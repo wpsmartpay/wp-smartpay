@@ -1,0 +1,15 @@
+{
+    "name": "themesgrove/wp-smartpay",
+    "description": "A simple plugin for receiving payment.",
+    "require": {
+        "themexpert/paddle-php": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "ThemesGrove\\SmartPay\\": "includes/"
+        },
+        "files": [
+            "includes/helpers.php"
+        ]
+    }
+}
