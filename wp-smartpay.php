@@ -20,7 +20,9 @@
 namespace ThemesGrove\SmartPay;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 // Includes vendor files.
 require_once __DIR__ . '/vendor/autoload.php';
@@ -110,6 +112,12 @@ final class SmartPay
      */
     private function init_actions()
     {
+        global $smartpay_options;
+
+        $smartpay_options = Setting::get_settings();
+
+        Setting::instance();
+
         PostType::instance();
 
         Gateway::instance();

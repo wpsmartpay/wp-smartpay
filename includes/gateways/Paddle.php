@@ -3,7 +3,9 @@
 namespace ThemesGrove\SmartPay\Gateways;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 final class Paddle extends PaymentGateway
 {
     /**
@@ -19,6 +21,7 @@ final class Paddle extends PaymentGateway
      */
     private function __construct()
     {
+        add_action('init', [$this, 'process_webhooks']);
     }
 
     /**
@@ -38,5 +41,20 @@ final class Paddle extends PaymentGateway
         }
 
         return self::$instance;
+    }
+
+    /**
+         * Process webhook requests.
+         *
+         * @since 1.1.0
+         * @return void
+         * @access public
+         */
+    public function process_webhooks()
+    {
+        if (isset($_GET['smartpay-listener']) && $_GET['smartpay-listener'] == 'paddle') {
+            echo 'paddle webhook';
+            die();
+        }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace ThemesGrove\SmartPay;
 
-use ThemesGrove\SmartPay\Admin\PaymentForm;
 use ThemesGrove\SmartPay\Admin\Setting;
+use ThemesGrove\SmartPay\Admin\PaymentForm;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 final class Admin
 {
     /**
@@ -22,14 +24,11 @@ final class Admin
      */
     private function __construct()
     {
-        add_action('admin_menu', [$this, 'menu_item'], 10);
-
-
-        add_action('admin_init', [$this, 'dbi_register_settings']);
-
         Setting::instance();
 
         PaymentForm::instance();
+
+        add_action('admin_menu', [$this, 'menu_item'], 10);
     }
 
     /**
@@ -127,41 +126,5 @@ final class Admin
     public function admin_log_page_cb()
     {
         return view('admin/debug-log');
-    }
-
-    public function dbi_register_settings()
-    {
-        register_setting('dbi_example_plugin_options', 'dbi_example_plugin_options', [$this, 'dbi_example_plugin_options_validate']);
-        add_settings_section('api_settings', 'API Settings', [$this, 'dbi_plugin_section_text'], 'dbi_example_plugin');
-
-        add_settings_field('dbi_plugin_setting_api_key', 'API Key', [$this, 'dbi_plugin_setting_api_key'], 'dbi_example_plugin', 'api_settings');
-        add_settings_field('dbi_plugin_setting_results_limit', 'Results Limit', [$this, 'dbi_plugin_setting_results_limit'], 'dbi_example_plugin', 'api_settings');
-    }
-
-    public function dbi_example_plugin_options_validate($input)
-    {
-        $newinput['api_key'] = trim($input['api_key']);
-        if (!preg_match('/^[a-z0-9]{32}$/i', $newinput['api_key'])) {
-            $newinput['api_key'] = '';
-        }
-
-        return $newinput;
-    }
-
-    public function dbi_plugin_section_text()
-    {
-        echo '<p>Here you can set all the options for using the API</p>';
-    }
-
-    public function dbi_plugin_setting_api_key()
-    {
-        $options = get_option('dbi_example_plugin_options');
-        echo "<input id='dbi_plugin_setting_api_key' name='dbi_example_plugin_options[api_key]'type='text' value='" . esc_attr($options['api_key']) . "' />";
-    }
-
-    public function dbi_plugin_setting_results_limit()
-    {
-        $options = get_option('dbi_example_plugin_options');
-        echo "<input id='dbi_plugin_setting_results_limit' name='dbi_example_plugin_options[results_limit]' type='text' value='" . esc_attr($options['results_limit']) . "' />";
     }
 }

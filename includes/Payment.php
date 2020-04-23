@@ -44,6 +44,10 @@ final class Payment
     public function process_payment()
     {
         if ('smartpay_checkout' === $this->get_relative_url_path()) {
+
+            if (!isset($_POST['smartpay_shortcode_nonce']) || !wp_verify_nonce($_POST['smartpay_shortcode_nonce'], 'smartpay_payment_shortcode_nonce'))
+            return;
+
             extract(sanitize_post($_POST));
 
             $payment_id = wp_insert_post(array(

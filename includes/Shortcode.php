@@ -3,11 +3,13 @@
 namespace ThemesGrove\SmartPay;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 final class Shortcode
 {
     /**
-     * The single instance of this class
+     * The single instance of this class.
      */
     private static $instance = null;
 
@@ -15,7 +17,6 @@ final class Shortcode
      * Construct Shortcode class.
      *
      * @since 0.1
-     * @access private
      */
     private function __construct()
     {
@@ -29,8 +30,8 @@ final class Shortcode
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
+     *
      * @return object|Shortcode
-     * @access public
      */
     public static function instance()
     {
@@ -43,10 +44,9 @@ final class Shortcode
 
     public function smartpay_form_shortcode($atts)
     {
-        extract(shortcode_atts(array(
+        extract(shortcode_atts([
             'id' => null,
-        ), $atts));
-
+        ], $atts));
 
         if (!isset($id)) {
             return;
@@ -56,9 +56,9 @@ final class Shortcode
 
         $data = [
             'form_id' => $form->ID,
-            '_amount' => get_post_meta($id, '_amount', true),
+            'amount' => get_post_meta($id, '_form_amount', true),
         ];
 
-        return view_render('shortcode/smartpay_form', $data);
+        return view_render('shortcode/payment_form', $data);
     }
 }

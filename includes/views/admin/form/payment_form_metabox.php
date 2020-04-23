@@ -14,7 +14,8 @@ $_form_amount = get_post_meta($post->ID, '_form_amount', true);
                     </label>
                 </th>
                 <td>
-                    <input type="tel" name="_form_amount" id="_form_amount" value="<?php echo esc_attr($_form_amount); ?>" placeholder="1.00">
+                    <input type="tel" name="_form_amount" id="_form_amount"
+                        value="<?php echo esc_attr($_form_amount); ?>" placeholder="1.00">
                 </td>
             </tr>
         </tbody>

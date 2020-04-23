@@ -6,7 +6,8 @@
     },
     "autoload": {
         "psr-4": {
-            "ThemesGrove\\SmartPay\\": "includes/"
+            "ThemesGrove\\SmartPay\\": "includes/",
+            "ThemesGrove\\SmartPay\\Gateways\\": "includes/gateways/"
         },
         "files": [
             "includes/helpers.php"

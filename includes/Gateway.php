@@ -2,8 +2,12 @@
 
 namespace ThemesGrove\SmartPay;
 
+use ThemesGrove\SmartPay\Gateways\Paddle;
+
 // Exit if accessed directly.
-if (!defined('ABSPATH')) exit;
+if (!defined('ABSPATH')) {
+    exit;
+}
 final class Gateway
 {
     /**
@@ -19,10 +23,8 @@ final class Gateway
      */
     private function __construct()
     {
-        // $gateways = gateways();
-        // foreach ($gateways as $id => $class) {
-        //     echo $id;
-        // }
+        // Initialize actions.
+        $this->include_gateways();
     }
 
     /**
@@ -42,5 +44,23 @@ final class Gateway
         }
 
         return self::$instance;
+    }
+
+    public static function gateways()
+    {
+        $gateways = array(
+            'paddle' => array(
+                'admin_label'       => 'Paddle',
+                'checkout_label'    => 'Paddle'
+            )
+        );
+
+        $gateways = apply_filters('smartpay_gateways', $gateways);
+        return $gateways;
+    }
+
+    public function include_gateways()
+    {
+        Paddle::instance();
     }
 }

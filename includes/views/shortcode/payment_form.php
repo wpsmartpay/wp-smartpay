@@ -1,7 +1,5 @@
-<?php
-?>
-
 <form action="<?php echo home_url('smartpay_checkout'); ?>" method="POST">
+    <?php wp_nonce_field('smartpay_shortcode_nonce', 'smartpay_payment_form'); ?>
     <input type="hidden" name="form_id" value="<?php echo $form_id ?>">
 
     <label for="first_name">First Name</label>
@@ -17,7 +15,7 @@
     <br>
 
     <label for="amount">Amount</label>
-    <input type="text" name="amount" id="amount" value="<?php echo $_amount ?>">
+    <input type="text" name="amount" id="amount" value="<?php echo $amount ?>">
     <br>
 
     <button type="submit">Pay Now</button>
