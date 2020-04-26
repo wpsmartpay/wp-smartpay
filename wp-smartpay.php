@@ -92,6 +92,11 @@ final class SmartPay
             define('WP_SMARTPAY_FILE', __FILE__);
         }
 
+        // Plugin Folder URL.
+        if (!defined('WP_SMARTPAY_URL')) {
+            define('WP_SMARTPAY_URL', plugin_dir_url(__FILE__));
+        }
+
         // Define plugin.
         if (!defined('WP_SMARTPAY_PATH')) {
             define('WP_SMARTPAY_PATH', plugin_dir_path(__FILE__));
@@ -128,7 +133,7 @@ final class SmartPay
 
         Payment::instance();
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_styles']);
+        // add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_styles']);
 
         register_activation_hook(__FILE__, [$this, 'activate']);
     }
@@ -150,13 +155,13 @@ final class SmartPay
         update_option('wp_smartpay_version', WP_SMARTPAY_VERSION);
     }
 
-    public function enqueue_smartpay_styles()
-    {
-        wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));
-        // wp_enqueue_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+    // public function enqueue_smartpay_styles()
+    // {
+    //     wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));
+    //     // wp_enqueue_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
 
-        wp_enqueue_script('app-js', plugins_url('/assets/js/app.js', __FILE__), '', true);
-    }
+    //     wp_enqueue_script('app-js', plugins_url('/assets/js/app.js', __FILE__), '', true);
+    // }
 }
 
 /**
