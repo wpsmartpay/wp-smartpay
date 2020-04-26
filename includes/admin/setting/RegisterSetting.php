@@ -22,6 +22,8 @@ final class RegisterSetting
     private function __construct()
     {
         add_action('admin_init', [$this, 'register_settings']);
+
+        // var_dump(smartpay_get_settings());
     }
 
     /**
@@ -103,7 +105,7 @@ final class RegisterSetting
                     add_settings_field(
                         'smartpay_settings[' . $args['id'] . ']',
                         $args['name'],
-                        method_exists($this, 'settings_'. $args['type'] . '_callback') ? [$this, 'settings_' . $args['type'] . '_callback'] : [$this, 'settings_missing_callback'],
+                        method_exists($this, 'settings_' . $args['type'] . '_callback') ? [$this, 'settings_' . $args['type'] . '_callback'] : [$this, 'settings_missing_callback'],
                         'smartpay_settings_' . $tab . '_' . $section,
                         'smartpay_settings_' . $tab . '_' . $section,
                         $args
@@ -138,14 +140,47 @@ final class RegisterSetting
                             'tooltip_title' => __('Page Settings', 'wp-smartpay'),
                             'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'wp-smartpay'),
                         ),
-                        'allow_tracking' => array(
-                            'id'   => 'allow_tracking',
-                            'name' => __('Allow Usage Tracking?', 'wp-smartpay'),
-                            'desc' => sprintf(
-                                __('Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a discount to the smartpay shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'wp-smartpay'),
-                                'https://easydigitaldownloads.com/downloads/?utm_source=' . substr(md5(get_bloginfo('name')), 0, 10) . '&utm_medium=admin&utm_term=settings&utm_campaign=smartpayUsageTracking'
+                        'payment_success_page' => array(
+                            'id'          => 'payment_success_page',
+                            'name'        => __('Payment Success Page', 'wp-smartpay'),
+                            'desc'        => __('The page customers are sent to after completing a payment. The shortcode [smartpay_payment_receipt] needs to be on this page. Output configured in the Payment Confirmation settings. This page should be excluded from any site caching.', 'wp-smartpay'),
+                            'type'        => 'page_select',
+                            'chosen'      => true,
+                            'placeholder' => __('Select a page', 'wp-smartpay'),
+                        ),
+                        'payment_failure_page' => array(
+                            'id'          => 'payment_failure_page',
+                            'name'        => __('Payment Failure Page', 'wp-smartpay'),
+                            'desc'        => __('The page customers are sent to after a failed payment.', 'wp-smartpay'),
+                            'type'        => 'page_select',
+                            'chosen'      => true,
+                            'placeholder' => __('Select a page', 'wp-smartpay'),
+                        ),
+                        'currency_settings' => array(
+                            'id'   => 'currency_settings',
+                            'name' => '<h3>' . __('Currency Options', 'wp-smartpay') . '</h3>',
+                            'desc' => '',
+                            'type' => 'header',
+                            'tooltip_title' => __('Page Settings', 'wp-smartpay'),
+                            'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'wp-smartpay'),
+                        ),
+                        'currency' => array(
+                            'id'      => 'currency',
+                            'name'    => __('Currency', 'wp-smartpay'),
+                            'desc'    => __('Choose your currency. Note that some payment gateways have currency restrictions.', 'wp-smartpay'),
+                            'type'    => 'select',
+                            'options' => smartpay_get_currencies(),
+                            'chosen'  => true,
+                        ),
+                        'currency_position' => array(
+                            'id'      => 'currency_position',
+                            'name'    => __('Currency Position', 'wp-smartpay'),
+                            'desc'    => __('Choose the location of the currency sign.', 'wp-smartpay'),
+                            'type'    => 'select',
+                            'options' => array(
+                                'before' => __('Before - $10', 'wp-smartpay'),
+                                'after'  => __('After - 10$', 'wp-smartpay'),
                             ),
-                            'type' => 'checkbox',
                         ),
                     ),
                 )
@@ -154,61 +189,21 @@ final class RegisterSetting
             'gateways' => apply_filters(
                 'smartpay_settings_gateways',
                 array(
-                    'main' => array(
-                        'test_mode' => array(
-                            'id'   => 'test_mode',
-                            'name' => __('Test Mode', 'wp-smartpay'),
-                            'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'wp-smartpay'),
-                            'type' => 'checkbox',
-                        ),
-                        'accepted_cards' => array(
-                            'id'      => 'accepted_cards',
-                            'name'    => __('Accepted Payment Method Icons', 'wp-smartpay'),
-                            'desc'    => __('Display icons for the selected payment methods.', 'wp-smartpay') . '<br/>' . __('You will also need to configure your gateway settings if you are accepting credit cards.', 'wp-smartpay'),
-                            'type'    => 'payment_icons',
-                            'options' => apply_filters(
-                                'smartpay_accepted_payment_icons',
-                                array(
-                                    'mastercard'      => 'Mastercard',
-                                    'visa'            => 'Visa',
-                                    'americanexpress' => 'American Express',
-                                    'discover'        => 'Discover',
-                                    'paypal'          => 'PayPal',
-                                )
-                            ),
-                        ),
-                    ),
+                    'main' => array(),
                 )
             ),
             /** Emails Settings */
             'emails' => apply_filters(
                 'smartpay_settings_emails',
                 array(
-                    'main' => array(
-                        'sendwp_header' => array(
-                            'id'   => 'sendwp_header',
-                            'name' => '<strong>' . __('SendWP Settings', 'wp-smartpay') . '</strong>',
-                            'type' => 'header',
-                        ),
-                        'email_header' => array(
-                            'id'   => 'email_header',
-                            'name' => '<strong>' . __('Email Configuration', 'wp-smartpay') . '</strong>',
-                            'type' => 'header',
-                        ),
-                    ),
+                    'main' => array(),
                 )
             ),
             /** License Settings */
             'licenses' => apply_filters(
                 'smartpay_settings_licenses',
                 array(
-                    'main' => array(
-                        'hea' => array(
-                            'id'   => 'hea',
-                            'name' => '<strong>' . __('SendWP Settings', 'wp-smartpay') . '</strong>',
-                            'type' => 'header',
-                        ),
-                    ),
+                    'main' => array(),
                 )
             ),
         );
@@ -320,8 +315,8 @@ final class RegisterSetting
 
             // Some setting types are not actually settings, just keep moving along here
             $non_setting_types = apply_filters('smartpay_non_setting_types', array(
-            'header', 'descriptive_text', 'hook',
-        ));
+                'header', 'descriptive_text', 'hook',
+            ));
 
             if (in_array($type, $non_setting_types)) {
                 continue;
@@ -334,25 +329,25 @@ final class RegisterSetting
 
             if ($doing_section) {
                 switch ($type) {
-                case 'checkbox':
-                case 'gateways':
-                case 'multicheck':
-                case 'payment_icons':
-                    if (array_key_exists($key, $input) && $output[$key] === '-1') {
-                        unset($output[$key]);
-                    }
-                    break;
-                case 'text':
-                    if (array_key_exists($key, $input) && empty($input[$key])) {
-                        unset($output[$key]);
-                    }
-                    break;
-                default:
-                    if (array_key_exists($key, $input) && empty($input[$key]) || (array_key_exists($key, $output) && !array_key_exists($key, $input))) {
-                        unset($output[$key]);
-                    }
-                    break;
-            }
+                    case 'checkbox':
+                    case 'gateways':
+                    case 'multicheck':
+                    case 'payment_icons':
+                        if (array_key_exists($key, $input) && $output[$key] === '-1') {
+                            unset($output[$key]);
+                        }
+                        break;
+                    case 'text':
+                        if (array_key_exists($key, $input) && empty($input[$key])) {
+                            unset($output[$key]);
+                        }
+                        break;
+                    default:
+                        if (array_key_exists($key, $input) && empty($input[$key]) || (array_key_exists($key, $output) && !array_key_exists($key, $input))) {
+                            unset($output[$key]);
+                        }
+                        break;
+                }
             } else {
                 if (empty($input[$key])) {
                     unset($output[$key]);
@@ -378,7 +373,7 @@ final class RegisterSetting
 
             foreach ($tab as $section_id => $section_or_setting) {
 
-            // See if we have a setting registered at the tab level for backwards compatibility
+                // See if we have a setting registered at the tab level for backwards compatibility
                 if (false !== $filtered_section && is_array($section_or_setting) && array_key_exists('type', $section_or_setting)) {
                     $setting_types[$section_or_setting['id']] = $section_or_setting['type'];
                     continue;
@@ -399,11 +394,199 @@ final class RegisterSetting
         return $setting_types;
     }
 
+    public function settings_header_callback($args)
+    {
+        // echo apply_filters('edd_after_setting_output', '', $args);
+    }
+
+    public function settings_select_callback($args)
+    {
+        $old_value = smartpay_get_option($args['id']) ?? 0;
+
+        if ($old_value) {
+            $value = $old_value;
+        } else {
+
+            // Properly set default fallback if the Select Field allows Multiple values
+            if (empty($args['multiple'])) {
+                $value = isset($args['std']) ? $args['std'] : '';
+            } else {
+                $value = !empty($args['std']) ? $args['std'] : array();
+            }
+        }
+
+        if (isset($args['placeholder'])) {
+            $placeholder = $args['placeholder'];
+        } else {
+            $placeholder = '';
+        }
+
+        $class = $this->settings_sanitize_html_class($args['field_class']);
+
+        if (isset($args['chosen'])) {
+            $class .= ' smartpay-select-chosen';
+        }
+
+        $nonce = isset($args['data']['nonce'])
+            ? ' data-nonce="' . sanitize_text_field($args['data']['nonce']) . '" '
+            : '';
+
+        // If the Select Field allows Multiple values, save as an Array
+        $name_attr = 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']';
+        $name_attr = ($args['multiple']) ? $name_attr . '[]' : $name_attr;
+
+        $html = '<select ' . $nonce . ' id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html($placeholder) . '" ' . (($args['multiple']) ? 'multiple="true"' : '') . '>';
+
+        foreach ($args['options'] as $option => $name) {
+            if (!$args['multiple']) {
+                $selected = selected($option, $value, false);
+                $html .= '<option value="' . esc_attr($option) . '" ' . $selected . '>' . esc_html($name) . '</option>';
+            } else {
+                // Do an in_array() check to output selected attribute for Multiple
+                $html .= '<option value="' . esc_attr($option) . '" ' . ((in_array($option, $value)) ? 'selected="true"' : '') . '>' . esc_html($name) . '</option>';
+            }
+        }
+
+        $html .= '</select>';
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</label>';
+
+        echo $html;
+    }
+
+    public function settings_sanitize_html_class($class = '')
+    {
+        if (is_string($class)) {
+            $class = sanitize_html_class($class);
+        } elseif (is_array($class)) {
+            $class = array_values(array_map('sanitize_html_class', $class));
+            $class = implode(' ', array_unique($class));
+        }
+
+        return $class;
+    }
+
+
     public function settings_missing_callback($args)
     {
         printf(
             __('The callback function used for the %s setting is missing.', 'wp-smartpay'),
             '<strong>' . $args['id'] . '</strong>'
         );
+    }
+
+    public function settings_page_select_callback($args)
+    {
+
+        $selected = smartpay_get_option($args['id']) ?? 0;
+
+        $args = array(
+            'depth'                 => 0,
+            'child_of'              => 0,
+            'selected'              => absint($selected),
+            'echo'                  => 1,
+            'name'                  => 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']',
+            'id'                    => 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']',
+            'class'                 => null, // string
+            'show_option_none'      => null, // string
+            'show_option_no_change' => smartpay_sanitize_key($args['placeholder']), // string
+            'option_none_value'     => null, // string
+        );
+
+        wp_dropdown_pages($args);
+        // FIXME:: Show label
+    }
+
+    public function settings_text_callback($args)
+    {
+        $old_value = smartpay_get_option($args['id']);
+
+        if ($old_value) {
+            $value = $old_value;
+        } elseif (!empty($args['allow_blank']) && empty($old_value)) {
+            $value = '';
+        } else {
+            $value = isset($args['std']) ? $args['std'] : '';
+        }
+
+        if (isset($args['faux']) && true === $args['faux']) {
+            $args['readonly'] = true;
+            $value = isset($args['std']) ? $args['std'] : '';
+            $name  = '';
+        } else {
+            $name = 'name="smartpay_settings[' . esc_attr($args['id']) . ']"';
+        }
+
+        $class = edd_sanitize_html_class($args['field_class']);
+
+        $disabled = !empty($args['disabled']) ? ' disabled="disabled"' : '';
+        $readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
+        $size     = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
+        $html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . edd_sanitize_key($args['id']) . ']" ' . $name . ' value="' . esc_attr(stripslashes($value)) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr($args['placeholder']) . '"/>';
+        $html    .= '<label for="smartpay_settings[' . edd_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+        echo $html;
+    }
+
+    public function settings_custom_content_callback($args)
+    {
+        echo $args['content'] ?? '';
+    }
+
+    public function settings_upload_callback($args)
+    {
+        $old_value = edd_get_option($args['id']);
+
+        if ($old_value) {
+            $value = $old_value;
+        } else {
+            $value = isset($args['std']) ? $args['std'] : '';
+        }
+
+        $class = $this->smartpay_sanitize_html_class($args['field_class']);
+
+        $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
+        $html = '<input type="text" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" class="' . $class . '" name="smartpay_settings[' . esc_attr($args['id']) . ']" value="' . esc_attr(stripslashes($value)) . '"/>';
+        $html .= '<span>&nbsp;<input type="button" class="smartpay_settings_upload_button button-secondary" value="' . __('Upload File', 'easy-digital-downloads') . '"/></span>';
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</label>';
+
+        echo $html;
+    }
+
+    public function  settings_descriptive_text_callback($args)
+    {
+        $html = wp_kses_post($args['desc']);
+
+        echo $html;
+    }
+
+    public function smartpay_sanitize_html_class($class = '')
+    {
+        if (is_string($class)) {
+            $class = sanitize_html_class($class);
+        } elseif (is_array($class)) {
+            $class = array_values(array_map('sanitize_html_class', $class));
+            $class = implode(' ', array_unique($class));
+        }
+
+        return $class;
+    }
+
+
+
+    public function settings_textarea_callback($args)
+    {
+        $old_value = smartpay_get_option($args['id']);
+
+        if ($old_value) {
+            $value = $old_value;
+        } else {
+            $value = isset($args['std']) ? $args['std'] : '';
+        }
+
+        $class =  $this->smartpay_sanitize_html_class($args['field_class']);
+
+        $html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        echo $html;
     }
 }
