@@ -45,8 +45,9 @@ final class Payment
     {
         if ('smartpay_checkout' === $this->get_relative_url_path()) {
 
-            if (!isset($_POST['smartpay_shortcode_nonce']) || !wp_verify_nonce($_POST['smartpay_shortcode_nonce'], 'smartpay_payment_shortcode_nonce'))
-            return;
+            if (!isset($_POST['smartpay_shortcode_nonce']) || !wp_verify_nonce($_POST['smartpay_shortcode_nonce'], 'smartpay_shortcode_nonce')) {
+                wp_redirect(home_url('/'));
+            }
 
             extract(sanitize_post($_POST));
 
