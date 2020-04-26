@@ -134,7 +134,7 @@ final class RegisterSetting
                     'main' => array(
                         'page_settings' => array(
                             'id'   => 'page_settings',
-                            'name' => '<h3>' . __('Pages', 'wp-smartpay') . '</h3>',
+                            'name' => '<h3 style="margin: 0;">' . __('Pages', 'wp-smartpay') . '</h3>',
                             'desc' => '',
                             'type' => 'header',
                             'tooltip_title' => __('Page Settings', 'wp-smartpay'),
@@ -158,7 +158,7 @@ final class RegisterSetting
                         ),
                         'currency_settings' => array(
                             'id'   => 'currency_settings',
-                            'name' => '<h3>' . __('Currency Options', 'wp-smartpay') . '</h3>',
+                            'name' => '<h3 style="margin: 0;">' . __('Currency Options', 'wp-smartpay') . '</h3>',
                             'desc' => '',
                             'type' => 'header',
                             'tooltip_title' => __('Page Settings', 'wp-smartpay'),
@@ -487,8 +487,8 @@ final class RegisterSetting
             'name'                  => 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']',
             'id'                    => 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']',
             'class'                 => null, // string
-            'show_option_none'      => null, // string
-            'show_option_no_change' => smartpay_sanitize_key($args['placeholder']), // string
+            'show_option_none'      => $args['placeholder'], // string
+            'show_option_no_change' => null, // string
             'option_none_value'     => null, // string
         );
 

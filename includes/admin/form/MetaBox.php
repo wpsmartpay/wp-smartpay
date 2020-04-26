@@ -13,6 +13,8 @@ final class MetaBox
      */
     private static $instance = null;
 
+    private $post;
+
     /**
      * Construct MetaBox class.
      *
@@ -58,7 +60,78 @@ final class MetaBox
 
     public function add_smartpay_form_meta_box_callback($post)
     {
-        return view('admin/form/payment_form_metabox', ['post' => $post]);
+
+        $this->post = $post;
+
+        $fields =
+            apply_filters(
+                'smartpay_form_meta_box_fields',
+                array(
+                    '_form_payment_type' => array(
+                        'id'                => '_form_payment_type',
+                        'name'              => __('One-Time Amount', 'wp-smartpay'),
+                        'desc'              => __('Enter your Paddle Vendor ID', 'wp-smartpay'),
+                        'type'              => 'radio',
+                        'options'           => array(
+                            'one-time'      => array(
+                                'name'      => __('One-Time', 'wp-smartpay'),
+                                'disabled'   => false
+                            ),
+                            '_'     => array(
+                                'name'      => __('Recurring (Available on Pro)', 'wp-smartpay'),
+                                'disabled'   => true
+                            ),
+                        ),
+                        'std'               => 'one-time',
+                        'placeholder'       => 'Form Amount',
+                    ),
+                    '_form_amount' => array(
+                        'id'            => '_form_amount',
+                        'name'          => __('One-Time Amount', 'wp-smartpay'),
+                        'desc'          => __('Enter your Paddle Vendor ID', 'wp-smartpay'),
+                        'type'          => 'text',
+                        'placeholder'   => 'Form Amount',
+                    ),
+                )
+            );
+
+        // var_dump($fields);
+        // die();
+
+
+        $this->render_form($fields);
+
+        echo '<div style="background-color: #f4f4f4;
+        border: 1px solid #e5e5e5;
+        padding: 10px 20px;
+        margin: 30px 0px;">
+        <h2 style=" font-size: 18px;
+        font-weight: 600;
+        margin: 10px 0;
+        padding: 0;">Want to customize your payment forms even more?</h2>
+        <p>
+            By upgrading to WP Simple Pay Pro, you get access to powerful features such as:</p>
+        
+        <!-- Repeat this bulleted list in sidebar.php & generic-tab-promo.php -->
+        <ul>
+            <li><div class="dashicons dashicons-yes"></div> Unlimited custom fields to capture additional data</li>
+            <li><div class="dashicons dashicons-yes"></div> Custom amounts - let customers enter an amount to pay</li>
+            <li><div class="dashicons dashicons-yes"></div> Coupon code support</li>
+            <li><div class="dashicons dashicons-yes"></div> On-site checkout (no redirect) with custom forms</li>
+            <li><div class="dashicons dashicons-yes"></div> Embedded &amp; overlay form display options</li>
+            <li><div class="dashicons dashicons-yes"></div> Apple Pay &amp; Google Pay support with custom forms</li>
+            <li><div class="dashicons dashicons-yes"></div> Stripe Subscription support (Plus or higher license required)</li>
+        </ul>
+        
+        
+        <p>
+            <a href="https://wpsmartpay.com/" class="button button-primary button-large" target="_blank">
+                Click here to Upgrade	</a>
+        </p>
+        
+        </div>';
+
+        // return view('admin/form/payment_form_metabox', ['post' => $post]);
     }
 
     public function save_smartpay_form_meta($post_id)
@@ -72,5 +145,64 @@ final class MetaBox
         if (isset($_POST['_form_amount'])) {
             update_post_meta($post_id, '_form_amount', sanitize_text_field($_POST['_form_amount']));
         }
+    }
+
+    public function render_form($fields)
+    {
+
+        echo '<table><tbody class="simpay-panel-section">';
+
+        foreach ($fields as $field) {
+            echo '<tr class=""> <td style="padding: 15px 15px 15px 0px;">';
+            echo '<label for="' . esc_attr($field['id']) . '">' . esc_attr($field['name']) . '</label></td><td>';
+
+            $func = 'metabox_fields_' . $field['type'] . '_callback';
+
+            method_exists($this,  $func) ? $this->$func($field) : 'Method not found!';
+
+            echo '</td></tr>';
+        }
+
+        echo '</tbody></table>';
+    }
+
+    public function metabox_fields_text_callback($field)
+    {
+        $old_value = get_post_meta($this->post->ID, esc_attr($field['id']), true);
+
+        $value = $old_value ?? $field['std'] ?? '';
+
+        $disabled = !empty($field['disabled']) ? ' disabled="disabled"' : '';
+        $readonly = $field['readonly'] === true ? ' readonly="readonly"' : '';
+        $size = (isset($field['size']) && !is_null($field['size'])) ? $field['size'] : 'regular';
+
+        $html = '<input type="text" class="' . $field['class'] . ' ' . sanitize_html_class($size) . '" name="' . esc_attr($field['id']) . '" id="' . esc_attr($field['id']) . '" value="' . esc_attr(stripslashes($value)) . '" ' . $readonly . $disabled . ' placeholder="' . esc_attr($field['placeholder']) . '" />';
+        echo $html;
+    }
+
+    function metabox_fields_radio_callback($field)
+    {
+        $old_value = get_post_meta($this->post->ID, esc_attr($field['id']), true);
+
+        $readonly = $field['readonly'] === true ? ' readonly="readonly"' : '';
+        $size = (isset($field['size']) && !is_null($field['size'])) ? $field['size'] : 'regular';
+
+        $html = '';
+        foreach ($field['options'] as $key => $option) {
+            $checked = false;
+            $disabled = $option['disabled'] ?? true;
+
+            if ($old_value && $old_value == $key) {
+                $checked = true;
+            } elseif (isset($field['std']) && $field['std'] == $key && !$old_value) {
+                $checked = true;
+            }
+
+            $html .= '<input type="radio" class="' . $field['class'] . ' ' . sanitize_html_class($size) . '" name="' . esc_attr($field['id']) . '" id="' . esc_attr($field['id']) . '_' . $key . '" value="' . esc_attr(stripslashes($key)) . '" ' . $readonly . $disabled . checked(true, $checked, false) . disabled(true, $disabled, false) . '" />&nbsp;';
+
+            $html .= '<label for="' . esc_attr($field['id']) . '_' . $key . '">' . esc_html($option['name'] ?? '') . '</label>&nbsp;&nbsp;';
+        }
+
+        echo $html;
     }
 }
