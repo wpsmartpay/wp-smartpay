@@ -130,16 +130,16 @@ final class Admin
 
     public function smartpay_admin_dashboard_page_cb()
     {
-        return view('admin/dashboard');
+        return smartpay_view('admin/dashboard');
     }
 
     public function admin_setting_page_cb()
     {
-        return view('admin/setting');
+        return smartpay_view('admin/setting');
     }
 
     public function admin_log_page_cb()
     {
-        return view('admin/debug-log');
+        return smartpay_view('admin/debug-log');
     }
 }
