@@ -22,8 +22,6 @@ final class RegisterSetting
     private function __construct()
     {
         add_action('admin_init', [$this, 'register_settings']);
-
-        // var_dump(smartpay_get_settings());
     }
 
     /**
@@ -516,13 +514,13 @@ final class RegisterSetting
             $name = 'name="smartpay_settings[' . esc_attr($args['id']) . ']"';
         }
 
-        $class = edd_sanitize_html_class($args['field_class']);
+        $class = sanitize_html_class($args['field_class']);
 
         $disabled = !empty($args['disabled']) ? ' disabled="disabled"' : '';
         $readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
         $size     = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
-        $html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . edd_sanitize_key($args['id']) . ']" ' . $name . ' value="' . esc_attr(stripslashes($value)) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr($args['placeholder']) . '"/>';
-        $html    .= '<label for="smartpay_settings[' . edd_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+        $html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" ' . $name . ' value="' . esc_attr(stripslashes($value)) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr($args['placeholder']) . '"/>';
+        $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
         echo $html;
     }
 

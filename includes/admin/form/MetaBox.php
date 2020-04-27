@@ -60,44 +60,86 @@ final class MetaBox
 
     public function add_smartpay_form_meta_box_callback($post)
     {
-
         $this->post = $post;
 
         $fields =
             apply_filters(
                 'smartpay_form_meta_box_fields',
                 array(
-                    '_form_payment_type' => array(
+                    '_form_payment_type'    => array(
                         'id'                => '_form_payment_type',
                         'name'              => __('One-Time Amount', 'wp-smartpay'),
-                        'desc'              => __('Enter your Paddle Vendor ID', 'wp-smartpay'),
                         'type'              => 'radio',
                         'options'           => array(
                             'one-time'      => array(
                                 'name'      => __('One-Time', 'wp-smartpay'),
-                                'disabled'   => false
+                                'disabled'  => false
                             ),
-                            '_'     => array(
+                            '_'             => array(
                                 'name'      => __('Recurring (Available on Pro)', 'wp-smartpay'),
-                                'disabled'   => true
+                                'disabled'  => true
                             ),
                         ),
                         'std'               => 'one-time',
+                    ),
+                    '_form_amount'          => array(
+                        'id'                => '_form_amount',
+                        'name'              => __('One-Time Amount', 'wp-smartpay'),
+                        'type'              => 'text',
                         'placeholder'       => 'Form Amount',
                     ),
-                    '_form_amount' => array(
-                        'id'            => '_form_amount',
-                        'name'          => __('One-Time Amount', 'wp-smartpay'),
-                        'desc'          => __('Enter your Paddle Vendor ID', 'wp-smartpay'),
-                        'type'          => 'text',
-                        'placeholder'   => 'Form Amount',
+
+                    // On-Page Form Display
+                    '_form_payment_button_text'     => array(
+                        'id'                => '_form_payment_button_text',
+                        'name'              => __('Payment Button Text', 'wp-smartpay'),
+                        'type'              => 'text',
+                        'placeholder'       => 'Pay with Paddle',
+                    ),
+                    '_form_payment_button_processing_text'     => array(
+                        'id'                => '_form_payment_button_processing_text',
+                        'name'              => __('Payment Button Processing Text', 'wp-smartpay'),
+                        'type'              => 'text',
+                        'placeholder'       => 'Please wait...',
+                    ),
+                    '_form_payment_button_style'    => array(
+                        'id'                => '_form_payment_button_style',
+                        'name'              => __('Payment Button Style', 'wp-smartpay'),
+                        'type'              => 'radio',
+                        'options'           => array(
+                            'paddle_green'      => array(
+                                'name'      => __('Paddle Green', 'wp-smartpay'),
+                            ),
+                            'site_default'             => array(
+                                'name'      => __('Site Default', 'wp-smartpay'),
+                            ),
+                        ),
+                        'std'               => 'paddle_green',
+                    ),
+
+                    // Paddle Checkout Display
+                    '_form_paddle_checkout_image'     => array(
+                        'id'                => '_form_paddle_checkout_image',
+                        'name'              => __('Paddle checkout image', 'wp-smartpay'),
+                        'type'              => 'text',
+                        'placeholder'       => 'Image link',
+                    ),
+                    '_form_paddle_checkout_location'    => array(
+                        'id'                => '_form_paddle_checkout_location',
+                        'name'              => __('Paddle checkout location', 'wp-smartpay'),
+                        'type'              => 'radio',
+                        'options'           => array(
+                            'on_site'      => array(
+                                'name'      => __('On site', 'wp-smartpay'),
+                            ),
+                            'paddle_checkout'             => array(
+                                'name'      => __('Paddle checkout', 'wp-smartpay'),
+                            ),
+                        ),
+                        'std'               => 'on_site',
                     ),
                 )
             );
-
-        // var_dump($fields);
-        // die();
-
 
         $this->render_form($fields);
 
@@ -131,7 +173,7 @@ final class MetaBox
         
         </div>';
 
-        // return view('admin/form/payment_form_metabox', ['post' => $post]);
+        // return smartpay_view('admin/form/payment_form_metabox', ['post' => $post]);
     }
 
     public function save_smartpay_form_meta($post_id)
@@ -142,13 +184,39 @@ final class MetaBox
             return;
         }
 
+        if (isset($_POST['_form_payment_type'])) {
+            \update_post_meta($post_id, '_form_payment_type', sanitize_text_field($_POST['_form_payment_type']));
+        }
+
         if (isset($_POST['_form_amount'])) {
-            update_post_meta($post_id, '_form_amount', sanitize_text_field($_POST['_form_amount']));
+            \update_post_meta($post_id, '_form_amount', sanitize_text_field($_POST['_form_amount']));
+        }
+
+        if (isset($_POST['_form_payment_button_text'])) {
+            \update_post_meta($post_id, '_form_payment_button_text', sanitize_text_field($_POST['_form_payment_button_text']));
+        }
+
+        if (isset($_POST['_form_payment_button_processing_text'])) {
+            \update_post_meta($post_id, '_form_payment_button_processing_text', sanitize_text_field($_POST['_form_payment_button_processing_text']));
+        }
+
+        if (isset($_POST['_form_payment_button_style'])) {
+            \update_post_meta($post_id, '_form_payment_button_style', sanitize_text_field($_POST['_form_payment_button_style']));
+        }
+
+        if (isset($_POST['_form_paddle_checkout_image'])) {
+            \update_post_meta($post_id, '_form_paddle_checkout_image', sanitize_text_field($_POST['_form_paddle_checkout_image']));
+        }
+
+        if (isset($_POST['_form_paddle_checkout_location'])) {
+            \update_post_meta($post_id, '_form_paddle_checkout_location', sanitize_text_field($_POST['_form_paddle_checkout_location']));
         }
     }
 
     public function render_form($fields)
     {
+        echo '<form action="" method="POST">';
+        wp_nonce_field('smartpay_form_metabox_nonce', 'smartpay_form_metabox_nonce');
 
         echo '<table><tbody class="simpay-panel-section">';
 
@@ -164,13 +232,14 @@ final class MetaBox
         }
 
         echo '</tbody></table>';
+        echo '</form>';
     }
 
     public function metabox_fields_text_callback($field)
     {
         $old_value = get_post_meta($this->post->ID, esc_attr($field['id']), true);
 
-        $value = $old_value ?? $field['std'] ?? '';
+        $value =  !empty($old_value) ? $old_value : $field['std'] ?? '';
 
         $disabled = !empty($field['disabled']) ? ' disabled="disabled"' : '';
         $readonly = $field['readonly'] === true ? ' readonly="readonly"' : '';
@@ -190,7 +259,7 @@ final class MetaBox
         $html = '';
         foreach ($field['options'] as $key => $option) {
             $checked = false;
-            $disabled = $option['disabled'] ?? true;
+            $disabled = $option['disabled'] ?? false;
 
             if ($old_value && $old_value == $key) {
                 $checked = true;
