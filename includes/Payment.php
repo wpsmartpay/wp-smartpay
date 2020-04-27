@@ -43,31 +43,64 @@ final class Payment
 
     public function process_payment()
     {
-        if ('smartpay_checkout' === $this->get_relative_url_path()) {
+        if ('smartpay-checkout' === $this->get_relative_url_path()) {
 
-            if (!isset($_POST['smartpay_shortcode_nonce']) || !wp_verify_nonce($_POST['smartpay_shortcode_nonce'], 'smartpay_shortcode_nonce')) {
+            if (!isset($_POST['smartpay_process_payment']) || !wp_verify_nonce($_POST['smartpay_process_payment'], 'smartpay_process_payment')) {
                 wp_redirect(home_url('/'));
             }
 
             extract(sanitize_post($_POST));
 
-            $payment_id = wp_insert_post(array(
-                'post_type' => 'smartpay_payment',
-                'post_status' => 'pending',
-                'comment_status' => 'closed',
-                'ping_status' => 'closed',
-            ));
-
-            if ($payment_id) {
-                add_post_meta($payment_id, '_first_name', $first_name);
-                add_post_meta($payment_id, '_last_name', $last_name);
-                add_post_meta($payment_id, '_email', $email);
-                add_post_meta($payment_id, '_amount', $amount);
-                add_post_meta($payment_id, '_form_id', $form_id);
+            if (empty($first_name) || empty($last_name) || empty($email) || empty($amount) || empty($form_id)) {
+                wp_redirect(home_url('/'));
             }
 
-            die(var_dump($payment_id));
+            $payment_data = array(
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'email' => $email,
+                'amount' => $amount,
+                'gateway' => $gateway,
+                'form_id' => $form_id,
+            );
+
+            // Send info to the gateway for payment processing
+            smartpay_send_to_gateway($gateway, $payment_data);
+
+            return;
         }
+    }
+
+    public static function insert($payment_data)
+    {
+
+        if (!isset($payment_data['gateway_nonce']) || !wp_verify_nonce($payment_data['gateway_nonce'], 'smartpay-gateway')) {
+            return false;
+        }
+
+        if (empty($payment_data['first_name']) || empty($payment_data['last_name']) || empty($payment_data['email']) || empty($payment_data['amount'])  || empty($payment_data['gateway']) || empty($payment_data['form_id'])) {
+            return false;
+        }
+        $payment_id = wp_insert_post(array(
+            'post_type' => 'smartpay_payment',
+            'post_status' => 'pending',
+            'comment_status' => 'closed',
+            'ping_status' => 'closed',
+        ));
+
+        if ($payment_id) {
+            add_post_meta($payment_id, '_first_name', $payment_data['first_name']);
+            add_post_meta($payment_id, '_last_name', $payment_data['last_name']);
+            add_post_meta($payment_id, '_email', $payment_data['email']);
+            add_post_meta($payment_id, '_amount', $payment_data['amount']);
+            add_post_meta($payment_id, '_gateway', $payment_data['gateway']);
+            add_post_meta($payment_id, '_form_id', $payment_data['form_id']);
+
+            // Add session
+            $_SESSION['smartpay_payment_id'] = $payment_id;
+        }
+
+        return $payment_id;
     }
 
     private function get_relative_url_path()

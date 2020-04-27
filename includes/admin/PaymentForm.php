@@ -61,12 +61,13 @@ final class PaymentForm
     {
         // shortcode column
         if ('shortcode' === $column) {
-            echo '<input type="text" readonly="readonly" title="Click to select. Then press Ctrl+C (⌘+C on Mac) to copy." onclick="this.select();" value="[smartpay_form id=&quot;'.$post_id.'&quot;]">';
+            echo '<input type="text" readonly="readonly" title="Click to select. Then press Ctrl+C (⌘+C on Mac) to copy." onclick="this.select();" value="[smartpay_form id=&quot;' . $post_id . '&quot;]">';
         }
 
         // amount column
+        // TODO:: Update currency
         if ('amount' === $column) {
-            echo '$ '.number_format(get_post_meta($post_id, '_form_amount', true) ?? 0, 2);
+            echo '$ ' . number_format(absint(get_post_meta($post_id, '_form_amount', true)) ?? 0, 2);
         }
     }
 
@@ -91,7 +92,7 @@ final class PaymentForm
 
                 break;
             case 'name':
-                echo get_post_meta($post_id, '_first_name', true).' '.get_post_meta($post_id, '_last_name', true);
+                echo get_post_meta($post_id, '_first_name', true) . ' ' . get_post_meta($post_id, '_last_name', true);
 
                 break;
             case 'email':
@@ -99,7 +100,7 @@ final class PaymentForm
 
                 break;
             case 'amount':
-                echo '$ '.number_format(get_post_meta($post_id, '_amount', true) ?? 0, 2);
+                echo '$ ' . number_format(get_post_meta($post_id, '_amount', true) ?? 0, 2);
 
                 break;
             case 'status':

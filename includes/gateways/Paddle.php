@@ -22,7 +22,8 @@ final class Paddle extends PaymentGateway
     private function __construct()
     {
         add_action('init', [$this, 'process_webhooks']);
-        add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section'], 10, 1);
+        add_action('smartpay_paddle_process_payment', [$this, 'process_payment']);
+        add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
     }
 
@@ -60,6 +61,20 @@ final class Paddle extends PaymentGateway
         }
     }
 
+    public function process_payment($payment_data)
+    {
+        // $payment_data
+
+        $payment_id = smartpay_insert_payment($payment_data);
+
+        if ($payment_id) {
+            $redirect_uri = smartpay_get_success_page_uri();
+            wp_redirect($redirect_uri);
+        } else {
+            die('Error');
+        }
+    }
+
     /**
      * Add Gateway subsection
      *
@@ -70,7 +85,7 @@ final class Paddle extends PaymentGateway
      */
     public function gateway_section(array $sections = array()): array
     {
-        $sections['main'] = __('Paddle', 'wp-smartpay');
+        $sections['paddle'] = __('Paddle', 'wp-smartpay');
 
         return $sections;
     }
@@ -132,13 +147,13 @@ final class Paddle extends PaymentGateway
             //     'type'  => 'upload',
             //     'size'  => 'regular',
             // ),
-            array(
-                'id'    => 'paddle_checkout_image',
-                'name'  => __('Checkout Image URL', 'wp-smartpay'),
-                'desc'  => __('Checkout Image URL must be including https://. If you don\'t set, it will use the default value.', 'wp-smartpay'),
-                'type'  => 'upload',
-                'size'  => 'regular',
-            ),
+            // array(
+            //     'id'    => 'paddle_checkout_image',
+            //     'name'  => __('Checkout Image URL', 'wp-smartpay'),
+            //     'desc'  => __('Checkout Image URL must be including https://. If you don\'t set, it will use the default value.', 'wp-smartpay'),
+            //     'type'  => 'upload',
+            //     'size'  => 'regular',
+            // ),
             array(
                 'id'    => 'paddle_checkout_location',
                 'name'  => __('Checkout Location', 'wp-smartpay'),
@@ -161,7 +176,7 @@ final class Paddle extends PaymentGateway
                 sprintf(
                     '<p>For Paddle to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
                     'https://vendors.paddle.com/alerts-webhooks',
-                    home_url("index.php?edd-listener={$this->gateway_id}")
+                    home_url("index.php?smartpay-listener=paddle")
                 ),
                 'wp-smartpay'
             ),
@@ -177,6 +192,6 @@ final class Paddle extends PaymentGateway
             ),
         );
 
-        return array_merge($settings, ['main' => $gateway_settings]);
+        return array_merge($settings, ['paddle' => $gateway_settings]);
     }
 }
