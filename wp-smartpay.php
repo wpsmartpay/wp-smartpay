@@ -136,6 +136,8 @@ final class SmartPay
         // add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_styles']);
 
         register_activation_hook(__FILE__, [$this, 'activate']);
+
+        // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
     }
 
     /**
@@ -153,6 +155,40 @@ final class SmartPay
         }
 
         update_option('wp_smartpay_version', WP_SMARTPAY_VERSION);
+
+        self::create_pages();
+    }
+
+    public static function create_pages()
+    {
+        if (false == get_option('smartpay_settings')) {
+            add_option('smartpay_settings');
+        }
+
+        $payment_receipt = wp_insert_post(array(
+            'post_title'     => __('Payment Confirmation', 'wp-smartpay'),
+            'post_content'   => '<!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->',
+            'post_status'    => 'publish',
+            'post_author'    => \get_current_user_id(),
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+        ));
+
+        $payment_failure = wp_insert_post(array(
+            'post_title'     => __('Payment Failed', 'wp-smartpay'),
+            'post_content'   => sprintf(__("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\nWe're sorry, but your transaction failed to process. Please try again or contact site support.", 'wp-smartpay'), '[smartpay_payment_error show_to="admin"]' . "\n\n"),
+            'post_status'    => 'publish',
+            'post_author'    => \get_current_user_id(),
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+        ));
+
+        $options = array(
+            'payment_success_page'  => $payment_receipt,
+            'payment_failure_page'  => $payment_failure,
+        );
+
+        update_option('smartpay_settings', $options);
     }
 
     // public function enqueue_smartpay_styles()
