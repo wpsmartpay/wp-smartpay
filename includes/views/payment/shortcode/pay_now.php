@@ -3,7 +3,7 @@
 <p>Payment type : <?php echo 'recurring' == $payment_type  ? 'Subscription' : 'One Time' ?></p>
 <br>
 
-<form action="<?php echo home_url('smartpay-checkout'); ?>" method="POST">
+<form action="<?php echo home_url('smartpay-payment'); ?>" method="POST">
 
     <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
@@ -13,17 +13,27 @@
     <label for="first_name">Payment by</label>
     <?php
 
-    $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
+    $has_payment_error = false;
+    $gateways = smartpay_get_enabled_payment_gateways(true);
 
-    foreach (smartpay_get_enabled_payment_gateways(true) as $gateway_id => $gateway) :
+    if (count($gateways)) :
 
-        $checked = checked($gateway_id, $chosen_gateway, false);
+        $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
 
-        echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">';
-        echo '<input type="radio" name="gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . $checked . '>' . esc_html($gateway['checkout_label']);
-        echo '</label>';
+        foreach ($gateways as $gateway_id => $gateway) :
 
-    endforeach;
+            $checked = checked($gateway_id, $chosen_gateway, false);
+
+            echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">';
+            echo '<input type="radio" name="gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . $checked . '>' . esc_html($gateway['checkout_label']);
+            echo '</label>';
+
+        endforeach;
+
+    else :
+        $has_payment_error = true;
+        echo 'You must enable a payment gateway to proceed a payment.';
+    endif;
     ?>
     <br>
 
@@ -39,5 +49,6 @@
     <input type="email" name="email" id="email" placeholder="Email" required>
     <br>
 
-    <button type="submit"> <?php echo $payment_button_text ?: 'Pay Now' ?></button>
+    <button type="submit" <?php if ($has_payment_error) echo 'disabled'; ?>>
+        <?php echo $payment_button_text ?: 'Pay Now' ?></button>
 </form>
