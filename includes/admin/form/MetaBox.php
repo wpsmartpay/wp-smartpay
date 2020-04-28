@@ -96,48 +96,48 @@ final class MetaBox
                         'type'              => 'text',
                         'placeholder'       => 'Pay with Paddle',
                     ),
-                    '_form_payment_button_processing_text'     => array(
-                        'id'                => '_form_payment_button_processing_text',
-                        'name'              => __('Payment Button Processing Text', 'wp-smartpay'),
-                        'type'              => 'text',
-                        'placeholder'       => 'Please wait...',
-                    ),
-                    '_form_payment_button_style'    => array(
-                        'id'                => '_form_payment_button_style',
-                        'name'              => __('Payment Button Style', 'wp-smartpay'),
-                        'type'              => 'radio',
-                        'options'           => array(
-                            'paddle_green'      => array(
-                                'name'      => __('Paddle Green', 'wp-smartpay'),
-                            ),
-                            'site_default'             => array(
-                                'name'      => __('Site Default', 'wp-smartpay'),
-                            ),
-                        ),
-                        'std'               => 'paddle_green',
-                    ),
+                    // '_form_payment_button_processing_text'     => array(
+                    //     'id'                => '_form_payment_button_processing_text',
+                    //     'name'              => __('Payment Button Processing Text', 'wp-smartpay'),
+                    //     'type'              => 'text',
+                    //     'placeholder'       => 'Please wait...',
+                    // ),
+                    // '_form_payment_button_style'    => array(
+                    //     'id'                => '_form_payment_button_style',
+                    //     'name'              => __('Payment Button Style', 'wp-smartpay'),
+                    //     'type'              => 'radio',
+                    //     'options'           => array(
+                    //         'paddle_green'      => array(
+                    //             'name'      => __('Paddle Green', 'wp-smartpay'),
+                    //         ),
+                    //         'site_default'             => array(
+                    //             'name'      => __('Site Default', 'wp-smartpay'),
+                    //         ),
+                    //     ),
+                    //     'std'               => 'paddle_green',
+                    // ),
 
                     // Paddle Checkout Display
-                    '_form_paddle_checkout_image'     => array(
-                        'id'                => '_form_paddle_checkout_image',
-                        'name'              => __('Paddle checkout image', 'wp-smartpay'),
-                        'type'              => 'text',
-                        'placeholder'       => 'Image link',
-                    ),
-                    '_form_paddle_checkout_location'    => array(
-                        'id'                => '_form_paddle_checkout_location',
-                        'name'              => __('Paddle checkout location', 'wp-smartpay'),
-                        'type'              => 'radio',
-                        'options'           => array(
-                            'on_site'      => array(
-                                'name'      => __('On site', 'wp-smartpay'),
-                            ),
-                            'paddle_checkout'             => array(
-                                'name'      => __('Paddle checkout', 'wp-smartpay'),
-                            ),
-                        ),
-                        'std'               => 'on_site',
-                    ),
+                    // '_form_paddle_checkout_image'     => array(
+                    //     'id'                => '_form_paddle_checkout_image',
+                    //     'name'              => __('Paddle checkout image', 'wp-smartpay'),
+                    //     'type'              => 'text',
+                    //     'placeholder'       => 'Image link',
+                    // ),
+                    // '_form_paddle_checkout_location'    => array(
+                    //     'id'                => '_form_paddle_checkout_location',
+                    //     'name'              => __('Paddle checkout location', 'wp-smartpay'),
+                    //     'type'              => 'radio',
+                    //     'options'           => array(
+                    //         'on_site'      => array(
+                    //             'name'      => __('On site', 'wp-smartpay'),
+                    //         ),
+                    //         'paddle_checkout'             => array(
+                    //             'name'      => __('Paddle checkout', 'wp-smartpay'),
+                    //         ),
+                    //     ),
+                    //     'std'               => 'on_site',
+                    // ),
                 )
             );
 
