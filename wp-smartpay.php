@@ -165,27 +165,65 @@ final class SmartPay
             add_option('smartpay_settings');
         }
 
-        $payment_receipt = wp_insert_post(array(
-            'post_title'     => __('Payment Confirmation', 'wp-smartpay'),
-            'post_content'   => '<!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->',
-            'post_status'    => 'publish',
-            'post_author'    => \get_current_user_id(),
-            'post_type'      => 'page',
-            'comment_status' => 'closed',
-        ));
+        $current_options = get_option('smartpay_settings', array());
 
-        $payment_failure = wp_insert_post(array(
-            'post_title'     => __('Payment Failed', 'wp-smartpay'),
-            'post_content'   => sprintf(__("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\nWe're sorry, but your transaction failed to process. Please try again or contact site support.", 'wp-smartpay'), '[smartpay_payment_error show_to="admin"]' . "\n\n"),
-            'post_status'    => 'publish',
-            'post_author'    => \get_current_user_id(),
-            'post_type'      => 'page',
-            'comment_status' => 'closed',
-        ));
+        // Checks if the purchase page option exists
+        $payment_page = array_key_exists('payment_page', $current_options) ? get_post($current_options['payment_page']) : false;
+        if (empty($payment_page)) {
+            // Checkout Page
+            $payment_page = wp_insert_post(
+                array(
+                    'post_title'     => __('SmartPay Payment', 'wp-smartpay'),
+                    'post_name' => 'smartpay-payment',
+                    'post_content'   => '',
+                    'post_status'    => 'publish',
+                    'post_author'    => 1,
+                    'post_type'      => 'page',
+                    'comment_status' => 'closed'
+                )
+            );
+        }
+
+        $payment_page = isset($payment_page) ? $payment_page : $current_options['payment_page'];
+
+        $payment_success_page = array_key_exists('payment_success_page', $current_options) ? get_post($current_options['payment_success_page']) : false;
+        if (empty($payment_success_page)) {
+            // Payment Confirmation (Success) Page
+            $payment_success_page = wp_insert_post(
+                array(
+                    'post_title'     => __('Payment Confirmation', 'wp-smartpay'),
+                    'post_content'   => __('Thank you for your payment.', 'wp-smartpay') . "\n <!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
+                    'post_status'    => 'publish',
+                    'post_author'    => get_current_user_id(),
+                    'post_type'      => 'page',
+                    'post_parent'    => $payment_page,
+                    'comment_status' => 'closed'
+                )
+            );
+        }
+
+        $payment_failure_page = array_key_exists('payment_failure_page_page', $current_options) ? get_post($current_options['payment_failure_page_page']) : false;
+        if (empty($payment_failure_page)) {
+            // Payment Confirmation (Success) Page
+            $payment_failure_page = wp_insert_post(
+                array(
+                    'post_title'     => __('Payment Failed', 'wp-smartpay'),
+                    'post_content'   => __('We\'re sorry, but your transaction failed to process. Please try again or contact site support.', 'wp-smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
+                    'post_status'    => 'publish',
+                    'post_author'    => get_current_user_id(),
+                    'post_type'      => 'page',
+                    'post_parent'    => $payment_page,
+                    'comment_status' => 'closed'
+                )
+            );
+        }
 
         $options = array(
-            'payment_success_page'  => $payment_receipt,
-            'payment_failure_page'  => $payment_failure,
+            'payment_page'          => $payment_page,
+            'payment_success_page'  => $payment_success_page,
+            'payment_failure_page'  => $payment_failure_page,
+            // 'gateways'      => ['paddle' => 1],
+            // 'default_gateway'       => 'paddle'
         );
 
         update_option('smartpay_settings', $options);
