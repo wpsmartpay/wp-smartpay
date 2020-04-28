@@ -48,9 +48,17 @@ function smartpay_get_option($key = '', $default = false)
     return $value;
 }
 
-function smartpay_gateways()
+function smartpay_payment_gateways()
 {
-    return Gateway::gateways();
+    // Default, built-in gateways
+    $gateways = array(
+        'paddle' => array(
+            'admin_label'    => __('Paddle', 'wp-smartpay'),
+            'checkout_label' => __('Paddle', 'wp-smartpay'),
+        ),
+    );
+
+    return apply_filters('smartpay_payment_gateways', $gateways);
 }
 
 function smartpay_get_currency_symbol($currency = 'USD')
@@ -272,4 +280,56 @@ function smartpay_sanitize_key($key)
 {
     $key = preg_replace('/[^a-zA-Z0-9_\-\.\:\/]/', '', $key);
     return $key;
+}
+
+function smartpay_get_enabled_payment_gateways($sort = false)
+{
+    $gateways = smartpay_payment_gateways();
+
+    $enabled  = (array) smartpay_get_option('enabled_gateways', false);
+
+    // var_dump($enabled);
+    // exit();
+
+    $gateway_list = array();
+
+    foreach ($gateways as $key => $gateway) {
+        if (isset($enabled[$key]) && $enabled[$key] == 1) {
+            $gateway_list[$key] = $gateway;
+        }
+    }
+
+    if (true === $sort) {
+        // Reorder our gateways so the default is first
+        $default_gateway_id = smartpay_get_default_gateway();
+
+        if (smartpay_is_gateway_active($default_gateway_id)) {
+            $default_gateway    = array($default_gateway_id => $gateway_list[$default_gateway_id]);
+            unset($gateway_list[$default_gateway_id]);
+
+            $gateway_list = array_merge($default_gateway, $gateway_list);
+        }
+    }
+
+    return $gateway_list;
+}
+
+function smartpay_is_gateway_active($gateway)
+{
+    $gateways = smartpay_get_enabled_payment_gateways();
+    $is_active = array_key_exists($gateway, $gateways);
+    return $is_active;
+}
+
+function smartpay_get_default_gateway()
+{
+    $default = smartpay_get_option('default_gateway', 'paddle');
+
+    if (!smartpay_is_gateway_active($default)) {
+        $gateways = smartpay_get_enabled_payment_gateways();
+        $gateways = array_keys($gateways);
+        $default  = reset($gateways);
+    }
+
+    return $default;
 }

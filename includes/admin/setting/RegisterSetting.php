@@ -187,23 +187,52 @@ final class RegisterSetting
             'gateways' => apply_filters(
                 'smartpay_settings_gateways',
                 array(
-                    'main' => array(),
-                )
-            ),
-            /** Emails Settings */
-            'emails' => apply_filters(
-                'smartpay_settings_emails',
-                array(
-                    'main' => array(),
+                    'main' => array(
+                        'test_mode' => array(
+                            'id'   => 'test_mode',
+                            'name' => __('Test Mode', 'wp-smartpay'),
+                            'desc' => __('<i>Active</i></i><br><br>While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'wp-smartpay'),
+                            'type' => 'checkbox',
+                        ),
+                        'enabled_gateways' => array(
+                            'id'      => 'enabled_gateways',
+                            'name'    => __('Payment Gateways', 'wp-smartpay'),
+                            'desc'    => __('Choose the payment gateways you want to enable.', 'wp-smartpay'),
+                            'type'    => 'gateways',
+                            'options' => smartpay_payment_gateways(),
+                        ),
+                        'default_gateway' => array(
+                            'id'      => 'default_gateway',
+                            'name'    => __('Default Gateway', 'wp-smartpay'),
+                            'desc'    => __('<br><br><i>This gateway will be loaded automatically with the checkout page.</i>', 'wp-smartpay'),
+                            'type'    => 'gateway_select',
+                            'options' => smartpay_get_enabled_payment_gateways(),
+                            'std'     => 'paddle',
+                        ),
+                    ),
                 )
             ),
             /** License Settings */
-            'licenses' => apply_filters(
-                'smartpay_settings_licenses',
+            'extensions' => apply_filters(
+                'smartpay_settings_extensions',
                 array(
                     'main' => array(),
                 )
             ),
+            // /** Emails Settings */
+            // 'emails' => apply_filters(
+            //     'smartpay_settings_emails',
+            //     array(
+            //         'main' => array(),
+            //     )
+            // ),
+            /** License Settings */
+            // 'licenses' => apply_filters(
+            //     'smartpay_settings_licenses',
+            //     array(
+            //         'main' => array(),
+            //     )
+            // ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -254,9 +283,12 @@ final class RegisterSetting
             'emails'    => apply_filters('smartpay_settings_sections_emails', array(
                 'main'  => __('General', 'wp-smartpay'),
             )),
-            'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
+            'extensions'  => apply_filters('smartpay_settings_sections_extensions', array(
                 'main'  => __('General', 'wp-smartpay'),
             )),
+            // 'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
+            //     'main'  => __('General', 'wp-smartpay'),
+            // )),
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -267,8 +299,9 @@ final class RegisterSetting
         $tabs = array();
         $tabs['general']  = __('General', 'wp-smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'wp-smartpay');
-        $tabs['emails']   = __('Emails', 'wp-smartpay');
-        $tabs['licenses']   = __('Licenses', 'wp-smartpay');
+        $tabs['extensions']   = __('Extensions', 'wp-smartpay');
+        // $tabs['emails']   = __('Emails', 'wp-smartpay');
+        // $tabs['licenses']   = __('Licenses', 'wp-smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
     }
@@ -451,6 +484,76 @@ final class RegisterSetting
         echo $html;
     }
 
+    public function settings_gateway_select_callback($args)
+    {
+        $smartpay_option = smartpay_get_option($args['id']);
+
+        $class = sanitize_html_class($args['field_class']);
+
+        $html = '';
+
+        $html .= '<select name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" class="' . $class . '">';
+
+        foreach ($args['options'] as $key => $option) :
+            $selected = isset($smartpay_option) ? selected($key, $smartpay_option, false) : '';
+            $html .= '<option value="' . smartpay_sanitize_key($key) . '"' . $selected . '>' . esc_html($option['admin_label']) . '</option>';
+        endforeach;
+
+        $html .= '</select>';
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        echo $html;
+    }
+
+    public function settings_checkbox_callback($args)
+    {
+        $smartpay_option = smartpay_get_option($args['id']);
+
+        if (isset($args['faux']) && true === $args['faux']) {
+            $name = '';
+        } else {
+            $name = 'name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"';
+        }
+
+        $class = sanitize_html_class($args['field_class']);
+
+        $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
+        $html     = '<input type="hidden"' . $name . ' value="-1" />';
+        $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
+        $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        echo apply_filters('smartpay_after_setting_output', $html, $args);
+    }
+
+    public function settings_gateways_callback($args)
+    {
+        global $smartpay_options;
+
+        $smartpay_option = smartpay_get_option($args['id']);
+
+        // var_dump($smartpay_option);
+
+        $class = edd_sanitize_html_class($args['field_class']);
+
+        $html = '<input type="hidden" name="edd_settings[' . smartpay_sanitize_key($args['id']) . ']" value="-1" />';
+
+        foreach ($args['options'] as $key => $option) :
+            if (isset($smartpay_option[$key])) {
+                $enabled = '1';
+            } else {
+                $enabled = null;
+            }
+
+            $html .= '<input name="smartpay_settings[' . esc_attr($args['id']) . '][' . smartpay_sanitize_key($key) . ']" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+            $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" style="font-style: italic;">' . esc_html($option['admin_label']) . '</label><br/>';
+        endforeach;
+
+        $url   = esc_url('https://wpsmartpay.com');
+        $html .= '<br><p class="description">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'wp-smartpay'), $url) . '</p>';
+
+        echo  $html;
+    }
+
     public function settings_sanitize_html_class($class = '')
     {
         if (is_string($class)) {
@@ -474,7 +577,6 @@ final class RegisterSetting
 
     public function settings_page_select_callback($args)
     {
-
         $selected = smartpay_get_option($args['id']) ?? 0;
 
         $args = array(
@@ -543,7 +645,7 @@ final class RegisterSetting
 
         $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
         $html = '<input type="text" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" class="' . $class . '" name="smartpay_settings[' . esc_attr($args['id']) . ']" value="' . esc_attr(stripslashes($value)) . '"/>';
-        $html .= '<span>&nbsp;<input type="button" class="smartpay_settings_upload_button button-secondary" value="' . __('Upload File', 'easy-digital-downloads') . '"/></span>';
+        $html .= '<span>&nbsp;<input type="button" class="smartpay_settings_upload_button button-secondary" value="' . __('Upload File', 'wp-smartpay') . '"/></span>';
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</label>';
 
         echo $html;
