@@ -43,7 +43,7 @@ final class Payment
 
     public function process_payment()
     {
-        if ('smartpay-checkout' === $this->get_relative_url_path()) {
+        if ('smartpay-payment' === $this->get_relative_url_path()) {
 
             if (!isset($_POST['smartpay_process_payment']) || !wp_verify_nonce($_POST['smartpay_process_payment'], 'smartpay_process_payment')) {
                 wp_redirect(home_url('/'));
