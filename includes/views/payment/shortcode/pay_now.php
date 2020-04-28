@@ -11,18 +11,20 @@
     <input type="hidden" name="amount" value="<?php echo $amount ?>">
 
     <label for="first_name">Payment by</label>
-    <label for="gateway_paddle">
-        <input type="radio" name="gateway" id="gateway_paddle" value="paddle">
-        Paddle
-    </label>
-    <label for="gateway_bkash">
-        <input type="radio" name="gateway" id="gateway_bkash" value="bkash">
-        bKash
-    </label>
-    <label for="gateway_amar_pay">
-        <input type="radio" name="gateway" id="gateway_amar_pay" value="amar_pay">
-        Amar Pay
-    </label>
+    <?php
+
+    $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
+
+    foreach (smartpay_get_enabled_payment_gateways(true) as $gateway_id => $gateway) :
+
+        $checked = checked($gateway_id, $chosen_gateway, false);
+
+        echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">';
+        echo '<input type="radio" name="gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . $checked . '>' . esc_html($gateway['checkout_label']);
+        echo '</label>';
+
+    endforeach;
+    ?>
     <br>
 
     <label for="first_name">First Name</label>
