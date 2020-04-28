@@ -79,6 +79,7 @@ final class PaymentForm
             'name' => __('Name'),
             'email' => __('Email'),
             'amount' => __('Amount'),
+            'gateway' => __('Gateway'),
             'status' => __('Status'),
             'date' => __('Date'),
         ];
@@ -89,24 +90,28 @@ final class PaymentForm
         switch ($column) {
             case 'id':
                 echo $post_id;
-
                 break;
+
             case 'name':
                 echo get_post_meta($post_id, '_first_name', true) . ' ' . get_post_meta($post_id, '_last_name', true);
-
                 break;
+
             case 'email':
                 echo get_post_meta($post_id, '_email', true);
-
                 break;
+
             case 'amount':
-                echo '$ ' . number_format(get_post_meta($post_id, '_amount', true) ?? 0, 2);
-
+                echo smartpay_amount_format(get_post_meta($post_id, '_amount', true));
                 break;
+
+            case 'gateway':
+                echo get_post_meta($post_id, '_gateway', true);
+                break;
+
             case 'status':
                 echo ucfirst(get_post_status($post_id));
-
                 break;
+
             default:
                 break;
         }
