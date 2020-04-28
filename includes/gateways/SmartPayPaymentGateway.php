@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Gateways;
 if (!defined('ABSPATH')) {
     exit;
 }
-abstract class PaymentGateway
+abstract class SmartPayPaymentGateway
 {
     /**
      * Construct Paddle class.
@@ -24,7 +24,7 @@ abstract class PaymentGateway
         //
     }
 
-    public function process_payment()
+    public function process_payment($payment_data)
     {
         //
     }

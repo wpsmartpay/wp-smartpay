@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Gateways;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Paddle extends PaymentGateway
+final class Paddle extends SmartPayPaymentGateway
 {
     /**
      * The single instance of this class
@@ -101,7 +101,6 @@ final class Paddle extends PaymentGateway
      */
     public function gateway_settings(array $settings): array
     {
-
         $gateway_settings = array(
             array(
                 'id'    => 'paddle_settings',
