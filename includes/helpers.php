@@ -286,10 +286,7 @@ function smartpay_get_enabled_payment_gateways($sort = false)
 {
     $gateways = smartpay_payment_gateways();
 
-    $enabled  = (array) smartpay_get_option('enabled_gateways', false);
-
-    // var_dump($enabled);
-    // exit();
+    $enabled  = (array) smartpay_get_option('gateways', false);
 
     $gateway_list = array();
 
@@ -317,6 +314,11 @@ function smartpay_get_enabled_payment_gateways($sort = false)
 function smartpay_is_gateway_active($gateway)
 {
     $gateways = smartpay_get_enabled_payment_gateways();
+
+    if (!is_array($gateways) || !count($gateways)) {
+        return;
+    }
+
     $is_active = array_key_exists($gateway, $gateways);
     return $is_active;
 }
