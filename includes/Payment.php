@@ -2,6 +2,8 @@
 
 namespace ThemesGrove\SmartPay;
 
+use ThemesGrove\SmartPay\Models\SmartPay_Payment;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
 final class Payment
@@ -20,6 +22,7 @@ final class Payment
     private function __construct()
     {
         add_action('init', [$this, 'process_payment']);
+        add_shortcode('smartpay_payment_receipt', [$this, 'smartpay_payment_receipt_shortcode']);
     }
 
     /**
@@ -43,7 +46,7 @@ final class Payment
 
     public function process_payment()
     {
-        if ('smartpay-payment' === $this->get_relative_url_path()) {
+        if (isset($_POST['smartpay_action']) && 'smartpay_process_payment' === $_POST['smartpay_action']) {
 
             if (!isset($_POST['smartpay_process_payment']) || !wp_verify_nonce($_POST['smartpay_process_payment'], 'smartpay_process_payment')) {
                 wp_redirect(home_url('/'));
@@ -57,11 +60,12 @@ final class Payment
 
             $payment_data = array(
                 'first_name' => $first_name,
-                'last_name' => $last_name,
-                'email' => $email,
-                'amount' => $amount,
-                'gateway' => $gateway,
-                'form_id' => $form_id,
+                'last_name'  => $last_name,
+                'email'      => $email,
+                'amount'     => $amount,
+                'currency'   => smartpay_get_currency() ?? 'USD',
+                'gateway'    => $gateway,
+                'form_id'    => $form_id,
             );
 
             // Send info to the gateway for payment processing
@@ -70,7 +74,6 @@ final class Payment
             return;
         }
     }
-
 
     private function _send_to_gateway($gateway, $payment_data)
     {
@@ -85,7 +88,6 @@ final class Payment
 
     public static function insert($payment_data)
     {
-
         if (!isset($payment_data['gateway_nonce']) || !wp_verify_nonce($payment_data['gateway_nonce'], 'smartpay-gateway')) {
             return false;
         }
@@ -105,6 +107,7 @@ final class Payment
             add_post_meta($payment_id, '_last_name', $payment_data['last_name']);
             add_post_meta($payment_id, '_email', $payment_data['email']);
             add_post_meta($payment_id, '_amount', $payment_data['amount']);
+            add_post_meta($payment_id, '_currency', smartpay_get_currency() ?? 'USD');
             add_post_meta($payment_id, '_gateway', $payment_data['gateway']);
             add_post_meta($payment_id, '_form_id', $payment_data['form_id']);
 
@@ -115,8 +118,12 @@ final class Payment
         return $payment_id;
     }
 
-    private function get_relative_url_path()
+    function smartpay_payment_receipt_shortcode($atts, $content = null)
     {
-        return trim(add_query_arg(NULL, NULL), "/\\");
+        ob_start();
+
+        echo smartpay_view_render('payment/shortcode/receipt');
+
+        return ob_get_clean();
     }
 }

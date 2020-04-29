@@ -3,12 +3,13 @@
 <p>Payment type : <?php echo 'recurring' == $payment_type  ? 'Subscription' : 'One Time' ?></p>
 <br>
 
-<form action="<?php echo home_url('smartpay-payment'); ?>" method="POST">
+<form action="<?php echo $form_action; ?>" method="POST">
 
     <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
     <input type="hidden" name="form_id" value="<?php echo $form_id ?>">
     <input type="hidden" name="amount" value="<?php echo $amount ?>">
+    <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
 
     <label for="first_name">Payment by</label>
     <?php

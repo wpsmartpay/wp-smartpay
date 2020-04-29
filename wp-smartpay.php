@@ -117,6 +117,10 @@ final class SmartPay
      */
     private function init_actions()
     {
+        if (!session_id()) {
+            session_start();
+        }
+
         global $smartpay_options;
 
         $smartpay_options = Setting::get_settings();

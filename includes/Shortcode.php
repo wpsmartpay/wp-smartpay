@@ -96,20 +96,25 @@ final class Shortcode
 
     public static function render_html($form)
     {
-        $data = [
-            'form_id'                           => $form->ID,
-            'amount'                            => get_post_meta($form->ID, '_form_amount', true),
-            'payment_type'                      => get_post_meta($form->ID, '_form_payment_type', true),
-            'amount'                            => get_post_meta($form->ID, '_form_amount', true),
-            'payment_button_text'               => get_post_meta($form->ID, '_form_payment_button_text', true),
-            'payment_button_processing_text'    => get_post_meta($form->ID, '_form_payment_button_processing_text', true),
-            'payment_button_style'              => get_post_meta($form->ID, '_form_payment_button_style', true),
-            'paddle_checkout_image'             => get_post_meta($form->ID, '_form_paddle_checkout_image', true),
-            'paddle_checkout_location'          => get_post_meta($form->ID, '_form_paddle_checkout_location', true),
-        ];
-        // var_dump($data);
-        // die();
 
-        echo smartpay_view_render('payment/shortcode/pay_now', $data);
+        $payment_page = smartpay_get_option('payment_page', 0);
+        if ($payment_page) {
+            $data = [
+                'form_id'                           => $form->ID,
+                'form_action'                       => get_permalink(absint($payment_page)),
+                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
+                'payment_type'                      => get_post_meta($form->ID, '_form_payment_type', true),
+                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
+                'payment_button_text'               => get_post_meta($form->ID, '_form_payment_button_text', true),
+                'payment_button_processing_text'    => get_post_meta($form->ID, '_form_payment_button_processing_text', true),
+                'payment_button_style'              => get_post_meta($form->ID, '_form_payment_button_style', true),
+                'paddle_checkout_image'             => get_post_meta($form->ID, '_form_paddle_checkout_image', true),
+                'paddle_checkout_location'          => get_post_meta($form->ID, '_form_paddle_checkout_location', true),
+            ];
+
+            echo smartpay_view_render('payment/shortcode/pay_now', $data);
+        } else {
+            echo 'Please setup your payment page.';
+        }
     }
 }

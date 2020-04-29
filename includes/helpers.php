@@ -61,6 +61,12 @@ function smartpay_payment_gateways()
     return apply_filters('smartpay_payment_gateways', $gateways);
 }
 
+function smartpay_get_currency()
+{
+    $currency = smartpay_get_option('currency', 'USD');
+    return $currency;
+}
+
 function smartpay_get_currency_symbol($currency = 'USD')
 {
     $currencies = smartpay_get_currencies();
@@ -329,4 +335,9 @@ function smartpay_is_test_mode()
 {
     $is_test_mode = smartpay_get_option('test_mode', false);
     return (bool)  $is_test_mode;
+}
+
+function smartpay_get_purchase_session()
+{
+    return $_SESSION['smartpay_payment_id'] ?? false;
 }
