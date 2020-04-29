@@ -65,10 +65,22 @@ final class Payment
             );
 
             // Send info to the gateway for payment processing
-            smartpay_send_to_gateway($gateway, $payment_data);
+            $this->_send_to_gateway($gateway, $payment_data);
 
             return;
         }
+    }
+
+
+    private function _send_to_gateway($gateway, $payment_data)
+    {
+
+        $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
+
+        // $gateway must match the ID used when registering the gateway
+        do_action('smartpay_' . $gateway . '_process_payment', $payment_data);
+
+        die();
     }
 
     public static function insert($payment_data)

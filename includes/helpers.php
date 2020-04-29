@@ -248,17 +248,6 @@ function smartpay_insert_payment($payment_data)
     return Payment::insert($payment_data);
 }
 
-
-function smartpay_send_to_gateway($gateway, $payment_data)
-{
-    $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
-
-    // $gateway must match the ID used when registering the gateway
-    do_action('smartpay_' . $gateway . '_process_payment', $payment_data);
-
-    return;
-}
-
 function smartpay_die($message = '', $title = '', $status = 400)
 {
     wp_die($message, $title, array('response' => $status));
@@ -334,4 +323,10 @@ function smartpay_get_default_gateway()
     }
 
     return $default;
+}
+
+function smartpay_is_test_mode()
+{
+    $is_test_mode = smartpay_get_option('test_mode', false);
+    return (bool)  $is_test_mode;
 }
