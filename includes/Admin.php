@@ -2,6 +2,7 @@
 
 namespace ThemesGrove\SmartPay;
 
+use ThemesGrove\SmartPay\Admin\AdminNotices;
 use ThemesGrove\SmartPay\Admin\Setting;
 use ThemesGrove\SmartPay\Admin\PaymentForm;
 
@@ -24,6 +25,8 @@ final class Admin
      */
     private function __construct()
     {
+        AdminNotices::instance();
+
         Setting::instance();
 
         PaymentForm::instance();
