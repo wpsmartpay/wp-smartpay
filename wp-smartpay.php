@@ -192,7 +192,7 @@ final class SmartPay
             $payment_success_page = wp_insert_post(
                 array(
                     'post_title'     => __('Payment Confirmation', 'wp-smartpay'),
-                    'post_content'   => __('Thank you for your payment.', 'wp-smartpay') . "\n <!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
+                    'post_content'   => "<!-- wp:paragraph --><p>Thank you for your payment.</p><!-- /wp:paragraph --> <!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
                     'post_type'      => 'page',
@@ -208,7 +208,7 @@ final class SmartPay
             $payment_failure_page = wp_insert_post(
                 array(
                     'post_title'     => __('Payment Failed', 'wp-smartpay'),
-                    'post_content'   => __('We\'re sorry, but your transaction failed to process. Please try again or contact site support.', 'wp-smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
+                    'post_content'   => __('<!-- wp:paragraph --><p>We\'re sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->', 'wp-smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
                     'post_type'      => 'page',
@@ -222,8 +222,8 @@ final class SmartPay
             'payment_page'          => $payment_page,
             'payment_success_page'  => $payment_success_page,
             'payment_failure_page'  => $payment_failure_page,
-            // 'gateways'      => ['paddle' => 1],
-            // 'default_gateway'       => 'paddle'
+            'gateways'      => ['paddle' => 1],
+            'default_gateway'       => 'paddle'
         );
 
         update_option('smartpay_settings', $options);
