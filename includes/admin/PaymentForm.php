@@ -65,11 +65,12 @@ final class PaymentForm
         }
 
         // amount column
-        // TODO:: Update currency
         if ('amount' === $column) {
-            echo '$ ' . number_format(absint(get_post_meta($post_id, '_form_amount', true)) ?? 0, 2);
+            echo smartpay_amount_format(get_post_meta($post_id, '_form_amount', true));
         }
     }
+
+    // TODO: Add seperated class
 
     public function smartpay_payment_columns($columns)
     {
