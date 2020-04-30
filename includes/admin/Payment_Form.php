@@ -106,7 +106,7 @@ final class Payment_Form
                 break;
 
             case 'gateway':
-                echo get_post_meta($post_id, '_gateway', true);
+                echo smartpay_payment_gateways()[get_post_meta($post_id, '_gateway', true)]['admin_label'] ?? ucfirst(get_post_meta($post_id, '_gateway', true));
                 break;
 
             case 'status':
