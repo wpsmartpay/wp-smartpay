@@ -178,6 +178,10 @@ function smartpay_get_currencies()
             'name'   => esc_html__('ZAR'),
             'symbol' => '',
         ],
+        'BDT'        => [
+            'name'   => esc_html__('Bangladeshi taka'),
+            'symbol' => '&#2547;',
+        ],
     );
 }
 
@@ -195,17 +199,18 @@ function smartpay_amount_format($amount, $currency = '')
 
     if ($position == 'before') {
         switch ($currency) {
-            case "GBP":
-            case "BRL":
-            case "EUR":
-            case "USD":
-            case "AUD":
-            case "CAD":
-            case "HKD":
-            case "MXN":
-            case "NZD":
-            case "SGD":
-            case "JPY":
+            case 'GBP':
+            case 'BRL':
+            case 'EUR':
+            case 'USD':
+            case 'AUD':
+            case 'CAD':
+            case 'HKD':
+            case 'MXN':
+            case 'NZD':
+            case 'SGD':
+            case 'JPY':
+            case 'BDT':
                 $formatted = $symbol . $amount . ' ' . $currency;
                 break;
             default:
@@ -214,16 +219,17 @@ function smartpay_amount_format($amount, $currency = '')
         }
     } else {
         switch ($currency) {
-            case "GBP":
-            case "BRL":
-            case "EUR":
-            case "USD":
-            case "AUD":
-            case "CAD":
-            case "HKD":
-            case "MXN":
-            case "SGD":
-            case "JPY":
+            case 'GBP':
+            case 'BRL':
+            case 'EUR':
+            case 'USD':
+            case 'AUD':
+            case 'CAD':
+            case 'HKD':
+            case 'MXN':
+            case 'SGD':
+            case 'JPY':
+            case 'BDT':
                 $formatted = $currency . ' ' . $amount . $symbol;
                 break;
             default:
