@@ -44,8 +44,9 @@ class SmartPay_Payment extends Model
 
     public function complete_payment()
     {
+
         return wp_update_post(array(
-            'ID'          => $this->payment_id,
+            'ID'          => $this->id,
             'post_status' => 'publish',
         ));
     }
