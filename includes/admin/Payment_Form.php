@@ -102,7 +102,7 @@ final class Payment_Form
                 break;
 
             case 'amount':
-                echo smartpay_amount_format(get_post_meta($post_id, '_amount', true));
+                echo smartpay_amount_format(get_post_meta($post_id, '_amount', true), get_post_meta($post_id, '_currency', true));
                 break;
 
             case 'gateway':
