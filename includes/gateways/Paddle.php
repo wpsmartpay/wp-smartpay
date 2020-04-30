@@ -2,6 +2,7 @@
 
 namespace ThemesGrove\SmartPay\Gateways;
 
+use ThemesGrove\SmartPay\Models\SmartPay_Payment;
 use ThemeXpert\Paddle\Paddle as PaddleSDK;
 use ThemeXpert\Paddle\Util\Price as PaddleSDKPrice;
 use ThemeXpert\Paddle\Product\PayLink as PaddleSDKPayLink;
@@ -23,9 +24,9 @@ final class Paddle extends SmartPay_Payment_Gateway
      * @var object
      * @since 1.0.0
      */
-    private static $credentials;
+    private $credentials = null;
 
-    private $paddle_supported_currency = ['USD', 'EUR', 'GBP', 'ARS', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'HKD', 'HUF', 'INR', 'JPY', 'KRW', 'MXN', 'NZD', 'PLN', 'RUB', 'SEK', 'SGD', 'TWD', 'ZAR'];
+    private static $supported_currency = ['USD', 'EUR', 'GBP', 'ARS', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'HKD', 'HUF', 'INR', 'JPY', 'KRW', 'MXN', 'NZD', 'PLN', 'RUB', 'SEK', 'SGD', 'TWD', 'ZAR'];
 
     /**
      * Construct Paddle class.
@@ -35,9 +36,16 @@ final class Paddle extends SmartPay_Payment_Gateway
      */
     private function __construct()
     {
-        if (!in_array(strtoupper(smartpay_get_currency()), $this->paddle_supported_currency)) {
+        // You must add this line top of the constractor
+        add_action('smartpay_paddle_process_payment', [$this, 'process_payment']);
+
+        if (!smartpay_is_gateway_active('paddle')) {
+            return;
+        }
+
+        if (!in_array(strtoupper(smartpay_get_currency()), self::$supported_currency)) {
             add_action('admin_notices', [$this, 'unsupported_currency_notice']);
-            return false;
+            return;
         }
 
         // Initialize actions.
@@ -73,7 +81,6 @@ final class Paddle extends SmartPay_Payment_Gateway
     private function init_actions()
     {
         add_action('init', [$this, 'process_webhooks']);
-        add_action('smartpay_paddle_process_payment', [$this, 'process_payment']);
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
         add_filter('smartpay_after_payment_receipt', [$this, 'payment_receipt']);
@@ -106,6 +113,12 @@ final class Paddle extends SmartPay_Payment_Gateway
         }
 
         $payment_id = smartpay_insert_payment($payment_data);
+
+        if (!$payment_id) {
+            die('Can\'t insert payment.');
+            wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
+        }
+
         $payment_price = number_format($payment_data['amount'], 2);
 
         $pay_link_data = array(
@@ -127,8 +140,7 @@ final class Paddle extends SmartPay_Payment_Gateway
 
         // API request to create pay link
         $api_response_data = json_decode(PaddleSDKPayLink::create($pay_link_data));
-        // var_dump($api_response_data);
-        // die();
+
         // If Paylink created successfully
         if ($api_response_data && $api_response_data->success == true) {
             update_post_meta($payment_id, 'paddle_pay_link', $api_response_data->response->url);
@@ -161,7 +173,12 @@ final class Paddle extends SmartPay_Payment_Gateway
 
     private function _pay_now_content($payment_data)
     {
-        global $smartpay_options;
+
+        $vendor_id = smartpay_get_option('paddle_vendor_id');
+
+        if (empty($vendor_id)) {
+            die('Credentials error.');
+        }
 
         $paddle_pay_link = get_post_meta($payment_data->id, 'paddle_pay_link', true);
 
@@ -183,7 +200,7 @@ final class Paddle extends SmartPay_Payment_Gateway
             $content .= '<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script type="text/javascript">';
             $content .= 'jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
             $content .= 'Paddle.Setup({';
-            $content .= sprintf('vendor: %s', $smartpay_options['paddle_vendor_id']);
+            $content .= sprintf('vendor: %s', $vendor_id);
             $content .= ' });';
 
             // Open popup on page load
@@ -336,13 +353,6 @@ final class Paddle extends SmartPay_Payment_Gateway
             // TODO: Add smartpay payment error notice
             die('SmartPay-Paddle: Set credentials; You must enter your vendor id, auth codes and public key for Paddle in gateway settings.');
         }
-
-        // Get credentials.
-        self::$credentials = array(
-            'paddle_vendor_id'          => trim($vendor_id),
-            'paddle_vendor_auth_code'   => trim($vendor_auth_code),
-            'paddle_public_key'         => trim($public_key),
-        );
 
         PaddleSDK::setApiCredentials($vendor_id, $vendor_auth_code);
 
