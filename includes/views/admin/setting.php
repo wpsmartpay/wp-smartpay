@@ -1,14 +1,14 @@
 <?php
 
-use ThemesGrove\SmartPay\Admin\Setting\RegisterSetting;
+use ThemesGrove\SmartPay\Admin\Setting\Register_Setting;
 
-$settings_tabs  = RegisterSetting::settings_tabs();
-$all_settings   = RegisterSetting::get_registered_settings_sections();
+$settings_tabs  = Register_Setting::settings_tabs();
+$all_settings   = Register_Setting::get_registered_settings_sections();
 $active_tab     = sanitize_text_field($_GET['tab'] ?? null);
 $active_tab     = array_key_exists($active_tab, $settings_tabs) ? $active_tab : 'general';
-$sections       = RegisterSetting::settings_tab_sections($active_tab);
+$sections       = Register_Setting::settings_tab_sections($active_tab);
 $key            = !empty($sections) ? key($sections) : 'main';
-$section        = isset($_GET['section']) && ! empty($sections) && array_key_exists($_GET['section'], $sections) ? sanitize_text_field($_GET['section']) : $key;
+$section        = isset($_GET['section']) && !empty($sections) && array_key_exists($_GET['section'], $sections) ? sanitize_text_field($_GET['section']) : $key;
 
 $has_main_settings = !empty($all_settings[$active_tab]['main']) ? true : false;
 
@@ -45,50 +45,50 @@ ob_start();
     <h2><?php _e('SmartPay Settings', 'wp-smartpay'); ?></h2>
     <h2 class="nav-tab-wrapper">
         <?php
-            foreach ($settings_tabs as $tab_id => $tab_name) {
-                $tab_url = add_query_arg(array(
-                    'settings-updated' => false,
-                    'tab'              => $tab_id,
-                ));
+        foreach ($settings_tabs as $tab_id => $tab_name) {
+            $tab_url = add_query_arg(array(
+                'settings-updated' => false,
+                'tab'              => $tab_id,
+            ));
 
-                // Remove the section from the tabs so we always end up at the main section
-                $tab_url = remove_query_arg('section', $tab_url);
+            // Remove the section from the tabs so we always end up at the main section
+            $tab_url = remove_query_arg('section', $tab_url);
 
-                $active = $active_tab == $tab_id ? ' nav-tab-active' : '';
+            $active = $active_tab == $tab_id ? ' nav-tab-active' : '';
 
-                echo '<a href="' . esc_url($tab_url) . '" class="nav-tab' . $active . '">';
-                echo esc_html($tab_name);
-                echo '</a>';
-            }
+            echo '<a href="' . esc_url($tab_url) . '" class="nav-tab' . $active . '">';
+            echo esc_html($tab_name);
+            echo '</a>';
+        }
         ?>
     </h2>
 
     <?php
-        $number_of_sections = count($sections);
-        $number = 0;
-        if ($number_of_sections > 1) {
-            echo '<div class="wp-clearfix"><ul class="subsubsub">';
-            foreach ($sections as $section_id => $section_name) {
-                echo '<li>';
-                $number++;
-                $tab_url = add_query_arg(array(
-                    'settings-updated' => false,
-                    'tab' => $active_tab,
-                    'section' => $section_id
-                ));
-                $class = '';
-                if ($section == $section_id) {
-                    $class = 'current';
-                }
-                echo '<a class="' . $class . '" href="' . esc_url($tab_url) . '">' . $section_name . '</a>';
-
-                if ($number != $number_of_sections) {
-                    echo ' | ';
-                }
-                echo '</li>';
+    $number_of_sections = count($sections);
+    $number = 0;
+    if ($number_of_sections > 1) {
+        echo '<div class="wp-clearfix"><ul class="subsubsub">';
+        foreach ($sections as $section_id => $section_name) {
+            echo '<li>';
+            $number++;
+            $tab_url = add_query_arg(array(
+                'settings-updated' => false,
+                'tab' => $active_tab,
+                'section' => $section_id
+            ));
+            $class = '';
+            if ($section == $section_id) {
+                $class = 'current';
             }
-            echo '</ul></div>';
+            echo '<a class="' . $class . '" href="' . esc_url($tab_url) . '">' . $section_name . '</a>';
+
+            if ($number != $number_of_sections) {
+                echo ' | ';
+            }
+            echo '</li>';
         }
+        echo '</ul></div>';
+    }
     ?>
 
     <div id="tab_container" class="<?php echo esc_attr($active_tab . '-tab'); ?>">
@@ -96,14 +96,14 @@ ob_start();
             <form method="POST" action="options.php">
                 <table class="form-table">
                     <?php
-                        settings_fields('smartpay_settings');
-                        // do_settings_sections('edd_settings_' . $active_tab . '_' . $section);
-                        do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section);
+                    settings_fields('smartpay_settings');
+                    // do_settings_sections('edd_settings_' . $active_tab . '_' . $section);
+                    do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section);
 
-                        // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
-                        if (true === $override):
+                    // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
+                    if (true === $override) :
                     ?>
-                    <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
+                        <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                     <?php endif; ?>
                 </table>
                 <?php submit_button(); ?>

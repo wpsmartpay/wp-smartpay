@@ -10,7 +10,7 @@ use ThemeXpert\Paddle\Product\PayLink as PaddleSDKPayLink;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Paddle extends SmartPayPaymentGateway
+final class Paddle extends SmartPay_Payment_Gateway
 {
     /**
      * The single instance of this class

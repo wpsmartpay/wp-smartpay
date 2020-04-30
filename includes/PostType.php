@@ -2,7 +2,7 @@
 
 namespace ThemesGrove\SmartPay;
 
-use ThemesGrove\SmartPay\Admin\Form\MetaBox;
+use ThemesGrove\SmartPay\Admin\Form\Meta_Box;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
@@ -27,7 +27,7 @@ final class PostType
 
         add_filter('post_row_actions', [$this, 'remove_smartpay_post_type_inline_edit'], 10, 2);
 
-        MetaBox::instance();
+        Meta_Box::instance();
     }
 
     /**

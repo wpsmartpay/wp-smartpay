@@ -2,9 +2,9 @@
 
 namespace ThemesGrove\SmartPay;
 
-use ThemesGrove\SmartPay\Admin\AdminNotices;
+use ThemesGrove\SmartPay\Admin\Admin_Notices;
 use ThemesGrove\SmartPay\Admin\Setting;
-use ThemesGrove\SmartPay\Admin\PaymentForm;
+use ThemesGrove\SmartPay\Admin\Payment_Form;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -25,11 +25,11 @@ final class Admin
      */
     private function __construct()
     {
-        AdminNotices::instance();
+        Admin_Notices::instance();
 
         Setting::instance();
 
-        PaymentForm::instance();
+        Payment_Form::instance();
 
         add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts'], 100);
 

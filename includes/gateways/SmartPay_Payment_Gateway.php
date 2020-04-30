@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Gateways;
 if (!defined('ABSPATH')) {
     exit;
 }
-abstract class SmartPayPaymentGateway
+abstract class SmartPay_Payment_Gateway
 {
     /**
      * Construct Paddle class.

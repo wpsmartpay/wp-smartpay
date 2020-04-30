@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Admin;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class PaymentForm
+final class Payment_Form
 {
     /**
      * The single instance of this class.
@@ -14,7 +14,7 @@ final class PaymentForm
     private static $instance = null;
 
     /**
-     * Construct PaymentForm class.
+     * Construct Payment_Form class.
      *
      * @since 0.1
      */
@@ -28,18 +28,18 @@ final class PaymentForm
     }
 
     /**
-     * Main PaymentForm Instance.
+     * Main Payment_Form Instance.
      *
-     * Ensures that only one instance of PaymentForm exists in memory at any one
+     * Ensures that only one instance of Payment_Form exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
      *
-     * @return object|PaymentForm
+     * @return object|Payment_Form
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof PaymentForm)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Payment_Form)) {
             self::$instance = new self();
         }
 

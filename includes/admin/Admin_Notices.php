@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Admin;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class AdminNotices
+final class Admin_Notices
 {
     /**
      * The single instance of this class
@@ -14,7 +14,7 @@ final class AdminNotices
     private static $instance = null;
 
     /**
-     * Construct AdminNotices class.
+     * Construct Admin_Notices class.
      *
      * @since 0.1
      * @access private
@@ -26,18 +26,18 @@ final class AdminNotices
     }
 
     /**
-     * Main AdminNotices Instance.
+     * Main Admin_Notices Instance.
      *
-     * Ensures that only one instance of AdminNotices exists in memory at any one
+     * Ensures that only one instance of Admin_Notices exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
-     * @return object|AdminNotices
+     * @return object|Admin_Notices
      * @access public
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof AdminNotices)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Admin_Notices)) {
             self::$instance = new self();
         }
 
@@ -59,11 +59,11 @@ final class AdminNotices
         if (!count(smartpay_get_enabled_payment_gateways(true))) {
             ob_start();
 ?>
-<div class="error">
-    <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'wp-smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
-    </p>
-</div>
-<?php
+            <div class="error">
+                <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'wp-smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
+                </p>
+            </div>
+        <?php
             echo ob_get_clean();
         }
 
@@ -71,13 +71,12 @@ final class AdminNotices
         if ((smartpay_get_option('payment_page', '') == '' || 'trash' == get_post_status(smartpay_get_option('payment_page', ''))) && current_user_can('edit_pages') && !get_user_meta(get_current_user_id(), '_smartpay_set_checkout_dismissed')) {
             ob_start();
         ?>
-<div class="error">
-    <p><?php printf(__('No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'wp-smartpay'), admin_url('admin.php?page=smartpay-setting')); ?>
-    </p>
-    <p><a
-            href="<?php echo esc_url(add_query_arg(array('smartpay_action' => 'dismiss_notices', 'smartpay_notice' => 'set_checkout'))); ?>"><?php _e('Dismiss Notice', 'wp-smartpay'); ?></a>
-    </p>
-</div>
+            <div class="error">
+                <p><?php printf(__('No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'wp-smartpay'), admin_url('admin.php?page=smartpay-setting')); ?>
+                </p>
+                <p><a href="<?php echo esc_url(add_query_arg(array('smartpay_action' => 'dismiss_notices', 'smartpay_notice' => 'set_checkout'))); ?>"><?php _e('Dismiss Notice', 'wp-smartpay'); ?></a>
+                </p>
+            </div>
 <?php
             echo ob_get_clean();
         }

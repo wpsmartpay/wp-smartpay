@@ -2,7 +2,7 @@
 
 namespace ThemesGrove\SmartPay\Admin;
 
-use ThemesGrove\SmartPay\Admin\Setting\RegisterSetting;
+use ThemesGrove\SmartPay\Admin\Setting\Register_Setting;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -23,7 +23,7 @@ final class Setting
      */
     private function __construct()
     {
-        RegisterSetting::instance();
+        Register_Setting::instance();
     }
 
     /**

@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Admin\Setting;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class RegisterSetting
+final class Register_Setting
 {
     /**
      * The single instance of this class
@@ -14,7 +14,7 @@ final class RegisterSetting
     private static $instance = null;
 
     /**
-     * Construct RegisterSetting class.
+     * Construct Register_Setting class.
      *
      * @since 0.1
      * @access private
@@ -25,18 +25,18 @@ final class RegisterSetting
     }
 
     /**
-     * Main RegisterSetting Instance.
+     * Main Register_Setting Instance.
      *
-     * Ensures that only one instance of RegisterSetting exists in memory at any one
+     * Ensures that only one instance of Register_Setting exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
-     * @return object|RegisterSetting
+     * @return object|Register_Setting
      * @access public
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof RegisterSetting)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Register_Setting)) {
             self::$instance = new self();
         }
 

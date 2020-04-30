@@ -6,7 +6,7 @@ namespace ThemesGrove\SmartPay\Admin\Form;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class MetaBox
+final class Meta_Box
 {
     /**
      * The single instance of this class.
@@ -16,7 +16,7 @@ final class MetaBox
     private $post;
 
     /**
-     * Construct MetaBox class.
+     * Construct Meta_Box class.
      *
      * @since 0.1
      */
@@ -28,14 +28,14 @@ final class MetaBox
     }
 
     /**
-     * Main MetaBox Instance.
+     * Main Meta_Box Instance.
      *
-     * Ensures that only one instance of MetaBox exists in memory at any one
+     * Ensures that only one instance of Meta_Box exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
      *
-     * @return object|MetaBox
+     * @return object|Meta_Box
      */
     public static function instance()
     {
