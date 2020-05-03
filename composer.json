@@ -7,8 +7,11 @@
     "autoload": {
         "psr-4": {
             "ThemesGrove\\SmartPay\\": "includes/",
-            "ThemesGrove\\SmartPay\\Models\\": "includes/Models/",
-            "ThemesGrove\\SmartPay\\Gateways\\": "includes/gateways/"
+            "ThemesGrove\\SmartPay\\Admin\\": "includes/admin/",
+            "ThemesGrove\\SmartPay\\Admin\\Form\\": "includes/admin/form",
+            "ThemesGrove\\SmartPay\\Admin\\Setting\\": "includes/admin/setting",
+            "ThemesGrove\\SmartPay\\Gateways\\": "includes/gateways/",
+            "ThemesGrove\\SmartPay\\Models\\": "includes/Models/"
         },
         "files": [
             "includes/helpers.php"
