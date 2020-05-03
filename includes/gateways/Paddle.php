@@ -6,6 +6,7 @@ use ThemesGrove\SmartPay\Models\SmartPay_Payment;
 use ThemeXpert\Paddle\Paddle as PaddleSDK;
 use ThemeXpert\Paddle\Util\Price as PaddleSDKPrice;
 use ThemeXpert\Paddle\Product\PayLink as PaddleSDKPayLink;
+use ThemeXpert\Paddle\Verify as PaddleSDKVerify;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -17,14 +18,6 @@ final class Paddle extends SmartPay_Payment_Gateway
      * The single instance of this class
      */
     private static $instance = null;
-
-    /**
-     * Paddle API credentials.
-     *
-     * @var object
-     * @since 1.0.0
-     */
-    private $credentials = null;
 
     private static $supported_currency = ['USD', 'EUR', 'GBP', 'ARS', 'AUD', 'BRL', 'CAD', 'CHF', 'CNY', 'CZK', 'DKK', 'HKD', 'HUF', 'INR', 'JPY', 'KRW', 'MXN', 'NZD', 'PLN', 'RUB', 'SEK', 'SGD', 'TWD', 'ZAR'];
 
@@ -75,7 +68,7 @@ final class Paddle extends SmartPay_Payment_Gateway
      * Initialize wp actions.
      *
      * @access private
-     * @since 1.1.0
+     * @since 0.1
      * @return void
      */
     private function init_actions()
@@ -83,24 +76,17 @@ final class Paddle extends SmartPay_Payment_Gateway
         add_action('init', [$this, 'process_webhooks']);
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
-        add_filter('smartpay_after_payment_receipt', [$this, 'payment_receipt']);
+        add_filter('smartpay_payment_paddle_receipt', [$this, 'payment_receipt']);
     }
 
     /**
      * Process webhook requests.
      *
-     * @since 1.1.0
+     * @since 0.1
+     * @param array $payment_data
      * @return void
      * @access public
      */
-    public function process_webhooks()
-    {
-        if (isset($_GET['smartpay-listener']) && $_GET['smartpay-listener'] == 'paddle') {
-            echo 'paddle webhook';
-            die();
-        }
-    }
-
     public function process_payment($payment_data)
     {
         global $smartpay_options;
@@ -159,39 +145,52 @@ final class Paddle extends SmartPay_Payment_Gateway
         return wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
     }
 
-    public function payment_receipt($payment_data)
+    /**
+     * Payment receipt.
+     *
+     * @since 0.1
+     * @param object $payment
+     * @return void
+     * @access public
+     */
+    public function payment_receipt($payment)
     {
-        if ('paddle' != $payment_data->gateway) {
+        if ('paddle' != $payment->payment_gateway) {
             return;
         }
 
-        // if($payment_data[])
+        // if($payment[])
         // $payment_id = smartpay_get_purchase_session();
 
-        echo $this->_pay_now_content($payment_data);
+        echo $this->_pay_now_content($payment);
     }
 
-    private function _pay_now_content($payment_data)
+    /**
+     * Generate pay now content.
+     *
+     * @since 0.1
+     * @param object $payment
+     * @access private
+     */
+    private function _pay_now_content($payment)
     {
-
         $vendor_id = smartpay_get_option('paddle_vendor_id');
 
         if (empty($vendor_id)) {
             die('Credentials error.');
         }
 
-        $paddle_pay_link = get_post_meta($payment_data->id, 'paddle_pay_link', true);
+        $paddle_pay_link = get_post_meta($payment->ID, 'paddle_pay_link', true);
 
         if (!$paddle_pay_link) {
             die('Paddle pay link not found.');
-            return;
         }
 
-        if ('publish' != $payment_data->status) {
+        if ('publish' != $payment->status) {
             $content = '';
             $content .= '<p>' . __(
                 'Thank you for your order, please click the button below to pay with Paddle.',
-                'wp-smartpay-edd'
+                'wp-smartpay'
             ) . '</p>';
             $content .= '<div style="margin: 0 auto;text-align: center;">';
             $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', $paddle_pay_link);
@@ -215,10 +214,213 @@ final class Paddle extends SmartPay_Payment_Gateway
         }
     }
 
+
+    /**
+     * Process webhook requests.
+     *
+     * @since 0.1
+     * @return void
+     * @access public
+     */
+    public function process_webhooks()
+    {
+        if (isset($_GET['smartpay-listener']) && $_GET['smartpay-listener'] == 'paddle') {
+
+            // $payment = smartpay_get_payment(15);
+            // $payment->update_status('completed');
+
+            $signature = $_POST['p_signature'];
+            $web_hook_data = stripslashes_deep($_POST);
+            $identifier = $_GET['identifier'] ?? null;
+            $alert_name = $web_hook_data['alert_name'] ?? null;
+            $alert_id = $web_hook_data['alert_id'] ?? 'N/A';
+            $payment_id = absint($web_hook_data['passthrough'] ?? $_GET['payment-id'] ?? null);
+
+            $responsible_alerts = [
+                'payment_succeeded'
+            ];
+
+            // If not responsible for regular payment then return
+            if (!in_array($alert_name, $responsible_alerts) && ($identifier != $this->fulfillment_webhook_identifier)) {
+                return;
+            }
+
+            $payment = smartpay_get_payment($payment_id);
+
+            // If payment id not found
+            if (!$payment) {
+                echo __(sprintf(
+                    'SmartPay-Paddle: Webhook requested [%s]; Smartpay payment not found for #%s.',
+                    $alert_id,
+                    $payment_id
+                ), 'wp-smartpay');
+
+                die('Error.');
+            }
+
+            if (!$this->_set_credentials()) {
+                echo __(sprintf(
+                    'SmartPay-Paddle: Webhook requested [%s]; Payment #%s. API credentials not properly configured.',
+                    $alert_id,
+                    $payment_id
+                ), 'wp-smartpay');
+
+                die('Error.');
+            }
+
+            global $smartpay_options;
+
+            $public_key = $smartpay_options['paddle_public_key'] ?? null;
+
+            if (empty($signature) || !count($web_hook_data) || empty($public_key)) {
+                echo __(sprintf(
+                    'SmartPay-Paddle: Webhook requested [%s]; Signature, Webhook data or Public key can not be empty. Payment #%s.',
+                    $alert_id,
+                    $payment_id
+                ), 'wp-smartpay');
+
+                die('Error.');
+            }
+
+            try {
+                $verify_signature = PaddleSDKVerify::webHookSignature($signature, $web_hook_data, $public_key);
+
+                if ($verify_signature) {
+                    if (true == $verify_signature['success']) {
+
+                        // Fulfillment webhooks.
+                        if ($identifier == $this->fulfillment_webhook_identifier) {
+                            /* Sent when a one-time purchase order is processed for a product with webhook fulfillment enabled */
+
+                            if ($payment->update_status('publish')) {
+                                // Paddle transaction id.
+                                $paddle_order_id = sanitize_text_field($web_hook_data['p_order_id'] ?? null);
+
+                                if ($paddle_order_id) {
+                                    smartpay_set_payment_transaction_id($payment_id, $paddle_order_id);
+                                }
+
+                                // $payment->add_note(__('Payment completed by paddle fulfillment webhook.', 'wp-smartpay'));
+
+                                echo __(sprintf(
+                                    'SmartPay-Paddle: Fulfillment webhook requested [%s]; Payment #%s completed.',
+                                    $alert_id,
+                                    $payment_id
+                                ), 'wp-smartpay');
+
+                                die('Success.');
+                            } else {
+                                // $payment->add_note(__('Payment can not completed by paddle fulfillment webhook.', 'wp-smartpay'));
+
+                                echo __(sprintf(
+                                    'SmartPay-Paddle: Fulfillment webhook requested [%s]; Payment #%s can not complete.',
+                                    $alert_id,
+                                    $payment_id
+                                ), 'wp-smartpay');
+
+                                die('Error.');
+                            }
+                        } else {
+                            // Other Webhooks.
+
+                            // Paddle transaction id.
+                            $paddle_order_id = sanitize_text_field($web_hook_data['order_id'] ?? null);
+
+                            switch (strtolower($alert_name)) {
+
+                                case 'payment_succeeded':
+                                    /* Fired when a payment is made into your Paddle account. */
+
+                                    if ('publish' == smartpay_get_payment_status($payment_id)) {
+                                        echo __(sprintf(
+                                            'SmartPay-Paddle: Webhook requested [%s]; Payment #%s was completed before.',
+                                            $alert_id,
+                                            $payment_id
+                                        ), 'wp-smartpay');
+
+                                        die('Success.');
+                                    }
+
+                                    if ($payment->update_status('publish')) {
+                                        if ($paddle_order_id) {
+                                            smartpay_set_payment_transaction_id($payment_id, $paddle_order_id);
+                                        }
+
+                                        // $payment->add_note(__('Payment completed by paddle webhook.', 'wp-smartpay'));
+
+                                        echo __(sprintf(
+                                            'SmartPay-Paddle: Webhook requested [%s]; Payment #%s completed.',
+                                            $alert_id,
+                                            $payment_id
+                                        ), 'wp-smartpay');
+
+                                        die('Success.');
+                                    } else {
+                                        // $payment->add_note(__('Payment can not completed by paddle webhook.', 'wp-smartpay'));
+
+                                        echo __(sprintf(
+                                            'SmartPay-Paddle: Webhook requested [%s]; Payment #%s can not completed.',
+                                            $alert_id,
+                                            $payment_id
+                                        ), 'wp-smartpay');
+
+                                        die('Error.');
+                                    }
+                                    break;
+
+                                default:
+                                    echo __(sprintf(
+                                        'SmartPay-Paddle: Webhook requested [%s]; No action taken for payment #%s.',
+                                        $alert_id,
+                                        $payment_id
+                                    ), 'wp-smartpay');
+
+                                    die('Error.');
+                                    break;
+                            }
+                        }
+                    } else {
+                        // If signature is not valid
+                        echo __(sprintf(
+                            'SmartPay-Paddle: Webhook requested [%s]; Payment #%s. Webhook signature invalid. Errors: %s',
+                            $alert_id,
+                            $payment_id,
+                            json_encode($verify_signature['error']['message'])
+                        ), 'wp-smartpay');
+
+                        die('Error.');
+                    }
+                } else {
+                    // Other errors
+                    echo __(sprintf(
+                        'SmartPay-Paddle: Webhook requested [%s]; Payment #%s. Something went wrong! Error on checking Webhook signature.',
+                        $alert_id,
+                        $payment_id
+                    ), 'wp-smartpay');
+
+                    die('Error.');
+                }
+            } catch (Exception $e) {
+                // If fail to verify signature.
+                echo __(sprintf(
+                    'SmartPay-Paddle: Webhook requested [%s]; Payment #%s. Exception: %s.',
+                    $alert_id,
+                    $payment_id,
+                    var_dump($e)
+                ), 'wp-smartpay-woo');
+
+                die('Error.');
+            }
+
+            // Send responce.
+            die();
+        }
+    }
+
     /**
      * Add Gateway subsection
      *
-     * @since 1.0.0
+     * @since 0.1
      * @param array $sections Gateway subsections
      * @return array
      * @access public
@@ -234,7 +436,7 @@ final class Paddle extends SmartPay_Payment_Gateway
     /**
      * Register the gateway settings for Paddle
      *
-     * @since 1.1.0
+     * @since 0.1
      * @param array $settings
      * @return array
      * @access public
@@ -248,7 +450,6 @@ final class Paddle extends SmartPay_Payment_Gateway
                 'desc'  => __('Configure your Paddle Gateway Settings', 'wp-smartpay'),
                 'type'  => 'header'
             ),
-
             array(
                 'id'    => 'paddle_vendor_id',
                 'name'  => __('Vendor ID', 'wp-smartpay'),
@@ -337,7 +538,7 @@ final class Paddle extends SmartPay_Payment_Gateway
     /**
      * Set and check API credentials
      *
-     * @since 1.1.7
+     * @since 0.1
      * @return boolean
      * @access private
      */
