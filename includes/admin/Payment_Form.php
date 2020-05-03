@@ -94,19 +94,19 @@ final class Payment_Form
                 break;
 
             case 'name':
-                echo get_post_meta($post_id, '_first_name', true) . ' ' . get_post_meta($post_id, '_last_name', true);
+                echo get_post_meta($post_id, '_smartpay_payment_first_name', true) . ' ' . get_post_meta($post_id, '_smartpay_payment_last_name', true);
                 break;
 
             case 'email':
-                echo get_post_meta($post_id, '_email', true);
+                echo get_post_meta($post_id, '_smartpay_payment_email', true);
                 break;
 
             case 'amount':
-                echo smartpay_amount_format(get_post_meta($post_id, '_amount', true), get_post_meta($post_id, '_currency', true));
+                echo smartpay_amount_format(get_post_meta($post_id, '_smartpay_payment_amount', true), get_post_meta($post_id, '_smartpay_payment_currency', true));
                 break;
 
             case 'gateway':
-                echo smartpay_payment_gateways()[get_post_meta($post_id, '_gateway', true)]['admin_label'] ?? ucfirst(get_post_meta($post_id, '_gateway', true));
+                echo smartpay_payment_gateways()[get_post_meta($post_id, '_smartpay_payment_gateway', true)]['admin_label'] ?? ucfirst(get_post_meta($post_id, '_smartpay_payment_gateway', true));
                 break;
 
             case 'status':

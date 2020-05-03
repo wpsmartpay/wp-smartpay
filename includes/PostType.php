@@ -160,14 +160,14 @@ final class PostType
             // unset($actions['trash']);
             unset($actions['inline hide-if-no-js']);
 
-            $actions = array_merge($actions, array(
-                // TODO:: MAke dynamic
-                'manage' => sprintf(
-                    '<a href="%1$s">%2$s</a>',
-                    esc_url(''),
-                    'View details'
-                )
-            ));
+            // $actions = array_merge($actions, array(
+            //     // TODO:: MAke dynamic
+            //     'manage' => sprintf(
+            //         '<a href="%1$s">%2$s</a>',
+            //         esc_url(''),
+            //         'View details'
+            //     )
+            // ));
         }
 
         return $actions;

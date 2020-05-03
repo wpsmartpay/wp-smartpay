@@ -97,13 +97,12 @@ ob_start();
                 <table class="form-table">
                     <?php
                     settings_fields('smartpay_settings');
-                    // do_settings_sections('edd_settings_' . $active_tab . '_' . $section);
                     do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section);
 
                     // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
                     if (true === $override) :
                     ?>
-                        <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
+                    <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                     <?php endif; ?>
                 </table>
                 <?php submit_button(); ?>
