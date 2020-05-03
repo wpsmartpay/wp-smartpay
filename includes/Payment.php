@@ -59,13 +59,15 @@ final class Payment
             }
 
             $payment_data = array(
-                'first_name' => $first_name,
-                'last_name'  => $last_name,
-                'email'      => $email,
+                'form_id'    => $form_id,
+                'post_date'  => date('Y-m-d H:i:s', time()),
                 'amount'     => $amount,
                 'currency'   => smartpay_get_currency() ?? 'USD',
                 'gateway'    => $gateway,
-                'form_id'    => $form_id,
+                'first_name' => $first_name,
+                'last_name'  => $last_name,
+                'email'      => $email,
+                'key'        => strtolower(md5($email . date('Y-m-d H:i:s') . rand(1, 10))),
             );
 
             // Send info to the gateway for payment processing
@@ -88,34 +90,37 @@ final class Payment
 
     public static function insert($payment_data)
     {
-        if (!isset($payment_data['gateway_nonce']) || !wp_verify_nonce($payment_data['gateway_nonce'], 'smartpay-gateway')) {
+        if (empty($payment_data)) {
             return false;
         }
 
-        if (empty($payment_data['first_name']) || empty($payment_data['last_name']) || empty($payment_data['email']) || empty($payment_data['amount'])  || empty($payment_data['gateway']) || empty($payment_data['form_id'])) {
-            return false;
-        }
-        $payment_id = wp_insert_post(array(
-            'post_type' => 'smartpay_payment',
-            'post_status' => 'pending',
-            'comment_status' => 'closed',
-            'ping_status' => 'closed',
-        ));
+        $payment = new SmartPay_Payment();
 
-        if ($payment_id) {
-            add_post_meta($payment_id, '_first_name', $payment_data['first_name']);
-            add_post_meta($payment_id, '_last_name', $payment_data['last_name']);
-            add_post_meta($payment_id, '_email', $payment_data['email']);
-            add_post_meta($payment_id, '_amount', $payment_data['amount']);
-            add_post_meta($payment_id, '_currency', smartpay_get_currency() ?? 'USD');
-            add_post_meta($payment_id, '_gateway', $payment_data['gateway']);
-            add_post_meta($payment_id, '_form_id', $payment_data['form_id']);
+        $payment->form_id           = $payment_data['form_id'];
+        $payment->date           = $payment_data['post_date'];
+        $payment->amount           = $payment_data['amount'];
+        $payment->currency       = $payment_data['currency'] ?? smartpay_get_currency();
+        $payment->payment_gateway        = $payment_data['gateway'] ?? smartpay_get_default_gateway();
+        $payment->first_name     = $payment_data['first_name'];
+        $payment->last_name      = $payment_data['last_name'];
+        $payment->email          = $payment_data['email'];
+        $payment->key            = $payment_data['key'];
+        $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
+        $payment->parent_payment = !empty($payment_data['parent']) ? absint($payment_data['parent']) : '';
+        $payment->status         = !empty($payment_data['status']) ? $payment_data['status'] : 'pending';
+        $payment->save();
 
+        do_action('smartpay_insert_payment', $payment->ID, $payment_data);
+
+        if (!empty($payment->ID)) {
             // Add session
-            $_SESSION['smartpay_payment_id'] = $payment_id;
+            $_SESSION['smartpay_payment_id'] = $payment->ID;
+
+            return $payment->ID;
         }
 
-        return $payment_id;
+        // Return false if no payment was inserted
+        return false;
     }
 
     function smartpay_payment_receipt_shortcode($atts, $content = null)
