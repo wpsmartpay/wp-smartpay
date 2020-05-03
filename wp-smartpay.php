@@ -142,6 +142,7 @@ final class SmartPay
         register_activation_hook(__FILE__, [$this, 'activate']);
 
         // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
+
     }
 
     /**
@@ -196,11 +197,11 @@ final class SmartPay
             $payment_success_page = wp_insert_post(
                 array(
                     'post_title'     => __('Payment Confirmation', 'wp-smartpay'),
+                    'post_name' => 'smartpay-payment-confirmation',
                     'post_content'   => "<!-- wp:paragraph --><p>Thank you for your payment.</p><!-- /wp:paragraph --> <!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
                     'post_type'      => 'page',
-                    'post_parent'    => $payment_page,
                     'comment_status' => 'closed'
                 )
             );
@@ -212,11 +213,11 @@ final class SmartPay
             $payment_failure_page = wp_insert_post(
                 array(
                     'post_title'     => __('Payment Failed', 'wp-smartpay'),
+                    'post_name' => 'smartpay-payment-failed',
                     'post_content'   => __('<!-- wp:paragraph --><p>We\'re sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->', 'wp-smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
                     'post_type'      => 'page',
-                    'post_parent'    => $payment_page,
                     'comment_status' => 'closed'
                 )
             );
