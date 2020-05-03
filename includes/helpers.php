@@ -1,6 +1,7 @@
 <?php
 
 use ThemesGrove\SmartPay\Gateway;
+use ThemesGrove\SmartPay\Models\SmartPay_Payment;
 use ThemesGrove\SmartPay\Payment;
 use ThemesGrove\SmartPay\Setting;
 
@@ -260,6 +261,115 @@ function smartpay_insert_payment($payment_data)
     return Payment::insert($payment_data);
 }
 
+function smartpay_get_payment($payment_or_txn_id, $by_txn = false)
+{
+    if (!$payment_or_txn_id) {
+        return;
+    }
+
+    return new SmartPay_Payment($payment_or_txn_id, $by_txn = false);
+}
+
+/**
+ * Sets a Transaction ID in post meta for the given Payment ID
+ *
+ * @since  2.1
+ * @param int $payment_id Payment ID
+ * @param string $transaction_id The transaction ID from the gateway
+ * @return mixed Meta ID if successful, false if unsuccessful
+ */
+function smartpay_set_payment_transaction_id($payment_id = 0, $transaction_id = '')
+{
+    if (empty($payment_id) || empty($transaction_id)) {
+        return false;
+    }
+
+    $transaction_id = apply_filters('smartpay_set_payment_transaction_id', $transaction_id, $payment_id);
+
+    return smartpay_update_payment_meta($payment_id, '_smartpay_payment_transaction_id', $transaction_id);
+}
+
+/**
+ * Update the meta for a payment
+ * @param  integer $payment_id Payment ID
+ * @param  string  $meta_key   Meta key to update
+ * @param  string  $meta_value Value to update to
+ * @param  string  $prev_value Previous value
+ * @return mixed   Meta ID if successful, false if unsuccessful
+ */
+function smartpay_update_payment_meta($payment_id = 0, $meta_key = '', $meta_value = '', $prev_value = '')
+{
+    $payment = new SmartPay_Payment($payment_id);
+    return $payment->update_meta($meta_key, $meta_value, $prev_value);
+}
+
+
+/**
+ * Get Payment Status
+ *
+ * @since 1.0
+ *
+ * @param int  Payment ID
+ * @param bool   $return_label Whether to return the payment status or not
+ *
+ * @return bool|mixed if payment status exists, false otherwise
+ */
+function smartpay_get_payment_status($payment_id, $return_label = false)
+{
+    $payment = smartpay_get_payment($payment_id);
+
+    if (!is_object($payment)) {
+        return false;
+    }
+
+    if (true === $return_label) {
+        $status = smartpay_get_payment_status_label($payment->status);
+    } else {
+        $keys      = smartpay_get_payment_status_keys();
+        $found_key = array_search(strtolower($payment->status), $keys);
+        $status    = array_key_exists($found_key, $keys) ? $keys[$found_key] : false;
+    }
+
+    return !empty($status) ? $status : false;
+}
+
+/**
+ * Retrieves keys for all available statuses for payments
+ *
+ * @since 2.3
+ * @return array $payment_status All the available payment statuses
+ */
+function smartpay_get_payment_status_keys()
+{
+    $statuses = array_keys(smartpay_get_payment_statuses());
+    asort($statuses);
+
+    return array_values($statuses);
+}
+
+/**
+ * Given a payment status string, return the label for that string.
+ *
+ * @since 2.9.2
+ * @param string $status
+ *
+ * @return bool|mixed
+ */
+function smartpay_get_payment_status_label($status = '')
+{
+    $statuses = smartpay_get_payment_statuses();
+
+    if (!is_array($statuses) || empty($statuses)) {
+        return false;
+    }
+
+    if (array_key_exists($status, $statuses)) {
+        return $statuses[$status];
+    }
+
+    return false;
+}
+
 function smartpay_die($message = '', $title = '', $status = 400)
 {
     wp_die($message, $title, array('response' => $status));
@@ -345,5 +455,27 @@ function smartpay_is_test_mode()
 
 function smartpay_get_purchase_session()
 {
+    // TODO: Change to payment key
     return $_SESSION['smartpay_payment_id'] ?? false;
+}
+
+/**
+ * Retrieves all available statuses for payments.
+ *
+ * @since 1.0.8.1
+ * @return array $payment_status All the available payment statuses
+ */
+function smartpay_get_payment_statuses()
+{
+    $payment_statuses = array(
+        'pending'   => __('Pending', 'wp-smartpay'),
+        'publish'   => __('Complete', 'wp-smartpay'),
+        'refunded'  => __('Refunded', 'wp-smartpay'),
+        'failed'    => __('Failed', 'wp-smartpay'),
+        'abandoned' => __('Abandoned', 'wp-smartpay'),
+        'revoked'   => __('Revoked', 'wp-smartpay'),
+        'processing' => __('Processing', 'wp-smartpay')
+    );
+
+    return apply_filters('smartpay_payment_statuses', $payment_statuses);
 }
