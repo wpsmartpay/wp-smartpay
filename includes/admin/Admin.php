@@ -117,8 +117,16 @@ final class Admin
 
         add_submenu_page(
             'smartpay',
-            'SmartPay - Setting',
-            'Setting',
+            __('SmartPay - Customers', 'wp-smartpay'),
+            __('Customers', 'wp-smartpay'),
+            'manage_options',
+            '#',
+        );
+
+        add_submenu_page(
+            'smartpay',
+            'SmartPay - Settings',
+            'Settings',
             'manage_options',
             'smartpay-setting',
             [$this, 'admin_setting_page_cb']
