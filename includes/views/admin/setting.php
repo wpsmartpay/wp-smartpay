@@ -43,7 +43,7 @@ ob_start();
 
 <div class="wrap smartpay <?php echo 'wrap-' . $active_tab; ?>">
 	<div class="container">
-		<div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-success rounded-top">
+		<div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-dark rounded-top">
 			<div class="lh-100">
 				<h2 class="text-white"><?php _e('SmartPay Settings', 'wp-smartpay'); ?></h2>
 			</div>
@@ -116,7 +116,7 @@ ob_start();
 							<input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
 						<?php endif; ?>
 					</table>
-					<?php submit_button(); ?>
+					<?php submit_button(__( 'Save Changes', 'smartpay' ), 'btn btn-primary'); ?>
 				</form>
 			</div>
 		</div>
