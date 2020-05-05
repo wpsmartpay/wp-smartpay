@@ -1,0 +1,22 @@
+/*!
+ * Bootstrap Grid v4.3.1 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+ $include-column-box-sizing: true !default;
+
+ @import "./functions";
+ @import "./variables";
+
+ @import "./mixins/breakpoints";
+ @import "./mixins/container";
+ @import "./mixins/grid";
+
+//  @import "./containers";
+ @import "../../../node_modules/bootstrap/scss/grid";
+
+//Utilities
+@import "../../../node_modules/bootstrap/scss/utilities";
+// @import "../../../node_modules/bootstrap/scss/utilities/api";
