@@ -77,6 +77,7 @@ final class Paddle extends SmartPay_Payment_Gateway
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
         add_filter('smartpay_payment_paddle_receipt', [$this, 'payment_receipt']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
 
     /**
@@ -213,7 +214,6 @@ final class Paddle extends SmartPay_Payment_Gateway
             return $content;
         }
     }
-
 
     /**
      * Process webhook requests.
@@ -432,7 +432,6 @@ final class Paddle extends SmartPay_Payment_Gateway
         return $sections;
     }
 
-
     /**
      * Register the gateway settings for Paddle
      *
@@ -563,5 +562,12 @@ final class Paddle extends SmartPay_Payment_Gateway
     public function unsupported_currency_notice()
     {
         echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by Paddle.</p></div>', 'wp-smartpay');
+    }
+
+    public function enqueue_payment_scripts()
+    {
+        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', WP_SMARTPAY_FILE), array('jquery'), WP_SMARTPAY_VERSION);
+
+        wp_enqueue_script('smartpay-payment');
     }
 }
