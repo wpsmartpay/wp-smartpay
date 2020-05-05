@@ -23,6 +23,8 @@ final class Payment
     {
         add_action('init', [$this, 'process_payment']);
         add_shortcode('smartpay_payment_receipt', [$this, 'smartpay_payment_receipt_shortcode']);
+
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
 
     /**
@@ -123,12 +125,19 @@ final class Payment
         return false;
     }
 
-    function smartpay_payment_receipt_shortcode($atts, $content = null)
+    public function smartpay_payment_receipt_shortcode($atts, $content = null)
     {
         ob_start();
 
         echo smartpay_view_render('payment/shortcode/receipt');
 
         return ob_get_clean();
+    }
+
+    public function enqueue_payment_scripts()
+    {
+        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', WP_SMARTPAY_FILE), array('jquery'), WP_SMARTPAY_VERSION);
+
+        wp_enqueue_script('smartpay-payment');
     }
 }
