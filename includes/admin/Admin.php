@@ -60,7 +60,7 @@ final class Admin
 
     public function load_admin_scripts()
     {
-        wp_register_script('smartpay-admin', WP_SMARTPAY_URL . '/assets/js/admin.js', array('jquery', 'jquery-form'), WP_SMARTPAY_VERSION, false);
+        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_URL . '/assets/js/admin.js', array('jquery', 'jquery-form'), SMARTPAY_VERSION, false);
         wp_enqueue_script('smartpay-admin');
 
         // wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));

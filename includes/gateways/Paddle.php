@@ -566,7 +566,7 @@ final class Paddle extends SmartPay_Payment_Gateway
 
     public function enqueue_payment_scripts()
     {
-        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', WP_SMARTPAY_FILE), array('jquery'), WP_SMARTPAY_VERSION);
+        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION);
 
         wp_enqueue_script('smartpay-payment');
     }

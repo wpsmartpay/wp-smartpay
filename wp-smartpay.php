@@ -1,16 +1,16 @@
 <?php
 
 /**
- * WP SmartPay
+ * SmartPay
  *
- * Plugin Name: WP SmartPay
+ * Plugin Name: SmartPay Core
  * Plugin URI:  https://wpsmartpay.com/
- * Description:
- * Tags: paddle
+ * Description: The most easiest way to sell digital downloads and get paid in WordPress.
+ * Tags: digital downloads, ecommerce, paddle, stripe, paypal, payment forms
  * Version:     0.1
- * Author:      WPSmartPay
+ * Author:      SmartPay Team
  * Author URI:  https://wpsmartpay.com/
- * Text Domain: wp-smartpay
+ * Text Domain: smartpay
  *
  * Requires PHP: 7.0.0
  * Requires at least: 4.9
@@ -106,33 +106,33 @@ final class SmartPay
     private function define_constants()
     {
         // Set plugin version.
-        if (!defined('WP_SMARTPAY_VERSION')) {
-            define('WP_SMARTPAY_VERSION', '0.1');
+        if (!defined('SMARTPAY_VERSION')) {
+            define('SMARTPAY_VERSION', '0.1');
         }
 
         // Define plugin name.
-        if (!defined('WP_SMARTPAY_PLUGIN_NAME')) {
-            define('WP_SMARTPAY_PLUGIN_NAME', 'WP SmartPay');
+        if (!defined('SMARTPAY_PLUGIN_NAME')) {
+            define('SMARTPAY_PLUGIN_NAME', 'WP SmartPay');
         }
 
         // Define plugin main file.
-        if (!defined('WP_SMARTPAY_FILE')) {
-            define('WP_SMARTPAY_FILE', __FILE__);
+        if (!defined('SMARTPAY_FILE')) {
+            define('SMARTPAY_FILE', __FILE__);
         }
 
         // Plugin Folder URL.
-        if (!defined('WP_SMARTPAY_URL')) {
-            define('WP_SMARTPAY_URL', plugin_dir_url(__FILE__));
+        if (!defined('SMARTPAY_PLUGIN_URL')) {
+            define('SMARTPAY_PLUGIN_URL', plugin_dir_url(__FILE__));
         }
 
         // Define plugin.
-        if (!defined('WP_SMARTPAY_PATH')) {
-            define('WP_SMARTPAY_PATH', plugin_dir_path(__FILE__));
+        if (!defined('SMARTPAY_PLUGIN_DIR')) {
+            define('SMARTPAY_PLUGIN_DIR', plugin_dir_path(__FILE__));
         }
 
         // Define plugin store URL.
-        if (!defined('WP_SMARTPAY_STORE_URL')) {
-            define('WP_SMARTPAY_STORE_URL', 'https://themesgrove.com/');
+        if (!defined('SMARTPAY_STORE_URL')) {
+            define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
         }
     }
 
@@ -166,7 +166,7 @@ final class SmartPay
             update_option('wp_smartpay_installed', time());
         }
 
-        update_option('wp_smartpay_version', WP_SMARTPAY_VERSION);
+        update_option('SMARTPAY_VERSION', SMARTPAY_VERSION);
 
         self::create_pages();
     }
@@ -244,17 +244,15 @@ final class SmartPay
     public function enqueue_smartpay_scripts()
     {
         // Styles
-        wp_register_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
-        wp_register_style('smartpay-app-css', WP_SMARTPAY_URL . '/assets/css/app.css', '', WP_SMARTPAY_VERSION);
+        wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_URL . '/assets/css/admin.min.css', '', SMARTPAY_VERSION);
 
-        wp_enqueue_style('bootstrap-css');
-        wp_enqueue_style('smartpay-app-css');
+        wp_enqueue_style('smartpay-admin');
 
         // Scripts
-        wp_register_script('smartpay-app-js', WP_SMARTPAY_URL . '/assets/js/app.js', ['jquery'], WP_SMARTPAY_VERSION, true);
+        wp_register_script('smartpay-app', SMARTPAY_PLUGIN_URL . '/assets/js/app.js', ['jquery'], SMARTPAY_VERSION, true);
 
-        wp_enqueue_script('jquery');
-        wp_enqueue_script('smartpay-admin-js');
+        // wp_enqueue_script('jquery');
+        wp_enqueue_script('smartpay-admin');
     }
 }
 
