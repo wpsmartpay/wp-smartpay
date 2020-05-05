@@ -82,11 +82,44 @@ final class Meta_Box
                         ),
                         'std'               => 'one-time',
                     ),
+                    '_form_amount_type'    => array(
+                        'id'                => '_form_amount_type',
+                        'name'              => __('Amount type', 'wp-smartpay'),
+                        'type'              => 'radio',
+                        'options'           => array(
+                            'fixed'      => array(
+                                'name'      => __('Fixed amount', 'wp-smartpay'),
+                                'disabled'  => false
+                            ),
+                            'multiple'             => array(
+                                'name'      => __('Multiple', 'wp-smartpay'),
+                                'disabled'  => false
+                            ),
+                        ),
+                        'std'               => 'fixed',
+                    ),
                     '_form_amount'          => array(
                         'id'                => '_form_amount',
-                        'name'              => __('One-Time Amount', 'wp-smartpay'),
+                        'name'              => __('Fixed Amount', 'wp-smartpay'),
                         'type'              => 'text',
                         'placeholder'       => 'Form Amount',
+                    ),
+                    '_form_multiple_amount' => array(
+                        'id'                => '_form_multiple_amount',
+                        'name'              => 'Multiple amount',
+                        'type'              => 'nested_html',
+                        'elements'              => array(
+                            array(
+                                'id'                => '_form_amounts',
+                                'type'              => 'text',
+                                'placeholder'       => 'eg. 10|20.50|30',
+                            ),
+                            array(
+                                'id'                => '_form_enabled_custom_amount',
+                                'type'              => 'checkbox',
+                                'name'              => 'Accept custom',
+                            ),
+                        ),
                     ),
 
                     // On-Page Form Display
@@ -144,32 +177,32 @@ final class Meta_Box
         $this->render_form($fields);
 
         echo '<div style="background-color: #f4f4f4;
-        border: 1px solid #e5e5e5;
-        padding: 10px 20px;
-        margin: 30px 0px;">
-        <h2 style=" font-size: 18px;
-        font-weight: 600;
-        margin: 10px 0;
-        padding: 0;">Want to customize your payment forms even more?</h2>
-        <p>
-            By upgrading to WP Simple Pay Pro, you get access to powerful features such as:</p>
-        
-        <!-- Repeat this bulleted list in sidebar.php & generic-tab-promo.php -->
-        <ul>
-            <li><div class="dashicons dashicons-yes"></div> Unlimited custom fields to capture additional data</li>
-            <li><div class="dashicons dashicons-yes"></div> Custom amounts - let customers enter an amount to pay</li>
-            <li><div class="dashicons dashicons-yes"></div> Coupon code support</li>
-            <li><div class="dashicons dashicons-yes"></div> On-site checkout (no redirect) with custom forms</li>
-            <li><div class="dashicons dashicons-yes"></div> Embedded &amp; overlay form display options</li>
-            <li><div class="dashicons dashicons-yes"></div> Apple Pay &amp; Google Pay support with custom forms</li>
-            <li><div class="dashicons dashicons-yes"></div> Stripe Subscription support (Plus or higher license required)</li>
-        </ul>
-        
-        
-        <p>
-            <a href="https://wpsmartpay.com/" class="button button-primary button-large" target="_blank">
-                Click here to Upgrade	</a>
-        </p>
+            border: 1px solid #e5e5e5;
+            padding: 10px 20px;
+            margin: 30px 0px;">
+            <h2 style=" font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+            padding: 0;">Want to customize your payment forms even more?</h2>
+            <p>
+                By upgrading to WP Simple Pay Pro, you get access to powerful features such as:</p>
+            
+            <!-- Repeat this bulleted list in sidebar.php & generic-tab-promo.php -->
+            <ul>
+                <li><div class="dashicons dashicons-yes"></div> Unlimited custom fields to capture additional data</li>
+                <li><div class="dashicons dashicons-yes"></div> Custom amounts - let customers enter an amount to pay</li>
+                <li><div class="dashicons dashicons-yes"></div> Coupon code support</li>
+                <li><div class="dashicons dashicons-yes"></div> On-site checkout (no redirect) with custom forms</li>
+                <li><div class="dashicons dashicons-yes"></div> Embedded &amp; overlay form display options</li>
+                <li><div class="dashicons dashicons-yes"></div> Apple Pay &amp; Google Pay support with custom forms</li>
+                <li><div class="dashicons dashicons-yes"></div> Stripe Subscription support (Plus or higher license required)</li>
+            </ul>
+            
+            
+            <p>
+                <a href="https://wpsmartpay.com/" class="button button-primary button-large" target="_blank">
+                    Click here to Upgrade	</a>
+            </p>
         
         </div>';
 
@@ -218,10 +251,10 @@ final class Meta_Box
         echo '<form action="" method="POST">';
         wp_nonce_field('smartpay_form_metabox_nonce', 'smartpay_form_metabox_nonce');
 
-        echo '<table><tbody class="simpay-panel-section">';
+        echo '<div id="smartpay_form_metabox"><table><tbody class="simpay-panel-section">';
 
         foreach ($fields as $field) {
-            echo '<tr class=""> <td style="padding: 15px 15px 15px 0px;">';
+            echo '<tr id="' . esc_attr($field['id']) . '_container"> <td style="padding: 15px 15px 15px 0px;">';
             echo '<label for="' . esc_attr($field['id']) . '">' . esc_attr($field['name']) . '</label></td><td>';
 
             $func = 'metabox_fields_' . $field['type'] . '_callback';
@@ -231,7 +264,7 @@ final class Meta_Box
             echo '</td></tr>';
         }
 
-        echo '</tbody></table>';
+        echo '</tbody></table></div>';
         echo '</form>';
     }
 
@@ -273,5 +306,39 @@ final class Meta_Box
         }
 
         echo $html;
+    }
+
+    function metabox_fields_checkbox_callback($field)
+    {
+        $old_value = get_post_meta($this->post->ID, esc_attr($field['id']), true);
+
+        $readonly = $field['readonly'] === true ? ' readonly="readonly"' : '';
+        $disabled = $field['disabled'] ?? false;
+        $checked = true;
+        $size = (isset($field['size']) && !is_null($field['size'])) ? $field['size'] : 'regular';
+
+        $html = '';
+        $html .= '<input type="checkbox" class="' . $field['class'] . ' ' . sanitize_html_class($size) . '" name="' . esc_attr($field['id']) . '" id="' . esc_attr($field['id']) . '" value="1" ' . $readonly . $disabled . checked(true, $checked, false) . disabled(true, $disabled, false) . '" />&nbsp;';
+        $html .= '<label for="' . esc_attr($field['id']) . '">' . esc_html($field['name'] ?? '') . '</label>&nbsp;&nbsp;';
+
+        echo $html;
+    }
+
+    function metabox_fields_nested_html_callback($field)
+    {
+        if (count($field['elements'])) {
+            foreach ($field['elements'] as $field) {
+                echo '<span id="' . esc_attr($field['id']) . '_container">';
+
+                echo '<span style="padding: 15px 15px 15px 0px;">';
+                $func = 'metabox_fields_' . $field['type'] . '_callback';
+                method_exists($this,  $func) ? $this->$func($field) : 'Method not found!';
+                echo '</span></span>';
+            }
+        } elseif (is_array($field['elements'])) {
+            echo 'array';
+        } else {
+            echo 'Nested element format invalid.';
+        }
     }
 }
