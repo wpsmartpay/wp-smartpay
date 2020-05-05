@@ -7,7 +7,7 @@ use SmartPay\Setting;
 
 function smartpay_view(string $file, array $data = [])
 {
-    $file = SMARTPAY_PLUGIN_DIR . 'includes/views/' . $file . '.php';
+    $file = SMARTPAY_DIR . 'includes/views/' . $file . '.php';
     if (file_exists($file)) {
         if (count($data)) {
             extract($data);
@@ -21,7 +21,7 @@ function smartpay_view(string $file, array $data = [])
 
 function smartpay_view_render(string $file, array $data = [])
 {
-    $file = SMARTPAY_PLUGIN_DIR . 'includes/views/' . $file . '.php';
+    $file = SMARTPAY_DIR . 'includes/views/' . $file . '.php';
     if (file_exists($file)) {
         if (count($data)) {
             extract($data);
