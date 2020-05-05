@@ -1,8 +1,8 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Gateways;
+namespace SmartPay\Gateways;
 
-use ThemesGrove\SmartPay\Models\SmartPay_Payment;
+use SmartPay\Models\SmartPay_Payment;
 use ThemeXpert\Paddle\Paddle as PaddleSDK;
 use ThemeXpert\Paddle\Util\Price as PaddleSDKPrice;
 use ThemeXpert\Paddle\Product\PayLink as PaddleSDKPayLink;

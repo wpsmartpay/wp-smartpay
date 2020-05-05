@@ -1,9 +1,9 @@
 <?php
 
-use ThemesGrove\SmartPay\Gateway;
-use ThemesGrove\SmartPay\Models\SmartPay_Payment;
-use ThemesGrove\SmartPay\Payment;
-use ThemesGrove\SmartPay\Setting;
+use SmartPay\Gateway;
+use SmartPay\Models\SmartPay_Payment;
+use SmartPay\Payment;
+use SmartPay\Setting;
 
 function smartpay_view(string $file, array $data = [])
 {

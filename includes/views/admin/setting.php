@@ -1,6 +1,6 @@
 <?php
 
-use ThemesGrove\SmartPay\Admin\Setting\Register_Setting;
+use SmartPay\Admin\Setting\Register_Setting;
 
 $settings_tabs  = Register_Setting::settings_tabs();
 $all_settings   = Register_Setting::get_registered_settings_sections();
@@ -102,7 +102,7 @@ ob_start();
                     // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
                     if (true === $override) :
                     ?>
-                    <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
+                        <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                     <?php endif; ?>
                 </table>
                 <?php submit_button(); ?>
