@@ -19,6 +19,8 @@
 
 namespace ThemesGrove\SmartPay;
 
+use ThemesGrove\SmartPay\Admin\Admin;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -35,6 +37,16 @@ final class SmartPay
     private static $instance = null;
 
     /**
+     * Session Object.
+     *
+     * This holds purchase sessions, and anything else stored in the session.
+     *
+     * @var object|SP_Session
+     * @since 1.5
+     */
+    public $session;
+
+    /**
      * Construct SmartPay class.
      *
      * @since 0.1
@@ -42,6 +54,22 @@ final class SmartPay
      */
     private function __construct()
     {
+
+        if (!session_id()) {
+            session_start();
+        }
+
+        global $smartpay_options;
+        $smartpay_options = Setting::get_settings();
+
+        PostType::instance();
+
+        Shortcode::instance();
+
+        if (is_admin()) {
+            Admin::instance();
+        }
+
         // Define constants.
         $this->define_constants();
 
@@ -117,33 +145,11 @@ final class SmartPay
      */
     private function init_actions()
     {
-        if (!session_id()) {
-            session_start();
-        }
-
-        global $smartpay_options;
-
-        $smartpay_options = Setting::get_settings();
-
-        Setting::instance();
-
-        PostType::instance();
-
-        Gateway::instance();
-
-        Admin::instance();
-
-        Shortcode::instance();
-
-        Payment::instance();
-
         add_action('wp_enqueue_scripts', [$this, 'enqueue_smartpay_scripts']);
 
         register_activation_hook(__FILE__, [$this, 'activate']);
 
         // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-
-        wp_enqueue_script('jquery');
     }
 
     /**
@@ -237,18 +243,24 @@ final class SmartPay
 
     public function enqueue_smartpay_scripts()
     {
-        // wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));
-        // wp_enqueue_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+        // Styles
+        wp_register_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+        wp_register_style('smartpay-app-css', WP_SMARTPAY_URL . '/assets/css/app.css', '', WP_SMARTPAY_VERSION);
 
-        wp_enqueue_script('app-js', plugins_url('/assets/js/app.js', __FILE__), '', true);
+        wp_enqueue_style('bootstrap-css');
+        wp_enqueue_style('smartpay-app-css');
+
+        // Scripts
+        wp_register_script('smartpay-app-js', WP_SMARTPAY_URL . '/assets/js/app.js', ['jquery'], WP_SMARTPAY_VERSION, true);
+
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('smartpay-admin-js');
     }
 }
 
-/**
- * Initialize SmartPay.
- */
-function wp_smartpay()
+// Initialize SmartPay.
+function SmartPay()
 {
     return SmartPay::instance();
 }
-wp_smartpay();
+SmartPay();

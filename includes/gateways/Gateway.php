@@ -1,8 +1,8 @@
 <?php
 
-namespace ThemesGrove\SmartPay;
+namespace ThemesGrove\SmartPay\Gateway;
 
-use ThemesGrove\SmartPay\Gateways\Paddle;
+use ThemesGrove\SmartPay\Gateway\Paddle;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

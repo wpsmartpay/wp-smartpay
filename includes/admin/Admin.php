@@ -1,6 +1,6 @@
 <?php
 
-namespace ThemesGrove\SmartPay;
+namespace ThemesGrove\SmartPay\Admin;
 
 use ThemesGrove\SmartPay\Admin\Admin_Notices;
 use ThemesGrove\SmartPay\Admin\Form\Meta_Box;
@@ -74,8 +74,8 @@ final class Admin
     public function menu_item()
     {
         add_menu_page(
-            __('WP SmartPay', 'wp-smartpay'),
-            __('WP SmartPay', 'wp-smartpay'),
+            __('SmartPay', 'wp-smartpay'),
+            __('SmartPay', 'wp-smartpay'),
             'manage_options',
             'smartpay',
             [$this, 'smartpay_admin_dashboard_page_cb'],
@@ -85,15 +85,31 @@ final class Admin
 
         add_submenu_page(
             'smartpay',
-            __('WP SmartPay - Dashboard', 'wp-smartpay'),
-            __('Dashboard', 'wp-smartpay'),
+            __('SmartPay - Downloads', 'wp-smartpay'),
+            __('All Downloads', 'wp-smartpay'),
             'manage_options',
             'smartpay',
         );
 
         add_submenu_page(
             'smartpay',
-            __('WP SmartPay - Payment History', 'wp-smartpay'),
+            'SmartPay - AllPayment Forms',
+            'All Forms',
+            'manage_options',
+            'edit.php?post_type=smartpay_form',
+        );
+
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Add New', 'wp-smartpay'),
+            __('Add new', 'wp-smartpay'),
+            'manage_options',
+            '#',
+        );
+
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Payment History', 'wp-smartpay'),
             __('Payment History', 'wp-smartpay'),
             'manage_options',
             'edit.php?post_type=smartpay_payment',
@@ -101,23 +117,7 @@ final class Admin
 
         add_submenu_page(
             'smartpay',
-            'WP SmartPay - Payment Forms',
-            'Payment Forms',
-            'manage_options',
-            'edit.php?post_type=smartpay_form',
-        );
-
-        add_submenu_page(
-            'smartpay',
-            'WP SmartPay - Add Payment Forms',
-            'Add Form',
-            'manage_options',
-            'post-new.php?post_type=smartpay_form',
-        );
-
-        add_submenu_page(
-            'smartpay',
-            'WP SmartPay - Setting',
+            'SmartPay - Setting',
             'Setting',
             'manage_options',
             'smartpay-setting',
@@ -126,7 +126,7 @@ final class Admin
 
         add_submenu_page(
             'smartpay',
-            'WP SmartPay - Log',
+            'SmartPay - Log',
             'Log',
             'manage_options',
             'smartpay-log',

@@ -1,19 +1,14 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Gateways;
+namespace ThemesGrove\SmartPay;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
-abstract class SmartPay_Payment_Gateway
+
+abstract class Payment_Gateway
 {
-    /**
-     * Construct Paddle class.
-     *
-     * @since 0.1
-     * @access public
-     */
     public function __construct()
     {
         //
