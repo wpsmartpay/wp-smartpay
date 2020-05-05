@@ -1,8 +1,8 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Admin;
+namespace SmartPay\Admin;
 
-use ThemesGrove\SmartPay\Admin\Setting\Register_Setting;
+use SmartPay\Admin\Setting\Register_Setting;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

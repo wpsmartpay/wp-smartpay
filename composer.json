@@ -1,20 +1,20 @@
 {
-    "name": "themesgrove/wp-smartpay",
+    "name": "wp-smartpay/core",
     "description": "A simple plugin for receiving payment.",
     "require": {
         "themexpert/paddle-php": "dev-dev"
     },
     "autoload": {
         "psr-4": {
-            "ThemesGrove\\SmartPay\\": [
+            "SmartPay\\": [
                 "includes/",
                 "includes/abstracts/"
             ],
-            "ThemesGrove\\SmartPay\\Admin\\": "includes/admin/",
-            "ThemesGrove\\SmartPay\\Admin\\Setting\\": "includes/admin/settings",
-            "ThemesGrove\\SmartPay\\Gateway\\": "includes/gateways/",
-            "ThemesGrove\\SmartPay\\Form\\": "includes/forms",
-            "ThemesGrove\\SmartPay\\Payment\\": "includes/payments"
+            "SmartPay\\Admin\\": "includes/admin/",
+            "SmartPay\\Admin\\Setting\\": "includes/admin/settings",
+            "SmartPay\\Gateway\\": "includes/gateways/",
+            "SmartPay\\Form\\": "includes/forms",
+            "SmartPay\\Payment\\": "includes/payments"
         },
         "files": [
             "includes/helpers.php",

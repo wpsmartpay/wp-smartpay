@@ -1,6 +1,6 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Models;
+namespace SmartPay\Models;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

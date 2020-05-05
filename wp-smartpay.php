@@ -17,9 +17,9 @@
  * Tested up to: 5.4
  */
 
-namespace ThemesGrove\SmartPay;
+namespace SmartPay;
 
-use ThemesGrove\SmartPay\Admin\Admin;
+use SmartPay\Admin\Admin;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

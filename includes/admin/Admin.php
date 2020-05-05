@@ -1,11 +1,11 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Admin;
+namespace SmartPay\Admin;
 
-use ThemesGrove\SmartPay\Admin\Admin_Notices;
-use ThemesGrove\SmartPay\Admin\Form\Meta_Box;
-use ThemesGrove\SmartPay\Admin\Setting;
-use ThemesGrove\SmartPay\Admin\Payment_Form;
+use SmartPay\Admin\Admin_Notices;
+use SmartPay\Admin\Form\Meta_Box;
+use SmartPay\Admin\Setting;
+use SmartPay\Admin\Payment_Form;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

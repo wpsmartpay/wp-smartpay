@@ -1,6 +1,6 @@
 <?php
 
-namespace ThemesGrove\SmartPay\Admin\Setting;
+namespace SmartPay\Admin\Setting;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
