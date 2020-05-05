@@ -60,8 +60,8 @@ final class Admin
 
     public function load_admin_scripts()
     {
-        wp_register_script('smartpay-admin-setting', WP_SMARTPAY_URL . '/assets/js/admin-setting.js', array('jquery', 'jquery-form'), WP_SMARTPAY_VERSION, false);
-        wp_enqueue_script('smartpay-admin-setting');
+        wp_register_script('smartpay-admin', WP_SMARTPAY_URL . '/assets/js/admin.js', array('jquery', 'jquery-form'), WP_SMARTPAY_VERSION, false);
+        wp_enqueue_script('smartpay-admin');
 
         // wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));
         // wp_enqueue_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
