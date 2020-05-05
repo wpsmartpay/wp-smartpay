@@ -2,8 +2,6 @@
 
 namespace ThemesGrove\SmartPay;
 
-use ThemesGrove\SmartPay\Admin\Form\Meta_Box;
-
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
 final class PostType
@@ -26,8 +24,6 @@ final class PostType
         add_action('init', [$this, 'register_smartpay_payment_post_type']);
 
         add_filter('post_row_actions', [$this, 'remove_smartpay_post_type_inline_edit'], 10, 2);
-
-        Meta_Box::instance();
     }
 
     /**

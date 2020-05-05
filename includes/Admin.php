@@ -3,6 +3,7 @@
 namespace ThemesGrove\SmartPay;
 
 use ThemesGrove\SmartPay\Admin\Admin_Notices;
+use ThemesGrove\SmartPay\Admin\Form\Meta_Box;
 use ThemesGrove\SmartPay\Admin\Setting;
 use ThemesGrove\SmartPay\Admin\Payment_Form;
 
@@ -28,6 +29,8 @@ final class Admin
         Admin_Notices::instance();
 
         Setting::instance();
+
+        Meta_Box::instance();
 
         Payment_Form::instance();
 
