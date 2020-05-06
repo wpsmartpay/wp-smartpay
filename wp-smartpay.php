@@ -20,6 +20,7 @@
 namespace SmartPay;
 
 use SmartPay\Admin\Admin;
+use SmartPay\Product\Product;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -80,6 +81,8 @@ final class SmartPay
 		$smartpay_options = Setting::get_settings();
 
 		PostType::instance();
+
+		Product::instance();
 
 		Shortcode::instance();
 

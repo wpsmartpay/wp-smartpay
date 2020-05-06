@@ -1,0 +1,670 @@
+<?php
+
+namespace SmartPay\Product;
+
+use SmartPay\Model;
+
+// Exit if accessed directly.
+if (!defined('ABSPATH')) {
+	exit;
+}
+
+class SmartPay_Product extends Model
+{
+	/**
+	 * The product ID
+	 *
+	 * @since  0.1
+	 * @var    integer
+	 */
+	public    $ID  = 0;
+	protected $_ID = 0;
+
+	/**
+	 * The status of the product
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $status      = 'pending';
+	protected $post_status = 'pending'; // Same as $status but here for backwards compat
+
+	/**
+	 * The display name of the current product status
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $status_nicename = '';
+
+	/**
+	 * The price the product
+	 *
+	 * @since  0.1
+	 * @var float
+	 */
+	protected $price = 0.00;
+
+	/**
+	 * The title of the payee
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $title = '';
+
+	/**
+	 * The description of the payee
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $description = '';
+
+	/**
+	 * The image used for the product
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $image = '';
+
+	/**
+	 * Identify if the product is a new one or existing
+	 *
+	 * @since  0.1
+	 * @var boolean
+	 */
+	protected $new = false;
+
+	/**
+	 * When updating, the old status prior to the change
+	 *
+	 * @since  0.1
+	 * @var string
+	 */
+	protected $old_status = '';
+
+	/**
+	 * Array of items that have changed since the last save() was run
+	 * This is for internal use, to allow fewer update_product_meta calls to be run
+	 *
+	 * @since  0.1
+	 * @var array
+	 */
+	private $pending;
+
+	/**
+	 * Setup the smartpay products class
+	 *
+	 * @since 0.1
+	 * @param int $product_id A given product
+	 * @return mixed void|false
+	 */
+	public function __construct($product_or_txn_id = false, $by_txn = false)
+	{
+		global $wpdb;
+
+		if (empty($product_or_txn_id)) {
+			return false;
+		}
+
+		if ($by_txn) {
+			$query      = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_smartpay_product_transaction_id' AND meta_value = '%s'", $product_or_txn_id);
+			$product_id = $wpdb->get_var($query);
+
+			if (empty($product_id)) {
+				return false;
+			}
+		} else {
+			$product_id = absint($product_or_txn_id);
+		}
+
+		$this->setup_product($product_id);
+	}
+
+	/**
+	 * Magic GET function
+	 *
+	 * @since  0.1
+	 * @param  string $key  The property
+	 * @return mixed        The value
+	 */
+	public function __get($key)
+	{
+		if (method_exists($this, 'get_' . $key)) {
+
+			$value = call_user_func(array($this, 'get_' . $key));
+		} else {
+
+			$value = $this->$key;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Magic SET function
+	 *
+	 * Sets up the pending array for the save method
+	 *
+	 * @since  0.1
+	 * @param string $key   The property name
+	 * @param mixed $value  The value of the property
+	 */
+	public function __set($key, $value)
+	{
+		$ignore = array('_ID');
+
+		if ($key === 'status') {
+			$this->old_status = $this->status;
+		}
+
+		if (!in_array($key, $ignore)) {
+			$this->pending[$key] = $value;
+		}
+
+		if ('_ID' !== $key) {
+			$this->$key = $value;
+		}
+	}
+
+	/**
+	 * Setup product properties
+	 *
+	 * @since  0.1
+	 * @param  int  $product_id The product ID
+	 * @return bool If the setup was successful or not
+	 */
+	private function setup_product($product_id)
+	{
+		if (empty($product_id)) {
+			return false;
+		}
+
+		$product = get_post($product_id);
+		if (!$product || is_wp_error($product)) {
+			return false;
+		}
+
+		if ('smartpay_product' !== $product->post_type) {
+			return false;
+		}
+
+		// Primary Identifier
+		$this->ID               = absint($product_id);
+
+		// Protected ID that can never be changed
+		$this->_ID              = absint($product_id);
+
+		$this->form_id          = $this->setup_form_id();
+
+		// Status and Dates
+		$this->date             = $product->post_date;
+		$this->completed_date   = $this->setup_completed_date();
+		$this->status           = $product->post_status;
+		$all_product_statuses   = smartpay_get_product_statuses();
+		$this->status_nicename  = array_key_exists($this->status, $all_product_statuses) ? $all_product_statuses[$this->status] : ucfirst($this->status);
+
+		$this->amount           = $this->setup_amount();
+		$this->currency         = $this->setup_currency();
+		$this->product_gateway  = $this->setup_product_gateway();
+		$this->transaction_id   = $this->setup_transaction_id();
+
+		$this->first_name       = $this->setup_first_name();
+		$this->last_name        = $this->setup_last_name();
+		$this->email            = $this->setup_email();
+
+		// Other Identifiers
+		$this->key              = $this->setup_product_key();
+
+		$this->parent_product   = $product->post_parent;
+
+		$this->mode             = $this->setup_mode();
+
+		return true;
+	}
+
+	/**
+	 * One items have been set, an update is needed to save them to the database.
+	 *
+	 * @return bool  True of the save occurred, false if it failed or wasn't needed
+	 */
+	public function save()
+	{
+		$saved = false;
+
+		if (empty($this->ID)) {
+
+			$product_id = $this->insert_product();
+
+			if (false === $product_id) {
+				$saved = false;
+			} else {
+				$this->ID = $product_id;
+			}
+		}
+
+		if ($this->ID !== $this->_ID) {
+			$this->ID = $this->_ID;
+		}
+
+		// If we have something pending, let's save it
+		if (!empty($this->pending)) {
+
+			foreach ($this->pending as $key => $value) {
+				switch ($key) {
+					case 'form_id':
+						$this->update_meta('_smartpay_product_form_id', $this->form_id);
+						break;
+
+					case 'date':
+						$args = array(
+							'ID'        => $this->ID,
+							'post_date' => $this->date,
+							'edit_date' => true,
+						);
+
+						wp_update_post($args);
+						break;
+
+					case 'completed_date':
+						$this->update_meta('_smartpay_product_completed_date', $this->completed_date);
+						break;
+
+					case 'status':
+						$this->update_status($this->status);
+						break;
+
+					case 'amount':
+						$this->update_meta('_smartpay_product_amount', $this->amount);
+						break;
+
+					case 'currency':
+						$this->update_meta('_smartpay_product_currency', $this->currency);
+						break;
+
+					case 'product_gateway':
+						$this->update_meta('_smartpay_product_gateway', $this->product_gateway);
+						break;
+
+					case 'transaction_id':
+						$this->update_meta('_smartpay_product_transaction_id', $this->transaction_id);
+						break;
+
+					case 'first_name':
+						$this->update_meta('_smartpay_product_first_name', $this->first_name);
+						break;
+
+					case 'last_name':
+						$this->update_meta('_smartpay_product_last_name', $this->last_name);
+						break;
+
+					case 'email':
+						$this->update_meta('_smartpay_product_email', $this->email);
+						break;
+
+					case 'key':
+						$this->update_meta('_smartpay_product_key', $this->key);
+						break;
+
+					case 'parent_product':
+						$args = array(
+							'ID'          => $this->ID,
+							'post_parent' => $this->parent_product,
+						);
+
+						wp_update_post($args);
+						break;
+
+					case 'mode':
+						$this->update_meta('_smartpay_product_mode', $this->mode);
+						break;
+
+					default:
+						/**
+						 * Used to save non-standard data. Developers can hook here if they want to save
+						 * specific product data when $product->save() is run and their item is in the $pending array
+						 */
+						do_action('smartpay_product_save', $this, $key);
+						break;
+				}
+			}
+
+			$this->pending = array();
+			$saved         = true;
+		}
+
+		if (true === $saved) {
+			$this->setup_product($this->ID);
+
+			/**
+			 * This action fires anytime that $product->save() is run, allowing developers to run actions
+			 * when a product is updated
+			 */
+			do_action('product_data_product_saved', $this->ID, $this);
+		}
+
+		/**
+		 * Update the product in the object cache
+		 */
+		// $cache_key = md5('product_data_product' . $this->ID);
+		// wp_cache_set($cache_key, $this, 'products');
+
+		return $saved;
+	}
+
+	/**
+	 * Create the base of a product.
+	 *
+	 * @since  0.1
+	 * @return int|bool False on failure, the product ID on success.
+	 */
+	private function insert_product()
+	{
+		if (empty($this->key)) {
+			$this->key = strtolower(md5($this->email . date('Y-m-d H:i:s') . rand(1, 10)));  // Unique key
+			$this->pending['key'] = $this->key;
+		}
+
+		// Create a blank product
+		$product_id = wp_insert_post(array(
+			'post_type'      => 'smartpay_product',
+			'post_status'    => 'pending',
+			'post_date'      => !empty($this->date) ? $this->date : null,
+			'post_date_gmt'  => !empty($this->date) ? get_gmt_from_date($this->date) : null,
+			'post_parent'    => $this->parent_product,
+			'comment_status' => 'closed',
+			'ping_status'    => 'closed',
+		));
+
+		if (!empty($product_id)) {
+			$this->ID   = $product_id;
+			$this->_ID  = $product_id;
+
+			$this->new  = true;
+		}
+
+		return $this->ID;
+	}
+
+	/**
+	 * Set the product status and run any status specific changes necessary
+	 *
+	 * @since 0.1
+	 *
+	 * @param  string $status The status to set the product to
+	 * @return bool Returns if the status was successfully updated
+	 */
+	public function update_status($status = false)
+	{
+		if ($status == 'completed' || $status == 'complete') {
+			$status = 'publish';
+		}
+
+		$old_status = !empty($this->old_status) ? $this->old_status : false;
+
+		if ($old_status === $status) {
+			return false; // Don't permit status changes that aren't changes
+		}
+
+		$updated = false;
+
+		do_action('smartpay_before_product_status_change', $this->ID, $status, $old_status);
+
+		$update_fields = array('ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time('mysql'));
+
+		$updated = wp_update_post(apply_filters('smartpay_update_product_status_fields', $update_fields));
+
+		$this->status = $status;
+		$this->post_status = $status;
+
+		$all_product_statuses  = smartpay_get_product_statuses();
+		$this->status_nicename = array_key_exists($status, $all_product_statuses) ? $all_product_statuses[$status] : ucfirst($status);
+
+		// Process any specific status functions
+		// switch ($status) {
+		//     case 'refunded':
+		//         $this->process_refund();
+		//         break;
+		//     case 'failed':
+		//         $this->process_failure();
+		//         break;
+		//     case 'pending' || 'processing':
+		//         $this->process_pending();
+		//         break;
+		// }
+
+		do_action('smartpay_update_product_status', $this->ID, $status, $old_status);
+
+		return $updated;
+	}
+
+	/**
+	 * Get a post meta item for the product
+	 *
+	 * @since  0.1
+	 * @param  string   $meta_key The Meta Key
+	 * @param  boolean  $single   Return single item or array
+	 * @return mixed    The value from the post meta
+	 */
+	public function get_meta($meta_key = '', $single = true)
+	{
+		if (empty($meta_key)) {
+			return;
+		}
+
+		$meta = get_post_meta($this->ID, $meta_key, $single);
+
+		$meta = apply_filters('smartpay_get_product_meta_' . $meta_key, $meta, $this->ID);
+
+		if (is_serialized($meta)) {
+			preg_match('/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches);
+			if (!empty($matches)) {
+				$meta = array();
+			}
+		}
+
+		return apply_filters('smartpay_get_product_meta', $meta, $this->ID, $meta_key);
+	}
+
+	/**
+	 * Update the post meta
+	 *
+	 * @since  0.1
+	 * @param  string $meta_key   The meta key to update
+	 * @param  string $meta_value The meta value
+	 * @param  string $prev_value Previous meta value
+	 * @return int|bool           Meta ID if the key didn't exist, true on successful update, false on failure
+	 */
+	public function update_meta($meta_key = '', $meta_value = '', $prev_value = '')
+	{
+		if (empty($meta_key)) {
+			return;
+		}
+
+		$meta_value = apply_filters('smartpay_update_product_meta_' . $meta_key, $meta_value, $this->ID);
+
+		return update_post_meta($this->ID, $meta_key, $meta_value, $prev_value);
+	}
+
+	/**
+	 * Add an item to the product meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 * @param bool   $unique
+	 *
+	 * @return bool|false|int
+	 */
+	public function add_meta($meta_key = '', $meta_value = '', $unique = false)
+	{
+		if (empty($meta_key)) {
+			return false;
+		}
+
+		return add_post_meta($this->ID, $meta_key, $meta_value, $unique);
+	}
+
+	/**
+	 * Delete an item from product meta
+	 *
+	 * @since 2.8
+	 * @param string $meta_key
+	 * @param string $meta_value
+	 *
+	 * @return bool
+	 */
+	public function delete_meta($meta_key = '', $meta_value = '')
+	{
+		if (empty($meta_key)) {
+			return false;
+		}
+
+		return delete_post_meta($this->ID, $meta_key, $meta_value);
+	}
+
+	/**
+	 * Setup the user info
+	 *
+	 * @since  0.1
+	 * @return array The user info associated with the product
+	 */
+	private function setup_form_id()
+	{
+		return $this->get_meta('_smartpay_product_form_id', true);
+	}
+
+	/**
+	 * Setup the product completed date
+	 *
+	 * @since  0.1
+	 * @return string The date the product was completed
+	 */
+	private function setup_completed_date()
+	{
+		$product = get_post($this->ID);
+
+		if ('pending' == $product->post_status || 'preapproved' == $product->post_status || 'processing' == $product->post_status) {
+			return false; // This product was never completed
+		}
+
+		$date = ($date = $this->get_meta('_smartpay_product_completed_date', true)) ? $date : $product->date;
+
+		return $date;
+	}
+
+	/**
+	 * Setup the product amount
+	 *
+	 * @since  0.1
+	 * @return float The product amount
+	 */
+	private function setup_amount()
+	{
+		return $this->get_meta('_smartpay_product_amount', true);
+	}
+
+	/**
+	 * Setup the currency code
+	 *
+	 * @since  0.1
+	 * @return string The currency for the product
+	 */
+	private function setup_currency()
+	{
+		return $this->get_meta('_smartpay_product_currency', true) ?? smartpay_get_currency();
+	}
+
+	/**
+	 * Setup the product gateway
+	 *
+	 * @since  0.1
+	 * @return string The product gateway
+	 */
+	private function setup_product_gateway()
+	{
+		return $this->get_meta('_smartpay_product_gateway');
+	}
+
+	/**
+	 * Setup the transaction ID
+	 *
+	 * @since  0.1
+	 * @return string The transaction ID for the product
+	 */
+	private function setup_transaction_id()
+	{
+		$transaction_id = $this->get_meta('_smartpay_product_transaction_id', true);
+
+		if (empty($transaction_id) || (int) $transaction_id === (int) $this->ID) {
+
+			$gateway        = $this->gateway;
+			$transaction_id = apply_filters('smartpay_get_product_transaction_id-' . $gateway, $this->ID);
+		}
+
+		return $transaction_id;
+	}
+
+	/**
+	 * Setup the first_name for the purchase
+	 *
+	 * @since  0.1
+	 * @return string The email address for the product
+	 */
+	private function setup_first_name()
+	{
+		return  $this->get_meta('_smartpay_product_first_name', true);
+	}
+
+	/**
+	 * Setup the last_name for the purchase
+	 *
+	 * @since  0.1
+	 * @return string The email address for the product
+	 */
+	private function setup_last_name()
+	{
+		return  $this->get_meta('_smartpay_product_last_name', true);
+	}
+
+	/**
+	 * Setup the email address for the purchase
+	 *
+	 * @since  0.1
+	 * @return string The email address for the product
+	 */
+	private function setup_email()
+	{
+		return  $this->get_meta('_smartpay_product_email', true);
+	}
+
+	/**
+	 * Setup the product key
+	 *
+	 * @since  0.1
+	 * @return string The product Key
+	 */
+	private function setup_product_key()
+	{
+		return $this->get_meta('_smartpay_product_key', true);
+	}
+
+	/**
+	 * Setup the product mode
+	 *
+	 * @since  0.1
+	 * @return string The product mode
+	 */
+	private function setup_mode()
+	{
+		return $this->get_meta('_smartpay_product_mode');
+	}
+
+
+	public function complete_product()
+	{
+		return $this->update_status('completed');
+	}
+}
