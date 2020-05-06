@@ -40,10 +40,10 @@ if (false === $has_main_settings) {
 
 ob_start();
 ?>
-<div class="wrap">
-    <h1 class="wp-heading-inline"></h1>
-</div>
-<div class="smartpay <?php echo 'wrap-' . $active_tab; ?>">
+<div class="smartpay <?php echo 'settings-' . $active_tab; ?>">
+	<div class="wrap container">
+		<h1 class="wp-heading-inline"></h1>
+	</div>
     <div class="container">
         <div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-dark rounded-top">
             <div class="lh-100">

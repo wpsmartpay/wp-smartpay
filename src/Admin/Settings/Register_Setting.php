@@ -198,7 +198,7 @@ final class Register_Setting
 						'test_mode' => array(
 							'id'   => 'test_mode',
 							'name' => __('Test Mode', 'smartpay'),
-							'desc' => __('<i>Active</i></i><br><br>While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
+							'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
 							'type' => 'switch',
 						),
 						'gateways' => array(
@@ -211,7 +211,7 @@ final class Register_Setting
 						'default_gateway' => array(
 							'id'      => 'default_gateway',
 							'name'    => __('Default Gateway', 'smartpay'),
-							'desc'    => __('<br><br><i>This gateway will be loaded automatically with the checkout page.</i>', 'smartpay'),
+							'desc'    => __('This gateway will be loaded automatically with the checkout page.', 'smartpay'),
 							'type'    => 'gateway_select',
 							'options' => smartpay_get_enabled_payment_gateways(),
 							'std'     => 'paddle',
@@ -511,7 +511,7 @@ final class Register_Setting
 		}
 
 		$html .= '</select>';
-		$html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</label>';
+		$html .= '<small class="form-text text-muted" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</small>';
 
 		echo $html;
 	}
@@ -532,7 +532,8 @@ final class Register_Setting
 		endforeach;
 
 		$html .= '</select>';
-		$html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+		$html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+		$html	.= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
 		echo $html;
 	}
@@ -552,8 +553,8 @@ final class Register_Setting
 		$checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
 		$html     = '<input type="hidden"' . $name . ' value="-1" />';
 		$html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-		$html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
-
+		$html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+		$html		 .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 		echo apply_filters('smartpay_after_setting_output', $html, $args);
 	}
 
@@ -570,11 +571,12 @@ final class Register_Setting
 		$class = sanitize_html_class($args['field_class']);
 
 		$checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
-		$html	  = '<div class="custom-control custom-switch">';
-		$html    .= '<input type="hidden"' . $name . ' value="-1" />';
-		$html    .= '<input type="checkbox" class="custom-control-input" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="1" ' . $checked . '>';
-		$html    .= '<label class="custom-control-label" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">'  . wp_kses_post($args['desc']) . '</label>';
+		$html	  	= '<div class="custom-control custom-switch">';
+			$html    .= '<input type="hidden"' . $name . ' value="-1" />';
+			$html    .= '<input type="checkbox" class="custom-control-input" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="1" ' . $checked . '>';
+			$html    .= '<label class="custom-control-label" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
 		$html    .= '</div>';
+		$html		 .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
 		echo apply_filters('smartpay_after_setting_output', $html, $args);
 	}
@@ -599,7 +601,7 @@ final class Register_Setting
 		endforeach;
 
 		$url   = esc_url('https://wpsmartpay.com');
-		$html .= '<br><p class="description">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</p>';
+		$html .= '<small class="form-text text-muted">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</small>';
 
 		echo  $html;
 	}
