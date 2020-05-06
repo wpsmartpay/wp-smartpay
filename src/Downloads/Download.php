@@ -75,7 +75,9 @@ final class Download
 			'uploaded_to_this_item' => __('Uploaded to this Download', 'smartpay'),
 			'items_list'            => __('Downloads list', 'smartpay'),
 			'items_list_navigation' => __('Downloads list navigation', 'smartpay'),
-			'filter_items_list'     => __('Filter Downloads list', 'smartpay'),
+            'filter_items_list'     => __('Filter Downloads list', 'smartpay'),
+            'menu_name'             => __('SmartPay', 'smartpay'),
+            'name_admin_bar'        => __('Download', 'smartpay')
 		);
 
 		$args = array(
@@ -95,7 +97,7 @@ final class Download
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => true,
 			'query_var'          => true,
-			'menu_icon'          => 'dashicons-download',
+			'menu_icon'          => 'dashicons-media-default',
 			'capability_type'       => 'page',
 
 
