@@ -198,6 +198,7 @@ final class Register_Setting
 						'test_mode' => array(
 							'id'   => 'test_mode',
 							'name' => __('Test Mode', 'smartpay'),
+							'label' => __('Test lable', 'smartpay'),
 							'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
 							'type' => 'switch',
 						),
@@ -561,6 +562,7 @@ final class Register_Setting
 	public function settings_switch_callback($args)
 	{
 		$smartpay_option = smartpay_get_option($args['id']);
+		$label = ( isset($args['label']) AND !empty($args['label']) ) ? $args['label'] : '';
 
 		if (isset($args['faux']) && true === $args['faux']) {
 			$name = '';
@@ -574,7 +576,7 @@ final class Register_Setting
 		$html	  	= '<div class="custom-control custom-switch">';
 			$html    .= '<input type="hidden"' . $name . ' value="-1" />';
 			$html    .= '<input type="checkbox" class="custom-control-input" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" ' . $name . ' value="1" ' . $checked . '>';
-			$html    .= '<label class="custom-control-label" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+			$html    .= '<label class="custom-control-label" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">'. $label .'</label>';
 		$html    .= '</div>';
 		$html		 .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
