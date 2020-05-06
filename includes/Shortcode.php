@@ -64,7 +64,7 @@ final class Shortcode
             if (!$has_keys && current_user_can('manage_options')) {
                 return wp_kses_post(sprintf(
                     /* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
-                    __('Please complete your %1$sPaddle Setup%2$s to view the payment form.', 'wp-smartpay'),
+                    __('Please complete your %1$sPaddle Setup%2$s to view the payment form.', 'smartpay'),
                     sprintf(
                         '<a href="%s">',
                         add_query_arg(

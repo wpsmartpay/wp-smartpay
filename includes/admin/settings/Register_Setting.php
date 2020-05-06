@@ -132,59 +132,59 @@ final class Register_Setting
                     'main' => array(
                         'page_settings' => array(
                             'id'   => 'page_settings',
-                            'name' => '<h3 style="margin: 0;">' . __('Pages', 'wp-smartpay') . '</h3>',
+                            'name' => '<h3 style="margin: 0;">' . __('Pages', 'smartpay') . '</h3>',
                             'desc' => '',
                             'type' => 'header',
-                            'tooltip_title' => __('Page Settings', 'wp-smartpay'),
-                            'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'wp-smartpay'),
+                            'tooltip_title' => __('Page Settings', 'smartpay'),
+                            'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                         ),
                         'payment_page' => array(
                             'id'          => 'payment_page',
-                            'name'        => __('Payment Page', 'wp-smartpay'),
+                            'name'        => __('Payment Page', 'smartpay'),
                             'desc'        => __(''),
                             'type'        => 'page_select',
                             'chosen'      => true,
-                            'placeholder' => __('Select a page', 'wp-smartpay'),
+                            'placeholder' => __('Select a page', 'smartpay'),
                         ),
                         'payment_success_page' => array(
                             'id'          => 'payment_success_page',
-                            'name'        => __('Payment Success Page', 'wp-smartpay'),
-                            'desc'        => __('The page customers are sent to after completing a payment. The shortcode [smartpay_payment_receipt] needs to be on this page. Output configured in the Payment Confirmation settings. This page should be excluded from any site caching.', 'wp-smartpay'),
+                            'name'        => __('Payment Success Page', 'smartpay'),
+                            'desc'        => __('The page customers are sent to after completing a payment. The shortcode [smartpay_payment_receipt] needs to be on this page. Output configured in the Payment Confirmation settings. This page should be excluded from any site caching.', 'smartpay'),
                             'type'        => 'page_select',
                             'chosen'      => true,
-                            'placeholder' => __('Select a page', 'wp-smartpay'),
+                            'placeholder' => __('Select a page', 'smartpay'),
                         ),
                         'payment_failure_page' => array(
                             'id'          => 'payment_failure_page',
-                            'name'        => __('Payment Failure Page', 'wp-smartpay'),
-                            'desc'        => __('The page customers are sent to after a failed payment.', 'wp-smartpay'),
+                            'name'        => __('Payment Failure Page', 'smartpay'),
+                            'desc'        => __('The page customers are sent to after a failed payment.', 'smartpay'),
                             'type'        => 'page_select',
                             'chosen'      => true,
-                            'placeholder' => __('Select a page', 'wp-smartpay'),
+                            'placeholder' => __('Select a page', 'smartpay'),
                         ),
                         'currency_settings' => array(
                             'id'   => 'currency_settings',
-                            'name' => '<h3 style="margin: 0;">' . __('Currency Options', 'wp-smartpay') . '</h3>',
+                            'name' => '<h3 style="margin: 0;">' . __('Currency Options', 'smartpay') . '</h3>',
                             'desc' => '',
                             'type' => 'header',
-                            'tooltip_title' => __('Page Settings', 'wp-smartpay'),
-                            'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'wp-smartpay'),
+                            'tooltip_title' => __('Page Settings', 'smartpay'),
+                            'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                         ),
                         'currency' => array(
                             'id'      => 'currency',
-                            'name'    => __('Currency', 'wp-smartpay'),
-                            'desc'    => __('Choose your currency. Note that some payment gateways have currency restrictions.', 'wp-smartpay'),
+                            'name'    => __('Currency', 'smartpay'),
+                            'desc'    => __('Choose your currency. Note that some payment gateways have currency restrictions.', 'smartpay'),
                             'type'    => 'select_currency',
                             'chosen'  => true,
                         ),
                         'currency_position' => array(
                             'id'      => 'currency_position',
-                            'name'    => __('Currency Position', 'wp-smartpay'),
-                            'desc'    => __('Choose the location of the currency sign.', 'wp-smartpay'),
+                            'name'    => __('Currency Position', 'smartpay'),
+                            'desc'    => __('Choose the location of the currency sign.', 'smartpay'),
                             'type'    => 'select',
                             'options' => array(
-                                'before' => __('Before - $10', 'wp-smartpay'),
-                                'after'  => __('After - 10$', 'wp-smartpay'),
+                                'before' => __('Before - $10', 'smartpay'),
+                                'after'  => __('After - 10$', 'smartpay'),
                             ),
                         ),
                     ),
@@ -197,21 +197,21 @@ final class Register_Setting
                     'main' => array(
                         'test_mode' => array(
                             'id'   => 'test_mode',
-                            'name' => __('Test Mode', 'wp-smartpay'),
-                            'desc' => __('<i>Active</i></i><br><br>While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'wp-smartpay'),
+                            'name' => __('Test Mode', 'smartpay'),
+                            'desc' => __('<i>Active</i></i><br><br>While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
                             'type' => 'checkbox',
                         ),
                         'gateways' => array(
                             'id'      => 'gateways',
-                            'name'    => __('Payment Gateways', 'wp-smartpay'),
-                            'desc'    => __('Choose the payment gateways you want to enable.', 'wp-smartpay'),
+                            'name'    => __('Payment Gateways', 'smartpay'),
+                            'desc'    => __('Choose the payment gateways you want to enable.', 'smartpay'),
                             'type'    => 'gateways',
                             'options' => smartpay_payment_gateways(),
                         ),
                         'default_gateway' => array(
                             'id'      => 'default_gateway',
-                            'name'    => __('Default Gateway', 'wp-smartpay'),
-                            'desc'    => __('<br><br><i>This gateway will be loaded automatically with the checkout page.</i>', 'wp-smartpay'),
+                            'name'    => __('Default Gateway', 'smartpay'),
+                            'desc'    => __('<br><br><i>This gateway will be loaded automatically with the checkout page.</i>', 'smartpay'),
                             'type'    => 'gateway_select',
                             'options' => smartpay_get_enabled_payment_gateways(),
                             'std'     => 'paddle',
@@ -282,19 +282,19 @@ final class Register_Setting
 
         $sections = array(
             'general'   => apply_filters('smartpay_settings_sections_general', array(
-                'main'  => __('General', 'wp-smartpay'),
+                'main'  => __('General', 'smartpay'),
             )),
             'gateways'  => apply_filters('smartpay_settings_sections_gateways', array(
-                'main'  => __('General', 'wp-smartpay'),
+                'main'  => __('General', 'smartpay'),
             )),
             'emails'    => apply_filters('smartpay_settings_sections_emails', array(
-                'main'  => __('General', 'wp-smartpay'),
+                'main'  => __('General', 'smartpay'),
             )),
             'extensions'  => apply_filters('smartpay_settings_sections_extensions', array(
-                'main'  => __('General', 'wp-smartpay'),
+                'main'  => __('General', 'smartpay'),
             )),
             // 'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
-            //     'main'  => __('General', 'wp-smartpay'),
+            //     'main'  => __('General', 'smartpay'),
             // )),
         );
 
@@ -304,11 +304,11 @@ final class Register_Setting
     public static function settings_tabs()
     {
         $tabs = array();
-        $tabs['general']  = __('General', 'wp-smartpay');
-        $tabs['gateways'] = __('Payment Gateways', 'wp-smartpay');
-        $tabs['extensions']   = __('Extensions', 'wp-smartpay');
-        // $tabs['emails']   = __('Emails', 'wp-smartpay');
-        // $tabs['licenses']   = __('Licenses', 'wp-smartpay');
+        $tabs['general']  = __('General', 'smartpay');
+        $tabs['gateways'] = __('Payment Gateways', 'smartpay');
+        $tabs['extensions']   = __('Extensions', 'smartpay');
+        // $tabs['emails']   = __('Emails', 'smartpay');
+        // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
     }
@@ -407,7 +407,7 @@ final class Register_Setting
         }
 
         if ($doing_section) {
-            add_settings_error('smartpay-notices', '', __('Settings updated.', 'wp-smartpay'), 'updated');
+            add_settings_error('smartpay-notices', '', __('Settings updated.', 'smartpay'), 'updated');
         }
 
         return $output;
@@ -577,7 +577,7 @@ final class Register_Setting
         endforeach;
 
         $url   = esc_url('https://wpsmartpay.com');
-        $html .= '<br><p class="description">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'wp-smartpay'), $url) . '</p>';
+        $html .= '<br><p class="description">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</p>';
 
         echo  $html;
     }
@@ -598,7 +598,7 @@ final class Register_Setting
     public function settings_missing_callback($args)
     {
         printf(
-            __('The callback function used for the %s setting is missing.', 'wp-smartpay'),
+            __('The callback function used for the %s setting is missing.', 'smartpay'),
             '<strong>' . $args['id'] . '</strong>'
         );
     }

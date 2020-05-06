@@ -7,7 +7,7 @@ use SmartPay\Setting;
 
 function smartpay_view(string $file, array $data = [])
 {
-	$file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
+    $file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
     if (file_exists($file)) {
         if (count($data)) {
             extract($data);
@@ -54,8 +54,8 @@ function smartpay_payment_gateways()
     // Default, built-in gateways
     $gateways = array(
         'paddle' => array(
-            'admin_label'    => __('Paddle', 'wp-smartpay'),
-            'checkout_label' => __('Paddle', 'wp-smartpay'),
+            'admin_label'    => __('Paddle', 'smartpay'),
+            'checkout_label' => __('Paddle', 'smartpay'),
         ),
     );
 
@@ -468,13 +468,13 @@ function smartpay_get_purchase_session()
 function smartpay_get_payment_statuses()
 {
     $payment_statuses = array(
-        'pending'   => __('Pending', 'wp-smartpay'),
-        'publish'   => __('Complete', 'wp-smartpay'),
-        'refunded'  => __('Refunded', 'wp-smartpay'),
-        'failed'    => __('Failed', 'wp-smartpay'),
-        'abandoned' => __('Abandoned', 'wp-smartpay'),
-        'revoked'   => __('Revoked', 'wp-smartpay'),
-        'processing' => __('Processing', 'wp-smartpay')
+        'pending'   => __('Pending', 'smartpay'),
+        'publish'   => __('Complete', 'smartpay'),
+        'refunded'  => __('Refunded', 'smartpay'),
+        'failed'    => __('Failed', 'smartpay'),
+        'abandoned' => __('Abandoned', 'smartpay'),
+        'revoked'   => __('Revoked', 'smartpay'),
+        'processing' => __('Processing', 'smartpay')
     );
 
     return apply_filters('smartpay_payment_statuses', $payment_statuses);

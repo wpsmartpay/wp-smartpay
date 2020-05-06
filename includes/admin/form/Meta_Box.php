@@ -68,15 +68,15 @@ final class Meta_Box
                 array(
                     '_form_payment_type'    => array(
                         'id'                => '_form_payment_type',
-                        'name'              => __('One-Time Amount', 'wp-smartpay'),
+                        'name'              => __('One-Time Amount', 'smartpay'),
                         'type'              => 'radio',
                         'options'           => array(
                             'one-time'      => array(
-                                'name'      => __('One-Time', 'wp-smartpay'),
+                                'name'      => __('One-Time', 'smartpay'),
                                 'disabled'  => false
                             ),
                             '_'             => array(
-                                'name'      => __('Recurring (Available on Pro)', 'wp-smartpay'),
+                                'name'      => __('Recurring (Available on Pro)', 'smartpay'),
                                 'disabled'  => true
                             ),
                         ),
@@ -84,15 +84,15 @@ final class Meta_Box
                     ),
                     '_form_amount_type'    => array(
                         'id'                => '_form_amount_type',
-                        'name'              => __('Amount type', 'wp-smartpay'),
+                        'name'              => __('Amount type', 'smartpay'),
                         'type'              => 'radio',
                         'options'           => array(
                             'fixed'      => array(
-                                'name'      => __('Fixed amount', 'wp-smartpay'),
+                                'name'      => __('Fixed amount', 'smartpay'),
                                 'disabled'  => false
                             ),
                             'multiple'             => array(
-                                'name'      => __('Multiple', 'wp-smartpay'),
+                                'name'      => __('Multiple', 'smartpay'),
                                 'disabled'  => false
                             ),
                         ),
@@ -100,7 +100,7 @@ final class Meta_Box
                     ),
                     '_form_amount'          => array(
                         'id'                => '_form_amount',
-                        'name'              => __('Fixed Amount', 'wp-smartpay'),
+                        'name'              => __('Fixed Amount', 'smartpay'),
                         'type'              => 'text',
                         'placeholder'       => 'Form Amount',
                     ),
@@ -125,26 +125,26 @@ final class Meta_Box
                     // On-Page Form Display
                     '_form_payment_button_text'     => array(
                         'id'                => '_form_payment_button_text',
-                        'name'              => __('Payment Button Text', 'wp-smartpay'),
+                        'name'              => __('Payment Button Text', 'smartpay'),
                         'type'              => 'text',
                         'placeholder'       => 'Pay with Paddle',
                     ),
                     // '_form_payment_button_processing_text'     => array(
                     //     'id'                => '_form_payment_button_processing_text',
-                    //     'name'              => __('Payment Button Processing Text', 'wp-smartpay'),
+                    //     'name'              => __('Payment Button Processing Text', 'smartpay'),
                     //     'type'              => 'text',
                     //     'placeholder'       => 'Please wait...',
                     // ),
                     // '_form_payment_button_style'    => array(
                     //     'id'                => '_form_payment_button_style',
-                    //     'name'              => __('Payment Button Style', 'wp-smartpay'),
+                    //     'name'              => __('Payment Button Style', 'smartpay'),
                     //     'type'              => 'radio',
                     //     'options'           => array(
                     //         'paddle_green'      => array(
-                    //             'name'      => __('Paddle Green', 'wp-smartpay'),
+                    //             'name'      => __('Paddle Green', 'smartpay'),
                     //         ),
                     //         'site_default'             => array(
-                    //             'name'      => __('Site Default', 'wp-smartpay'),
+                    //             'name'      => __('Site Default', 'smartpay'),
                     //         ),
                     //     ),
                     //     'std'               => 'paddle_green',
@@ -153,20 +153,20 @@ final class Meta_Box
                     // Paddle Checkout Display
                     // '_form_paddle_checkout_image'     => array(
                     //     'id'                => '_form_paddle_checkout_image',
-                    //     'name'              => __('Paddle checkout image', 'wp-smartpay'),
+                    //     'name'              => __('Paddle checkout image', 'smartpay'),
                     //     'type'              => 'text',
                     //     'placeholder'       => 'Image link',
                     // ),
                     // '_form_paddle_checkout_location'    => array(
                     //     'id'                => '_form_paddle_checkout_location',
-                    //     'name'              => __('Paddle checkout location', 'wp-smartpay'),
+                    //     'name'              => __('Paddle checkout location', 'smartpay'),
                     //     'type'              => 'radio',
                     //     'options'           => array(
                     //         'on_site'      => array(
-                    //             'name'      => __('On site', 'wp-smartpay'),
+                    //             'name'      => __('On site', 'smartpay'),
                     //         ),
                     //         'paddle_checkout'             => array(
-                    //             'name'      => __('Paddle checkout', 'wp-smartpay'),
+                    //             'name'      => __('Paddle checkout', 'smartpay'),
                     //         ),
                     //     ),
                     //     'std'               => 'on_site',
