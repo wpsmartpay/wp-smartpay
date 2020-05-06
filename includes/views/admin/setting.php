@@ -1,6 +1,6 @@
 <?php
 
-use SmartPay\Admin\Setting\Register_Setting;
+use SmartPay\Admin\Settings\Register_Setting;
 
 $settings_tabs  = Register_Setting::settings_tabs();
 $all_settings   = Register_Setting::get_registered_settings_sections();
@@ -125,7 +125,9 @@ ob_start();
             </div>
         </div>
 
-    </div> <!-- container end
+    </div>
+    <!-- container end
  -->
+
 </div>
 <?php echo ob_get_clean(); ?>

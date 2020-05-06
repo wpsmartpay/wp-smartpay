@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Admin\Setting;
+namespace SmartPay\Admin\Settings;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

@@ -6,23 +6,10 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"SmartPay\\": [
-				"includes/",
-				"includes/abstracts/"
-			],
-			"SmartPay\\Admin\\": "includes/admin/",
-			"SmartPay\\Admin\\Setting\\": "includes/admin/settings",
-			"SmartPay\\Gateway\\": "includes/gateways/",
-			"SmartPay\\Form\\": "includes/forms",
-			"SmartPay\\Product\\": "includes/products",
-			"SmartPay\\Payment\\": "includes/payments"
+			"SmartPay\\": "src/"
 		},
 		"files": [
-			"includes/helpers.php",
-			"includes/admin/admin-functions.php",
-			"includes/gateways/gateway-functions.php",
-			"includes/forms/form-functions.php",
-			"includes/payments/payment-functions.php"
+			"includes/helpers.php"
 		]
 	}
 }

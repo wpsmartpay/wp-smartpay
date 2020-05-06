@@ -1,6 +1,5 @@
 <?php
 
-use SmartPay\Gateway;
 use SmartPay\Models\SmartPay_Payment;
 use SmartPay\Payment;
 use SmartPay\Setting;

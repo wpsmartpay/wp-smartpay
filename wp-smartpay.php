@@ -20,7 +20,7 @@
 namespace SmartPay;
 
 use SmartPay\Admin\Admin;
-use SmartPay\Product\Product;
+use SmartPay\Downloads\Download;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -53,13 +53,12 @@ final class SmartPay
 	 */
 	private $db_version_key = 'smartpay_version';
 
-
 	/**
 	 * Session Object.
 	 *
 	 * This holds purchase sessions, and anything else stored in the session.
 	 *
-	 * @var object|SP_Session
+	 * @var object|SmartPay_Session
 	 * @since 1.5
 	 */
 	public $session;
@@ -82,7 +81,7 @@ final class SmartPay
 
 		PostType::instance();
 
-		Product::instance();
+		Download::instance();
 
 		Shortcode::instance();
 
