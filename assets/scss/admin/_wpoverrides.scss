@@ -16,5 +16,8 @@
 	}
 }
 
-// Button
+// Custom swtich
+.custom-control-label::before{
+	height: 15px;
+}
 

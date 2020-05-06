@@ -186,11 +186,186 @@
 .smartpay .mr-auto,.smartpay .mx-auto{margin-right:auto !important}
 .smartpay .mb-auto,.smartpay .my-auto{margin-bottom:auto !important}
 .smartpay .ml-auto,.smartpay .mx-auto{margin-left:auto !important}
-.smartpay .btn,.smartpay .wp-core-ui .button-primary{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
-.smartpay .btn:hover,.smartpay .wp-core-ui .button-primary:hover{color:#212529;text-decoration:none}
-.smartpay .btn:focus,.smartpay .wp-core-ui .button-primary:focus,.smartpay .btn.focus,.smartpay .wp-core-ui .focus.button-primary{outline:0;box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
-.smartpay .btn.disabled,.smartpay .wp-core-ui .disabled.button-primary,.smartpay .btn:disabled,.smartpay .wp-core-ui .button-primary:disabled{opacity:.65}
-.smartpay a.btn.disabled,.smartpay .wp-core-ui a.disabled.button-primary,.smartpay fieldset:disabled a.btn,.smartpay fieldset:disabled .wp-core-ui a.button-primary,.smartpay .wp-core-ui fieldset:disabled a.button-primary{pointer-events:none}
+.smartpay .form-control{display:block;width:100%;height:calc(1.5em + 0.75rem + 2px);padding:.375rem .75rem;font-size:1rem;font-weight:400;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+.smartpay .form-control::-ms-expand{background-color:transparent;border:0}
+.smartpay .form-control:-moz-focusring{color:transparent;text-shadow:0 0 0 #495057}
+.smartpay .form-control:focus{color:#495057;background-color:#fff;border-color:#80bdff;outline:0;box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .form-control::placeholder{color:#6c757d;opacity:1}
+.smartpay .form-control:disabled,.smartpay .form-control[readonly]{background-color:#e9ecef;opacity:1}
+.smartpay select.form-control:focus::-ms-value{color:#495057;background-color:#fff}
+.smartpay .form-control-file,.smartpay .form-control-range{display:block;width:100%}
+.smartpay .col-form-label{padding-top:calc(0.375rem + 1px);padding-bottom:calc(0.375rem + 1px);margin-bottom:0;font-size:inherit;line-height:1.5}
+.smartpay .col-form-label-lg{padding-top:calc(0.5rem + 1px);padding-bottom:calc(0.5rem + 1px);font-size:1.25rem;line-height:1.5}
+.smartpay .col-form-label-sm{padding-top:calc(0.25rem + 1px);padding-bottom:calc(0.25rem + 1px);font-size:.875rem;line-height:1.5}
+.smartpay .form-control-plaintext{display:block;width:100%;padding:.375rem 0;margin-bottom:0;font-size:1rem;line-height:1.5;color:#212529;background-color:transparent;border:solid transparent;border-width:1px 0}
+.smartpay .form-control-plaintext.form-control-sm,.smartpay .form-control-plaintext.form-control-lg{padding-right:0;padding-left:0}
+.smartpay .form-control-sm{height:calc(1.5em + 0.5rem + 2px);padding:.25rem .5rem;font-size:.875rem;line-height:1.5;border-radius:.2rem}
+.smartpay .form-control-lg{height:calc(1.5em + 1rem + 2px);padding:.5rem 1rem;font-size:1.25rem;line-height:1.5;border-radius:.3rem}
+.smartpay select.form-control[size],.smartpay select.form-control[multiple]{height:auto}
+.smartpay textarea.form-control{height:auto}
+.smartpay .form-group{margin-bottom:1rem}
+.smartpay .form-text{display:block;margin-top:.25rem}
+.smartpay .form-row{display:flex;flex-wrap:wrap;margin-right:-5px;margin-left:-5px}
+.smartpay .form-row>.col,.smartpay .form-row>[class*="col-"]{padding-right:5px;padding-left:5px}
+.smartpay .form-check{position:relative;display:block;padding-left:1.25rem}
+.smartpay .form-check-input{position:absolute;margin-top:.3rem;margin-left:-1.25rem}
+.smartpay .form-check-input[disabled] ~ .form-check-label,.smartpay .form-check-input:disabled ~ .form-check-label{color:#6c757d}
+.smartpay .form-check-label{margin-bottom:0}
+.smartpay .form-check-inline{display:inline-flex;align-items:center;padding-left:0;margin-right:.75rem}
+.smartpay .form-check-inline .form-check-input{position:static;margin-top:0;margin-right:.3125rem;margin-left:0}
+.smartpay .valid-feedback{display:none;width:100%;margin-top:.25rem;font-size:80%;color:#28a745}
+.smartpay .valid-tooltip{position:absolute;top:100%;z-index:5;display:none;max-width:100%;padding:.25rem .5rem;margin-top:.1rem;font-size:.875rem;line-height:1.5;color:#fff;background-color:rgba(40,167,69,0.9);border-radius:.25rem}
+.was-validated .smartpay:valid ~ .valid-feedback,.was-validated .smartpay:valid ~ .valid-tooltip,.smartpay.is-valid ~ .valid-feedback,.smartpay.is-valid ~ .valid-tooltip{display:block}
+.was-validated .smartpay .form-control:valid,.smartpay .form-control.is-valid{border-color:#28a745;padding-right:calc(1.5em + 0.75rem);background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right calc(0.375em + 0.1875rem) center;background-size:calc(0.75em + 0.375rem) calc(0.75em + 0.375rem)}
+.was-validated .smartpay .form-control:valid:focus,.smartpay .form-control.is-valid:focus{border-color:#28a745;box-shadow:0 0 0 .2rem rgba(40,167,69,0.25)}
+.was-validated .smartpay textarea.form-control:valid,.smartpay textarea.form-control.is-valid{padding-right:calc(1.5em + 0.75rem);background-position:top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem)}
+.was-validated .smartpay .custom-select:valid,.smartpay .custom-select.is-valid{border-color:#28a745;padding-right:calc(0.75em + 2.3125rem);background:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e") #fff no-repeat center right 1.75rem/calc(0.75em + 0.375rem) calc(0.75em + 0.375rem)}
+.was-validated .smartpay .custom-select:valid:focus,.smartpay .custom-select.is-valid:focus{border-color:#28a745;box-shadow:0 0 0 .2rem rgba(40,167,69,0.25)}
+.was-validated .smartpay .form-check-input:valid ~ .form-check-label,.smartpay .form-check-input.is-valid ~ .form-check-label{color:#28a745}
+.was-validated .smartpay .form-check-input:valid ~ .valid-feedback,.was-validated .smartpay .form-check-input:valid ~ .valid-tooltip,.smartpay .form-check-input.is-valid ~ .valid-feedback,.smartpay .form-check-input.is-valid ~ .valid-tooltip{display:block}
+.was-validated .smartpay .custom-control-input:valid ~ .custom-control-label,.smartpay .custom-control-input.is-valid ~ .custom-control-label{color:#28a745}
+.was-validated .smartpay .custom-control-input:valid ~ .custom-control-label::before,.smartpay .custom-control-input.is-valid ~ .custom-control-label::before{border-color:#28a745}
+.was-validated .smartpay .custom-control-input:valid:checked ~ .custom-control-label::before,.smartpay .custom-control-input.is-valid:checked ~ .custom-control-label::before{border-color:#34ce57;background-color:#34ce57}
+.was-validated .smartpay .custom-control-input:valid:focus ~ .custom-control-label::before,.smartpay .custom-control-input.is-valid:focus ~ .custom-control-label::before{box-shadow:0 0 0 .2rem rgba(40,167,69,0.25)}
+.was-validated .smartpay .custom-control-input:valid:focus:not(:checked) ~ .custom-control-label::before,.smartpay .custom-control-input.is-valid:focus:not(:checked) ~ .custom-control-label::before{border-color:#28a745}
+.was-validated .smartpay .custom-file-input:valid ~ .custom-file-label,.smartpay .custom-file-input.is-valid ~ .custom-file-label{border-color:#28a745}
+.was-validated .smartpay .custom-file-input:valid:focus ~ .custom-file-label,.smartpay .custom-file-input.is-valid:focus ~ .custom-file-label{border-color:#28a745;box-shadow:0 0 0 .2rem rgba(40,167,69,0.25)}
+.smartpay .invalid-feedback{display:none;width:100%;margin-top:.25rem;font-size:80%;color:#dc3545}
+.smartpay .invalid-tooltip{position:absolute;top:100%;z-index:5;display:none;max-width:100%;padding:.25rem .5rem;margin-top:.1rem;font-size:.875rem;line-height:1.5;color:#fff;background-color:rgba(220,53,69,0.9);border-radius:.25rem}
+.was-validated .smartpay:invalid ~ .invalid-feedback,.was-validated .smartpay:invalid ~ .invalid-tooltip,.smartpay.is-invalid ~ .invalid-feedback,.smartpay.is-invalid ~ .invalid-tooltip{display:block}
+.was-validated .smartpay .form-control:invalid,.smartpay .form-control.is-invalid{border-color:#dc3545;padding-right:calc(1.5em + 0.75rem);background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right calc(0.375em + 0.1875rem) center;background-size:calc(0.75em + 0.375rem) calc(0.75em + 0.375rem)}
+.was-validated .smartpay .form-control:invalid:focus,.smartpay .form-control.is-invalid:focus{border-color:#dc3545;box-shadow:0 0 0 .2rem rgba(220,53,69,0.25)}
+.was-validated .smartpay textarea.form-control:invalid,.smartpay textarea.form-control.is-invalid{padding-right:calc(1.5em + 0.75rem);background-position:top calc(0.375em + 0.1875rem) right calc(0.375em + 0.1875rem)}
+.was-validated .smartpay .custom-select:invalid,.smartpay .custom-select.is-invalid{border-color:#dc3545;padding-right:calc(0.75em + 2.3125rem);background:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px,url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23dc3545' viewBox='0 0 12 12'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") #fff no-repeat center right 1.75rem/calc(0.75em + 0.375rem) calc(0.75em + 0.375rem)}
+.was-validated .smartpay .custom-select:invalid:focus,.smartpay .custom-select.is-invalid:focus{border-color:#dc3545;box-shadow:0 0 0 .2rem rgba(220,53,69,0.25)}
+.was-validated .smartpay .form-check-input:invalid ~ .form-check-label,.smartpay .form-check-input.is-invalid ~ .form-check-label{color:#dc3545}
+.was-validated .smartpay .form-check-input:invalid ~ .invalid-feedback,.was-validated .smartpay .form-check-input:invalid ~ .invalid-tooltip,.smartpay .form-check-input.is-invalid ~ .invalid-feedback,.smartpay .form-check-input.is-invalid ~ .invalid-tooltip{display:block}
+.was-validated .smartpay .custom-control-input:invalid ~ .custom-control-label,.smartpay .custom-control-input.is-invalid ~ .custom-control-label{color:#dc3545}
+.was-validated .smartpay .custom-control-input:invalid ~ .custom-control-label::before,.smartpay .custom-control-input.is-invalid ~ .custom-control-label::before{border-color:#dc3545}
+.was-validated .smartpay .custom-control-input:invalid:checked ~ .custom-control-label::before,.smartpay .custom-control-input.is-invalid:checked ~ .custom-control-label::before{border-color:#e4606d;background-color:#e4606d}
+.was-validated .smartpay .custom-control-input:invalid:focus ~ .custom-control-label::before,.smartpay .custom-control-input.is-invalid:focus ~ .custom-control-label::before{box-shadow:0 0 0 .2rem rgba(220,53,69,0.25)}
+.was-validated .smartpay .custom-control-input:invalid:focus:not(:checked) ~ .custom-control-label::before,.smartpay .custom-control-input.is-invalid:focus:not(:checked) ~ .custom-control-label::before{border-color:#dc3545}
+.was-validated .smartpay .custom-file-input:invalid ~ .custom-file-label,.smartpay .custom-file-input.is-invalid ~ .custom-file-label{border-color:#dc3545}
+.was-validated .smartpay .custom-file-input:invalid:focus ~ .custom-file-label,.smartpay .custom-file-input.is-invalid:focus ~ .custom-file-label{border-color:#dc3545;box-shadow:0 0 0 .2rem rgba(220,53,69,0.25)}
+.smartpay .form-inline{display:flex;flex-flow:row wrap;align-items:center}
+.smartpay .form-inline .form-check{width:100%}
+.smartpay .btn-group,.smartpay .btn-group-vertical{position:relative;display:inline-flex;vertical-align:middle}
+.smartpay .btn-group>.btn,.smartpay .btn-group-vertical>.btn{position:relative;flex:1 1 auto}
+.smartpay .btn-group>.btn:hover,.smartpay .btn-group-vertical>.btn:hover{z-index:1}
+.smartpay .btn-group>.btn:focus,.smartpay .btn-group>.btn:active,.smartpay .btn-group>.btn.active,.smartpay .btn-group-vertical>.btn:focus,.smartpay .btn-group-vertical>.btn:active,.smartpay .btn-group-vertical>.btn.active{z-index:1}
+.smartpay .btn-toolbar{display:flex;flex-wrap:wrap;justify-content:flex-start}
+.smartpay .btn-toolbar .input-group{width:auto}
+.smartpay .btn-group>.btn:not(:first-child),.smartpay .btn-group>.btn-group:not(:first-child){margin-left:-1px}
+.smartpay .btn-group>.btn:not(:last-child):not(.dropdown-toggle),.smartpay .btn-group>.btn-group:not(:last-child)>.btn{border-top-right-radius:0;border-bottom-right-radius:0}
+.smartpay .btn-group>.btn:not(:first-child),.smartpay .btn-group>.btn-group:not(:first-child)>.btn{border-top-left-radius:0;border-bottom-left-radius:0}
+.smartpay .dropdown-toggle-split{padding-right:.5625rem;padding-left:.5625rem}
+.smartpay .dropdown-toggle-split::after,.dropup .smartpay .dropdown-toggle-split::after,.dropright .smartpay .dropdown-toggle-split::after{margin-left:0}
+.dropleft .smartpay .dropdown-toggle-split::before{margin-right:0}
+.smartpay .btn-sm+.dropdown-toggle-split,.smartpay .btn-group-sm>.btn+.dropdown-toggle-split{padding-right:.375rem;padding-left:.375rem}
+.smartpay .btn-lg+.dropdown-toggle-split,.smartpay .btn-group-lg>.btn+.dropdown-toggle-split{padding-right:.75rem;padding-left:.75rem}
+.smartpay .btn-group-vertical{flex-direction:column;align-items:flex-start;justify-content:center}
+.smartpay .btn-group-vertical>.btn,.smartpay .btn-group-vertical>.btn-group{width:100%}
+.smartpay .btn-group-vertical>.btn:not(:first-child),.smartpay .btn-group-vertical>.btn-group:not(:first-child){margin-top:-1px}
+.smartpay .btn-group-vertical>.btn:not(:last-child):not(.dropdown-toggle),.smartpay .btn-group-vertical>.btn-group:not(:last-child)>.btn{border-bottom-right-radius:0;border-bottom-left-radius:0}
+.smartpay .btn-group-vertical>.btn:not(:first-child),.smartpay .btn-group-vertical>.btn-group:not(:first-child)>.btn{border-top-left-radius:0;border-top-right-radius:0}
+.smartpay .btn-group-toggle>.btn,.smartpay .btn-group-toggle>.btn-group>.btn{margin-bottom:0}
+.smartpay .btn-group-toggle>.btn input[type="radio"],.smartpay .btn-group-toggle>.btn input[type="checkbox"],.smartpay .btn-group-toggle>.btn-group>.btn input[type="radio"],.smartpay .btn-group-toggle>.btn-group>.btn input[type="checkbox"]{position:absolute;clip:rect(0,0,0,0);pointer-events:none}
+.smartpay .input-group{position:relative;display:flex;flex-wrap:wrap;align-items:stretch;width:100%}
+.smartpay .input-group>.form-control,.smartpay .input-group>.form-control-plaintext,.smartpay .input-group>.custom-select,.smartpay .input-group>.custom-file{position:relative;flex:1 1 0;min-width:0;margin-bottom:0}
+.smartpay .input-group>.form-control+.form-control,.smartpay .input-group>.form-control+.custom-select,.smartpay .input-group>.form-control+.custom-file,.smartpay .input-group>.form-control-plaintext+.form-control,.smartpay .input-group>.form-control-plaintext+.custom-select,.smartpay .input-group>.form-control-plaintext+.custom-file,.smartpay .input-group>.custom-select+.form-control,.smartpay .input-group>.custom-select+.custom-select,.smartpay .input-group>.custom-select+.custom-file,.smartpay .input-group>.custom-file+.form-control,.smartpay .input-group>.custom-file+.custom-select,.smartpay .input-group>.custom-file+.custom-file{margin-left:-1px}
+.smartpay .input-group>.form-control:focus,.smartpay .input-group>.custom-select:focus,.smartpay .input-group>.custom-file .custom-file-input:focus ~ .custom-file-label{z-index:3}
+.smartpay .input-group>.custom-file .custom-file-input:focus{z-index:4}
+.smartpay .input-group>.form-control:not(:last-child),.smartpay .input-group>.custom-select:not(:last-child){border-top-right-radius:0;border-bottom-right-radius:0}
+.smartpay .input-group>.form-control:not(:first-child),.smartpay .input-group>.custom-select:not(:first-child){border-top-left-radius:0;border-bottom-left-radius:0}
+.smartpay .input-group>.custom-file{display:flex;align-items:center}
+.smartpay .input-group>.custom-file:not(:last-child) .custom-file-label,.smartpay .input-group>.custom-file:not(:last-child) .custom-file-label::after{border-top-right-radius:0;border-bottom-right-radius:0}
+.smartpay .input-group>.custom-file:not(:first-child) .custom-file-label{border-top-left-radius:0;border-bottom-left-radius:0}
+.smartpay .input-group-prepend,.smartpay .input-group-append{display:flex}
+.smartpay .input-group-prepend .btn,.smartpay .input-group-append .btn{position:relative;z-index:2}
+.smartpay .input-group-prepend .btn:focus,.smartpay .input-group-append .btn:focus{z-index:3}
+.smartpay .input-group-prepend .btn+.btn,.smartpay .input-group-prepend .btn+.input-group-text,.smartpay .input-group-prepend .input-group-text+.input-group-text,.smartpay .input-group-prepend .input-group-text+.btn,.smartpay .input-group-append .btn+.btn,.smartpay .input-group-append .btn+.input-group-text,.smartpay .input-group-append .input-group-text+.input-group-text,.smartpay .input-group-append .input-group-text+.btn{margin-left:-1px}
+.smartpay .input-group-prepend{margin-right:-1px}
+.smartpay .input-group-append{margin-left:-1px}
+.smartpay .input-group-text{display:flex;align-items:center;padding:.375rem .75rem;margin-bottom:0;font-size:1rem;font-weight:400;line-height:1.5;color:#495057;text-align:center;white-space:nowrap;background-color:#e9ecef;border:1px solid #ced4da;border-radius:.25rem}
+.smartpay .input-group-text input[type="radio"],.smartpay .input-group-text input[type="checkbox"]{margin-top:0}
+.smartpay .input-group-lg>.form-control:not(textarea),.smartpay .input-group-lg>.custom-select{height:calc(1.5em + 1rem + 2px)}
+.smartpay .input-group-lg>.form-control,.smartpay .input-group-lg>.custom-select,.smartpay .input-group-lg>.input-group-prepend>.input-group-text,.smartpay .input-group-lg>.input-group-append>.input-group-text,.smartpay .input-group-lg>.input-group-prepend>.btn,.smartpay .input-group-lg>.input-group-append>.btn{padding:.5rem 1rem;font-size:1.25rem;line-height:1.5;border-radius:.3rem}
+.smartpay .input-group-sm>.form-control:not(textarea),.smartpay .input-group-sm>.custom-select{height:calc(1.5em + 0.5rem + 2px)}
+.smartpay .input-group-sm>.form-control,.smartpay .input-group-sm>.custom-select,.smartpay .input-group-sm>.input-group-prepend>.input-group-text,.smartpay .input-group-sm>.input-group-append>.input-group-text,.smartpay .input-group-sm>.input-group-prepend>.btn,.smartpay .input-group-sm>.input-group-append>.btn{padding:.25rem .5rem;font-size:.875rem;line-height:1.5;border-radius:.2rem}
+.smartpay .input-group-lg>.custom-select,.smartpay .input-group-sm>.custom-select{padding-right:1.75rem}
+.smartpay .input-group>.input-group-prepend>.btn,.smartpay .input-group>.input-group-prepend>.input-group-text,.smartpay .input-group>.input-group-append:not(:last-child)>.btn,.smartpay .input-group>.input-group-append:not(:last-child)>.input-group-text,.smartpay .input-group>.input-group-append:last-child>.btn:not(:last-child):not(.dropdown-toggle),.smartpay .input-group>.input-group-append:last-child>.input-group-text:not(:last-child){border-top-right-radius:0;border-bottom-right-radius:0}
+.smartpay .input-group>.input-group-append>.btn,.smartpay .input-group>.input-group-append>.input-group-text,.smartpay .input-group>.input-group-prepend:not(:first-child)>.btn,.smartpay .input-group>.input-group-prepend:not(:first-child)>.input-group-text,.smartpay .input-group>.input-group-prepend:first-child>.btn:not(:first-child),.smartpay .input-group>.input-group-prepend:first-child>.input-group-text:not(:first-child){border-top-left-radius:0;border-bottom-left-radius:0}
+.smartpay .custom-control{position:relative;display:block;min-height:1.5rem;padding-left:1.5rem}
+.smartpay .custom-control-inline{display:inline-flex;margin-right:1rem}
+.smartpay .custom-control-input{position:absolute;left:0;z-index:-1;width:1rem;height:1.25rem;opacity:0}
+.smartpay .custom-control-input:checked ~ .custom-control-label::before{color:#fff;border-color:#007bff;background-color:#007bff}
+.smartpay .custom-control-input:focus ~ .custom-control-label::before{box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-control-input:focus:not(:checked) ~ .custom-control-label::before{border-color:#80bdff}
+.smartpay .custom-control-input:not(:disabled):active ~ .custom-control-label::before{color:#fff;background-color:#b3d7ff;border-color:#b3d7ff}
+.smartpay .custom-control-input[disabled] ~ .custom-control-label,.smartpay .custom-control-input:disabled ~ .custom-control-label{color:#6c757d}
+.smartpay .custom-control-input[disabled] ~ .custom-control-label::before,.smartpay .custom-control-input:disabled ~ .custom-control-label::before{background-color:#e9ecef}
+.smartpay .custom-control-label{position:relative;margin-bottom:0;vertical-align:top}
+.smartpay .custom-control-label::before{position:absolute;top:.25rem;left:-1.5rem;display:block;width:1rem;height:1rem;pointer-events:none;content:"";background-color:#fff;border:#adb5bd solid 1px}
+.smartpay .custom-control-label::after{position:absolute;top:.25rem;left:-1.5rem;display:block;width:1rem;height:1rem;content:"";background:no-repeat 50% / 50% 50%}
+.smartpay .custom-checkbox .custom-control-label::before{border-radius:.25rem}
+.smartpay .custom-checkbox .custom-control-input:checked ~ .custom-control-label::after{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e")}
+.smartpay .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before{border-color:#007bff;background-color:#007bff}
+.smartpay .custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::after{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3e%3cpath stroke='%23fff' d='M0 2h4'/%3e%3c/svg%3e")}
+.smartpay .custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before{background-color:rgba(0,123,255,0.5)}
+.smartpay .custom-checkbox .custom-control-input:disabled:indeterminate ~ .custom-control-label::before{background-color:rgba(0,123,255,0.5)}
+.smartpay .custom-radio .custom-control-label::before{border-radius:50%}
+.smartpay .custom-radio .custom-control-input:checked ~ .custom-control-label::after{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e")}
+.smartpay .custom-radio .custom-control-input:disabled:checked ~ .custom-control-label::before{background-color:rgba(0,123,255,0.5)}
+.smartpay .custom-switch{padding-left:2.25rem}
+.smartpay .custom-switch .custom-control-label::before{left:-2.25rem;width:1.75rem;pointer-events:all;border-radius:.5rem}
+.smartpay .custom-switch .custom-control-label::after{top:calc(0.25rem + 2px);left:calc(-2.25rem + 2px);width:calc(1rem - 4px);height:calc(1rem - 4px);background-color:#adb5bd;border-radius:.5rem;transition:transform .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+.smartpay .custom-switch .custom-control-input:checked ~ .custom-control-label::after{background-color:#fff;transform:translateX(0.75rem)}
+.smartpay .custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before{background-color:rgba(0,123,255,0.5)}
+.smartpay .custom-select{display:inline-block;width:100%;height:calc(1.5em + 0.75rem + 2px);padding:.375rem 1.75rem .375rem .75rem;font-size:1rem;font-weight:400;line-height:1.5;color:#495057;vertical-align:middle;background:#fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;border:1px solid #ced4da;border-radius:.25rem;appearance:none}
+.smartpay .custom-select:focus{border-color:#80bdff;outline:0;box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-select:focus::-ms-value{color:#495057;background-color:#fff}
+.smartpay .custom-select[multiple],.smartpay .custom-select[size]:not([size="1"]){height:auto;padding-right:.75rem;background-image:none}
+.smartpay .custom-select:disabled{color:#6c757d;background-color:#e9ecef}
+.smartpay .custom-select::-ms-expand{display:none}
+.smartpay .custom-select:-moz-focusring{color:transparent;text-shadow:0 0 0 #495057}
+.smartpay .custom-select-sm{height:calc(1.5em + 0.5rem + 2px);padding-top:.25rem;padding-bottom:.25rem;padding-left:.5rem;font-size:.875rem}
+.smartpay .custom-select-lg{height:calc(1.5em + 1rem + 2px);padding-top:.5rem;padding-bottom:.5rem;padding-left:1rem;font-size:1.25rem}
+.smartpay .custom-file{position:relative;display:inline-block;width:100%;height:calc(1.5em + 0.75rem + 2px);margin-bottom:0}
+.smartpay .custom-file-input{position:relative;z-index:2;width:100%;height:calc(1.5em + 0.75rem + 2px);margin:0;opacity:0}
+.smartpay .custom-file-input:focus ~ .custom-file-label{border-color:#80bdff;box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-file-input[disabled] ~ .custom-file-label,.smartpay .custom-file-input:disabled ~ .custom-file-label{background-color:#e9ecef}
+.smartpay .custom-file-input:lang(en) ~ .custom-file-label::after{content:"Browse"}
+.smartpay .custom-file-input ~ .custom-file-label[data-browse]::after{content:attr(data-browse)}
+.smartpay .custom-file-label{position:absolute;top:0;right:0;left:0;z-index:1;height:calc(1.5em + 0.75rem + 2px);padding:.375rem .75rem;font-weight:400;line-height:1.5;color:#495057;background-color:#fff;border:1px solid #ced4da;border-radius:.25rem}
+.smartpay .custom-file-label::after{position:absolute;top:0;right:0;bottom:0;z-index:3;display:block;height:calc(1.5em + 0.75rem);padding:.375rem .75rem;line-height:1.5;color:#495057;content:"Browse";background-color:#e9ecef;border-left:inherit;border-radius:0 .25rem .25rem 0}
+.smartpay .custom-range{width:100%;height:1.4rem;padding:0;background-color:transparent;appearance:none}
+.smartpay .custom-range:focus{outline:0}
+.smartpay .custom-range:focus::-webkit-slider-thumb{box-shadow:0 0 0 1px #fff,0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-range:focus::-moz-range-thumb{box-shadow:0 0 0 1px #fff,0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-range:focus::-ms-thumb{box-shadow:0 0 0 1px #fff,0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .custom-range::-moz-focus-outer{border:0}
+.smartpay .custom-range::-webkit-slider-thumb{width:1rem;height:1rem;margin-top:-0.25rem;background-color:#007bff;border:0;border-radius:1rem;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;appearance:none}
+.smartpay .custom-range::-webkit-slider-thumb:active{background-color:#b3d7ff}
+.smartpay .custom-range::-webkit-slider-runnable-track{width:100%;height:.5rem;color:transparent;cursor:pointer;background-color:#dee2e6;border-color:transparent;border-radius:1rem}
+.smartpay .custom-range::-moz-range-thumb{width:1rem;height:1rem;background-color:#007bff;border:0;border-radius:1rem;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;appearance:none}
+.smartpay .custom-range::-moz-range-thumb:active{background-color:#b3d7ff}
+.smartpay .custom-range::-moz-range-track{width:100%;height:.5rem;color:transparent;cursor:pointer;background-color:#dee2e6;border-color:transparent;border-radius:1rem}
+.smartpay .custom-range::-ms-thumb{width:1rem;height:1rem;margin-top:0;margin-right:.2rem;margin-left:.2rem;background-color:#007bff;border:0;border-radius:1rem;transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;appearance:none}
+.smartpay .custom-range::-ms-thumb:active{background-color:#b3d7ff}
+.smartpay .custom-range::-ms-track{width:100%;height:.5rem;color:transparent;cursor:pointer;background-color:transparent;border-color:transparent;border-width:.5rem}
+.smartpay .custom-range::-ms-fill-lower{background-color:#dee2e6;border-radius:1rem}
+.smartpay .custom-range::-ms-fill-upper{margin-right:15px;background-color:#dee2e6;border-radius:1rem}
+.smartpay .custom-range:disabled::-webkit-slider-thumb{background-color:#adb5bd}
+.smartpay .custom-range:disabled::-webkit-slider-runnable-track{cursor:default}
+.smartpay .custom-range:disabled::-moz-range-thumb{background-color:#adb5bd}
+.smartpay .custom-range:disabled::-moz-range-track{cursor:default}
+.smartpay .custom-range:disabled::-ms-thumb{background-color:#adb5bd}
+.smartpay .custom-control-label::before,.smartpay .custom-file-label,.smartpay .custom-select{transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+.smartpay .btn{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+.smartpay .btn:hover{color:#212529;text-decoration:none}
+.smartpay .btn:focus,.smartpay .btn.focus{outline:0;box-shadow:0 0 0 .2rem rgba(0,123,255,0.25)}
+.smartpay .btn.disabled,.smartpay .btn:disabled{opacity:.65}
+.smartpay a.btn.disabled,.smartpay fieldset:disabled a.btn{pointer-events:none}
 .smartpay .btn-primary{color:#fff;background-color:#007bff;border-color:#007bff}
 .smartpay .btn-primary:hover{color:#fff;background-color:#0069d9;border-color:#0062cc}
 .smartpay .btn-primary:focus,.smartpay .btn-primary.focus{color:#fff;background-color:#0069d9;border-color:#0062cc;box-shadow:0 0 0 .2rem rgba(38,143,255,0.5)}
@@ -291,8 +466,8 @@
 .smartpay .btn-link:hover{color:#0056b3;text-decoration:underline}
 .smartpay .btn-link:focus,.smartpay .btn-link.focus{text-decoration:underline;box-shadow:none}
 .smartpay .btn-link:disabled,.smartpay .btn-link.disabled{color:#6c757d;pointer-events:none}
-.smartpay .btn-lg{padding:.5rem 1rem;font-size:1.25rem;line-height:1.5;border-radius:.3rem}
-.smartpay .btn-sm{padding:.25rem .5rem;font-size:.875rem;line-height:1.5;border-radius:.2rem}
+.smartpay .btn-lg,.smartpay .btn-group-lg>.btn{padding:.5rem 1rem;font-size:1.25rem;line-height:1.5;border-radius:.3rem}
+.smartpay .btn-sm,.smartpay .btn-group-sm>.btn{padding:.25rem .5rem;font-size:.875rem;line-height:1.5;border-radius:.2rem}
 .smartpay .btn-block{display:block;width:100%}
 .smartpay .btn-block+.btn-block{margin-top:.5rem}
 .smartpay input[type="submit"].btn-block,.smartpay input[type="reset"].btn-block,.smartpay input[type="button"].btn-block{width:100%}
@@ -696,7 +871,14 @@
 .smartpay .card{max-width:100%;padding:0}
 .smartpay .card .card-header-tabs{margin-top:0}
 .smartpay .card .card-header-tabs .nav-link{text-decoration:none;font-weight:bold;padding:.7rem 1rem;text-transform:uppercase}
-@media(prefers-reduced-motion:reduce){.smartpay .btn,.smartpay .wp-core-ui .button-primary{transition:none}
+.smartpay .custom-control-label::before{height:15px}
+@media(prefers-reduced-motion:reduce){.smartpay .form-control{transition:none}
+.smartpay .custom-switch .custom-control-label::after{transition:none}
+.smartpay .custom-range::-webkit-slider-thumb{transition:none}
+.smartpay .custom-range::-moz-range-thumb{transition:none}
+.smartpay .custom-range::-ms-thumb{transition:none}
+.smartpay .custom-control-label::before,.smartpay .custom-file-label,.smartpay .custom-select{transition:none}
+.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}
 .smartpay .collapsing{transition:none}
 }@media(min-width:576px){.smartpay .container{max-width:540px}
@@ -881,6 +1063,15 @@
 .smartpay .mr-sm-auto,.smartpay .mx-sm-auto{margin-right:auto !important}
 .smartpay .mb-sm-auto,.smartpay .my-sm-auto{margin-bottom:auto !important}
 .smartpay .ml-sm-auto,.smartpay .mx-sm-auto{margin-left:auto !important}
+.smartpay .form-inline label{display:flex;align-items:center;justify-content:center;margin-bottom:0}
+.smartpay .form-inline .form-group{display:flex;flex:0 0 auto;flex-flow:row wrap;align-items:center;margin-bottom:0}
+.smartpay .form-inline .form-control{display:inline-block;width:auto;vertical-align:middle}
+.smartpay .form-inline .form-control-plaintext{display:inline-block}
+.smartpay .form-inline .input-group,.smartpay .form-inline .custom-select{width:auto}
+.smartpay .form-inline .form-check{display:flex;align-items:center;justify-content:center;width:auto;padding-left:0}
+.smartpay .form-inline .form-check-input{position:relative;flex-shrink:0;margin-top:0;margin-right:.25rem;margin-left:0}
+.smartpay .form-inline .custom-control{align-items:center;justify-content:center}
+.smartpay .form-inline .custom-control-label{margin-bottom:0}
 .smartpay .navbar-expand-sm{flex-flow:row nowrap;justify-content:flex-start}
 .smartpay .navbar-expand-sm .navbar-nav{flex-direction:row}
 .smartpay .navbar-expand-sm .navbar-nav .dropdown-menu{position:absolute}
