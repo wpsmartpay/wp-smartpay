@@ -1,7 +1,27 @@
+/*--------------------------------------------------------------
+# Bootstrap
+--------------------------------------------------------------*/
+@import "../../../node_modules/bootstrap/scss/functions";
 @import "../../../node_modules/bootstrap/scss/variables";
 @import "../../../node_modules/bootstrap/scss/mixins";
 
-/*--------------------------------------------------------------
-# Alert
---------------------------------------------------------------*/
+
+// Buttons
+@import "../../../node_modules/bootstrap/scss/buttons";
+// Transitions
+@import "../../../node_modules/bootstrap/scss/transitions";
+// Nav
+@import "../../../node_modules/bootstrap/scss/nav";
+// Navbar
+@import "../../../node_modules/bootstrap/scss/navbar";
+// Card
+@import "../../../node_modules/bootstrap/scss/card";
+// Alert
 @import "../../../node_modules/bootstrap/scss/alert";
+// Utilities
+@import "../../../node_modules/bootstrap/scss/utilities";
+
+/*--------------------------------------------------------------
+# WP Css fix that override Bootstrap
+--------------------------------------------------------------*/
+@import "./wpoverrides"
