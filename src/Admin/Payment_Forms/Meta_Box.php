@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Admin\Forms;
+namespace SmartPay\Admin\Payment_Forms;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

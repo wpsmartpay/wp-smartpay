@@ -2,6 +2,8 @@
 
 namespace SmartPay\Admin;
 
+use SmartPay\Admin\Payment_Forms\Meta_Box;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -20,6 +22,8 @@ final class Payment_Form
      */
     private function __construct()
     {
+        Meta_Box::instance();
+
         add_filter('manage_smartpay_form_posts_columns', [$this, 'smartpay_form_columns']);
         add_filter('manage_smartpay_form_posts_custom_column', [$this, 'smartpay_form_column_data'], 10, 2);
 
