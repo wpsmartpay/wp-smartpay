@@ -17,6 +17,7 @@
     "browser-sync": "^2.11.1",
     "eslint": "^5.5.0",
     "eslint-config-wordpress": "^2.0.0",
+    "feather-icons": "^4.28.0",
     "gulp": "^4.0.0",
     "gulp-autoprefixer": "^6.0.0",
     "gulp-babel": "^8.0.0",
@@ -54,6 +55,10 @@
     {
       "from": "node_modules/bootstrap/dist/js/bootstrap.js",
       "to": "assets/js/vendor/bootstrap.js"
+    },
+    {
+      "from": "node_modules/feather-icons/dist/feather.min.js",
+      "to": "assets/js/vendor/feather.min.js"
     }
   ]
 }

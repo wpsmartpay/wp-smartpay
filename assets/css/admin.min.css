@@ -1,3 +1,4 @@
+*,*::before,*::after{box-sizing:border-box}
 .smartpay{/*! Bootstrap Grid v4.4.1 (https://getbootstrap.com/) Copyright 2011-2019 The Bootstrap Authors Copyright 2011-2019 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */}
 .smartpay html{box-sizing:border-box;-ms-overflow-style:scrollbar}
 .smartpay *,.smartpay *::before,.smartpay *::after{box-sizing:inherit}
@@ -868,6 +869,7 @@
 .smartpay .text-reset{color:inherit !important}
 .smartpay .visible{visibility:visible !important}
 .smartpay .invisible{visibility:hidden !important}
+.smartpay .file-uploader{border:1px dashed #ddd;border-radius:4px}
 .smartpay .card{max-width:100%;padding:0}
 .smartpay .card .card-header-tabs{margin-top:0}
 .smartpay .card .card-header-tabs .nav-link{text-decoration:none;font-weight:bold;padding:.7rem 1rem;text-transform:uppercase}

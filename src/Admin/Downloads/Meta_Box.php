@@ -48,6 +48,16 @@ final class Meta_Box
 
     public function add_smartpay_download_meta_boxes()
     {
+		 /** Contents **/
+		 add_meta_box(
+            'smartpay_download_contents',
+            __('Files', 'smartpay'),
+            [$this, 'render_smartpay_download_files_meta_box'],
+            ['smartpay_download'],
+            'normal',
+            'high'
+		);
+
         /** Pricing **/
         add_meta_box(
             'smartpay_download_pricing',
@@ -58,25 +68,15 @@ final class Meta_Box
             'high'
         );
 
-        /** Contents **/
-        add_meta_box(
-            'smartpay_download_contents',
-            __('Contents', 'smartpay'),
-            [$this, 'render_smartpay_download_contents_meta_box'],
-            ['smartpay_download'],
-            'normal',
-            'high'
-        );
-
-        /** Variant **/
-        add_meta_box(
-            'smartpay_download_variant',
-            __('Variant', 'smartpay'),
-            [$this, 'render_smartpay_download_variant_meta_box'],
-            ['smartpay_download'],
-            'normal',
-            'high'
-        );
+        // /** Variant **/
+        // add_meta_box(
+        //     'smartpay_download_variant',
+        //     __('Variant', 'smartpay'),
+        //     [$this, 'render_smartpay_download_variants_meta_box'],
+        //     ['smartpay_download'],
+        //     'normal',
+        //     'high'
+        // );
     }
 
     public function render_smartpay_download_pricing_meta_box()
@@ -86,7 +86,7 @@ final class Meta_Box
         /** Output the price fields **/
         // ob_start();
 
-        echo smartpay_view_render('admin/downloads/pricing_meta_box', ['post', $post]);
+        echo smartpay_view_render('admin/downloads/metabox/pricing', ['post', $post]);
 
         // ob_get_clean();
 
@@ -95,28 +95,28 @@ final class Meta_Box
         wp_nonce_field(basename(__FILE__), 'smartpay_download_meta_box_nonce');
     }
 
-    public function render_smartpay_download_contents_meta_box()
+    public function render_smartpay_download_files_meta_box()
     {
         global $post;
 
         /** Output the price fields **/
         // ob_start();
 
-        echo smartpay_view_render('admin/downloads/contents_meta_box', ['post', $post]);
+        echo smartpay_view_render('admin/downloads/metabox/files', ['post', $post]);
 
         // ob_get_clean();
 
         do_action('smartpay_download_contents_meta_box_fields', $post->ID);
     }
 
-    public function render_smartpay_download_variant_meta_box()
+    public function render_smartpay_download_variants_meta_box()
     {
         global $post;
 
         /** Output the price fields **/
         // ob_start();
 
-        echo smartpay_view_render('admin/downloads/variant_meta_box', ['post', $post]);
+        echo smartpay_view_render('admin/downloads/metabox/variants', ['post', $post]);
 
         // ob_get_clean();
 

@@ -26,7 +26,9 @@
 // Utilities
 @import "../../../node_modules/bootstrap/scss/utilities";
 
+// Metabox
+@import "./metabox";
 /*--------------------------------------------------------------
 # WP Css fix that override Bootstrap
 --------------------------------------------------------------*/
-@import "./wpoverrides"
+@import "./wpoverrides";
