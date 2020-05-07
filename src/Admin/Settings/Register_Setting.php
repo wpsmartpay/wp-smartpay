@@ -16,7 +16,7 @@ final class Register_Setting
 	/**
 	 * Construct Register_Setting class.
 	 *
-	 * @since 0.1
+	 * @since 0.0.1
 	 * @access private
 	 */
 	private function __construct()
@@ -30,7 +30,7 @@ final class Register_Setting
 	 * Ensures that only one instance of Register_Setting exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since 0.1
+	 * @since 0.0.1
 	 * @return object|Register_Setting
 	 * @access public
 	 */
@@ -46,7 +46,7 @@ final class Register_Setting
 	/**
 	 * Add all settings sections and fields
 	 *
-	 * @since 1.0
+	 * @since 0.0.1
 	 * @return void
 	 */
 	public function register_settings()
@@ -119,7 +119,7 @@ final class Register_Setting
 	/**
 	 * Retrieve the array of plugin settings
 	 *
-	 * @since 1.8
+	 * @since 0.0.1
 	 * @return array
 	 */
 	public static function registered_settings()
@@ -132,11 +132,9 @@ final class Register_Setting
 					'main' => array(
 						'page_settings' => array(
 							'id'   => 'page_settings',
-							'name' => '<h3 style="margin: 0;">' . __('Pages', 'smartpay') . '</h3>',
-							'desc' => '',
+							'name' => '<h4 class="text-uppercase text-info my-1">'. __('Pages Settings', 'smartpay') . '</h4>',
+							'desc' => __('SmartPay Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
 							'type' => 'header',
-							'tooltip_title' => __('Page Settings', 'smartpay'),
-							'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
 						),
 						'payment_page' => array(
 							'id'          => 'payment_page',
@@ -164,11 +162,11 @@ final class Register_Setting
 						),
 						'currency_settings' => array(
 							'id'   => 'currency_settings',
-							'name' => '<h3 style="margin: 0;">' . __('Currency Options', 'smartpay') . '</h3>',
+							'name' => '<h4 class="text-uppercase text-info my-1">' . __('Currency Settings', 'smartpay') . '</h4>',
 							'desc' => '',
 							'type' => 'header',
 							'tooltip_title' => __('Page Settings', 'smartpay'),
-							'tooltip_desc'  => __('Easy Digital Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+							'tooltip_desc'  => __('SmartPay Downloads uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
 						),
 						'currency' => array(
 							'id'      => 'currency',
@@ -198,7 +196,6 @@ final class Register_Setting
 						'test_mode' => array(
 							'id'   => 'test_mode',
 							'name' => __('Test Mode', 'smartpay'),
-							'label' => __('Test lable', 'smartpay'),
 							'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
 							'type' => 'switch',
 						),
@@ -249,7 +246,7 @@ final class Register_Setting
 	/**
 	 * Retrieve settings tabs
 	 *
-	 * @since 2.5
+	 * @since 0.0.1
 	 * @return array $section
 	 */
 	public static function settings_tab_sections($tab = false)
@@ -270,7 +267,7 @@ final class Register_Setting
 	 * Get the settings sections for each tab
 	 * Uses a static to avoid running the filters on every request to this function
 	 *
-	 * @since  2.5
+	 * @since 0.0.1
 	 * @return array Array of tabs and sections
 	 */
 	public static function get_registered_settings_sections()
@@ -320,7 +317,7 @@ final class Register_Setting
 	 * Adds a settings error (for the updated message)
 	 * At some point this will validate input
 	 *
-	 * @since 1.0.8.2
+	 * @since 0.0.1
 	 *
 	 * @param array $input The value inputted in the field
 	 * @global array $smartpay_options Array of all the SmartPay Options
