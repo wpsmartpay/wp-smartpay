@@ -67,8 +67,12 @@ function smartpay_get_currency()
     return $currency;
 }
 
-function smartpay_get_currency_symbol($currency = 'USD')
+function smartpay_get_currency_symbol($currency = '')
 {
+    if (empty($currency)) {
+        $currency = smartpay_get_currency();
+    }
+
     $currencies = smartpay_get_currencies();
 
     if (array_key_exists($currency, $currencies)) {
