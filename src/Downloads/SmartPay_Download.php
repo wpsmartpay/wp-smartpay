@@ -2,669 +2,868 @@
 
 namespace SmartPay\Downloads;
 
-use SmartPay\Model;
+use WP_Post;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
-	exit;
+    exit;
 }
 
-class SmartPay_Download extends Model
+class SmartPay_Download
 {
-	/**
-	 * The download ID
-	 *
-	 * @since  0.1
-	 * @var    integer
-	 */
-	public    $ID  = 0;
-	protected $_ID = 0;
-
-	/**
-	 * The status of the download
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $status      = 'pending';
-	protected $post_status = 'pending'; // Same as $status but here for backwards compat
-
-	/**
-	 * The display name of the current download status
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $status_nicename = '';
-
-	/**
-	 * The price the download
-	 *
-	 * @since  0.1
-	 * @var float
-	 */
-	protected $price = 0.00;
-
-	/**
-	 * The title of the payee
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $title = '';
-
-	/**
-	 * The description of the payee
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $description = '';
-
-	/**
-	 * The image used for the download
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $image = '';
-
-	/**
-	 * Identify if the download is a new one or existing
-	 *
-	 * @since  0.1
-	 * @var boolean
-	 */
-	protected $new = false;
-
-	/**
-	 * When updating, the old status prior to the change
-	 *
-	 * @since  0.1
-	 * @var string
-	 */
-	protected $old_status = '';
-
-	/**
-	 * Array of items that have changed since the last save() was run
-	 * This is for internal use, to allow fewer update_download_meta calls to be run
-	 *
-	 * @since  0.1
-	 * @var array
-	 */
-	private $pending;
-
-	/**
-	 * Setup the smartpay downloads class
-	 *
-	 * @since 0.1
-	 * @param int $download_id A given download
-	 * @return mixed void|false
-	 */
-	public function __construct($download_or_txn_id = false, $by_txn = false)
-	{
-		global $wpdb;
-
-		if (empty($download_or_txn_id)) {
-			return false;
-		}
-
-		if ($by_txn) {
-			$query      = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_smartpay_download_transaction_id' AND meta_value = '%s'", $download_or_txn_id);
-			$download_id = $wpdb->get_var($query);
-
-			if (empty($download_id)) {
-				return false;
-			}
-		} else {
-			$download_id = absint($download_or_txn_id);
-		}
-
-		$this->setup_download($download_id);
-	}
-
-	/**
-	 * Magic GET function
-	 *
-	 * @since  0.1
-	 * @param  string $key  The property
-	 * @return mixed        The value
-	 */
-	public function __get($key)
-	{
-		if (method_exists($this, 'get_' . $key)) {
-
-			$value = call_user_func(array($this, 'get_' . $key));
-		} else {
-
-			$value = $this->$key;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Magic SET function
-	 *
-	 * Sets up the pending array for the save method
-	 *
-	 * @since  0.1
-	 * @param string $key   The property name
-	 * @param mixed $value  The value of the property
-	 */
-	public function __set($key, $value)
-	{
-		$ignore = array('_ID');
-
-		if ($key === 'status') {
-			$this->old_status = $this->status;
-		}
-
-		if (!in_array($key, $ignore)) {
-			$this->pending[$key] = $value;
-		}
-
-		if ('_ID' !== $key) {
-			$this->$key = $value;
-		}
-	}
-
-	/**
-	 * Setup download properties
-	 *
-	 * @since  0.1
-	 * @param  int  $download_id The download ID
-	 * @return bool If the setup was successful or not
-	 */
-	private function setup_download($download_id)
-	{
-		if (empty($download_id)) {
-			return false;
-		}
-
-		$download = get_post($download_id);
-		if (!$download || is_wp_error($download)) {
-			return false;
-		}
-
-		if ('smartpay_download' !== $download->post_type) {
-			return false;
-		}
-
-		// Primary Identifier
-		$this->ID               = absint($download_id);
-
-		// Protected ID that can never be changed
-		$this->_ID              = absint($download_id);
-
-		$this->form_id          = $this->setup_form_id();
-
-		// Status and Dates
-		$this->date             = $download->post_date;
-		$this->completed_date   = $this->setup_completed_date();
-		$this->status           = $download->post_status;
-		$all_download_statuses   = smartpay_get_download_statuses();
-		$this->status_nicename  = array_key_exists($this->status, $all_download_statuses) ? $all_download_statuses[$this->status] : ucfirst($this->status);
-
-		$this->amount           = $this->setup_amount();
-		$this->currency         = $this->setup_currency();
-		$this->download_gateway  = $this->setup_download_gateway();
-		$this->transaction_id   = $this->setup_transaction_id();
-
-		$this->first_name       = $this->setup_first_name();
-		$this->last_name        = $this->setup_last_name();
-		$this->email            = $this->setup_email();
-
-		// Other Identifiers
-		$this->key              = $this->setup_download_key();
-
-		$this->parent_download   = $download->post_parent;
-
-		$this->mode             = $this->setup_mode();
-
-		return true;
-	}
-
-	/**
-	 * One items have been set, an update is needed to save them to the database.
-	 *
-	 * @return bool  True of the save occurred, false if it failed or wasn't needed
-	 */
-	public function save()
-	{
-		$saved = false;
-
-		if (empty($this->ID)) {
-
-			$download_id = $this->insert_download();
-
-			if (false === $download_id) {
-				$saved = false;
-			} else {
-				$this->ID = $download_id;
-			}
-		}
-
-		if ($this->ID !== $this->_ID) {
-			$this->ID = $this->_ID;
-		}
-
-		// If we have something pending, let's save it
-		if (!empty($this->pending)) {
-
-			foreach ($this->pending as $key => $value) {
-				switch ($key) {
-					case 'form_id':
-						$this->update_meta('_smartpay_download_form_id', $this->form_id);
-						break;
-
-					case 'date':
-						$args = array(
-							'ID'        => $this->ID,
-							'post_date' => $this->date,
-							'edit_date' => true,
-						);
-
-						wp_update_post($args);
-						break;
-
-					case 'completed_date':
-						$this->update_meta('_smartpay_download_completed_date', $this->completed_date);
-						break;
-
-					case 'status':
-						$this->update_status($this->status);
-						break;
-
-					case 'amount':
-						$this->update_meta('_smartpay_download_amount', $this->amount);
-						break;
-
-					case 'currency':
-						$this->update_meta('_smartpay_download_currency', $this->currency);
-						break;
-
-					case 'download_gateway':
-						$this->update_meta('_smartpay_download_gateway', $this->download_gateway);
-						break;
-
-					case 'transaction_id':
-						$this->update_meta('_smartpay_download_transaction_id', $this->transaction_id);
-						break;
-
-					case 'first_name':
-						$this->update_meta('_smartpay_download_first_name', $this->first_name);
-						break;
-
-					case 'last_name':
-						$this->update_meta('_smartpay_download_last_name', $this->last_name);
-						break;
-
-					case 'email':
-						$this->update_meta('_smartpay_download_email', $this->email);
-						break;
-
-					case 'key':
-						$this->update_meta('_smartpay_download_key', $this->key);
-						break;
-
-					case 'parent_download':
-						$args = array(
-							'ID'          => $this->ID,
-							'post_parent' => $this->parent_download,
-						);
-
-						wp_update_post($args);
-						break;
-
-					case 'mode':
-						$this->update_meta('_smartpay_download_mode', $this->mode);
-						break;
-
-					default:
-						/**
-						 * Used to save non-standard data. Developers can hook here if they want to save
-						 * specific download data when $download->save() is run and their item is in the $pending array
-						 */
-						do_action('smartpay_download_save', $this, $key);
-						break;
-				}
-			}
-
-			$this->pending = array();
-			$saved         = true;
-		}
-
-		if (true === $saved) {
-			$this->setup_download($this->ID);
-
-			/**
-			 * This action fires anytime that $download->save() is run, allowing developers to run actions
-			 * when a download is updated
-			 */
-			do_action('download_data_download_saved', $this->ID, $this);
-		}
-
-		/**
-		 * Update the download in the object cache
-		 */
-		// $cache_key = md5('download_data_download' . $this->ID);
-		// wp_cache_set($cache_key, $this, 'downloads');
-
-		return $saved;
-	}
-
-	/**
-	 * Create the base of a download.
-	 *
-	 * @since  0.1
-	 * @return int|bool False on failure, the download ID on success.
-	 */
-	private function insert_download()
-	{
-		if (empty($this->key)) {
-			$this->key = strtolower(md5($this->email . date('Y-m-d H:i:s') . rand(1, 10)));  // Unique key
-			$this->pending['key'] = $this->key;
-		}
-
-		// Create a blank download
-		$download_id = wp_insert_post(array(
-			'post_type'      => 'smartpay_download',
-			'post_status'    => 'pending',
-			'post_date'      => !empty($this->date) ? $this->date : null,
-			'post_date_gmt'  => !empty($this->date) ? get_gmt_from_date($this->date) : null,
-			'post_parent'    => $this->parent_download,
-			'comment_status' => 'closed',
-			'ping_status'    => 'closed',
-		));
-
-		if (!empty($download_id)) {
-			$this->ID   = $download_id;
-			$this->_ID  = $download_id;
-
-			$this->new  = true;
-		}
-
-		return $this->ID;
-	}
-
-	/**
-	 * Set the download status and run any status specific changes necessary
-	 *
-	 * @since 0.1
-	 *
-	 * @param  string $status The status to set the download to
-	 * @return bool Returns if the status was successfully updated
-	 */
-	public function update_status($status = false)
-	{
-		if ($status == 'completed' || $status == 'complete') {
-			$status = 'publish';
-		}
-
-		$old_status = !empty($this->old_status) ? $this->old_status : false;
-
-		if ($old_status === $status) {
-			return false; // Don't permit status changes that aren't changes
-		}
-
-		$updated = false;
-
-		do_action('smartpay_before_download_status_change', $this->ID, $status, $old_status);
-
-		$update_fields = array('ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time('mysql'));
-
-		$updated = wp_update_post(apply_filters('smartpay_update_download_status_fields', $update_fields));
-
-		$this->status = $status;
-		$this->post_status = $status;
-
-		$all_download_statuses  = smartpay_get_download_statuses();
-		$this->status_nicename = array_key_exists($status, $all_download_statuses) ? $all_download_statuses[$status] : ucfirst($status);
-
-		// Process any specific status functions
-		// switch ($status) {
-		//     case 'refunded':
-		//         $this->process_refund();
-		//         break;
-		//     case 'failed':
-		//         $this->process_failure();
-		//         break;
-		//     case 'pending' || 'processing':
-		//         $this->process_pending();
-		//         break;
-		// }
-
-		do_action('smartpay_update_download_status', $this->ID, $status, $old_status);
-
-		return $updated;
-	}
-
-	/**
-	 * Get a post meta item for the download
-	 *
-	 * @since  0.1
-	 * @param  string   $meta_key The Meta Key
-	 * @param  boolean  $single   Return single item or array
-	 * @return mixed    The value from the post meta
-	 */
-	public function get_meta($meta_key = '', $single = true)
-	{
-		if (empty($meta_key)) {
-			return;
-		}
-
-		$meta = get_post_meta($this->ID, $meta_key, $single);
-
-		$meta = apply_filters('smartpay_get_download_meta_' . $meta_key, $meta, $this->ID);
-
-		if (is_serialized($meta)) {
-			preg_match('/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches);
-			if (!empty($matches)) {
-				$meta = array();
-			}
-		}
-
-		return apply_filters('smartpay_get_download_meta', $meta, $this->ID, $meta_key);
-	}
-
-	/**
-	 * Update the post meta
-	 *
-	 * @since  0.1
-	 * @param  string $meta_key   The meta key to update
-	 * @param  string $meta_value The meta value
-	 * @param  string $prev_value Previous meta value
-	 * @return int|bool           Meta ID if the key didn't exist, true on successful update, false on failure
-	 */
-	public function update_meta($meta_key = '', $meta_value = '', $prev_value = '')
-	{
-		if (empty($meta_key)) {
-			return;
-		}
-
-		$meta_value = apply_filters('smartpay_update_download_meta_' . $meta_key, $meta_value, $this->ID);
-
-		return update_post_meta($this->ID, $meta_key, $meta_value, $prev_value);
-	}
-
-	/**
-	 * Add an item to the download meta
-	 *
-	 * @since 2.8
-	 * @param string $meta_key
-	 * @param string $meta_value
-	 * @param bool   $unique
-	 *
-	 * @return bool|false|int
-	 */
-	public function add_meta($meta_key = '', $meta_value = '', $unique = false)
-	{
-		if (empty($meta_key)) {
-			return false;
-		}
-
-		return add_post_meta($this->ID, $meta_key, $meta_value, $unique);
-	}
-
-	/**
-	 * Delete an item from download meta
-	 *
-	 * @since 2.8
-	 * @param string $meta_key
-	 * @param string $meta_value
-	 *
-	 * @return bool
-	 */
-	public function delete_meta($meta_key = '', $meta_value = '')
-	{
-		if (empty($meta_key)) {
-			return false;
-		}
-
-		return delete_post_meta($this->ID, $meta_key, $meta_value);
-	}
-
-	/**
-	 * Setup the user info
-	 *
-	 * @since  0.1
-	 * @return array The user info associated with the download
-	 */
-	private function setup_form_id()
-	{
-		return $this->get_meta('_smartpay_download_form_id', true);
-	}
-
-	/**
-	 * Setup the download completed date
-	 *
-	 * @since  0.1
-	 * @return string The date the download was completed
-	 */
-	private function setup_completed_date()
-	{
-		$download = get_post($this->ID);
-
-		if ('pending' == $download->post_status || 'preapproved' == $download->post_status || 'processing' == $download->post_status) {
-			return false; // This download was never completed
-		}
-
-		$date = ($date = $this->get_meta('_smartpay_download_completed_date', true)) ? $date : $download->date;
-
-		return $date;
-	}
-
-	/**
-	 * Setup the download amount
-	 *
-	 * @since  0.1
-	 * @return float The download amount
-	 */
-	private function setup_amount()
-	{
-		return $this->get_meta('_smartpay_download_amount', true);
-	}
-
-	/**
-	 * Setup the currency code
-	 *
-	 * @since  0.1
-	 * @return string The currency for the download
-	 */
-	private function setup_currency()
-	{
-		return $this->get_meta('_smartpay_download_currency', true) ?? smartpay_get_currency();
-	}
-
-	/**
-	 * Setup the download gateway
-	 *
-	 * @since  0.1
-	 * @return string The download gateway
-	 */
-	private function setup_download_gateway()
-	{
-		return $this->get_meta('_smartpay_download_gateway');
-	}
-
-	/**
-	 * Setup the transaction ID
-	 *
-	 * @since  0.1
-	 * @return string The transaction ID for the download
-	 */
-	private function setup_transaction_id()
-	{
-		$transaction_id = $this->get_meta('_smartpay_download_transaction_id', true);
-
-		if (empty($transaction_id) || (int) $transaction_id === (int) $this->ID) {
-
-			$gateway        = $this->gateway;
-			$transaction_id = apply_filters('smartpay_get_download_transaction_id-' . $gateway, $this->ID);
-		}
-
-		return $transaction_id;
-	}
-
-	/**
-	 * Setup the first_name for the purchase
-	 *
-	 * @since  0.1
-	 * @return string The email address for the download
-	 */
-	private function setup_first_name()
-	{
-		return  $this->get_meta('_smartpay_download_first_name', true);
-	}
-
-	/**
-	 * Setup the last_name for the purchase
-	 *
-	 * @since  0.1
-	 * @return string The email address for the download
-	 */
-	private function setup_last_name()
-	{
-		return  $this->get_meta('_smartpay_download_last_name', true);
-	}
-
-	/**
-	 * Setup the email address for the purchase
-	 *
-	 * @since  0.1
-	 * @return string The email address for the download
-	 */
-	private function setup_email()
-	{
-		return  $this->get_meta('_smartpay_download_email', true);
-	}
-
-	/**
-	 * Setup the download key
-	 *
-	 * @since  0.1
-	 * @return string The download Key
-	 */
-	private function setup_download_key()
-	{
-		return $this->get_meta('_smartpay_download_key', true);
-	}
-
-	/**
-	 * Setup the download mode
-	 *
-	 * @since  0.1
-	 * @return string The download mode
-	 */
-	private function setup_mode()
-	{
-		return $this->get_meta('_smartpay_download_mode');
-	}
-
-
-	public function complete_download()
-	{
-		return $this->update_status('completed');
-	}
+
+    /**
+     * The download ID
+     *
+     * @since 2.2
+     */
+    public $ID = 0;
+
+    /**
+     * The download price
+     *
+     * @since 2.2
+     */
+    private $price;
+
+    /**
+     * The download prices, if Variable Prices are enabled
+     *
+     * @since 2.2
+     */
+    private $prices;
+
+    /**
+     * The download files
+     *
+     * @since 2.2
+     */
+    private $files;
+
+    /**
+     * The download's file download limit
+     *
+     * @since 2.2
+     */
+    private $file_download_limit;
+
+    /**
+     * The download type, default or bundle
+     *
+     * @since 2.2
+     */
+    private $type;
+
+    /**
+     * The bundled downloads, if this is a bundle type
+     *
+     * @since 2.2
+     */
+    private $bundled_downloads;
+
+    /**
+     * The download's sale count
+     *
+     * @since 2.2
+     */
+    private $sales;
+
+    /**
+     * The download's total earnings
+     *
+     * @since 2.2
+     */
+    private $earnings;
+
+    /**
+     * The download's notes
+     *
+     * @since 2.2
+     */
+    private $notes;
+
+    /**
+     * The download sku
+     *
+     * @since 2.2
+     */
+    private $sku;
+
+    /**
+     * The download's purchase button behavior
+     *
+     * @since 2.2
+     */
+    private $button_behavior;
+
+    /**
+     * Declare the default properties in WP_Post as we can't extend it
+     * Anything we've declared above has been removed.
+     */
+    public $post_author = 0;
+    public $post_date = '0000-00-00 00:00:00';
+    public $post_date_gmt = '0000-00-00 00:00:00';
+    public $post_content = '';
+    public $post_title = '';
+    public $post_excerpt = '';
+    public $post_status = 'publish';
+    public $comment_status = 'open';
+    public $ping_status = 'open';
+    public $post_password = '';
+    public $post_name = '';
+    public $to_ping = '';
+    public $pinged = '';
+    public $post_modified = '0000-00-00 00:00:00';
+    public $post_modified_gmt = '0000-00-00 00:00:00';
+    public $post_content_filtered = '';
+    public $post_parent = 0;
+    public $guid = '';
+    public $menu_order = 0;
+    public $post_mime_type = '';
+    public $comment_count = 0;
+    public $filter;
+
+    /**
+     * Get things going
+     *
+     * @since 2.2
+     */
+    public function __construct($_id = false, $_args = array())
+    {
+
+        $download = WP_Post::get_instance($_id);
+
+        return $this->setup_download($download);
+    }
+
+    /**
+     * Given the download data, let's set the variables
+     *
+     * @since  2.3.6
+     * @param  WP_Post $download The WP_Post object for download.
+     * @return bool             If the setup was successful or not
+     */
+    private function setup_download($download)
+    {
+
+        if (!is_object($download)) {
+            return false;
+        }
+
+        if (!$download instanceof WP_Post) {
+            return false;
+        }
+
+        if ('download' !== $download->post_type) {
+            return false;
+        }
+
+        foreach ($download as $key => $value) {
+
+            switch ($key) {
+
+                default:
+                    $this->$key = $value;
+                    break;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Magic __get function to dispatch a call to retrieve a private property
+     *
+     * @since 2.2
+     */
+    public function __get($key)
+    {
+
+        if (method_exists($this, 'get_' . $key)) {
+
+            return call_user_func(array($this, 'get_' . $key));
+        } else {
+
+            return new WP_Error('edd-download-invalid-property', sprintf(__('Can\'t get property %s', 'easy-digital-downloads'), $key));
+        }
+    }
+
+    /**
+     * Creates a download
+     *
+     * @since  2.3.6
+     * @param  array  $data Array of attributes for a download
+     * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
+     */
+    public function create($data = array())
+    {
+
+        if ($this->id != 0) {
+            return false;
+        }
+
+        $defaults = array(
+            'post_type'   => 'download',
+            'post_status' => 'draft',
+            'post_title'  => __('New Download Product', 'easy-digital-downloads')
+        );
+
+        $args = wp_parse_args($data, $defaults);
+
+        /**
+         * Fired before a download is created
+         *
+         * @param array $args The post object arguments used for creation.
+         */
+        do_action('edd_download_pre_create', $args);
+
+        $id = wp_insert_post($args, true);
+
+        $download = WP_Post::get_instance($id);
+
+        /**
+         * Fired after a download is created
+         *
+         * @param int   $id   The post ID of the created item.
+         * @param array $args The post object arguments used for creation.
+         */
+        do_action('edd_download_post_create', $id, $args);
+
+        return $this->setup_download($download);
+    }
+
+    /**
+     * Retrieve the ID
+     *
+     * @since 2.2
+     * @return int ID of the download
+     */
+    public function get_ID()
+    {
+
+        return $this->ID;
+    }
+
+    /**
+     * Retrieve the download name
+     *
+     * @since 2.5.8
+     * @return string Name of the download
+     */
+    public function get_name()
+    {
+        return get_the_title($this->ID);
+    }
+
+    /**
+     * Retrieve the price
+     *
+     * @since 2.2
+     * @return float Price of the download
+     */
+    public function get_price()
+    {
+
+        if (!isset($this->price)) {
+
+            $this->price = get_post_meta($this->ID, 'edd_price', true);
+
+            if ($this->price) {
+
+                $this->price = edd_sanitize_amount($this->price);
+            } else {
+
+                $this->price = 0;
+            }
+        }
+
+        /**
+         * Override the download price.
+         *
+         * @since 2.2
+         *
+         * @param string $price The download price(s).
+         * @param string|int $id The downloads ID.
+         */
+        return apply_filters('edd_get_download_price', $this->price, $this->ID);
+    }
+
+    /**
+     * Retrieve the variable prices
+     *
+     * @since 2.2
+     * @return array List of the variable prices
+     */
+    public function get_prices()
+    {
+
+        $this->prices = array();
+
+        if (true === $this->has_variable_prices()) {
+
+            if (empty($this->prices)) {
+                $this->prices = get_post_meta($this->ID, 'edd_variable_prices', true);
+            }
+        }
+
+        /**
+         * Override variable prices
+         *
+         * @since 2.2
+         *
+         * @param array $prices The array of variables prices.
+         * @param int|string The ID of the download.
+         */
+        return apply_filters('edd_get_variable_prices', $this->prices, $this->ID);
+    }
+
+    /**
+     * Determine if single price mode is enabled or disabled
+     *
+     * @since 2.2
+     * @return bool True if download is in single price mode, false otherwise
+     */
+    public function is_single_price_mode()
+    {
+
+        $ret = get_post_meta($this->ID, '_edd_price_options_mode', true);
+
+        /**
+         * Override the price mode for a download when checking if is in single price mode.
+         *
+         * @since 2.3
+         *
+         * @param bool $ret Is download in single price mode?
+         * @param int|string The ID of the download.
+         */
+        return (bool) apply_filters('edd_single_price_option_mode', $ret, $this->ID);
+    }
+
+    /**
+     * Determine if the download has variable prices enabled
+     *
+     * @since 2.2
+     * @return bool True when the download has variable pricing enabled, false otherwise
+     */
+    public function has_variable_prices()
+    {
+
+        $ret = get_post_meta($this->ID, '_variable_pricing', true);
+
+        /**
+         * Override whether the download has variables prices.
+         *
+         * @since 2.3
+         *
+         * @param bool $ret Does download have variable prices?
+         * @param int|string The ID of the download.
+         */
+        return (bool) apply_filters('edd_has_variable_prices', $ret, $this->ID);
+    }
+
+    /**
+     * Retrieve the file downloads
+     *
+     * @since 2.2
+     * @param integer $variable_price_id
+     * @return array List of download files
+     */
+    public function get_files($variable_price_id = null)
+    {
+        if (!isset($this->files)) {
+
+            $this->files = array();
+
+            // Bundled products are not allowed to have files
+            if ($this->is_bundled_download()) {
+                return $this->files;
+            }
+
+            $download_files = get_post_meta($this->ID, 'edd_download_files', true);
+
+            if ($download_files) {
+
+
+                if (!is_null($variable_price_id) && $this->has_variable_prices()) {
+
+                    foreach ($download_files as $key => $file_info) {
+
+                        if (isset($file_info['condition'])) {
+
+                            if ($file_info['condition'] == $variable_price_id || 'all' === $file_info['condition']) {
+
+                                $this->files[$key] = $file_info;
+                            }
+                        }
+                    }
+                } else {
+
+                    $this->files = $download_files;
+                }
+            }
+        }
+
+        return apply_filters('edd_download_files', $this->files, $this->ID, $variable_price_id);
+    }
+
+    /**
+     * Retrieve the file download limit
+     *
+     * @since 2.2
+     * @return int Number of download limit
+     */
+    public function get_file_download_limit()
+    {
+
+        if (!isset($this->file_download_limit)) {
+
+            $ret    = 0;
+            $limit  = get_post_meta($this->ID, '_edd_download_limit', true);
+            $global = edd_get_option('file_download_limit', 0);
+
+            if (!empty($limit) || (is_numeric($limit) && (int) $limit == 0)) {
+
+                // Download specific limit
+                $ret = absint($limit);
+            } else {
+
+                // Global limit
+                $ret = strlen($limit) == 0  || $global ? $global : 0;
+            }
+
+            $this->file_download_limit = $ret;
+        }
+
+        return absint(apply_filters('edd_file_download_limit', $this->file_download_limit, $this->ID));
+    }
+
+    /**
+     * Retrieve the price option that has access to the specified file
+     *
+     * @since 2.2
+     * @return int|string
+     */
+    public function get_file_price_condition($file_key = 0)
+    {
+
+        $files    = $this->get_files();
+        $condition = isset($files[$file_key]['condition']) ? $files[$file_key]['condition'] : 'all';
+
+        return apply_filters('edd_get_file_price_condition', $condition, $this->ID, $files);
+    }
+
+    /**
+     * Retrieve the download type, default or bundle
+     *
+     * @since 2.2
+     * @return string Type of download, either 'default' or 'bundle'
+     */
+    public function get_type()
+    {
+
+        if (!isset($this->type)) {
+
+            $this->type = get_post_meta($this->ID, '_edd_product_type', true);
+
+            if (empty($this->type)) {
+                $this->type = 'default';
+            }
+        }
+
+        return apply_filters('edd_get_download_type', $this->type, $this->ID);
+    }
+
+    /**
+     * Determine if this is a bundled download
+     *
+     * @since 2.2
+     * @return bool True when download is a bundle, false otherwise
+     */
+    public function is_bundled_download()
+    {
+        return 'bundle' === $this->get_type();
+    }
+
+    /**
+     * Retrieves the Download IDs that are bundled with this Download
+     *
+     * @since 2.2
+     * @return array List of bundled downloads
+     */
+    public function get_bundled_downloads()
+    {
+
+        if (!isset($this->bundled_downloads)) {
+
+            $this->bundled_downloads = (array) get_post_meta($this->ID, '_edd_bundled_products', true);
+        }
+
+        return (array) apply_filters('edd_get_bundled_products', array_filter($this->bundled_downloads), $this->ID);
+    }
+
+    /**
+     * Retrieve the Download IDs that are bundled with this Download based on the variable pricing ID passed
+     *
+     * @since 2.7
+     * @param int $price_id Variable pricing ID
+     * @return array List of bundled downloads
+     */
+    public function get_variable_priced_bundled_downloads($price_id = null)
+    {
+        if (null == $price_id) {
+            return $this->get_bundled_downloads();
+        }
+
+        $downloads         = array();
+        $bundled_downloads = $this->get_bundled_downloads();
+        $price_assignments = $this->get_bundle_pricing_variations();
+
+        if (!$price_assignments) {
+            return $bundled_downloads;
+        }
+
+        $price_assignments = $price_assignments[0];
+        $price_assignments = array_values($price_assignments);
+
+        foreach ($price_assignments as $key => $value) {
+            if ($value == $price_id || $value == 'all') {
+                $downloads[] = $bundled_downloads[$key];
+            }
+        }
+
+        return $downloads;
+    }
+
+    /**
+     * Retrieve the download notes
+     *
+     * @since 2.2
+     * @return string Note related to the download
+     */
+    public function get_notes()
+    {
+
+        if (!isset($this->notes)) {
+
+            $this->notes = get_post_meta($this->ID, 'edd_product_notes', true);
+        }
+
+        return (string) apply_filters('edd_product_notes', $this->notes, $this->ID);
+    }
+
+    /**
+     * Retrieve the download sku
+     *
+     * @since 2.2
+     * @return string SKU of the download
+     */
+    public function get_sku()
+    {
+
+        if (!isset($this->sku)) {
+
+            $this->sku = get_post_meta($this->ID, 'edd_sku', true);
+
+            if (empty($this->sku)) {
+                $this->sku = '-';
+            }
+        }
+
+        return apply_filters('edd_get_download_sku', $this->sku, $this->ID);
+    }
+
+    /**
+     * Retrieve the purchase button behavior
+     *
+     * @since 2.2
+     * @return string
+     */
+    public function get_button_behavior()
+    {
+
+        if (!isset($this->button_behavior)) {
+
+            $this->button_behavior = get_post_meta($this->ID, '_edd_button_behavior', true);
+
+            if (empty($this->button_behavior) || !edd_shop_supports_buy_now()) {
+
+                $this->button_behavior = 'add_to_cart';
+            }
+        }
+
+        return apply_filters('edd_get_download_button_behavior', $this->button_behavior, $this->ID);
+    }
+
+    /**
+     * Retrieve the sale count for the download
+     *
+     * @since 2.2
+     * @return int Number of times this has been purchased
+     */
+    public function get_sales()
+    {
+
+        if (!isset($this->sales)) {
+
+            if ('' == get_post_meta($this->ID, '_edd_download_sales', true)) {
+                add_post_meta($this->ID, '_edd_download_sales', 0);
+            }
+
+            $this->sales = get_post_meta($this->ID, '_edd_download_sales', true);
+
+            // Never let sales be less than zero
+            $this->sales = max($this->sales, 0);
+        }
+
+        return $this->sales;
+    }
+
+    /**
+     * Increment the sale count by one
+     *
+     * @since 2.2
+     * @param int $quantity The quantity to increase the sales by
+     * @return int New number of total sales
+     */
+    public function increase_sales($quantity = 1)
+    {
+
+        $quantity    = absint($quantity);
+        $total_sales = $this->get_sales() + $quantity;
+
+        if ($this->update_meta('_edd_download_sales', $total_sales)) {
+
+            $this->sales = $total_sales;
+
+            do_action('edd_download_increase_sales', $this->ID, $this->sales, $this);
+
+            return $this->sales;
+        }
+
+        return false;
+    }
+
+    /**
+     * Decrement the sale count by one
+     *
+     * @since 2.2
+     * @param int $quantity The quantity to decrease by
+     * @return int New number of total sales
+     */
+    public function decrease_sales($quantity = 1)
+    {
+
+        // Only decrease if not already zero
+        if ($this->get_sales() > 0) {
+
+            $quantity    = absint($quantity);
+            $total_sales = $this->get_sales() - $quantity;
+
+            if ($this->update_meta('_edd_download_sales', $total_sales)) {
+
+                $this->sales = $total_sales;
+
+                do_action('edd_download_decrease_sales', $this->ID, $this->sales, $this);
+
+                return $this->sales;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Retrieve the total earnings for the download
+     *
+     * @since 2.2
+     * @return float Total download earnings
+     */
+    public function get_earnings()
+    {
+
+        if (!isset($this->earnings)) {
+
+            if ('' == get_post_meta($this->ID, '_edd_download_earnings', true)) {
+                add_post_meta($this->ID, '_edd_download_earnings', 0);
+            }
+
+            $this->earnings = get_post_meta($this->ID, '_edd_download_earnings', true);
+
+            // Never let earnings be less than zero
+            $this->earnings = max($this->earnings, 0);
+        }
+
+        return $this->earnings;
+    }
+
+    /**
+     * Increase the earnings by the given amount
+     *
+     * @since 2.2
+     * @param int|float $amount Amount to increase the earnings by
+     * @return float New number of total earnings
+     */
+    public function increase_earnings($amount = 0)
+    {
+
+        $current_earnings = $this->get_earnings();
+        $new_amount = apply_filters('edd_download_increase_earnings_amount', $current_earnings + (float) $amount, $current_earnings, $amount, $this);
+
+        if ($this->update_meta('_edd_download_earnings', $new_amount)) {
+
+            $this->earnings = $new_amount;
+
+            do_action('edd_download_increase_earnings', $this->ID, $this->earnings, $this);
+
+            return $this->earnings;
+        }
+
+        return false;
+    }
+
+    /**
+     * Decrease the earnings by the given amount
+     *
+     * @since 2.2
+     * @param int|float $amount Number to decrease earning with
+     * @return float New number of total earnings
+     */
+    public function decrease_earnings($amount)
+    {
+
+        // Only decrease if greater than zero
+        if ($this->get_earnings() > 0) {
+
+            $current_earnings = $this->get_earnings();
+            $new_amount = apply_filters('edd_download_decrease_earnings_amount', $current_earnings - (float) $amount, $current_earnings, $amount, $this);
+
+            if ($this->update_meta('_edd_download_earnings', $new_amount)) {
+
+                $this->earnings = $new_amount;
+
+                do_action('edd_download_decrease_earnings', $this->ID, $this->earnings, $this);
+
+                return $this->earnings;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if the download is free or if the given price ID is free
+     *
+     * @since 2.2
+     * @param bool $price_id ID of variation if needed
+     * @return bool True when the download is free, false otherwise
+     */
+    public function is_free($price_id = false)
+    {
+
+        $is_free = false;
+        $variable_pricing = edd_has_variable_prices($this->ID);
+
+        if ($variable_pricing && !is_null($price_id) && $price_id !== false) {
+
+            $price = edd_get_price_option_amount($this->ID, $price_id);
+        } elseif ($variable_pricing && $price_id === false) {
+
+            $lowest_price  = (float) edd_get_lowest_price_option($this->ID);
+            $highest_price = (float) edd_get_highest_price_option($this->ID);
+
+            if ($lowest_price === 0.00 && $highest_price === 0.00) {
+                $price = 0;
+            }
+        } elseif (!$variable_pricing) {
+
+            $price = get_post_meta($this->ID, 'edd_price', true);
+        }
+
+        if (isset($price) && (float) $price == 0) {
+            $is_free = true;
+        }
+
+        return (bool) apply_filters('edd_is_free_download', $is_free, $this->ID, $price_id);
+    }
+
+    /**
+     * Is quantity input disabled on this product?
+     *
+     * @since 2.7
+     * @return bool
+     */
+    public function quantities_disabled()
+    {
+
+        $ret = (bool) get_post_meta($this->ID, '_edd_quantities_disabled', true);
+        return apply_filters('edd_download_quantity_disabled', $ret, $this->ID);
+    }
+
+    /**
+     * Updates a single meta entry for the download
+     *
+     * @since  2.3
+     * @access private
+     * @param  string $meta_key   The meta_key to update
+     * @param  string|array|object $meta_value The value to put into the meta
+     * @return bool             The result of the update query
+     */
+    private function update_meta($meta_key = '', $meta_value = '')
+    {
+
+        global $wpdb;
+
+        if (empty($meta_key) || (!is_numeric($meta_value) && empty($meta_value))) {
+            return false;
+        }
+
+        // Make sure if it needs to be serialized, we do
+        $meta_value = maybe_serialize($meta_value);
+
+        if (is_numeric($meta_value)) {
+            $value_type = is_float($meta_value) ? '%f' : '%d';
+        } else {
+            $value_type = "'%s'";
+        }
+
+        $sql = $wpdb->prepare("UPDATE $wpdb->postmeta SET meta_value = $value_type WHERE post_id = $this->ID AND meta_key = '%s'", $meta_value, $meta_key);
+
+        if ($wpdb->query($sql)) {
+
+            clean_post_cache($this->ID);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the download can be purchased
+     *
+     * NOTE: Currently only checks on edd_get_cart_contents() and edd_add_to_cart()
+     *
+     * @since  2.6.4
+     * @return bool If the current user can purcahse the download ID
+     */
+    public function can_purchase()
+    {
+        $can_purchase = true;
+
+        if (!current_user_can('edit_post', $this->ID) && $this->post_status != 'publish') {
+            $can_purchase = false;
+        }
+
+        return (bool) apply_filters('edd_can_purchase_download', $can_purchase, $this);
+    }
+
+    /**
+     * Get pricing variations for bundled items
+     *
+     * @since 2.7
+     * @return array
+     */
+    public function get_bundle_pricing_variations()
+    {
+        return get_post_meta($this->ID, '_edd_bundled_products_conditions');
+    }
 }

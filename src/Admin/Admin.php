@@ -2,8 +2,6 @@
 
 namespace SmartPay\Admin;
 
-use SmartPay\Admin\Forms\Meta_Box;
-
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -27,7 +25,7 @@ final class Admin
 
         Setting::instance();
 
-        Meta_Box::instance();
+        Download::instance();
 
         Payment_Form::instance();
 
@@ -57,20 +55,24 @@ final class Admin
 
     public function load_admin_scripts()
     {
-        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', array('jquery', 'jquery-form'), SMARTPAY_VERSION, false);
-        wp_enqueue_script('smartpay-admin');
+        // Styles
+		wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.min.css', '', SMARTPAY_VERSION);
 
-        // wp_enqueue_style('app-css', plugins_url('/assets/css/app.css', __FILE__));
-        // wp_enqueue_style('bootstrap-css', '//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css');
+		wp_enqueue_style('smartpay-admin');
 
-        // wp_enqueue_script('app-js', plugins_url('/assets/js/app.js', __FILE__), '', true);
+		// Scripts
+        wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/bootstrap.js', ['jquery'], SMARTPAY_VERSION);
+        
+        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery'], SMARTPAY_VERSION);
+        
+        wp_enqueue_script('smartpay-bootstrap');
+		wp_enqueue_script('smartpay-admin');
     }
 
 
 
     public function menu_item()
     {
-
         remove_submenu_page( 'edit.php?post_type=smartpay_download', 'post-new.php?post_type=smartpay_download' );
 
         add_submenu_page(
