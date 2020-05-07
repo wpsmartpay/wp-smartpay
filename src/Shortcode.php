@@ -20,7 +20,8 @@ final class Shortcode
      */
     private function __construct()
     {
-        add_shortcode('smartpay_form', [$this, 'smartpay_form_shortcode']);
+        add_shortcode('smartpay_form', [$this, 'form_shortcode']);
+        add_shortcode('smartpay_payment_history', [$this, 'payment_history_shortcode']);
     }
 
     /**
@@ -42,7 +43,7 @@ final class Shortcode
         return self::$instance;
     }
 
-    public function smartpay_form_shortcode($atts)
+    public function form_shortcode($atts)
     {
         // global $smartpay_options;
 
@@ -85,7 +86,7 @@ final class Shortcode
             try {
                 ob_start();
 
-                self::render_html($form);
+                self::render_form_html($form);
 
                 return ob_get_clean();
             } catch (\Exception $e) {
@@ -94,7 +95,7 @@ final class Shortcode
         }
     }
 
-    public static function render_html($form)
+    public static function render_form_html($form)
     {
 
         $payment_page = smartpay_get_option('payment_page', 0);
@@ -116,5 +117,13 @@ final class Shortcode
         } else {
             echo 'Please setup your payment page.';
         }
-    }
+	}
+
+	public function payment_history_shortcode($atts){
+		ob_start();
+
+		echo smartpay_view_render('shortcodes/payment_history');
+
+		return ob_get_clean();
+	}
 }

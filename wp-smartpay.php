@@ -159,7 +159,10 @@ final class SmartPay
 	 */
 	private function init_actions()
 	{
+		// Admin only scripts
 		add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_scripts']);
+		// Site scripts
+		add_action('wp_enqueue_scripts', [$this, 'enqueue_smartpay_site_scripts']);
 
 		register_activation_hook(__FILE__, [$this, 'activate']);
 
@@ -269,6 +272,12 @@ final class SmartPay
 
 		wp_enqueue_script('smartpay-bootstrap');
 		wp_enqueue_script('smartpay-app');
+	}
+
+	public function enqueue_smartpay_site_scripts(){
+		// Styles
+		wp_register_style('smartpay', SMARTPAY_PLUGIN_ASSETS . '/css/site.min.css', '', SMARTPAY_VERSION);
+		wp_enqueue_style('smartpay');
 	}
 }
 
