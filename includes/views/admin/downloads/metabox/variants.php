@@ -21,7 +21,7 @@
 			<!-- Variant start -->
 			<div class="variant-option">
 				<div class="variant-option__header p-3">
-					<div class="row">
+					<div class="form-row">
 						<div class="col-7">
 							<div class="form-group m-0">
 								<label for="option_name[0]" class="text-muted my-2 d-block"><strong>Option name</strong></label>
@@ -37,10 +37,10 @@
 								</div>
 							</div>
 						</div>
-						<div class="col d-flex align-items-end">
-							<div>
-								<button type="button" class="btn btn-light border shadow-sm pb-0"><i data-feather="edit-3" width="20" height="20"></i></button>
-								<button type="button" class="btn btn-light border shadow-sm pb-0 ml-2"><i data-feather="trash" width="20" height="20"></i></button>
+						<div class="col d-flex align-items-center">
+							<div class="mt-4">
+								<button type="button" class="btn btn-light btn-sm border shadow-sm pb-0"><i data-feather="edit-3" width="20" height="20"></i></button>
+								<button type="button" class="btn btn-light btn-sm border shadow-sm pb-0 ml-2"><i data-feather="trash" width="20" height="20"></i></button>
 							</div>
 						</div>
 					</div>
@@ -60,6 +60,27 @@
 						</div>
 
 					</div>
+					<!-- Files selection -->
+					<ul class="list-group">
+						<li class="list-group-item m-0 d-flex justify-content-between">
+							<div class="custom-checkbox custom-checkbox-round">
+								<input type="checkbox" class="custom-control-input" id="customCheck1" checked>
+								<label class="custom-control-label" for="customCheck1">Cras justo odio</label>
+							</div>
+						</li>
+						<li class="list-group-item m-0">
+							<div class="custom-checkbox custom-checkbox-round">
+								<input type="checkbox" class="custom-control-input" id="customCheck2">
+								<label class="custom-control-label" for="customCheck2">Porta ac consectetur ac</label>
+							</div>
+						</li>
+						<li class="list-group-item m-0">
+							<div class="custom-checkbox custom-checkbox-round">
+								<input type="checkbox" class="custom-control-input" id="customCheck3">
+								<label class="custom-control-label" for="customCheck3">Porta ac consectetur ac</label>
+							</div>
+						</li>
+					</ul>
 
 				</div>
 			</div>

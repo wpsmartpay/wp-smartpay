@@ -50,23 +50,32 @@ final class Meta_Box
     {
 		 /** Contents **/
 		 add_meta_box(
-            'smartpay_download_contents',
-            __('Files', 'smartpay'),
-            [$this, 'render_smartpay_download_files_meta_box'],
+            'smartpay_download_metabox',
+            __('SmartPay', 'smartpay'),
+            [$this, 'render_metabox'],
             ['smartpay_download'],
             'normal',
             'high'
 		);
+		 /** Contents **/
+		//  add_meta_box(
+        //     'smartpay_download_contents',
+        //     __('Files', 'smartpay'),
+        //     [$this, 'render_smartpay_download_files_meta_box'],
+        //     ['smartpay_download'],
+        //     'normal',
+        //     'high'
+		// );
 
         /** Pricing **/
-        add_meta_box(
-            'smartpay_download_pricing',
-            __('Pricing', 'smartpay'),
-            [$this, 'render_smartpay_download_pricing_meta_box'],
-            ['smartpay_download'],
-            'normal',
-            'high'
-        );
+        // add_meta_box(
+        //     'smartpay_download_pricing',
+        //     __('Pricing', 'smartpay'),
+        //     [$this, 'render_smartpay_download_pricing_meta_box'],
+        //     ['smartpay_download'],
+        //     'normal',
+        //     'high'
+        // );
 
         // /** Variant **/
         // add_meta_box(
@@ -79,6 +88,21 @@ final class Meta_Box
         // );
     }
 
+    public function render_metabox()
+    {
+        global $post;
+
+        /** Output the price fields **/
+        // ob_start();
+
+        echo smartpay_view_render('admin/downloads/metabox', ['post', $post]);
+
+        // ob_get_clean();
+
+        do_action('smartpay_download_metabox_fields', $post->ID);
+
+        wp_nonce_field(basename(__FILE__), 'smartpay_download_metabox_nonce');
+    }
     public function render_smartpay_download_pricing_meta_box()
     {
         global $post;
@@ -92,7 +116,7 @@ final class Meta_Box
 
         do_action('smartpay_download_pricing_meta_box_fields', $post->ID);
 
-        wp_nonce_field(basename(__FILE__), 'smartpay_download_meta_box_nonce');
+        wp_nonce_field(basename(__FILE__), 'smartpay_download_meta_box_nonc');
     }
 
     public function render_smartpay_download_files_meta_box()
