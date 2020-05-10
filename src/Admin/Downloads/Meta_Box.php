@@ -2,6 +2,8 @@
 
 namespace SmartPay\Admin\Downloads;
 
+use SmartPay\Downloads\SmartPay_Download;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -25,6 +27,7 @@ final class Meta_Box
         // Add metabox.
         add_action('add_meta_boxes', [$this, 'add_smartpay_download_meta_boxes']);
         add_action('save_post', [$this, 'save_smartpay_download_meta']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_download_metabox_scripts']);
     }
 
     /**
@@ -48,54 +51,26 @@ final class Meta_Box
 
     public function add_smartpay_download_meta_boxes()
     {
-		 /** Contents **/
-		 add_meta_box(
+        /** Metabox **/
+        add_meta_box(
             'smartpay_download_metabox',
             __('SmartPay', 'smartpay'),
             [$this, 'render_metabox'],
             ['smartpay_download'],
             'normal',
             'high'
-		);
-		 /** Contents **/
-		//  add_meta_box(
-        //     'smartpay_download_contents',
-        //     __('Files', 'smartpay'),
-        //     [$this, 'render_smartpay_download_files_meta_box'],
-        //     ['smartpay_download'],
-        //     'normal',
-        //     'high'
-		// );
-
-        /** Pricing **/
-        // add_meta_box(
-        //     'smartpay_download_pricing',
-        //     __('Pricing', 'smartpay'),
-        //     [$this, 'render_smartpay_download_pricing_meta_box'],
-        //     ['smartpay_download'],
-        //     'normal',
-        //     'high'
-        // );
-
-        // /** Variant **/
-        // add_meta_box(
-        //     'smartpay_download_variant',
-        //     __('Variant', 'smartpay'),
-        //     [$this, 'render_smartpay_download_variants_meta_box'],
-        //     ['smartpay_download'],
-        //     'normal',
-        //     'high'
-        // );
+        );
     }
 
     public function render_metabox()
     {
         global $post;
+        $download = new SmartPay_Download($post->ID);
 
         /** Output the price fields **/
         // ob_start();
 
-        echo smartpay_view_render('admin/downloads/metabox', ['post', $post]);
+        echo smartpay_view_render('admin/downloads/metabox', ['download' => $download]);
 
         // ob_get_clean();
 
@@ -103,98 +78,59 @@ final class Meta_Box
 
         wp_nonce_field(basename(__FILE__), 'smartpay_download_metabox_nonce');
     }
-    public function render_smartpay_download_pricing_meta_box()
-    {
-        global $post;
-
-        /** Output the price fields **/
-        // ob_start();
-
-        echo smartpay_view_render('admin/downloads/metabox/pricing', ['post', $post]);
-
-        // ob_get_clean();
-
-        do_action('smartpay_download_pricing_meta_box_fields', $post->ID);
-
-        wp_nonce_field(basename(__FILE__), 'smartpay_download_meta_box_nonc');
-    }
-
-    public function render_smartpay_download_files_meta_box()
-    {
-        global $post;
-
-        /** Output the price fields **/
-        // ob_start();
-
-        echo smartpay_view_render('admin/downloads/metabox/files', ['post', $post]);
-
-        // ob_get_clean();
-
-        do_action('smartpay_download_contents_meta_box_fields', $post->ID);
-    }
-
-    public function render_smartpay_download_variants_meta_box()
-    {
-        global $post;
-
-        /** Output the price fields **/
-        // ob_start();
-
-        echo smartpay_view_render('admin/downloads/metabox/variants', ['post', $post]);
-
-        // ob_get_clean();
-
-        do_action('smartpay_download_variant_meta_box_fields', $post->ID);
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function save_smartpay_download_meta($post_id)
     {
-        if (!isset($_POST['smartpay_download_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_download_metabox_nonce'], 'smartpay_download_metabox_nonce')) {
+        if (!isset($_POST['smartpay_download_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_download_metabox_nonce'], basename(__FILE__))) {
             return;
         }
 
-        if (isset($_POST['_form_payment_type'])) {
-            \update_post_meta($post_id, '_form_payment_type', sanitize_text_field($_POST['_form_payment_type']));
+        extract($_POST);
+        // var_dump($variations);
+        // exit();
+
+        // Base price
+        if (isset($base_price)) {
+            update_post_meta($post_id, '_smartpay_base_price', sanitize_text_field($base_price));
         }
 
-        if (isset($_POST['_form_amount'])) {
-            \update_post_meta($post_id, '_form_amount', sanitize_text_field($_POST['_form_amount']));
+        // Sale price
+        if (isset($sale_price)) {
+            update_post_meta($post_id, '_smartpay_sale_price', sanitize_text_field($sale_price));
         }
 
-        if (isset($_POST['_form_payment_button_text'])) {
-            \update_post_meta($post_id, '_form_payment_button_text', sanitize_text_field($_POST['_form_payment_button_text']));
+        // Files
+        if (isset($files)) {
+            update_post_meta($post_id, '_smartpay_download_files', $files ?? []);
+        } else {
+            update_post_meta($post_id, '_smartpay_download_files', []);
         }
 
-        if (isset($_POST['_form_payment_button_processing_text'])) {
-            \update_post_meta($post_id, '_form_payment_button_processing_text', sanitize_text_field($_POST['_form_payment_button_processing_text']));
+        // Variation
+        $smartpay_variations = [];
+        foreach ($variations as $index => $variation) {
+            $_variant = array(
+                'title' => $variation['title'] ?? 'Variation ' . $index + 1,
+                'name' => $variation['name'] ?? 'Variation ' . $index + 1,
+                'additional_amount' => $variation['additional_amount'] ?? 0,
+                'description' => $variation['description'] ?? '',
+                'files' => $variation['files'] ?? [],
+            );
+            array_push($smartpay_variations, apply_filters('smartpay_download_variation', $_variant));
         }
 
-        if (isset($_POST['_form_payment_button_style'])) {
-            \update_post_meta($post_id, '_form_payment_button_style', sanitize_text_field($_POST['_form_payment_button_style']));
-        }
+        update_post_meta($post_id, '_smartpay_variations', $smartpay_variations);
 
-        if (isset($_POST['_form_paddle_checkout_image'])) {
-            \update_post_meta($post_id, '_form_paddle_checkout_image', sanitize_text_field($_POST['_form_paddle_checkout_image']));
-        }
+        do_action('save_smartpay_download', $post_id, $post);
+    }
 
-        if (isset($_POST['_form_paddle_checkout_location'])) {
-            \update_post_meta($post_id, '_form_paddle_checkout_location', sanitize_text_field($_POST['_form_paddle_checkout_location']));
-        }
+    public function enqueue_smartpay_download_metabox_scripts()
+    {
+        wp_enqueue_media();
+
+        // Scripts
+        wp_register_script('smartpay-download-file-selector', SMARTPAY_PLUGIN_ASSETS . '/js/download_file_selector.js', '', SMARTPAY_VERSION);
+
+        wp_enqueue_script('smartpay-download-file-selector');
     }
 }
