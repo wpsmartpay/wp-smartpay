@@ -1,6 +1,6 @@
 <div class="smartpay smartpay_variant" id="smartpay_variant_section">
 
-	<div class="border rounded bg-light text-center p-5">
+	<div class="border rounded bg-light text-center p-4">
 		<i data-feather="layers" width="42" height="42"></i>
 		<h3>Offer variations of this product</h3>
 		<p class="text-muted">Sweeten the deal for your customers with different options for format, version, etc</p>
@@ -33,7 +33,7 @@
 								<label for="add_amount[0]" class="text-muted my-2 d-block"><strong>Additional amount</strong></label>
 								<div class="input-group">
 									<div class="input-group-prepend"><span class="input-group-text">$</span></div>
-									<input type="text" name="add_amount[0]" id="add_amount[0]" class="form-control" placeholder="1.0">
+									<input type="text" name="add_amount[0]" id="add_amount[0]" class="form-control" placeholder="0.0">
 								</div>
 							</div>
 						</div>
@@ -53,7 +53,7 @@
 					</div>
 					<div class="form-group">
 						<label for="option_description[0]" class="text-muted my-2 d-block"><strong>Files</strong></label>
-						<div class="border rounded text-center p-5">
+						<div class="border rounded text-center p-4">
 							<i data-feather="package" width="42" height="42"></i>
 							<h3 class="text-muted">Associate files with this variant</h3>
 							<button class="btn btn-light border shadow-sm">Select files</button>
