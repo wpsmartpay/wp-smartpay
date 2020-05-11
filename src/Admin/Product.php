@@ -2,13 +2,13 @@
 
 namespace SmartPay\Admin;
 
-use SmartPay\Admin\Downloads\Meta_Box;
+use SmartPay\Admin\Products\Meta_Box;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Download
+final class Product
 {
     /**
      * The single instance of this class.
@@ -16,7 +16,7 @@ final class Download
     private static $instance = null;
 
     /**
-     * Construct Download class.
+     * Construct Product class.
      *
      * @since 0.1
      */
@@ -26,18 +26,18 @@ final class Download
     }
 
     /**
-     * Main Download Instance.
+     * Main Product Instance.
      *
-     * Ensures that only one instance of Download exists in memory at any one
+     * Ensures that only one instance of Product exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
      *
-     * @return object|Download
+     * @return object|Product
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof Download)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Product)) {
             self::$instance = new self();
         }
 

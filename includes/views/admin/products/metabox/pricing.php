@@ -1,6 +1,6 @@
 <?php
-$base_price = $download->get_base_price() ?? 0;
-$sale_price = $download->get_sale_price() ?? 0;
+$base_price = $product->get_base_price() ?? 0;
+$sale_price = $product->get_sale_price() ?? 0;
 ?>
 
 <div class="smartpay smartpay_pricing" id="smartpay_pricing_section">

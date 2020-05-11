@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Downloads;
+namespace SmartPay\Products;
 
 use WP_Post;
 
@@ -9,60 +9,60 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class SmartPay_Download
+class SmartPay_Product
 {
 
     /**
-     * The download ID
+     * The product ID
      *
      * @since 0.1
      */
     public $ID = 0;
 
     /**
-     * The download base price
+     * The product base price
      *
      * @since 0.1
      */
     private $base_price;
 
     /**
-     * The download sale price
+     * The product sale price
      *
      * @since 0.1
      */
     private $sale_price;
 
     /**
-     * The download variations
+     * The product variations
      *
      * @since 0.1
      */
     private $variations = array();
 
     /**
-     * The download files
+     * The product files
      *
      * @since 0.1
      */
     private $files;
 
     /**
-     * The download's sale count
+     * The product's sale count
      *
      * @since 0.1
      */
     private $sales;
 
     /**
-     * The download's notes
+     * The product's notes
      *
      * @since 0.1
      */
     private $notes;
 
     /**
-     * The download sku
+     * The product sku
      *
      * @since 0.1
      */
@@ -105,34 +105,34 @@ class SmartPay_Download
             return;
         }
 
-        $download = WP_Post::get_instance($_id);
+        $product = WP_Post::get_instance($_id);
 
-        return $this->setup_download($download);
+        return $this->setup_product($product);
     }
 
     /**
-     * Given the download data, let's set the variables
+     * Given the product data, let's set the variables
      *
      * @since  2.3.6
-     * @param  WP_Post $download The WP_Post object for download.
+     * @param  WP_Post $product The WP_Post object for product.
      * @return bool             If the setup was successful or not
      */
-    private function setup_download($download)
+    private function setup_product($product)
     {
 
-        if (!is_object($download)) {
+        if (!is_object($product)) {
             return false;
         }
 
-        if (!$download instanceof WP_Post) {
+        if (!$product instanceof WP_Post) {
             return false;
         }
 
-        if ('smartpay_download' !== $download->post_type) {
+        if ('smartpay_product' !== $product->post_type) {
             return false;
         }
 
-        foreach ($download as $key => $value) {
+        foreach ($product as $key => $value) {
 
             switch ($key) {
 
@@ -158,16 +158,16 @@ class SmartPay_Download
             return call_user_func(array($this, 'get_' . $key));
         } else {
 
-            return new WP_Error('smartpay-download-invalid-property', sprintf(__('Can\'t get property %s', 'smartpay'), $key));
+            return new WP_Error('smartpay-product-invalid-property', sprintf(__('Can\'t get property %s', 'smartpay'), $key));
         }
     }
 
     /**
-     * Creates a download
+     * Creates a product
      *
      * @since  2.3.6
-     * @param  array  $data Array of attributes for a download
-     * @return mixed  false if data isn't passed and class not instantiated for creation, or New Download ID
+     * @param  array  $data Array of attributes for a product
+     * @return mixed  false if data isn't passed and class not instantiated for creation, or New product ID
      */
     public function create($data = array())
     {
@@ -176,40 +176,40 @@ class SmartPay_Download
         }
 
         $defaults = array(
-            'post_type'   => 'smartpay_download',
+            'post_type'   => 'smartpay_product',
             'post_status' => 'draft',
-            'post_title'  => __('New Download Product', 'smartpay')
+            'post_title'  => __('New Product', 'smartpay')
         );
 
         $args = wp_parse_args($data, $defaults);
 
         /**
-         * Fired before a download is created
+         * Fired before a product is created
          *
          * @param array $args The post object arguments used for creation.
          */
-        do_action('smartpay_download_pre_create', $args);
+        do_action('smartpay_product_pre_create', $args);
 
         $id = wp_insert_post($args, true);
 
-        $download = WP_Post::get_instance($id);
+        $product = WP_Post::get_instance($id);
 
         /**
-         * Fired after a download is created
+         * Fired after a product is created
          *
          * @param int   $id   The post ID of the created item.
          * @param array $args The post object arguments used for creation.
          */
-        do_action('smartpay_download_post_create', $id, $args);
+        do_action('smartpay_product_post_create', $id, $args);
 
-        return $this->setup_download($download);
+        return $this->setup_product($product);
     }
 
     /**
      * Retrieve the ID
      *
      * @since 0.1
-     * @return int ID of the download
+     * @return int ID of the product
      */
     public function get_ID()
     {
@@ -217,10 +217,10 @@ class SmartPay_Download
     }
 
     /**
-     * Retrieve the download name
+     * Retrieve the product name
      *
      * @since 2.5.8
-     * @return string Name of the download
+     * @return string Name of the product
      */
     public function get_name()
     {
@@ -231,7 +231,7 @@ class SmartPay_Download
      * Retrieve the base price
      *
      * @since 0.1
-     * @return float Price of the download
+     * @return float Price of the product
      */
     public function get_base_price()
     {
@@ -249,15 +249,15 @@ class SmartPay_Download
             }
         }
 
-        /** Override the download base price. **/
-        return apply_filters('smartpay_get_download_base_price', $this->base_price, $this->ID);
+        /** Override the product base price. **/
+        return apply_filters('smartpay_get_product_base_price', $this->base_price, $this->ID);
     }
 
     /**
      * Retrieve the sale price
      *
      * @since 0.1
-     * @return float Price of the download
+     * @return float Price of the product
      */
     public function get_sale_price()
     {
@@ -275,8 +275,8 @@ class SmartPay_Download
             }
         }
 
-        /** Override the download sale price. **/
-        return apply_filters('smartpay_get_download_sale_price', $this->sale_price, $this->ID);
+        /** Override the product sale price. **/
+        return apply_filters('smartpay_get_product_sale_price', $this->sale_price, $this->ID);
     }
 
     /**
@@ -303,29 +303,29 @@ class SmartPay_Download
         }
 
         /** Override variations **/
-        return apply_filters('smartpay_get_download_variations', $this->variations, $this->ID);
+        return apply_filters('smartpay_get_product_variations', $this->variations, $this->ID);
     }
 
     /**
-     * Determine if the download has variations enabled
+     * Determine if the product has variations enabled
      *
      * @since 0.1
-     * @return bool True when the download has variations, false otherwise
+     * @return bool True when the product has variations, false otherwise
      */
     public function has_variations()
     {
         $ret = get_post_meta($this->ID, '_smartpay_variations', true);
 
-        /** Override whether the download has variables prices. **/
+        /** Override whether the product has variables prices. **/
         return (bool) apply_filters('smartpay_has_variations', $ret, $this->ID);
     }
 
     /**
-     * Retrieve the file downloads
+     * Retrieve the file products
      *
      * @since 0.1
      * @param integer $variable_price_id
-     * @return array List of download files
+     * @return array List of product files
      */
     public function get_files($variable_price_id = null)
     {
@@ -334,14 +334,14 @@ class SmartPay_Download
 
             $this->files = array();
 
-            $download_files = get_post_meta($this->ID, '_smartpay_download_files', true);
+            $product_files = get_post_meta($this->ID, '_smartpay_product_files', true);
 
-            if ($download_files) {
-                $this->files = $download_files;
+            if ($product_files) {
+                $this->files = $product_files;
             }
         }
 
-        return apply_filters('smartpay_download_files', $this->files, $this->ID, $variable_price_id);
+        return apply_filters('smartpay_product_files', $this->files, $this->ID, $variable_price_id);
     }
 
     /**
@@ -360,43 +360,43 @@ class SmartPay_Download
     }
 
     /**
-     * Retrieve the download notes
+     * Retrieve the product notes
      *
      * @since 0.1
-     * @return string Note related to the download
+     * @return string Note related to the product
      */
     public function get_notes()
     {
         if (!isset($this->notes)) {
 
-            $this->notes = get_post_meta($this->ID, '_smartpay_download_notes', true);
+            $this->notes = get_post_meta($this->ID, '_smartpay_product_notes', true);
         }
 
-        return (string) apply_filters('smartpay_download_notes', $this->notes, $this->ID);
+        return (string) apply_filters('smartpay_product_notes', $this->notes, $this->ID);
     }
 
     /**
-     * Retrieve the download sku
+     * Retrieve the product sku
      *
      * @since 0.1
-     * @return string SKU of the download
+     * @return string SKU of the product
      */
     public function get_sku()
     {
         if (!isset($this->sku)) {
 
-            $this->sku = get_post_meta($this->ID, '_smartpay_download_sku', true);
+            $this->sku = get_post_meta($this->ID, '_smartpay_product_sku', true);
 
             if (empty($this->sku)) {
                 $this->sku = '-';
             }
         }
 
-        return apply_filters('smartpay_get_download_sku', $this->sku, $this->ID);
+        return apply_filters('smartpay_get_product_sku', $this->sku, $this->ID);
     }
 
     /**
-     * Retrieve the sale count for the download
+     * Retrieve the sale count for the product
      *
      * @since 0.1
      * @return int Number of times this has been purchased
@@ -405,11 +405,11 @@ class SmartPay_Download
     {
         if (!isset($this->sales)) {
 
-            if ('' == get_post_meta($this->ID, '_smartpay_download_sales', true)) {
-                add_post_meta($this->ID, '_smartpay_download_sales', 0);
+            if ('' == get_post_meta($this->ID, '_smartpay_product_sales', true)) {
+                add_post_meta($this->ID, '_smartpay_product_sales', 0);
             }
 
-            $this->sales = get_post_meta($this->ID, '_smartpay_download_sales', true);
+            $this->sales = get_post_meta($this->ID, '_smartpay_product_sales', true);
 
             // Never let sales be less than zero
             $this->sales = max($this->sales, 0);
@@ -430,11 +430,11 @@ class SmartPay_Download
         $quantity    = absint($quantity);
         $total_sales = $this->get_sales() + $quantity;
 
-        if ($this->update_meta('_smartpay_download_sales', $total_sales)) {
+        if ($this->update_meta('_smartpay_product_sales', $total_sales)) {
 
             $this->sales = $total_sales;
 
-            do_action('smartpay_download_increase_sales', $this->ID, $this->sales, $this);
+            do_action('smartpay_product_increase_sales', $this->ID, $this->sales, $this);
 
             return $this->sales;
         }
@@ -457,11 +457,11 @@ class SmartPay_Download
             $quantity    = absint($quantity);
             $total_sales = $this->get_sales() - $quantity;
 
-            if ($this->update_meta('_smartpay_download_sales', $total_sales)) {
+            if ($this->update_meta('_smartpay_product_sales', $total_sales)) {
 
                 $this->sales = $total_sales;
 
-                do_action('smartpay_download_decrease_sales', $this->ID, $this->sales, $this);
+                do_action('smartpay_product_decrease_sales', $this->ID, $this->sales, $this);
 
                 return $this->sales;
             }
@@ -477,7 +477,7 @@ class SmartPay_Download
     // TODO: Can buy multiple
 
     /**
-     * Updates a single meta entry for the download
+     * Updates a single meta entry for the product
      *
      * @since  2.3
      * @access private
@@ -515,10 +515,10 @@ class SmartPay_Download
     }
 
     /**
-     * Checks if the download can be purchased
+     * Checks if the product can be purchased
      *
      * @since  2.6.4
-     * @return bool If the current user can purchase the download ID
+     * @return bool If the current user can purchase the product ID
      */
     public function can_purchase()
     {
@@ -528,6 +528,6 @@ class SmartPay_Download
             $can_purchase = false;
         }
 
-        return (bool) apply_filters('smartpay_can_purchase_download', $can_purchase, $this);
+        return (bool) apply_filters('smartpay_can_purchase_product', $can_purchase, $this);
     }
 }

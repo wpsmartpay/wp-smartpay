@@ -21,7 +21,7 @@ use SmartPay\Setting;
 use SmartPay\PostType;
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
-use SmartPay\Downloads\Download;
+use SmartPay\Products\Product;
 use SmartPay\HTML_Elements;
 
 // Exit if accessed directly.
@@ -90,7 +90,7 @@ final class SmartPay
 
         PostType::instance();
 
-        Download::instance();
+        Product::instance();
 
         Shortcode::instance();
 

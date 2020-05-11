@@ -1,5 +1,5 @@
 <?php
-$variations = $download->get_variations() ?? [];
+$variations = $product->get_variations() ?? [];
 // var_dump($variations);
 ?>
 

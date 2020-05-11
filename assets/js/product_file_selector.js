@@ -86,7 +86,7 @@
 
 // Select media
 jQuery(function ($) {
-    $("body").on("click", "#select_smartpay_download_file", (e) => {
+    $(document.body).on("click", "#select_smartpay_product_file", (e) => {
         e.preventDefault();
 
         var media = new SmartPayMediaSelector({
@@ -98,7 +98,7 @@ jQuery(function ($) {
                 }
 
                 console.log(selected_files);
-                $smartpay_download_files = $('#smartpay_download_files');
+                $smartpay_product_files = $('#smartpay_product_files');
 
                 selected_files.forEach(file => {
 
@@ -129,7 +129,7 @@ jQuery(function ($) {
                         </div>
                     </li>`;
 
-                    $smartpay_download_files.append(listItem);
+                    $smartpay_product_files.append(listItem);
                 });
                 feather.replace()
 
@@ -139,7 +139,7 @@ jQuery(function ($) {
         media.open();
     });
 
-    $("body").on("click", ".remove-file", (e) => {
+    $(document.body).on("click", ".remove-file", (e) => {
         $(e.target).parents(".files-item").remove();
     });
 });

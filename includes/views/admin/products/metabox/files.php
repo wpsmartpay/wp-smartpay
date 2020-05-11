@@ -1,14 +1,14 @@
 <?php
-$files = $download->get_files() ?? [];
+$files = $product->get_files() ?? [];
 ?>
 
 <div class="border rounded bg-light text-center p-5">
     <i data-feather="hard-drive" width="42" height="42"></i>
     <h3 class="text-muted">Upload or select files for this product</h3>
-    <button type="button" class="btn btn-light border shadow-sm" id="select_smartpay_download_file" data-target="smartpay_download_files">Upload files</button>
+    <button type="button" class="btn btn-light border shadow-sm" id="select_smartpay_product_file" data-target="smartpay_product_files">Upload files</button>
 </div>
 <div class="smartpay_file_secion">
-    <ul class="list-group" id="smartpay_download_files">
+    <ul class="list-group" id="smartpay_product_files">
         <?php foreach ($files as $index => $file) : ?>
             <?php $id = $file["id"] ?? $index + 1; ?>
             <li class="list-group-item list-group-item-action mb-0 files-item" id="file-<?php echo $id ?>">

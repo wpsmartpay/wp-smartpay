@@ -1,8 +1,8 @@
 <?php
 
-namespace SmartPay\Admin\Downloads;
+namespace SmartPay\Admin\Products;
 
-use SmartPay\Downloads\SmartPay_Download;
+use SmartPay\Products\SmartPay_Product;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -25,9 +25,9 @@ final class Meta_Box
     private function __construct()
     {
         // Add metabox.
-        add_action('add_meta_boxes', [$this, 'add_smartpay_download_meta_boxes']);
-        add_action('save_post', [$this, 'save_smartpay_download_meta']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_download_metabox_scripts']);
+        add_action('add_meta_boxes', [$this, 'add_smartpay_product_meta_boxes']);
+        add_action('save_post', [$this, 'save_smartpay_product_meta']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_product_metabox_scripts']);
     }
 
     /**
@@ -49,14 +49,14 @@ final class Meta_Box
         return self::$instance;
     }
 
-    public function add_smartpay_download_meta_boxes()
+    public function add_smartpay_product_meta_boxes()
     {
         /** Metabox **/
         add_meta_box(
-            'smartpay_download_metabox',
+            'smartpay_product_metabox',
             __('SmartPay', 'smartpay'),
             [$this, 'render_metabox'],
-            ['smartpay_download'],
+            ['smartpay_product'],
             'normal',
             'high'
         );
@@ -65,23 +65,23 @@ final class Meta_Box
     public function render_metabox()
     {
         global $post;
-        $download = new SmartPay_Download($post->ID);
+        $product = new SmartPay_Product($post->ID);
 
         /** Output the price fields **/
         // ob_start();
 
-        echo smartpay_view_render('admin/downloads/metabox', ['download' => $download]);
+        echo smartpay_view_render('admin/products/metabox', ['product' => $product]);
 
         // ob_get_clean();
 
-        do_action('smartpay_download_metabox_fields', $post->ID);
+        do_action('smartpay_product_metabox_fields', $post->ID);
 
-        wp_nonce_field(basename(__FILE__), 'smartpay_download_metabox_nonce');
+        wp_nonce_field(basename(__FILE__), 'smartpay_product_metabox_nonce');
     }
 
-    public function save_smartpay_download_meta($post_id)
+    public function save_smartpay_product_meta($post_id)
     {
-        if (!isset($_POST['smartpay_download_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_download_metabox_nonce'], basename(__FILE__))) {
+        if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename(__FILE__))) {
             return;
         }
 
@@ -101,9 +101,9 @@ final class Meta_Box
 
         // Files
         if (isset($files)) {
-            update_post_meta($post_id, '_smartpay_download_files', $files ?? []);
+            update_post_meta($post_id, '_smartpay_product_files', $files ?? []);
         } else {
-            update_post_meta($post_id, '_smartpay_download_files', []);
+            update_post_meta($post_id, '_smartpay_product_files', []);
         }
 
         // Variation
@@ -116,21 +116,21 @@ final class Meta_Box
                 'description' => $variation['description'] ?? '',
                 'files' => $variation['files'] ?? [],
             );
-            array_push($smartpay_variations, apply_filters('smartpay_download_variation', $_variant));
+            array_push($smartpay_variations, apply_filters('smartpay_product_variation', $_variant));
         }
 
         update_post_meta($post_id, '_smartpay_variations', $smartpay_variations);
 
-        do_action('save_smartpay_download', $post_id, $post);
+        do_action('save_smartpay_product', $post_id, $post);
     }
 
-    public function enqueue_smartpay_download_metabox_scripts()
+    public function enqueue_smartpay_product_metabox_scripts()
     {
         wp_enqueue_media();
 
         // Scripts
-        wp_register_script('smartpay-download-file-selector', SMARTPAY_PLUGIN_ASSETS . '/js/download_file_selector.js', '', SMARTPAY_VERSION);
+        wp_register_script('smartpay-product-file-selector', SMARTPAY_PLUGIN_ASSETS . '/js/product_file_selector.js', '', SMARTPAY_VERSION);
 
-        wp_enqueue_script('smartpay-download-file-selector');
+        wp_enqueue_script('smartpay-product-file-selector');
     }
 }
