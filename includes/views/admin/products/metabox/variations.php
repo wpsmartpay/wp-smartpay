@@ -24,10 +24,10 @@ $variations = $product->get_variations() ?? [];
             </div>
         </div>
         <div class="card-body p-0 variations">
-            <!-- Variants -->
+            <!-- Variantions -->
             <?php foreach ($variations as $index => $variation) : ?>
             <?php $variation_id = $variation['id'] ?? $index + 1; ?>
-            <div class="variation-option">
+            <div class="variation-option" data-variation-id="<?php echo $variation_id; ?>">
                 <div class="variation-option__header p-3">
                     <div class="form-row">
                         <div class="col-7">
@@ -56,7 +56,8 @@ $variations = $product->get_variations() ?? [];
                             <div class="mt-4">
                                 <!-- <button type="button" class="btn btn-light btn-sm border shadow-sm pb-0"><i
                                         data-feather="edit-3" width="20" height="20"></i></button> -->
-                                <button type="button" class="btn btn-light btn-sm border shadow-sm pb-0 ml-2 remove-variation-option"><i
+                                <button type="button"
+                                    class="btn btn-light btn-sm border shadow-sm pb-0 ml-2 remove-variation-option"><i
                                         data-feather="trash" width="20" height="20"></i></button>
                             </div>
                         </div>
@@ -73,29 +74,31 @@ $variations = $product->get_variations() ?? [];
                             rows="3"><?php echo $variation ? $variation['description'] : ''; ?></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label class="text-muted my-2 d-block"><strong>Files</strong></label>
+                    <!-- Files -->
+                    <label class="text-muted my-2 d-block"><strong>Files</strong></label>
+                    <div class="form-group no-variation-file-box">
                         <div class="border rounded text-center p-5">
                             <i data-feather="package" width="42" height="42"></i>
                             <h3 class="text-muted">Associate files with this variant</h3>
-                            <button class="btn btn-light border shadow-sm">Select files</button>
+                            <button type="button" class="btn btn-light border shadow-sm select-variation-files">Select
+                                files</button>
                         </div>
                     </div>
-
-                    <!-- Files selection -->
-                    <ul class="list-group">
-                        <li class="list-group-item m-0 d-flex justify-content-between">
-                            <div class="custom-checkbox custom-checkbox-round">
-                                <input type="checkbox" class="custom-control-input"
-                                    id="<?php echo 'variations[' . $variation_id . '][name][0]'; ?>"
-                                    name="<?php echo 'variations[' . $variation_id . '][name][0]'; ?>" value="file 1"
-                                    checked>
-                                <label class="custom-control-label"
-                                    for="<?php echo 'variations[' . $variation_id . '][name][0]'; ?>">File Name</label>
-                            </div>
-                        </li>
-                    </ul>
-
+                    <div class="variation-files-secion" style="display:none">
+                        <ul class="list-group variation-files">
+                            <!-- <li class="list-group-item m-0 d-flex justify-content-between files-item">
+                                <div class="custom-checkbox custom-checkbox-round">
+                                    <input type="checkbox" class="custom-control-input variation-file"
+                                        id="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>"
+                                        name="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>"
+                                        value="file 1" checked>
+                                    <label class="custom-control-label"
+                                        for="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>">File
+                                        Name</label>
+                                </div>
+                            </li> -->
+                        </ul>
+                    </div>
                 </div>
             </div>
             <?php endforeach; ?>

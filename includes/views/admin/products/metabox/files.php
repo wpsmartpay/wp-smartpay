@@ -8,22 +8,23 @@ $files = $product->get_files() ?? [];
     <h3 class="text-muted">Upload or select files for this product</h3>
     <button type="button" class="btn btn-light border shadow-sm upload-product-file">Upload files</button>
 </div>
-<div class="product-files-secion">
-    <ul class="list-group product-files" <?php echo !count($files) ? 'style="display:none"': '' ?>>
+<div class="product-files-secion" <?php echo !count($files) ? 'style="display:none"': '' ?>>
+    <ul class="list-group product-files" id="product-files">
         <?php foreach ($files as $index => $file) : ?>
         <?php $id = $file['id'] ?? $index + 1; ?>
-        <li class="list-group-item list-group-item-action mb-0 files-item" id="file-<?php echo $id ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][id]'; ?>"
+        <li class="list-group-item list-group-item-action mb-0 files-item" id="file-<?php echo $id ?>"
+            data-file-id="<?php echo $id ?>">
+            <input type="hidden" class="form-control file-id" name="<?php echo 'files[' . $id . '][id]'; ?>"
                 value="<?php echo $id ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][icon]'; ?>"
+            <input type="hidden" class="form-control file-icon" name="<?php echo 'files[' . $id . '][icon]'; ?>"
                 value="<?php echo $file['icon'] ?? '' ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][filename]'; ?>"
+            <input type="hidden" class="form-control file-filename" name="<?php echo 'files[' . $id . '][filename]'; ?>"
                 value="<?php echo $file['filename'] ?? '' ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][mime]'; ?>"
+            <input type="hidden" class="form-control file-mime" name="<?php echo 'files[' . $id . '][mime]'; ?>"
                 value="<?php echo $file['mime'] ?? '' ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][size]'; ?>"
+            <input type="hidden" class="form-control file-size" name="<?php echo 'files[' . $id . '][size]'; ?>"
                 value="<?php echo $file['size'] ?? '' ?>">
-            <input type="hidden" class="form-control" name="<?php echo 'files[' . $id . '][url]'; ?>"
+            <input type="hidden" class="form-control file-url" name="<?php echo 'files[' . $id . '][url]'; ?>"
                 value="<?php echo $file['url'] ?? '' ?>">
 
             <div class="d-flex">
