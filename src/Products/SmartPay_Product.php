@@ -245,7 +245,7 @@ class SmartPay_Product
                 $this->base_price = $this->base_price;
             } else {
 
-                $this->base_price = 0;
+                $this->base_price = '';
             }
         }
 
@@ -271,7 +271,7 @@ class SmartPay_Product
                 $this->sale_price = $this->sale_price;
             } else {
 
-                $this->sale_price = 0;
+                $this->sale_price = '';
             }
         }
 
