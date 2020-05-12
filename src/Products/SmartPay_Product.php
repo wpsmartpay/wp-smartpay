@@ -298,7 +298,7 @@ class SmartPay_Product
         if (true === $this->has_variations()) {
 
             if (empty($this->variations)) {
-                $this->variations = get_post_meta($this->ID, '_smartpay_variations', true);
+                $this->variations = get_post_meta($this->ID, '_smartpay_product_variations', true);
             }
         }
 
@@ -314,7 +314,7 @@ class SmartPay_Product
      */
     public function has_variations()
     {
-        $ret = get_post_meta($this->ID, '_smartpay_variations', true);
+        $ret = get_post_meta($this->ID, '_smartpay_has_variations', true);
 
         /** Override whether the product has variables prices. **/
         return (bool) apply_filters('smartpay_has_variations', $ret, $this->ID);
