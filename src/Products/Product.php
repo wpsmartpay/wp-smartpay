@@ -96,8 +96,8 @@ final class Product
             'has_archive'           => true,
             'exclude_from_search'   => true,
             'publicly_queryable'    => true,
-            'query_var'          => true,
-            'menu_icon'          => 'dashicons-media-default',
+            'query_var'             => true,
+            'menu_icon'             => \smartpay_get_svg_icon_url(),
             'capability_type'       => 'page',
 
 

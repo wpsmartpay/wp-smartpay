@@ -86,8 +86,6 @@ final class Meta_Box
         }
 
         extract( $_POST );
-        // var_dump($variations);
-        // exit();
 
         // Base price
         if ( isset( $base_price ) ) {
@@ -101,7 +99,7 @@ final class Meta_Box
 
         // Files
         if ( isset( $files ) ) {
-            update_post_meta( $post_id, '_smartpay_product_files', $files ?? [] );
+            update_post_meta( $post_id, '_smartpay_product_files', array_values($files) ?? [] );
         } else {
             update_post_meta( $post_id, '_smartpay_product_files', [] );
         }
@@ -113,25 +111,26 @@ final class Meta_Box
         }
         update_post_meta($post_id, '_smartpay_has_variations', apply_filters('smartpay_has_product_variations', $_has_variations));
 
-        // var_dump($has_variations);exit();
-        $product_variations = [];
+        $product_variations = array();
         if ($has_variations && isset( $variations )) {
 
+            // It should start from 1,
+            $i = 1;
             foreach ( $variations as $index => $variation ) {
-                
+
                 $_variation = array(
-                    'name'              => $variation['name'] ?? 'Variation ' . $index + 1,
+                    'id'                => $i,
+                    'name'              => $variation['name'] ?? 'Variation ' . $index,
                     'additional_amount' => $variation['additional_amount'] ?? 0,
                     'description'       => $variation['description'] ?? '',
-                    'files'             => $variation['files'] ?? [],
+                    'has_files'         => $variation['has_files'] ?? 0,
+                    'files'             => array_keys($variation['files'] ?? []),
                 );
 
-                array_push($product_variations, apply_filters('smartpay_product_variation', $_variation));
+                $product_variations[$i++] = apply_filters('smartpay_product_variation', $_variation);
             }
         }
-        
         update_post_meta($post_id, '_smartpay_product_variations', apply_filters('smartpay_product_variations', $product_variations));
-
 
         // Scope for other extentions
         do_action('save_smartpay_product', $post_id, $post);

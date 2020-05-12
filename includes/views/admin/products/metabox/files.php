@@ -1,16 +1,16 @@
 <?php
-$files = $product->get_files() ?? [];
+$product_files = $product->get_files() ?? [];
 ?>
 
 <div class="border rounded bg-light text-center p-5 no-product-file-box"
-    <?php echo count($files) ? 'style="display:none"': '' ?>>
+    <?php echo count($product_files) ? 'style="display:none"': '' ?>>
     <i data-feather="hard-drive" width="42" height="42"></i>
     <h3 class="text-muted">Upload or select files for this product</h3>
     <button type="button" class="btn btn-light border shadow-sm upload-product-file">Upload files</button>
 </div>
-<div class="product-files-secion" <?php echo !count($files) ? 'style="display:none"': '' ?>>
+<div class="product-files-secion" <?php echo !count($product_files) ? 'style="display:none"': '' ?>>
     <ul class="list-group product-files" id="product-files">
-        <?php foreach ($files as $index => $file) : ?>
+        <?php foreach ($product_files as $index => $file) : ?>
         <?php $id = $file['id'] ?? $index + 1; ?>
         <li class="list-group-item list-group-item-action mb-0 files-item" id="file-<?php echo $id ?>"
             data-file-id="<?php echo $id ?>">

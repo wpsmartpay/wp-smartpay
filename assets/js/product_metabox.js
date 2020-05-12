@@ -251,7 +251,7 @@ jQuery(function ($) {
         hasFile = getProductFiles().length
 
         if (!hasFile) {
-            alert('You have file for this product, select a file first!')
+            alert('You have no file for this product, select a file first!')
             uploadProductFiles().then(hasFile => {
                 if (hasFile) {
                     getProductFiles().forEach(file => {
@@ -340,8 +340,8 @@ jQuery(function ($) {
 
             filesItem = `<li class="list-group-item m-0 d-flex justify-content-between files-item file-${file.id}" data-file-id="${file.id}">
                 <div class="custom-checkbox custom-checkbox-round">
-                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}]files[${file.id}]" name="variations[${variationId}]files[${file.id}]" value="${file.id}" checked>
-                    <label class="custom-control-label" for="variations[${variationId}]files[${file.id}]">${file.filename}</label>
+                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}][files][${file.id}]" name="variations[${variationId}][files][${file.id}]" value="${file.id}">
+                    <label class="custom-control-label" for="variations[${variationId}][files][${file.id}]">${file.filename}</label>
                 </div>
             </li>`;
 

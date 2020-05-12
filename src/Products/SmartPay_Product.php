@@ -244,12 +244,11 @@ class SmartPay_Product
                 // TODO: Add sanitization
                 $this->base_price = $this->base_price;
             } else {
-
-                $this->base_price = 0;
+                $this->base_price = '';
             }
         }
 
-        /** Override the product base price. **/
+        // Override the product base price.
         return apply_filters('smartpay_get_product_base_price', $this->base_price, $this->ID);
     }
 
@@ -270,12 +269,11 @@ class SmartPay_Product
                 // TODO: Add sanitization
                 $this->sale_price = $this->sale_price;
             } else {
-
-                $this->sale_price = 0;
+                $this->sale_price = '';
             }
         }
 
-        /** Override the product sale price. **/
+        // Override the product sale price.
         return apply_filters('smartpay_get_product_sale_price', $this->sale_price, $this->ID);
     }
 
@@ -287,12 +285,6 @@ class SmartPay_Product
      */
     public function get_variations()
     {
-        // [
-        //     name:
-        //     additional_amount:
-        //     description:
-        //     files: []
-        // ]
         $this->variations = array();
 
         if (true === $this->has_variations()) {
@@ -302,7 +294,7 @@ class SmartPay_Product
             }
         }
 
-        /** Override variations **/
+        // Override variations
         return apply_filters('smartpay_get_product_variations', $this->variations, $this->ID);
     }
 
@@ -316,7 +308,7 @@ class SmartPay_Product
     {
         $ret = get_post_meta($this->ID, '_smartpay_has_variations', true);
 
-        /** Override whether the product has variables prices. **/
+        // Override whether the product has variables prices.
         return (bool) apply_filters('smartpay_has_variations', $ret, $this->ID);
     }
 
@@ -324,12 +316,10 @@ class SmartPay_Product
      * Retrieve the file products
      *
      * @since 0.1
-     * @param integer $variable_price_id
      * @return array List of product files
      */
-    public function get_files($variable_price_id = null)
+    public function get_files()
     {
-        // TODO: Do it later
         if (!isset($this->files)) {
 
             $this->files = array();
@@ -345,18 +335,33 @@ class SmartPay_Product
     }
 
     /**
-     * Retrieve the price option that has access to the specified file
+     * Retrieve product variation files
      *
      * @since 0.1
-     * @return int|string
+     * @param integer $variation_id
+     * @return array List of product files
      */
-    public function get_file_price_condition($file_key = 0)
+    public function get_variation_files($variation_id = 1)
     {
-        // TODO: Do it later
-        $files    = $this->get_files();
-        $condition = isset($files[$file_key]['condition']) ? $files[$file_key]['condition'] : 'all';
+        $variations = $this->get_variations();
 
-        return apply_filters('smartpay_get_file_price_condition', $condition, $this->ID, $files);
+        $variation_files = [];
+
+        $variation_files_id = [];
+
+        if (isset($variations[$variation_id])) {
+            $variation_files_id = $variations[$variation_id]['files'];
+            
+            foreach ($variation_files_id as $file_id) {
+                foreach ($this->get_files() as $product_file) {
+                    if ($file_id == $product_file['id']) {
+                        array_push($variation_files, $product_file);
+                    }
+                }
+            }
+        }
+
+        return apply_filters('smartpay_product_variation_files', $variation_files, $this->ID, $variation_id);
     }
 
     /**

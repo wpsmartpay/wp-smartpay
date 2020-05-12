@@ -1,6 +1,5 @@
 <?php
 $variations = $product->get_variations() ?? [];
-// var_dump($variations);
 ?>
 
 <div class="smartpay-variations">
@@ -54,8 +53,6 @@ $variations = $product->get_variations() ?? [];
                         </div>
                         <div class="col d-flex align-items-center">
                             <div class="mt-4">
-                                <!-- <button type="button" class="btn btn-light btn-sm border shadow-sm pb-0"><i
-                                        data-feather="edit-3" width="20" height="20"></i></button> -->
                                 <button type="button"
                                     class="btn btn-light btn-sm border shadow-sm pb-0 ml-2 remove-variation-option"><i
                                         data-feather="trash" width="20" height="20"></i></button>
@@ -75,28 +72,40 @@ $variations = $product->get_variations() ?? [];
                     </div>
 
                     <!-- Files -->
+                    <?php $variation_files = $product->get_variation_files($variation_id) ?? []; ?>
+
                     <label class="text-muted my-2 d-block"><strong>Files</strong></label>
-                    <div class="form-group no-variation-file-box">
+                    <div class="form-group no-variation-file-box"
+                        <?php echo count($variation_files) ? 'style="display:none"': '' ?>>
                         <div class="border rounded text-center p-5">
                             <i data-feather="package" width="42" height="42"></i>
                             <h3 class="text-muted">Associate files with this variant</h3>
-                            <button type="button" class="btn btn-light border shadow-sm select-variation-files">Select
-                                files</button>
+                            <button type="button" class="btn btn-light border shadow-sm select-variation-files">
+                                Select files</button>
                         </div>
                     </div>
-                    <div class="variation-files-secion" style="display:none">
+                    <div class="variation-files-secion"
+                        <?php echo !count($variation_files) ? 'style="display:none"': '' ?>>
+                        <input type="hidden" name="<?php echo 'variations[' . $variation_id . '][has_files]'; ?>"
+                            id="<?php echo 'variations[' . $variation_id . '][has_files]'; ?>"
+                            value="<?php echo count($variation_files) ? 1 : 0 ?>">
                         <ul class="list-group variation-files">
-                            <!-- <li class="list-group-item m-0 d-flex justify-content-between files-item">
+
+                            <!-- Variation files -->
+                            <?php foreach ($product_files as $index => $file) : ?>
+                            <?php $checked = count(array_intersect($file, array_column($variation_files, 'id'))) ? 'checked' : ''; ?>
+                            <li class="list-group-item m-0 d-flex justify-content-between files-item">
                                 <div class="custom-checkbox custom-checkbox-round">
                                     <input type="checkbox" class="custom-control-input variation-file"
-                                        id="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>"
-                                        name="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>"
-                                        value="file 1" checked>
+                                        id="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"
+                                        name="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"
+                                        value="file 1" <?php echo $checked; ?>>
                                     <label class="custom-control-label"
-                                        for="<?php echo 'variations[' . $variation_id . '][files][0]'; ?>">File
-                                        Name</label>
+                                        for="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"><?php echo $file['filename'] ?></label>
                                 </div>
-                            </li> -->
+                            </li>
+                            <?php endforeach; ?>
+
                         </ul>
                     </div>
                 </div>
