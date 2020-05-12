@@ -81,46 +81,59 @@ final class Meta_Box
 
     public function save_smartpay_product_meta($post_id)
     {
-        if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename(__FILE__))) {
+        if ( !isset( $_POST['smartpay_product_metabox_nonce'] ) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename( __FILE__ ) ) ) {
             return;
         }
 
-        extract($_POST);
+        extract( $_POST );
         // var_dump($variations);
         // exit();
 
         // Base price
-        if (isset($base_price)) {
-            update_post_meta($post_id, '_smartpay_base_price', sanitize_text_field($base_price));
+        if ( isset( $base_price ) ) {
+            update_post_meta( $post_id, '_smartpay_base_price', sanitize_text_field( $base_price ) );
         }
 
         // Sale price
-        if (isset($sale_price)) {
-            update_post_meta($post_id, '_smartpay_sale_price', sanitize_text_field($sale_price));
+        if ( isset( $sale_price ) ) {
+            update_post_meta( $post_id, '_smartpay_sale_price', sanitize_text_field( $sale_price ) );
         }
 
         // Files
-        if (isset($files)) {
-            update_post_meta($post_id, '_smartpay_product_files', $files ?? []);
+        if ( isset( $files ) ) {
+            update_post_meta( $post_id, '_smartpay_product_files', $files ?? [] );
         } else {
-            update_post_meta($post_id, '_smartpay_product_files', []);
+            update_post_meta( $post_id, '_smartpay_product_files', [] );
         }
 
         // Variation
-        $smartpay_variations = [];
-        foreach ($variations as $index => $variation) {
-            $_variant = array(
-                'title' => $variation['title'] ?? 'Variation ' . $index + 1,
-                'name' => $variation['name'] ?? 'Variation ' . $index + 1,
-                'additional_amount' => $variation['additional_amount'] ?? 0,
-                'description' => $variation['description'] ?? '',
-                'files' => $variation['files'] ?? [],
-            );
-            array_push($smartpay_variations, apply_filters('smartpay_product_variation', $_variant));
+        $_has_variations = 0;
+        if ( isset( $has_variations ) && 1 == $has_variations ){
+            $_has_variations = 1;
         }
+        update_post_meta($post_id, '_smartpay_has_variations', apply_filters('smartpay_has_product_variations', $_has_variations));
 
-        update_post_meta($post_id, '_smartpay_variations', $smartpay_variations);
+        // var_dump($has_variations);exit();
+        $product_variations = [];
+        if ($has_variations && isset( $variations )) {
 
+            foreach ( $variations as $index => $variation ) {
+                
+                $_variation = array(
+                    'name'              => $variation['name'] ?? 'Variation ' . $index + 1,
+                    'additional_amount' => $variation['additional_amount'] ?? 0,
+                    'description'       => $variation['description'] ?? '',
+                    'files'             => $variation['files'] ?? [],
+                );
+
+                array_push($product_variations, apply_filters('smartpay_product_variation', $_variation));
+            }
+        }
+        
+        update_post_meta($post_id, '_smartpay_product_variations', apply_filters('smartpay_product_variations', $product_variations));
+
+
+        // Scope for other extentions
         do_action('save_smartpay_product', $post_id, $post);
     }
 
@@ -129,8 +142,8 @@ final class Meta_Box
         wp_enqueue_media();
 
         // Scripts
-        wp_register_script('smartpay-product-file-selector', SMARTPAY_PLUGIN_ASSETS . '/js/product_file_selector.js', '', SMARTPAY_VERSION);
+        wp_register_script('product-metabox', SMARTPAY_PLUGIN_ASSETS . '/js/product_metabox.js', '', SMARTPAY_VERSION);
 
-        wp_enqueue_script('smartpay-product-file-selector');
+        wp_enqueue_script('product-metabox');
     }
 }
