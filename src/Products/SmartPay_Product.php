@@ -2,6 +2,7 @@
 
 namespace SmartPay\Products;
 
+use WP_Error;
 use WP_Post;
 
 // Exit if accessed directly.
@@ -18,6 +19,8 @@ class SmartPay_Product
      * @since 0.1
      */
     public $ID = 0;
+
+    protected $status = 'publish';
 
     /**
      * The product base price
@@ -142,6 +145,9 @@ class SmartPay_Product
             }
         }
 
+        // TODO: Set all other data
+        $this->status = $product->post_status;
+
         return true;
     }
 
@@ -225,6 +231,28 @@ class SmartPay_Product
     public function get_name()
     {
         return get_the_title($this->ID);
+    }
+
+    /**
+     * Retrieve the product status
+     *
+     * @since 2.5.8
+     * @return string Status of the product
+     */
+    public function get_status()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Retrieve the product description
+     *
+     * @since 2.5.8
+     * @return string Description of the product
+     */
+    public function get_description()
+    {
+        return $this->post_content;
     }
 
     /**
@@ -331,7 +359,7 @@ class SmartPay_Product
             }
         }
 
-        return apply_filters('smartpay_product_files', $this->files, $this->ID, $variable_price_id);
+        return apply_filters('smartpay_product_files', $this->files, $this->ID);
     }
 
     /**
@@ -351,7 +379,7 @@ class SmartPay_Product
 
         if (isset($variations[$variation_id])) {
             $variation_files_id = $variations[$variation_id]['files'];
-            
+
             foreach ($variation_files_id as $file_id) {
                 foreach ($this->get_files() as $product_file) {
                     if ($file_id == $product_file['id']) {
@@ -529,7 +557,7 @@ class SmartPay_Product
     {
         $can_purchase = true;
 
-        if (!current_user_can('edit_post', $this->ID) && $this->post_status != 'publish') {
+        if ($this->post_status != 'publish') {
             $can_purchase = false;
         }
 

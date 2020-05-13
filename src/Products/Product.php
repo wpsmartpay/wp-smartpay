@@ -127,4 +127,9 @@ final class Product
 
         return $title;
     }
+
+    public static function get_product($product_id)
+    {
+        return new SmartPay_Product($product_id);
+    }
 }

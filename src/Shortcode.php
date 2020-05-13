@@ -21,6 +21,7 @@ final class Shortcode
     private function __construct()
     {
         add_shortcode('smartpay_form', [$this, 'form_shortcode']);
+        add_shortcode('smartpay_product', [$this, 'product_shortcode']);
         add_shortcode('smartpay_payment_history', [$this, 'payment_history_shortcode']);
     }
 
@@ -95,6 +96,34 @@ final class Shortcode
         }
     }
 
+    public function product_shortcode($atts)
+    {
+        extract(shortcode_atts([
+            'id' => null,
+        ], $atts));
+
+        if (!isset($id)) {
+            return;
+        }
+
+        $product = smartpay_get_product($id);
+
+        if (!$product->can_purchase()) {
+            echo 'You can\'t buy this product';
+            return;
+        }
+
+        try {
+            ob_start();
+
+            echo smartpay_view_render('shortcodes/product', ['product' => $product]);
+
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     public static function render_form_html($form)
     {
 
@@ -117,13 +146,14 @@ final class Shortcode
         } else {
             echo 'Please setup your payment page.';
         }
-	}
+    }
 
-	public function payment_history_shortcode($atts){
-		ob_start();
+    public function payment_history_shortcode($atts)
+    {
+        ob_start();
 
-		echo smartpay_view_render('shortcodes/payment_history');
+        echo smartpay_view_render('shortcodes/payment_history');
 
-		return ob_get_clean();
-	}
+        return ob_get_clean();
+    }
 }
