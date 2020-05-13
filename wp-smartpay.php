@@ -7,7 +7,7 @@
  * Plugin URI:  https://wpsmartpay.com/
  * Description: The most easiest way to sell digital downloads and get paid in WordPress.
  * Tags: digital downloads, ecommerce, paddle, stripe, paypal, payment forms
- * Version:     0.1
+ * Version:     0.0.1
  * Author:      SmartPay Team
  * Author URI:  https://wpsmartpay.com/
  * Text Domain: smartpay
@@ -22,7 +22,8 @@ use SmartPay\PostType;
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
 use SmartPay\Products\Product;
-use SmartPay\HTML_Elements;
+use SmartPay\Payments\Payment;
+use SmartPay\Session;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -50,17 +51,9 @@ final class SmartPay
      * Database version key
      *
      * @var string
-     * @since 0.1
+     * @since 0.0.1
      */
     private $db_version_key = 'smartpay_version';
-
-    /**
-     * SmartPay HTML Element Helper Object.
-     *
-     * @var object|HTML_Elements
-     * @since 0.1
-     */
-    public $html;
 
     /**
      * Session Object.
@@ -68,31 +61,20 @@ final class SmartPay
      * This holds purchase sessions, and anything else stored in the session.
      *
      * @var object|SmartPay_Session
-     * @since 0.1
+     * @since 0.0.1
      */
     public $session;
 
     /**
      * Construct SmartPay class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
     {
-
-        if (!session_id()) {
-            session_start();
-        }
-
         global $smartpay_options;
-        $smartpay_options = Setting::get_settings();
-
-        PostType::instance();
-
-        Product::instance();
-
-        Shortcode::instance();
+        $smartpay_options = smartpay_get_settings();
 
         if (is_admin()) {
             Admin::instance();
@@ -111,7 +93,7 @@ final class SmartPay
      * Ensures that only one instance of SmartPay exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|SmartPay
      * @access public
      */
@@ -120,16 +102,19 @@ final class SmartPay
         if (!isset(self::$instance) && !(self::$instance instanceof SmartPay)) {
             self::$instance = new self();
 
-            self::$instance->html = new HTML_Elements();
+            self::$instance->session   = Session::instance();
+            self::$instance->post_type = PostType::instance();
+            self::$instance->product   = Product::instance();
+            self::$instance->payment   = Payment::instance();
+            self::$instance->shortcode = Shortcode::instance();
         }
-
         return self::$instance;
     }
 
     /**
      * Define the necessary constants.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      * @return void
      */
@@ -160,11 +145,10 @@ final class SmartPay
         }
     }
 
-
     /**
      * Initialize actions.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      * @return void
      */
@@ -174,13 +158,14 @@ final class SmartPay
 
         register_activation_hook(__FILE__, [$this, 'activate']);
 
+        // TODO: Implement deactivation hook
         // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
     }
 
     /**
-     * Activate plugin.
+     * Plugin activation hook.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access public
      * @return void
      */
@@ -196,6 +181,13 @@ final class SmartPay
         self::create_pages();
     }
 
+    /**
+     * Create necessary pages.
+     *
+     * @since 0.0.1
+     * @access public
+     * @return void
+     */
     public static function create_pages()
     {
         if (false == get_option('smartpay_settings')) {
@@ -266,6 +258,13 @@ final class SmartPay
         update_option('smartpay_settings', $options);
     }
 
+    /**
+     * Enqueue smartpay scripts.
+     *
+     * @since 0.0.1
+     * @access public
+     * @return void
+     */
     public function enqueue_smartpay_scripts()
     {
         // Scripts
