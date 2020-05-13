@@ -14,17 +14,25 @@ function smartpay_get_payment_session()
     return SmartPay()->session->get_payment();
 }
 
+function smartpay_get_payment_page_uri($query_string = null)
+{
+    $page_id = absint(smartpay_get_option('payment_page', 0));
+
+    return smartpay_get_page_uri($page_id, $query_string);
+}
+
 function smartpay_get_payment_success_page_uri($query_string = null)
 {
     $page_id = absint(smartpay_get_option('payment_success_page', 0));
 
-    $success_page = get_permalink($page_id);
+    return smartpay_get_page_uri($page_id, $query_string);
+}
 
-    if ($query_string) {
-        $success_page .= $query_string;
-    }
+function smartpay_get_payment_failure_page_uri($query_string = null)
+{
+    $page_id = absint(smartpay_get_option('payment_failure_page', 0));
 
-    return $success_page;
+    return smartpay_get_page_uri($page_id, $query_string);
 }
 
 function smartpay_insert_payment($payment_data)
