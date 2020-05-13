@@ -207,6 +207,9 @@ jQuery(function ($) {
                 </div>
                 <div class="variation-files-secion" style="display:none">
                     <ul class="list-group variation-files"></ul>
+                    <div class="border rounded bg-light text-center p-3 mt-3">
+                        <button type="button" class="btn btn-sm btn-light border upload-product-file">Upload more file</button>
+                    </div>
                 </div>
             </div>
         </div>`;
@@ -255,7 +258,7 @@ jQuery(function ($) {
             uploadProductFiles().then(hasFile => {
                 if (hasFile) {
                     getProductFiles().forEach(file => {
-                        appendVariationFile($variationOption, file)
+                        appendVariationFile($variationOption, file, true)
                     })
 
                     // Show variation files
@@ -265,7 +268,7 @@ jQuery(function ($) {
             })
         } else {
             getProductFiles().forEach(file => {
-                appendVariationFile($variationOption, file)
+                appendVariationFile($variationOption, file, true)
             })
 
             // Show variation files
@@ -323,7 +326,7 @@ jQuery(function ($) {
     }
 
     /** Append variation file **/
-    function appendVariationFile($variationOption, file) {
+    function appendVariationFile($variationOption, file, checked = false) {
         $variationFiles = $variationOption.find('.variation-files')
 
         // Check if file exist
@@ -340,7 +343,7 @@ jQuery(function ($) {
 
             filesItem = `<li class="list-group-item m-0 d-flex justify-content-between files-item file-${file.id}" data-file-id="${file.id}">
                 <div class="custom-checkbox custom-checkbox-round">
-                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}][files][${file.id}]" name="variations[${variationId}][files][${file.id}]" value="${file.id}">
+                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}][files][${file.id}]" name="variations[${variationId}][files][${file.id}]" value="${file.id}" ${checked ? 'checked' : ''}>
                     <label class="custom-control-label" for="variations[${variationId}][files][${file.id}]">${file.filename}</label>
                 </div>
             </li>`;

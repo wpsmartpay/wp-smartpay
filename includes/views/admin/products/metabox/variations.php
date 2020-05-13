@@ -5,14 +5,14 @@ $variations = $product->get_variations() ?? [];
 <div class="smartpay-variations">
     <!-- Add variations -->
     <div class="border rounded bg-light text-center p-5 no-variations-box"
-        <?php echo count($variations) ? 'style="display:none"': '' ?>>
+        <?php echo count($variations) ? 'style="display:none"' : '' ?>>
         <i data-feather="layers" width="42" height="42"></i>
         <h3>Offer variations of this product</h3>
         <p class="text-muted">Sweeten the deal for your customers with different options for format, version, etc</p>
         <button type="button" class="btn btn-light border shadow-sm add-variation">Add Variations</button>
     </div>
 
-    <div class="card p-0 variations-secion" <?php echo !count($variations) ? 'style="display:none"': '' ?>>
+    <div class="card p-0 variations-secion" <?php echo !count($variations) ? 'style="display:none"' : '' ?>>
         <input type="hidden" name="has_variations" id="has_variations" value="<?php echo count($variations) ? 1 : 0 ?>">
         <div class="card-header bg-white p-0">
             <div class="d-flex px-3 py-2">
@@ -76,7 +76,7 @@ $variations = $product->get_variations() ?? [];
 
                     <label class="text-muted my-2 d-block"><strong>Files</strong></label>
                     <div class="form-group no-variation-file-box"
-                        <?php echo count($variation_files) ? 'style="display:none"': '' ?>>
+                        <?php echo count($variation_files) ? 'style="display:none"' : '' ?>>
                         <div class="border rounded text-center p-5">
                             <i data-feather="package" width="42" height="42"></i>
                             <h3 class="text-muted">Associate files with this variant</h3>
@@ -85,7 +85,7 @@ $variations = $product->get_variations() ?? [];
                         </div>
                     </div>
                     <div class="variation-files-secion"
-                        <?php echo !count($variation_files) ? 'style="display:none"': '' ?>>
+                        <?php echo !count($variation_files) ? 'style="display:none"' : '' ?>>
                         <input type="hidden" name="<?php echo 'variations[' . $variation_id . '][has_files]'; ?>"
                             id="<?php echo 'variations[' . $variation_id . '][has_files]'; ?>"
                             value="<?php echo count($variation_files) ? 1 : 0 ?>">
@@ -107,6 +107,11 @@ $variations = $product->get_variations() ?? [];
                             <?php endforeach; ?>
 
                         </ul>
+
+                        <div class="border rounded bg-light text-center p-3 mt-3">
+                            <button type="button" class="btn btn-sm btn-light border upload-product-file">Upload more
+                                file</button>
+                        </div>
                     </div>
                 </div>
             </div>
