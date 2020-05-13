@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/helpers/gateway.php';
 require_once __DIR__ . '/helpers/payment.php';
+require_once __DIR__ . '/helpers/product.php';
 
 use SmartPay\Models\SmartPay_Payment;
 use SmartPay\Payment;
