@@ -21,14 +21,6 @@ final class Admin
      */
     private function __construct()
     {
-        Admin_Notices::instance();
-
-        Setting::instance();
-
-        Product::instance();
-
-        Payment_Form::instance();
-
         add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts'], 100);
 
         add_action('admin_menu', [$this, 'menu_item'], 10);
@@ -48,6 +40,11 @@ final class Admin
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Admin)) {
             self::$instance = new self();
+
+            self::$instance->admin_notices = Admin_Notices::instance();
+            self::$instance->setting       = Setting::instance();
+            self::$instance->product       = Product::instance();
+            self::$instance->payment_form  = Payment_Form::instance();
         }
 
         return self::$instance;
