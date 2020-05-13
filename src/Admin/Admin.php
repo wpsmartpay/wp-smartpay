@@ -29,7 +29,7 @@ final class Admin
 
         Payment_Form::instance();
 
-		add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts'], 100);
+        add_action('admin_enqueue_scripts', [$this, 'load_admin_scripts'], 100);
 
         add_action('admin_menu', [$this, 'menu_item'], 10);
     }
@@ -56,23 +56,23 @@ final class Admin
     public function load_admin_scripts()
     {
         // Register scripts
-		wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.min.css', '', SMARTPAY_VERSION);
+        wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.min.css', '', SMARTPAY_VERSION);
         wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/bootstrap.js', ['jquery'], SMARTPAY_VERSION);
         wp_register_script('smartpay-icons', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/feather.min.js', ['smartpay-bootstrap'], SMARTPAY_VERSION, true);
         wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['smartpay-bootstrap'], SMARTPAY_VERSION);
 
-		// Enqueue them
-		wp_enqueue_style('smartpay-admin');
+        // Enqueue them
+        wp_enqueue_style('smartpay-admin');
         wp_enqueue_script('smartpay-bootstrap');
         wp_enqueue_script('smartpay-icons');
-		wp_enqueue_script('smartpay-admin');
-		wp_add_inline_script( 'smartpay-icons', 'feather.replace()' );
-	}
+        wp_enqueue_script('smartpay-admin');
+        wp_add_inline_script('smartpay-icons', 'feather.replace()');
+    }
 
 
     public function menu_item()
     {
-        remove_submenu_page( 'edit.php?post_type=smartpay_product', 'post-new.php?post_type=smartpay_product' );
+        remove_submenu_page('edit.php?post_type=smartpay_product', 'post-new.php?post_type=smartpay_product');
 
         add_submenu_page(
             'edit.php?post_type=smartpay_product',
