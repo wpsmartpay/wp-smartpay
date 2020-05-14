@@ -204,7 +204,7 @@ final class SmartPay
             $payment_page = wp_insert_post(
                 array(
                     'post_title'     => __('SmartPay Payment', 'smartpay'),
-                    'post_name' => 'smartpay-payment',
+                    'post_name'      => 'smartpay-payment',
                     'post_content'   => '',
                     'post_status'    => 'publish',
                     'post_author'    => 1,
@@ -238,7 +238,7 @@ final class SmartPay
             $payment_failure_page = wp_insert_post(
                 array(
                     'post_title'     => __('Payment Failed', 'smartpay'),
-                    'post_name' => 'smartpay-payment-failed',
+                    'post_name'      => 'smartpay-payment-failed',
                     'post_content'   => __('<!-- wp:paragraph --><p>We\'re sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->', 'smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
@@ -252,7 +252,7 @@ final class SmartPay
             'payment_page'          => $payment_page,
             'payment_success_page'  => $payment_success_page,
             'payment_failure_page'  => $payment_failure_page,
-            'gateways'      => ['paddle' => 1],
+            'gateways'              => ['paddle' => 1],
             'default_gateway'       => 'paddle'
         );
 

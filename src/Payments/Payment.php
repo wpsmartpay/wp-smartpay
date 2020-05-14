@@ -2,6 +2,8 @@
 
 namespace SmartPay\Payments;
 
+use stdClass;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
 final class Payment
@@ -133,11 +135,11 @@ final class Payment
             $product = smartpay_get_product($smartpay_product_id);
 
             // TODO: Implement variations
-            $purchase_data = array(
-                'type'       => 'product_purchase',
-                'product_id' => $product->get_ID(),
-                'amount'     => $product->get_sale_price() ?? $product->get_base_price(),
-            );
+            $purchase_data = new stdClass();
+
+            $purchase_data->type        = 'product_purchase';
+            $purchase_data->product_id  = $product->get_ID();
+            $purchase_data->amount      = $product->get_sale_price() ?? $product->get_base_price();
         } else if ('form_payment' == $smartpay_purchase_type) {
 
             // TODO: Implement form payment
@@ -169,11 +171,11 @@ final class Payment
     {
         extract(sanitize_post($_data));
 
-        $customer = array(
-            'first_name' => $smartpay_first_name,
-            'last_name'  => $smartpay_last_name,
-            'email'      => $smartpay_email,
-        );
+        $customer = new stdClass();
+
+        $customer->first_name = $smartpay_first_name;
+        $customer->last_name  = $smartpay_last_name;
+        $customer->email      = $smartpay_email;
 
         return $customer;
     }
