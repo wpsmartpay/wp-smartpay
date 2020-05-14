@@ -49,7 +49,7 @@ final class Product
      * @since 0.1
      * @access private
      */
-    public function register_smartpay_Product_post_type()
+    public function register_smartpay_product_post_type()
     {
         $labels = array(
             'name'                  => __('Products', 'smartpay'),
@@ -128,7 +128,7 @@ final class Product
         return $title;
     }
 
-    public static function get_product($product_id)
+    public function get_product($product_id)
     {
         return new SmartPay_Product($product_id);
     }

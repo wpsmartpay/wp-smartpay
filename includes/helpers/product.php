@@ -6,5 +6,5 @@ function smartpay_get_product($product_id)
         return;
     }
 
-    return SmartPay()->product::get_product($product_id);
+    return SmartPay()->product->get_product($product_id);
 }
