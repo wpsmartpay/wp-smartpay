@@ -21,7 +21,11 @@ final class Shortcode
     private function __construct()
     {
         add_shortcode('smartpay_form', [$this, 'form_shortcode']);
+
         add_shortcode('smartpay_product', [$this, 'product_shortcode']);
+
+        add_shortcode('smartpay_payment_receipt', [$this, 'payment_receipt_shortcode']);
+
         add_shortcode('smartpay_payment_history', [$this, 'payment_history_shortcode']);
     }
 
@@ -87,12 +91,36 @@ final class Shortcode
             try {
                 ob_start();
 
-                self::render_form_html($form);
+                $this->render_form_html($form);
 
                 return ob_get_clean();
             } catch (\Exception $e) {
                 return $e->getMessage();
             }
+        }
+    }
+
+    public function render_form_html($form)
+    {
+
+        $payment_page = smartpay_get_option('payment_page', 0);
+        if ($payment_page) {
+            $data = [
+                'form_id'                           => $form->ID,
+                'form_action'                       => get_permalink(absint($payment_page)),
+                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
+                'payment_type'                      => get_post_meta($form->ID, '_form_payment_type', true),
+                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
+                'payment_button_text'               => get_post_meta($form->ID, '_form_payment_button_text', true),
+                'payment_button_processing_text'    => get_post_meta($form->ID, '_form_payment_button_processing_text', true),
+                'payment_button_style'              => get_post_meta($form->ID, '_form_payment_button_style', true),
+                'paddle_checkout_image'             => get_post_meta($form->ID, '_form_paddle_checkout_image', true),
+                'paddle_checkout_location'          => get_post_meta($form->ID, '_form_paddle_checkout_location', true),
+            ];
+
+            echo smartpay_view_render('payment/shortcode/pay_now', $data);
+        } else {
+            echo 'Please setup your payment page.';
         }
     }
 
@@ -124,27 +152,24 @@ final class Shortcode
         }
     }
 
-    public static function render_form_html($form)
+    public function payment_receipt_shortcode($atts)
     {
+        $payment_id = smartpay_get_session_payment_id();
 
-        $payment_page = smartpay_get_option('payment_page', 0);
-        if ($payment_page) {
-            $data = [
-                'form_id'                           => $form->ID,
-                'form_action'                       => get_permalink(absint($payment_page)),
-                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
-                'payment_type'                      => get_post_meta($form->ID, '_form_payment_type', true),
-                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
-                'payment_button_text'               => get_post_meta($form->ID, '_form_payment_button_text', true),
-                'payment_button_processing_text'    => get_post_meta($form->ID, '_form_payment_button_processing_text', true),
-                'payment_button_style'              => get_post_meta($form->ID, '_form_payment_button_style', true),
-                'paddle_checkout_image'             => get_post_meta($form->ID, '_form_paddle_checkout_image', true),
-                'paddle_checkout_location'          => get_post_meta($form->ID, '_form_paddle_checkout_location', true),
-            ];
+        if (!isset($payment_id)) {
+            return;
+        }
 
-            echo smartpay_view_render('payment/shortcode/pay_now', $data);
-        } else {
-            echo 'Please setup your payment page.';
+        $payment = smartpay_get_payment($payment_id);
+
+        try {
+            ob_start();
+
+            echo smartpay_view_render('shortcodes/payment_receipt', ['payment' => $payment]);
+
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
     }
 

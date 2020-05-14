@@ -23,8 +23,6 @@ final class Payment
 
         add_action('init', [$this, 'process_payment']);
 
-        add_shortcode('smartpay_payment_receipt', [$this, 'smartpay_payment_receipt_shortcode']);
-
         add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
 
@@ -211,8 +209,8 @@ final class Payment
 
 
         if (!empty($payment->ID)) {
-            // Add session payment
-            smartpay_set_session_payment($payment);
+            // Set session payment id
+            smartpay_set_session_payment_id($payment->ID);
 
             return $payment;
         }
@@ -224,15 +222,6 @@ final class Payment
     public function get_payment($payment_or_txn_id, $by_txn = false)
     {
         return new SmartPay_Payment($payment_or_txn_id, $by_txn);
-    }
-
-    public function smartpay_payment_receipt_shortcode($atts, $content = null)
-    {
-        ob_start();
-
-        echo smartpay_view_render('payment/shortcode/receipt');
-
-        return ob_get_clean();
     }
 
     public function enqueue_payment_scripts()
