@@ -186,6 +186,62 @@
 .smartpay .mr-auto,.smartpay .mx-auto{margin-right:auto !important}
 .smartpay .mb-auto,.smartpay .my-auto{margin-bottom:auto !important}
 .smartpay .ml-auto,.smartpay .mx-auto{margin-left:auto !important}
+.smartpay *,.smartpay *::before,.smartpay *::after{box-sizing:border-box}
+.smartpay html{font-family:sans-serif;line-height:1.15;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0)}
+.smartpay article,.smartpay aside,.smartpay figcaption,.smartpay figure,.smartpay footer,.smartpay header,.smartpay hgroup,.smartpay main,.smartpay nav,.smartpay section{display:block}
+.smartpay body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:1rem;font-weight:400;line-height:1.5;color:#212529;text-align:left;background-color:#fff}
+.smartpay [tabindex="-1"]:focus:not(:focus-visible){outline:0 !important}
+.smartpay hr{box-sizing:content-box;height:0;overflow:visible}
+.smartpay h1,.smartpay h2,.smartpay h3,.smartpay h4,.smartpay h5,.smartpay h6{margin-top:0;margin-bottom:.5rem}
+.smartpay p{margin-top:0;margin-bottom:1rem}
+.smartpay abbr[title],.smartpay abbr[data-original-title]{text-decoration:underline;text-decoration:underline dotted;cursor:help;border-bottom:0;text-decoration-skip-ink:none}
+.smartpay address{margin-bottom:1rem;font-style:normal;line-height:inherit}
+.smartpay ol,.smartpay ul,.smartpay dl{margin-top:0;margin-bottom:1rem}
+.smartpay ol ol,.smartpay ul ul,.smartpay ol ul,.smartpay ul ol{margin-bottom:0}
+.smartpay dt{font-weight:700}
+.smartpay dd{margin-bottom:.5rem;margin-left:0}
+.smartpay blockquote{margin:0 0 1rem}
+.smartpay b,.smartpay strong{font-weight:bolder}
+.smartpay small{font-size:80%}
+.smartpay sub,.smartpay sup{position:relative;font-size:75%;line-height:0;vertical-align:baseline}
+.smartpay sub{bottom:-.25em}
+.smartpay sup{top:-.5em}
+.smartpay a{color:#007bff;text-decoration:none;background-color:transparent}
+.smartpay a:hover{color:#0056b3;text-decoration:underline}
+.smartpay a:not([href]){color:inherit;text-decoration:none}
+.smartpay a:not([href]):hover{color:inherit;text-decoration:none}
+.smartpay pre,.smartpay code,.smartpay kbd,.smartpay samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em}
+.smartpay pre{margin-top:0;margin-bottom:1rem;overflow:auto}
+.smartpay figure{margin:0 0 1rem}
+.smartpay img{vertical-align:middle;border-style:none}
+.smartpay svg{overflow:hidden;vertical-align:middle}
+.smartpay table{border-collapse:collapse}
+.smartpay caption{padding-top:.75rem;padding-bottom:.75rem;color:#6c757d;text-align:left;caption-side:bottom}
+.smartpay th{text-align:inherit}
+.smartpay label{display:inline-block;margin-bottom:.5rem}
+.smartpay button{border-radius:0}
+.smartpay button:focus{outline:1px dotted;outline:5px auto -webkit-focus-ring-color}
+.smartpay input,.smartpay button,.smartpay select,.smartpay optgroup,.smartpay textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}
+.smartpay button,.smartpay input{overflow:visible}
+.smartpay button,.smartpay select{text-transform:none}
+.smartpay select{word-wrap:normal}
+.smartpay button,.smartpay [type="button"],.smartpay [type="reset"],.smartpay [type="submit"]{-webkit-appearance:button}
+.smartpay button:not(:disabled),.smartpay [type="button"]:not(:disabled),.smartpay [type="reset"]:not(:disabled),.smartpay [type="submit"]:not(:disabled){cursor:pointer}
+.smartpay button::-moz-focus-inner,.smartpay [type="button"]::-moz-focus-inner,.smartpay [type="reset"]::-moz-focus-inner,.smartpay [type="submit"]::-moz-focus-inner{padding:0;border-style:none}
+.smartpay input[type="radio"],.smartpay input[type="checkbox"]{box-sizing:border-box;padding:0}
+.smartpay input[type="date"],.smartpay input[type="time"],.smartpay input[type="datetime-local"],.smartpay input[type="month"]{-webkit-appearance:listbox}
+.smartpay textarea{overflow:auto;resize:vertical}
+.smartpay fieldset{min-width:0;padding:0;margin:0;border:0}
+.smartpay legend{display:block;width:100%;max-width:100%;padding:0;margin-bottom:.5rem;font-size:1.5rem;line-height:inherit;color:inherit;white-space:normal}
+.smartpay progress{vertical-align:baseline}
+.smartpay [type="number"]::-webkit-inner-spin-button,.smartpay [type="number"]::-webkit-outer-spin-button{height:auto}
+.smartpay [type="search"]{outline-offset:-2px;-webkit-appearance:none}
+.smartpay [type="search"]::-webkit-search-decoration{-webkit-appearance:none}
+.smartpay ::-webkit-file-upload-button{font:inherit;-webkit-appearance:button}
+.smartpay output{display:inline-block}
+.smartpay summary{display:list-item;cursor:pointer}
+.smartpay template{display:none}
+.smartpay [hidden]{display:none !important}
 .smartpay .table{width:100%;margin-bottom:1rem;color:#212529}
 .smartpay .table th,.smartpay .table td{padding:.75rem;vertical-align:top;border-top:1px solid #dee2e6}
 .smartpay .table thead th{vertical-align:bottom;border-bottom:2px solid #dee2e6}
