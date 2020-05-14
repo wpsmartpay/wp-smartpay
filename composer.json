@@ -1,15 +1,18 @@
 {
-	"name": "wp-smartpay/core",
-	"description": "A simple plugin for receiving payment.",
-	"require": {
-		"themexpert/paddle-php": "dev-dev"
-	},
-	"autoload": {
-		"psr-4": {
-			"SmartPay\\": "src/"
-		},
-		"files": [
-			"includes/helpers.php"
-		]
-	}
+    "name": "wp-smartpay/core",
+    "description": "A simple plugin for receiving payment.",
+    "require": {
+        "themexpert/paddle-php": "dev-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "SmartPay\\": [
+                "src/",
+                "src/Abstracts"
+            ]
+        },
+        "files": [
+            "includes/helpers.php"
+        ]
+    }
 }
