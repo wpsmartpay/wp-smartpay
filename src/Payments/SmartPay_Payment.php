@@ -207,7 +207,7 @@ class SmartPay_Payment
             $value = call_user_func(array($this, 'get_' . $key));
         } else {
 
-            $value = $this->$key;
+            $value = $this->$key ?? '';
         }
 
         return $value;
@@ -267,8 +267,8 @@ class SmartPay_Payment
         // Protected ID that can never be changed
         $this->_ID              = absint($payment_id);
 
-        $this->purchase_type     = $this->setup_purchase_type();
-        $this->purchase_data     = $this->setup_purchase_data();
+        $this->purchase_type    = $this->setup_purchase_type();
+        $this->purchase_data    = $this->setup_purchase_data();
 
         // Status and Dates
         $this->date             = $payment->post_date;
@@ -325,8 +325,12 @@ class SmartPay_Payment
 
             foreach ($this->pending as $key => $value) {
                 switch ($key) {
-                    case 'form_id':
-                        $this->update_meta('_smartpay_payment_form_id', $this->form_id);
+                    case 'purchase_type':
+                        $this->update_meta('_smartpay_payment_purchase_type', $this->purchase_type);
+                        break;
+
+                    case 'purchase_data':
+                        $this->update_meta('_smartpay_payment_purchase_data', $this->purchase_data);
                         break;
 
                     case 'date':
@@ -356,19 +360,15 @@ class SmartPay_Payment
                         break;
 
                     case 'gateway':
-                        $this->update_meta('_smartpay_gateway', $this->gateway);
+                        $this->update_meta('_smartpay_payment_gateway', $this->gateway);
                         break;
 
                     case 'transaction_id':
                         $this->update_meta('_smartpay_payment_transaction_id', $this->transaction_id);
                         break;
 
-                    case 'first_name':
-                        $this->update_meta('_smartpay_payment_first_name', $this->first_name);
-                        break;
-
-                    case 'last_name':
-                        $this->update_meta('_smartpay_payment_last_name', $this->last_name);
+                    case 'customer':
+                        $this->update_meta('_smartpay_payment_customer_data', $this->customer);
                         break;
 
                     case 'email':
@@ -666,7 +666,7 @@ class SmartPay_Payment
      */
     private function setup_gateway()
     {
-        return $this->get_meta('_smartpay_gateway');
+        return $this->get_meta('_smartpay_payment_gateway');
     }
 
     /**
@@ -731,7 +731,6 @@ class SmartPay_Payment
     {
         return $this->get_meta('_smartpay_payment_mode');
     }
-
 
     public function complete_payment()
     {

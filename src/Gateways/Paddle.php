@@ -156,12 +156,12 @@ final class Paddle extends Payment_Gateway
      */
     public function payment_receipt($payment)
     {
-        if ('paddle' != $payment->payment_gateway) {
+        if ('paddle' != $payment->gateway) {
             return;
         }
 
         // if($payment[])
-        // $payment = smartpay_set_session_payment();
+        // $payment_id = smartpay_set_session_payment_id();
 
         echo $this->_pay_now_content($payment);
     }

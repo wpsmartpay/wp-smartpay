@@ -2,6 +2,8 @@
 
 namespace SmartPay\Payments;
 
+use stdClass;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
 final class Payment
@@ -22,8 +24,6 @@ final class Payment
         add_action('init', [$this, 'register_smartpay_payment_post_type']);
 
         add_action('init', [$this, 'process_payment']);
-
-        add_shortcode('smartpay_payment_receipt', [$this, 'smartpay_payment_receipt_shortcode']);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
@@ -135,11 +135,11 @@ final class Payment
             $product = smartpay_get_product($smartpay_product_id);
 
             // TODO: Implement variations
-            $purchase_data = array(
-                'type'       => 'product_purchase',
-                'product_id' => $product->get_ID(),
-                'amount'     => $product->get_sale_price() ?? $product->get_base_price(),
-            );
+            $purchase_data = new stdClass();
+
+            $purchase_data->type        = 'product_purchase';
+            $purchase_data->product_id  = $product->get_ID();
+            $purchase_data->amount      = $product->get_sale_price() ?? $product->get_base_price();
         } else if ('form_payment' == $smartpay_purchase_type) {
 
             // TODO: Implement form payment
@@ -171,11 +171,11 @@ final class Payment
     {
         extract(sanitize_post($_data));
 
-        $customer = array(
-            'first_name' => $smartpay_first_name,
-            'last_name'  => $smartpay_last_name,
-            'email'      => $smartpay_email,
-        );
+        $customer = new stdClass();
+
+        $customer->first_name = $smartpay_first_name;
+        $customer->last_name  = $smartpay_last_name;
+        $customer->email      = $smartpay_email;
 
         return $customer;
     }
@@ -211,8 +211,8 @@ final class Payment
 
 
         if (!empty($payment->ID)) {
-            // Add session payment
-            smartpay_set_session_payment($payment);
+            // Set session payment id
+            smartpay_set_session_payment_id($payment->ID);
 
             return $payment;
         }
@@ -224,15 +224,6 @@ final class Payment
     public function get_payment($payment_or_txn_id, $by_txn = false)
     {
         return new SmartPay_Payment($payment_or_txn_id, $by_txn);
-    }
-
-    public function smartpay_payment_receipt_shortcode($atts, $content = null)
-    {
-        ob_start();
-
-        echo smartpay_view_render('payment/shortcode/receipt');
-
-        return ob_get_clean();
     }
 
     public function enqueue_payment_scripts()

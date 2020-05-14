@@ -14,14 +14,14 @@ function smartpay_get_session_payment_data()
     return SmartPay()->session->get_payment_data();
 }
 
-function smartpay_set_session_payment($payment)
+function smartpay_set_session_payment_id($payment_id)
 {
-    return SmartPay()->session->set_payment($payment);
+    return SmartPay()->session->set_payment_id($payment_id);
 }
 
-function smartpay_get_session_payment()
+function smartpay_get_session_payment_id()
 {
-    return SmartPay()->session->get_payment();
+    return SmartPay()->session->get_payment_id();
 }
 
 function smartpay_get_payment_page_uri($query_string = null)
