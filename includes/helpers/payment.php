@@ -4,12 +4,22 @@
 
 use SmartPay\Payments\SmartPay_Payment;
 
-function smartpay_set_payment_session($payment_data)
+function smartpay_set_session_payment_data($payment_data)
 {
-    return SmartPay()->session->set_payment($payment_data);
+    return SmartPay()->session->set_payment_data($payment_data);
 }
 
-function smartpay_get_payment_session()
+function smartpay_get_session_payment_data()
+{
+    return SmartPay()->session->get_payment_data();
+}
+
+function smartpay_set_session_payment($payment)
+{
+    return SmartPay()->session->set_payment($payment);
+}
+
+function smartpay_get_session_payment()
 {
     return SmartPay()->session->get_payment();
 }

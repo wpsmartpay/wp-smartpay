@@ -56,7 +56,7 @@ final class Session
     {
         $key = sanitize_key($key);
 
-        if (is_array($value)) {
+        if (is_array($value) || is_object($value)) {
             $this->session[$key] = wp_json_encode($value);
         } else {
             $this->session[$key] = esc_attr($value);
@@ -114,14 +114,24 @@ final class Session
 
     // TODO: Implement unset
 
-    public function set_payment($payment_data)
+    public function set_payment($payment)
     {
-        return $this->set('smartpay_payment', $payment_data);
+        return $this->set('smartpay_payment', $payment);
     }
 
     public function get_payment()
     {
         return $this->get('smartpay_payment');
+    }
+
+    public function set_payment_data($payment_data)
+    {
+        return $this->set('smartpay_payment_data', $payment_data);
+    }
+
+    public function get_payment_data()
+    {
+        return $this->get('smartpay_payment_data');
     }
 
     /**
