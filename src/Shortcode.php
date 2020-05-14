@@ -44,7 +44,6 @@ final class Shortcode
         if (!isset(self::$instance) && !(self::$instance instanceof Shortcode)) {
             self::$instance = new self();
         }
-
         return self::$instance;
     }
 
@@ -134,7 +133,7 @@ final class Shortcode
             return;
         }
 
-        $product = smartpay_get_product($id);
+		$product = smartpay_get_product($id);
 
         if (!$product->can_purchase()) {
             echo 'You can\'t buy this product';

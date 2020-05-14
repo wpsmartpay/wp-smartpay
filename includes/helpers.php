@@ -216,7 +216,7 @@ function smartpay_amount_format($amount, $currency = '')
             case 'SGD':
             case 'JPY':
             case 'BDT':
-                $formatted = $symbol . $amount . ' ' . $currency;
+                $formatted = $symbol . $amount;
                 break;
             default:
                 $formatted = $currency . ' ' . $amount;
@@ -235,7 +235,7 @@ function smartpay_amount_format($amount, $currency = '')
             case 'SGD':
             case 'JPY':
             case 'BDT':
-                $formatted = $currency . ' ' . $amount . $symbol;
+                $formatted = $amount . $symbol;
                 break;
             default:
                 $formatted = $amount . ' ' . $currency;
