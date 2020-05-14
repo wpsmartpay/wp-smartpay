@@ -114,14 +114,14 @@ final class Session
 
     // TODO: Implement unset
 
-    public function set_payment($payment)
+    public function set_payment_id($payment_id)
     {
-        return $this->set('smartpay_payment', $payment);
+        return $this->set('smartpay_payment_id', $payment_id);
     }
 
-    public function get_payment()
+    public function get_payment_id()
     {
-        return $this->get('smartpay_payment');
+        return $this->get('smartpay_payment_id');
     }
 
     public function set_payment_data($payment_data)
