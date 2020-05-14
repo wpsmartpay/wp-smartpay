@@ -83,27 +83,24 @@ ob_start();
                 $number_of_sections = count($sections);
                 $number = 0;
                 if ($number_of_sections > 1) {
-                    echo '<div class="wp-clearfix"><ul class="subsubsub">';
+                    echo '<ul class="nav nav-pills border-bottom px-3 pb-2 mt-n2 mx-n4">';
                     foreach ($sections as $section_id => $section_name) {
-                        echo '<li>';
+                        echo '<li class="nav-item m-0">';
                         $number++;
                         $tab_url = add_query_arg(array(
                             'settings-updated' => false,
                             'tab' => $active_tab,
                             'section' => $section_id
                         ));
-                        $class = '';
+                        $class = 'nav-link text-decoration-none py-1';
                         if ($section == $section_id) {
-                            $class = 'current';
+                            $class .= ' active bg-secondary';
                         }
                         echo '<a class="' . $class . '" href="' . esc_url($tab_url) . '">' . $section_name . '</a>';
 
-                        if ($number != $number_of_sections) {
-                            echo ' | ';
-                        }
                         echo '</li>';
                     }
-                    echo '</ul></div>';
+                    echo '</ul>';
                 }
                 ?>
                 <form method="POST" action="options.php">

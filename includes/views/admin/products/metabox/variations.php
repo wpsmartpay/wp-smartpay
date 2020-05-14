@@ -69,6 +69,7 @@ $variations = $product->get_variations() ?? [];
                             id="<?php echo 'variations[' . $variation_id . '][description]'; ?>"
                             name="<?php echo 'variations[' . $variation_id . '][description]'; ?>"
                             rows="3"><?php echo $variation ? $variation['description'] : ''; ?></textarea>
+							<small class="form-text text-muted">Do not write HTML code here.</small>
                     </div>
 
                     <!-- Files -->
