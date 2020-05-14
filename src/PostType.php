@@ -21,8 +21,6 @@ final class PostType
     {
         add_action('init', [$this, 'register_smartpay_form_post_type']);
 
-        add_action('init', [$this, 'register_smartpay_payment_post_type']);
-
         add_filter('post_row_actions', [$this, 'remove_smartpay_post_type_inline_edit'], 10, 2);
     }
 
@@ -108,41 +106,7 @@ final class PostType
         ));
     }
 
-    public function register_smartpay_payment_post_type()
-    {
-        /** Payment Post Type */
-        $payment_labels = array(
-            'name'               => _x('Payments', 'post type general name', 'smartpay'),
-            'singular_name'      => _x('Payment', 'post type singular name', 'smartpay'),
-            'add_new'            => __('Add New', 'smartpay'),
-            'add_new_item'       => __('Add New Payment', 'smartpay'),
-            'edit_item'          => __('Edit Payment', 'smartpay'),
-            'new_item'           => __('New Payment', 'smartpay'),
-            'all_items'          => __('All Payments', 'smartpay'),
-            'view_item'          => __('View Payment', 'smartpay'),
-            'search_items'       => __('Search Payments', 'smartpay'),
-            'not_found'          => __('No Payments found', 'smartpay'),
-            'not_found_in_trash' => __('No Payments found in Trash', 'smartpay'),
-            'parent_item_colon'  => '',
-            'menu_name'          => __('Payment History', 'smartpay')
-        );
 
-        $payment_args = array(
-            'labels'          => $payment_labels,
-            'public'          => true,
-            'show_in_menu'    => false,
-            'query_var'       => false,
-            'rewrite'         => false,
-            'capability_type' => 'post',
-            'map_meta_cap'    => true,
-            'supports'        => [],
-            'can_export'      => true,
-            'capabilities' => array(
-                'create_posts' => false
-            )
-        );
-        register_post_type('smartpay_payment', $payment_args);
-    }
 
     public function remove_smartpay_post_type_inline_edit($actions, $post)
     {
