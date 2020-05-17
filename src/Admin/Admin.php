@@ -81,14 +81,6 @@ final class Admin
 
         add_submenu_page(
             'edit.php?post_type=smartpay_product',
-            __('SmartPay - Add New', 'smartpay'),
-            __('Add new', 'smartpay'),
-            'manage_options',
-            '#',
-        );
-
-        add_submenu_page(
-            'edit.php?post_type=smartpay_product',
             __('SmartPay - Payment History', 'smartpay'),
             __('Payment History', 'smartpay'),
             'manage_options',
@@ -120,6 +112,16 @@ final class Admin
             'smartpay-log',
             [$this, 'admin_log_page_cb']
         );
+
+        // TODO: It's temporary page, should removed
+        add_submenu_page(
+            'edit.php?post_type=smartpay_product',
+            'SmartPay - Payment Details',
+            'Payment Details',
+            'manage_options',
+            'smartpay-payment-details',
+            [$this, 'payment_details_page_cb']
+        );
     }
 
     public function smartpay_admin_dashboard_page_cb()
@@ -135,5 +137,10 @@ final class Admin
     public function admin_log_page_cb()
     {
         return smartpay_view('admin/debug-log');
+    }
+
+    public function payment_details_page_cb()
+    {
+        return smartpay_view('admin/payments/details');
     }
 }
