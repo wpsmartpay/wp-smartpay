@@ -7,10 +7,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class SmartPay_Product
+class Product_Variation
 {
     /**
-     * The product ID
+     * The variation ID
      *
      * @since 0.0.1
      * @var integer
@@ -19,15 +19,15 @@ class SmartPay_Product
     protected $_ID = 0;
 
     /**
-     * The product title
+     * The variation name
      *
      * @since  0.0.1
      * @var string
      */
-    protected $title = '';
+    protected $name = '';
 
     /**
-     * The product description
+     * The variation description
      *
      * @since  0.0.1
      * @var string
@@ -35,55 +35,15 @@ class SmartPay_Product
     protected $description = '';
 
     /**
-     * The product base price
+     * The variation parent
      *
-     * @since 0.0.1
-     * @var float
+     * @since  0.0.1
+     * @var int
      */
-    protected $base_price = '';
+    protected $parent = '';
 
     /**
-     * The product sale price
-     *
-     * @since 0.0.1
-     * @var float
-     */
-    protected $sale_price = '';
-
-    /**
-     * The product has variations
-     *
-     * @since 0.0.1
-     * @var boolean
-     */
-    protected $has_variations = false;
-
-    /**
-     * The product variations
-     *
-     * @since 0.0.1
-     * @var array
-     */
-    protected $variations = array();
-
-    /**
-     * The product files
-     *
-     * @since 0.0.1
-     * @var array
-     */
-    private $files = array();
-
-    /**
-     * The product status
-     *
-     * @since 0.0.1
-     * @var array
-     */
-    protected $status = 'publish';
-
-    /**
-     * The product additional amount
+     * The variation additional_amount
      *
      * @since 0.0.1
      * @var float
@@ -91,14 +51,30 @@ class SmartPay_Product
     protected $additional_amount = 0;
 
     /**
-     * The product created_at time
+     * The variation files
+     *
+     * @since 0.0.1
+     * @var array
+     */
+    private $files = array();
+
+    /**
+     * The variation status
+     *
+     * @since 0.0.1
+     * @var array
+     */
+    protected $status = 'publish';
+
+    /**
+     * The variation created_at time
      *
      * @since  0.0.1
      * @var integer
      */
     protected $created_at = '';
     /**
-     * The product updated_at time
+     * The variation updated_at time
      *
      * @since  0.0.1
      * @var integer
@@ -106,7 +82,7 @@ class SmartPay_Product
     protected $updated_at = '';
 
     /**
-     * The product's sale count
+     * The variation's sale count
      *
      * @since 0.0.1
      * @var integer
@@ -114,7 +90,7 @@ class SmartPay_Product
     private $sales = 0;
 
     /**
-     * The product sku
+     * The variation sku
      *
      * @since 0.0.1
      * @var string
@@ -122,7 +98,7 @@ class SmartPay_Product
     protected $sku = '';
 
     /**
-     * Identify if the product is a new one or existing
+     * Identify if the variation is a new one or existing
      *
      * @since  0.0.1
      * @var boolean
@@ -149,48 +125,46 @@ class SmartPay_Product
             return;
         }
 
-        $product = \WP_Post::get_instance($_id);
+        $variation = \WP_Post::get_instance($_id);
 
-        return $this->setup_product($product);
+        return $this->setup_variation($variation);
     }
 
     /**
-     * Given the product data, let's set the variables
+     * Given the variation data, let's set the variables
      *
      * @since  0.0.1
-     * @param  \WP_Post $product
+     * @param  \WP_Post $variation
      * @return bool If the setup was successful or not
      */
-    private function setup_product($product)
+    private function setup_variation($variation)
     {
-        if (!is_object($product)) {
+        if (!is_object($variation)) {
             return false;
         }
 
-        if (!$product instanceof \WP_Post) {
+        if (!$variation instanceof \WP_Post) {
             return false;
         }
 
-        if ('product' !== $product->post_type) {
+        if ('product_variation' !== $variation->post_type) {
             return false;
         }
 
         // Primary Identifier
-        $this->ID = absint($product->ID);
+        $this->ID = absint($variation->ID);
 
         // Protected ID that can never be changed
-        $this->_ID = absint($product->ID);
+        $this->_ID = absint($variation->ID);
 
-        $this->title             = $product->post_title;
-        $this->description       = $product->post_content;
-        $this->base_price        = $this->setup_base_price();
-        $this->sale_price        = $this->setup_sale_price();
-        $this->has_variations    = $this->has_variations();
-        $this->variations        = $this->has_variations ? $this->setup_variations() : [];
+        $this->name              = $variation->post_title;
+        $this->description       = $variation->post_content;
+        $this->parent            = $variation->post_parent;
+        $this->additional_amount = $this->setup_additional_amount();
         $this->files             = $this->setup_files() ?? [];
-        $this->status            = $product->post_status;
-        $this->created_at        = $product->post_date;
-        $this->updated_at        = $product->post_modified;
+        $this->status            = $variation->post_status;
+        $this->created_at        = $variation->post_date;
+        $this->updated_at        = $variation->post_modified;
         $this->sales             = $this->setup_sales();
         $this->sku               = $this->setup_sku();
 
@@ -198,7 +172,7 @@ class SmartPay_Product
     }
 
     /**
-     * Get a post meta item for the product
+     * Get a post meta item for the variation
      *
      * @since  0.0.1
      * @param  string   $meta_key The Meta Key
@@ -213,7 +187,7 @@ class SmartPay_Product
 
         $meta = get_post_meta($this->ID, $meta_key, $single);
 
-        $meta = apply_filters('smartpay_get_product_meta_' . $meta_key, $meta, $this->ID);
+        $meta = apply_filters('smartpay_get_product_variation_meta_' . $meta_key, $meta, $this->ID);
 
         if (is_serialized($meta)) {
             preg_match('/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $meta, $matches);
@@ -222,7 +196,7 @@ class SmartPay_Product
             }
         }
 
-        return apply_filters('smartpay_get_product_meta', $meta, $this->ID, $meta_key);
+        return apply_filters('smartpay_get_product_variation_meta', $meta, $this->ID, $meta_key);
     }
 
     /**
@@ -240,99 +214,33 @@ class SmartPay_Product
             return;
         }
 
-        $meta_value = apply_filters('smartpay_product_update_meta_' . $meta_key, $meta_value, $this->ID);
+        $meta_value = apply_filters('smartpay_product_variation_update_meta_' . $meta_key, $meta_value, $this->ID);
 
         return update_post_meta($this->ID, $meta_key, $meta_value, $prev_value);
     }
 
     /**
-     * Setup the base_price
+     * Setup the additional_amount
      *
      * @since  0.0.1
-     * @return float Product base price
+     * @return float variation additional amount
      */
-    private function setup_base_price()
+    private function setup_additional_amount()
     {
-        $base_price = (float) $this->get_meta('_product_base_price');
+        $additional_amount = (int) $this->get_meta('_product_variation_additional_amount');
 
-        return $base_price;
-    }
-
-    /**
-     * Setup the sale_price
-     *
-     * @since  0.0.1
-     * @return float Product sale price
-     */
-    private function setup_sale_price()
-    {
-        $sale_price = (float) $this->get_meta('_product_sale_price');
-
-        return $sale_price;
-    }
-
-
-    /**
-     * Determine if the product has variations enabled
-     *
-     * @since 0.0.1
-     * @return bool True when the product has variations, false otherwise
-     */
-    public function has_variations()
-    {
-        $has_variation = get_post_meta($this->ID, '_product_has_variations', true);
-
-        // Override whether the product has variables prices.
-        return (bool) apply_filters('smartpay_product_has_variations', $has_variation, $this->ID);
-    }
-
-    /**
-     * Setup the variations
-     *
-     * @since  0.0.1
-     * @return float The variations associated with the product
-     */
-    private function setup_variations()
-    {
-        $the_query = new \WP_Query(array(
-            'post_parent' => $this->ID,
-            'post_type' => 'product_variation',
-        ));
-
-        $child_products = $the_query->have_posts() ? $the_query->get_posts() : [];
-
-        wp_reset_postdata();
-
-        $variations = [];
-        foreach ($child_products as $product) {
-
-            $variation = new Product_Variation($product->ID);
-
-            array_push($variations, array(
-                'id' => $variation->ID,
-                'name' => $variation->name,
-                'additional_amount' => $variation->additional_amount,
-                'description' => $variation->description,
-                'files' => $variation->files,
-            ));
-        }
-
-        usort($variations, function ($a, $b) {
-            return $a['id'] <=> $b['id'];
-        });
-
-        return $variations;
+        return $additional_amount;
     }
 
     /**
      * Setup the files
      *
      * @since  0.0.1
-     * @return float The files associated with the product
+     * @return float The files associated with the variation
      */
     private function setup_files()
     {
-        $files = $this->get_meta('_product_files');
+        $files = $this->get_meta('_product_variation_files');
         if (!is_array($files)) $files = [];
 
         return $files;
@@ -342,11 +250,11 @@ class SmartPay_Product
      * Setup the sales
      *
      * @since  0.0.1
-     * @return float Total product sales
+     * @return float Total variation sales
      */
     private function setup_sales()
     {
-        $sales = $this->get_meta('_product_sales');
+        $sales = $this->get_meta('_product_variation_sales');
         return !empty($sales) ? $sales : 0;
     }
 
@@ -354,11 +262,11 @@ class SmartPay_Product
      * Setup the sku
      *
      * @since  0.0.1
-     * @return float Product sku
+     * @return float variation sku
      */
     private function setup_sku()
     {
-        return $this->get_meta('_product_sku');
+        return $this->get_meta('_product_variation_sku');
     }
 
     /**
@@ -373,7 +281,7 @@ class SmartPay_Product
             return call_user_func(array($this, 'get_' . $key));
         } else {
 
-            return new \WP_Error('smartpay-product-invalid-property', sprintf(__('Can\'t get property %s', 'smartpay'), $key));
+            return new \WP_Error('smartpay-product-variation-invalid-property', sprintf(__('Can\'t get property %s', 'smartpay'), $key));
         }
     }
 
@@ -398,7 +306,7 @@ class SmartPay_Product
      * Retrieve the ID
      *
      * @since 0.0.1
-     * @return int ID of the product
+     * @return int ID of the variation
      */
     public function get_ID()
     {
@@ -406,21 +314,21 @@ class SmartPay_Product
     }
 
     /**
-     * Retrieve the title
+     * Retrieve the name
      *
      * @since 0.0.1
-     * @return string title of the product
+     * @return string name of the variation
      */
-    public function get_title()
+    public function get_name()
     {
-        return $this->title;
+        return $this->name;
     }
 
     /**
      * Retrieve the description
      *
      * @since 0.0.1
-     * @return string description of the product
+     * @return string description of the variation
      */
     public function get_description()
     {
@@ -428,38 +336,26 @@ class SmartPay_Product
     }
 
     /**
-     * Retrieve the base_price
+     * Retrieve the product parent
      *
-     * @since 0.0.1
-     * @return string base_price of the product
+     * @since 2.5.8
+     * @return string parent of the product
      */
-    public function get_base_price()
+    public function get_parent()
     {
-        // Override the product base price.
-        return apply_filters('smartpay_product_get_base_price', $this->base_price, $this->ID);
+        return apply_filters('smartpay_product_variation_get_parent', $this->parent, $this->ID);
     }
 
     /**
-     * Retrieve the sale_price
+     * Retrieve the additional_amount
      *
      * @since 0.0.1
-     * @return string sale_price of the product
+     * @return string additional_amount of the product
      */
-    public function get_sale_price()
+    public function get_additional_amount()
     {
-        // Override the product base price.
-        return apply_filters('smartpay_product_get_sale_price', $this->sale_price, $this->ID);
-    }
-
-    /**
-     * Retrieve the variations
-     *
-     * @since 0.0.1
-     * @return string variations of the product
-     */
-    public function get_variations()
-    {
-        return apply_filters('smartpay_product_get_variations', $this->variations, $this->ID);
+        // Override the variation additional amount.
+        return apply_filters('smartpay_product_variation_get_additional_amount', $this->additional_amount, $this->ID);
     }
 
     /**
@@ -495,7 +391,7 @@ class SmartPay_Product
         if (!isset($this->sales)) {
 
             if (!$this->sales) {
-                add_post_meta($this->ID, '_product_sales', 0);
+                add_post_meta($this->ID, '_product_variation_sales', 0);
             }
         }
 
@@ -524,28 +420,27 @@ class SmartPay_Product
      * Create the base of a product.
      *
      * @since  0.0.1
-     * @return int|bool False on failure, the product ID on success.
+     * @return int|bool False on failure, the variation ID on success.
      */
     private function insert()
     {
         if (0 != $this->ID) {
             return false;
         }
-        var_dump($this);
-        exit;
-        // Create a blank product
-        $product_id = wp_insert_post(array(
-            'post_title'     => $this->title ?? '',
+        // Create a blank variation
+        $variation_id = wp_insert_post(array(
+            'post_title'     => $this->name ?? '',
             'post_content'   => $this->description ?? '',
-            'post_type'      => 'product',
+            'post_parent'   => $this->parent ?? 0,
+            'post_type'      => 'product_variation',
             'post_status'    => $this->status ?? 'publish',
             'comment_status' => 'closed',
             'ping_status'    => 'closed',
         ));
 
-        if (!empty($product_id)) {
-            $this->ID   = $product_id;
-            $this->_ID  = $product_id;
+        if (!empty($variation_id)) {
+            $this->ID   = $variation_id;
+            $this->_ID  = $variation_id;
 
             $this->new  = true;
         }
@@ -563,12 +458,12 @@ class SmartPay_Product
         $saved = false;
 
         if (!$this->ID) {
-            $product_id = $this->insert();
+            $variation_id = $this->insert();
 
-            if (false === $product_id) {
+            if (false === $variation_id) {
                 $saved = false;
             } else {
-                $this->ID = $product_id;
+                $this->ID = $variation_id;
             }
         }
 
@@ -580,28 +475,20 @@ class SmartPay_Product
         if (!empty($this->pending)) {
             foreach ($this->pending as $key => $value) {
                 switch ($key) {
-                    case 'title':
-                        wp_update_post(array('ID' => $this->ID, 'post_title' => $this->title));
+                    case 'name':
+                        wp_update_post(array('ID' => $this->ID, 'post_title' => $this->name));
                         break;
 
                     case 'description':
                         wp_update_post(array('ID' => $this->ID, 'post_content' => $this->description));
                         break;
 
-                    case 'base_price':
-                        $this->update_meta('_product_base_price', $this->base_price);
-                        break;
-
-                    case 'sale_price':
-                        $this->update_meta('_product_sale_price', $this->sale_price);
-                        break;
-
-                    case 'has_variations':
-                        $this->update_meta('_product_has_variations', $this->has_variations);
+                    case 'additional_amount':
+                        $this->update_meta('_product_variation_additional_amount', $this->additional_amount);
                         break;
 
                     case 'files':
-                        $this->update_meta('_product_files', $this->files);
+                        $this->update_meta('_product_variation_files', $this->files);
                         break;
 
                     case 'status':
@@ -628,10 +515,10 @@ class SmartPay_Product
         }
 
         if (true === $saved) {
-            $this->setup_product($this->ID);
+            $this->setup_variation($this->ID);
 
-            /** This action fires anytime that $product->save() is run **/
-            do_action('smartpay_product_saved', $this->ID, $this);
+            /** This action fires anytime that $variation->save() is run **/
+            do_action('smartpay_product_variation_saved', $this->ID, $this);
         }
 
         return $saved;
@@ -649,11 +536,11 @@ class SmartPay_Product
         $quantity    = absint($quantity);
         $total_sales = $this->get_sales() + $quantity;
 
-        if ($this->update_meta('_product_sales', $total_sales)) {
+        if ($this->update_meta('_product_variation_sales', $total_sales)) {
 
             $this->sales = $total_sales;
 
-            do_action('smartpay_product_increase_sales', $this->ID, $this->sales, $this);
+            do_action('smartpay_product_variation_increase_sales', $this->ID, $this->sales, $this);
 
             return $this->sales;
         }
@@ -676,11 +563,11 @@ class SmartPay_Product
             $quantity    = absint($quantity);
             $total_sales = $this->get_sales() - $quantity;
 
-            if ($this->update_meta('_product_sales', $total_sales)) {
+            if ($this->update_meta('_product_variation_sales', $total_sales)) {
 
                 $this->sales = $total_sales;
 
-                do_action('smartpay_product_decrease_sales', $this->ID, $this->sales, $this);
+                do_action('smartpay_product_variation_decrease_sales', $this->ID, $this->sales, $this);
 
                 return $this->sales;
             }
@@ -690,10 +577,10 @@ class SmartPay_Product
     }
 
     /**
-     * Checks if the product can be purchased
+     * Checks if the product_variation can be purchased
      *
      * @since  0.0.1
-     * @return bool If the current user can purchase the product ID
+     * @return bool If the current user can purchase the product_variation ID
      */
     public function can_purchase()
     {
@@ -703,12 +590,6 @@ class SmartPay_Product
             $can_purchase = false;
         }
 
-        return (bool) apply_filters('smartpay_can_purchase_product', $can_purchase, $this);
+        return (bool) apply_filters('smartpay_can_purchase_product_variation', $can_purchase, $this);
     }
-
-    // TODO: Add earnings
-
-    // TODO: is free
-
-    // TODO: Can buy multiple
 }

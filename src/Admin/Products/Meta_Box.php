@@ -2,8 +2,8 @@
 
 namespace SmartPay\Admin\Products;
 
+use SmartPay\Products\Product_Variation;
 use SmartPay\Products\SmartPay_Product;
-use WP_Post;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -26,9 +26,11 @@ final class Meta_Box
     private function __construct()
     {
         // Add metabox.
-        add_action('add_meta_boxes', [$this, 'add_smartpay_product_meta_boxes']);
-        add_action('save_post_smartpay_product', [$this, 'save_smartpay_product_meta']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_smartpay_product_metabox_scripts']);
+        add_action('add_meta_boxes', [$this, 'add_product_meta_boxes']);
+
+        add_action('save_post_product', [$this, 'save_product_meta']);
+
+        add_action('admin_enqueue_scripts', [$this, 'enqueue_product_metabox_scripts']);
     }
 
     /**
@@ -50,14 +52,14 @@ final class Meta_Box
         return self::$instance;
     }
 
-    public function add_smartpay_product_meta_boxes()
+    public function add_product_meta_boxes()
     {
         /** Metabox **/
         add_meta_box(
-            'smartpay_product_metabox',
+            'product_metabox',
             __('SmartPay', 'smartpay'),
             [$this, 'render_metabox'],
-            ['smartpay_product'],
+            ['product'],
             'normal',
             'high'
         );
@@ -80,7 +82,7 @@ final class Meta_Box
         wp_nonce_field(basename(__FILE__), 'smartpay_product_metabox_nonce');
     }
 
-    public function save_smartpay_product_meta($post_id)
+    public function save_product_meta($post_id)
     {
         if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename(__FILE__))) {
             return;
@@ -96,46 +98,22 @@ final class Meta_Box
 
         if ($has_variations && isset($variations)) {
 
-            remove_action('save_post_smartpay_product', [$this, 'save_smartpay_product_meta']);
-
             foreach ($variations as $variation_id => $variation) {
-
-                $child_product = WP_Post::get_instance($variation_id ?? 0);
-
-                if (!$child_product) {
-
-                    $child_product                    = new SmartPay_Product();
-                    $child_product->type              = 'variation';
-                    $child_product->title             = $variation['name'] ?? '';
-                    $child_product->description       = $variation['description'] ?? '';
-                    $child_product->has_variations    = false;
-                    $child_product->variations        = [];
-                    $child_product->files             = array_keys($variation['files'] ?? []);
-                    $child_product->parent            = $product->ID;
-                    $child_product->additional_amount = $variation['additional_amount'] ?? 0;
-                    $child_product->save();
-                } else {
-                    $child_product                    = new SmartPay_Product($variation_id ?? 0);
-                    $child_product->type              = 'variation';
-                    $child_product->title             = $variation['name'] ?? '';
-                    $child_product->description       = $variation['description'] ?? '';
-                    $child_product->has_variations    = false;
-                    $child_product->variations        = [];
-                    $child_product->files             = array_keys($variation['files'] ?? []);
-                    $child_product->parent            = $product->ID;
-                    $child_product->additional_amount = $variation['additional_amount'] ?? 0;
-                    $child_product->save();
-                }
+                $child_product                    = new Product_Variation($variation_id ?? 0);
+                $child_product->name              = $variation['name'] ?? '';
+                $child_product->description       = $variation['description'] ?? '';
+                $child_product->files             = array_keys($variation['files'] ?? []);
+                $child_product->parent            = $product->ID;
+                $child_product->additional_amount = $variation['additional_amount'] ?? 0;
+                $child_product->save();
             }
-
-            add_action('save_post_smartpay_product', [$this, 'save_smartpay_product_meta']);
         }
 
         // Scope for other extentions
-        do_action('save_smartpay_product', $post_id, $post);
+        do_action('smartpay_save_product', $post_id, $post);
     }
 
-    public function enqueue_smartpay_product_metabox_scripts()
+    public function enqueue_product_metabox_scripts()
     {
         wp_enqueue_media();
 

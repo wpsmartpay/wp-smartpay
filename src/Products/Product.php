@@ -19,13 +19,13 @@ final class Product
      */
     private function __construct()
     {
-        add_action('init', [$this, 'register_smartpay_product_post_type']);
+        add_action('init', [$this, 'register_products_post_type']);
 
         add_filter('enter_title_here', [$this, 'change_default_title']);
 
-        add_filter('manage_smartpay_product_posts_columns', [$this, 'smartpay_product_columns']);
+        add_filter('manage_product_posts_columns', [$this, 'product_columns']);
 
-        add_filter('manage_smartpay_product_posts_custom_column', [$this, 'smartpay_product_column_data'], 10, 2);
+        add_filter('manage_product_posts_custom_column', [$this, 'product_column_data'], 10, 2);
     }
 
     /**
@@ -53,9 +53,9 @@ final class Product
      * @since 0.1
      * @access private
      */
-    public function register_smartpay_product_post_type()
+    public function register_products_post_type()
     {
-        $labels = array(
+        $product_labels = array(
             'name'                  => __('Products', 'smartpay'),
             'singular_name'         => __('Product', 'smartpay'),
             'attributes'            => __('Product Attributes', 'smartpay'),
@@ -87,10 +87,10 @@ final class Product
         $args = array(
             'label'                 => __('Product', 'smartpay'),
             'description'           => __('Product', 'smartpay'),
-            'labels'                => $labels,
+            'labels'                => $product_labels,
             'supports'              => array('title', 'editor', 'thumbnail', 'revisions', 'author'),
             'taxonomies'            => array(),
-            'hierarchical'          => true,
+            'hierarchical'          => false,
             'public'                => true,
             'show_ui'               => true,
             'show_in_menu'          => true,
@@ -106,7 +106,26 @@ final class Product
 
 
         );
-        register_post_type('smartpay_product', $args);
+        register_post_type('product', $args);
+
+        $args = array(
+            'label'                 => __('Product variation', 'smartpay'),
+            'description'           => __('Product variation', 'smartpay'),
+            'labels'                => [],
+            'supports'              => array('title', 'editor', 'author'),
+            'taxonomies'            => array(),
+            'hierarchical'          => false,
+            'public'                => false,
+            'can_export'            => true,
+            'has_archive'           => true,
+            'exclude_from_search'   => true,
+            'publicly_queryable'    => true,
+            'query_var'             => true,
+            'capability_type'       => 'page',
+
+
+        );
+        register_post_type('product_variation', $args);
     }
 
     /**
@@ -137,7 +156,7 @@ final class Product
         return new SmartPay_Product($product_id);
     }
 
-    public function smartpay_product_columns($columns)
+    public function product_columns($columns)
     {
         return [
             'cb' => $columns['cb'],
@@ -147,7 +166,7 @@ final class Product
         ];
     }
 
-    public function smartpay_product_column_data($column, $post_id)
+    public function product_column_data($column, $post_id)
     {
         // shortcode column
         if ('shortcode' === $column) {
