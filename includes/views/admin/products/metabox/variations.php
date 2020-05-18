@@ -25,7 +25,7 @@ $variations = $product->get_variations() ?? [];
         <div class="card-body p-0 variations">
             <!-- Variantions -->
             <?php foreach ($variations as $index => $variation) : ?>
-            <?php $variation_id = $variation['id'] ?? $index + 1; ?>
+            <?php $variation_id = $variation['id'] ?? 'variation_' + $index + 1; ?>
             <div class="variation-option" data-variation-id="<?php echo $variation_id; ?>">
                 <div class="variation-option__header p-3">
                     <div class="form-row">
@@ -69,11 +69,11 @@ $variations = $product->get_variations() ?? [];
                             id="<?php echo 'variations[' . $variation_id . '][description]'; ?>"
                             name="<?php echo 'variations[' . $variation_id . '][description]'; ?>"
                             rows="3"><?php echo $variation ? $variation['description'] : ''; ?></textarea>
-							<small class="form-text text-muted">Do not write HTML code here.</small>
+                        <small class="form-text text-muted">Do not write HTML code here.</small>
                     </div>
 
                     <!-- Files -->
-                    <?php $variation_files = $product->get_variation_files($variation_id) ?? []; ?>
+                    <?php $variation_files = $variation['files'] ?? []; ?>
 
                     <label class="text-muted my-2 d-block"><strong>Files</strong></label>
                     <div class="form-group no-variation-file-box"
@@ -94,13 +94,13 @@ $variations = $product->get_variations() ?? [];
 
                             <!-- Variation files -->
                             <?php foreach ($product_files as $index => $file) : ?>
-                            <?php $checked = count(array_intersect($file, array_column($variation_files, 'id'))) ? 'checked' : ''; ?>
+                            <?php $checked = count(array_intersect($file, $variation_files)) ? 'checked' : ''; ?>
                             <li class="list-group-item m-0 d-flex justify-content-between files-item">
                                 <div class="custom-checkbox custom-checkbox-round">
                                     <input type="checkbox" class="custom-control-input variation-file"
                                         id="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"
                                         name="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"
-                                        value="file 1" <?php echo $checked; ?>>
+                                        value="1" <?php echo $checked; ?>>
                                     <label class="custom-control-label"
                                         for="<?php echo 'variations[' . $variation_id . '][files][' . $file['id'] . ']'; ?>"><?php echo $file['filename'] ?></label>
                                 </div>

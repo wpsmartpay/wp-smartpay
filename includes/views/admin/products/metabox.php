@@ -20,10 +20,11 @@
             <div class="tab-content py-3" id="smartpay-tabContent">
                 <div class="tab-pane fade show active" id="smartpay-files" role="tabpanel"
                     aria-labelledby="smartpay-files-tab">
-                    <?php include "metabox/files.php"?>
+                    <?php include "metabox/files.php" ?>
                 </div>
                 <div class="tab-pane fade" id="smartpay-pricing" role="tabpanel" aria-labelledby="smartpay-pricing-tab">
-                    <?php include "metabox/pricing.php"?>
+                    <?php include "metabox/pricing.php"
+                    ?>
                 </div>
             </div>
         </div>

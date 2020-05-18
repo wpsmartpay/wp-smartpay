@@ -86,7 +86,7 @@ final class Product
             'labels'                => $labels,
             'supports'              => array('title', 'editor', 'thumbnail', 'revisions', 'author'),
             'taxonomies'            => array(),
-            'hierarchical'          => false,
+            'hierarchical'          => true,
             'public'                => true,
             'show_ui'               => true,
             'show_in_menu'          => true,

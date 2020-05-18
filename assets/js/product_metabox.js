@@ -141,6 +141,9 @@ jQuery(function ($) {
     $(document.body).on('click', '#smartpay-metabox .remove-variation-option', (e) => {
         e.preventDefault()
 
+        alert('If your remove a variation, your customer can\'t access it\'s resource');
+        console.log('make ajax call');
+
         $(e.target).parents('.variation-option').remove()
 
         if (!$('.variations .variation-option').length) {
@@ -155,7 +158,7 @@ jQuery(function ($) {
 
         $variations = $('#smartpay-metabox .variations')
 
-        variationId = $('#smartpay-metabox .variations .variation-option').length + 1
+        variationId = 'variation_' + ($('#smartpay-metabox .variations .variation-option').length + 1)
 
         option = `<div class="variation-option" data-variation-id="${variationId}">
             <div class="variation-option__header p-3">
@@ -223,6 +226,9 @@ jQuery(function ($) {
 
     /** Scroll to last option **/
     function scrollToLastVariationOption() {
+
+        $variations = $('#smartpay-metabox .variations')
+
         $('html, body').animate({
             scrollTop: eval($variations.children('.variation-option').last().offset().top - 70)
         }, 500);
