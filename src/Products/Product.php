@@ -22,6 +22,10 @@ final class Product
         add_action('init', [$this, 'register_smartpay_product_post_type']);
 
         add_filter('enter_title_here', [$this, 'change_default_title']);
+
+        add_filter('manage_smartpay_product_posts_columns', [$this, 'smartpay_product_columns']);
+
+        add_filter('manage_smartpay_product_posts_custom_column', [$this, 'smartpay_product_column_data'], 10, 2);
     }
 
     /**
@@ -131,5 +135,23 @@ final class Product
     public function get_product($product_id)
     {
         return new SmartPay_Product($product_id);
+    }
+
+    public function smartpay_product_columns($columns)
+    {
+        return [
+            'cb' => $columns['cb'],
+            'title' => __('Title'),
+            'shortcode' => __('Shortcode'),
+            'date' => __('Date'),
+        ];
+    }
+
+    public function smartpay_product_column_data($column, $post_id)
+    {
+        // shortcode column
+        if ('shortcode' === $column) {
+            echo '<input type="text" readonly="readonly" title="Click to select. Then press Ctrl+C (⌘+C on Mac) to copy." onclick="this.select();" value="[smartpay_product id=&quot;' . $post_id . '&quot;]">';
+        }
     }
 }
