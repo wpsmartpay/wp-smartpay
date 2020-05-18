@@ -35,6 +35,14 @@ class SmartPay_Product
     protected $description = '';
 
     /**
+     * The product image
+     *
+     * @since  0.0.1
+     * @var string
+     */
+    protected $image = '';
+
+    /**
      * The product base price
      *
      * @since 0.0.1
@@ -183,6 +191,7 @@ class SmartPay_Product
 
         $this->title             = $product->post_title;
         $this->description       = $product->post_content;
+        $this->image             = $this->setup_image();
         $this->base_price        = $this->setup_base_price();
         $this->sale_price        = $this->setup_sale_price();
         $this->has_variations    = $this->has_variations();
@@ -243,6 +252,17 @@ class SmartPay_Product
         $meta_value = apply_filters('smartpay_product_update_meta_' . $meta_key, $meta_value, $this->ID);
 
         return update_post_meta($this->ID, $meta_key, $meta_value, $prev_value);
+    }
+
+    /**
+     * Setup the image
+     *
+     * @since  0.0.1
+     * @return float Product image
+     */
+    private function setup_image()
+    {
+        return has_post_thumbnail($this->ID) ? wp_get_attachment_url(get_post_thumbnail_id($this->ID), 'thumbnail') : '';
     }
 
     /**
@@ -425,6 +445,18 @@ class SmartPay_Product
     public function get_description()
     {
         return $this->description;
+    }
+
+    /**
+     * Retrieve the image
+     *
+     * @since 0.0.1
+     * @return string image of the product
+     */
+    public function get_image()
+    {
+        // Override the product base price.
+        return apply_filters('smartpay_product_get_image', $this->image, $this->ID);
     }
 
     /**
