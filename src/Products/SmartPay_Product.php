@@ -253,9 +253,9 @@ class SmartPay_Product
      */
     private function setup_base_price()
     {
-        $base_price = (float) $this->get_meta('_product_base_price');
+        $base_price = $this->get_meta('_product_base_price');
 
-        return $base_price;
+        return !empty($base_price) ?  (float) $base_price : '';
     }
 
     /**
@@ -268,7 +268,7 @@ class SmartPay_Product
     {
         $sale_price = (float) $this->get_meta('_product_sale_price');
 
-        return $sale_price;
+        return !empty($sale_price) ?  (float) $sale_price : '';
     }
 
 
