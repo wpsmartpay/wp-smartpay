@@ -2,6 +2,7 @@
 
 namespace SmartPay\Payments;
 
+use SmartPay\Products\Product_Variation;
 use stdClass;
 
 // Exit if accessed directly.
@@ -149,12 +150,20 @@ final class Payment
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
-            // TODO: Implement variations
             $purchase_data = [
-                'type' => 'product_purchase',
-                'product_id' => $product->get_ID(),
-                'amount' => $product->get_sale_price() ?? $product->get_base_price(),
+                'product_id' => $product->ID,
+                'product_price' => $product->sale_price ?? $product->base_price,
             ];
+
+
+            if (count($product->variations) && isset($_data['smartpay_product_variation_id'])) {
+                $variation = new Product_Variation($_data['smartpay_product_variation_id']);
+
+                $purchase_data['variation_id'] = $_data['smartpay_product_variation_id'];
+                $purchase_data['variation_name'] = $variation->name;
+                $purchase_data['additional_amount'] = $variation->additional_amount;
+                $purchase_data['total_amount'] = $purchase_data['product_price'] + $variation->additional_amount;
+            }
         } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
             // TODO: Implement form payment
@@ -167,12 +176,16 @@ final class Payment
     {
         $amount = 0;
 
-        // TODO: Implement variations
         if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
             $amount = $product->get_sale_price() ?? $product->get_base_price();
+
+            if (count($product->variations) && isset($_data['smartpay_product_variation_id'])) {
+                $variation = new Product_Variation($_data['smartpay_product_variation_id']);
+                $amount += $variation->additional_amount;
+            }
         } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
             // TODO: Implement form payment
@@ -267,7 +280,7 @@ final class Payment
 
                 // Send info to the gateway for payment processing
                 $gateway = $_POST['data']['smartpay_gateway'];
-                $this->_get_gateway_response($gateway, $payment_data);
+                $this->_process_gateway_payment($gateway, $payment_data);
             } else {
                 echo 'Something wrong!';
             }
@@ -278,13 +291,15 @@ final class Payment
         die();
     }
 
-    private function _get_gateway_response($gateway, $payment_data)
+    private function _process_gateway_payment($gateway, $payment_data, $ajax = true)
     {
         if (smartpay_is_gateway_active($gateway)) {
             $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
 
             // $gateway must match the ID used when registering the gateway
-            do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
+            if ($ajax) {
+                do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
+            }
         } else {
             echo 'Gateway not active or not exist!';
         }

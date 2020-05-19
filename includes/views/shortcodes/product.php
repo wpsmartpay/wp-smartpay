@@ -1,6 +1,6 @@
 <?php
 // var_dump($product);
-$product_price = isset($product->sale_price) ? $product->sale_price : $product->base_price;
+$product_price = $product->sale_price > -1 ? $product->sale_price : $product->base_price;
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
@@ -26,7 +26,7 @@ $has_payment_error = false;
                                 <?php foreach ($product->variations as $variation) : ?>
                                 <li>
                                     <?php echo '<label for="smartpay-product-variation-' . esc_attr($variation['id']) . '">
-										<input type="radio" name="smartpay_product_variation" id="smartpay-product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
+										<input type="radio" name="smartpay_product_variation_id" id="smartpay-product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
                                             echo esc_html($variation['name']) . ' - ' . smartpay_amount_format(($product_price + $variation['additional_amount']));
                                             echo '</label>';
                                             ?>

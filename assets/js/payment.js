@@ -19,11 +19,11 @@ jQuery(document).ready(function ($) {
         jQuery.post(smartpay.ajax_url, data, response => {
             if (response) {
                 setTimeout(() => {
-
                     $('#smartpay_payment_gateway_popup .modal-body').html(response)
                 }, 500)
 
             } else {
+                $('#smartpay_payment_gateway_popup .modal-body').html('Something wrong!')
                 console.log('Something wrong!')
             }
 
