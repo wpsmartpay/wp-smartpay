@@ -155,12 +155,14 @@ final class SmartPay
      */
     private function init_actions()
     {
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_smartpay_scripts']);
-
         register_activation_hook(__FILE__, [$this, 'activate']);
 
         // TODO: Implement deactivation hook
         // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
+
+        add_action('plugins_loaded', array($this, 'on_plugins_loaded'), -1);
+
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_smartpay_scripts']);
     }
 
     /**
@@ -257,6 +259,11 @@ final class SmartPay
         );
 
         update_option('smartpay_settings', $options);
+    }
+
+    public function on_plugins_loaded()
+    {
+        do_action('smartpay_loaded');
     }
 
     /**
