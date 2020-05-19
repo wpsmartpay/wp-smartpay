@@ -772,6 +772,10 @@
 .smartpay .text-reset{color:inherit !important}
 .smartpay .visible{visibility:visible !important}
 .smartpay .invisible{visibility:hidden !important}
+.smartpay .spinner-border{display:inline-block;width:2rem;height:2rem;vertical-align:text-bottom;border:.25em solid currentColor;border-right-color:transparent;border-radius:50%;animation:spinner-border .75s linear infinite}
+.smartpay .spinner-border-sm{width:1rem;height:1rem;border-width:.2em}
+.smartpay .spinner-grow{display:inline-block;width:2rem;height:2rem;vertical-align:text-bottom;background-color:currentColor;border-radius:50%;opacity:0;animation:spinner-grow .75s linear infinite}
+.smartpay .spinner-grow-sm{width:1rem;height:1rem}
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}
 .smartpay .collapsing{transition:none}
@@ -2107,4 +2111,7 @@
 .smartpay .d-print-table-cell{display:table-cell !important}
 .smartpay .d-print-flex{display:flex !important}
 .smartpay .d-print-inline-flex{display:inline-flex !important}
+}@keyframes spinner-border{to{transform:rotate(360deg)}
+}@keyframes spinner-grow{0%{transform:scale(0)}
+50%{opacity:1}
 }

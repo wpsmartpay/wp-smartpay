@@ -1,6 +1,6 @@
 <?php
 // var_dump($product);
-$product_price = $product->sale_price ?? $product->base_price;
+$product_price = isset($product->sale_price) ? $product->sale_price : $product->base_price;
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
@@ -91,7 +91,13 @@ $has_payment_error = false;
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">Loading...</div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

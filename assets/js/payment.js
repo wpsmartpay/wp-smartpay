@@ -7,6 +7,7 @@ jQuery(document).ready(function ($) {
         let buttonText = $('button#pay_now').text()
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')
+        $('#smartpay_payment_gateway_popup').modal('show')
 
         // let data = { action: 'smartpay_payment_process_action', data: getFormJSONData($('.smartpay #payment_form')) }
 
@@ -17,13 +18,15 @@ jQuery(document).ready(function ($) {
 
         jQuery.post(smartpay.ajax_url, data, response => {
             if (response) {
-                $('#smartpay_payment_gateway_popup .modal-body').html(response)
+                setTimeout(() => {
+
+                    $('#smartpay_payment_gateway_popup .modal-body').html(response)
+                }, 500)
 
             } else {
                 console.log('Something wrong!')
             }
 
-            $('#smartpay_payment_gateway_popup').modal('show')
 
             $('button#pay_now')
                 .text(buttonText)
