@@ -26,6 +26,8 @@ final class Payment
         add_action('init', [$this, 'process_payment']);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
+
+        add_action('wp_ajax_smartpay_payment_process_action', [$this, 'ajax_smartpay_payment_process_action']);
     }
 
     /**
@@ -116,6 +118,21 @@ final class Payment
         }
     }
 
+    private function _prepare_payment_data($_data)
+    {
+        return apply_filters('smartpay_payment_data', array(
+            'purchase_type'   => $_data['smartpay_purchase_type'],
+            'purchase_data'   => $this->_get_product_purchase_data($_data),
+            'date'            => date('Y-m-d H:i:s', time()),
+            'amount'          => $this->_get_purchase_amount($_data),
+            'currency'        => smartpay_get_currency() ?? 'USD',
+            'gateway'         => $_data['smartpay_gateway'],
+            'customer'        => $this->_get_purchase_customer($_data),
+            'email'           => $_data['smartpay_email'],
+            'key'             => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+        ));
+    }
+
     private function _send_to_gateway($gateway, $payment_data)
     {
         $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
@@ -126,21 +143,19 @@ final class Payment
 
     private function _get_product_purchase_data($_data)
     {
-        extract(sanitize_post($_data));
-
         $purchase_data = [];
 
-        if ('product_purchase' == $smartpay_purchase_type) {
+        if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
 
-            $product = smartpay_get_product($smartpay_product_id);
+            $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
             // TODO: Implement variations
-            $purchase_data = new stdClass();
-
-            $purchase_data->type        = 'product_purchase';
-            $purchase_data->product_id  = $product->get_ID();
-            $purchase_data->amount      = $product->get_sale_price() ?? $product->get_base_price();
-        } else if ('form_payment' == $smartpay_purchase_type) {
+            $purchase_data = [
+                'type' => 'product_purchase',
+                'product_id' => $product->get_ID(),
+                'amount' => $product->get_sale_price() ?? $product->get_base_price(),
+            ];
+        } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
             // TODO: Implement form payment
         }
@@ -150,17 +165,15 @@ final class Payment
 
     private function _get_purchase_amount($_data)
     {
-        extract(sanitize_post($_data));
-
         $amount = 0;
 
         // TODO: Implement variations
-        if ('product_purchase' == $smartpay_purchase_type) {
+        if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
 
-            $product = smartpay_get_product($smartpay_product_id);
+            $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
             $amount = $product->get_sale_price() ?? $product->get_base_price();
-        } else if ('form_payment' == $smartpay_purchase_type) {
+        } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
             // TODO: Implement form payment
         }
@@ -169,15 +182,11 @@ final class Payment
 
     private function _get_purchase_customer($_data)
     {
-        extract(sanitize_post($_data));
-
-        $customer = new stdClass();
-
-        $customer->first_name = $smartpay_first_name;
-        $customer->last_name  = $smartpay_last_name;
-        $customer->email      = $smartpay_email;
-
-        return $customer;
+        return [
+            'first_name' => $_data['smartpay_first_name'] ?? '',
+            'last_name'  => $_data['smartpay_last_name'] ?? '',
+            'email'      => $_data['smartpay_email'] ?? '',
+        ];
     }
 
     public function insert_payment($payment_data)
@@ -228,8 +237,56 @@ final class Payment
 
     public function enqueue_payment_scripts()
     {
-        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION);
+        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION, true);
 
         wp_enqueue_script('smartpay-payment');
+
+        wp_localize_script(
+            'smartpay-payment',
+            'smartpay',
+            array('ajax_url' => admin_url('admin-ajax.php'))
+        );
+    }
+
+    function ajax_smartpay_payment_process_action()
+    {
+
+        if (isset($_POST['data']['smartpay_action']) && 'smartpay_process_payment' === $_POST['data']['smartpay_action']) {
+
+            if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
+                echo 'Something wrong!';
+            }
+
+            // TODO: Add validation
+            $payment_data = $this->_prepare_payment_data($_POST['data']);
+
+            if ($this->insert_payment($payment_data)) {
+
+                // Set session payment data
+                smartpay_set_session_payment_data($payment_data);
+
+                // Send info to the gateway for payment processing
+                $gateway = $_POST['data']['smartpay_gateway'];
+                $this->_get_gateway_response($gateway, $payment_data);
+            } else {
+                echo 'Something wrong!';
+            }
+        } else {
+            echo 'Something wrong!';
+        }
+
+        die();
+    }
+
+    private function _get_gateway_response($gateway, $payment_data)
+    {
+        if (smartpay_is_gateway_active($gateway)) {
+            $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
+
+            // $gateway must match the ID used when registering the gateway
+            do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
+        } else {
+            echo 'Gateway not active or not exist!';
+        }
     }
 }
