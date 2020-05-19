@@ -72,6 +72,7 @@ final class Paddle extends Payment_Gateway
     {
         add_action('init', [$this, 'process_webhooks']);
         add_action('smartpay_paddle_process_payment', [$this, 'process_payment']);
+        add_action('smartpay_paddle_ajax_process_payment', [$this, 'ajax_process_payment']);
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
         add_filter('smartpay_payment_paddle_receipt', [$this, 'payment_receipt']);
@@ -144,6 +145,34 @@ final class Paddle extends Payment_Gateway
         }
 
         return wp_redirect(smartpay_get_payment_failure_page_uri(), 302);
+    }
+
+    public function ajax_process_payment()
+    {
+        echo 'paddle';
+        $content = '';
+        $content .= '<p>' . __(
+            'Thank you for your order, please click the button below to pay with Paddle.',
+            'smartpay'
+        ) . '</p>';
+        $content .= '<div style="margin: 0 auto;text-align: center;">';
+        $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', 'aaa');
+        $content .= '</div>';
+
+        $content .= '<script>jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
+        $content .= 'Paddle.Setup({';
+        $content .= sprintf('vendor: %s', '111');
+        $content .= ' });';
+
+        // Open popup on page load
+        // $content .= 'Paddle.Checkout.open({';
+        // $content .= sprintf('override: "%s"', 'aaa');
+        // $content .= '});';
+
+        $content .= '});';
+        $content .= '</script>';
+
+        echo $content;
     }
 
     /**
