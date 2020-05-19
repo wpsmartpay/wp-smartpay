@@ -1,6 +1,6 @@
 <?php
 // var_dump($product);
-
+$product_price = $product->sale_price ?? $product->base_price;
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
@@ -10,34 +10,36 @@ $has_payment_error = false;
 
 <div class="smartpay">
     <div class="card">
-        <div class="bg-light border-bottom">
-            <img src="<?php echo $product->image; ?>" class="card-img-top">
-        </div>
-        <div class="card-body p-5">
-            <div class="row">
-                <div class="col-8">
-                    <p class=""><?php echo smartpay_amount_format($product->base_price); ?></p>
-                    <h2 class="card-title mt-0 mb-2"><?php echo $product->title; ?></h2>
-                    <div class="card-text"><?php echo $product->description; ?></div>
+        <form id="payment_form" action="<?php echo $form_action; ?>" method="POST">
+            <div class="bg-light border-bottom">
+                <img src="<?php echo $product->image; ?>" class="card-img-top">
+            </div>
+            <div class="card-body p-5">
+                <div class="row">
+                    <div class="col-8">
+                        <h2 class="card-title mt-0 mb-2"><?php echo $product->title; ?></h2>
+                        <div class="card-text"><?php echo $product->description; ?></div>
 
-                    <div class="product-variations">
                         <?php if ($product->has_variations()) : ?>
-                        <ul>
-                            <?php foreach ($product->variations as $variation) : ?>
-                            <li>
-                                <?php echo '<label for="product-variation-' . esc_attr($variation['id']) . '">
-										<input type="radio" name="product_variation" id="product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
-                                        echo esc_html($variation['name']);
-                                        echo '</label>';
-                                        ?>
-                            </li>
-                            <?php endforeach; ?>
-                        </ul>
+                        <div class="product-variations">
+                            <ul>
+                                <?php foreach ($product->variations as $variation) : ?>
+                                <li>
+                                    <?php echo '<label for="smartpay-product-variation-' . esc_attr($variation['id']) . '">
+										<input type="radio" name="smartpay_product_variation" id="smartpay-product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
+                                            echo esc_html($variation['name']) . ' - ' . smartpay_amount_format(($product_price + $variation['additional_amount']));
+                                            echo '</label>';
+                                            ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <?php else : ?>
+                        <p class="price"><?php echo smartpay_amount_format($product_price); ?>
+                        </p>
                         <?php endif; ?>
                     </div>
-                </div>
-                <div class="col">
-                    <form action="<?php echo $form_action; ?>" method="POST">
+                    <div class="col">
 
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
@@ -70,12 +72,28 @@ $has_payment_error = false;
                         <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
                         <br>
 
-                        <button type="submit" class="btn btn-primary btn-block btn-lg"
+                        <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
                             <?php if ($has_payment_error) echo 'disabled'; ?>>
                             <?php echo $payment_button_text ?? 'Pay Now' ?></button>
-                    </form>
-                </div>
-            </div> <!-- row -->
-        </div> <!-- card-body -->
+                    </div> <!-- col -->
+                </div> <!-- row -->
+            </div> <!-- card-body -->
+        </form>
     </div> <!-- card -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="smartpay_payment_gateway_popup" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Process payment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">Loading...</div>
+            </div>
+        </div>
+    </div>
+
 </div> <!-- .smartpay -->

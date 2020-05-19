@@ -468,6 +468,33 @@
 .smartpay .alert-dark{color:#1b1e21;background-color:#d6d8d9;border-color:#c6c8ca}
 .smartpay .alert-dark hr{border-top-color:#b9bbbe}
 .smartpay .alert-dark .alert-link{color:#040505}
+.smartpay .modal-open{overflow:hidden}
+.smartpay .modal-open .modal{overflow-x:hidden;overflow-y:auto}
+.smartpay .modal{position:fixed;top:0;left:0;z-index:1050;display:none;width:100%;height:100%;overflow:hidden;outline:0}
+.smartpay .modal-dialog{position:relative;width:auto;margin:.5rem;pointer-events:none}
+.modal.fade .smartpay .modal-dialog{transition:transform .3s ease-out;transform:translate(0,-50px)}
+.modal.show .smartpay .modal-dialog{transform:none}
+.modal.modal-static .smartpay .modal-dialog{transform:scale(1.02)}
+.smartpay .modal-dialog-scrollable{display:flex;max-height:calc(100% - 1rem)}
+.smartpay .modal-dialog-scrollable .modal-content{max-height:calc(100vh - 1rem);overflow:hidden}
+.smartpay .modal-dialog-scrollable .modal-header,.smartpay .modal-dialog-scrollable .modal-footer{flex-shrink:0}
+.smartpay .modal-dialog-scrollable .modal-body{overflow-y:auto}
+.smartpay .modal-dialog-centered{display:flex;align-items:center;min-height:calc(100% - 1rem)}
+.smartpay .modal-dialog-centered::before{display:block;height:calc(100vh - 1rem);content:""}
+.smartpay .modal-dialog-centered.modal-dialog-scrollable{flex-direction:column;justify-content:center;height:100%}
+.smartpay .modal-dialog-centered.modal-dialog-scrollable .modal-content{max-height:none}
+.smartpay .modal-dialog-centered.modal-dialog-scrollable::before{content:none}
+.smartpay .modal-content{position:relative;display:flex;flex-direction:column;width:100%;pointer-events:auto;background-color:#fff;background-clip:padding-box;border:1px solid rgba(0,0,0,0.2);border-radius:.3rem;outline:0}
+.smartpay .modal-backdrop{position:fixed;top:0;left:0;z-index:1040;width:100vw;height:100vh;background-color:#000}
+.smartpay .modal-backdrop.fade{opacity:0}
+.smartpay .modal-backdrop.show{opacity:.5}
+.smartpay .modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:1rem 1rem;border-bottom:1px solid #dee2e6;border-top-left-radius:calc(0.3rem - 1px);border-top-right-radius:calc(0.3rem - 1px)}
+.smartpay .modal-header .close{padding:1rem 1rem;margin:-1rem -1rem -1rem auto}
+.smartpay .modal-title{margin-bottom:0;line-height:1.5}
+.smartpay .modal-body{position:relative;flex:1 1 auto;padding:1rem}
+.smartpay .modal-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;padding:.75rem;border-top:1px solid #dee2e6;border-bottom-right-radius:calc(0.3rem - 1px);border-bottom-left-radius:calc(0.3rem - 1px)}
+.smartpay .modal-footer>*{margin:.25rem}
+.smartpay .modal-scrollbar-measure{position:absolute;top:-9999px;width:50px;height:50px;overflow:scroll}
 .smartpay .align-baseline{vertical-align:baseline !important}
 .smartpay .align-top{vertical-align:top !important}
 .smartpay .align-middle{vertical-align:middle !important}
@@ -748,6 +775,7 @@
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}
 .smartpay .collapsing{transition:none}
+.modal.fade .smartpay .modal-dialog{transition:none}
 }@media(min-width:576px){.smartpay .container{max-width:540px}
 .smartpay .container,.smartpay .container-sm{max-width:540px}
 .smartpay .col-sm{flex-basis:0;flex-grow:1;max-width:100%}
@@ -943,6 +971,12 @@
 .smartpay .card-group>.card:not(:first-child) .card-img-bottom,.smartpay .card-group>.card:not(:first-child) .card-footer{border-bottom-left-radius:0}
 .smartpay .card-columns{column-count:3;column-gap:1.25rem;orphans:1;widows:1}
 .smartpay .card-columns .card{display:inline-block;width:100%}
+.smartpay .modal-dialog{max-width:500px;margin:1.75rem auto}
+.smartpay .modal-dialog-scrollable{max-height:calc(100% - 3.5rem)}
+.smartpay .modal-dialog-scrollable .modal-content{max-height:calc(100vh - 3.5rem)}
+.smartpay .modal-dialog-centered{min-height:calc(100% - 3.5rem)}
+.smartpay .modal-dialog-centered::before{height:calc(100vh - 3.5rem)}
+.smartpay .modal-sm{max-width:300px}
 .smartpay .d-sm-none{display:none !important}
 .smartpay .d-sm-inline{display:inline !important}
 .smartpay .d-sm-inline-block{display:inline-block !important}
@@ -1585,6 +1619,7 @@
 .smartpay .mr-lg-auto,.smartpay .mx-lg-auto{margin-right:auto !important}
 .smartpay .mb-lg-auto,.smartpay .my-lg-auto{margin-bottom:auto !important}
 .smartpay .ml-lg-auto,.smartpay .mx-lg-auto{margin-left:auto !important}
+.smartpay .modal-lg,.smartpay .modal-xl{max-width:800px}
 .smartpay .d-lg-none{display:none !important}
 .smartpay .d-lg-inline{display:inline !important}
 .smartpay .d-lg-inline-block{display:inline-block !important}
@@ -1906,6 +1941,7 @@
 .smartpay .mr-xl-auto,.smartpay .mx-xl-auto{margin-right:auto !important}
 .smartpay .mb-xl-auto,.smartpay .my-xl-auto{margin-bottom:auto !important}
 .smartpay .ml-xl-auto,.smartpay .mx-xl-auto{margin-left:auto !important}
+.smartpay .modal-xl{max-width:1140px}
 .smartpay .d-xl-none{display:none !important}
 .smartpay .d-xl-inline{display:inline !important}
 .smartpay .d-xl-inline-block{display:inline-block !important}
