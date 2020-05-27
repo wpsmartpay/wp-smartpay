@@ -5,6 +5,7 @@ namespace SmartPay\Admin;
 use SmartPay\Admin\Settings\Setting;
 use SmartPay\Admin\Products\Product;
 use SmartPay\Admin\Forms\Form;
+use SmartPay\Admin\Payments\Payment;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -48,7 +49,8 @@ final class Admin
             self::$instance->admin_notices = Admin_Notices::instance();
             self::$instance->setting       = Setting::instance();
             self::$instance->product       = Product::instance();
-            self::$instance->forms         = Form::instance();
+            self::$instance->form          = Form::instance();
+            self::$instance->payment       = Payment::instance();
         }
 
         return self::$instance;
