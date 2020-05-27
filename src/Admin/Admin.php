@@ -2,6 +2,8 @@
 
 namespace SmartPay\Admin;
 
+use SmartPay\Admin\Products\Product;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;

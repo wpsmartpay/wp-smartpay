@@ -31,6 +31,8 @@ final class Meta_Box
         add_action('save_post_product', [$this, 'save_product_meta']);
 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_product_metabox_scripts']);
+
+        add_action('admin_footer', [$this, 'admin_footer_scripts']);
     }
 
     /**
@@ -121,5 +123,13 @@ final class Meta_Box
         wp_register_script('product-metabox', SMARTPAY_PLUGIN_ASSETS . '/js/product_metabox.js', '', SMARTPAY_VERSION);
 
         wp_enqueue_script('product-metabox');
+    }
+
+    public function admin_footer_scripts()
+    {
+        global $post;
+        if ($post->post_type == 'product') {
+            echo '<script> document.getElementById("edit-slug-box").outerHTML = ""; </script>';
+        }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Admin;
+namespace SmartPay\Admin\Products;
 
 use SmartPay\Admin\Products\Meta_Box;
 
