@@ -66,14 +66,15 @@ final class Payment
     public function smartpay_payment_columns($columns)
     {
         return [
-            'cb' => $columns['cb'],
-            'id' => __('Payment ID'),
-            'name' => __('Name'),
-            'email' => __('Email'),
-            'amount' => __('Amount'),
+            'cb'      => $columns['cb'],
+            'id'      => __('Payment ID'),
+            'name'    => __('Name'),
+            'email'   => __('Email'),
+            'amount'  => __('Amount'),
+            'type'    => __('Type'),
             'gateway' => __('Gateway'),
-            'status' => __('Status'),
-            'date' => __('Date'),
+            'status'  => __('Status'),
+            'date'    => __('Date'),
         ];
     }
 
@@ -95,6 +96,22 @@ final class Payment
 
             case 'amount':
                 echo smartpay_amount_format(get_post_meta($post_id, '_payment_amount', true), get_post_meta($post_id, '_payment_currency', true));
+                break;
+
+            case 'type':
+                switch (get_post_meta($post_id, '_payment_purchase_type', true)) {
+                    case 'product_purchase':
+                        echo 'Product Purchase';
+                        break;
+
+                    case 'form_payment':
+                        echo 'Form Payment';
+                        break;
+
+                    default:
+                        echo '-';
+                        break;
+                }
                 break;
 
             case 'gateway':
