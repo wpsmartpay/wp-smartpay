@@ -14,8 +14,8 @@ $has_payment_error = false;
 
             <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
             <input type="hidden" name="smartpay_purchase_type" value="form_payment">
-            <input type="hidden" name="form_id" value="<?php echo $form_id ?>">
-
+            <input type="hidden" name="smartpay_form_id" value="<?php echo $form_id ?>">
+            <input type="hidden" name="smartpay_amount" value="<?php echo $amount ?>">
 
             <div class="bg-light border-bottom">
                 <img src="<?php echo $form_image; ?>" class="card-img-top">
@@ -31,18 +31,18 @@ $has_payment_error = false;
                 <ul class="list-unstyled">
                     <?php if (count($gateways)) : ?>
 
-                    <?php foreach ($gateways as $gateway_id => $gateway) : ?>
-                    <li>
-                        <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
+                        <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                            <li>
+                                <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
 								<input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
                                 echo esc_html($gateway['checkout_label']);
                                 echo '</label>';
                                 ?>
-                    </li>
-                    <?php endforeach; ?>
+                            </li>
+                        <?php endforeach; ?>
 
                     <?php else : ?>
-                    <?php
+                        <?php
                         $has_payment_error = true;
                         echo 'You must enable a payment gateway to proceed a payment.';
                         ?>
@@ -54,8 +54,7 @@ $has_payment_error = false;
                 <input type="text" name="smartpay_last_name" value="Firdows">
                 <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
                 <br>
-                <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
-                    <?php if ($has_payment_error) echo 'disabled'; ?>>
+                <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg" <?php if ($has_payment_error) echo 'disabled'; ?>>
                     <?php echo $payment_button_text ?: 'Pay Now' ?>
                 </button>
             </div>

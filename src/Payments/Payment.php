@@ -149,6 +149,8 @@ final class Payment
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
+            if (!$product) return;
+
             $purchase_data = [
                 'product_id' => $product->ID,
                 'product_price' => $product->sale_price ?? $product->base_price,
@@ -165,7 +167,14 @@ final class Payment
             }
         } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
-            // TODO: Implement form payment
+            $form = smartpay_get_form($_data['smartpay_form_id'] ?? '');
+
+            if (!$form) return;
+
+            $purchase_data = [
+                'form_id' => $form->ID,
+                'total_amount' => $_data['smartpay_amount'] ?? 0,
+            ];
         }
 
         return $purchase_data;
@@ -173,23 +182,24 @@ final class Payment
 
     private function _get_purchase_amount($_data)
     {
-        $amount = 0;
-
         if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
-            $amount = $product->get_sale_price() ?? $product->get_base_price();
+            if (!$product) return;
+
+            $product_price = $product->get_sale_price() ?? $product->get_base_price();
 
             if (count($product->variations) && isset($_data['smartpay_product_variation_id'])) {
                 $variation = new Product_Variation($_data['smartpay_product_variation_id']);
-                $amount += $variation->additional_amount;
+                return $product_price + $variation->additional_amount ?? 0;
             }
         } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
 
-            // TODO: Implement form payment
+            return $_data['smartpay_amount'] ?? 0;
         }
-        return $amount;
+
+        return 0;
     }
 
     private function _get_purchase_customer($_data)

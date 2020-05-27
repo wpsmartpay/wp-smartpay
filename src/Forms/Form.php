@@ -93,4 +93,9 @@ final class Form
         );
         register_post_type('smartpay_form', $args);
     }
+
+    public function get_form($form_id)
+    {
+        return new SmartPay_Form($form_id);
+    }
 }
