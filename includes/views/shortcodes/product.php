@@ -11,6 +11,13 @@ $has_payment_error = false;
 <div class="smartpay">
     <div class="card">
         <form id="payment_form" action="<?php echo $form_action; ?>" method="POST">
+
+            <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
+
+            <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
+            <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
+            <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
+
             <div class="bg-light border-bottom">
                 <img src="<?php echo $product->image; ?>" class="card-img-top">
             </div>
@@ -40,12 +47,6 @@ $has_payment_error = false;
                         <?php endif; ?>
                     </div>
                     <div class="col">
-
-                        <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
-
-                        <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
-                        <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
-                        <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
                         <ul class="list-unstyled">
                             <?php if (count($gateways)) : ?>
 
@@ -74,7 +75,8 @@ $has_payment_error = false;
 
                         <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
                             <?php if ($has_payment_error) echo 'disabled'; ?>>
-                            <?php echo $payment_button_text ?? 'Pay Now' ?></button>
+                            <?php echo $payment_button_text ?: 'Pay Now' ?>
+                        </button>
                     </div> <!-- col -->
                 </div> <!-- row -->
             </div> <!-- card-body -->

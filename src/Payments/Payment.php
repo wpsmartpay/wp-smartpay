@@ -3,7 +3,6 @@
 namespace SmartPay\Payments;
 
 use SmartPay\Products\Product_Variation;
-use stdClass;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) exit;
