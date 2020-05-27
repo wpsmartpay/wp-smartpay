@@ -4,6 +4,7 @@ jQuery(document).ready(function ($) {
 
         e.preventDefault()
 
+        // TODO: Change to class name
         let buttonText = $('button#pay_now').text()
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')

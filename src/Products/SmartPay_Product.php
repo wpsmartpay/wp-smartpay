@@ -91,14 +91,6 @@ class SmartPay_Product
     protected $status = 'publish';
 
     /**
-     * The product additional amount
-     *
-     * @since 0.0.1
-     * @var float
-     */
-    protected $additional_amount = 0;
-
-    /**
      * The product created_at time
      *
      * @since  0.0.1
@@ -191,17 +183,17 @@ class SmartPay_Product
 
         $this->title             = $product->post_title;
         $this->description       = $product->post_content;
-        $this->image             = $this->setup_image();
-        $this->base_price        = $this->setup_base_price();
-        $this->sale_price        = $this->setup_sale_price();
+        $this->image             = $this->_setup_image();
+        $this->base_price        = $this->_setup_base_price();
+        $this->sale_price        = $this->_setup_sale_price();
         $this->has_variations    = $this->has_variations();
-        $this->variations        = $this->has_variations ? $this->setup_variations() : [];
-        $this->files             = $this->setup_files() ?? [];
+        $this->variations        = $this->has_variations ? $this->_setup_variations() : [];
+        $this->files             = $this->_setup_files() ?? [];
         $this->status            = $product->post_status;
         $this->created_at        = $product->post_date;
         $this->updated_at        = $product->post_modified;
-        $this->sales             = $this->setup_sales();
-        $this->sku               = $this->setup_sku();
+        $this->sales             = $this->_setup_sales();
+        $this->sku               = $this->_setup_sku();
 
         return true;
     }
@@ -260,7 +252,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float Product image
      */
-    private function setup_image()
+    private function _setup_image()
     {
         return has_post_thumbnail($this->ID) ? wp_get_attachment_url(get_post_thumbnail_id($this->ID), 'thumbnail') : '';
     }
@@ -271,7 +263,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float Product base price
      */
-    private function setup_base_price()
+    private function _setup_base_price()
     {
         $base_price = $this->get_meta('_product_base_price');
 
@@ -284,7 +276,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float Product sale price
      */
-    private function setup_sale_price()
+    private function _setup_sale_price()
     {
         $sale_price = (float) $this->get_meta('_product_sale_price');
 
@@ -300,7 +292,7 @@ class SmartPay_Product
      */
     public function has_variations()
     {
-        $has_variation = get_post_meta($this->ID, '_product_has_variations', true);
+        $has_variation = $this->get_meta('_product_has_variations');
 
         // Override whether the product has variables prices.
         return (bool) apply_filters('smartpay_product_has_variations', $has_variation, $this->ID);
@@ -312,7 +304,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float The variations associated with the product
      */
-    private function setup_variations()
+    private function _setup_variations()
     {
         $the_query = new \WP_Query(array(
             'post_parent' => $this->ID,
@@ -350,7 +342,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float The files associated with the product
      */
-    private function setup_files()
+    private function _setup_files()
     {
         $files = $this->get_meta('_product_files');
         if (!is_array($files)) $files = [];
@@ -364,7 +356,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float Total product sales
      */
-    private function setup_sales()
+    private function _setup_sales()
     {
         $sales = $this->get_meta('_product_sales');
         return !empty($sales) ? $sales : 0;
@@ -376,7 +368,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return float Product sku
      */
-    private function setup_sku()
+    private function _setup_sku()
     {
         return $this->get_meta('_product_sku');
     }
@@ -508,7 +500,7 @@ class SmartPay_Product
     /**
      * Retrieve the product status
      *
-     * @since 2.5.8
+     * @since 0.0.1
      * @return string Status of the product
      */
     public function get_status()
@@ -519,7 +511,7 @@ class SmartPay_Product
     /**
      * Retrieve the product sales
      *
-     * @since 2.5.8
+     * @since 0.0.1
      * @return string sales of the product
      */
     public function get_sales()
@@ -540,7 +532,7 @@ class SmartPay_Product
     /**
      * Retrieve the product sku
      *
-     * @since 2.5.8
+     * @since 0.0.1
      * @return string sku of the product
      */
     public function get_sku()
@@ -558,7 +550,7 @@ class SmartPay_Product
      * @since  0.0.1
      * @return int|bool False on failure, the product ID on success.
      */
-    private function insert()
+    private function _insert()
     {
         if (0 != $this->ID) {
             return false;
@@ -595,7 +587,7 @@ class SmartPay_Product
         $saved = false;
 
         if (!$this->ID) {
-            $product_id = $this->insert();
+            $product_id = $this->_insert();
 
             if (false === $product_id) {
                 $saved = false;

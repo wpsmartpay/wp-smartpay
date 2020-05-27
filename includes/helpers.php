@@ -4,14 +4,11 @@ require_once __DIR__ . '/helpers/gateway.php';
 require_once __DIR__ . '/helpers/payment.php';
 require_once __DIR__ . '/helpers/product.php';
 
-use SmartPay\Models\SmartPay_Payment;
-use SmartPay\Payment;
-
 function smartpay_view(string $file, array $data = [])
 {
     $file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
     if (file_exists($file)) {
-        if (count($data)) {
+        if (is_array($data)) {
             extract($data);
         }
 
@@ -25,7 +22,7 @@ function smartpay_view_render(string $file, array $data = [])
 {
     $file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
     if (file_exists($file)) {
-        if (count($data)) {
+        if (is_array($data)) {
             extract($data);
         }
 
