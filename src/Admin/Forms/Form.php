@@ -23,10 +23,10 @@ final class Form
         Meta_Box::instance();
 
         add_filter('manage_smartpay_form_posts_columns', [$this, 'smartpay_form_columns']);
+
         add_filter('manage_smartpay_form_posts_custom_column', [$this, 'smartpay_form_column_data'], 10, 2);
 
-        add_filter('manage_smartpay_payment_posts_columns', [$this, 'smartpay_payment_columns']);
-        add_filter('manage_smartpay_payment_posts_custom_column', [$this, 'smartpay_payment_column_data'], 10, 2);
+        add_filter('post_row_actions', [$this, 'modify_smartpay_form_admin_table'], 10, 2);
     }
 
     /**
@@ -72,51 +72,12 @@ final class Form
         }
     }
 
-    // TODO: Add seperated class
-
-    public function smartpay_payment_columns($columns)
+    public function modify_smartpay_form_admin_table($actions, $post)
     {
-        return [
-            'cb' => $columns['cb'],
-            'id' => __('Payment ID'),
-            'name' => __('Name'),
-            'email' => __('Email'),
-            'amount' => __('Amount'),
-            'gateway' => __('Gateway'),
-            'status' => __('Status'),
-            'date' => __('Date'),
-        ];
-    }
-
-    public function smartpay_payment_column_data($column, $post_id)
-    {
-        switch ($column) {
-            case 'id':
-                echo $post_id;
-                break;
-
-            case 'name':
-                echo get_post_meta($post_id, '_smartpay_payment_first_name', true) . ' ' . get_post_meta($post_id, '_smartpay_payment_last_name', true);
-                break;
-
-            case 'email':
-                echo get_post_meta($post_id, '_smartpay_payment_email', true);
-                break;
-
-            case 'amount':
-                echo smartpay_amount_format(get_post_meta($post_id, '_smartpay_payment_amount', true), get_post_meta($post_id, '_smartpay_payment_currency', true));
-                break;
-
-            case 'gateway':
-                echo smartpay_payment_gateways()[get_post_meta($post_id, '_smartpay_payment_gateway', true)]['admin_label'] ?? ucfirst(get_post_meta($post_id, '_smartpay_payment_gateway', true));
-                break;
-
-            case 'status':
-                echo ucfirst(get_post_status($post_id));
-                break;
-
-            default:
-                break;
+        if ('smartpay_form' === $post->post_type) {
+            unset($actions['inline hide-if-no-js']);
         }
+
+        return $actions;
     }
 }

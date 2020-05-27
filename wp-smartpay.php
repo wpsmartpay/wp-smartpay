@@ -17,9 +17,9 @@
  * Tested up to: 5.4
  */
 
-use SmartPay\PostType;
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
+use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
 use SmartPay\Payments\Payment;
@@ -103,10 +103,10 @@ final class SmartPay
             self::$instance = new self();
 
             self::$instance->session   = Session::instance();
-            // self::$instance->post_type = PostType::instance();
             self::$instance->product   = Product::instance();
             self::$instance->gateway   = Gateway::instance();
             self::$instance->payment   = Payment::instance();
+            self::$instance->form      = Form::instance();
             self::$instance->shortcode = Shortcode::instance();
         }
         return self::$instance;
