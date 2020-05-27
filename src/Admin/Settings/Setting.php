@@ -1,41 +1,42 @@
 <?php
 
-namespace SmartPay\Admin\Products;
+namespace SmartPay\Admin\Settings;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Product
+final class Setting
 {
     /**
-     * The single instance of this class.
+     * The single instance of this class
      */
     private static $instance = null;
 
     /**
-     * Construct Product class.
+     * Construct Setting class.
      *
      * @since 0.1
+     * @access private
      */
     private function __construct()
     {
-        Meta_Box::instance();
+        Register_Setting::instance();
     }
 
     /**
-     * Main Product Instance.
+     * Main Setting Instance.
      *
-     * Ensures that only one instance of Product exists in memory at any one
+     * Ensures that only one instance of Setting exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
-     *
-     * @return object|Product
+     * @return object|Setting
+     * @access public
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof Product)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Setting)) {
             self::$instance = new self();
         }
 

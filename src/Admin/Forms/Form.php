@@ -1,14 +1,12 @@
 <?php
 
-namespace SmartPay\Admin;
-
-use SmartPay\Admin\Payment_Forms\Meta_Box;
+namespace SmartPay\Admin\Forms;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Payment_Form
+final class Form
 {
     /**
      * The single instance of this class.
@@ -16,7 +14,7 @@ final class Payment_Form
     private static $instance = null;
 
     /**
-     * Construct Payment_Form class.
+     * Construct Form class.
      *
      * @since 0.1
      */
@@ -32,18 +30,18 @@ final class Payment_Form
     }
 
     /**
-     * Main Payment_Form Instance.
+     * Main Form Instance.
      *
-     * Ensures that only one instance of Payment_Form exists in memory at any one
+     * Ensures that only one instance of Form exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
      * @since 0.1
      *
-     * @return object|Payment_Form
+     * @return object|Form
      */
     public static function instance()
     {
-        if (!isset(self::$instance) && !(self::$instance instanceof Payment_Form)) {
+        if (!isset(self::$instance) && !(self::$instance instanceof Form)) {
             self::$instance = new self();
         }
 
