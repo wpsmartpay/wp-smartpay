@@ -180,7 +180,7 @@ class SmartPay_Payment
         }
 
         if ($by_txn) {
-            $query      = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_smartpay_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id);
+            $query      = $wpdb->prepare("SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id);
             $payment_id = $wpdb->get_var($query);
 
             if (empty($payment_id)) {
@@ -326,11 +326,11 @@ class SmartPay_Payment
             foreach ($this->pending as $key => $value) {
                 switch ($key) {
                     case 'purchase_type':
-                        $this->update_meta('_smartpay_payment_purchase_type', $this->purchase_type);
+                        $this->update_meta('_payment_purchase_type', $this->purchase_type);
                         break;
 
                     case 'purchase_data':
-                        $this->update_meta('_smartpay_payment_purchase_data', $this->purchase_data);
+                        $this->update_meta('_payment_purchase_data', $this->purchase_data);
                         break;
 
                     case 'date':
@@ -344,7 +344,7 @@ class SmartPay_Payment
                         break;
 
                     case 'completed_date':
-                        $this->update_meta('_smartpay_payment_completed_date', $this->completed_date);
+                        $this->update_meta('_payment_completed_date', $this->completed_date);
                         break;
 
                     case 'status':
@@ -352,31 +352,31 @@ class SmartPay_Payment
                         break;
 
                     case 'amount':
-                        $this->update_meta('_smartpay_payment_amount', $this->amount);
+                        $this->update_meta('_payment_amount', $this->amount);
                         break;
 
                     case 'currency':
-                        $this->update_meta('_smartpay_payment_currency', $this->currency);
+                        $this->update_meta('_payment_currency', $this->currency);
                         break;
 
                     case 'gateway':
-                        $this->update_meta('_smartpay_payment_gateway', $this->gateway);
+                        $this->update_meta('_payment_gateway', $this->gateway);
                         break;
 
                     case 'transaction_id':
-                        $this->update_meta('_smartpay_payment_transaction_id', $this->transaction_id);
+                        $this->update_meta('_payment_transaction_id', $this->transaction_id);
                         break;
 
                     case 'customer':
-                        $this->update_meta('_smartpay_payment_customer_data', $this->customer);
+                        $this->update_meta('_payment_customer_data', $this->customer);
                         break;
 
                     case 'email':
-                        $this->update_meta('_smartpay_payment_email', $this->email);
+                        $this->update_meta('_payment_email', $this->email);
                         break;
 
                     case 'key':
-                        $this->update_meta('_smartpay_payment_key', $this->key);
+                        $this->update_meta('_payment_key', $this->key);
                         break;
 
                     case 'parent_payment':
@@ -389,7 +389,7 @@ class SmartPay_Payment
                         break;
 
                     case 'mode':
-                        $this->update_meta('_smartpay_payment_mode', $this->mode);
+                        $this->update_meta('_payment_mode', $this->mode);
                         break;
 
                     default:
@@ -631,7 +631,7 @@ class SmartPay_Payment
             return false; // This payment was never completed
         }
 
-        $date = ($date = $this->get_meta('_smartpay_payment_completed_date', true)) ? $date : $payment->date;
+        $date = ($date = $this->get_meta('_payment_completed_date', true)) ? $date : $payment->date;
 
         return $date;
     }
@@ -644,7 +644,7 @@ class SmartPay_Payment
      */
     private function setup_amount()
     {
-        return $this->get_meta('_smartpay_payment_amount', true);
+        return $this->get_meta('_payment_amount', true);
     }
 
     /**
@@ -655,7 +655,7 @@ class SmartPay_Payment
      */
     private function setup_currency()
     {
-        return $this->get_meta('_smartpay_payment_currency', true) ?? smartpay_get_currency();
+        return $this->get_meta('_payment_currency', true) ?? smartpay_get_currency();
     }
 
     /**
@@ -666,7 +666,7 @@ class SmartPay_Payment
      */
     private function setup_gateway()
     {
-        return $this->get_meta('_smartpay_payment_gateway');
+        return $this->get_meta('_payment_gateway');
     }
 
     /**
@@ -677,7 +677,7 @@ class SmartPay_Payment
      */
     private function setup_transaction_id()
     {
-        $transaction_id = $this->get_meta('_smartpay_payment_transaction_id', true);
+        $transaction_id = $this->get_meta('_payment_transaction_id', true);
 
         if (empty($transaction_id) || (int) $transaction_id === (int) $this->ID) {
 
@@ -696,7 +696,7 @@ class SmartPay_Payment
      */
     private function setup_customer()
     {
-        return $this->get_meta('_smartpay_payment_customer_data', true) ?? [];
+        return $this->get_meta('_payment_customer_data', true) ?? [];
     }
 
     /**
@@ -707,7 +707,7 @@ class SmartPay_Payment
      */
     private function setup_email()
     {
-        return  $this->get_meta('_smartpay_payment_email', true);
+        return  $this->get_meta('_payment_email', true);
     }
 
     /**
@@ -718,7 +718,7 @@ class SmartPay_Payment
      */
     private function setup_payment_key()
     {
-        return $this->get_meta('_smartpay_payment_key', true);
+        return $this->get_meta('_payment_key', true);
     }
 
     /**
@@ -729,7 +729,7 @@ class SmartPay_Payment
      */
     private function setup_mode()
     {
-        return $this->get_meta('_smartpay_payment_mode');
+        return $this->get_meta('_payment_mode');
     }
 
     public function complete_payment()
