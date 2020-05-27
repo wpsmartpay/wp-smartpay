@@ -107,7 +107,9 @@ final class Admin
             'Settings',
             'manage_options',
             'smartpay-setting',
-            [$this, 'admin_setting_page_cb']
+            function () {
+                return smartpay_view('admin/setting');
+            }
         );
 
         add_submenu_page(
@@ -116,37 +118,9 @@ final class Admin
             'Log',
             'manage_options',
             'smartpay-log',
-            [$this, 'admin_log_page_cb']
+            function () {
+                return smartpay_view('admin/debug-log');
+            }
         );
-
-        // TODO: It's temporary page, should removed
-        add_submenu_page(
-            'edit.php?post_type=product',
-            'SmartPay - Payment Details',
-            'Payment Details',
-            'manage_options',
-            'smartpay-payment-details',
-            [$this, 'payment_details_page_cb']
-        );
-    }
-
-    public function smartpay_admin_dashboard_page_cb()
-    {
-        return smartpay_view('admin/dashboard');
-    }
-
-    public function admin_setting_page_cb()
-    {
-        return smartpay_view('admin/setting');
-    }
-
-    public function admin_log_page_cb()
-    {
-        return smartpay_view('admin/debug-log');
-    }
-
-    public function payment_details_page_cb()
-    {
-        return smartpay_view('admin/payments/details');
     }
 }

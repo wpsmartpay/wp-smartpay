@@ -21,6 +21,8 @@ final class Payment
      */
     private function __construct()
     {
+        add_action('admin_menu', [$this, 'add_payment_details_page'], 10);
+
         add_filter('manage_smartpay_payment_posts_columns', [$this, 'smartpay_payment_columns']);
 
         add_filter('manage_smartpay_payment_posts_custom_column', [$this, 'smartpay_payment_column_data'], 10, 2);
@@ -45,6 +47,20 @@ final class Payment
         }
 
         return self::$instance;
+    }
+
+    public function add_payment_details_page()
+    {
+        add_submenu_page(
+            '',
+            'SmartPay - Payment Details',
+            'Payment Details',
+            'manage_options',
+            'payment-details',
+            function () {
+                return smartpay_view('admin/payments/details');
+            }
+        );
     }
 
     public function smartpay_payment_columns($columns)
@@ -102,14 +118,14 @@ final class Payment
             // unset($actions['trash']);
             unset($actions['inline hide-if-no-js']);
 
-            // $actions = array_merge($actions, array(
-            //     // TODO:: Make dynamic
-            //     'manage' => sprintf(
-            //         '<a href="%1$s">%2$s</a>',
-            //         esc_url(''),
-            //         'View details'
-            //     )
-            // ));
+            $actions = array_merge($actions, array(
+                // TODO:: Make dynamic
+                'manage' => sprintf(
+                    '<a href="%1$s">%2$s</a>',
+                    esc_url(admin_url('edit.php?post_type=product&page=payment-details&id=' . $post->ID)),
+                    'View details'
+                )
+            ));
         }
 
         return $actions;

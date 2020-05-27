@@ -28,7 +28,6 @@ jQuery(document).ready(function ($) {
                 console.log('Something wrong!')
             }
 
-
             $('button#pay_now')
                 .text(buttonText)
                 .removeAttr('disabled');

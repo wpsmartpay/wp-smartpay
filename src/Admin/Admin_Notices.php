@@ -22,6 +22,7 @@ final class Admin_Notices
     private function __construct()
     {
         add_action('admin_notices', [$this, 'show_notices']);
+        
         add_action('smartpay_dismiss_notices', [$this, 'dismiss_notices']);
     }
 

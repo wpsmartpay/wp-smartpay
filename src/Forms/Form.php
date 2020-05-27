@@ -92,17 +92,5 @@ final class Form
             'capability_type'       => 'page',
         );
         register_post_type('smartpay_form', $args);
-
-        register_post_status('aggregated', array(
-            'label'                     => _x('Aggregated ', 'post status label', 'bznrd'),
-            'public'                    => true,
-            'label_count'               => _n_noop('Aggregated s <span class="count">(%s)</span>', 'Aggregated s <span class="count">(%s)</span>', 'plugin-domain'),
-            'post_type'                 => array('smartpay_form'),
-            'show_in_admin_all_list'    => true,
-            'show_in_admin_status_list' => true,
-            'show_in_metabox_dropdown'  => true,
-            'show_in_inline_dropdown'   => true,
-            'dashicon'                  => 'dashicons-businessman',
-        ));
     }
 }
