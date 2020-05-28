@@ -154,3 +154,5 @@ function smartpay_get_payment_statuses()
 
     return apply_filters('smartpay_payment_statuses', $payment_statuses);
 }
+
+// edd_update_payment_meta($payment_id, 'email', $user->user_email);s

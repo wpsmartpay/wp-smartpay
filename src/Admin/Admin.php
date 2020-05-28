@@ -2,6 +2,7 @@
 
 namespace SmartPay\Admin;
 
+use SmartPay\Admin\Customers\Customer_Table;
 use SmartPay\Admin\Settings\Setting;
 use SmartPay\Admin\Products\Product;
 use SmartPay\Admin\Forms\Form;
@@ -98,7 +99,10 @@ final class Admin
             __('SmartPay - Customers', 'smartpay'),
             __('Customers', 'smartpay'),
             'manage_options',
-            '#',
+            'smartpay-customers',
+            function () {
+                return smartpay_view('admin/customers/index');
+            }
         );
 
         add_submenu_page(

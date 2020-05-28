@@ -19,6 +19,8 @@
 
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
+use SmartPay\Customers\Customer;
+use SmartPay\Customers\DB_Customer;
 use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
@@ -46,14 +48,6 @@ final class SmartPay
      * The single instance of this class
      */
     private static $instance = null;
-
-    /**
-     * Database version key
-     *
-     * @var string
-     * @since 0.0.1
-     */
-    private $db_version_key = 'smartpay_version';
 
     /**
      * Session Object.
@@ -104,9 +98,10 @@ final class SmartPay
 
             self::$instance->session   = Session::instance();
             self::$instance->product   = Product::instance();
-            self::$instance->gateway   = Gateway::instance();
-            self::$instance->payment   = Payment::instance();
             self::$instance->form      = Form::instance();
+            self::$instance->gateway   = Gateway::instance();
+            self::$instance->customer  = Customer::instance();
+            self::$instance->payment   = Payment::instance();
             self::$instance->shortcode = Shortcode::instance();
         }
         return self::$instance;
@@ -179,9 +174,12 @@ final class SmartPay
             update_option('wp_smartpay_installed', time());
         }
 
-        update_option($this->db_version_key, SMARTPAY_VERSION);
+        update_option('smartpay_version', SMARTPAY_VERSION);
 
         self::create_pages();
+
+        // Create DB tables
+        Customer::create_db_table();
     }
 
     /**
