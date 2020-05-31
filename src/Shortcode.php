@@ -2,6 +2,8 @@
 
 namespace SmartPay;
 
+use SmartPay\Customers\SmartPay_Customer;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -141,9 +143,18 @@ final class Shortcode
 
     public function payment_history_shortcode($atts)
     {
+        // If not logged in or id not found, then return
+        if (!is_user_logged_in() || get_current_user_id() <= 0) return;
+
+        $customer = new SmartPay_Customer(get_current_user_id(), true);
+        // echo '<pre>';
+        // var_dump($customer->all_payments()[0]);
+        // echo '</pre>';
+
+
         ob_start();
 
-        echo smartpay_view_render('shortcodes/payment_history');
+        echo smartpay_view_render('shortcodes/payment_history', ['payments' => $customer->all_payments()]);
 
         return ob_get_clean();
     }
