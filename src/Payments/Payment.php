@@ -211,6 +211,7 @@ final class Payment
         if ($customer->ID) {
             $customer_id = $customer->ID;
         } else {
+            $customer->user_id      = is_user_logged_in() ? get_current_user_id() : 0;
             $customer->first_name   = $_data['smartpay_first_name'];
             $customer->last_name    = $_data['smartpay_last_name'];
             $customer->email        = $_data['smartpay_email'];
