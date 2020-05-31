@@ -2,6 +2,8 @@
 
 namespace SmartPay\Customers;
 
+use SmartPay\Payments\SmartPay_Payment;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -89,7 +91,7 @@ class SmartPay_Customer
      * @param int $customer_id A given customer
      * @return mixed void|false
      */
-    public function __construct($_id_or_email = false, $by_user_id = true)
+    public function __construct($_id_or_email = false, $by_user_id = false)
     {
         if (false === $_id_or_email || (is_numeric($_id_or_email) && (int) $_id_or_email !== absint($_id_or_email))) {
             return false;
@@ -238,6 +240,18 @@ class SmartPay_Customer
         }
 
         return (new DB_Customer)->update($this->_ID, ['payments' => \maybe_serialize($this->payments)]);
+    }
+
+    public function all_payments()
+    {
+        return array_map(function ($payment_id) {
+
+            $payment = new SmartPay_Payment(intval($payment_id));
+
+            if ($payment->ID > 0 && $payment->customer['customer_id'] == $this->_ID) {
+                return $payment;
+            }
+        }, $this->payments);
     }
 
     public static function create($data)
