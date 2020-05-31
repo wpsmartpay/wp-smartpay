@@ -8,7 +8,7 @@ $payment_details = new SmartPay_Payment($payment_ID);
 $customer_details = $payment_details->customer;
 ?>
 
-<div class="wrap">
+<div class="wrap payment-details">
     <h1 class="wp-heading-inline">Payment Details #<?php echo $payment_ID;?></h1>
     <hr class="wp-header-end">
 
@@ -73,6 +73,40 @@ $customer_details = $payment_details->customer;
                                 </div>
                                 <div class="column">
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="checkout-details" class="postbox">
+                        <h2 class="hndle">Checkout Details</h2>
+                        <div class="inside">
+                            <div class="column-container">
+                                <div class="column">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <tr>
+                                                    <td>Item</td>
+                                                    <td>Quantity</td>
+                                                    <td>Unit Price</td>
+                                                    <td>Amount</td>
+                                                </tr>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Pro</td>
+                                                <td>1</td>
+                                                <td>10</td>
+                                                <td>10</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3">Total</td>
+                                                <td>20</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot></tfoot>
+                                    </table>
                                 </div>
                             </div>
                         </div>
