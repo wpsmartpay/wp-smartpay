@@ -2,6 +2,7 @@
 
 namespace SmartPay\Payments;
 
+use SmartPay\Customers\SmartPay_Customer;
 use SmartPay\Products\Product_Variation;
 
 // Exit if accessed directly.
@@ -87,6 +88,7 @@ final class Payment
 
     public function process_payment()
     {
+        // TODO: Need to refactor
         if (isset($_POST['smartpay_action']) && 'smartpay_process_payment' === $_POST['smartpay_action']) {
 
             if (!isset($_POST['smartpay_process_payment']) || !wp_verify_nonce($_POST['smartpay_process_payment'], 'smartpay_process_payment')) {
@@ -204,10 +206,23 @@ final class Payment
 
     private function _get_purchase_customer($_data)
     {
+        $customer = new SmartPay_Customer($_data['smartpay_email']);
+
+        if ($customer->ID) {
+            $customer_id = $customer->ID;
+        } else {
+            $customer->first_name   = $_data['smartpay_first_name'];
+            $customer->last_name    = $_data['smartpay_last_name'];
+            $customer->email        = $_data['smartpay_email'];
+
+            $customer_id = $customer->insert();
+        }
+
         return [
-            'first_name' => $_data['smartpay_first_name'] ?? '',
-            'last_name'  => $_data['smartpay_last_name'] ?? '',
-            'email'      => $_data['smartpay_email'] ?? '',
+            'customer_id' => $customer_id ?? 0,
+            'first_name'  => $_data['smartpay_first_name'] ?? '',
+            'last_name'   => $_data['smartpay_last_name'] ?? '',
+            'email'       => $_data['smartpay_email'] ?? '',
         ];
     }
 
@@ -282,13 +297,18 @@ final class Payment
             // TODO: Add validation
             $payment_data = $this->_prepare_payment_data($_POST['data']);
 
-            if ($this->insert_payment($payment_data)) {
+            $payment = $this->insert_payment($payment_data);
+
+            if ($payment) {
+
+                $this->_attach_customer_payment($payment);
 
                 // Set session payment data
                 smartpay_set_session_payment_data($payment_data);
 
                 // Send info to the gateway for payment processing
                 $gateway = $_POST['data']['smartpay_gateway'];
+
                 $this->_process_gateway_payment($gateway, $payment_data);
             } else {
                 echo 'Something wrong!';
@@ -312,5 +332,12 @@ final class Payment
         } else {
             echo 'Gateway not active or not exist!';
         }
+    }
+
+    private function _attach_customer_payment($payment)
+    {
+        $customer = new SmartPay_Customer($payment->email);
+
+        $customer->attach_payment($payment->ID);
     }
 }
