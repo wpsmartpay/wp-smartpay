@@ -116,15 +116,15 @@ final class Admin
             }
         );
 
-        add_submenu_page(
-            'edit.php?post_type=product',
-            'SmartPay - Log',
-            'Log',
-            'manage_options',
-            'smartpay-log',
-            function () {
-                return smartpay_view('admin/debug-log');
-            }
-        );
+        // add_submenu_page(
+        //     'edit.php?post_type=product',
+        //     'SmartPay - Log',
+        //     'Log',
+        //     'manage_options',
+        //     'smartpay-log',
+        //     function () {
+        //         return smartpay_view('admin/debug-log');
+        //     }
+        // );
     }
 }

@@ -12,12 +12,11 @@ if (!defined('ABSPATH')) {
 
 class Customer_Table extends \WP_List_Table
 {
-
     /**
      * Number of items per page
      *
      * @var int
-     * @since 1.5
+     * @since 0.0.1
      */
     public $per_page = 30;
 
@@ -25,7 +24,7 @@ class Customer_Table extends \WP_List_Table
      * Number of customers found
      *
      * @var int
-     * @since 1.7
+     * @since 0.0.1
      */
     public $count = 0;
 
@@ -33,7 +32,7 @@ class Customer_Table extends \WP_List_Table
      * Total customers
      *
      * @var int
-     * @since 1.95
+     * @since 0.0.1
      */
     public $total = 0;
 
@@ -41,14 +40,14 @@ class Customer_Table extends \WP_List_Table
      * The arguments for the data set
      *
      * @var array
-     * @since 2.6
+     * @since 0.0.1
      */
     public $args = array();
 
     /**
      * Get things started
      *
-     * @since 1.5
+     * @since 0.0.1
      * @see WP_List_Table::__construct()
      */
     public function __construct()
@@ -66,7 +65,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Show the search field
      *
-     * @since 1.7
+     * @since 0.0.1
      *
      * @param string $text Label for the search box
      * @param string $input_id ID of the search box
@@ -93,7 +92,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Gets the name of the primary column.
      *
-     * @since 2.5
+     * @since 0.0.1
      * @access protected
      *
      * @return string Name of the primary column.
@@ -106,7 +105,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * This function renders most of the columns in the list table.
      *
-     * @since 1.5
+     * @since 0.0.1
      *
      * @param array $item Contains all the data of the customers
      * @param string $column_name The name of the column
@@ -141,33 +140,32 @@ class Customer_Table extends \WP_List_Table
     {
         $name        = '#' . $item['id'] . ' ';
         $name       .= !empty($item['first_name'] && $item['last_name']) ? $item['first_name'] ?? '' . ' ' . $item['last_name'] ?? '' : 'Unnamed customer';
-        $user        = !empty($item['user_id']) ? $item['user_id'] : $item['email'];
+        // $user        = !empty($item['user_id']) ? $item['user_id'] : $item['email'];
         $customer    = new SmartPay_Customer($item['id']);
         $view_url    = admin_url('edit.php?post_type=download&page=smartpay-customers&view=overview&id=' . $item['id']);
-        $actions     = array(
-            'view'   => '<a href="' . $view_url . '">' . __('View', 'smartpay') . '</a>',
-            'logs'   => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-reports&tab=logs&customer=' . $customer->id) . '">' . __('Download log', 'smartpay') . '</a>',
-            'delete' => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-customers&view=delete&id=' . $item['id']) . '">' . __('Delete', 'smartpay') . '</a>'
-        );
+        // $actions     = array(
+        //     'view'   => '<a href="' . $view_url . '">' . __('View', 'smartpay') . '</a>',
+        //     'logs'   => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-reports&tab=logs&customer=' . $customer->id) . '">' . __('Download log', 'smartpay') . '</a>',
+        //     'delete' => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-customers&view=delete&id=' . $item['id']) . '">' . __('Delete', 'smartpay') . '</a>'
+        // );
 
         $pending  = smartpay_user_pending_verification($customer->user_id) ? ' <em>' . __('(Pending Verification)', 'smartpay') . '</em>' : '';
 
-        return '<a href="' . esc_url($view_url) . '">' . $name . '</a>' . $pending . $this->row_actions($actions);
+        return '<a href="' . esc_url($view_url) . '">' . $name . '</a>' . $pending;
+        //  . $this->row_actions($actions);
     }
 
     /**
      * Retrieve the table columns
      *
-     * @since 1.5
+     * @since 0.0.1
      * @return array $columns Array of all the list table columns
      */
     public function get_columns()
     {
         $columns = array(
             'name'          => __('Name', 'smartpay'),
-            'email'         => __('Primary Email', 'smartpay'),
-            'num_purchases' => __('Purchases', 'smartpay'),
-            'amount_spent'  => __('Total Spent', 'smartpay'),
+            'email'         => __('Email', 'smartpay'),
             'created_at'  => __('Date Created', 'smartpay'),
         );
 
@@ -177,7 +175,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Get the sortable columns
      *
-     * @since 2.1
+     * @since 0.0.1
      * @return array Array of all the sortable columns
      */
     public function get_sortable_columns()
@@ -185,15 +183,13 @@ class Customer_Table extends \WP_List_Table
         return array(
             'created_at'  => array('created_at', true),
             'name'          => array('name', true),
-            'num_purchases' => array('purchase_count', false),
-            // 'amount_spent'  => array('purchase_value', false),
         );
     }
 
     /**
      * Outputs the reporting views
      *
-     * @since 1.5
+     * @since 0.0.1
      * @return void
      */
     public function bulk_actions($which = '')
@@ -204,7 +200,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Retrieve the current page number
      *
-     * @since 1.5
+     * @since 0.0.1
      * @return int Current page number
      */
     public function get_paged()
@@ -215,7 +211,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Retrieves the search query string
      *
-     * @since 1.7
+     * @since 0.0.1
      * @return mixed string If search is present, false otherwise
      */
     public function get_search()
@@ -226,7 +222,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Build all the reports data
      *
-     * @since 1.5
+     * @since 0.0.1
      * @global object $wpdb Used to query the database using the WordPress
      *   Database API
      * @return array $reports_data All the data for customer reports
@@ -274,7 +270,6 @@ class Customer_Table extends \WP_List_Table
                     'first_name'    => $customer->first_name,
                     'last_name'     => $customer->last_name,
                     'email'         => $customer->email,
-                    // 'num_purchases' => $customer->purchase_count,
                     'created_at'  => $customer->created_at,
                 );
             }
@@ -286,7 +281,7 @@ class Customer_Table extends \WP_List_Table
     /**
      * Setup the final data for the table
      *
-     * @since 1.5
+     * @since 0.0.1
      * @uses SmartPay_Customer_Reports_Table::get_columns()
      * @uses WP_List_Table::get_sortable_columns()
      * @uses SmartPay_Customer_Reports_Table::get_pagenum()
