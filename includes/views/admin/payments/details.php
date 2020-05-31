@@ -9,7 +9,7 @@ $customer_details = $payment_details->customer;
 ?>
 
 <div class="wrap payment-details">
-    <h1 class="wp-heading-inline">Payment Details #<?php echo $payment_ID;?></h1>
+    <h1 class="wp-heading-inline">Payment #<?php echo $payment_ID;?></h1>
     <hr class="wp-header-end">
 
     <div id="poststuff">
@@ -33,46 +33,49 @@ $customer_details = $payment_details->customer;
             </div>
             <div id="postbox-container-2" class="postbox-container">
                 <div id="normal-sortables">
-                    <div id="smartpay-form-metabox-data" class="postbox ">
+                    <!-- <div id="smartpay-form-metabox-data" class="postbox ">
                         <h2 class="hndle"><span>Payment Form Options</span></h2>
                         <div class="inside">
                         <?php 
-                            echo '<pre>';
-                                var_dump($payment_details);
-                            echo '</pre>';
+                            // echo '<pre>';
+                            //     var_dump($payment_details);
+                            // echo '</pre>';
                         ?>
                         <div class="column-container">
 
                         </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div id="payment-details" class="postbox">
-                        <h2 class="hndle">Payment Details</h2>
+                        <h2 class="hndle">Details</h2>
                         <div class="inside">
-                            <div class="column-container">
-                                <div class="column">
-                                    <b class="payment-amount"><?php echo $payment_details->amount . ' ' . $payment_details->currency;?></b>
-                                    <span class="status"><?php echo $payment_details->status; ?></span>
+                            <div class="smartpay">
+                                <div class="column-container row d-flex align-items-center border-bottom py-3">
+                                    <div class="column col-6 d-flex">
+                                        <h3 class="m-0 h3 mr-3"><b class="payment-amount"><?php echo $payment_details->amount . ' ' . $payment_details->currency;?></b></h3>
+                                        <span class="btn btn-info px-2 py-0 pb-1"><?php echo ucfirst($payment_details->status); ?></span>
+                                    </div>
+                                    <div class="column col-6 text-right">
+                                        <p>Transaction Key: <?php echo $payment_details->key; ?></p>
+                                    </div>
                                 </div>
-                                <div class="column">
-                                    <p>Transaction Key: <?php echo $payment_details->key; ?></p>
-                                </div>
-                            </div>
-                            <div class="column-container">
-                                <div class="column">
-                                    <p>Date</p>
-                                    <p><?php echo $payment_details->date; ?></p>
-                                </div>
-                                <div class="column">
-                                    <p>Customer</p>
-                                    <p><?php echo $payment_details->email; ?></p>
-                                </div>
-                                <div class="column">
-                                    <p>Payment Method</p>
-                                    <p><?php echo $payment_details->mode; ?></p>
-                                </div>
-                                <div class="column">
-
+                                <div class="column-container row pt-3">
+                                    <div class="column col-3">
+                                        <b>Date</b>
+                                        <p><?php echo $payment_details->date; ?></p>
+                                    </div>
+                                    <div class="column col-3">
+                                        <b>Customer</b>
+                                        <p><?php echo $payment_details->email; ?></p>
+                                    </div>
+                                    <div class="column col-3">
+                                        <b>Payment Method</b>
+                                        <p><?php echo $payment_details->mode; ?></p>
+                                    </div>
+                                    <div class="column col-3">
+                                        <b>Transaction ID</b>
+                                        <p><?php echo $payment_details->ID; ?></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -80,34 +83,30 @@ $customer_details = $payment_details->customer;
                     <div id="checkout-details" class="postbox">
                         <h2 class="hndle">Checkout Details</h2>
                         <div class="inside">
-                            <div class="column-container">
-                                <div class="column">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <tr>
-                                                    <td>Item</td>
-                                                    <td>Quantity</td>
-                                                    <td>Unit Price</td>
-                                                    <td>Amount</td>
-                                                </tr>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Pro</td>
-                                                <td>1</td>
-                                                <td>10</td>
-                                                <td>10</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">Total</td>
-                                                <td>20</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot></tfoot>
-                                    </table>
-                                </div>
+                            <div class="smartpay">
+                                <table class="table table-bordered col-12">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Item</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Unit Price</th>
+                                            <th scope="col">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pro</td>
+                                            <td>1</td>
+                                            <td>10</td>
+                                            <td>10</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">Total</td>
+                                            <td>20</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot></tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -116,8 +115,8 @@ $customer_details = $payment_details->customer;
                         <div class="inside">
                             <div class="column-container">
                                 <div class="column">
-                                    <p>Name: <?php echo $customer_details['first_name'] . ' ' . $customer_details['last_name']; ?></p>
-                                    <p>Email: <?php echo $customer_details['email']; ?></p>
+                                    <p><b>Name:</b> <?php echo $customer_details['first_name'] . ' ' . $customer_details['last_name']; ?></p>
+                                    <p><b>Email:</b> <?php echo $customer_details['email']; ?></p>
                                 </div>
                             </div>
                             <p></p>
