@@ -72,15 +72,19 @@ $has_payment_error = false;
 
     <!-- Modal -->
     <div class="modal fade" id="smartpay_payment_checkout_popup" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title m-0">Checkout</h5>
+                    <p class="modal-title m-0"><b>Checkout</b></p>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h5 class="m-0 mb-3"><?php echo $product->title; ?></h5>
+                        <p class="m-0"><?php echo esc_html('Enter your info to complete your puchase', 'wpsmartpay');?></p>
+                    </div>
                     <div class="text-center">
                         <!-- <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
@@ -92,13 +96,13 @@ $has_payment_error = false;
                             <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
                             <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
                             <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
-                            <ul class="list-unstyled list-group list-group-horizontal-sm m-0 my-3">
+                            <ul class="list-unstyled list-group list-group-horizontal-sm m-0 my-3 justify-content-center">
                                 <?php if (count($gateways)) : ?>
 
                                 <?php foreach ($gateways as $gateway_id => $gateway) : ?>
                                 <li class="list-group-item p-0 m-0 px-3 py-1">
                                     <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
-                                            <input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
+                                            <input type="radio" class="mr-2" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
                                             echo esc_html($gateway['checkout_label']);
                                             echo '</label>';
                                             ?>
@@ -130,7 +134,7 @@ $has_payment_error = false;
         </div>
     </div>
     <div class="modal fade" id="smartpay_payment_gateway_popup" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title m-0">Process payment</h5>
@@ -138,7 +142,7 @@ $has_payment_error = false;
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center p-5">
                     <div class="text-center">
                         <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
