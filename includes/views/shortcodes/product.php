@@ -11,13 +11,13 @@ $has_payment_error = false;
 
 <div class="smartpay">
     <div class="card">
-        <form id="payment_form" action="<?php echo $form_action; ?>" method="POST">
+        <!-- <form id="payment_form" action="<?php echo $form_action; ?>" method="POST"> -->
 
-            <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
+            <?php //wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
-            <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
-            <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
-            <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
+            <!-- <input type="hidden" name="smartpay_action" value="smartpay_process_payment"> -->
+            <!-- <input type="hidden" name="smartpay_purchase_type" value="product_purchase"> -->
+            <!-- <input type="hidden" name="smartpay_product_id" value="<?php //echo $product->get_ID() ?>"> -->
 
             <div class="bg-light border-bottom">
                 <img src="<?php echo $product->image; ?>" class="card-img-top">
@@ -67,7 +67,7 @@ $has_payment_error = false;
                     </div> <!-- col -->
                 </div> <!-- row -->
             </div> <!-- card-body -->
-        </form>
+        <!-- </form> -->
     </div> <!-- card -->
 
     <!-- Modal -->
@@ -75,7 +75,7 @@ $has_payment_error = false;
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Checkout</h5>
+                    <h5 class="modal-title m-0">Checkout</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -85,36 +85,45 @@ $has_payment_error = false;
                         <!-- <div class="spinner-border" role="status">
                             <span class="sr-only">Loading...</span>
                         </div> -->
-                        <ul class="list-unstyled">
-                            <?php if (count($gateways)) : ?>
+                        <form id="payment_form" action="<?php echo $form_action; ?>" method="POST">
 
-                            <?php foreach ($gateways as $gateway_id => $gateway) : ?>
-                            <li>
-                                <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
-										<input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
-                                        echo esc_html($gateway['checkout_label']);
-                                        echo '</label>';
-                                        ?>
-                            </li>
-                            <?php endforeach; ?>
+                            <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
-                            <?php else : ?>
-                            <?php
-                                $has_payment_error = true;
-                                echo 'You must enable a payment gateway to proceed a payment.';
-                                ?>
-                            <?php endif; ?>
-                        </ul>
+                            <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
+                            <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
+                            <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
+                            <ul class="list-unstyled list-group list-group-horizontal-sm m-0 my-3">
+                                <?php if (count($gateways)) : ?>
 
-                        <input type="text" name="smartpay_first_name" value="Al-Amin">
-                        <input type="text" name="smartpay_last_name" value="Firdows">
-                        <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
-                        <br>
-                        <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
-                            <?php if ($has_payment_error) echo 'disabled'; ?>>
-                            <?php //echo $payment_button_text ?: 'Pay Now' ?>
-                            <?php echo 'Pay Now' ?>
-                        </button>
+                                <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                                <li class="list-group-item p-0 m-0 px-3 py-1">
+                                    <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
+                                            <input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
+                                            echo esc_html($gateway['checkout_label']);
+                                            echo '</label>';
+                                            ?>
+                                </li>
+                                <?php endforeach; ?>
+
+                                <?php else : ?>
+                                <?php
+                                    $has_payment_error = true;
+                                    echo 'You must enable a payment gateway to proceed a payment.';
+                                    ?>
+                                <?php endif; ?>
+                            </ul>
+
+                            <input type="text" class="mb-3 form-control" name="smartpay_first_name" value="Al-Amin">
+                            <input type="text" class="mb-3 form-control" name="smartpay_last_name" value="Firdows">
+                            <input type="text" class="mb-3 form-control" name="smartpay_email" value="alaminfirdows@gmail.com">
+                            <br>
+                            <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
+                                <?php if ($has_payment_error) echo 'disabled'; ?>>
+                                <?php //echo $payment_button_text ?: 'Pay Now' ?>
+                                <?php echo 'Pay Now' ?>
+                            </button>
+
+                        </form>
                     </div>
                 </div>
             </div>
@@ -124,7 +133,7 @@ $has_payment_error = false;
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Process payment</h5>
+                    <h5 class="modal-title m-0">Process payment</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
