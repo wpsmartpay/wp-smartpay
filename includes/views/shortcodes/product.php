@@ -113,11 +113,11 @@ $has_payment_error = false;
                                 <?php endif; ?>
                             </ul>
 
-                            <input type="text" class="mb-3 form-control" name="smartpay_first_name" value="Al-Amin">
-                            <input type="text" class="mb-3 form-control" name="smartpay_last_name" value="Firdows">
-                            <input type="text" class="mb-3 form-control" name="smartpay_email" value="alaminfirdows@gmail.com">
+                            <input type="text" class="mb-3" name="smartpay_first_name" value="Al-Amin" required>
+                            <input type="text" class="mb-3" name="smartpay_last_name" value="Firdows" >
+                            <input type="email" class="mb-3" name="smartpay_email" value="alaminfirdows@gmail.com" required>
                             <br>
-                            <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
+                            <button id="pay_now" type="submit" class="btn btn-primary btn-block btn-lg"
                                 <?php if ($has_payment_error) echo 'disabled'; ?>>
                                 <?php //echo $payment_button_text ?: 'Pay Now' ?>
                                 <?php echo 'Pay Now' ?>
