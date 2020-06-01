@@ -48,7 +48,7 @@ $payment = new SmartPay_Payment($payment_id);
                                         class="payment-amount"><?php echo smartpay_amount_format($payment->amount, $payment->currency); ?></strong>
                                 </h3>
                                 <span
-                                    class="btn btn-info px-2 py-0 pb-1 <?php echo 'pending' == $payment->status ? 'btn-danger' : ''; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
+                                    class="btn px-2 py-0 pb-1 <?php echo 'publish' == $payment->status ? 'btn-success' : 'btn-danger'; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
                             </div>
                             <div class="col d-flex justify-content-end">
                                 <h3 class="h3 text-primary px-2 my-0 pb-1">
