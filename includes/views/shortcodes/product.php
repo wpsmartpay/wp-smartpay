@@ -75,8 +75,7 @@ $has_payment_error = false;
 
                         <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
                             <?php if ($has_payment_error) echo 'disabled'; ?>>
-                            <?php //echo $payment_button_text ?: 'Pay Now' ?>
-                            <?php echo 'Pay Now'; ?>
+                            <?php echo isset($payment_button_text) ?: 'Pay Now' ?>
                         </button>
                     </div> <!-- col -->
                 </div> <!-- row -->
