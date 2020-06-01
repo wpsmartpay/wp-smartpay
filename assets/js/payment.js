@@ -27,16 +27,29 @@ jQuery(document).ready(function ($) {
                 $('#smartpay_payment_gateway_popup .modal-body').html('Something wrong!')
                 console.log('Something wrong!')
             }
-
+            // console.log(buttonText);
             $('button#pay_now')
                 .text(buttonText)
                 .removeAttr('disabled');
         });
 
     });
+    $('#payment_form .product-variations .list-group-item').on('click', function(e){
+        $(this).parent().find('li.active span').removeClass('btn-outline-light').addClass('btn-outline-dark');
+        $(this).parent().find('li.active').removeClass('active');
+        $(this).find('span').removeClass('btn-outline-dark').addClass('btn-outline-light');
+        $(this).addClass('active');
+    })
+    $('button#checkout_button').on('click', function(e){
+        e.preventDefault();
+        getFormJSONData($('.smartpay #payment_form'));
+        $('#smartpay_payment_checkout_popup').modal('show')
+
+    })
 
     function getFormJSONData($form) {
         var serialize_array = $form.serializeArray();
+        console.log(serialize_array);
         var indexed_array = {};
 
         $.map(serialize_array, function (n, i) {
