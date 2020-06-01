@@ -156,6 +156,11 @@ final class Product
         return new SmartPay_Product($product_id);
     }
 
+    public function get_product_variation($variation_id)
+    {
+        return new Product_Variation($variation_id);
+    }
+
     public function product_columns($columns)
     {
         return [

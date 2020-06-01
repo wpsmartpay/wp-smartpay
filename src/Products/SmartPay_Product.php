@@ -181,19 +181,19 @@ class SmartPay_Product
         // Protected ID that can never be changed
         $this->_ID = absint($product->ID);
 
-        $this->title             = $product->post_title;
-        $this->description       = $product->post_content;
-        $this->image             = $this->_setup_image();
-        $this->base_price        = $this->_setup_base_price();
-        $this->sale_price        = $this->_setup_sale_price();
-        $this->has_variations    = $this->has_variations();
-        $this->variations        = $this->has_variations ? $this->_setup_variations() : [];
-        $this->files             = $this->_setup_files() ?? [];
-        $this->status            = $product->post_status;
-        $this->created_at        = $product->post_date;
-        $this->updated_at        = $product->post_modified;
-        $this->sales             = $this->_setup_sales();
-        $this->sku               = $this->_setup_sku();
+        $this->title          = $product->post_title;
+        $this->description    = $product->post_content;
+        $this->image          = $this->_setup_image();
+        $this->base_price     = $this->_setup_base_price();
+        $this->sale_price     = $this->_setup_sale_price();
+        $this->has_variations = $this->has_variations();
+        $this->variations     = $this->has_variations ? $this->_setup_variations() : [];
+        $this->files          = $this->_setup_files() ?? [];
+        $this->status         = $product->post_status;
+        $this->created_at     = $product->post_date;
+        $this->updated_at     = $product->post_modified;
+        $this->sales          = $this->_setup_sales();
+        $this->sku            = $this->_setup_sku();
 
         return true;
     }
