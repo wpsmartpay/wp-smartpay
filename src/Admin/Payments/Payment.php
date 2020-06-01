@@ -99,19 +99,7 @@ final class Payment
                 break;
 
             case 'type':
-                switch (get_post_meta($post_id, '_payment_purchase_type', true)) {
-                    case 'product_purchase':
-                        echo 'Product Purchase';
-                        break;
-
-                    case 'form_payment':
-                        echo 'Form Payment';
-                        break;
-
-                    default:
-                        echo '-';
-                        break;
-                }
+                echo ucwords(str_replace('_', ' ', get_post_meta($post_id, '_payment_type', true)));
                 break;
 
             case 'gateway':
