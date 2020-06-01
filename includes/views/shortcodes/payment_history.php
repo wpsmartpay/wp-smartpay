@@ -1,4 +1,11 @@
 <div class="smartpay">
+    <?php if (!is_array($payments) || !count($payments)) : ?>
+    <div class="card">
+        <div class="card-body py-5">
+            <p class="text-info  m-0 text-center">You don't have any payment yet.</p>
+        </div>
+    </div>
+    <?php else : ?>
     <div class="table-responsive">
         <table class="table table-hover">
             <thead class="thead-dark">
@@ -54,4 +61,5 @@
             </tbody>
         </table>
     </div>
+    <?php endif ?>
 </div>

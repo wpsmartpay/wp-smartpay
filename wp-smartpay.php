@@ -176,7 +176,7 @@ final class SmartPay
 
         update_option('smartpay_version', SMARTPAY_VERSION);
 
-        self::create_pages();
+        $this->create_pages();
 
         // Create DB tables
         Customer::create_db_table();
@@ -189,7 +189,7 @@ final class SmartPay
      * @access public
      * @return void
      */
-    public static function create_pages()
+    public function create_pages()
     {
         if (false == get_option('smartpay_settings')) {
             add_option('smartpay_settings');
@@ -247,6 +247,19 @@ final class SmartPay
                 )
             );
         }
+
+        // Payment History (Success) Page
+        $payment_history_page = wp_insert_post(
+            array(
+                'post_title'     => __('Payment History', 'smartpay'),
+                'post_name'      => 'smartpay-payment-history',
+                'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_payment_history]'),
+                'post_status'    => 'publish',
+                'post_author'    => get_current_user_id(),
+                'post_type'      => 'page',
+                'comment_status' => 'closed'
+            )
+        );
 
         $options = array(
             'payment_page'          => $payment_page,
