@@ -121,9 +121,7 @@ class Product_Variation
      */
     public function __construct($_id = false)
     {
-        if (!$_id) {
-            return;
-        }
+        if (!$_id) return;
 
         $variation = \WP_Post::get_instance($_id);
 

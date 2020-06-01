@@ -326,11 +326,11 @@ class SmartPay_Payment
             foreach ($this->pending as $key => $value) {
                 switch ($key) {
                     case 'payment_type':
-                        $this->update_meta('_payment_payment_type', $this->payment_type);
+                        $this->update_meta('_payment_type', $this->payment_type);
                         break;
 
                     case 'payment_data':
-                        $this->update_meta('_payment_payment_data', $this->payment_data);
+                        $this->update_meta('_payment_data', $this->payment_data);
                         break;
 
                     case 'date':
