@@ -196,6 +196,7 @@ class SmartPay_Customer
 
         $data = array(
             'first_name' => $this->first_name,
+            'user_id'    => $this->user_id,
             'last_name'  => $this->last_name,
             'email'      => $this->email,
             'payments'   => maybe_serialize($this->payments ?? [])
@@ -258,6 +259,7 @@ class SmartPay_Customer
     {
         $customer = new self();
 
+        $customer->user_id      = $data['user_id'] ?? 0;
         $customer->first_name   = $data['first_name'];
         $customer->last_name    = $data['last_name'];
         $customer->email        = $data['email'];
