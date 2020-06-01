@@ -147,10 +147,6 @@ final class Shortcode
         if (!is_user_logged_in() || get_current_user_id() <= 0) return;
 
         $customer = new SmartPay_Customer(get_current_user_id(), true);
-        // echo '<pre>';
-        // var_dump($customer->all_payments()[0]);
-        // echo '</pre>';
-
 
         ob_start();
 
