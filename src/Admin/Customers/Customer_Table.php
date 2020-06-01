@@ -81,11 +81,11 @@ class Customer_Table extends \WP_List_Table
         if (!empty($_REQUEST['order']))
             echo '<input type="hidden" name="order" value="' . esc_attr($_REQUEST['order']) . '" />';
 ?>
-<p class="search-box">
-    <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-    <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
-    <?php submit_button($text, 'button', false, false, array('ID' => 'search-submit')); ?>
-</p>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+            <input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+            <?php submit_button($text, 'button', false, false, array('ID' => 'search-submit')); ?>
+        </p>
 <?php
     }
 
@@ -116,9 +116,9 @@ class Customer_Table extends \WP_List_Table
     {
         switch ($column_name) {
 
-            case 'num_purchases':
+            case 'num_payments':
                 $value = '<a href="' .
-                    admin_url('/edit.php?post_type=download&page=smartpay-payment-history&user=' . urlencode($item['email'])) . '">' . esc_html($item['num_purchases']) . '</a>';
+                    admin_url('/edit.php?post_type=download&page=smartpay-payment-history&user=' . urlencode($item['email'])) . '">' . esc_html($item['num_payments']) . '</a>';
                 break;
 
                 // case 'amount_spent':

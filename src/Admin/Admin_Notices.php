@@ -22,7 +22,7 @@ final class Admin_Notices
     private function __construct()
     {
         add_action('admin_notices', [$this, 'show_notices']);
-        
+
         add_action('smartpay_dismiss_notices', [$this, 'dismiss_notices']);
     }
 
@@ -93,7 +93,7 @@ final class Admin_Notices
                         $notices['updated']['smartpay-payment-deleted'] = __('The payment has been deleted.', 'smartpay');
                         break;
                     case 'email_sent':
-                        $notices['updated']['smartpay-payment-sent'] = __('The purchase receipt has been resent.', 'smartpay');
+                        $notices['updated']['smartpay-payment-sent'] = __('The payment receipt has been resent.', 'smartpay');
                         break;
                     case 'refreshed-reports':
                         $notices['updated']['smartpay-refreshed-reports'] = __('The reports have been refreshed.', 'smartpay');

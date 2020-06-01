@@ -169,7 +169,7 @@ class Customer_Query
      *                                        or 'meta_value_num', `$meta_key` must also be provided.
      *                                        To sort by a specific `$meta_query` clause, use that
      *                                        clause's array key. Accepts 'id', 'user_id', 'name',
-     *                                        'email', 'payment_ids', 'purchase_value', 'purchase_count',
+     *                                        'email', 'payment_ids', 'payment_value', 'payment_count',
      *                                        'notes', 'date_created', 'meta_value', 'meta_value_num',
      *                                        the value of `$meta_key`, and the array keys of `$meta_query`.
      *                                        Also accepts false, an empty array, or 'none' to disable the
@@ -285,12 +285,12 @@ class Customer_Query
         }
 
         /**
-		 * Fires after the customer query vars have been parsed.
-		 *
-		 * @since 0.0.1
-		 *
-		 * @param Customer_Query &$this The Customer_Query instance (passed by reference).
-		 */
+         * Fires after the customer query vars have been parsed.
+         *
+         * @since 0.0.1
+         *
+         * @param Customer_Query &$this The Customer_Query instance (passed by reference).
+         */
         do_action_ref_array('parse_customer_query', array(&$this));
     }
 
@@ -703,8 +703,8 @@ class Customer_Query
 
         if (in_array($orderby, $allowed_keys, true)) {
             /* This column needs special handling here. */
-            if ('purchase_value' === $orderby) {
-                return "$this->table_name.purchase_value+0";
+            if ('payment_value' === $orderby) {
+                return "$this->table_name.payment_value+0";
             }
 
             return "$this->table_name.$orderby";

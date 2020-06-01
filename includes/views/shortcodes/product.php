@@ -15,7 +15,7 @@ $has_payment_error = false;
             <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
             <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
-            <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
+            <input type="hidden" name="smartpay_payment_type" value="product_purchase">
             <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
 
             <div class="bg-light border-bottom">
@@ -28,40 +28,40 @@ $has_payment_error = false;
                         <div class="card-text"><?php echo $product->description; ?></div>
 
                         <?php if ($product->has_variations()) : ?>
-                            <div class="product-variations">
-                                <ul>
-                                    <?php foreach ($product->variations as $variation) : ?>
-                                        <li>
-                                            <?php echo '<label for="smartpay-product-variation-' . esc_attr($variation['id']) . '">
+                        <div class="product-variations">
+                            <ul>
+                                <?php foreach ($product->variations as $variation) : ?>
+                                <li>
+                                    <?php echo '<label for="smartpay-product-variation-' . esc_attr($variation['id']) . '">
 										<input type="radio" name="smartpay_product_variation_id" id="smartpay-product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
                                             echo esc_html($variation['name']) . ' - ' . smartpay_amount_format(($product_price + $variation['additional_amount']));
                                             echo '</label>';
                                             ?>
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                         <?php else : ?>
-                            <p class="price"><?php echo smartpay_amount_format($product_price); ?>
-                            </p>
+                        <p class="price"><?php echo smartpay_amount_format($product_price); ?>
+                        </p>
                         <?php endif; ?>
                     </div>
                     <div class="col">
                         <ul class="list-unstyled">
                             <?php if (count($gateways)) : ?>
 
-                                <?php foreach ($gateways as $gateway_id => $gateway) : ?>
-                                    <li>
-                                        <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
+                            <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                            <li>
+                                <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
 										<input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
                                         echo esc_html($gateway['checkout_label']);
                                         echo '</label>';
                                         ?>
-                                    </li>
-                                <?php endforeach; ?>
+                            </li>
+                            <?php endforeach; ?>
 
                             <?php else : ?>
-                                <?php
+                            <?php
                                 $has_payment_error = true;
                                 echo 'You must enable a payment gateway to proceed a payment.';
                                 ?>
@@ -73,7 +73,8 @@ $has_payment_error = false;
                         <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
                         <br>
 
-                        <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg" <?php if ($has_payment_error) echo 'disabled'; ?>>
+                        <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
+                            <?php if ($has_payment_error) echo 'disabled'; ?>>
                             <?php echo $payment_button_text ?? 'Pay Now' ?>
                         </button>
                     </div> <!-- col -->

@@ -101,13 +101,13 @@ final class Payment
             // }
 
             $payment_data = apply_filters('smartpay_payment_data', array(
-                'purchase_type'   => $smartpay_purchase_type,
-                'purchase_data'   => $this->_get_product_purchase_data($_POST),
+                'payment_type'   => $smartpay_payment_type,
+                'payment_data'   => $this->_get_product_payment_data($_POST),
                 'date'            => date('Y-m-d H:i:s', time()),
-                'amount'          => $this->_get_purchase_amount($_POST),
+                'amount'          => $this->_get_payment_amount($_POST),
                 'currency'        => smartpay_get_currency() ?? 'USD',
                 'gateway'         => $smartpay_gateway,
-                'customer'        => $this->_get_purchase_customer($_POST),
+                'customer'        => $this->_get_payment_customer($_POST),
                 'email'           => $smartpay_email,
                 'key'             => strtolower(md5($smartpay_email . date('Y-m-d H:i:s') . rand(1, 10))),
             ));
@@ -123,13 +123,13 @@ final class Payment
     private function _prepare_payment_data($_data)
     {
         return apply_filters('smartpay_payment_data', array(
-            'purchase_type'   => $_data['smartpay_purchase_type'],
-            'purchase_data'   => $this->_get_product_purchase_data($_data),
+            'payment_type'   => $_data['smartpay_payment_type'],
+            'payment_data'   => $this->_get_product_payment_data($_data),
             'date'            => date('Y-m-d H:i:s', time()),
-            'amount'          => $this->_get_purchase_amount($_data),
+            'amount'          => $this->_get_payment_amount($_data),
             'currency'        => smartpay_get_currency() ?? 'USD',
             'gateway'         => $_data['smartpay_gateway'],
-            'customer'        => $this->_get_purchase_customer($_data),
+            'customer'        => $this->_get_payment_customer($_data),
             'email'           => $_data['smartpay_email'],
             'key'             => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
         ));
@@ -143,17 +143,17 @@ final class Payment
         do_action('smartpay_' . $gateway . '_process_payment', $payment_data);
     }
 
-    private function _get_product_purchase_data($_data)
+    private function _get_product_payment_data($_data)
     {
-        $purchase_data = [];
+        $payment_data = [];
 
-        if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
+        if ('product_payment' == $_data['smartpay_payment_type'] ?? '') {
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
             if (!$product) return;
 
-            $purchase_data = [
+            $payment_data = [
                 'product_id' => $product->ID,
                 'product_price' => $product->sale_price ?? $product->base_price,
             ];
@@ -162,29 +162,29 @@ final class Payment
             if (count($product->variations) && isset($_data['smartpay_product_variation_id'])) {
                 $variation = new Product_Variation($_data['smartpay_product_variation_id']);
 
-                $purchase_data['variation_id'] = $_data['smartpay_product_variation_id'];
-                $purchase_data['variation_name'] = $variation->name;
-                $purchase_data['additional_amount'] = $variation->additional_amount;
-                $purchase_data['total_amount'] = $purchase_data['product_price'] + $variation->additional_amount;
+                $payment_data['variation_id'] = $_data['smartpay_product_variation_id'];
+                $payment_data['variation_name'] = $variation->name;
+                $payment_data['additional_amount'] = $variation->additional_amount;
+                $payment_data['total_amount'] = $payment_data['product_price'] + $variation->additional_amount;
             }
-        } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
+        } else if ('form_payment' == $_data['smartpay_payment_type'] ?? '') {
 
             $form = smartpay_get_form($_data['smartpay_form_id'] ?? '');
 
             if (!$form) return;
 
-            $purchase_data = [
+            $payment_data = [
                 'form_id' => $form->ID,
                 'total_amount' => $_data['smartpay_amount'] ?? 0,
             ];
         }
 
-        return $purchase_data;
+        return $payment_data;
     }
 
-    private function _get_purchase_amount($_data)
+    private function _get_payment_amount($_data)
     {
-        if ('product_purchase' == $_data['smartpay_purchase_type'] ?? '') {
+        if ('product_payment' == $_data['smartpay_payment_type'] ?? '') {
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
@@ -196,7 +196,7 @@ final class Payment
                 $variation = new Product_Variation($_data['smartpay_product_variation_id']);
                 return $product_price + $variation->additional_amount ?? 0;
             }
-        } else if ('form_payment' == $_data['smartpay_purchase_type'] ?? '') {
+        } else if ('form_payment' == $_data['smartpay_payment_type'] ?? '') {
 
             return $_data['smartpay_amount'] ?? 0;
         }
@@ -204,7 +204,7 @@ final class Payment
         return 0;
     }
 
-    private function _get_purchase_customer($_data)
+    private function _get_payment_customer($_data)
     {
         $customer = new SmartPay_Customer($_data['smartpay_email']);
 
@@ -235,8 +235,8 @@ final class Payment
 
         $payment = new SmartPay_Payment();
 
-        $payment->purchase_type  = $payment_data['purchase_type'];
-        $payment->purchase_data  = $payment_data['purchase_data'];
+        $payment->payment_type  = $payment_data['payment_type'];
+        $payment->payment_data  = $payment_data['payment_data'];
         $payment->date           = $payment_data['date'];
 
         $payment->amount         = $payment_data['amount'];

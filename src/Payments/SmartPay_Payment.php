@@ -24,15 +24,15 @@ class SmartPay_Payment
      * @since  0.0.1
      * @var string
      */
-    protected $purchase_type = '';
+    protected $payment_type = '';
 
     /**
-     * Purchase data
+     * payment data
      *
      * @since  0.0.1
      * @var array
      */
-    protected $purchase_data = [];
+    protected $payment_data = [];
 
     /**
      * The date the payment was created
@@ -267,8 +267,8 @@ class SmartPay_Payment
         // Protected ID that can never be changed
         $this->_ID              = absint($payment_id);
 
-        $this->purchase_type    = $this->setup_purchase_type();
-        $this->purchase_data    = $this->setup_purchase_data();
+        $this->payment_type    = $this->setup_payment_type();
+        $this->payment_data    = $this->setup_payment_data();
 
         // Status and Dates
         $this->date             = $payment->post_date;
@@ -325,12 +325,12 @@ class SmartPay_Payment
 
             foreach ($this->pending as $key => $value) {
                 switch ($key) {
-                    case 'purchase_type':
-                        $this->update_meta('_payment_purchase_type', $this->purchase_type);
+                    case 'payment_type':
+                        $this->update_meta('_payment_payment_type', $this->payment_type);
                         break;
 
-                    case 'purchase_data':
-                        $this->update_meta('_payment_purchase_data', $this->purchase_data);
+                    case 'payment_data':
+                        $this->update_meta('_payment_payment_data', $this->payment_data);
                         break;
 
                     case 'date':
@@ -601,9 +601,9 @@ class SmartPay_Payment
      * @since  0.0.1
      * @return array The user info associated with the payment
      */
-    private function setup_purchase_type()
+    private function setup_payment_type()
     {
-        return $this->get_meta('_smartpay_purchase_type', true);
+        return $this->get_meta('_payment_type', true);
     }
 
     /**
@@ -612,9 +612,9 @@ class SmartPay_Payment
      * @since  0.0.1
      * @return array The user info associated with the payment
      */
-    private function setup_purchase_data()
+    private function setup_payment_data()
     {
-        return $this->get_meta('_smartpay_purchase_data', true);
+        return $this->get_meta('_payment_data', true);
     }
 
     /**
@@ -689,7 +689,7 @@ class SmartPay_Payment
     }
 
     /**
-     * Setup the customer for the purchase
+     * Setup the customer for the payment
      *
      * @since  0.0.1
      * @return string The email address for the payment
@@ -700,7 +700,7 @@ class SmartPay_Payment
     }
 
     /**
-     * Setup the email address for the purchase
+     * Setup the email address for the payment
      *
      * @since  0.0.1
      * @return string The email address for the payment

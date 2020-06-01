@@ -133,7 +133,7 @@ final class Register_Setting
                         'page_settings' => array(
                             'id'   => 'page_settings',
                             'name' => '<h4 class="text-uppercase text-info my-1">' . __('Pages Settings', 'smartpay') . '</h4>',
-                            'desc' => __('SmartPay products uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'desc' => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                             'type' => 'header',
                         ),
                         'payment_page' => array(
@@ -166,7 +166,7 @@ final class Register_Setting
                             'desc' => '',
                             'type' => 'header',
                             'tooltip_title' => __('Page Settings', 'smartpay'),
-                            'tooltip_desc'  => __('SmartPay products uses the pages below for handling the display of checkout, purchase confirmation, purchase history, and purchase failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'tooltip_desc'  => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                         ),
                         'currency' => array(
                             'id'      => 'currency',

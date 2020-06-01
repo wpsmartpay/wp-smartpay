@@ -52,7 +52,7 @@ final class SmartPay
     /**
      * Session Object.
      *
-     * This holds purchase sessions, and anything else stored in the session.
+     * This holds sessions, and anything else stored in the session.
      *
      * @var object|SmartPay_Session
      * @since 0.0.1
@@ -197,7 +197,7 @@ final class SmartPay
 
         $current_options = get_option('smartpay_settings', array());
 
-        // Checks if the purchase page option exists
+        // Checks if the payment page option exists
         $payment_page = array_key_exists('payment_page', $current_options) ? get_post($current_options['payment_page']) : false;
         if (empty($payment_page)) {
             // Checkout Page
