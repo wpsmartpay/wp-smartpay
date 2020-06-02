@@ -2,8 +2,8 @@
 
 namespace SmartPay\Admin\Products;
 
-use SmartPay\Products\Product_Variation;
 use SmartPay\Products\SmartPay_Product;
+use SmartPay\Products\Product_Variation;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -15,8 +15,6 @@ final class Meta_Box
      * The single instance of this class.
      */
     private static $instance = null;
-
-    private $post;
 
     /**
      * Construct Meta_Box class.
@@ -59,7 +57,7 @@ final class Meta_Box
         /** Metabox **/
         add_meta_box(
             'product_metabox',
-            __('SmartPay', 'smartpay'),
+            __('Product Options', 'smartpay'),
             [$this, 'render_metabox'],
             ['product'],
             'normal',
@@ -70,14 +68,11 @@ final class Meta_Box
     public function render_metabox()
     {
         global $post;
+
         $product = new SmartPay_Product($post->ID);
 
-        /** Output the price fields **/
-        // ob_start();
-
+        /** Output the metabox **/
         echo smartpay_view_render('admin/products/metabox', ['product' => $product]);
-
-        // ob_get_clean();
 
         do_action('smartpay_product_metabox_fields', $post->ID);
 
@@ -89,6 +84,7 @@ final class Meta_Box
         if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename(__FILE__))) {
             return;
         }
+
         extract($_POST);
 
         $product = new SmartPay_Product($post_id);
