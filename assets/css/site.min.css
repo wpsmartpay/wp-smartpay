@@ -883,8 +883,13 @@
 .smartpay .list-group-item-dark{color:#1b1e21;background-color:#c6c8ca}
 .smartpay .list-group-item-dark.list-group-item-action:hover,.smartpay .list-group-item-dark.list-group-item-action:focus{color:#1b1e21;background-color:#b9bbbe}
 .smartpay .list-group-item-dark.list-group-item-action.active{color:#fff;background-color:#1b1e21;border-color:#1b1e21}
-.smartpay #payment_form{color:red}
-.smartpay #payment_form .product-price .product-variations .variation-short-description{font-size:16px;color:#007bff}
+.smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup #payment_form{padding:0 100px}
+.smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup #payment_form .user-info{background:#e7e7e7;padding:50px;margin:30px 0;border-radius:5px}
+.smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup #payment_form .user-info input{font-size:16px;min-height:40px;padding:5px 15px}
+.smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup #payment_form .user-info button{font-size:16px;text-transform:uppercase;margin-top:20px;padding:8px 15px}
+.smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup .overlay{background:rgba(255,255,255,0.9);position:absolute;left:0;top:0;width:100%;height:100%;display:none}
+.smartpay .smartpay-payment-shortcode-output .modal-header button.close{background:transparent;font-size:30px;margin-right:0;color:#c2c2c2}
+.smartpay .smartpay-payment-shortcode-output .modal-header button.close:focus{outline:0}
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}
 .smartpay .collapsing{transition:none}

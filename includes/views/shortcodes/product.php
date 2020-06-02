@@ -9,7 +9,7 @@ $has_payment_error = false;
 // var_dump('hello');
 ?>
 
-<div class="smartpay">
+<div class="smartpay smartpay-payment-shortcode-output">
     <div id="single-payment-card" class="card">
         <div class="bg-light border-bottom">
             <img src="<?php echo $product->image; ?>" class="card-img-top">
@@ -59,6 +59,7 @@ $has_payment_error = false;
         </div> <!-- card-body -->
     </div> <!-- card -->
     <!-- Modal -->
+    <!-- <div class="checkout-form-wrapper"> -->
     <div class="modal fade" id="smartpay_payment_checkout_popup" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
             <div class="modal-content">
@@ -101,24 +102,27 @@ $has_payment_error = false;
                                     ?>
                                 <?php endif; ?>
                             </ul>
-
-                            <input type="text" class="mb-3" name="smartpay_first_name" value="Al-Amin" required>
-                            <input type="text" class="mb-3" name="smartpay_last_name" value="Firdows" >
-                            <input type="email" class="mb-3" name="smartpay_email" value="alaminfirdows@gmail.com" required>
-                            <br>
-                            <button id="pay_now" type="submit" class="btn btn-primary btn-block btn-lg"
-                                <?php if ($has_payment_error) echo 'disabled'; ?>>
-                                <?php echo isset($payment_button_text) ?: 'Pay Now'; ?>
-                            </button>
+                            <div class="user-info">
+                                <input type="text" placeholder="First name" class="mb-3 form-control" name="smartpay_first_name" value="Al-Amin" required>
+                                <input type="text" placeholder="Last name" class="mb-3 form-control" name="smartpay_last_name" value="Firdows" >
+                                <input type="email" placeholder="Email address" class="mb-3 form-control" name="smartpay_email" value="alaminfirdows@gmail.com" required>
+                                <button id="pay_now" type="submit" class="btn btn-success btn-block btn-lg"
+                                    <?php if ($has_payment_error) echo 'disabled'; ?>>
+                                    <?php echo isset($payment_button_text) ?: 'Pay Now'; ?>
+                                </button>
+                            </div>
 
                         </form>
+                        
                     </div>
                 </div>
+                <div class="overlay"></div>
             </div>
         </div>
     </div>
+    <!-- </div> -->
     <div class="modal fade" id="smartpay_payment_gateway_popup" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title m-0">Process payment</h5>

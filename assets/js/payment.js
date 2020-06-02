@@ -8,6 +8,7 @@ jQuery(document).ready(function ($) {
         let buttonText = $('button#pay_now').text()
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')
+        $('#smartpay_payment_checkout_popup .overlay').css('display', 'block');
         $('#smartpay_payment_gateway_popup').modal('show')
 
         // let data = { action: 'smartpay_payment_process_action', data: getFormJSONData($('.smartpay #payment_form')) }
@@ -20,6 +21,7 @@ jQuery(document).ready(function ($) {
         jQuery.post(smartpay.ajax_url, data, response => {
             if (response) {
                 $('#smartpay_payment_checkout_popup').modal('hide');
+                $('#smartpay_payment_checkout_popup .overlay').css('display', 'none');
                 setTimeout(() => {
                     $('#smartpay_payment_gateway_popup .modal-body').html(response)
                 }, 500)
@@ -50,7 +52,10 @@ jQuery(document).ready(function ($) {
     $('button#checkout_button').on('click', function(e){
         e.preventDefault();
         getFormJSONData($('.smartpay #payment_form'));
-        $('#smartpay_payment_checkout_popup').modal('show')
+        if(! $('body').hasClass('smartpay')){
+            $('body').addClass('smartpay');
+        };
+        $('#smartpay_payment_checkout_popup').modal('show');
     })
 
     function getFormJSONData($form) {
