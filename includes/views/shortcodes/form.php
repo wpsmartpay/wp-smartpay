@@ -6,7 +6,6 @@ $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_RE
 $has_payment_error = false;
 ?>
 
-
 <div class="smartpay">
     <div class="card">
         <form id="payment_form" action="<?php echo $form_action; ?>" method="POST">
@@ -14,18 +13,42 @@ $has_payment_error = false;
 
             <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
             <input type="hidden" name="smartpay_payment_type" value="form_payment">
-            <input type="hidden" name="smartpay_form_id" value="<?php echo $form_id ?>">
-            <input type="hidden" name="smartpay_amount" value="<?php echo $amount ?>">
+            <input type="hidden" name="smartpay_form_id" value="<?php echo $form->ID ?>">
 
+            <!-- Form image -->
+            <?php if (isset($form->image)) : ?>
             <div class="bg-light border-bottom">
-                <img src="<?php echo $form_image; ?>" class="card-img-top">
+                <img src="<?php echo $form->image; ?>" class="card-img-top" alt="<?php echo $form->title; ?>">
             </div>
+            <?php endif; ?>
+
             <div class="card-body p-5">
+                <h4><?php echo $form->title; ?></h4>
 
-                <h4>Payment : <?php echo smartpay_amount_format($amount); ?></h4>
+                <?php if ($form->has_multiple_amount()) : ?>
+                <ul class="list-group m-0">
+                    <?php foreach ($form->amounts as $index => $amount) : ?>
+                    <li class="list-group-item m-0 my-2 py-4">
+                        <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
+                            <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($index); ?>" checked>
+                            <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
+                        </label>
+                    </li>
+                    <?php endforeach; ?>
 
-                <p>Payment type : <?php echo 'recurring' == $payment_type  ? 'Subscription' : 'One Time' ?></p>
-                <br>
+                </ul>
+                <?php else : ?>
+                <strong>Payment : <?php echo smartpay_amount_format($form->amounts[0]); ?></strong>
+                <?php endif; ?>
+
+                <!-- // Allow custom payment -->
+                <?php if ($form->allow_custom_amount) : ?>
+                <div class="form-group">
+                    <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
+                    <!-- // TODO: On fixed amount click set amount here. -->
+                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="<?php echo end($form->amounts); ?>" placeholder="5.0">
+                </div>
+                <?php endif; ?>
 
                 <label for="first_name">Payment by</label>
                 <ul class="list-unstyled">
@@ -54,10 +77,7 @@ $has_payment_error = false;
                 <input type="text" name="smartpay_last_name" value="Firdows">
                 <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
                 <br>
-                <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg"
-                    <?php if ($has_payment_error) echo 'disabled'; ?>>
-                    <?php echo $payment_button_text ?: 'Pay Now' ?>
-                </button>
+                <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg" <?php if ($has_payment_error) echo 'disabled'; ?>>Pay Now</button>
             </div>
         </form>
     </div> <!-- card -->
@@ -82,5 +102,4 @@ $has_payment_error = false;
             </div>
         </div>
     </div>
-
 </div> <!-- .smartpay -->

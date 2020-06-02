@@ -43,20 +43,12 @@ class SmartPay_Form
     protected $image = '';
 
     /**
-     * The form amount
+     * The form payment type
      *
-     * @since 0.0.1
-     * @var float
+     * @since  0.0.1
+     * @var string
      */
-    protected $amount = '';
-
-    /**
-     * The form has multiple_amount
-     *
-     * @since 0.0.1
-     * @var boolean
-     */
-    protected $has_multiple_amount = false;
+    protected $payment_type = 'one-time';
 
     /**
      * The form amounts
@@ -65,6 +57,22 @@ class SmartPay_Form
      * @var array
      */
     protected $amounts = array();
+
+    /**
+     * The form has multiple amount
+     *
+     * @since 0.0.1
+     * @var boolean
+     */
+    protected $has_multiple_amount = false;
+
+    /**
+     * The form accept custom amount
+     *
+     * @since 0.0.1
+     * @var boolean
+     */
+    protected $allow_custom_amount = false;
 
     /**
      * The form status
@@ -81,6 +89,7 @@ class SmartPay_Form
      * @var integer
      */
     protected $created_at = '';
+
     /**
      * The form updated_at time
      *
@@ -113,9 +122,9 @@ class SmartPay_Form
      */
     public function __construct($_id = false)
     {
-        if (!$_id) {
-            return;
-        }
+        $_id = absint($_id);
+
+        if (!$_id) return;
 
         $form = \WP_Post::get_instance($_id);
 
@@ -131,17 +140,9 @@ class SmartPay_Form
      */
     private function setup_form($form)
     {
-        if (!is_object($form)) {
-            return false;
-        }
+        if (!is_object($form) || !$form instanceof \WP_Post) return;
 
-        if (!$form instanceof \WP_Post) {
-            return false;
-        }
-
-        if ('smartpay_form' !== $form->post_type) {
-            return false;
-        }
+        if ('smartpay_form' !== $form->post_type) return;
 
         // Primary Identifier
         $this->ID = absint($form->ID);
@@ -152,9 +153,10 @@ class SmartPay_Form
         $this->title                = $form->post_title;
         $this->description          = $form->post_content;
         $this->image                = $this->_setup_image();
-        $this->amount               = $this->_setup_amount();
+        $this->payment_type         = $this->_setup_payment_type();
+        $this->amounts              = $this->_setup_amounts();
         $this->has_multiple_amount  = $this->has_multiple_amount();
-        $this->amounts              = $this->has_multiple_amount ? $this->_setup_amounts() : [];
+        $this->allow_custom_amount = $this->_setup_allow_custom_amount();
         $this->status               = $form->post_status;
         $this->created_at           = $form->post_date;
         $this->updated_at           = $form->post_modified;
@@ -201,9 +203,7 @@ class SmartPay_Form
      */
     public function update_meta($meta_key = '', $meta_value = '', $prev_value = '')
     {
-        if (empty($meta_key)) {
-            return;
-        }
+        if (empty($meta_key)) return;
 
         $meta_value = apply_filters('smartpay_form_update_meta_' . $meta_key, $meta_value, $this->ID);
 
@@ -222,30 +222,16 @@ class SmartPay_Form
     }
 
     /**
-     * Setup the amount
+     * Setup the payment_type
      *
      * @since  0.0.1
-     * @return float Form amount
+     * @return float payment type associated with the form
      */
-    private function _setup_amount()
+    private function _setup_payment_type()
     {
-        $amount = $this->get_meta('_form_amount');
+        $payment_type = $this->get_meta('_form_payment_type');
 
-        return !empty($amount) ?  (float) $amount : '';
-    }
-
-    /**
-     * Determine if the form has multiple amount enabled
-     *
-     * @since 0.0.1
-     * @return bool True when the form has multiple amount, false otherwise
-     */
-    public function has_multiple_amount()
-    {
-        $has_multiple_amount = $this->get_meta('_form_has_multiple_amount');
-
-        // Override whether the form has variables prices.
-        return (bool) apply_filters('smartpay_form_has_multiple_amount', $has_multiple_amount, $this->ID);
+        return $payment_type;
     }
 
     /**
@@ -257,9 +243,38 @@ class SmartPay_Form
     private function _setup_amounts()
     {
         $amounts = $this->get_meta('_form_amounts');
-        // TODO: Spilt array
+
+        if (!is_array($amounts) && !count($amounts)) return [];
 
         return $amounts;
+    }
+
+    /**
+     * Determine if the form has multiple amount enabled
+     *
+     * @since 0.0.1
+     * @return bool True when the form has multiple amount, false otherwise
+     */
+    public function has_multiple_amount()
+    {
+        $has_multiple_amount = count($this->amounts) > 1 ? true : false;
+
+        // Override whether the form has multiple amount.
+        return (bool) apply_filters('smartpay_form_has_multiple_amount', $has_multiple_amount, $this->ID);
+    }
+
+    /**
+     * Determine if the form has multiple amount enabled
+     *
+     * @since 0.0.1
+     * @return bool True when the form has multiple amount, false otherwise
+     */
+    public function _setup_allow_custom_amount()
+    {
+        $allow_custom_amount = $this->get_meta('_form_allow_custom_amount');
+
+        // Override whether the form accept custom amount.
+        return (bool) apply_filters('smartpay_form_allow_custom_amount', $allow_custom_amount, $this->ID);
     }
 
     /**
@@ -271,11 +286,13 @@ class SmartPay_Form
     {
         if (method_exists($this, 'get_' . $key)) {
 
-            return call_user_func(array($this, 'get_' . $key));
+            $value = call_user_func(array($this, 'get_' . $key));
         } else {
 
-            return new \WP_Error('smartpay-form-invalid-property', sprintf(__('Can\'t get property %s', 'smartpay'), $key));
+            $value = $this->$key ?? '';
         }
+
+        return $value;
     }
 
     /**
@@ -442,16 +459,16 @@ class SmartPay_Form
                         wp_update_post(array('ID' => $this->ID, 'post_content' => $this->description));
                         break;
 
-                    case 'amount':
-                        $this->update_meta('_form_amount', $this->amount);
-                        break;
-
-                    case 'has_multiple_amount':
-                        $this->update_meta('_form_has_multiple_amount', $this->has_multiple_amount);
+                    case 'payment_type':
+                        $this->update_meta('_form_payment_type', $this->payment_type);
                         break;
 
                     case 'amounts':
                         $this->update_meta('_form_amounts', $this->amounts);
+                        break;
+
+                    case 'allow_custom_amount':
+                        $this->update_meta('_form_allow_custom_amount', $this->allow_custom_amount);
                         break;
 
                     case 'status':

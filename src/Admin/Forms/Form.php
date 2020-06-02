@@ -20,8 +20,6 @@ final class Form
      */
     private function __construct()
     {
-        Meta_Box::instance();
-
         add_filter('manage_smartpay_form_posts_columns', [$this, 'smartpay_form_columns']);
 
         add_filter('manage_smartpay_form_posts_custom_column', [$this, 'smartpay_form_column_data'], 10, 2);
@@ -43,6 +41,7 @@ final class Form
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Form)) {
             self::$instance = new self();
+            self::$instance->meta_box   = Meta_Box::instance();
         }
 
         return self::$instance;

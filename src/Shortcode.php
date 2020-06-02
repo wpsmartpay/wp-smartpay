@@ -51,43 +51,31 @@ final class Shortcode
 
     public function form_shortcode($atts)
     {
-        // global $smartpay_options;
-
         extract(shortcode_atts([
             'id' => null,
         ], $atts));
 
-        if (!isset($id)) {
-            return;
-        }
+        if (!isset($id)) return;
 
         // TODO: Add message if no payment method setup
 
-        $form = get_post($id);
+        $form = smartpay_get_form($id);
 
-        if ($form && 'publish' === $form->post_status) {
+        if (!isset($form)) return;
 
-            $data = [
-                'form_id'                           => $form->ID,
-                'amount'                            => get_post_meta($form->ID, '_form_amount', true),
-                'payment_type'                      => get_post_meta($form->ID, '_form_payment_type', true),
-                'payment_button_text'               => get_post_meta($form->ID, '_form_payment_button_text', true),
-                'payment_button_processing_text'    => get_post_meta($form->ID, '_form_payment_button_processing_text', true),
-                'payment_button_style'              => get_post_meta($form->ID, '_form_payment_button_style', true),
-                'paddle_checkout_image'             => get_post_meta($form->ID, '_form_paddle_checkout_image', true),
-                'paddle_checkout_location'          => get_post_meta($form->ID, '_form_paddle_checkout_location', true),
-                'form_image'          => has_post_thumbnail($form->ID) ? wp_get_attachment_url(get_post_thumbnail_id($form->ID), 'thumbnail') : ''
-            ];
+        if (!$form->can_pay()) {
+            echo 'You can\'t pay on this form.';
+            return;
+        }
 
-            try {
-                ob_start();
+        try {
+            ob_start();
 
-                echo smartpay_view_render('shortcodes/form', $data);
+            echo smartpay_view_render('shortcodes/form', ['form' => $form]);
 
-                return ob_get_clean();
-            } catch (\Exception $e) {
-                return $e->getMessage();
-            }
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -97,12 +85,13 @@ final class Shortcode
             'id' => null,
         ], $atts));
 
-        if (!isset($id)) {
-            return;
-        }
+        if (!isset($id)) return;
+
         // TODO: Add message if no payment method setup
 
         $product = smartpay_get_product($id);
+
+        if (!isset($product)) return;
 
         if (!$product->can_purchase()) {
             echo 'You can\'t buy this product';

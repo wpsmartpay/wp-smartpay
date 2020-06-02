@@ -20,7 +20,6 @@ final class Product
      */
     private function __construct()
     {
-        Meta_Box::instance();
     }
 
     /**
@@ -37,6 +36,7 @@ final class Product
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Product)) {
             self::$instance = new self();
+            self::$instance->meta_box   = Meta_Box::instance();
         }
 
         return self::$instance;
