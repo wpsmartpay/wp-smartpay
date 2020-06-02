@@ -41,10 +41,8 @@ jQuery(document).ready(function ($) {
      * add active class for variation price
      */
     $('#single-payment-card .product-variations .list-group-item').on('click', function(e){
-        $(this).parent().find('li.active span').removeClass('btn-outline-light').addClass('btn-outline-dark');
-        $(this).parent().find('li.active').removeClass('active');
-        $(this).find('span').removeClass('btn-outline-dark').addClass('btn-outline-light');
-        $(this).addClass('active');
+        $(this).parent().find('li.selected').removeClass('selected');
+        $(this).addClass('selected');
     })
     /**
      * open checkout form

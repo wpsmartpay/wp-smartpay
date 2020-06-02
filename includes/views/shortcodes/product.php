@@ -38,7 +38,7 @@ $has_payment_error = false;
                                     name="smartpay_product_variation_id" 
                                     id="smartpay-product-variation-<?php echo esc_attr($variation['id']); ?>" 
                                     value="<?php echo esc_attr($variation['id']); ?>" checked >
-                                <span class="btn btn-outline-dark"><?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
+                                <span class="price"><?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
                                 <h5 class="m-0 mt-3"><?php echo esc_html(ucfirst($variation['name'])); ?></h5>
                                 <p class="variation-short-description m-0"><?php echo esc_attr($variation['description']); ?></p>
                                 </label>
@@ -51,7 +51,7 @@ $has_payment_error = false;
                     </p>
                     <?php endif; ?>
 
-                    <button id="checkout_button" type="button" class="btn btn-primary btn-block btn-lg">
+                    <button id="checkout_button" type="button" class="btn btn-success btn-block btn-lg">
                         <?php echo esc_html('Pay Now', 'wp-smartpay'); ?>
                     </button>
                 </div> <!-- col -->
