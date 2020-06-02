@@ -71,11 +71,17 @@ final class Paddle extends Payment_Gateway
     private function init_actions()
     {
         add_action('init', [$this, 'process_webhooks']);
+
         add_action('smartpay_paddle_process_payment', [$this, 'process_payment']);
+
         add_action('smartpay_paddle_ajax_process_payment', [$this, 'ajax_process_payment']);
+
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
+
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
+
         add_filter('smartpay_payment_paddle_receipt', [$this, 'payment_receipt']);
+
         add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
 
@@ -255,9 +261,6 @@ final class Paddle extends Payment_Gateway
     {
         if (isset($_GET['smartpay-listener']) && $_GET['smartpay-listener'] == 'paddle') {
 
-            // $payment = smartpay_get_payment(15);
-            // $payment->update_status('completed');
-
             $signature     = $_POST['p_signature'];
             $web_hook_data = stripslashes_deep($_POST);
             $identifier    = $_GET['identifier'] ?? null;
@@ -321,7 +324,7 @@ final class Paddle extends Payment_Gateway
                         if ($identifier == $this->fulfillment_webhook_identifier) {
                             /* Sent when a one-time purchase order is processed for a product with webhook fulfillment enabled */
 
-                            if ($payment->update_status('publish')) {
+                            if ($payment->update_status('completed')) {
                                 // Paddle transaction id.
                                 $paddle_order_id = sanitize_text_field($web_hook_data['p_order_id'] ?? null);
 
@@ -370,7 +373,7 @@ final class Paddle extends Payment_Gateway
                                         die('Success.');
                                     }
 
-                                    if ($payment->update_status('publish')) {
+                                    if ($payment->update_status('completed')) {
                                         if ($paddle_order_id) {
                                             smartpay_set_payment_transaction_id($payment->ID, $paddle_order_id);
                                         }
