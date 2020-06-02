@@ -231,8 +231,6 @@ class SmartPay_Form
     {
         $payment_type = $this->get_meta('_form_payment_type');
 
-        if (!is_array($payment_type) && !count($payment_type)) return [];
-
         return $payment_type;
     }
 
