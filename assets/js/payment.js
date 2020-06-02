@@ -52,7 +52,7 @@ jQuery(document).ready(function ($) {
         $(this).addClass('selected');
     })
     /**
-     * open checkout form
+     * open payment checkout form
      */
     $('button#checkout_button').on('click', function (e) {
         e.preventDefault();
@@ -61,6 +61,19 @@ jQuery(document).ready(function ($) {
             $('body').addClass('smartpay');
         };
         $('#smartpay_payment_checkout_popup').modal('show');
+    })
+    /**
+     * open form checkout form
+     */
+    $('button#form_checkout_button').on('click', function (e) {
+        e.preventDefault();
+        var checkoutData = getFormJSONData($('.smartpay #checkout_form'));
+        var selectedPriceAmount = checkoutData.smartpay_amount;
+        $('#smartpay_form_checkout_popup #payment_form input[name="smartpay_amount"]').val(selectedPriceAmount);
+        if(! $('body').hasClass('smartpay')){
+            $('body').addClass('smartpay');
+        };
+        $('#smartpay_form_checkout_popup').modal('show');
     })
 
     function getFormJSONData($form) {
