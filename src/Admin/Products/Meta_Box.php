@@ -88,8 +88,8 @@ final class Meta_Box
         extract($_POST);
 
         $product = new SmartPay_Product($post_id);
-        $product->base_price     = $base_price;
-        $product->sale_price     = $sale_price;
+        $product->base_price     = floatval($base_price);
+        $product->sale_price     = floatval($sale_price);
         $product->has_variations = (isset($has_variations) && 1 == $has_variations) ? true : false;
         $product->files          = isset($files) ? array_values($files) ?? [] : [];
         $product->save();
@@ -102,7 +102,7 @@ final class Meta_Box
                 $child_product->description       = $variation['description'] ?? '';
                 $child_product->files             = array_keys($variation['files'] ?? []);
                 $child_product->parent            = $product->ID;
-                $child_product->additional_amount = $variation['additional_amount'] ?? 0;
+                $child_product->additional_amount = floatval($variation['additional_amount'] ?? 0);
                 $child_product->save();
             }
         }

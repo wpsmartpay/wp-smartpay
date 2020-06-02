@@ -28,8 +28,6 @@ final class Meta_Box
         add_action('save_post', [$this, 'save_form_meta']);
 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_form_metabox_scripts']);
-
-        add_action('admin_footer', [$this, 'admin_footer_scripts']);
     }
 
     /**
@@ -87,24 +85,17 @@ final class Meta_Box
         extract($_POST);
 
         $form = new SmartPay_Form($post_id);
-        $form->base_price     = $base_price;
-        $form->sale_price     = $sale_price;
-        $form->has_variations = (isset($has_variations) && 1 == $has_variations) ? true : false;
-        $form->files          = isset($files) ? array_values($files) ?? [] : [];
+        // [1, 5, 6, 7, 8, 9]
+        $filtered_amount = array_unique(array_filter(array_unique($amounts)));
+
+        $amounts = array_map(function ($amount) {
+            return ($amount);
+        }, $filtered_amount);
+
+        $form->payment_type         = $payment_type;
+        $form->amounts              = $amounts;
+        $form->allow_custom_amount  = $allow_custom_amount;
         $form->save();
-
-        if ($has_variations && isset($variations)) {
-
-            foreach ($variations as $variation_id => $variation) {
-                $child_form                    = new form_Variation($variation_id ?? 0);
-                $child_form->name              = $variation['name'] ?? '';
-                $child_form->description       = $variation['description'] ?? '';
-                $child_form->files             = array_keys($variation['files'] ?? []);
-                $child_form->parent            = $form->ID;
-                $child_form->additional_amount = $variation['additional_amount'] ?? 0;
-                $child_form->save();
-            }
-        }
 
         // Scope for other extentions
         do_action('smartpay_save_form', $post_id, $post);
@@ -118,13 +109,5 @@ final class Meta_Box
         wp_register_script('form-metabox', SMARTPAY_PLUGIN_ASSETS . '/js/form_metabox.js', '', SMARTPAY_VERSION);
 
         wp_enqueue_script('form-metabox');
-    }
-
-    public function admin_footer_scripts()
-    {
-        global $post;
-        if ($post && $post->post_type == 'smartpay_form') {
-            echo '<script> document.getElementById("edit-slug-box").outerHTML = ""; </script>';
-        }
     }
 }

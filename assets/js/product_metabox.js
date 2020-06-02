@@ -160,7 +160,7 @@ jQuery(function ($) {
 
         variationId = 'variation_' + ($('#smartpay-metabox .variations .variation-option').length + 1)
 
-        option = `<div class="variation-option" data-variation-id="${variationId}">
+        let option = `<div class="variation-option" data-variation-id="${variationId}">
             <div class="variation-option__header p-3">
                 <div class="form-row">
                     <div class="col-7">

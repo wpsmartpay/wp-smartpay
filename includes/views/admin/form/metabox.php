@@ -1,73 +1,21 @@
 <div class="smartpay" id="smartpay-metabox" style="margin: -6px -12px -12px -12px;">
-
-    <div class="smartpay-form-metabox p-3">
-        <!-- Payment Type -->
-        <div class="payment-type">
-            <label class="text-muted my-2 d-block"><strong>Payment Type</strong></label>
-            <ul class="list-group list-group-horizontal-sm">
-                <li class="list-group-item d-flex justify-content-between">
-                    <div class="custom-checkbox custom-checkbox-round">
-                        <input type="radio" class="custom-control-input" id="payment_type_one-time" name="payment_type" value="one-time" checked>
-                        <label class="custom-control-label" for="payment_type_one-time">One-Time</label>
-                    </div>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <div class="custom-checkbox custom-checkbox-round">
-                        <input type="radio" class="custom-control-input" id="payment_type__" name="payment_type" value="_" disabled>
-                        <label class="custom-control-label" for="payment_type__">Recurring (Available on Pro)</label>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Fixed amount container -->
-        <div class="fixed-amount d-none">
-            <div class="form-row">
-                <div class="col">
-                    <div class="form-group">
-                        <label for="amount" class="text-muted my-2 d-block"><strong>Amount</strong></label>
-                        <input type="text" class="form-control" id="amount" name="amount" value="<?php echo $amount; ?>">
-                    </div>
+    <div class="d-flex">
+        <div class="col-3 bg-light border-right">
+            <div class="py-3">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active text-decoration-none d-flex align-items-center" id="smartpay-pricing-tab" data-toggle="pill" href="#smartpay-pricing" role="tab" aria-controls="smartpay-pricing" aria-selected="false">
+                        <i data-feather="dollar-sign" width="14" height="14"></i> <span class="ml-2">Pricing</span>
+                    </a>
                 </div>
             </div>
         </div>
-
-        <!-- Multiple amount container -->
-        <div class="multiple-amount">
-            <label for="amount" class="text-muted my-2 d-block"><strong>Amounts</strong></label>
-            <div class="form-row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="amount" name="amount" value="<?php echo $amount; ?>" placeholder="5.0">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="amount" name="amount" value="<?php echo $amount; ?>" placeholder="7.0">
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-secondary">Add more</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Allow custom amount container -->
-        <div class="allow-custom-amount">
-            <label for="amount" class="text-muted my-2 d-block"><strong>Custom Amount</strong></label>
-            <div class="row">
-                <div class="col-6">
-                    <div class="card m-0 d-flex justify-content-between p-2">
-                        <div class="custom-control custom-switch">
-                            <input type="hidden" name="allow_custom" value="0">
-                            <input type="checkbox" class="custom-control-input" id="allow_custom" name="allow_custom" value="1"><label class="custom-control-label" for="allow_custom">Allow Custom Amount</label>
-                        </div>
-                    </div>
+        <div class="col-9">
+            <div class="tab-content py-3" id="smartpay-tabContent">
+                <div class="tab-pane fade show active" id="smartpay-pricing" role="tabpanel" aria-labelledby="smartpay-pricing-tab">
+                    <?php include "metabox/pricing.php" ?>
                 </div>
             </div>
         </div>
     </div>
+
 </div>
