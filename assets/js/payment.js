@@ -9,6 +9,13 @@ jQuery(document).ready(function ($) {
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')
         $('#smartpay_payment_checkout_popup .overlay').css('display', 'block');
+        $('#smartpay_payment_gateway_popup .modal-body').html(`
+            <div class="text-center">
+                    <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>`
+        )
         $('#smartpay_payment_gateway_popup').modal('show')
 
         // let data = { action: 'smartpay_payment_process_action', data: getFormJSONData($('.smartpay #payment_form')) }
@@ -47,7 +54,7 @@ jQuery(document).ready(function ($) {
     /**
      * open checkout form
      */
-    $('button#checkout_button').on('click', function(e){
+    $('button#checkout_button').on('click', function (e) {
         e.preventDefault();
         getFormJSONData($('.smartpay #payment_form'));
         if(! $('body').hasClass('smartpay')){
