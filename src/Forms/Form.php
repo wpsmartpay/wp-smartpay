@@ -77,7 +77,7 @@ final class Form
             'label'                 => __('SmartPay Form', 'smartpay'),
             'description'           => __('SmartPay Form', 'smartpay'),
             'labels'                => $labels,
-            'supports'              => array('title', 'thumbnail', 'revisions', 'author'),
+            'supports'              => array('title', 'thumbnail', 'revisions'),
             'taxonomies'            => array(),
             'hierarchical'          => false,
             'public'                => true,
