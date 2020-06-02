@@ -8,6 +8,13 @@ jQuery(document).ready(function ($) {
         let buttonText = $('button#pay_now').text()
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')
+        $('#smartpay_payment_gateway_popup .modal-body').html(`
+            <div class="text-center">
+                    <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>`
+        )
         $('#smartpay_payment_gateway_popup').modal('show')
 
         // let data = { action: 'smartpay_payment_process_action', data: getFormJSONData($('.smartpay #payment_form')) }
@@ -38,7 +45,7 @@ jQuery(document).ready(function ($) {
     /**
      * add active class for variation price
      */
-    $('#payment_form .product-variations .list-group-item').on('click', function(e){
+    $('#payment_form .product-variations .list-group-item').on('click', function (e) {
         $(this).parent().find('li.active span').removeClass('btn-outline-light').addClass('btn-outline-dark');
         $(this).parent().find('li.active').removeClass('active');
         $(this).find('span').removeClass('btn-outline-dark').addClass('btn-outline-light');
@@ -47,7 +54,7 @@ jQuery(document).ready(function ($) {
     /**
      * open checkout form
      */
-    $('button#checkout_button').on('click', function(e){
+    $('button#checkout_button').on('click', function (e) {
         e.preventDefault();
         getFormJSONData($('.smartpay #payment_form'));
         $('#smartpay_payment_checkout_popup').modal('show')
