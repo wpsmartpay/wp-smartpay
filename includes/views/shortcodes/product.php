@@ -10,7 +10,7 @@ $has_payment_error = false;
 ?>
 
 <div class="smartpay smartpay-payment-shortcode-output">
-    <div id="single-payment-card" class="card">
+    <div id="single-payment-card" class="card single-payment-card">
         <div class="bg-light border-bottom">
             <img src="<?php echo $product->image; ?>" class="card-img-top">
         </div>
