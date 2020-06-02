@@ -6,7 +6,8 @@ $gateways = smartpay_get_enabled_payment_gateways(true);
 
 $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
 $has_payment_error = false;
-// var_dump('hello');
+$count = 0;
+
 ?>
 
 <div class="smartpay smartpay-payment-shortcode-output">
@@ -24,8 +25,8 @@ $has_payment_error = false;
                 <?php if ($product->has_variations()) : ?>
                     <div class="product-variations mb-2">
                         <ul class="list-group m-0">
-                            <?php foreach ($product->variations as $variation) : ?>
-                            <li class="list-group-item m-0 my-2 py-4">
+                            <?php foreach ($product->variations as $variation) : $count++; ?>
+                            <li class="list-group-item m-0 my-2 py-4 <?php echo (1==$count) ? 'selected': null ?>">
                                 <?php //echo '<label for="smartpay-product-variation-' . esc_attr($variation['id']) . '">
                                     // <input type="radio" name="smartpay_product_variation_id" id="smartpay-product-variation-' . esc_attr($variation['id']) . '" value="' . esc_attr($variation['id']) . '" checked>';
                                         //echo esc_html($variation['name']) . ' - ' . smartpay_amount_format(($product_price + $variation['additional_amount']));
