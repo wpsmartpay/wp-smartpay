@@ -883,6 +883,7 @@
 .smartpay .list-group-item-dark{color:#1b1e21;background-color:#c6c8ca}
 .smartpay .list-group-item-dark.list-group-item-action:hover,.smartpay .list-group-item-dark.list-group-item-action:focus{color:#1b1e21;background-color:#b9bbbe}
 .smartpay .list-group-item-dark.list-group-item-action.active{color:#fff;background-color:#1b1e21;border-color:#1b1e21}
+.smartpay #payment_form{border:solid 1px red;color:red}
 .smartpay #payment_form .product-price .product-variations .variation-short-description{font-size:16px;color:#007bff}
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}

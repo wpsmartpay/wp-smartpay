@@ -10,7 +10,7 @@ $has_payment_error = false;
 ?>
 
 <div class="smartpay">
-    <div class="card">
+    <div id="single-payment-card" class="card">
         <div class="bg-light border-bottom">
             <img src="<?php echo $product->image; ?>" class="card-img-top">
         </div>
@@ -58,7 +58,6 @@ $has_payment_error = false;
             </div> <!-- row -->
         </div> <!-- card-body -->
     </div> <!-- card -->
-
     <!-- Modal -->
     <div class="modal fade" id="smartpay_payment_checkout_popup" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered  modal-lg" role="document">
