@@ -79,11 +79,7 @@ jQuery(document).ready(function ($) {
     $('button#form_checkout_button').on('click', function (e) {
         e.preventDefault();
         var checkoutData = getFormJSONData($('.smartpay #checkout_form'));
-        if(checkoutData.smartpay_amount_custom){
-            var selectedPriceAmount = checkoutData.smartpay_amount_custom;
-        }else{
-            var selectedPriceAmount = checkoutData.smartpay_amount;
-        }
+        var selectedPriceAmount = checkoutData.smartpay_amount;
         $('#smartpay_form_checkout_popup #payment_form input[name="smartpay_amount"]').val(selectedPriceAmount);
         if(! $('body').hasClass('smartpay')){
             $('body').addClass('smartpay');
