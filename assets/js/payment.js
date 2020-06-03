@@ -20,7 +20,7 @@ jQuery(document).ready(function ($) {
         // let data = { action: 'smartpay_payment_process_action', data: getFormJSONData($('.smartpay #payment_form')) }
 
         let data = {
-            action: 'smartpay_payment_process_action',
+            action: 'smartpay_process_payment',
             data: getFormJSONData($('.smartpay #payment_form'))
         };
 
