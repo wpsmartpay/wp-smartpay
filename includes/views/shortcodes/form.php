@@ -12,44 +12,53 @@ $count = 0;
         <form id="checkout_form">
 
             <!-- Form image -->
-            <?php if (isset($form->image)) : ?>
+            <?php if ($form->image) : ?>
             <div class="bg-light border-bottom">
                 <img src="<?php echo $form->image; ?>" class="card-img-top" alt="<?php echo $form->title; ?>">
             </div>
             <?php endif; ?>
 
             <div class="card-body p-5">
-                <h4><?php echo $form->title; ?></h4>
+                <div class="row">
+                    <div class="col-7">
+                        <h2 class="mt-0"><?php echo $form->title; ?></h2>
+                        <p><?php echo $form->description; ?></p>
+                    </div>
+                    <div class="col">
+                        <?php if ($form->has_multiple_amount()) : ?>
+                        <div class="multiple-amount">
+                            <ul class="list-group m-0">
+                                <?php foreach ($form->amounts as $index => $amount) : $count++; ?>
+                                <li class="list-group-item m-0 my-2 py-4 <?php echo (1==$count) ? 'selected' : '';  ?>">
+                                    <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
+                                        <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" <?php echo (1==$count) ? 'checked' : ''; ?> >
+                                        <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
+                                    </label>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                        <?php else : ?>
+                        <strong>Payment : <?php echo smartpay_amount_format($form->amounts[0]); ?></strong>
+                        <?php endif; ?>
 
-                <?php if ($form->has_multiple_amount()) : ?>
-                <div class="multiple-amount">
-                    <ul class="list-group m-0">
-                        <?php foreach ($form->amounts as $index => $amount) : $count++; ?>
-                        <li class="list-group-item m-0 my-2 py-4 <?php echo (1==$count) ? 'selected' : '';  ?>">
-                            <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
-                                <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>">
-                                <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
-                            </label>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
+                        <!-- // Allow custom payment -->
+                        <?php if ($form->allow_custom_amount) : ?>
+                        <div class="form-group">
+                            <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
+                            <!-- // TODO: On fixed amount click set amount here. -->
+                            <input type="text" id="smartpay-amount-custom" name="smartpay_amount_custom" value="" placeholder="5.0">
+                        </div>
+                        <?php endif; ?>
+                        
+                        <button id="form_checkout_button" type="submit" class="btn btn-success btn-block btn-lg">
+                            <?php echo esc_html('Pay Now', 'wp-smartpay'); ?>
+                        </button>
+                    </div>
                 </div>
-                <?php else : ?>
-                <strong>Payment : <?php echo smartpay_amount_format($form->amounts[0]); ?></strong>
-                <?php endif; ?>
-
-                <!-- // Allow custom payment -->
-                <?php if ($form->allow_custom_amount) : ?>
-                <div class="form-group">
-                    <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
-                    <!-- // TODO: On fixed amount click set amount here. -->
-                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount_custom" value="" placeholder="5.0">
-                </div>
-                <?php endif; ?>
                 
-                <button id="form_checkout_button" type="submit" class="btn btn-success btn-block btn-lg">
-                    <?php echo esc_html('Pay Now', 'wp-smartpay'); ?>
-                </button>
+
+                
             </div>
         </form>
     </div> <!-- card -->
