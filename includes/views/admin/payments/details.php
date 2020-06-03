@@ -44,11 +44,9 @@ $payment = new SmartPay_Payment($payment_id);
                         <div class="d-flex align-items-center border-bottom py-3">
                             <div class="col d-flex">
                                 <h3 class="my-1 h3 mr-3">
-                                    <strong
-                                        class="payment-amount"><?php echo smartpay_amount_format($payment->amount, $payment->currency); ?></strong>
+                                    <strong class="payment-amount"><?php echo smartpay_amount_format($payment->amount, $payment->currency); ?></strong>
                                 </h3>
-                                <span
-                                    class="btn px-2 py-0 pb-1 <?php echo 'publish' == $payment->status ? 'btn-success' : 'btn-danger'; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
+                                <span class="btn px-2 py-0 pb-1 <?php echo 'publish' == $payment->status ? 'btn-success' : 'btn-danger'; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
                             </div>
                             <div class="col d-flex justify-content-end">
                                 <h3 class="h3 text-primary px-2 my-0 pb-1">
@@ -155,11 +153,11 @@ $payment = new SmartPay_Payment($payment_id);
                         <div class="d-flex flex-lg-row flex-column py-2">
                             <div class="col">
                                 <p><strong>First Name</strong></p>
-                                <p><?php echo $customer['first_name'] ?? ''; ?></p>
+                                <p><?php echo $customer['first_name'] ?: '-'; ?></p>
                             </div>
                             <div class="col">
                                 <p><strong>Last Name</strong></p>
-                                <p><?php echo $customer['last_name'] ?? ''; ?></p>
+                                <p><?php echo $customer['last_name'] ?: '-'; ?></p>
                             </div>
                             <div class="col">
                                 <p><strong>Email</strong></p>
