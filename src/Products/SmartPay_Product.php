@@ -181,7 +181,7 @@ class SmartPay_Product
         // Protected ID that can never be changed
         $this->_ID = absint($product->ID);
 
-        $this->title          = $product->post_title;
+        $this->title          = ucfirst($product->post_title);
         $this->description    = $product->post_content;
         $this->image          = $this->_setup_image();
         $this->base_price     = $this->_setup_base_price();
@@ -267,7 +267,7 @@ class SmartPay_Product
     {
         $base_price = $this->get_meta('_product_base_price');
 
-        return !empty($base_price) ?  (float) $base_price : '';
+        return !empty($base_price) ? (float) $base_price : null;
     }
 
     /**
@@ -280,7 +280,7 @@ class SmartPay_Product
     {
         $sale_price = (float) $this->get_meta('_product_sale_price');
 
-        return !empty($sale_price) ?  (float) $sale_price : '';
+        return !empty($sale_price) ? (float) $sale_price : null;
     }
 
 
