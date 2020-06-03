@@ -43,10 +43,11 @@ $has_payment_error = false;
 
                 <!-- // Allow custom payment -->
                 <?php if ($form->allow_custom_amount) : ?>
+                <?php $form_amount = $form->amounts; ?>
                 <div class="form-group">
                     <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
                     <!-- // TODO: On fixed amount click set amount here. -->
-                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="<?php echo end($form->amounts); ?>" placeholder="5.0">
+                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="<?php echo end($form_amount); ?>" placeholder="5.0">
                 </div>
                 <?php endif; ?>
 

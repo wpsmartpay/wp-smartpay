@@ -23,6 +23,7 @@ class DB_Customer extends DB_Model
         $this->table_name  = $wpdb->prefix . 'smartpay_customers';
         $this->version     = '1.0';
         $this->primary_key = 'ID';
+        $this->cache_group = 'customers';
 
         // add_action('profile_update', array($this, 'update_customer_email_on_user_update'), 10, 2);
     }
@@ -95,7 +96,7 @@ class DB_Customer extends DB_Model
     /**
      * Delete a customer
      *
-     * @since   0.0.1
+     * @since  0.0.1
      * @return  bool
      */
     public function delete($row_id = 0)
@@ -125,7 +126,7 @@ class DB_Customer extends DB_Model
     /**
      * Updates the email address of a customer record when the email on a user is updated
      *
-     * @since   2.4
+     * @since  0.0.1
      */
     public function update_customer_email_on_user_update($user_id = 0, $old_user_data)
     {

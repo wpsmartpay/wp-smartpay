@@ -16,7 +16,7 @@ final class Gateway
     /**
      * Construct Gateway class.
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @access private
      */
     private function __construct()
@@ -31,7 +31,7 @@ final class Gateway
      * Ensures that only one instance of Gateway exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return object|Gateway
      * @access public
      */

@@ -23,7 +23,7 @@
                             <?php if (count($gateways) == 1) : ?>
                             <?php $gateways_index = array_keys($gateways); ?>
                             <p class="payment-gateway--label single-gateway"><?php echo sprintf(__('Pay with ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p>
-                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo reset($gateways_index); ?>">
+                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>">
 
                             <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>

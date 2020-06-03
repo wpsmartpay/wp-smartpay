@@ -137,7 +137,7 @@ function smartpay_get_payment_status_label($status = '')
 /**
  * Retrieves all available statuses for payments.
  *
- * @since 1.0.8.1
+ * @since 0.1.1
  * @return array $payment_status All the available payment statuses
  */
 function smartpay_get_payment_statuses()
@@ -154,5 +154,3 @@ function smartpay_get_payment_statuses()
 
     return apply_filters('smartpay_payment_statuses', $payment_statuses);
 }
-
-// edd_update_payment_meta($payment_id, 'email', $user->user_email);s

@@ -16,7 +16,7 @@ final class Setting
     /**
      * Construct Setting class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -30,7 +30,7 @@ final class Setting
      * Ensures that only one instance of Setting exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Setting
      * @access public
      */

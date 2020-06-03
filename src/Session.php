@@ -19,7 +19,7 @@ final class Session
      *
      * @var array
      * @access private
-     * @since 1.5
+     * @since 0.0.1
      */
     private $session;
 
@@ -28,14 +28,14 @@ final class Session
      *
      * @var string
      * @access private
-     * @since 2.3
+     * @since 0.0.1
      */
     private $session_key = 'SMARTPAY_SESSION';
 
     /**
      * Construct Session class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -46,7 +46,7 @@ final class Session
     /**
      * Set a session variable
      *
-     * @since 1.5
+     * @since 0.0.1
      *
      * @param string $key Session key
      * @param int|string|array $value Session variable
@@ -70,7 +70,7 @@ final class Session
     /**
      * Retrieve a session variable
      *
-     * @since 1.5
+     * @since 0.0.1
      * @param string $key Session key
      * @return mixed Session variable
      */
@@ -140,7 +140,7 @@ final class Session
      * Ensures that only one instance of Session exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Session
      * @access public
      */

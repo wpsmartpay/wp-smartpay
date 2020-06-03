@@ -24,7 +24,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Construct Paddle class.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @access private
      */
     private function __construct()
@@ -48,7 +48,7 @@ final class Paddle extends Payment_Gateway
      * Ensures that only one instance of Paddle exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @return object|Paddle
      * @access public
      */
@@ -65,7 +65,7 @@ final class Paddle extends Payment_Gateway
      * Initialize wp actions.
      *
      * @access private
-     * @since 0.1
+     * @since  0.0.1
      * @return void
      */
     private function init_actions()
@@ -88,7 +88,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Process webhook requests.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @param array $payment_data
      * @return void
      * @access public
@@ -184,7 +184,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Payment receipt.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @param object $payment
      * @return void
      * @access public
@@ -204,7 +204,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Generate pay now content.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @param object $payment
      * @access private
      */
@@ -253,7 +253,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Process webhook requests.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @return void
      * @access public
      */
@@ -452,7 +452,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Add Gateway subsection
      *
-     * @since 0.1
+     * @since  0.0.1
      * @param array $sections Gateway subsections
      * @return array
      * @access public
@@ -467,7 +467,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Register the gateway settings for Paddle
      *
-     * @since 0.1
+     * @since  0.0.1
      * @param array $settings
      * @return array
      * @access public
@@ -552,7 +552,7 @@ final class Paddle extends Payment_Gateway
                 'smartpay'
             ),
 
-            $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
+            $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
 
             array(
                 'id'    => 'paddle_webhook_description',
@@ -569,7 +569,7 @@ final class Paddle extends Payment_Gateway
     /**
      * Set and check API credentials
      *
-     * @since 0.1
+     * @since  0.0.1
      * @return boolean
      * @access private
      */

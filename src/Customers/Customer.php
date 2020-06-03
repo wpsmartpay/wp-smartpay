@@ -16,7 +16,7 @@ final class Customer
     /**
      * Construct Customer class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -29,7 +29,7 @@ final class Customer
      * Ensures that only one instance of Customer exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Customer
      * @access public
      */

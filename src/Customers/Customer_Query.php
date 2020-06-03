@@ -206,14 +206,14 @@ class Customer_Query
         if ($db_customer) {
             $this->db_customer = $db_customer;
         } else {
-            $this->db_customer = SmartPay()->customers;
+            $this->db_customer = new DB_Customer;
         }
 
         $this->table_name       = $this->db_customer->table_name;
-        $this->meta_type        = $this->db_customer->meta_type;
+        $this->meta_type        = '';
         $this->primary_key      = $this->db_customer->primary_key;
-        $this->date_key         = $this->db_customer->date_key;
-        $this->cache_group      = $this->db_customer->cache_group;
+        $this->date_key         = '';
+        $this->cache_group      = '';
 
         $this->query_var_defaults = array(
             'number'        => 20,
@@ -287,7 +287,7 @@ class Customer_Query
         /**
          * Fires after the customer query vars have been parsed.
          *
-         * @since 0.0.1
+         * @since  0.0.1
          *
          * @param Customer_Query &$this The Customer_Query instance (passed by reference).
          */
@@ -311,7 +311,7 @@ class Customer_Query
         /**
          * Fires before customers are retrieved.
          *
-         * @since 0.0.1
+         * @since  0.0.1
          *
          * @param Customer_Query &$this Current instance of Customer_Query, passed by reference.
          */
@@ -428,7 +428,7 @@ class Customer_Query
             /**
              * Filters the query used to retrieve the count of found customers.
              *
-             * @since 0.0.1
+             * @since  0.0.1
              *
              * @param string             $found_customers_query SQL query. Default 'SELECT FOUND_ROWS()'.
              * @param Customer_Query $customer_query        The `Customer_Query` instance.

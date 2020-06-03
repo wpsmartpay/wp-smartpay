@@ -14,7 +14,7 @@ final class Product
     /**
      * Construct Product class.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @access private
      */
     private function __construct()
@@ -34,7 +34,7 @@ final class Product
      * Ensures that only one instance of Product exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @return object|Product
      * @access public
      */
@@ -50,7 +50,7 @@ final class Product
     /**
      * Register smartpay Product post type.
      *
-     * @since 0.1
+     * @since  0.0.1
      * @access private
      */
     public function register_products_post_type()
@@ -131,7 +131,7 @@ final class Product
     /**
      * Change default "Enter title here" input
      *
-     * @since 1.4.0.2
+     * @since 0.0.1
      * @param string $title Default title placeholder text
      * @return string $title New placeholder text
      */

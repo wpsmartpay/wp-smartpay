@@ -14,7 +14,7 @@ class HTML_Elements
     /**
      * Renders an HTML Text field
      *
-     * @since 0.1
+     * @since 0.0.1
      *
      * @param array $args Arguments for the text field
      * @return string Text field
@@ -78,7 +78,7 @@ class HTML_Elements
     /**
      * Renders an Bootstrap Switch element
      *
-     * @since 1.9
+     * @since 0.0.1
      *
      * @param array $args
      *
@@ -118,7 +118,7 @@ class HTML_Elements
     /**
      * Renders an HTML Dropdown
      *
-     * @since 1.6
+     * @since 0.0.1
      *
      * @param array $args
      *
@@ -156,7 +156,7 @@ class HTML_Elements
         }
 
         if ($args['chosen']) {
-            $args['class'] .= ' edd-select-chosen';
+            $args['class'] .= ' smartpay-select-chosen';
             if (is_rtl()) {
                 $args['class'] .= ' chosen-rtl';
             }
@@ -181,7 +181,7 @@ class HTML_Elements
         }
 
         $class  = implode(' ', array_map('sanitize_html_class', explode(' ', $args['class'])));
-        $output = '<select' . $disabled . $readonly . ' name="' . esc_attr($args['name']) . '" id="' . esc_attr(smartpay_sanitize_key(str_replace('-', '_', $args['id']))) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
+        $output = '<select' . $disabled . $readonly . ' name="' . esc_attr($args['name']) . '" id="' . esc_attr(smartpay_sanitize_key(str_replace('-', '_', $args['id']))) . '" class="smartpay-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
 
         if (!isset($args['selected']) || (is_array($args['selected']) && empty($args['selected'])) || !$args['selected']) {
             $selected = "";

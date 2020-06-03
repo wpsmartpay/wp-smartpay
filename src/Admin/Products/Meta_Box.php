@@ -19,7 +19,7 @@ final class Meta_Box
     /**
      * Construct Meta_Box class.
      *
-     * @since 0.1
+     * @since 0.0.1
      */
     private function __construct()
     {
@@ -39,7 +39,7 @@ final class Meta_Box
      * Ensures that only one instance of Meta_Box exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      *
      * @return object|Meta_Box
      */

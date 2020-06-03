@@ -16,7 +16,7 @@ final class Payment
     /**
      * Construct Payment class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -36,7 +36,7 @@ final class Payment
      * Ensures that only one instance of Payment exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Payment
      * @access public
      */

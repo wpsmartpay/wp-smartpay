@@ -16,7 +16,7 @@ final class Product
     /**
      * Construct Product class.
      *
-     * @since 0.1
+     * @since 0.0.1
      */
     private function __construct()
     {
@@ -28,7 +28,7 @@ final class Product
      * Ensures that only one instance of Product exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      *
      * @return object|Product
      */

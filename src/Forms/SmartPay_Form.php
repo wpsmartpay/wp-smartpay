@@ -12,7 +12,7 @@ class SmartPay_Form
     /**
      * The form ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var integer
      */
     public $ID = 0;
@@ -53,7 +53,7 @@ class SmartPay_Form
     /**
      * The form amounts
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     protected $amounts = array();
@@ -61,7 +61,7 @@ class SmartPay_Form
     /**
      * The form has multiple amount
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var boolean
      */
     protected $has_multiple_amount = false;
@@ -69,7 +69,7 @@ class SmartPay_Form
     /**
      * The form accept custom amount
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var boolean
      */
     protected $allow_custom_amount = false;
@@ -77,7 +77,7 @@ class SmartPay_Form
     /**
      * The form status
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     protected $status = 'publish';
@@ -118,7 +118,7 @@ class SmartPay_Form
     /**
      * Get things going
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __construct($_id = false)
     {
@@ -244,7 +244,7 @@ class SmartPay_Form
     {
         $amounts = $this->get_meta('_form_amounts');
 
-        if (!is_array($amounts) && !count($amounts)) return [];
+        if (!is_array($amounts) || !count($amounts)) return [];
 
         return $amounts;
     }
@@ -252,7 +252,7 @@ class SmartPay_Form
     /**
      * Determine if the form has multiple amount enabled
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return bool True when the form has multiple amount, false otherwise
      */
     public function has_multiple_amount()
@@ -266,7 +266,7 @@ class SmartPay_Form
     /**
      * Determine if the form has multiple amount enabled
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return bool True when the form has multiple amount, false otherwise
      */
     public function _setup_allow_custom_amount()
@@ -280,7 +280,7 @@ class SmartPay_Form
     /**
      * Magic __get function to dispatch a call to retrieve a private property
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __get($key)
     {
@@ -315,7 +315,7 @@ class SmartPay_Form
     /**
      * Retrieve the ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return int ID of the form
      */
     public function get_ID()
@@ -326,7 +326,7 @@ class SmartPay_Form
     /**
      * Retrieve the title
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string title of the form
      */
     public function get_title()
@@ -337,7 +337,7 @@ class SmartPay_Form
     /**
      * Retrieve the description
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string description of the form
      */
     public function get_description()
@@ -348,7 +348,7 @@ class SmartPay_Form
     /**
      * Retrieve the image
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string image of the form
      */
     public function get_image()
@@ -360,7 +360,7 @@ class SmartPay_Form
     /**
      * Retrieve the amount
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string amount of the form
      */
     public function get_amount()
@@ -372,7 +372,7 @@ class SmartPay_Form
     /**
      * Retrieve the amounts
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string amounts of the form
      */
     public function get_amounts()
@@ -383,7 +383,7 @@ class SmartPay_Form
     /**
      * Retrieve the form status
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string Status of the form
      */
     public function get_status()

@@ -12,7 +12,7 @@ class SmartPay_Product
     /**
      * The product ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var integer
      */
     public $ID = 0;
@@ -45,7 +45,7 @@ class SmartPay_Product
     /**
      * The product base price
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var float
      */
     protected $base_price = '';
@@ -53,7 +53,7 @@ class SmartPay_Product
     /**
      * The product sale price
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var float
      */
     protected $sale_price = '';
@@ -61,7 +61,7 @@ class SmartPay_Product
     /**
      * The product has variations
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var boolean
      */
     protected $has_variations = false;
@@ -69,7 +69,7 @@ class SmartPay_Product
     /**
      * The product variations
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     protected $variations = array();
@@ -77,7 +77,7 @@ class SmartPay_Product
     /**
      * The product files
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     private $files = array();
@@ -85,7 +85,7 @@ class SmartPay_Product
     /**
      * The product status
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     protected $status = 'publish';
@@ -108,7 +108,7 @@ class SmartPay_Product
     /**
      * The product's sale count
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var integer
      */
     private $sales = 0;
@@ -116,7 +116,7 @@ class SmartPay_Product
     /**
      * The product sku
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var string
      */
     protected $sku = '';
@@ -141,7 +141,7 @@ class SmartPay_Product
     /**
      * Get things going
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __construct($_id = false)
     {
@@ -287,7 +287,7 @@ class SmartPay_Product
     /**
      * Determine if the product has variations enabled
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return bool True when the product has variations, false otherwise
      */
     public function has_variations()
@@ -376,7 +376,7 @@ class SmartPay_Product
     /**
      * Magic __get function to dispatch a call to retrieve a private property
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __get($key)
     {
@@ -409,7 +409,7 @@ class SmartPay_Product
     /**
      * Retrieve the ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return int ID of the product
      */
     public function get_ID()
@@ -420,7 +420,7 @@ class SmartPay_Product
     /**
      * Retrieve the title
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string title of the product
      */
     public function get_title()
@@ -431,7 +431,7 @@ class SmartPay_Product
     /**
      * Retrieve the description
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string description of the product
      */
     public function get_description()
@@ -442,7 +442,7 @@ class SmartPay_Product
     /**
      * Retrieve the image
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string image of the product
      */
     public function get_image()
@@ -454,7 +454,7 @@ class SmartPay_Product
     /**
      * Retrieve the base_price
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string base_price of the product
      */
     public function get_base_price()
@@ -466,7 +466,7 @@ class SmartPay_Product
     /**
      * Retrieve the sale_price
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string sale_price of the product
      */
     public function get_sale_price()
@@ -478,7 +478,7 @@ class SmartPay_Product
     /**
      * Retrieve the variations
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string variations of the product
      */
     public function get_variations()
@@ -489,7 +489,7 @@ class SmartPay_Product
     /**
      * Retrieve the files
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string files of the product
      */
     public function get_files()
@@ -500,7 +500,7 @@ class SmartPay_Product
     /**
      * Retrieve the product status
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string Status of the product
      */
     public function get_status()
@@ -511,7 +511,7 @@ class SmartPay_Product
     /**
      * Retrieve the product sales
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string sales of the product
      */
     public function get_sales()
@@ -532,7 +532,7 @@ class SmartPay_Product
     /**
      * Retrieve the product sku
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string sku of the product
      */
     public function get_sku()
@@ -664,7 +664,7 @@ class SmartPay_Product
     /**
      * Increment the sale count by one
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @param int $quantity The quantity to increase the sales by
      * @return int New number of total sales
      */
@@ -688,7 +688,7 @@ class SmartPay_Product
     /**
      * Decrement the sale count by one
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @param int $quantity The quantity to decrease by
      * @return int New number of total sales
      */

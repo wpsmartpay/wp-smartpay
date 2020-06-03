@@ -5,7 +5,7 @@
         <ul class="list-group list-group-horizontal-sm">
             <li class="list-group-item d-flex justify-content-between">
                 <div class="custom-checkbox custom-checkbox-round">
-                    <input type="radio" class="custom-control-input" id="payment_type_one-time" name="payment_type" value="one-time" <?php echo 'one-time' == $form->payment_type ? 'checked' : ''; ?>>
+                    <input type="radio" class="custom-control-input" id="payment_type_one-time" name="payment_type" value="one-time" <?php echo 'checked'; ?>>
                     <label class="custom-control-label" for="payment_type_one-time">One-Time</label>
                 </div>
             </li>
@@ -23,24 +23,24 @@
         <label for="amounts" class="text-muted my-2 d-block"><strong>Amounts</strong></label>
         <div id="form-amounts" class="form-row">
             <?php if (count($form->amounts ?? [])) : ?>
-                <?php foreach ($form->amounts as $index => $amount) : ?>
-                    <div class="col-sm-2 amount-section mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control amount" id="<?php echo 'amounts[' . $index . ']'; ?>" name="<?php echo 'amounts[' . $index . ']'; ?>" value="<?php echo $amount; ?>" placeholder="5.0">
-                            <?php if ($index >= 1) : ?>
-                                <div class="input-group-append">
-                                    <button class="btn btn-light border remove-amount" type="button"><i data-feather="x" width="17" height="17"></i></button>
-                                </div>
-                            <?php endif; ?>
-                        </div>
+            <?php foreach ($form->amounts as $index => $amount) : ?>
+            <div class="col-sm-2 amount-section mb-3">
+                <div class="input-group">
+                    <input type="text" class="form-control amount" id="<?php echo 'amounts[' . $index . ']'; ?>" name="<?php echo 'amounts[' . $index . ']'; ?>" value="<?php echo $amount; ?>" placeholder="5.0">
+                    <?php if ($index >= 1) : ?>
+                    <div class="input-group-append">
+                        <button class="btn btn-light border remove-amount" type="button"><i data-feather="x" width="17" height="17"></i></button>
                     </div>
-                <?php endforeach; ?>
-            <?php else : ?>
-                <div class="col-sm-2 amount-section mb-3">
-                    <div class="form-group">
-                        <input type="text" class="form-control amount" id="amounts[0]" name="amounts[0]" placeholder="5.0">
-                    </div>
+                    <?php endif; ?>
                 </div>
+            </div>
+            <?php endforeach; ?>
+            <?php else : ?>
+            <div class="col-sm-2 amount-section mb-3">
+                <div class="form-group">
+                    <input type="text" class="form-control amount" id="amounts[0]" name="amounts[0]" placeholder="5.0">
+                </div>
+            </div>
             <?php endif; ?>
 
         </div>

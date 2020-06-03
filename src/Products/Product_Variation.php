@@ -12,7 +12,7 @@ class Product_Variation
     /**
      * The variation ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var integer
      */
     public $ID = 0;
@@ -45,7 +45,7 @@ class Product_Variation
     /**
      * The variation additional_amount
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var float
      */
     protected $additional_amount = 0;
@@ -53,7 +53,7 @@ class Product_Variation
     /**
      * The variation files
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     private $files = array();
@@ -61,7 +61,7 @@ class Product_Variation
     /**
      * The variation status
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var array
      */
     protected $status = 'publish';
@@ -84,7 +84,7 @@ class Product_Variation
     /**
      * The variation's sale count
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var integer
      */
     private $sales = 0;
@@ -92,7 +92,7 @@ class Product_Variation
     /**
      * The variation sku
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @var string
      */
     protected $sku = '';
@@ -117,7 +117,7 @@ class Product_Variation
     /**
      * Get things going
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __construct($_id = false)
     {
@@ -270,7 +270,7 @@ class Product_Variation
     /**
      * Magic __get function to dispatch a call to retrieve a private property
      *
-     * @since 0.0.1
+     * @since  0.0.1
      */
     public function __get($key)
     {
@@ -303,7 +303,7 @@ class Product_Variation
     /**
      * Retrieve the ID
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return int ID of the variation
      */
     public function get_ID()
@@ -314,7 +314,7 @@ class Product_Variation
     /**
      * Retrieve the name
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string name of the variation
      */
     public function get_name()
@@ -325,7 +325,7 @@ class Product_Variation
     /**
      * Retrieve the description
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string description of the variation
      */
     public function get_description()
@@ -336,7 +336,7 @@ class Product_Variation
     /**
      * Retrieve the product parent
      *
-     * @since 2.5.8
+     * @since  0.0.1
      * @return string parent of the product
      */
     public function get_parent()
@@ -347,7 +347,7 @@ class Product_Variation
     /**
      * Retrieve the additional_amount
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string additional_amount of the product
      */
     public function get_additional_amount()
@@ -359,7 +359,7 @@ class Product_Variation
     /**
      * Retrieve the files
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @return string files of the product
      */
     public function get_files()
@@ -370,7 +370,7 @@ class Product_Variation
     /**
      * Retrieve the product status
      *
-     * @since 2.5.8
+     * @since  0.0.1
      * @return string Status of the product
      */
     public function get_status()
@@ -381,7 +381,7 @@ class Product_Variation
     /**
      * Retrieve the product sales
      *
-     * @since 2.5.8
+     * @since  0.0.1
      * @return string sales of the product
      */
     public function get_sales()
@@ -402,7 +402,7 @@ class Product_Variation
     /**
      * Retrieve the product sku
      *
-     * @since 2.5.8
+     * @since  0.0.1
      * @return string sku of the product
      */
     public function get_sku()
@@ -525,7 +525,7 @@ class Product_Variation
     /**
      * Increment the sale count by one
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @param int $quantity The quantity to increase the sales by
      * @return int New number of total sales
      */
@@ -549,7 +549,7 @@ class Product_Variation
     /**
      * Decrement the sale count by one
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @param int $quantity The quantity to decrease by
      * @return int New number of total sales
      */

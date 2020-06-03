@@ -22,7 +22,7 @@ final class Admin
     /**
      * Construct Admin class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -38,7 +38,7 @@ final class Admin
      * Ensures that only one instance of Admin exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Admin
      * @access public
      */

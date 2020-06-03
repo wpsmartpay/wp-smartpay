@@ -12,28 +12,35 @@ abstract class DB_Model
     /**
      * The name of our database table
      *
-     * @since   2.1
+     * @since   0.0.1
      */
     public $table_name;
 
     /**
      * The version of our database table
      *
-     * @since   2.1
+     * @since   0.0.1
      */
     public $version;
 
     /**
      * The name of the primary column
      *
-     * @since   2.1
+     * @since   0.0.1
      */
     public $primary_key;
+    
+    /**
+     * The name of the cache_group
+     *
+     * @since   0.0.1
+     */
+    public $cache_group;
 
     /**
      * Get things started
      *
-     * @since   2.1
+     * @since   0.0.1
      */
     public function __construct()
     {
@@ -43,7 +50,7 @@ abstract class DB_Model
     /**
      * Whitelist of columns
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  array
      */
     public function get_columns()
@@ -54,7 +61,7 @@ abstract class DB_Model
     /**
      * Default column values
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  array
      */
     public function get_column_defaults()
@@ -65,7 +72,7 @@ abstract class DB_Model
     /**
      * Retrieve a row by the primary key
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  object
      */
     public function get($row_id)
@@ -77,7 +84,7 @@ abstract class DB_Model
     /**
      * Retrieve a row by a specific column / value
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  object
      */
     public function get_by($column, $value)
@@ -90,7 +97,7 @@ abstract class DB_Model
     /**
      * Retrieve a specific column's value by the primary key
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  string
      */
     public function get_column($column, $row_id)
@@ -103,7 +110,7 @@ abstract class DB_Model
     /**
      * Retrieve a specific column's value by the the specified column / value
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  string
      */
     public function get_column_by($column, $column_where, $column_value)
@@ -117,7 +124,7 @@ abstract class DB_Model
     /**
      * Insert a new row
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  int
      */
     public function insert($data, $type = '')
@@ -153,7 +160,7 @@ abstract class DB_Model
     /**
      * Update a row
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  bool
      */
     public function update($row_id, $data = array(), $where = '')
@@ -194,7 +201,7 @@ abstract class DB_Model
     /**
      * Delete a row identified by the primary key
      *
-     * @since   2.1
+     * @since   0.0.1
      * @return  bool
      */
     public function delete($row_id = 0)
@@ -219,7 +226,7 @@ abstract class DB_Model
     /**
      * Check if the given table exists
      *
-     * @since  2.4
+     * @since  0.0.1
      * @param  string $table The table name
      * @return bool          If the table name exists
      */
@@ -234,7 +241,7 @@ abstract class DB_Model
     /**
      * Check if the table was ever installed
      *
-     * @since  2.4
+     * @since  0.0.1
      * @return bool Returns if the customers table was installed and upgrade routine run
      */
     public function installed()

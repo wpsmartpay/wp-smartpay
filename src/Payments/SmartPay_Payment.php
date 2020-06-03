@@ -167,7 +167,7 @@ class SmartPay_Payment
     /**
      * Setup the smartpay Payments class
      *
-     * @since 0.0.1
+     * @since  0.0.1
      * @param int $payment_id A given payment
      * @return mixed void|false
      */
@@ -561,7 +561,7 @@ class SmartPay_Payment
     /**
      * Add an item to the payment meta
      *
-     * @since 2.8
+     * @since  0.0.1
      * @param string $meta_key
      * @param string $meta_value
      * @param bool   $unique
@@ -580,7 +580,7 @@ class SmartPay_Payment
     /**
      * Delete an item from payment meta
      *
-     * @since 2.8
+     * @since  0.0.1
      * @param string $meta_key
      * @param string $meta_value
      *

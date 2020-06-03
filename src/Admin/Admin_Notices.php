@@ -16,7 +16,7 @@ final class Admin_Notices
     /**
      * Construct Admin_Notices class.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @access private
      */
     private function __construct()
@@ -32,7 +32,7 @@ final class Admin_Notices
      * Ensures that only one instance of Admin_Notices exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.1
+     * @since 0.0.1
      * @return object|Admin_Notices
      * @access public
      */
@@ -48,7 +48,7 @@ final class Admin_Notices
     /**
      * Show relevant notices
      *
-     * @since 2.3
+     * @since 0.0.1
      */
     public function show_notices()
     {
@@ -60,11 +60,11 @@ final class Admin_Notices
         if (!count(smartpay_get_enabled_payment_gateways(true))) {
             ob_start();
 ?>
-            <div class="error">
-                <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
-                </p>
-            </div>
-        <?php
+<div class="error">
+    <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
+    </p>
+</div>
+<?php
             echo ob_get_clean();
         }
 
@@ -72,12 +72,12 @@ final class Admin_Notices
         if ((smartpay_get_option('payment_page', '') == '' || 'trash' == get_post_status(smartpay_get_option('payment_page', ''))) && current_user_can('edit_pages') && !get_user_meta(get_current_user_id(), '_smartpay_set_checkout_dismissed')) {
             ob_start();
         ?>
-            <div class="error">
-                <p><?php printf(__('No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting')); ?>
-                </p>
-                <p><a href="<?php echo esc_url(add_query_arg(array('smartpay_action' => 'dismiss_notices', 'smartpay_notice' => 'set_checkout'))); ?>"><?php _e('Dismiss Notice', 'smartpay'); ?></a>
-                </p>
-            </div>
+<div class="error">
+    <p><?php printf(__('No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting')); ?>
+    </p>
+    <p><a href="<?php echo esc_url(add_query_arg(array('smartpay_action' => 'dismiss_notices', 'smartpay_notice' => 'set_checkout'))); ?>"><?php _e('Dismiss Notice', 'smartpay'); ?></a>
+    </p>
+</div>
 <?php
             echo ob_get_clean();
         }
@@ -135,7 +135,7 @@ final class Admin_Notices
     /**
      * Dismiss admin notices when Dismiss links are clicked
      *
-     * @since 2.3
+     * @since 0.0.1
      * @return void
      */
     function dismiss_notices()
