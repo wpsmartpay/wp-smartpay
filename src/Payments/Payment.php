@@ -313,7 +313,7 @@ final class Payment
         if (isset($_POST['data']['smartpay_action']) && 'smartpay_process_payment' === $_POST['data']['smartpay_action']) {
 
             if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
-                echo 'Something wrong!';
+                echo '<p class="text-danger">Something wrong!</p>';
             }
 
             // TODO: Add validation
@@ -333,10 +333,10 @@ final class Payment
 
                 $this->_process_gateway_payment($gateway, $payment_data);
             } else {
-                echo 'Something wrong!';
+                echo '<p class="text-danger">Something wrong!</p>';
             }
         } else {
-            echo 'Something wrong!';
+            echo '<p class="text-danger">Something wrong!</p>';
         }
 
         die();
