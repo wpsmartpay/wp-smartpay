@@ -904,13 +904,15 @@
 .smartpay .smartpay-payment-shortcode-output #smartpay_payment_checkout_popup .overlay{background:rgba(255,255,255,0.9);position:absolute;left:0;top:0;width:100%;height:100%;display:none}
 .smartpay .smartpay-payment-shortcode-output .modal-header button.close{background:transparent;font-size:30px;margin-right:0;color:#c2c2c2}
 .smartpay .smartpay-payment-shortcode-output .modal-header button.close:focus{outline:0}
-.smartpay #single-payment-card .product-price li.list-group-item{transition:all .3s ease;border-radius:3px}
-.smartpay #single-payment-card .product-price li.list-group-item label{cursor:pointer}
-.smartpay #single-payment-card .product-price li.list-group-item label span.price{transition:all .3s ease;font-size:16px;font-weight:bold;padding:0 8px;background:#eee;border:solid 1px #ddd;margin-bottom:5px;border-radius:3px;display:inline-block}
-.smartpay #single-payment-card .product-price li.list-group-item label h5{font-size:20px}
-.smartpay #single-payment-card .product-price li.list-group-item.selected{border:solid 1px rgba(21,87,36,0.5);box-shadow:0 0 0 2px rgba(21,87,36,0.5)}
-.smartpay #single-payment-card .product-price li.list-group-item.selected span.price{color:white;background-color:#1e7e34;border:solid 1px rgba(21,87,36,0.9)}
-.smartpay #single-payment-card #checkout_button{font-size:16px;text-transform:uppercase}
+.smartpay #single-form-card .form-price li.list-group-item{transition:all .3s ease;border-radius:3px}
+.smartpay #single-form-card .form-price li.list-group-item label{cursor:pointer}
+.smartpay #single-form-card .form-price li.list-group-item label span.price{transition:all .3s ease;font-size:16px;font-weight:bold;padding:0 8px;background:#eee;border:solid 1px #ddd;margin-bottom:5px;border-radius:3px;display:inline-block}
+.smartpay #single-form-card .form-price li.list-group-item label h5{font-size:16px}
+.smartpay #single-form-card .form-price li.list-group-item.selected{border:solid 1px rgba(21,87,36,0.5);box-shadow:0 0 0 2px rgba(21,87,36,0.5);color:#28a745}
+.smartpay #single-form-card .form-price li.list-group-item.selected span.price{color:white;background-color:#1e7e34;border:solid 1px rgba(21,87,36,0.9)}
+.smartpay #single-form-card .custom-amount-wrapper #smartpay-amount-custom{font-weight:bold;font-size:18px;border-radius:3px}
+.smartpay #single-form-card .custom-amount-wrapper #smartpay-amount-custom:focus{border:solid 1px rgba(21,87,36,0.5);box-shadow:0 0 0 2px rgba(21,87,36,0.5);outline:0;color:#28a745}
+.smartpay #single-form-card #form_checkout_button{font-size:16px;text-transform:uppercase}
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}
 .smartpay .collapsing{transition:none}

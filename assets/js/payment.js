@@ -58,7 +58,10 @@ jQuery(document).ready(function ($) {
         $(this).parent().find('li.selected').prop('checked', false);
         $(this).addClass('selected');
         $(this).find('input[name="smartpay_amount"]').prop('checked', true);
-    })
+    });
+    $('#smartpay-amount-custom').on('click', function(){
+        $('#single-form-card .multiple-amount').find('li.selected').removeClass('selected');
+    });
     /**
      * open payment checkout form
      */

@@ -24,7 +24,7 @@ $count = 0;
                         <h2 class="mt-0"><?php echo $form->title; ?></h2>
                         <p><?php echo $form->description; ?></p>
                     </div>
-                    <div class="col">
+                    <div class="col form-price">
                         <?php if ($form->has_multiple_amount()) : ?>
                         <div class="multiple-amount">
                             <ul class="list-group m-0">
@@ -32,7 +32,7 @@ $count = 0;
                                 <li class="list-group-item m-0 my-2 py-4 <?php echo (1==$count) ? 'selected' : '';  ?>">
                                     <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
                                         <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" <?php echo (1==$count) ? 'checked' : ''; ?> >
-                                        <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
+                                        <h5 class="m-0"><?php echo smartpay_amount_format($amount); ?></h5>
                                     </label>
                                 </li>
                                 <?php endforeach; ?>
@@ -44,8 +44,8 @@ $count = 0;
 
                         <!-- // Allow custom payment -->
                         <?php if ($form->allow_custom_amount) : ?>
-                        <div class="form-group">
-                            <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
+                        <div class="form-group custom-amount-wrapper my-4">
+                            <label for="smartpay-amount-custom" class="d-block m-0 mb-2">Pay custom amount</label>
                             <!-- // TODO: On fixed amount click set amount here. -->
                             <input type="text" id="smartpay-amount-custom" name="smartpay_amount_custom" value="" placeholder="5.0">
                         </div>
