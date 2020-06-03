@@ -4,7 +4,7 @@
             <div class="text-center p-4 pb-5">
                 <div class="mt-2">
                     <h4 class="payment-modal--small-title m-0 mb-3">
-                        <?php echo __('Payment For', 'smartpay'); ?>
+                        <?php echo __('Make a Payment', 'smartpay'); ?>
                     </h4>
                     <h2 class="payment-modal--title m-0 mb-3">
                         <?php echo $product->title ?? 'Product/Form'; ?>
@@ -14,15 +14,16 @@
             </div>
 
             <div class="modal-body text-center mb-4 step-1">
-                <div class="col-9 col-lg-6 text-center pb-4">
+                <div class="col-10 col-lg-7 text-center pb-4">
                     <form action="<?php echo $form_action; ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
                         <div class="payment-modal--gateway">
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
+                            <?php $gateways_index = array_keys($gateways); ?>
                             <p class="payment-gateway--label single-gateway"><?php echo sprintf(__('Pay with ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p>
-                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_attr(reset(array_keys($gateways))) ?>">
+                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo reset($gateways_index); ?>">
 
                             <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
@@ -41,9 +42,9 @@
                             <?php else : ?>
 
                             <?php
-                                    $has_payment_error = true;
-                                    echo 'You must enable a payment gateway to proceed a payment.';
-                                    ?>
+                                $has_payment_error = true;
+                                echo 'You must enable a payment gateway to proceed a payment.';
+                            ?>
                             <?php endif; ?>
                         </div>
 

@@ -19,7 +19,7 @@ $has_payment_error = false;
 
             <div class="card-body p-5">
                 <div class="row">
-                    <div class="col-7">
+                    <div class="col-sm-12 col-md-7 mb-3">
                         <?php if ($product->title) : ?>
                         <h2 class="card-title product--title mt-0 mb-2"><?php echo $product->title; ?></h2>
                         <?php endif; ?>
@@ -31,7 +31,7 @@ $has_payment_error = false;
                         <?php endif; ?>
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-sm-12 col-md-5">
                         <div class="product--price-section">
                             <div class="product-variations mb-2">
                                 <ul class="list-group m-0">
