@@ -1,0 +1,125 @@
+.smartpay-product-shortcode {
+	.product {
+		&--title {
+			display: block;
+			margin-bottom: 1rem;
+			font-family: -apple-system, '.SFNSDisplay-Regular', 'Helvetica Neue',
+				Helvetica, Arial, sans-serif;
+			font-size: 26px;
+			font-weight: bold;
+			color: #252a2e;
+			line-height: 1.2;
+		}
+
+		&--description {
+			margin-bottom: 10px;
+			color: #252a2e;
+		}
+
+		&--price-section {
+			color: red;
+			transition: all 0.3s ease;
+
+			.price {
+				cursor: pointer;
+				transition: all 0.05s ease-in-out;
+				padding: 15px;
+				display: block;
+				text-decoration: none;
+				font-size: 17px;
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				margin-top: 10px;
+				background: #fff;
+				overflow: hidden;
+				color: #252a2e;
+
+				label {
+					cursor: pointer;
+				}
+
+				&--amount {
+					display: inline-block;
+					margin-bottom: 10px;
+					background: #eee;
+					padding: 6px 10px;
+					font-size: 13px;
+					font-weight: bold;
+					position: relative;
+					pointer-events: none;
+					background: #eee;
+
+					&:hover {
+						background: #fdce71;
+					}
+
+					&:before,
+					&:after {
+						content: '';
+						height: 0;
+						position: absolute;
+						width: 0;
+						border-color: transparent;
+						border-style: solid;
+						border-width: 16px;
+						left: 100%;
+						margin-left: -16px;
+						-webkit-transform: scaleX(0.65);
+						transform: scaleX(0.65);
+					}
+
+					&:before {
+						top: 0;
+						border-top-color: #eee;
+
+						&:hover {
+							border-top-color: #fdce71;
+						}
+					}
+					&:after {
+						bottom: 0;
+						border-bottom-color: #eee;
+
+						&:hover {
+							border-bottom-color: #fdce71;
+						}
+					}
+				}
+
+				&.selected {
+					box-shadow: 0 0 0 2px $cyan;
+
+					.price--amount {
+						background: #fdce71;
+						&:before {
+							border-top-color: #fdce71;
+						}
+						&:after {
+							border-bottom-color: #fdce71;
+						}
+					}
+				}
+
+				&--title {
+					font-size: 20px;
+					font-weight: bold;
+					display: block;
+				}
+
+				.variation {
+					&--description {
+						margin-top: 10px;
+						color: #797874;
+						font-size: 17px;
+					}
+				}
+			}
+		}
+	}
+
+	button.open-payment-form {
+		font-size: 16px;
+		text-transform: uppercase;
+	}
+}

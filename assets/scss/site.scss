@@ -5,7 +5,10 @@
 # Grid
 # Site Specific
 --------------------------------------------------------------*/
-.smartpay{
+
+@import './variables';
+
+.smartpay {
 	/*--------------------------------------------------------------
 	# Common
 	--------------------------------------------------------------*/
@@ -14,11 +17,16 @@
 	/*--------------------------------------------------------------
 	# Bootstrap Grid
 	--------------------------------------------------------------*/
-	@import "../../node_modules/bootstrap/scss/bootstrap-grid";
+	@import '../../node_modules/bootstrap/scss/bootstrap-grid';
 
 	/*--------------------------------------------------------------
 	# Admin specific
 	--------------------------------------------------------------*/
-	@import "site/site";
-	@import "site/shortcode-form";
+	@import 'site/site';
+
+	@import 'site/shortcode/product';
+
+	@import 'site/shortcode/form';
+
+	@import 'site/shortcode/payment_modal';
 }
