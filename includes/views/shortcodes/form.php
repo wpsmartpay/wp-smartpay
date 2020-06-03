@@ -47,7 +47,7 @@ $count = 0;
                         <div class="form-group custom-amount-wrapper my-4">
                             <label for="smartpay-amount-custom" class="d-block m-0 mb-2">Pay custom amount</label>
                             <!-- // TODO: On fixed amount click set amount here. -->
-                            <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="" placeholder="5.0">
+                            <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="<?php echo $form->amounts[0];?>" placeholder="5.0">
                         </div>
                         <?php endif; ?>
                         
