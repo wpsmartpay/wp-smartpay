@@ -4,10 +4,11 @@ $gateways = smartpay_get_enabled_payment_gateways(true);
 
 $chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
 $has_payment_error = false;
+$count = 0;
 ?>
 
 <div class="smartpay">
-    <div class="card">
+    <div id="single-form-card" class="card">
         <form id="checkout_form">
 
             <!-- Form image -->
@@ -21,17 +22,18 @@ $has_payment_error = false;
                 <h4><?php echo $form->title; ?></h4>
 
                 <?php if ($form->has_multiple_amount()) : ?>
-                <ul class="list-group m-0">
-                    <?php foreach ($form->amounts as $index => $amount) : ?>
-                    <li class="list-group-item m-0 my-2 py-4">
-                        <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
-                            <input class="d-nones" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" checked>
-                            <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
-                        </label>
-                    </li>
-                    <?php endforeach; ?>
-
-                </ul>
+                <div class="multiple-amount">
+                    <ul class="list-group m-0">
+                        <?php foreach ($form->amounts as $index => $amount) : $count++; ?>
+                        <li class="list-group-item m-0 my-2 py-4 <?php echo (1==$count) ? 'selected' : '';  ?>">
+                            <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
+                                <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>">
+                                <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
+                            </label>
+                        </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
                 <?php else : ?>
                 <strong>Payment : <?php echo smartpay_amount_format($form->amounts[0]); ?></strong>
                 <?php endif; ?>

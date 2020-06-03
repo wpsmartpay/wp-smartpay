@@ -44,11 +44,20 @@ jQuery(document).ready(function ($) {
 
     });
     /**
-     * add active class for variation price
+     * add selected class for variation price
      */
     $('#single-payment-card .product-variations .list-group-item').on('click', function(e){
         $(this).parent().find('li.selected').removeClass('selected');
         $(this).addClass('selected');
+    });
+    /**
+     * add selected class for multiple amount option
+     */
+    $('#single-form-card .multiple-amount .list-group-item').on('click', function(e){
+        $(this).parent().find('li.selected').removeClass('selected');
+        $(this).parent().find('li.selected').prop('checked', false);
+        $(this).addClass('selected');
+        $(this).find('input[name="smartpay_amount"]').prop('checked', true);
     })
     /**
      * open payment checkout form
