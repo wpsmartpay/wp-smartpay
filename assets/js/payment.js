@@ -9,6 +9,7 @@ jQuery(document).ready(function ($) {
 
         $('#pay_now').text('Processing...').attr('disabled', 'disabled')
         $('#smartpay_payment_checkout_popup .overlay').css('display', 'block');
+        $('#smartpay_form_checkout_popup .overlay').css('display', 'block');
         $('#smartpay_payment_gateway_popup .modal-body').html(`
             <div class="text-center">
                     <div class="spinner-border" role="status">
