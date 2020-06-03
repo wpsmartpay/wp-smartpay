@@ -28,7 +28,9 @@ final class Payment
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
 
-        add_action('wp_ajax_smartpay_payment_process_action', [$this, 'ajax_smartpay_payment_process_action']);
+        add_action('wp_ajax_smartpay_process_payment', [$this, 'ajax_process_payment']);
+
+        add_action('wp_ajax_nopriv_smartpay_process_payment', [$this, 'ajax_process_payment']);
     }
 
     /**
@@ -293,6 +295,7 @@ final class Payment
 
     public function enqueue_payment_scripts()
     {
+
         wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION, true);
 
         wp_enqueue_script('smartpay-payment');
@@ -304,7 +307,7 @@ final class Payment
         );
     }
 
-    function ajax_smartpay_payment_process_action()
+    function ajax_process_payment()
     {
 
         if (isset($_POST['data']['smartpay_action']) && 'smartpay_process_payment' === $_POST['data']['smartpay_action']) {
