@@ -276,7 +276,6 @@ final class Payment
 
         do_action('smartpay_after_insert_payment', $payment);
 
-
         if (!empty($payment->ID)) {
             // Set session payment id
             smartpay_set_session_payment_id($payment->ID);
@@ -323,7 +322,12 @@ final class Payment
             die();
         }
 
-        // TODO: Add validation
+        $validate = $this->_checkValidation($_POST['data']);
+
+        if(!$validate) {
+            echo '<p class="text-danger">Payment data invalid!</p>';
+            die();
+        }
 
         $payment_data = $this->_prepare_payment_data($_POST['data']);
 
@@ -366,5 +370,14 @@ final class Payment
         $customer = new SmartPay_Customer($payment->email);
 
         $customer->attach_payment($payment->ID);
+    }
+
+    private function _checkValidation($_data)
+    {
+        // TODO: Reform validation
+        $email = $_data['smartpay_email'] ?? '';
+        if(!is_email($email)) return false;
+
+        return true;
     }
 }
