@@ -309,35 +309,40 @@ final class Payment
 
     function ajax_process_payment()
     {
+        // var_dump($_POST['data']);exit;
 
-        if (isset($_POST['data']['smartpay_action']) && 'smartpay_process_payment' === $_POST['data']['smartpay_action']) {
+        // TODO: Convert response to JSON
 
-            if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
-                echo '<p class="text-danger">Something wrong!</p>';
-            }
-
-            // TODO: Add validation
-            $payment_data = $this->_prepare_payment_data($_POST['data']);
-
-            $payment = $this->insert_payment($payment_data);
-
-            if ($payment) {
-
-                $this->_attach_customer_payment($payment);
-
-                // Set session payment data
-                smartpay_set_session_payment_data($payment_data);
-
-                // Send info to the gateway for payment processing
-                $gateway = $_POST['data']['smartpay_gateway'];
-
-                $this->_process_gateway_payment($gateway, $payment_data);
-            } else {
-                echo '<p class="text-danger">Something wrong!</p>';
-            }
-        } else {
-            echo '<p class="text-danger">Something wrong!</p>';
+        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != $_POST['data']['smartpay_action']) {
+            echo '<p class="text-danger">Payment process action not acceptable!</p>';
+            die();
         }
+
+        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
+            echo '<p class="text-danger">Payment process nonce verification failed!</p>';
+            die();
+        }
+
+        // TODO: Add validation
+
+        $payment_data = $this->_prepare_payment_data($_POST['data']);
+
+        $payment = $this->insert_payment($payment_data);
+
+        if (!$payment) {
+            echo '<p class="text-danger">Something wrong! Payment insert failed!</p>';
+            die();
+        }
+
+        $this->_attach_customer_payment($payment);
+
+        // Set session payment data
+        smartpay_set_session_payment_data($payment_data);
+
+        // Send info to the gateway for payment processing
+        $gateway = $_POST['data']['smartpay_gateway'];
+
+        $this->_process_gateway_payment($gateway, $payment_data);
 
         die();
     }

@@ -17,16 +17,12 @@
                 <div class="col-9 col-lg-6 text-center pb-4">
                     <form action="<?php echo $form_action; ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
-                        <input type="hidden" name="smartpay_action" value="smartpay_process_payment">
-                        <input type="hidden" name="smartpay_purchase_type" value="product_purchase">
-                        <input type="hidden" name="smartpay_product_id" value="<?php echo $product->get_ID() ?>">
-                        <!-- // FIXME: Add variation id -->
 
                         <div class="payment-modal--gateway">
-
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
                             <p class="payment-gateway--label single-gateway"><?php echo sprintf(__('Pay with ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p>
+                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_attr(reset(array_keys($gateways))) ?>">
 
                             <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
@@ -78,9 +74,16 @@
                 </div>
 
             </div>
-            <div class="modal-body text-center mb-4 step-2">
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
+            <div class="modal-body text-center mb-4 p-4 step-2">
+                <div class="my-3 col mb-5">
+                    <div class="alert alert-danger">
+                        <p class="m-0"><?php _e('Don\'t close this window', 'smartpay'); ?></p>
+                    </div>
+                </div>
+                <div class="dynamic-content">
+                    <div class="spinner-border" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
                 </div>
             </div>
         </div>

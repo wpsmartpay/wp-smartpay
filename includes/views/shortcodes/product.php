@@ -40,7 +40,7 @@ $has_payment_error = false;
                                     <?php foreach ($product->variations as $index => $variation) : ?>
                                     <li class="list-group-item variation price m-0 mb-3 py-4 <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" class="d-block m-0">
-                                            <input class="d-none" type="radio" name="smartpay_product_variation_id" id="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" value="<?php echo esc_attr($variation['id']); ?>" checked>
+                                            <input class="d-none" type="radio" name="smartpay_product_variation_id" id="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" value="<?php echo esc_attr($variation['id']); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
                                             <!-- // TODO: Add price to Product Variation -->
                                             <span class="price--amount"><?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
                                             <strong class="price--title"><?php echo esc_html(ucfirst($variation['name'])); ?></strong>
@@ -51,18 +51,17 @@ $has_payment_error = false;
                                             <?php endif; ?>
                                         </label>
                                     </li>
+
                                     <?php endforeach; ?>
 
                                     <!-- Product price -->
                                     <?php else : ?>
                                     <li class="list-group-item price m-0 my-2 py-4 selected">
-                                        <label for="product_price" class="d-block m-0">
-                                            <input class="d-none" type="radio" name="smartpay_product_variation_id" id="product_price" checked>
+                                        <label class="d-block m-0">
                                             <span class="price--amount"><?php echo smartpay_amount_format($product_price); ?></span>
                                             <h5 class="m-0 mt-3 price--title">Item Price</h5>
                                         </label>
                                     </li>
-                                    </p>
                                     <?php endif; ?>
                                 </ul>
                             </div>
@@ -75,6 +74,11 @@ $has_payment_error = false;
                 </div> <!-- row -->
             </div> <!-- card-body -->
         </div>
+
+        <!-- Form Data -->
+        <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
+        <input type="hidden" name="smartpay_product_id" id="smartpay_product_id" value="<?php echo $product->ID ?? 0; ?>">
+        <!-- /Form Data -->
 
         <!-- Payment modal -->
         <?php include "shared/payment-modal.php" ?>

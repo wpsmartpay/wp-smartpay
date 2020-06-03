@@ -60,7 +60,7 @@ jQuery(document).ready(($) => {
 
         setTimeout(() => {
             // Set loading content
-            $paymentSecondStep.html(`
+            $paymentSecondStep.children('.dynamic-content').html(`
             <div class="text-center">
                     <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
@@ -74,21 +74,22 @@ jQuery(document).ready(($) => {
             $paymentFirstStep.hide();
         }, 500)
 
+        $parentWrapper = $(e.currentTarget).parents('.smartpay-payment');
 
         let data = {
             action: 'smartpay_process_payment',
-            // data: getFormJSONData($('.smartpay #payment_form')),
+            data: getPaymentData($parentWrapper),
         }
 
         jQuery.post(smartpay.ajax_url, data, (response) => {
             if (response) {
                 setTimeout(() => {
-                    $paymentSecondStep.html(
+                    $paymentSecondStep.children('.dynamic-content').html(
                         response
                     )
                 }, 500)
             } else {
-                $paymentSecondStep.html(
+                $paymentSecondStep.children('.dynamic-content').html(
                     `<p class="text-danger">Something wrong!</p>`
                 )
 
@@ -102,6 +103,33 @@ jQuery(document).ready(($) => {
     function resetPaymentModal($modal) {
         $modal.find('.step-1').show();
         $modal.find('.step-2').hide();
+    }
+
+    function getPaymentData($wrapper) {
+
+        // TODO: Convert to name attribute
+        // let paymentType = $wrapper.find('["name"="smartpay_payment_type"]')
+
+        // console.log(paymentType)
+
+        let data = {
+            smartpay_action: 'smartpay_process_payment',
+            smartpay_process_payment: $wrapper.find('#smartpay_process_payment').val() || '',
+            smartpay_payment_type: $wrapper.find('#smartpay_payment_type').val() || '',
+            smartpay_product_id: $wrapper.find('#smartpay_product_id').val() || 0,
+            smartpay_product_variation_id: $wrapper.find('#smartpay_product_variation_id').val() || 0,
+            smartpay_form_id: $wrapper.find('#smartpay_form_id').val() || 0,
+            smartpay_gateway: $wrapper.find('#smartpay_gateway').val() || '',
+            smartpay_first_name: $wrapper.find('#smartpay_first_name').val() || '',
+            smartpay_last_name: $wrapper.find('#smartpay_last_name').val() || '',
+            smartpay_email: $wrapper.find('#smartpay_email').val() || '',
+        }
+
+
+        // console.log('Getting data')
+        console.log(data)
+
+        return data;
     }
 
 })
