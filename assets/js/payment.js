@@ -58,6 +58,9 @@ jQuery(document).ready(function ($) {
         $(this).parent().find('li.selected').prop('checked', false);
         $(this).addClass('selected');
         $(this).find('input[name="smartpay_amount"]').prop('checked', true);
+        var selectedInputPrice = $(this).find('input[name="smartpay_amount"]').val();
+        console.log(selectedInputPrice);
+        $('#single-form-card').find('.custom-amount-wrapper input#smartpay-amount-custom').val(selectedInputPrice);
     });
     $('#smartpay-amount-custom').on('click', function(){
         $('#single-form-card .multiple-amount').find('li.selected').removeClass('selected');
