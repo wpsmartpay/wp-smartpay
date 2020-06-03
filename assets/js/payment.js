@@ -6,7 +6,7 @@ jQuery(document).ready(($) => {
         'click',
         '.smartpay-product-shortcode .product-variations .variation',
         (e) => {
-            e.preventDefault()
+            // e.preventDefault()
 
             $(e.currentTarget)
                 .parent()
@@ -40,6 +40,12 @@ jQuery(document).ready(($) => {
             setTimeout(() => {
                 // Show payment modal
                 $paymentModal.modal('show')
+
+                // Appending modal background inside the .smartpay div
+                $('.modal-backdrop').appendTo('.smartpay');
+
+
+                document.body.style.overflow = 'hidden';
 
                 // Reset button
                 $(e.currentTarget).text(buttonText).removeAttr('disabled')
@@ -78,6 +84,8 @@ jQuery(document).ready(($) => {
                 </div>
             </div>`)
 
+            $('.back-button').show()
+
             // Show second step
             $paymentSecondStep.show();
 
@@ -114,28 +122,23 @@ jQuery(document).ready(($) => {
     function resetPaymentModal($modal) {
         $modal.find('.step-1').show();
         $modal.find('.step-2').hide();
+        $('.back-button').hide()
     }
 
     function getPaymentData($wrapper) {
 
-        // TODO: Convert to name attribute
-        // let paymentType = $wrapper.find('["name"="smartpay_payment_type"]')
-
-        // console.log(paymentType)
-
         let data = {
             smartpay_action: 'smartpay_process_payment',
-            smartpay_process_payment: $wrapper.find('#smartpay_process_payment').val() || '',
-            smartpay_payment_type: $wrapper.find('#smartpay_payment_type').val() || '',
-            smartpay_product_id: $wrapper.find('#smartpay_product_id').val() || 0,
-            smartpay_product_variation_id: $wrapper.find('#smartpay_product_variation_id').val() || 0,
-            smartpay_form_id: $wrapper.find('#smartpay_form_id').val() || 0,
-            smartpay_gateway: $wrapper.find('#smartpay_gateway').val() || '',
-            smartpay_first_name: $wrapper.find('#smartpay_first_name').val() || '',
-            smartpay_last_name: $wrapper.find('#smartpay_last_name').val() || '',
-            smartpay_email: $wrapper.find('#smartpay_email').val() || '',
+            smartpay_process_payment: $wrapper.find('input[name="smartpay_process_payment"]').val() || '',
+            smartpay_payment_type: $wrapper.find('input[name="smartpay_payment_type"]').val() || '',
+            smartpay_product_id: $wrapper.find('input[name="smartpay_product_id"]').val() || 0,
+            smartpay_product_variation_id: $wrapper.find("input[name='smartpay_product_variation_id']:checked").val() || 0,
+            smartpay_form_id: $wrapper.find('input[name="smartpay_form_id"]').val() || 0,
+            smartpay_gateway: $wrapper.find('input[name="smartpay_gateway"]:checked').val() || '',
+            smartpay_first_name: $wrapper.find('input[name="smartpay_first_name"]').val() || '',
+            smartpay_last_name: $wrapper.find('input[name="smartpay_last_name"]').val() || '',
+            smartpay_email: $wrapper.find('input[name="smartpay_email"]').val() || '',
         }
-
 
         // console.log('Getting data')
         console.log(data)
@@ -143,4 +146,15 @@ jQuery(document).ready(($) => {
         return data;
     }
 
+
+    $(document.body).on('click', '.smartpay-payment button.modal-close', async (e) => {
+        let $paymentModal = $(e.currentTarget).parents('.smartpay-payment').find('.payment-modal')
+        // Show payment modal
+        $paymentModal.modal('hide')
+    })
+
+
+    $('.payment-modal').on('hidden.bs.modal', function (e) {
+        document.body.style.overflow = 'auto';
+    })
 })

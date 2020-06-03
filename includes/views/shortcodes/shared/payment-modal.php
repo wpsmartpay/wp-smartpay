@@ -1,8 +1,15 @@
 <div class="modal fade payment-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content align-content-between">
             <div class="text-center p-4 pb-5">
-                <div class="mt-2">
+                <div class="float-right">
+                    <button class="btn modal-close"><i data-feather="x" width="21" height="21"></i></button>
+                </div>
+
+                <div class="float-left back-button">
+                    <button class="btn back-to-first-step"><i data-feather="corner-up-left" width="21" height="21"></i></button>
+                </div>
+                <div class="mt-4">
                     <h4 class="payment-modal--small-title m-0 mb-3">
                         <?php echo __('Make a Payment', 'smartpay'); ?>
                     </h4>
@@ -14,7 +21,7 @@
             </div>
 
             <div class="modal-body text-center mb-4 step-1">
-                <div class="col-10 col-lg-7 text-center pb-4">
+                <div class="col-10 col-lg-6 text-center pb-4 align-self-center">
                     <form action="<?php echo $form_action; ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
@@ -23,7 +30,7 @@
                             <?php if (count($gateways) == 1) : ?>
                             <?php $gateways_index = array_keys($gateways); ?>
                             <p class="payment-gateway--label single-gateway"><?php echo sprintf(__('Pay with ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p>
-                            <input type="hidden" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>">
+                            <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
                             <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
@@ -33,7 +40,7 @@
                                 <?php foreach ($gateways as $gateway_id => $gateway) : ?>
                                 <li class="gateway list-group-item p-0 m-0 px-3 py-1">
                                     <label for="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" class="gateway--label">
-                                        <input type="radio" class="mr-2" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
+                                        <input type="radio" class="mr-2" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php echo esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
                                         <?php echo esc_html($gateway['checkout_label']); ?>
                                     </label>
                                 </li>
@@ -80,7 +87,6 @@
                     <div class="alert alert-danger">
                         <p class="m-0"><?php _e('Don\'t close this window', 'smartpay'); ?></p>
                     </div>
-                    <button type="button" class="btn btn-lg btn-danger back-to-first-step">Back</button>
                 </div>
                 <div class="dynamic-content">
                     <div class="spinner-border" role="status">

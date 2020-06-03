@@ -2,6 +2,9 @@
 
     .payment-modal {
         .modal-content {
+            border: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+            min-height: 80vh;
 
             .modal-body{
                 display: flex;
@@ -10,6 +13,17 @@
 
             .step-2 {
                 display: none;
+            }
+
+            .back-button{
+                display: none;
+            }
+
+            .modal-close, .back-to-first-step{
+                border-radius: 50%;
+                padding: 8px;
+                margin: 0px;
+                border: 1px solid #ddd;
             }
         }
 

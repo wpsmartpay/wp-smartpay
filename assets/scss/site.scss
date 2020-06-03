@@ -41,5 +41,10 @@
 
 	@import 'site/shortcode/form';
 
-	@import 'site/shortcode/payment_modal';
+    @import 'site/shortcode/payment_modal';
+    
+    .modal-backdrop.show {
+        opacity: .95;
+        background-color: #f5f5f5;
+    }
 }
