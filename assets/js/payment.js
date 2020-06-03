@@ -1,5 +1,5 @@
 jQuery(document).ready(($) => {
-    const $paymentModal = $('.payment-modal')
+    /** ============= Product ============= **/
 
     /** Select product variation **/
     $(document.body).on(
@@ -17,24 +17,36 @@ jQuery(document).ready(($) => {
         }
     )
 
+    /** ============= Form ============= **/
+
+
+    /** ============= Payment Modal ============= **/
+
     /** Open payment form **/
     $(document.body).on(
         'click',
-        '.smartpay-product-shortcode button.open-payment-form',
+        '.smartpay-payment button.open-payment-form',
         (e) => {
             e.preventDefault()
 
             let $paymentModal = $(e.currentTarget).parents('.smartpay-payment').find('.payment-modal')
 
-            // Show First step content and hide second
-            $paymentModal.find('.step-1').show();
-            $paymentModal.find('.step-2').hide();
+            // Reset payment modal
+            resetPaymentModal($paymentModal)
 
-            // Show payment modal
-            $paymentModal.modal('show')
+            let buttonText = $(e.currentTarget).text()
+            $(e.currentTarget).text('Processing...').attr('disabled', 'disabled')
+
+            setTimeout(() => {
+                // Show payment modal
+                $paymentModal.modal('show')
+
+                // Reset button
+                $(e.currentTarget).text(buttonText).removeAttr('disabled')
+            }, 500)
+
         }
     )
-
 
     /** Send ajax request to process payment **/
     $(document.body).on('click', '.smartpay-payment button.smartpay-pay-now', async (e) => {
@@ -60,7 +72,7 @@ jQuery(document).ready(($) => {
 
             // Hide first step
             $paymentFirstStep.hide();
-        }, 750)
+        }, 500)
 
 
         let data = {
@@ -74,7 +86,7 @@ jQuery(document).ready(($) => {
                     $paymentSecondStep.html(
                         response
                     )
-                }, 750)
+                }, 500)
             } else {
                 $paymentSecondStep.html(
                     `<p class="text-danger">Something wrong!</p>`
@@ -86,5 +98,10 @@ jQuery(document).ready(($) => {
             $(e.currentTarget).text(buttonText).removeAttr('disabled')
         })
     })
+
+    function resetPaymentModal($modal) {
+        $modal.find('.step-1').show();
+        $modal.find('.step-2').hide();
+    }
 
 })
