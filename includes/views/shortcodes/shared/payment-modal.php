@@ -80,6 +80,7 @@
                     <div class="alert alert-danger">
                         <p class="m-0"><?php _e('Don\'t close this window', 'smartpay'); ?></p>
                     </div>
+                    <button type="button" class="btn btn-lg btn-danger back-to-first-step">Back</button>
                 </div>
                 <div class="dynamic-content">
                     <div class="spinner-border" role="status">

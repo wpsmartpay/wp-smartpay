@@ -48,6 +48,17 @@ jQuery(document).ready(($) => {
         }
     )
 
+    /** Back to payment modal first step **/
+    $(document.body).on('click', '.smartpay-payment button.back-to-first-step', async (e) => {
+        e.preventDefault()
+
+        let $paymentModal = $(e.currentTarget).parents('.smartpay-payment').find('.payment-modal')
+
+        // Reset payment modal
+        resetPaymentModal($paymentModal)
+    })
+
+
     /** Send ajax request to process payment **/
     $(document.body).on('click', '.smartpay-payment button.smartpay-pay-now', async (e) => {
         e.preventDefault()
