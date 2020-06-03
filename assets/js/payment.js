@@ -37,7 +37,6 @@ jQuery(document).ready(function ($) {
                 $('#smartpay_payment_gateway_popup .modal-body').html('Something wrong!')
                 console.log('Something wrong!')
             }
-            // console.log(buttonText);
             $('button#pay_now')
                 .text(buttonText)
                 .removeAttr('disabled');
@@ -68,7 +67,11 @@ jQuery(document).ready(function ($) {
     $('button#form_checkout_button').on('click', function (e) {
         e.preventDefault();
         var checkoutData = getFormJSONData($('.smartpay #checkout_form'));
-        var selectedPriceAmount = checkoutData.smartpay_amount;
+        if(checkoutData.smartpay_amount_custom){
+            var selectedPriceAmount = checkoutData.smartpay_amount_custom;
+        }else{
+            var selectedPriceAmount = checkoutData.smartpay_amount;
+        }
         $('#smartpay_form_checkout_popup #payment_form input[name="smartpay_amount"]').val(selectedPriceAmount);
         if(! $('body').hasClass('smartpay')){
             $('body').addClass('smartpay');

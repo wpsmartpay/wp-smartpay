@@ -25,7 +25,7 @@ $has_payment_error = false;
                     <?php foreach ($form->amounts as $index => $amount) : ?>
                     <li class="list-group-item m-0 my-2 py-4">
                         <label for="smartpay-amount-<?php echo esc_attr($index); ?>" class="d-block m-0">
-                            <input class="d-none" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($index); ?>" checked>
+                            <input class="d-nones" type="radio" name="smartpay_amount" id="smartpay-amount-<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" checked>
                             <h6 class="m-0"><?php echo smartpay_amount_format($amount); ?></h6>
                         </label>
                     </li>
@@ -41,7 +41,7 @@ $has_payment_error = false;
                 <div class="form-group">
                     <label for="smartpay-amount-custom" class="d-block m-0">Pay custom amount</label>
                     <!-- // TODO: On fixed amount click set amount here. -->
-                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount" value="<?php echo end($form->amounts); ?>" placeholder="5.0">
+                    <input type="text" id="smartpay-amount-custom" name="smartpay_amount_custom" value="" placeholder="5.0">
                 </div>
                 <?php endif; ?>
                 
