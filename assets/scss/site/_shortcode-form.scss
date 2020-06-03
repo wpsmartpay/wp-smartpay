@@ -1,13 +1,21 @@
-.smartpay-payment-shortcode-output{
+.smartpay-form-shortcode-output{
 
-    #smartpay_payment_checkout_popup{
+    #smartpay_form_checkout_popup{
         #payment_form{
             padding:0px 100px;
             .user-info{
-                background:#e7e7e7;
+                // background:#e7e7e7;
                 padding:50px;
                 margin:30px 0px;
                 border-radius:5px;
+                display:grid;
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap:10px;
+                input[type="email"],
+                button{
+                    grid-column-start: 1;
+                    grid-column-end: 3;
+                }
                 input{
                     font-size: 16px;
                     min-height:40px;

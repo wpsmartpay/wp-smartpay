@@ -7,7 +7,7 @@ $has_payment_error = false;
 $count = 0;
 ?>
 
-<div class="smartpay">
+<div class="smartpay smartpay-form-shortcode-output">
     <div id="single-form-card" class="card">
         <form id="checkout_form">
 
@@ -65,10 +65,10 @@ $count = 0;
 
     <!-- Modal -->
     <div class="modal fade" id="smartpay_form_checkout_popup" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Process payment</h5>
+                    <h5 class="modal-title m-0"><?php echo ucfirst($form->title) . ' checkout'; ?></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -83,37 +83,40 @@ $count = 0;
                             <input type="hidden" name="smartpay_form_id" value="<?php echo $form->ID ?>">
                             <input type="hidden" name="smartpay_amount" value="">
 
-                            <label for="first_name">Payment by</label>
-                            <ul class="list-unstyled">
-                                <?php if (count($gateways)) : ?>
-
-                                <?php foreach ($gateways as $gateway_id => $gateway) : ?>
-                                <li>
-                                    <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
-                                            <input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
-                                            echo esc_html($gateway['checkout_label']);
-                                            echo '</label>';
-                                            ?>
-                                </li>
-                                <?php endforeach; ?>
-
+                            <?php if (count($gateways)) : ?>
+                                <div class="gateway-wrapper <?php echo count($gateways)> 1 ? '': 'd-none'; ?>">
+                                    <p>
+                                        <label for="first_name">Payment by</label>
+                                    </p>
+                                    <ul class="list-unstyled list-group list-group-horizontal-sm m-0 my-3 justify-content-center">
+                                        <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                                        <li class="list-group-item p-0 m-0 px-3 py-1">
+                                            <?php echo '<label for="smartpay-gateway-' . esc_attr($gateway_id) . '">
+                                                    <input type="radio" name="smartpay_gateway" id="smartpay-gateway-' . esc_attr($gateway_id) . '" value="' . esc_attr($gateway_id) . '"' . checked($gateway_id, $chosen_gateway, false) . '>';
+                                                    echo esc_html($gateway['checkout_label']);
+                                                    echo '</label>';
+                                                    ?>
+                                        </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
                                 <?php else : ?>
                                 <?php
                                     $has_payment_error = true;
-                                    echo 'You must enable a payment gateway to proceed a payment.';
+                                    echo '<p>You must enable a payment gateway to proceed a payment.</p>';
                                     ?>
                                 <?php endif; ?>
-                            </ul>
 
-                            <div>
-                                <input type="text" name="smartpay_first_name" value="Al-Amin">
-                                <input type="text" name="smartpay_last_name" value="Firdows">
-                                <input type="text" name="smartpay_email" value="alaminfirdows@gmail.com">
+                            <div class="user-info">
+                                <input type="text" class="form-control" name="smartpay_first_name" value="Al-Amin">
+                                <input type="text" class="form-control" name="smartpay_last_name" value="Firdows">
+                                <input type="email" class="form-control" name="smartpay_email" value="alaminfirdows@gmail.com">
+                                <button id="pay_now" type="button" class="btn btn-success btn-block btn-lg" <?php if ($has_payment_error) echo 'disabled'; ?>>Pay Now</button>
                             </div>
-                            <button id="pay_now" type="button" class="btn btn-primary btn-block btn-lg" <?php if ($has_payment_error) echo 'disabled'; ?>>Pay Now</button>
                         </form>
                     </div>
                 </div>
+                <div class="overlay"></div>
             </div>
         </div>
     </div>

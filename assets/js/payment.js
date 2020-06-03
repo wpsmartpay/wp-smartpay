@@ -28,7 +28,9 @@ jQuery(document).ready(function ($) {
         jQuery.post(smartpay.ajax_url, data, response => {
             if (response) {
                 $('#smartpay_payment_checkout_popup').modal('hide');
+                $('#smartpay_form_checkout_popup').modal('hide');
                 $('#smartpay_payment_checkout_popup .overlay').css('display', 'none');
+                $('#smartpay_form_checkout_popup .overlay').css('display', 'none');
                 setTimeout(() => {
                     $('#smartpay_payment_gateway_popup .modal-body').html(response)
                 }, 500)
@@ -52,6 +54,7 @@ jQuery(document).ready(function ($) {
     });
     /**
      * add selected class for multiple amount option
+     * and change the custom amount value as fixed amount
      */
     $('#single-form-card .multiple-amount .list-group-item').on('click', function(e){
         $(this).parent().find('li.selected').removeClass('selected');
@@ -59,7 +62,6 @@ jQuery(document).ready(function ($) {
         $(this).addClass('selected');
         $(this).find('input[name="smartpay_amount"]').prop('checked', true);
         var selectedInputPrice = $(this).find('input[name="smartpay_amount"]').val();
-        console.log(selectedInputPrice);
         $('#single-form-card').find('.custom-amount-wrapper input#smartpay-amount-custom').val(selectedInputPrice);
     });
     $('#smartpay-amount-custom').on('click', function(){
