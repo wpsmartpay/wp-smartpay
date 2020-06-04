@@ -50,6 +50,11 @@ function smartpay_insert_payment($payment_data)
     return SmartPay()->payment->insert_payment($payment_data);
 }
 
+function smartpay_attach_customer_payment($payment)
+{
+    return SmartPay()->payment->attach_customer_payment($payment);
+}
+
 function smartpay_get_payment($payment_or_txn_id, $by_txn = false)
 {
     if (!$payment_or_txn_id) {
