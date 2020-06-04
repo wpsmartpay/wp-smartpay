@@ -181,7 +181,7 @@ class SmartPay_Product
         // Protected ID that can never be changed
         $this->_ID = absint($product->ID);
 
-        $this->title          = ucfirst($product->post_title);
+        $this->title          = $product->post_title;
         $this->description    = $product->post_content;
         $this->image          = $this->_setup_image();
         $this->base_price     = $this->_setup_base_price();

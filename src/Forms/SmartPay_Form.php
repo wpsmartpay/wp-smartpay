@@ -358,18 +358,6 @@ class SmartPay_Form
     }
 
     /**
-     * Retrieve the amount
-     *
-     * @since  0.0.1
-     * @return string amount of the form
-     */
-    public function get_amount()
-    {
-        // Override the form base price.
-        return apply_filters('smartpay_form_get_amount', $this->amount, $this->ID);
-    }
-
-    /**
      * Retrieve the amounts
      *
      * @since  0.0.1
@@ -399,11 +387,8 @@ class SmartPay_Form
      */
     private function _insert()
     {
-        if (0 != $this->ID) {
-            return false;
-        }
-        var_dump($this);
-        exit;
+        if (0 != $this->ID) retur;
+        
         // Create a blank form
         $form_id = wp_insert_post(array(
             'post_title'     => $this->title ?? '',
