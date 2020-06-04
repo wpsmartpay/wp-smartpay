@@ -3,7 +3,7 @@
         <div class="modal-content align-content-between">
             <div class="d-flex justify-content-between text-center p-4 mt-4">
                 <div class="modal-button">
-                    <button class="btn back-to-first-step"><i data-feather="corner-up-left" width="21" height="21"></i></button>
+                    <button class="btn back-to-first-step"><i data-feather="arrow-left" width="21" height="21"></i></button>
                 </div>
                 <div class="d-flex flex-column align-content-between">
                     <h4 class="payment-modal--small-title m-0 mb-3">
