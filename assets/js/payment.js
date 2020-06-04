@@ -19,6 +19,29 @@ jQuery(document).ready(($) => {
 
     /** ============= Form ============= **/
 
+    /** Select form fixed amount **/
+    $(document.body).on(
+        'click',
+        '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
+        (e) => {
+            // e.preventDefault()
+            $(e.currentTarget).parents('.form-amounts').find('.amount').removeClass('selected')
+
+            $(e.currentTarget).addClass('selected')
+
+            // Change the custom amount value on selecting form amount
+            var selectedAmount = $(e.currentTarget).find('input[name="_form_amount"]').val();
+            $(e.currentTarget).parents('.form-amounts').find('#smartpay_custom_amount').val(selectedAmount);
+        }
+    )
+    /** Select form custom amount **/
+    $(document.body).on(
+        'focus',
+        '.smartpay-form-shortcode .form-amounts #smartpay_custom_amount',
+        (e) => {
+            $(e.currentTarget).parents('.form-amounts').find('.amount').removeClass('selected');
+            $(e.currentTarget).addClass('selected');
+        });
 
     /** ============= Payment Modal ============= **/
 
@@ -96,7 +119,7 @@ jQuery(document).ready(($) => {
 
         let data = {
             action: 'smartpay_process_payment',
-            data: getPaymentData($parentWrapper),
+            data: getPaymentFormData($parentWrapper),
         }
 
         jQuery.post(smartpay.ajax_url, data, (response) => {
@@ -124,19 +147,24 @@ jQuery(document).ready(($) => {
         $('.back-to-first-step').hide()
     }
 
-    function getPaymentData($wrapper) {
+    function getPaymentFormData($wrapper) {
 
         let data = {
             smartpay_action: 'smartpay_process_payment',
-            smartpay_process_payment: $wrapper.find('input[name="smartpay_process_payment"]').val() || '',
-            smartpay_payment_type: $wrapper.find('input[name="smartpay_payment_type"]').val() || '',
-            smartpay_product_id: $wrapper.find('input[name="smartpay_product_id"]').val() || 0,
-            smartpay_product_variation_id: $wrapper.find("input[name='smartpay_product_variation_id']:checked").val() || 0,
-            smartpay_form_id: $wrapper.find('input[name="smartpay_form_id"]').val() || 0,
-            smartpay_gateway: $wrapper.find('input[name="smartpay_gateway"]:checked').val() || '',
-            smartpay_first_name: $wrapper.find('input[name="smartpay_first_name"]').val() || '',
-            smartpay_last_name: $wrapper.find('input[name="smartpay_last_name"]').val() || '',
-            smartpay_email: $wrapper.find('input[name="smartpay_email"]').val() || '',
+            smartpay_process_payment: $wrapper.find('input[name="smartpay_process_payment"]').val() || null,
+            smartpay_gateway: $wrapper.find('input[name="smartpay_gateway"]:checked').val() || null,
+            smartpay_first_name: $wrapper.find('input[name="smartpay_first_name"]').val() || null,
+            smartpay_last_name: $wrapper.find('input[name="smartpay_last_name"]').val() || null,
+            smartpay_email: $wrapper.find('input[name="smartpay_email"]').val() || null,
+
+            // Product purchase
+            smartpay_payment_type: $wrapper.find('input[name="smartpay_payment_type"]').val() || null,
+            smartpay_product_id: $wrapper.find('input[name="smartpay_product_id"]').val() || null,
+            smartpay_product_variation_id: $wrapper.find("input[name='smartpay_product_variation_id']:checked").val() || null,
+
+            // Form payment
+            smartpay_form_id: $wrapper.find('input[name="smartpay_form_id"]').val() || null,
+            smartpay_form_amount: $wrapper.find('input[name="smartpay_form_amount"]').val() || null,
         }
 
         // console.log('Getting data')

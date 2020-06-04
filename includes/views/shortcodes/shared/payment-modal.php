@@ -10,7 +10,7 @@
                         <?php echo __('Make a Payment', 'smartpay'); ?>
                     </h4>
                     <h2 class="payment-modal--title m-0 mb-3">
-                        <?php echo $product->title ?? 'Product/Form'; ?>
+                        <?php echo $product->title ?? $form->title ?? 'Product/Form'; ?>
                     </h2>
                     <p class="payment-modal--subtitle m-0 mb-3"><?php _e('Enter your info and complete payment!', 'smartpay'); ?></p>
                 </div>

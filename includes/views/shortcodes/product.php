@@ -41,7 +41,6 @@ $has_payment_error = false;
                                     <li class="list-group-item variation price m-0 mb-3 py-4 <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" class="d-block m-0">
                                             <input class="d-none" type="radio" name="smartpay_product_variation_id" id="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" value="<?php echo esc_attr($variation['id']); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
-                                            <!-- // TODO: Add price to Product Variation -->
                                             <span class="price--amount"><?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
                                             <strong class="price--title"><?php echo esc_html(ucfirst($variation['name'])); ?></strong>
                                             <?php if ($variation['description'] ?? false) : ?>

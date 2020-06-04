@@ -883,9 +883,9 @@
 .smartpay .list-group-item-dark{color:#1b1e21;background-color:#c6c8ca}
 .smartpay .list-group-item-dark.list-group-item-action:hover,.smartpay .list-group-item-dark.list-group-item-action:focus{color:#1b1e21;background-color:#b9bbbe}
 .smartpay .list-group-item-dark.list-group-item-action.active{color:#fff;background-color:#1b1e21;border-color:#1b1e21}
-.smartpay .smartpay-product-shortcode .product--title{display:block;margin-bottom:1rem;font-family:-apple-system,'.SFNSDisplay-Regular','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:26px;font-weight:bold;color:#252a2e;line-height:1.2}
+.smartpay .smartpay-product-shortcode .product--title{display:block;margin-bottom:1rem;font-size:26px;font-weight:bold;color:#252a2e;line-height:1.2}
 .smartpay .smartpay-product-shortcode .product--description{margin-bottom:10px;color:#252a2e}
-.smartpay .smartpay-product-shortcode .product--price-section{color:red;transition:all .3s ease}
+.smartpay .smartpay-product-shortcode .product--price-section{transition:all .3s ease}
 .smartpay .smartpay-product-shortcode .product--price-section .price{cursor:pointer;transition:all .05s ease-in-out;padding:15px;display:block;text-decoration:none;font-size:17px;box-sizing:border-box;border:1px solid #ddd;border-radius:4px;margin-top:10px;background:#fff;overflow:hidden;color:#252a2e}
 .smartpay .smartpay-product-shortcode .product--price-section .price label{cursor:pointer}
 .smartpay .smartpay-product-shortcode .product--price-section .price--amount{display:inline-block;margin-bottom:10px;background:#eee;padding:6px 10px;font-size:13px;font-weight:bold;position:relative;pointer-events:none;background:#eee}
@@ -901,8 +901,14 @@
 .smartpay .smartpay-product-shortcode .product--price-section .price.selected .price--amount:after{border-bottom-color:#fdce71}
 .smartpay .smartpay-product-shortcode .product--price-section .price--title{font-size:20px;font-weight:bold;display:block}
 .smartpay .smartpay-product-shortcode .product--price-section .price .variation--description{margin-top:10px;color:#797874;font-size:17px}
-.smartpay .smartpay-product-shortcode button.open-payment-form{font-size:16px;padding:6px 10px}
-.smartpay .smartpay-form-shortcode .pay-now-button{font-size:16px;text-transform:uppercase}
+.smartpay .smartpay-form-shortcode .form--title{display:block;margin-bottom:1rem;font-size:26px;font-weight:bold;color:#252a2e;line-height:1.2}
+.smartpay .smartpay-form-shortcode .form--description{margin-bottom:10px;color:#252a2e}
+.smartpay .smartpay-form-shortcode .form--amount-section{transition:all .3s ease}
+.smartpay .smartpay-form-shortcode .form--amount-section .amount{cursor:pointer;transition:all .05s ease-in-out;padding:15px;display:block;text-decoration:none;font-size:17px;box-sizing:border-box;border:1px solid #ddd;border-radius:4px;margin-top:10px;background:#fff;overflow:hidden;color:#252a2e}
+.smartpay .smartpay-form-shortcode .form--amount-section .amount label{cursor:pointer}
+.smartpay .smartpay-form-shortcode .form--amount-section .amount.selected{box-shadow:0 0 0 2px #28a745}
+.smartpay .smartpay-form-shortcode .form--amount-section .amount .variation--description{margin-top:10px;color:#797874;font-size:17px}
+.smartpay .smartpay-form-shortcode .form--custom-amount{font-size:24px !important;padding:11px 15px !important;height:auto !important;font-weight:bold !important}
 .smartpay .smartpay-payment .payment-modal .modal-content{border:0;box-shadow:0 1px 2px rgba(0,0,0,0.15);min-height:80vh}
 .smartpay .smartpay-payment .payment-modal .modal-content .modal-body{display:flex;justify-content:center}
 .smartpay .smartpay-payment .payment-modal .modal-content .step-2{display:none}
@@ -917,11 +923,8 @@
 .smartpay .smartpay-payment .payment-modal--gateway--label{color:#6c757d}
 .smartpay .smartpay-payment .payment-modal--gateway .gateway--label{font-weight:400;font-size:16px;margin:0;padding:4px}
 .smartpay .smartpay-payment .payment-modal--user-info .form-control{font-size:16px;min-height:40px;padding:5px 15px}
-.smartpay .smartpay-payment .payment-modal--user-info button.smartpay-pay-now{font-size:16px;padding:6px 10px}
+.smartpay .smartpay-payment button.open-payment-form,.smartpay .smartpay-payment button.smartpay-pay-now{font-size:16px;padding:6px 10px}
 .smartpay .smartpay-payment .overlay{background:rgba(255,255,255,0.9);position:absolute;left:0;top:0;width:100%;height:100%;display:none}
-.smartpay .smartpay-gateway-modal{color:inherit}
-.smartpay .modal-custom-header button.close{background:transparent;font-size:30px;margin-right:0;color:#c2c2c2}
-.smartpay .modal-custom-header button.close:focus{outline:0}
 .smartpay .modal-backdrop.show{opacity:.95;background-color:#f5f5f5}
 @media(prefers-reduced-motion:reduce){.smartpay .btn{transition:none}
 .smartpay .fade{transition:none}

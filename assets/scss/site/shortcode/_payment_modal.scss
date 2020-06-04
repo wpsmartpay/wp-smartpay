@@ -1,5 +1,4 @@
 .smartpay-payment {
-
     .payment-modal {
         .modal-content {
             border: none;
@@ -85,12 +84,12 @@
                 min-height: 40px;
                 padding: 5px 15px;
             }
-
-            button.smartpay-pay-now {
-                font-size: 16px;
-                padding: 6px 10px;
-            }
         }
+    }
+
+    button.open-payment-form, button.smartpay-pay-now {
+        font-size: 16px;
+        padding: 6px 10px;
     }
 
     .overlay {
@@ -101,22 +100,5 @@
         width: 100%;
         height: 100%;
         display: none;
-    }
-}
-
-.smartpay-gateway-modal {
-    color: inherit;
-}
-
-.modal-custom-header {
-    button.close {
-        background: transparent;
-        font-size: 30px;
-        margin-right: 0px;
-        color: #c2c2c2;
-
-        &:focus {
-            outline: none;
-        }
     }
 }

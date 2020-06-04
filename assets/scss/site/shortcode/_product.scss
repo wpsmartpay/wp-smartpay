@@ -3,8 +3,6 @@
         &--title {
             display: block;
             margin-bottom: 1rem;
-            font-family: -apple-system, '.SFNSDisplay-Regular', 'Helvetica Neue',
-                Helvetica, Arial, sans-serif;
             font-size: 26px;
             font-weight: bold;
             color: #252a2e;
@@ -17,7 +15,6 @@
         }
 
         &--price-section {
-            color: red;
             transition: all 0.3s ease;
 
             .price {
@@ -120,10 +117,4 @@
             }
         }
     }
-
-    button.open-payment-form {
-        font-size: 16px;
-        padding: 6px 10px;
-    }
-
 }
