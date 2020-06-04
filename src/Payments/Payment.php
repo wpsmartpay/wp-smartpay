@@ -122,19 +122,65 @@ final class Payment
         }
     }
 
+    function ajax_process_payment()
+    {
+
+        // TODO: Convert response to JSON
+
+        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != $_POST['data']['smartpay_action']) {
+            echo '<p class="text-danger">Payment process action not acceptable!</p>';
+            die();
+        }
+
+        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
+            echo '<p class="text-danger">Payment process nonce verification failed!</p>';
+            die();
+        }
+
+        $validate = $this->_checkValidation($_POST['data']);
+
+        if(!$validate) {
+            echo '<p class="text-danger">Payment data invalid!</p>';
+            die();
+        }
+
+        $payment_data = $this->_prepare_payment_data($_POST['data']);
+
+        // TODO: Do it inside gateway
+        $payment = $this->insert_payment($payment_data);
+
+        if (!$payment) {
+            echo '<p class="text-danger">Something wrong! Payment insert failed!</p>';
+            die();
+        }
+
+        $this->_attach_customer_payment($payment);
+
+        // Set session payment data
+        smartpay_set_session_payment_data($payment_data);
+
+        // Send info to the gateway for payment processing
+        $gateway = $_POST['data']['smartpay_gateway'];
+
+        $this->_process_gateway_payment($gateway, $payment_data);
+
+        die();
+    }
+
     private function _prepare_payment_data($_data)
     {
         $payment_data = $this->_get_payment_data($_data);
-        return apply_filters('smartpay_payment_data', array(
-            'payment_type'   => $_data['smartpay_payment_type'],
-            'payment_data'   => $payment_data,
-            'date'            => date('Y-m-d H:i:s', time()),
-            'amount'          => $payment_data['total_amount'] ?? '',
-            'currency'        => smartpay_get_currency() ?? 'USD',
-            'gateway'         => $_data['smartpay_gateway'],
-            'customer'        => $this->_get_payment_customer($_data),
-            'email'           => $_data['smartpay_email'],
-            'key'             => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+
+        return apply_filters('smartpay_prepare_payment_data', array(
+            'payment_type'  => $_data['smartpay_payment_type'],
+            'payment_data'  => $payment_data,
+            'date'          => date('Y-m-d H:i:s', time()),
+            'amount'        => $payment_data['total_amount'] ?? '',
+            'currency'      => smartpay_get_currency() ?? 'USD',
+            'gateway'       => $_data['smartpay_gateway'],
+            'customer'      => $this->_get_payment_customer($_data),
+            'email'         => $_data['smartpay_email'],
+            'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
         ));
     }
 
@@ -187,14 +233,16 @@ final class Payment
                 break;
 
             case 'form_payment':
-                // TODO: Need to reform
-                $form = smartpay_get_form($_data['smartpay_form_id'] ?? '');
 
-                if (!$form) return;
+                $form_id = $_data['smartpay_form_id'] ?? '';
 
-                $payment_data = [
+                $form = smartpay_get_form($form_id);
+
+                if (empty($form_id) || empty($form)) return [];
+
+                return [
                     'form_id' => $form->ID,
-                    'total_amount' => $_data['smartpay_amount'] ?? 0,
+                    'total_amount' => $_data['smartpay_form_amount'] ?? 0,
                 ];
                 break;
 
@@ -304,51 +352,6 @@ final class Payment
             'smartpay',
             array('ajax_url' => admin_url('admin-ajax.php'))
         );
-    }
-
-    function ajax_process_payment()
-    {
-        // var_dump($_POST['data']);exit;
-
-        // TODO: Convert response to JSON
-
-        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != $_POST['data']['smartpay_action']) {
-            echo '<p class="text-danger">Payment process action not acceptable!</p>';
-            die();
-        }
-
-        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
-            echo '<p class="text-danger">Payment process nonce verification failed!</p>';
-            die();
-        }
-
-        $validate = $this->_checkValidation($_POST['data']);
-
-        if(!$validate) {
-            echo '<p class="text-danger">Payment data invalid!</p>';
-            die();
-        }
-
-        $payment_data = $this->_prepare_payment_data($_POST['data']);
-
-        $payment = $this->insert_payment($payment_data);
-
-        if (!$payment) {
-            echo '<p class="text-danger">Something wrong! Payment insert failed!</p>';
-            die();
-        }
-
-        $this->_attach_customer_payment($payment);
-
-        // Set session payment data
-        smartpay_set_session_payment_data($payment_data);
-
-        // Send info to the gateway for payment processing
-        $gateway = $_POST['data']['smartpay_gateway'];
-
-        $this->_process_gateway_payment($gateway, $payment_data);
-
-        die();
     }
 
     private function _process_gateway_payment($gateway, $payment_data, $ajax = true)
