@@ -118,7 +118,7 @@ final class Payment
             smartpay_set_session_payment_data($payment_data);
 
             // Send info to the gateway for payment processing
-            $this->_send_to_gateway($smartpay_gateway, $payment_data);
+            $this->_send_to_gateway($smartpay_gateway, $payment_data, false);
         }
     }
 
@@ -136,30 +136,25 @@ final class Payment
             die();
         }
 
-        $validate = $this->_checkValidation($_POST['data']);
+        $validate = $this->_checkValidation($_POST['data'] ?? []);
 
         if(!$validate) {
             echo '<p class="text-danger">Payment data invalid!</p>';
             die();
         }
 
-        $payment_data = $this->_prepare_payment_data($_POST['data']);
+        $payment_data = $this->_prepare_payment_data($_POST['data'] ?? []);
 
-        // TODO: Do it inside gateway
-        $payment = $this->insert_payment($payment_data);
-
-        if (!$payment) {
-            echo '<p class="text-danger">Something wrong! Payment insert failed!</p>';
+        if(!$payment_data || !is_array($payment_data)) {
+            echo '<p class="text-danger">Payment data invalid!</p>';
             die();
         }
 
         // Set session payment data
         smartpay_set_session_payment_data($payment_data);
 
-        // Send info to the gateway for payment processing
-        $gateway = $_POST['data']['smartpay_gateway'] ?? '';
-
-        $this->_process_gateway_payment($gateway, $payment_data);
+        // Send payment data toprocess gateway payment
+        $this->_process_gateway_payment($payment_data);
 
         die();
     }
@@ -179,14 +174,6 @@ final class Payment
             'email'         => $_data['smartpay_email'],
             'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
         ));
-    }
-
-    private function _send_to_gateway($gateway, $payment_data)
-    {
-        $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
-
-        // $gateway must match the ID used when registering the gateway
-        do_action('smartpay_' . $gateway . '_process_payment', $payment_data);
     }
 
     private function _get_payment_data($_data)
@@ -294,6 +281,15 @@ final class Payment
         ];
     }
 
+    private function _checkValidation($_data)
+    {
+        // TODO: Reform validation
+        $email = $_data['smartpay_email'] ?? '';
+        if(!is_email($email)) return false;
+
+        return true;
+    }
+
     public function insert_payment($payment_data)
     {
         if (empty($payment_data)) return;
@@ -354,20 +350,22 @@ final class Payment
         );
     }
 
-    private function _process_gateway_payment($gateway, $payment_data, $ajax = true)
+    private function _process_gateway_payment($payment_data, $ajax = true)
     {
-        if (smartpay_is_gateway_active($gateway)) {
-            $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
+        $gateway = $_POST['data']['smartpay_gateway'] ?? '';
 
-            // gateway must match the ID used when registering the gateway
-            if ($ajax) {
-                do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
-            }
+        if (!is_string($gateway) || !smartpay_is_gateway_active($gateway)) {
+            echo '<p class="text-danger">Gateway is not active or not exist!</p>';
+            return;
+        }
+
+        $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
+
+        // gateway must match the ID used when registering the gateway
+        if ($ajax) {
+            do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
         } else {
-            if (!$payment) {
-                echo '<p class="text-danger">Gateway is not active or not exist!</p>';
-                return;
-            }
+            do_action('smartpay_' . $gateway . '_process_payment', $payment_data);
         }
     }
 
@@ -376,14 +374,5 @@ final class Payment
         $customer = new SmartPay_Customer($payment->email);
 
         $customer->attach_payment($payment->ID);
-    }
-
-    private function _checkValidation($_data)
-    {
-        // TODO: Reform validation
-        $email = $_data['smartpay_email'] ?? '';
-        if(!is_email($email)) return false;
-
-        return true;
     }
 }
