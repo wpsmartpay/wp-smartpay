@@ -44,7 +44,6 @@ jQuery(document).ready(($) => {
                 // Appending modal background inside the .smartpay div
                 $('.modal-backdrop').appendTo('.smartpay');
 
-
                 document.body.style.overflow = 'hidden';
 
                 // Reset button
@@ -77,17 +76,17 @@ jQuery(document).ready(($) => {
 
         setTimeout(() => {
             // Set loading content
-            $paymentSecondStep.children('.dynamic-content').html(`
+            $paymentSecondStep.find('.dynamic-content').html(`
             <div class="text-center">
                     <div class="spinner-border" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>`)
 
-            $('.back-button').show()
+            $('.back-to-first-step').show()
 
             // Show second step
-            $paymentSecondStep.show();
+            $paymentSecondStep.css('display', 'flex');
 
             // Hide first step
             $paymentFirstStep.hide();
@@ -103,16 +102,16 @@ jQuery(document).ready(($) => {
         jQuery.post(smartpay.ajax_url, data, (response) => {
             if (response) {
                 setTimeout(() => {
-                    $paymentSecondStep.children('.dynamic-content').html(
+                    $paymentSecondStep.find('.dynamic-content').html(
                         response
                     )
                 }, 500)
             } else {
-                $paymentSecondStep.children('.dynamic-content').html(
+                $paymentSecondStep.find('.dynamic-content').html(
                     `<p class="text-danger">Something wrong!</p>`
                 )
 
-                console.log('Something wrong!')
+                console.error('Something wrong!')
             }
 
             $(e.currentTarget).text(buttonText).removeAttr('disabled')
@@ -122,7 +121,7 @@ jQuery(document).ready(($) => {
     function resetPaymentModal($modal) {
         $modal.find('.step-1').show();
         $modal.find('.step-2').hide();
-        $('.back-button').hide()
+        $('.back-to-first-step').hide()
     }
 
     function getPaymentData($wrapper) {
@@ -146,13 +145,11 @@ jQuery(document).ready(($) => {
         return data;
     }
 
-
     $(document.body).on('click', '.smartpay-payment button.modal-close', async (e) => {
         let $paymentModal = $(e.currentTarget).parents('.smartpay-payment').find('.payment-modal')
         // Show payment modal
         $paymentModal.modal('hide')
     })
-
 
     $('.payment-modal').on('hidden.bs.modal', function (e) {
         document.body.style.overflow = 'auto';

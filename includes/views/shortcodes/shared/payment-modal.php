@@ -1,15 +1,11 @@
 <div class="modal fade payment-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content align-content-between">
-            <div class="text-center p-4 pb-5">
-                <div class="float-right">
-                    <button class="btn modal-close"><i data-feather="x" width="21" height="21"></i></button>
-                </div>
-
-                <div class="float-left back-button">
+            <div class="d-flex justify-content-between text-center p-4 mt-4">
+                <div class="modal-button">
                     <button class="btn back-to-first-step"><i data-feather="corner-up-left" width="21" height="21"></i></button>
                 </div>
-                <div class="mt-4">
+                <div class="d-flex flex-column align-content-between">
                     <h4 class="payment-modal--small-title m-0 mb-3">
                         <?php echo __('Make a Payment', 'smartpay'); ?>
                     </h4>
@@ -18,10 +14,13 @@
                     </h2>
                     <p class="payment-modal--subtitle m-0 mb-3"><?php _e('Enter your info and complete payment!', 'smartpay'); ?></p>
                 </div>
+                <div class="modal-button">
+                    <button class="btn modal-close"><i data-feather="x" width="21" height="21"></i></button>
+                </div>
             </div>
 
             <div class="modal-body text-center mb-4 step-1">
-                <div class="col-10 col-lg-6 text-center pb-4 align-self-center">
+                <div class="col-11 pb-4 align-self-center">
                     <form action="<?php echo $form_action; ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
@@ -55,21 +54,17 @@
                             <?php endif; ?>
                         </div>
 
-                        <!-- <div class="payment-modal--amount pb-1 d-none">
-                                    <p class="payment-gateway--label single-gateway"><?php //echo sprintf(__('Total: ', 'smartpay') . ' <strong id="show_amount">$</strong>'); ?></p>
-                                </div> -->
-
                         <div class="payment-modal--user-info mt-3">
                             <div class="row">
-                                <div class="col-sm-6 form-group mb-3">
+                                <div class="col-sm-6 form-group mb-4">
                                     <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" autocomplete="first_name" required>
                                 </div>
-                                <div class="col-sm-6 form-group mb-3">
+                                <div class="col-sm-6 form-group mb-4">
                                     <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" autocomplete="last_name">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col form-group mb-3">
+                                <div class="col form-group mb-4">
                                     <input type="email" placeholder="Email address" class="form-control" name="smartpay_email" id="smartpay_email" autocomplete="email" required>
                                 </div>
                             </div>
@@ -82,15 +77,17 @@
                 </div>
 
             </div>
-            <div class="modal-body text-center mb-4 p-4 step-2">
-                <div class="my-3 col mb-5">
-                    <div class="alert alert-danger">
-                        <p class="m-0"><?php _e('Don\'t close this window', 'smartpay'); ?></p>
+            <div class="modal-body text-center mb-4 step-2">
+                <div class="col-11 pb-4 align-self-center">
+                    <div class="mb-5">
+                        <div class="alert alert-danger py-4">
+                            <p class="m-0"><?php _e('Don\'t close this window before competing payment!', 'smartpay'); ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="dynamic-content">
-                    <div class="spinner-border" role="status">
-                        <span class="sr-only">Loading...</span>
+                    <div class="dynamic-content">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </div>
