@@ -95,6 +95,7 @@ final class Paddle extends Payment_Gateway
      */
     public function process_payment($payment_data)
     {
+        return;
         // var_dump($payment_data);
         // exit;
 
@@ -153,32 +154,55 @@ final class Paddle extends Payment_Gateway
         return wp_redirect(smartpay_get_payment_failure_page_uri(), 302);
     }
 
-    public function ajax_process_payment()
+    public function ajax_process_payment($payment_data)
     {
-        echo 'paddle';
-        $content = '';
-        $content .= '<p>' . __(
-            'Thank you for your order, please click the button below to pay with Paddle.',
-            'smartpay'
-        ) . '</p>';
-        $content .= '<div style="margin: 0 auto;text-align: center;">';
-        $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', 'aaa');
-        $content .= '</div>';
+        // TODO: Response data must be converted to JSON on version 1.0
 
-        $content .= '<script>jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
-        $content .= 'Paddle.Setup({';
-        $content .= sprintf('vendor: %s', '111');
-        $content .= ' });';
+        if (!$this->_set_credentials()) {
+            echo '<p class="text-danger">Paddle credentials not sets!</p>';
+            return;
+        }
 
-        // Open popup on page load
-        // $content .= 'Paddle.Checkout.open({';
-        // $content .= sprintf('override: "%s"', 'aaa');
-        // $content .= '});';
+        $payment = smartpay_insert_payment($payment_data);
 
-        $content .= '});';
-        $content .= '</script>';
+        if (!$payment) {
+            echo '<p class="text-danger">Something wrong! Failed to insert payment!</p>';
+            return;
+        }
 
-        echo $content;
+        // var_dump($payment_data);
+        // exit;
+
+        $payment_price = number_format($payment_data['amount'], 2);
+
+        $pay_link_data = array(
+            'title'             => 'Payment #' . $payment->ID,
+            'customer_email'    => $payment_data['email'],
+            'passthrough'       => $payment->ID,
+            'prices'            => [(string) new PaddleSDKPrice($payment_data['currency'], $payment_price)],
+            'quantity' => 1,
+            'quantity_variable' => 0,
+            'discountable'      => 0,
+            'return_url'        => get_permalink(smartpay_get_payment_success_page_uri()),
+            'webhook_url'       => get_bloginfo('url') . '/index.php?' . build_query(array(
+                'smartpay-listener' => 'paddle',
+                'identifier'        => 'fulfillment-webhook',
+                'payment-id'        => $payment->ID
+            )),
+        );
+
+        // API request to create pay link
+        $api_response_data = json_decode(PaddleSDKPayLink::create($pay_link_data));
+
+        // If failed to  create Paddle paylink
+        if (!$api_response_data && false == $api_response_data->success) {
+            echo '<p class="text-danger">API response error!</p>';
+            return;
+        }
+        
+        update_post_meta($payment->ID, 'paddle_pay_link', $api_response_data->response->url);
+        
+        echo $this->_pay_now_content($payment);
     }
 
     /**
@@ -212,42 +236,44 @@ final class Paddle extends Payment_Gateway
     {
         $vendor_id = smartpay_get_option('paddle_vendor_id');
 
-        if (empty($vendor_id)) {
-            die('Credentials error.');
-        }
+        if (empty($vendor_id)) die('Credentials error.');
 
         $paddle_pay_link = get_post_meta($payment->ID, 'paddle_pay_link', true);
 
         if (!$paddle_pay_link) {
             die('Paddle pay link not found.');
+            return;
         }
 
-        if ('publish' != $payment->status) {
-            $content = '';
-            $content .= '<p>' . __(
-                'Thank you for your order, please click the button below to pay with Paddle.',
-                'smartpay'
-            ) . '</p>';
-            $content .= '<div style="margin: 0 auto;text-align: center;">';
-            $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', $paddle_pay_link);
-            $content .= '</div>';
-
-            $content .= '<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script type="text/javascript">';
-            $content .= 'jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
-            $content .= 'Paddle.Setup({';
-            $content .= sprintf('vendor: %s', $vendor_id);
-            $content .= ' });';
-
-            // Open popup on page load
-            $content .= 'Paddle.Checkout.open({';
-            $content .= sprintf('override: "%s"', $paddle_pay_link);
-            $content .= '});';
-
-            $content .= '});';
-            $content .= '</script>';
-
-            return $content;
+        if ('completed' == $status->status) {
+            echo '<p class="text-danger">Payment Already!</p>';
+            return;
         }
+
+        $content = '';
+        $content .= '<p>' . __(
+            'Thank you for your order, please click the button below to pay with Paddle.',
+            'smartpay'
+        ) . '</p>';
+        $content .= '<div style="margin: 0 auto;text-align: center;">';
+        $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', $paddle_pay_link);
+        $content .= '</div>';
+
+        $content .= '<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script type="text/javascript">';
+        $content .= 'jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
+        $content .= 'Paddle.Setup({';
+        $content .= sprintf('vendor: %s', $vendor_id);
+        $content .= ' });';
+
+        // Open popup on page load
+        $content .= 'Paddle.Checkout.open({';
+        $content .= sprintf('override: "%s"', $paddle_pay_link);
+        $content .= '});';
+
+        $content .= '});';
+        $content .= '</script>';
+
+        return $content;
     }
 
     /**
@@ -583,7 +609,9 @@ final class Paddle extends Payment_Gateway
 
         if (empty($vendor_id) || empty($vendor_auth_code) || empty($public_key)) {
             // TODO: Add smartpay payment error notice
+
             die('SmartPay-Paddle: Set credentials; You must enter your vendor id, auth codes and public key for Paddle in gateway settings.');
+            return false;
         }
 
         PaddleSDK::setApiCredentials($vendor_id, $vendor_auth_code);
