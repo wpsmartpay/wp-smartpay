@@ -13,3 +13,5 @@ function smartpay_get_product_variation($variation_id)
 
     return SmartPay()->product->get_product_variation($variation_id);
 }
+
+// TODO: Set/Get product meta
