@@ -124,7 +124,6 @@ final class Payment
 
     function ajax_process_payment()
     {
-
         // TODO: Convert response to JSON
 
         if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != $_POST['data']['smartpay_action']) {
@@ -154,13 +153,11 @@ final class Payment
             die();
         }
 
-        $this->_attach_customer_payment($payment);
-
         // Set session payment data
         smartpay_set_session_payment_data($payment_data);
 
         // Send info to the gateway for payment processing
-        $gateway = $_POST['data']['smartpay_gateway'];
+        $gateway = $_POST['data']['smartpay_gateway'] ?? '';
 
         $this->_process_gateway_payment($gateway, $payment_data);
 
@@ -327,6 +324,9 @@ final class Payment
         if (!empty($payment->ID)) {
             // Set session payment id
             smartpay_set_session_payment_id($payment->ID);
+        
+            // Attach payment to customer
+            $this->attach_customer_payment($payment);
 
             return $payment;
         }
@@ -359,16 +359,19 @@ final class Payment
         if (smartpay_is_gateway_active($gateway)) {
             $payment_data['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
 
-            // $gateway must match the ID used when registering the gateway
+            // gateway must match the ID used when registering the gateway
             if ($ajax) {
                 do_action('smartpay_' . $gateway . '_ajax_process_payment', $payment_data);
             }
         } else {
-            echo 'Gateway not active or not exist!';
+            if (!$payment) {
+                echo '<p class="text-danger">Gateway is not active or not exist!</p>';
+                return;
+            }
         }
     }
 
-    private function _attach_customer_payment($payment)
+    public function attach_customer_payment($payment)
     {
         $customer = new SmartPay_Customer($payment->email);
 
