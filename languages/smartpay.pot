@@ -1,0 +1,696 @@
+# Copyright (C) 2020 smartpay
+# This file is distributed under the same license as the smartpay package.
+msgid ""
+msgstr ""
+"Project-Id-Version: smartpay\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: WP SmartPay <support@themexpert.com>\n"
+"Report-Msgid-Bugs-To: https://github.com/wpsmartpay/wp-smartpay/issues\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: wp-smartpay.php:202
+msgid "SmartPay Payment"
+msgstr ""
+
+#: wp-smartpay.php:220
+msgid "Payment Confirmation"
+msgstr ""
+
+#: wp-smartpay.php:236
+msgid "Payment Failed"
+msgstr ""
+
+#: wp-smartpay.php:238
+msgid "<!-- wp:paragraph --><p>We're sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->"
+msgstr ""
+
+#: wp-smartpay.php:250, src/Admin/Admin.php:92, src/Payments/Payment.php:71
+msgid "Payment History"
+msgstr ""
+
+#: src/HTML_Elements.php:138
+msgctxt "all dropdown items"
+msgid "All"
+msgstr ""
+
+#: src/HTML_Elements.php:139
+msgctxt "no dropdown items"
+msgid "None"
+msgstr ""
+
+#: includes/helpers/gateway.php:8, includes/helpers/gateway.php:9, src/Gateways/Paddle.php:488
+msgid "Paddle"
+msgstr ""
+
+#: includes/helpers/payment.php:151
+msgid "Pending"
+msgstr ""
+
+#: includes/helpers/payment.php:152
+msgid "Complete"
+msgstr ""
+
+#: includes/helpers/payment.php:153
+msgid "Refunded"
+msgstr ""
+
+#: includes/helpers/payment.php:154
+msgid "Failed"
+msgstr ""
+
+#: includes/helpers/payment.php:155
+msgid "Abandoned"
+msgstr ""
+
+#: includes/helpers/payment.php:156
+msgid "Revoked"
+msgstr ""
+
+#: includes/helpers/payment.php:157
+msgid "Processing"
+msgstr ""
+
+#: src/Admin/Admin.php:91
+msgid "SmartPay - Payment History"
+msgstr ""
+
+#: src/Admin/Admin.php:99
+msgid "SmartPay - Customers"
+msgstr ""
+
+#: src/Admin/Admin.php:100, src/Admin/Customers/Customer_Table.php:60, includes/views/admin/customers/index.php:12
+msgid "Customers"
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:64
+msgid "No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href=\"%s\">Settings</a> to set one."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:76
+msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:78
+msgid "Dismiss Notice"
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:85
+msgid "Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href=\"%s\">Settings</a>."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:93
+msgid "The payment has been deleted."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:96
+msgid "The payment receipt has been resent."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:99
+msgid "The reports have been refreshed."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:102
+msgid "The payment note has been deleted."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:111
+msgid "The payment note has been added successfully."
+msgstr ""
+
+#: src/Admin/Admin_Notices.php:114
+msgid "The payment has been successfully updated."
+msgstr ""
+
+#: src/Forms/Form.php:50
+msgid "Payment Forms"
+msgstr ""
+
+#: src/Forms/Form.php:51, src/Forms/Form.php:77, src/Forms/Form.php:78
+msgid "SmartPay Form"
+msgstr ""
+
+#: src/Forms/Form.php:52
+msgid "SmartPay Form Attributes"
+msgstr ""
+
+#: src/Forms/Form.php:53
+msgid "Parent Form:"
+msgstr ""
+
+#: src/Forms/Form.php:54
+msgid "All Form"
+msgstr ""
+
+#: src/Forms/Form.php:55
+msgid "Add New Payment Form"
+msgstr ""
+
+#: src/Forms/Form.php:56, src/Products/Product.php:65
+msgid "Add new"
+msgstr ""
+
+#: src/Forms/Form.php:57
+msgid "New Form"
+msgstr ""
+
+#: src/Forms/Form.php:58
+msgid "Edit Form"
+msgstr ""
+
+#: src/Forms/Form.php:59
+msgid "Update Form"
+msgstr ""
+
+#: src/Forms/Form.php:60
+msgid "View Form"
+msgstr ""
+
+#: src/Forms/Form.php:61
+msgid "View Forms"
+msgstr ""
+
+#: src/Forms/Form.php:62
+msgid "Search Form"
+msgstr ""
+
+#: src/Forms/Form.php:63, src/Products/Product.php:72
+msgid "Not found"
+msgstr ""
+
+#: src/Forms/Form.php:64, src/Products/Product.php:73
+msgid "Not found in Trash"
+msgstr ""
+
+#: src/Forms/Form.php:65, src/Products/Product.php:74
+msgid "Featured Image"
+msgstr ""
+
+#: src/Forms/Form.php:66, src/Products/Product.php:75
+msgid "Set featured image"
+msgstr ""
+
+#: src/Forms/Form.php:67, src/Products/Product.php:76
+msgid "Remove featured image"
+msgstr ""
+
+#: src/Forms/Form.php:68, src/Products/Product.php:77
+msgid "Use as featured image"
+msgstr ""
+
+#: src/Forms/Form.php:69
+msgid "Insert into Form"
+msgstr ""
+
+#: src/Forms/Form.php:70
+msgid "Uploaded to this Form"
+msgstr ""
+
+#: src/Forms/Form.php:71
+msgid "Forms list"
+msgstr ""
+
+#: src/Forms/Form.php:72
+msgid "Forms list navigation"
+msgstr ""
+
+#: src/Forms/Form.php:73
+msgid "Filter Forms list"
+msgstr ""
+
+#: src/Gateways/Paddle.php:254
+msgid "Thank you for your order, please click the button below to pay with Paddle."
+msgstr ""
+
+#: src/Gateways/Paddle.php:506
+msgid "Paddle Gateway Settings"
+msgstr ""
+
+#: src/Gateways/Paddle.php:507
+msgid "Configure your Paddle Gateway Settings"
+msgstr ""
+
+#: src/Gateways/Paddle.php:512
+msgid "Vendor ID"
+msgstr ""
+
+#: src/Gateways/Paddle.php:513
+msgid "Enter your Paddle Vendor ID"
+msgstr ""
+
+#: src/Gateways/Paddle.php:518
+msgid "Auth Codes"
+msgstr ""
+
+#: src/Gateways/Paddle.php:519
+msgid "Get Auth Code from Paddle : Developer > Authentication"
+msgstr ""
+
+#: src/Gateways/Paddle.php:524
+msgid "Public Key"
+msgstr ""
+
+#: src/Gateways/Paddle.php:525
+msgid "Get Your Public Key – this can be found  under Developer Tools > Public Key"
+msgstr ""
+
+#: src/Gateways/Paddle.php:556
+msgid "Checkout Location"
+msgstr ""
+
+#: src/Gateways/Paddle.php:557
+msgid "Select Checkout Location"
+msgstr ""
+
+#: src/Gateways/Paddle.php:568
+msgid "<p><b>Warning:</b> You must set the Instant Notification System (INS) for Paddle Checkout.<br>"
+msgstr ""
+
+#: src/Gateways/Paddle.php:581
+msgid "<p><b>Warning!</b> It seems you are on the localhost.</p>"
+msgstr ""
+
+#: src/Gateways/Paddle.php:586
+msgid "Instant Notification System (INS)"
+msgstr ""
+
+#: src/Payments/Payment.php:59
+msgctxt "post type general name"
+msgid "Payments"
+msgstr ""
+
+#: src/Payments/Payment.php:60
+msgctxt "post type singular name"
+msgid "Payment"
+msgstr ""
+
+#: src/Payments/Payment.php:61
+msgid "Add New"
+msgstr ""
+
+#: src/Payments/Payment.php:62
+msgid "Add New Payment"
+msgstr ""
+
+#: src/Payments/Payment.php:63
+msgid "Edit Payment"
+msgstr ""
+
+#: src/Payments/Payment.php:64
+msgid "New Payment"
+msgstr ""
+
+#: src/Payments/Payment.php:65
+msgid "All Payments"
+msgstr ""
+
+#: src/Payments/Payment.php:66
+msgid "View Payment"
+msgstr ""
+
+#: src/Payments/Payment.php:67
+msgid "Search Payments"
+msgstr ""
+
+#: src/Payments/Payment.php:68
+msgid "No Payments found"
+msgstr ""
+
+#: src/Payments/Payment.php:69
+msgid "No Payments found in Trash"
+msgstr ""
+
+#: src/Products/Product.php:59
+msgid "Products"
+msgstr ""
+
+#: src/Products/Product.php:60, src/Products/Product.php:84, src/Products/Product.php:88, src/Products/Product.php:89, includes/views/admin/payments/details.php:95
+msgid "Product"
+msgstr ""
+
+#: src/Products/Product.php:61
+msgid "Product Attributes"
+msgstr ""
+
+#: src/Products/Product.php:62
+msgid "Parent Product:"
+msgstr ""
+
+#: src/Products/Product.php:63
+msgid "All Product"
+msgstr ""
+
+#: src/Products/Product.php:64
+msgid "Add New Product"
+msgstr ""
+
+#: src/Products/Product.php:66
+msgid "New Product"
+msgstr ""
+
+#: src/Products/Product.php:67
+msgid "Edit Product"
+msgstr ""
+
+#: src/Products/Product.php:68
+msgid "Update Product"
+msgstr ""
+
+#: src/Products/Product.php:69
+msgid "View Product"
+msgstr ""
+
+#: src/Products/Product.php:70
+msgid "View Products"
+msgstr ""
+
+#: src/Products/Product.php:71
+msgid "Search Product"
+msgstr ""
+
+#: src/Products/Product.php:78
+msgid "Insert into Product"
+msgstr ""
+
+#: src/Products/Product.php:79
+msgid "Uploaded to this Product"
+msgstr ""
+
+#: src/Products/Product.php:80
+msgid "Products list"
+msgstr ""
+
+#: src/Products/Product.php:81
+msgid "Products list navigation"
+msgstr ""
+
+#: src/Products/Product.php:82
+msgid "Filter Products list"
+msgstr ""
+
+#: src/Products/Product.php:83
+msgid "SmartPay"
+msgstr ""
+
+#: src/Products/Product.php:112, src/Products/Product.php:113
+msgid "Product variation"
+msgstr ""
+
+#: src/Products/Product.php:141, src/Products/Product.php:148
+msgid "Enter product name here"
+msgstr ""
+
+#: src/Products/Product_Variation.php:282, src/Products/SmartPay_Product.php:388
+msgid "Can't get property %s"
+msgstr ""
+
+#: includes/views/admin/debug-log.php:2
+msgid "SmartPay Log"
+msgstr ""
+
+#: includes/views/admin/setting.php:50
+msgid "SmartPay Settings"
+msgstr ""
+
+#: includes/views/admin/setting.php:118
+msgid "Save Changes"
+msgstr ""
+
+#: includes/views/shortcodes/form.php:40
+msgid "Select an amount"
+msgstr ""
+
+#: includes/views/shortcodes/form.php:70
+msgid "Pay custom amount"
+msgstr ""
+
+#: includes/views/shortcodes/form.php:76, includes/views/shortcodes/product.php:69
+msgid "Pay"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:12
+msgid "Payment ID:"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:16
+msgid "Name:"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:20
+msgid "Email:"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:24
+msgid "Payment amount:"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:28
+msgid "Payment gateway:"
+msgstr ""
+
+#: includes/views/shortcodes/payment_receipt.php:33
+msgid "Payment status:"
+msgstr ""
+
+#: src/Admin/Customers/Customer_Table.php:59, includes/views/admin/payments/details.php:64
+msgid "Customer"
+msgstr ""
+
+#: src/Admin/Customers/Customer_Table.php:152
+msgid "(Pending Verification)"
+msgstr ""
+
+#: src/Admin/Customers/Customer_Table.php:167
+msgid "Name"
+msgstr ""
+
+#: src/Admin/Customers/Customer_Table.php:168, includes/views/admin/payments/details.php:190
+msgid "Email"
+msgstr ""
+
+#: src/Admin/Customers/Customer_Table.php:169
+msgid "Date Created"
+msgstr ""
+
+#: src/Admin/Forms/Meta_Box.php:57
+msgid "Form Options"
+msgstr ""
+
+#: src/Admin/Products/Meta_Box.php:60
+msgid "Product Options"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:135
+msgid "Pages Settings"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:136, src/Admin/Settings/Register_Setting.php:169
+msgid "SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:141
+msgid "Payment Page"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:145, src/Admin/Settings/Register_Setting.php:153, src/Admin/Settings/Register_Setting.php:161
+msgid "Select a page"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:149
+msgid "Payment Success Page"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:150
+msgid "The page customers are sent to after completing a payment. The shortcode [smartpay_payment_receipt] needs to be on this page. Output configured in the Payment Confirmation settings. This page should be excluded from any site caching."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:157
+msgid "Payment Failure Page"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:158
+msgid "The page customers are sent to after a failed payment."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:165
+msgid "Currency Settings"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:168
+msgid "Page Settings"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:173
+msgid "Currency"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:174
+msgid "Choose your currency. Note that some payment gateways have currency restrictions."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:180
+msgid "Currency Position"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:181
+msgid "Choose the location of the currency sign."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:184
+msgid "Before - $10"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:185
+msgid "After - 10$"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:198
+msgid "Test Mode"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:199
+msgid "While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:204, src/Admin/Settings/Register_Setting.php:306
+msgid "Payment Gateways"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:205
+msgid "Choose the payment gateways you want to enable."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:211
+msgid "Default Gateway"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:212
+msgid "This gateway will be loaded automatically with the checkout page."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:283, src/Admin/Settings/Register_Setting.php:286, src/Admin/Settings/Register_Setting.php:289, src/Admin/Settings/Register_Setting.php:292, src/Admin/Settings/Register_Setting.php:305
+msgid "General"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:307
+msgid "Extensions"
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:408
+msgid "Settings updated."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:603
+msgid "Don't see what you need? More Payment Gateway options are available <a href=\"%s\">here</a>."
+msgstr ""
+
+#: src/Admin/Settings/Register_Setting.php:624
+msgid "The callback function used for the %s setting is missing."
+msgstr ""
+
+#: includes/views/admin/customers/index.php:17
+msgid "Search Customers"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:11
+msgid "Payment #"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:43
+msgid "Details"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:60
+msgid "Date"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:68
+msgid "Payment Method"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:73
+msgid "Transaction ID"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:74
+msgid "N/A"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:158
+msgid "Form"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:166, includes/views/admin/payments/details.php:139
+msgid "Total Amount"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:152
+msgid "Form not found!"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:103
+msgid "Product Price"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:124
+msgid "Product Variation"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:129
+msgid "Additional Amount"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:117
+msgid "Product variation not associated with this product!"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:91
+msgid "Product not found!"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:178
+msgid "Customer Details"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:182
+msgid "First Name"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:186
+msgid "Last Name"
+msgstr ""
+
+#: includes/views/admin/payments/details.php:17
+msgid "Payment id invalid not found."
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:10
+msgid "Make a Payment"
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:15
+msgid "Enter your info and complete payment!"
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:36
+msgid "Select a gateway"
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:31
+msgid "Pay with "
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:73
+msgid "Pay Now"
+msgstr ""
+
+#: includes/views/shortcodes/shared/payment-modal.php:84
+msgid "Don't close this window before competing payment!"
+msgstr ""

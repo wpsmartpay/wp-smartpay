@@ -1,8 +1,5 @@
 === Download Manager and Donation Plugin by WP SmartPay - Sell Digital Download and Fundraise with WordPress ===
-Contributors: themesgrove, parvezvai, alaminfirdows
-Author URI: https://wpsmartpay.com/
-Plugin URI: https://wpsmartpay.com/
-Donate link: https://wpsmartpay.com/
+Contributors: themesgrove, parvezvai, alaminfirdows, anam_themexpert
 Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
 Requires at least: 4.9
 Tested up to: 5.4
