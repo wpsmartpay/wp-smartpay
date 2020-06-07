@@ -1,4 +1,4 @@
-<div class="modal fade payment-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content align-content-between">
             <div class="d-flex justify-content-between text-center p-4 mt-4">
