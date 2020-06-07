@@ -6,8 +6,6 @@ jQuery(document).ready(($) => {
 		'click',
 		'.smartpay-product-shortcode .product-variations .variation',
 		(e) => {
-			// e.preventDefault()
-
 			$(e.currentTarget)
 				.parent()
 				.find('.variation')
@@ -83,8 +81,6 @@ jQuery(document).ready(($) => {
 				// Appending modal background inside the .smartpay div
 				$('.modal-backdrop').appendTo('.smartpay')
 
-				document.body.style.overflow = 'hidden'
-
 				// Reset button
 				$(e.currentTarget).text(buttonText).removeAttr('disabled')
 			}, 500)
@@ -114,6 +110,8 @@ jQuery(document).ready(($) => {
 		(e) => {
 			e.preventDefault()
 
+			$parentWrapper = $(e.currentTarget).parents('.smartpay-payment')
+
 			let buttonText = $(e.currentTarget).text()
 			let $paymentFirstStep = $(e.currentTarget).parents('.step-1')
 			let $paymentSecondStep = $(e.currentTarget)
@@ -124,48 +122,62 @@ jQuery(document).ready(($) => {
 				.text('Processing...')
 				.attr('disabled', 'disabled')
 
-			setTimeout(() => {
-				// Set loading content
-				$paymentSecondStep.find('.dynamic-content').html(`
-            <div class="text-center">
-                    <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>`)
+			$parentWrapper.find('.modal-loading').css('display', 'flex')
 
-				$('.back-to-first-step').show()
+			let formData = getPaymentFormData($parentWrapper)
 
-				// Show second step
-				$paymentSecondStep.css('display', 'flex')
+			let validation = checkPaymentFormValidation(formData)
 
-				// Hide first step
-				$paymentFirstStep.hide()
-			}, 500)
+			// Hide all errors
+			$parentWrapper.find('input').removeClass('is-invalid')
+			$paymentFirstStep.find('.payment-modal--errors').hide()
 
-			$parentWrapper = $(e.currentTarget).parents('.smartpay-payment')
-
-			let data = {
-				action: 'smartpay_process_payment',
-				data: getPaymentFormData($parentWrapper),
-			}
-
-			jQuery.post(smartpay.ajax_url, data, (response) => {
-				if (response) {
-					setTimeout(() => {
-						$paymentSecondStep
-							.find('.dynamic-content')
-							.html(response)
-					}, 500)
-				} else {
-					$paymentSecondStep
-						.find('.dynamic-content')
-						.html(`<p class="text-danger">Something wrong!</p>`)
-
-					console.error('Something wrong!')
+			if (!validation.valid) {
+				showErrors(
+					$paymentFirstStep.find('.payment-modal--errors'),
+					validation
+				)
+				setTimeout(() => {
+					$parentWrapper.find('.modal-loading').css('display', 'none')
+				}, 300)
+			} else {
+				let data = {
+					action: 'smartpay_process_payment',
+					data: formData,
 				}
 
-				$(e.currentTarget).text(buttonText).removeAttr('disabled')
-			})
+				jQuery.post(smartpay.ajax_url, data, (response) => {
+					// Show second step
+					$paymentSecondStep.css('display', 'flex')
+
+					$('.back-to-first-step').show()
+
+					// Hide first step
+					$paymentFirstStep.hide()
+
+					setTimeout(() => {
+						if (response) {
+							$paymentSecondStep
+								.find('.dynamic-content')
+								.html(response)
+						} else {
+							$paymentSecondStep
+								.find('.dynamic-content')
+								.html(
+									`<p class="text-danger">Something wrong!</p>`
+								)
+
+							console.error('Something wrong!')
+						}
+
+						$parentWrapper
+							.find('.modal-loading')
+							.css('display', 'none')
+					}, 300)
+				})
+			}
+
+			$(e.currentTarget).text(buttonText).removeAttr('disabled')
 		}
 	)
 
@@ -194,10 +206,10 @@ jQuery(document).ready(($) => {
 			smartpay_email:
 				$wrapper.find('input[name="smartpay_email"]').val() || null,
 
-			// Product purchase
 			smartpay_payment_type:
 				$wrapper.find('input[name="smartpay_payment_type"]').val() ||
 				null,
+			// Product purchase
 			smartpay_product_id:
 				$wrapper.find('input[name="smartpay_product_id"]').val() ||
 				null,
@@ -214,8 +226,7 @@ jQuery(document).ready(($) => {
 				null,
 		}
 
-		// console.log('Getting data')
-		console.log(data)
+		// console.log(data)
 
 		return data
 	}
@@ -233,8 +244,64 @@ jQuery(document).ready(($) => {
 		}
 	)
 
+	/** Handle payment modal open event **/
+	$(document.body).on('show.bs.modal', '.payment-modal', (e) => {
+		document.body.style.overflow = 'hidden'
+	})
+
 	/** Handle payment modal close event **/
 	$(document.body).on('hidden.bs.modal', '.payment-modal', (e) => {
 		document.body.style.overflow = 'auto'
 	})
+
+	function checkPaymentFormValidation(data) {
+		const rules = {
+			smartpay_action: {
+				required: true,
+				value: 'smartpay_process_payment',
+			},
+			smartpay_process_payment: { required: true },
+			smartpay_gateway: { required: true },
+			smartpay_first_name: { required: true, length: [1, 8] },
+			smartpay_email: { required: true, email: true },
+			smartpay_payment_type: { required: true },
+		}
+
+		const validator = new SmartPayFormValidator(data, rules)
+
+		const errors = validator.validate()
+
+		return {
+			valid: Object.values(errors).every(
+				(messages) => messages.length === 0
+			),
+			errors: errors,
+		}
+	}
+
+	function showErrors($wrapper, validation) {
+		const $parentWrapper = $wrapper.parents('.smartpay-payment')
+		const errorHTML = []
+
+		Object.entries(validation.errors).forEach(([property, messages]) => {
+			$parentWrapper
+				.find('input[name="' + property + '"]')
+				.addClass('is-invalid')
+
+			let fieldName = JSUcfirst(property.split('_').slice(1).join(' '))
+
+			// messages.forEach((message) => {
+			errorHTML.push(`
+                <div class="alert alert-danger py-3">
+                    <p class="m-0 form-error-text">${fieldName} ${messages[0]}</p>
+                </div>`)
+			// })
+		})
+
+		if (!errorHTML.length) return
+
+		$wrapper.show()
+
+		$wrapper.html(errorHTML)
+	}
 })

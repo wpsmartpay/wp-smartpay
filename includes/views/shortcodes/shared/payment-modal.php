@@ -54,6 +54,9 @@
                             <?php endif; ?>
                         </div>
 
+                        <div class="payment-modal--errors my-5" style="display: none">
+                        </div>
+
                         <div class="payment-modal--user-info mt-3">
                             <div class="row">
                                 <div class="col-sm-6 form-group mb-4">
@@ -80,15 +83,20 @@
             <div class="modal-body text-center mb-4 step-2">
                 <div class="col-11 pb-4 align-self-center">
                     <div class="mb-5">
-                        <div class="alert alert-danger py-4">
+                        <div class="alert alert-danger py-3">
                             <p class="m-0"><?php _e('Don\'t close this window before competing payment!', 'smartpay'); ?></p>
                         </div>
                     </div>
                     <div class="dynamic-content">
-                        <div class="spinner-border" role="status">
+                        <div class="spinner-border" style="width: 40px; height: 40px;">
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="modal-loading justify-content-center align-items-center">
+                <div class="spinner-border text-secondary" style="width: 40px; height: 40px;">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
         </div>

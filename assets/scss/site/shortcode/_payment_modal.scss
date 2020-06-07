@@ -1,104 +1,117 @@
 .smartpay-payment {
-    .payment-modal {
-        .modal-content {
-            border: none;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-            min-height: 80vh;
+	.payment-modal {
+		.modal-content {
+			border: none;
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+			min-height: 80vh;
 
-            .modal-body{
-                display: flex;
-                justify-content: center;
-            }
+			.modal-body {
+				display: flex;
+				justify-content: center;
+			}
 
-            .step-2 {
-                display: none;
-            }
+			.step-2 {
+				display: none;
+			}
 
-            .modal-button{
-                min-width: 40px;
-            }
+			.modal-button {
+				min-width: 40px;
+			}
 
-            .back-to-first-step{
-                display: none;
-            }
+			.back-to-first-step {
+				display: none;
+			}
 
-            .modal-close, .back-to-first-step{
-                border-radius: 50%;
-                padding: 8px;
-                margin: 0px;
-                border: 1px solid #ddd;
-            }
-        }
+			.modal-close,
+			.back-to-first-step {
+				border-radius: 50%;
+				padding: 8px;
+				margin: 0px;
+				border: 1px solid #ddd;
+			}
 
-        &--small-title {
-            color: #888;
-            font-size: 14px;
-            text-transform: uppercase;
-            font-weight: normal;
-            text-align: center;
-        }
+			.modal-loading {
+				position: absolute;
+				background-color: rgba(245, 245, 245, 0.65);
+				z-index: 1;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				min-height: 100px;
+				display: none;
+			}
+		}
 
-        &--title {
-            color: #252a2e;
-            font-size: 22px;
-            line-height: 26px;
-            font-weight: bold;
-            text-align: center;
-        }
+		&--small-title {
+			color: #888;
+			font-size: 14px;
+			text-transform: uppercase;
+			font-weight: normal;
+			text-align: center;
+		}
 
-        &--subtitle {
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            font-size: 15px;
-            color: #888;
-        }
+		&--title {
+			color: #252a2e;
+			font-size: 22px;
+			line-height: 26px;
+			font-weight: bold;
+			text-align: center;
+		}
 
-        &--gateway{
-            padding-bottom: 20px;
-            text-align: center;
+		&--subtitle {
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			font-size: 15px;
+			color: #888;
+		}
 
-            .single-gateway {
-                color: #252a2e;
-                font-size: 18px;
-            }
+		&--gateway {
+			padding-bottom: 20px;
+			text-align: center;
 
-            &--label{
-                color: $secondary;
+			.single-gateway {
+				color: #252a2e;
+				font-size: 18px;
+			}
 
-            }
+			&--label {
+				color: $secondary;
+			}
 
-            .gateway{
-                &--label{
-                    font-weight: 400;
-                    font-size: 16px;
-                    margin: 0;
-                    padding: 4px;
-                }
-            }
-        }
+			.gateway {
+				&--label {
+					font-weight: 400;
+					font-size: 16px;
+					margin: 0;
+					padding: 4px;
+				}
+			}
+		}
 
-        &--user-info {
-            .form-control {
-                font-size: 16px;
-                min-height: 40px;
-                padding: 5px 15px;
-            }
-        }
-    }
+		&--user-info {
+			.form-control {
+				font-size: 16px;
+				min-height: 40px;
+				padding: 5px 15px;
+			}
+		}
+	}
 
-    button.open-payment-form, button.smartpay-pay-now {
-        font-size: 16px;
-        padding: 6px 10px;
-    }
+	button.open-payment-form,
+	button.smartpay-pay-now {
+		font-size: 16px;
+		padding: 6px 10px;
+	}
 
-    .overlay {
-        background: rgba(255, 255, 255, 0.9);
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        display: none;
-    }
+	.overlay {
+		background: rgba(255, 255, 255, 0.9);
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		display: none;
+	}
 }
