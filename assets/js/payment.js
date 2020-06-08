@@ -262,7 +262,8 @@ jQuery(document).ready(($) => {
 			},
 			smartpay_process_payment: { required: true },
 			smartpay_gateway: { required: true },
-			smartpay_first_name: { required: true, length: [1, 8] },
+			smartpay_first_name: { required: true },
+			smartpay_last_name: { required: true },
 			smartpay_email: { required: true, email: true },
 			smartpay_payment_type: { required: true },
 		}

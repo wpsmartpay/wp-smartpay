@@ -63,7 +63,7 @@
                                     <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" autocomplete="first_name" required>
                                 </div>
                                 <div class="col-sm-6 form-group mb-4">
-                                    <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" autocomplete="last_name">
+                                    <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" autocomplete="last_name" required>
                                 </div>
                             </div>
                             <div class="row">
