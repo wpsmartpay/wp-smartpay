@@ -1,57 +1,67 @@
 jQuery(function ($) {
+	/** ============= Files ============= **/
 
-    /** ============= Files ============= **/
+	/** Select file **/
+	$(document.body).on(
+		'click',
+		'#smartpay-metabox .upload-product-file',
+		(e) => {
+			e.preventDefault()
 
-    /** Select file **/
-    $(document.body).on('click', '#smartpay-metabox .upload-product-file', (e) => {
-        e.preventDefault();
+			uploadProductFiles()
+		}
+	)
 
-        uploadProductFiles()
-    });
+	/** Remove file **/
+	$(document.body).on('click', '#smartpay-metabox .remove-file', (e) => {
+		$filesItem = $(e.target).parents('.files-item')
 
-    /** Remove file **/
-    $(document.body).on('click', '#smartpay-metabox .remove-file', (e) => {
-        $filesItem = $(e.target).parents('.files-item')
+		// Remove from variation files
+		$variations = $(document.body).find(
+			'#smartpay-metabox .variation-option'
+		)
 
-        // Remove from variation files
-        $variations = $(document.body).find('#smartpay-metabox .variation-option')
+		$variations.each((index, element) => {
+			removeVariationFile(
+				$(element),
+				parseInt($filesItem.data('file-id'))
+			)
+		})
 
-        $variations.each((index, element) => {
-            removeVariationFile($(element), parseInt($filesItem.data('file-id')))
-        })
+		// Remove file item
+		$filesItem.remove()
 
-        // Remove file item
-        $filesItem.remove()
+		toggleFileSelectBox()
+	})
 
-        toggleFileSelectBox()
-    });
+	/** Upload product file */
+	function uploadProductFiles() {
+		return new Promise((resolve) => {
+			media = new SmartPayMediaSelector({
+				multiple: true,
+				title: 'Select files',
+				select: function (selected_files) {
+					$productFiles = $('.product-files')
 
-    /** Upload product file */
-    function uploadProductFiles() {
-        return new Promise((resolve) => {
-            media = new SmartPayMediaSelector({
-                multiple: true,
-                title: 'Select files',
-                select: function (selected_files) {
-                    $productFiles = $('.product-files')
+					selected_files.forEach((file) => {
+						// Check if file exist
+						fileExist = false
+						$productFiles
+							.find('.files-item')
+							.each((index, item) => {
+								if (file.id == $(item).data('file-id')) {
+									fileExist = true
+								}
+							})
 
-                    selected_files.forEach(file => {
+						// If file id not found then append files item
+						if (!fileExist) {
+							file_icon = file.sizes
+								? file.sizes.thumbnail.url
+								: file.icon
+							id = file.id
 
-                        // Check if file exist
-                        fileExist = false
-                        $productFiles.find('.files-item').each((index, item) => {
-                            if (file.id == $(item).data('file-id')) {
-                                fileExist = true
-                            }
-                        })
-
-                        // If file id not found then append files item
-                        if (!fileExist) {
-
-                            file_icon = file.sizes ? file.sizes.thumbnail.url : file.icon;
-                            id = file.id;
-
-                            listItem = `<li class="list-group-item list-group-item-action mb-0 files-item" id="file-${id}" data-file-id="${id}">
+							listItem = `<li class="list-group-item list-group-item-action mb-0 files-item" id="file-${id}" data-file-id="${id}">
                             <input type="hidden" class="form-control file-id" name="files[${id}][id]" value="${id}">
                             <input type="hidden" class="form-control file-icon" name="files[${id}][icon]" value="${file_icon}">
                             <input type="hidden" class="form-control file-filename" name="files[${id}][filename]" value="${file.filename}">
@@ -72,95 +82,107 @@ jQuery(function ($) {
                                     </div>
                                 </div>
                             </div>
-                        </li>`;
+                        </li>`
 
-                            $productFiles.append(listItem)
+							$productFiles.append(listItem)
 
-                            // Append to variation files
-                            $variations = $(document.body).find('#smartpay-metabox .variation-option')
+							// Append to variation files
+							$variations = $(document.body).find(
+								'#smartpay-metabox .variation-option'
+							)
 
-                            $variations.each((index, element) => {
-                                appendVariationFile($(element), file)
-                            })
-                        } else {
-                            alert('File already added!');
-                        }
-                    });
+							$variations.each((index, element) => {
+								appendVariationFile($(element), file)
+							})
+						} else {
+							alert('File already added!')
+						}
+					})
 
-                    feather.replace()
+					feather.replace()
 
-                    toggleFileSelectBox()
+					toggleFileSelectBox()
 
-                    resolve(true);
-                }
-            });
+					resolve(true)
+				},
+			})
 
-            media.open();
-        })
-    }
+			media.open()
+		})
+	}
 
-    /** Toggle file select box **/
-    function toggleFileSelectBox() {
-        $productFiles = $('.product-files');
-        if ($productFiles.children('.files-item').length) {
-            $('.no-product-file-box').hide();
-            $('.product-files-secion').show();
-        } else {
-            $('.product-files-secion').hide();
-            $('.no-product-file-box').show();
-        }
-    }
+	/** Toggle file select box **/
+	function toggleFileSelectBox() {
+		$productFiles = $('.product-files')
+		if ($productFiles.children('.files-item').length) {
+			$('.no-product-file-box').hide()
+			$('.product-files-secion').show()
+		} else {
+			$('.product-files-secion').hide()
+			$('.no-product-file-box').show()
+		}
+	}
 
-    /** ============= Variations ============= **/
+	/** ============= Variations ============= **/
 
-    /** Add variation **/
-    $(document.body).on('click', '#smartpay-metabox .add-variation', (e) => {
-        e.preventDefault()
-        toggleProductHasVariation(true)
+	/** Add variation **/
+	$(document.body).on('click', '#smartpay-metabox .add-variation', (e) => {
+		e.preventDefault()
+		toggleProductHasVariation(true)
 
-        if (!$('.variations .variation-option').length) {
-            addVariationOption()
-        }
+		if (!$('.variations .variation-option').length) {
+			addVariationOption()
+		}
+	})
 
-    });
+	/** Remove variation **/
+	$(document.body).on('click', '#smartpay-metabox .remove-variation', (e) => {
+		e.preventDefault()
 
-    /** Remove variation **/
-    $(document.body).on('click', '#smartpay-metabox .remove-variation', (e) => {
-        e.preventDefault()
-        toggleProductHasVariation(false)
-    });
+		toggleProductHasVariation(false)
+	})
 
-    /** Add variation option **/
-    $(document.body).on('click', '#smartpay-metabox .add-variation-option', (e) => {
-        e.preventDefault()
-        addVariationOption()
+	/** Add variation option **/
+	$(document.body).on(
+		'click',
+		'#smartpay-metabox .add-variation-option',
+		(e) => {
+			e.preventDefault()
+			addVariationOption()
+		}
+	)
 
-    });
+	/** Remove variation option **/
+	$(document.body).on(
+		'click',
+		'#smartpay-metabox .remove-variation-option',
+		(e) => {
+			e.preventDefault()
 
-    /** Remove variation option **/
-    $(document.body).on('click', '#smartpay-metabox .remove-variation-option', (e) => {
-        e.preventDefault()
+			alert(
+				"If your remove a variation, your customer can't access it's resource"
+			)
+			console.log('make ajax call')
 
-        alert('If your remove a variation, your customer can\'t access it\'s resource');
-        console.log('make ajax call');
+			$(e.target).parents('.variation-option').remove()
 
-        $(e.target).parents('.variation-option').remove()
+			if (!$('.variations .variation-option').length) {
+				toggleProductHasVariation(false)
+			} else {
+				scrollToLastVariationOption()
+			}
+		}
+	)
 
-        if (!$('.variations .variation-option').length) {
-            toggleProductHasVariation(false)
-        } else {
-            scrollToLastVariationOption()
-        }
-    });
+	/** Add variation option **/
+	function addVariationOption() {
+		$variations = $('#smartpay-metabox .variations')
 
-    /** Add variation option **/
-    function addVariationOption() {
+		variationId =
+			'variation_' +
+			($('#smartpay-metabox .variations .variation-option').length + 1)
 
-        $variations = $('#smartpay-metabox .variations')
-
-        variationId = 'variation_' + ($('#smartpay-metabox .variations .variation-option').length + 1)
-
-        let option = `<div class="variation-option" data-variation-id="${variationId}">
+		let option = `<div class="variation-option" data-variation-id="${variationId}">
             <div class="variation-option__header p-3">
                 <div class="form-row">
                     <div class="col-7">
@@ -215,166 +237,184 @@ jQuery(function ($) {
                     </div>
                 </div>
             </div>
-        </div>`;
+        </div>`
 
-        $variations.append(option)
+		$variations.append(option)
 
-        feather.replace()
+		feather.replace()
 
-        scrollToLastVariationOption()
-    }
+		scrollToLastVariationOption()
+	}
 
-    /** Scroll to last option **/
-    function scrollToLastVariationOption() {
+	/** Scroll to last option **/
+	function scrollToLastVariationOption() {
+		$variations = $('#smartpay-metabox .variations')
 
-        $variations = $('#smartpay-metabox .variations')
+		$('html, body').animate(
+			{
+				scrollTop: eval(
+					$variations.children('.variation-option').last().offset()
+						.top - 70
+				),
+			},
+			500
+		)
+	}
 
-        $('html, body').animate({
-            scrollTop: eval($variations.children('.variation-option').last().offset().top - 70)
-        }, 500);
-    }
+	/** Toggle product has variation **/
+	function toggleProductHasVariation(hasVariation = false) {
+		if (hasVariation) {
+			$('.variations-secion').show()
+			$('#has_variations').val('1')
+			$('.no-variations-box').hide()
+		} else {
+			$('.no-variations-box').show()
+			$('#has_variations').val('0')
+			$('.variations-secion').hide()
+		}
+	}
 
-    /** Toggle product has variation **/
-    function toggleProductHasVariation(hasVariation = false) {
+	/** Select variation file **/
+	$(document.body).on(
+		'click',
+		'#smartpay-metabox .select-variation-files',
+		async (e) => {
+			e.preventDefault()
 
-        if (hasVariation) {
-            $('.variations-secion').show();
-            $('#has_variations').val('1');
-            $('.no-variations-box').hide();
-        } else {
-            $('.no-variations-box').show()
-            $('#has_variations').val('0')
-            $('.variations-secion').hide()
-        }
-    }
+			$variationOption = $(e.target).parents('.variation-option')
 
-    /** Select variation file **/
-    $(document.body).on('click', '#smartpay-metabox .select-variation-files', async (e) => {
-        e.preventDefault()
+			// Remove if it has files
+			$variationOption.find('.variation-files').empty()
 
-        $variationOption = $(e.target).parents('.variation-option')
+			hasFile = getProductFiles().length
 
-        // Remove if it has files
-        $variationOption.find('.variation-files').empty()
+			if (!hasFile) {
+				alert('You have no file for this product, select a file first!')
+				uploadProductFiles().then((hasFile) => {
+					if (hasFile) {
+						getProductFiles().forEach((file) => {
+							appendVariationFile($variationOption, file, true)
+						})
 
-        hasFile = getProductFiles().length
+						// Show variation files
+						$variationOption.find('.no-variation-file-box').hide()
+						$variationOption.find('.variation-files-secion').show()
+					}
+				})
+			} else {
+				getProductFiles().forEach((file) => {
+					appendVariationFile($variationOption, file, true)
+				})
 
-        if (!hasFile) {
-            alert('You have no file for this product, select a file first!')
-            uploadProductFiles().then(hasFile => {
-                if (hasFile) {
-                    getProductFiles().forEach(file => {
-                        appendVariationFile($variationOption, file, true)
-                    })
+				// Show variation files
+				$variationOption.find('.no-variation-file-box').hide()
+				$variationOption.find('.variation-files-secion').show()
+			}
+		}
+	)
 
-                    // Show variation files
-                    $variationOption.find('.no-variation-file-box').hide()
-                    $variationOption.find('.variation-files-secion').show()
-                }
-            })
-        } else {
-            getProductFiles().forEach(file => {
-                appendVariationFile($variationOption, file, true)
-            })
+	/** Check or unchecked files **/
+	$(document.body).on('change', '.variation-file', (e) => {
+		e.preventDefault()
 
-            // Show variation files
-            $variationOption.find('.no-variation-file-box').hide()
-            $variationOption.find('.variation-files-secion').show()
-        }
+		$variationOption = $(e.target).parents('.variation-option')
+		totalCheckedItem = $(e.target)
+			.parents('.variation-files')
+			.find('.variation-file:checkbox:checked').length
 
-    });
+		// Hide variation files
+		if (!totalCheckedItem) {
+			$variationOption.find('.variation-files-secion').hide()
+			$variationOption.find('.no-variation-file-box').show()
+		}
+	})
 
+	/** Toggle variation has files **/
+	function toggleVariationHasFiles($variationOption) {
+		if (
+			$variationOption.find('.variation-files').children('.files-item')
+				.length
+		) {
+			$variationOption.find('.no-variation-file-box').hide()
+			$variationOption.find('.variation-files-secion').show()
+		} else {
+			$variationOption.find('.variation-files-secion').hide()
+			$variationOption.find('.no-variation-file-box').show()
+		}
+	}
 
+	/** Get product files **/
+	function getProductFiles() {
+		files = []
+		$productFilesItems = $(document.body)
+			.find('#smartpay-metabox #product-files')
+			.children('.files-item')
 
-    /** Check or unchecked files **/
-    $(document.body).on('change', '.variation-file', (e) => {
-        e.preventDefault()
+		$productFilesItems.each((index, element) => {
+			id = $(element).children('.file-id').val()
+			icon = $(element).children('.file-icon').val()
+			filename = $(element).children('.file-filename').val()
+			mime = $(element).children('.file-mime').val()
+			size = $(element).children('.file-size').val()
+			url = $(element).children('.file-url').val()
 
-        $variationOption = $(e.target).parents('.variation-option');
-        totalCheckedItem = $(e.target).parents('.variation-files').find('.variation-file:checkbox:checked').length
+			files.push({ id, icon, filename, mime, size, url })
+		})
 
-        // Hide variation files
-        if (!totalCheckedItem) {
-            $variationOption.find('.variation-files-secion').hide()
-            $variationOption.find('.no-variation-file-box').show()
-        }
+		return files
+	}
 
-    });
+	/** Append variation file **/
+	function appendVariationFile($variationOption, file, checked = false) {
+		$variationFiles = $variationOption.find('.variation-files')
 
-    /** Toggle variation has files **/
-    function toggleVariationHasFiles($variationOption) {
-        if ($variationOption.find('.variation-files').children('.files-item').length) {
-            $variationOption.find('.no-variation-file-box').hide()
-            $variationOption.find('.variation-files-secion').show()
-        } else {
-            $variationOption.find('.variation-files-secion').hide()
-            $variationOption.find('.no-variation-file-box').show()
-        }
-    }
+		// Check if file exist
+		fileExist = false
+		$variationFiles.find('.files-item').each((index, item) => {
+			if (file.id == $(item).data('file-id')) {
+				fileExist = true
+			}
+		})
 
-    /** Get product files **/
-    function getProductFiles() {
-        files = [];
-        $productFilesItems = $(document.body).find('#smartpay-metabox #product-files').children('.files-item')
+		// If file id not found then append files item
+		if (!fileExist) {
+			variationId = $variationOption.data('variation-id')
 
-        $productFilesItems.each((index, element) => {
-            id = $(element).children('.file-id').val()
-            icon = $(element).children('.file-icon').val()
-            filename = $(element).children('.file-filename').val()
-            mime = $(element).children('.file-mime').val()
-            size = $(element).children('.file-size').val()
-            url = $(element).children('.file-url').val()
-
-            files.push({ id, icon, filename, mime, size, url })
-        })
-
-        return files
-    }
-
-    /** Append variation file **/
-    function appendVariationFile($variationOption, file, checked = false) {
-        $variationFiles = $variationOption.find('.variation-files')
-
-        // Check if file exist
-        fileExist = false
-        $variationFiles.find('.files-item').each((index, item) => {
-            if (file.id == $(item).data('file-id')) {
-                fileExist = true
-            }
-        })
-
-        // If file id not found then append files item
-        if (!fileExist) {
-            variationId = $variationOption.data('variation-id')
-
-            filesItem = `<li class="list-group-item m-0 d-flex justify-content-between files-item file-${file.id}" data-file-id="${file.id}">
+			filesItem = `<li class="list-group-item m-0 d-flex justify-content-between files-item file-${
+				file.id
+			}" data-file-id="${file.id}">
                 <div class="custom-checkbox custom-checkbox-round">
-                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}][files][${file.id}]" name="variations[${variationId}][files][${file.id}]" value="${file.id}" ${checked ? 'checked' : ''}>
-                    <label class="custom-control-label" for="variations[${variationId}][files][${file.id}]">${file.filename}</label>
+                    <input type="checkbox" class="custom-control-input variation-file" id="variations[${variationId}][files][${
+				file.id
+			}]" name="variations[${variationId}][files][${file.id}]" value="${
+				file.id
+			}" ${checked ? 'checked' : ''}>
+                    <label class="custom-control-label" for="variations[${variationId}][files][${
+				file.id
+			}]">${file.filename}</label>
                 </div>
-            </li>`;
+            </li>`
 
-            $variationFiles.append(filesItem)
-        }
-    }
+			$variationFiles.append(filesItem)
+		}
+	}
 
-    /** Remove variation file **/
-    function removeVariationFile($variationOption, fileId) {
-        $variationFiles = $variationOption.find('.variation-files')
+	/** Remove variation file **/
+	function removeVariationFile($variationOption, fileId) {
+		$variationFiles = $variationOption.find('.variation-files')
 
-        // Check if file exist
-        fileExist = false
-        $variationFiles.find('.files-item').each((index, item) => {
-            if (fileId == $(item).data('file-id')) {
-                fileExist = true
-            }
-        })
+		// Check if file exist
+		fileExist = false
+		$variationFiles.find('.files-item').each((index, item) => {
+			if (fileId == $(item).data('file-id')) {
+				fileExist = true
+			}
+		})
 
-        // If file id found then remove files item
-        if (fileExist) {
-            $variationFiles.find('.file-' + fileId).remove()
-            toggleVariationHasFiles($variationOption)
-        }
-    }
-});
-
+		// If file id found then remove files item
+		if (fileExist) {
+			$variationFiles.find('.file-' + fileId).remove()
+			toggleVariationHasFiles($variationOption)
+		}
+	}
+})
