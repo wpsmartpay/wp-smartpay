@@ -25,7 +25,7 @@ $variations = $product->get_variations() ?? [];
             <!-- Variantions -->
             <?php foreach ($variations as $index => $variation) : ?>
             <?php $variation_id = $variation['id'] ?? 'variation_' + $index + 1; ?>
-            <div class="variation-option" data-variation-id="<?php echo $variation_id; ?>">
+            <div class="variation-option" data-variation-id="<?php echo $variation_id; ?>" data-variation-status="saved">
                 <div class="variation-option__header p-3">
                     <div class="form-row">
                         <div class="col-7">

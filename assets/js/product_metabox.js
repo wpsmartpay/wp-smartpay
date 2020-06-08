@@ -62,27 +62,27 @@ jQuery(function ($) {
 							id = file.id
 
 							listItem = `<li class="list-group-item list-group-item-action mb-0 files-item" id="file-${id}" data-file-id="${id}">
-                            <input type="hidden" class="form-control file-id" name="files[${id}][id]" value="${id}">
-                            <input type="hidden" class="form-control file-icon" name="files[${id}][icon]" value="${file_icon}">
-                            <input type="hidden" class="form-control file-filename" name="files[${id}][filename]" value="${file.filename}">
-                            <input type="hidden" class="form-control file-mime" name="files[${id}][mime]" value="${file.mime}">
-                            <input type="hidden" class="form-control file-size" name="files[${id}][size]" value="${file.filesizeHumanReadable}">
-                            <input type="hidden" class="form-control file-url" name="files[${id}][url]" value="${file.url}">
-                            <div class="d-flex">
-                                <div class="file-type">
-                                <img src="${file_icon}" alt="" width="28" height="28"/>
-                                </div>
-                                <div class="d-flex justify-content-between w-100">
-                                    <div class="d-flex flex-column ml-3">
-                                        <h5 class="file-name m-0">${file.filename}</h5>
-                                        <h6 class="file-size text-muted m-0">${file.filesizeHumanReadable}</h6>
+                                <input type="hidden" class="form-control file-id" name="files[${id}][id]" value="${id}">
+                                <input type="hidden" class="form-control file-icon" name="files[${id}][icon]" value="${file_icon}">
+                                <input type="hidden" class="form-control file-filename" name="files[${id}][filename]" value="${file.filename}">
+                                <input type="hidden" class="form-control file-mime" name="files[${id}][mime]" value="${file.mime}">
+                                <input type="hidden" class="form-control file-size" name="files[${id}][size]" value="${file.filesizeHumanReadable}">
+                                <input type="hidden" class="form-control file-url" name="files[${id}][url]" value="${file.url}">
+                                <div class="d-flex">
+                                    <div class="file-type">
+                                    <img src="${file_icon}" alt="" width="28" height="28"/>
                                     </div>
-                                    <div class="">
-                                        <button type="button" class="btn btn-light btn-sm pb-0 border remove-file"><i data-feather="trash"></i></button>
+                                    <div class="d-flex justify-content-between w-100">
+                                        <div class="d-flex flex-column ml-3">
+                                            <h5 class="file-name m-0">${file.filename}</h5>
+                                            <h6 class="file-size text-muted m-0">${file.filesizeHumanReadable}</h6>
+                                        </div>
+                                        <div class="">
+                                            <button type="button" class="btn btn-light btn-sm pb-0 border remove-file"><i data-feather="trash"></i></button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>`
+                            </li>`
 
 							$productFiles.append(listItem)
 
@@ -139,7 +139,54 @@ jQuery(function ($) {
 	$(document.body).on('click', '#smartpay-metabox .remove-variation', (e) => {
 		e.preventDefault()
 
-		toggleProductHasVariation(false)
+		// Check if contains any saved variation
+		const $variationOptions = $(e.target)
+			.parents('.variations-secion')
+			.find('.variation-option')
+
+		let hasSaved = false
+
+		$variationOptions.each((index, element) => {
+			'saved' == $(element).data('variation-status')
+				? (hasSaved = true)
+				: ''
+		})
+
+		if (!hasSaved) {
+			toggleProductHasVariation(false)
+			return
+		}
+
+		// If it contains saved variation then show warning
+		swal({
+			title: 'Are you sure?',
+			text:
+				"If your remove all variations, your customer can't access it's resource",
+			icon: 'warning',
+			buttons: true,
+		}).then((confirm) => {
+			if (confirm) {
+				let data = {
+					action: 'smartpay_delete_product_variations',
+					data: {
+						product_id: $('#post_ID').val(),
+						smartpay_product_metabox_nonce: $(
+							'#smartpay_product_metabox_nonce'
+						).val(),
+					},
+				}
+
+				// Send AJAX request to delete variations
+				jQuery.post(smartpay.ajax_url, data, (response) => {
+					if (response.success) {
+						console.log(response.message)
+						toggleProductHasVariation(false)
+					} else {
+						console.error(response.message)
+					}
+				})
+			}
+		})
 	})
 
 	/** Add variation option **/
@@ -159,18 +206,57 @@ jQuery(function ($) {
 		(e) => {
 			e.preventDefault()
 
-			alert(
-				"If your remove a variation, your customer can't access it's resource"
-			)
-			console.log('make ajax call')
+			const $variationOption = $(e.target).parents('.variation-option')
 
-			$(e.target).parents('.variation-option').remove()
+			if ('unsaved' == $variationOption.data('variation-status')) {
+				$variationOption.remove()
 
-			if (!$('.variations .variation-option').length) {
-				toggleProductHasVariation(false)
-			} else {
-				scrollToLastVariationOption()
+				if (!$('.variations .variation-option').length) {
+					toggleProductHasVariation(false)
+				} else {
+					scrollToLastVariationOption()
+				}
+				return
 			}
+
+			swal({
+				title: 'Are you sure?',
+				text:
+					"If your remove the variation, your customer can't access it's resource",
+				icon: 'warning',
+				buttons: true,
+			}).then((confirm) => {
+				if (confirm) {
+					let data = {
+						action: 'smartpay_delete_variation',
+						data: {
+							variation_id: parseInt(
+								$variationOption.data('variation-id')
+							),
+							smartpay_product_metabox_nonce: $(
+								'#smartpay_product_metabox_nonce'
+							).val(),
+						},
+					}
+
+					// Send AJAX request to delete the variation
+					jQuery.post(smartpay.ajax_url, data, (response) => {
+						if (response.success) {
+							console.log(response.message)
+
+							$variationOption.remove()
+
+							if (!$('.variations .variation-option').length) {
+								toggleProductHasVariation(false)
+							} else {
+								scrollToLastVariationOption()
+							}
+						} else {
+							console.error(response.message)
+						}
+					})
+				}
+			})
 		}
 	)
 
@@ -182,7 +268,7 @@ jQuery(function ($) {
 			'variation_' +
 			($('#smartpay-metabox .variations .variation-option').length + 1)
 
-		let option = `<div class="variation-option" data-variation-id="${variationId}">
+		let option = `<div class="variation-option" data-variation-id="${variationId}" data-variation-status="unsaved">
             <div class="variation-option__header p-3">
                 <div class="form-row">
                     <div class="col-7">

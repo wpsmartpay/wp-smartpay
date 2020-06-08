@@ -27,6 +27,10 @@ final class Meta_Box
         add_action('add_meta_boxes', [$this, 'add_product_meta_boxes']);
 
         add_action('save_post_product', [$this, 'save_product_meta']);
+        
+        add_action('wp_ajax_smartpay_delete_variation', [$this, 'ajax_delete_variation']);
+
+        add_action('wp_ajax_smartpay_delete_product_variations', [$this, 'ajax_delete_product_variations']);
 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_product_metabox_scripts']);
 
@@ -76,12 +80,12 @@ final class Meta_Box
 
         do_action('smartpay_product_metabox_fields', $post->ID);
 
-        wp_nonce_field(basename(__FILE__), 'smartpay_product_metabox_nonce');
+        wp_nonce_field('smartpay_product_metabox_nonce', 'smartpay_product_metabox_nonce');
     }
 
     public function save_product_meta($post_id)
     {
-        if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], basename(__FILE__))) {
+        if (!isset($_POST['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_product_metabox_nonce'], 'smartpay_product_metabox_nonce')) {
             return;
         }
 
@@ -97,6 +101,7 @@ final class Meta_Box
         if ($has_variations && isset($variations)) {
 
             foreach ($variations as $variation_id => $variation) {
+                // TODO: Check validation and if false then ignore
                 $child_product                    = new Product_Variation($variation_id ?? 0);
                 $child_product->name              = $variation['name'] ?? '';
                 $child_product->description       = $variation['description'] ?? '';
@@ -109,6 +114,91 @@ final class Meta_Box
 
         // Scope for other extentions
         do_action('smartpay_save_product', $post_id, $post);
+    }
+
+    
+    /**
+     * Delete product variation by ajax call.
+     *
+     * @since x.x.x
+     * @return string|json response
+     */
+    public function ajax_delete_variation()
+    {
+        $variation_id = $_POST['data']['variation_id'] ?? 0;
+        
+        if (!isset($_POST['data']['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['data']['smartpay_product_metabox_nonce'], 'smartpay_product_metabox_nonce') || !$variation_id) {
+            return wp_send_json(array(
+                'success'   => false,
+                'code'      => 401,
+                'message'   => 'Action unauthorized.',
+            ));
+        }
+
+        try {
+            $variation = new Product_Variation($variation_id);
+
+            $variation->delete();
+
+            return wp_send_json(array(
+                'success'   => true,
+                'code'      => 200,
+                'message'   => 'The variation has been deleted.',
+            ));
+            
+        } catch (\Exception $e) {
+
+            return wp_send_json(array(
+                'success'   => false,
+                'code'      => 409,
+                'message'   => $e->getMessage(),
+            ));
+        }
+    }
+
+    /**
+     * Delete product's all variations by ajax call.
+     *
+     * @since x.x.x
+     * @return string|json response
+     */
+    public function ajax_delete_product_variations()
+    {
+        $product_id = $_POST['data']['product_id'] ?? 0;
+        
+        if (!isset($_POST['data']['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['data']['smartpay_product_metabox_nonce'], 'smartpay_product_metabox_nonce') || !$product_id) {
+            return wp_send_json(array(
+                'success'   => false,
+                'code'      => 401,
+                'message'   => 'Action unauthorized.',
+            ));
+        }
+
+        try {
+            $product = new SmartPay_Product($product_id);
+
+            $variations = array_column($product->get_variations(), 'id');
+
+            foreach($variations as $variation_id) {
+                $variation = new Product_Variation($variation_id);
+
+                $variation->delete();
+            }
+
+            return wp_send_json(array(
+                'success'   => true,
+                'code'      => 200,
+                'message'   => 'All variations has been deleted.',
+            ));
+            
+        } catch (\Exception $e) {
+
+            return wp_send_json(array(
+                'success'   => false,
+                'code'      => 409,
+                'message'   => $e->getMessage(),
+            ));
+        }
     }
 
     public function enqueue_product_metabox_scripts()
