@@ -68,6 +68,11 @@ final class Admin
 
         // Enqueue them
         wp_enqueue_style('smartpay-admin');
+        wp_localize_script(
+            'smartpay-admin',
+            'smartpay',
+            array('ajax_url' => admin_url('admin-ajax.php'))
+        );
 
         wp_enqueue_script('smartpay-bootstrap');
         wp_enqueue_script('smartpay-admin');
