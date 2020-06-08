@@ -580,6 +580,7 @@ class SmartPay_Product
     /**
      * One items have been set, an update is needed to save them to the database.
      *
+     * @since  0.0.1
      * @return bool  True of the save occurred, false if it failed or wasn't needed
      */
     public function save()
@@ -659,6 +660,23 @@ class SmartPay_Product
         }
 
         return $saved;
+    }
+
+    /**
+     * Delete the product.
+     *
+     * @since  x.x.x
+     * @return bool  True of the deleted, false if it failed
+     */
+    public function delete()
+    {
+        $variations = array_column($this->variations, 'id');
+
+        foreach($variations as $variation_id) {
+            wp_delete_post($variation_id);
+        }
+        
+        return wp_delete_post($this->_ID);
     }
 
     /**

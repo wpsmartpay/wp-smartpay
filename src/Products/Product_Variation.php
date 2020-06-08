@@ -449,6 +449,7 @@ class Product_Variation
     /**
      * One items have been set, an update is needed to save them to the database.
      *
+     * @since  0.0.1
      * @return bool  True of the save occurred, false if it failed or wasn't needed
      */
     public function save()
@@ -520,6 +521,17 @@ class Product_Variation
         }
 
         return $saved;
+    }
+
+    /**
+     * Delete the variation.
+     *
+     * @since  x.x.x
+     * @return bool  True of the deleted, false if it failed
+     */
+    public function delete()
+    {
+        return wp_delete_post($this->_ID);
     }
 
     /**
