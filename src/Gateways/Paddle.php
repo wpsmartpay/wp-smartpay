@@ -259,7 +259,7 @@ final class Paddle extends Payment_Gateway
         $content .= sprintf('<a href="#!" class="paddle_button button alt" data-override="%s">Pay Now!</a>', $paddle_pay_link);
         $content .= '</div>';
 
-        $content .= '<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script><script type="text/javascript">';
+        $content .= '<script type="text/javascript">';
         $content .= 'jQuery.getScript("https://cdn.paddle.com/paddle/paddle.js", function(){';
         $content .= 'Paddle.Setup({';
         $content .= sprintf('vendor: %s', $vendor_id);
