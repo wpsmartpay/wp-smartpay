@@ -67,7 +67,17 @@ final class Form
 
         // amount column
         if ('amount' === $column) {
-            echo smartpay_amount_format(get_post_meta($post_id, '_form_amount', true));
+            $amounts = get_post_meta($post_id, '_form_amounts', true);
+
+            $amounts = array_map(function($amount){
+                return smartpay_amount_format($amount);
+            }, $amounts);
+
+            echo implode(', ', $amounts);
+
+            // array_walk($amounts, function($amount){
+            //     echo smartpay_amount_format($amount) . ', ';
+            // });
         }
     }
 
