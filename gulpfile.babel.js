@@ -102,7 +102,7 @@ const reload = (done) => {
 
 // Helper function to get version number
 const getProjectVersion = () => {
-	let text = fs.readFileSync('wp-smartpay.php', 'utf-8')
+	let text = fs.readFileSync('smartpay.php', 'utf-8')
 
 	let match = /(?<=Version:\s*)\d.\d.\d/.exec(text)
 
@@ -120,9 +120,8 @@ const replaceVersion = (file, version) => {
 	fs.writeFileSync(file, fileText)
 }
 
-// Make a zip bundle and store
-const makeBundle = () => {
-	let version = getProjectVersion()
+// Copy file to temp directory
+const copyFiles = () => {
 	return gulp
 		.src([
 			'./**',
@@ -141,7 +140,15 @@ const makeBundle = () => {
 			'!*.lock',
 			'!*.gitignore',
 		])
-		.pipe(zip(`wp-smartpay-${version}.zip`))
+		.pipe(gulp.dest('temp/smartpay'))
+}
+
+// Make a zip bundle and store
+const makeBundle = () => {
+	let version = getProjectVersion()
+	return gulp
+		.src(['./temp/**', './temp/*/**'])
+		.pipe(zip(`smartpay-${version}.zip`))
 		.pipe(gulp.dest('temp'))
 }
 
@@ -451,4 +458,4 @@ gulp.task(
  * Build release version.
  *
  */
-gulp.task('wp-build', gulp.series(makeBundle))
+gulp.task('wp-build', gulp.series(copyFiles, makeBundle))
