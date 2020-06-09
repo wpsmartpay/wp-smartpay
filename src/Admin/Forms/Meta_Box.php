@@ -25,7 +25,7 @@ final class Meta_Box
         // Add metabox.
         add_action('add_meta_boxes', [$this, 'add_form_meta_boxes']);
 
-        add_action('save_post', [$this, 'save_form_meta']);
+        add_action('save_post_smartpay_form', [$this, 'save_form_meta']);
 
         add_action('admin_enqueue_scripts', [$this, 'enqueue_form_metabox_scripts']);
     }
@@ -73,27 +73,26 @@ final class Meta_Box
 
         do_action('smartpay_form_metabox_fields', $post->ID);
 
-        wp_nonce_field(basename(__FILE__), 'smartpay_form_metabox_nonce');
+        wp_nonce_field('smartpay_form_metabox_nonce', 'smartpay_form_metabox_nonce');
     }
 
     public function save_form_meta($post_id)
     {
-        if (!isset($_POST['smartpay_form_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_form_metabox_nonce'], basename(__FILE__))) {
+        if (!isset($_POST['smartpay_form_metabox_nonce']) || !wp_verify_nonce($_POST['smartpay_form_metabox_nonce'], 'smartpay_form_metabox_nonce')) {
             return;
         }
 
         extract($_POST);
 
         $form = new SmartPay_Form($post_id);
-        // [1, 5, 6, 7, 8, 9]
-        $filtered_amount = array_unique(array_filter(array_unique($amounts)));
+        $filtered_amount = array_unique(array_filter($amounts));
 
-        $amounts = array_map(function ($amount) {
-            return ($amount);
-        }, $filtered_amount);
+        // $amounts = array_map(function ($amount) {
+        //     return ($amount);
+        // }, $filtered_amount);
 
         $form->payment_type         = $payment_type;
-        $form->amounts              = $amounts;
+        $form->amounts              = $filtered_amount;
         $form->allow_custom_amount  = $allow_custom_amount;
         $form->save();
 
@@ -103,8 +102,6 @@ final class Meta_Box
 
     public function enqueue_form_metabox_scripts()
     {
-        wp_enqueue_media();
-
         // Scripts
         wp_register_script('form-metabox', SMARTPAY_PLUGIN_ASSETS . '/js/form_metabox.js', '', SMARTPAY_VERSION);
 
