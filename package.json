@@ -15,6 +15,7 @@
     "beepbeep": "^1.2.2",
     "bootstrap": "^4.4.1",
     "browser-sync": "^2.11.1",
+    "del": "^5.1.0",
     "eslint": "^5.5.0",
     "eslint-config-wordpress": "^2.0.0",
     "feather-icons": "^4.28.0",

@@ -62,6 +62,7 @@ const remember = require('gulp-remember') //  Adds all the files it has ever see
 const plumber = require('gulp-plumber') // Prevent pipe breaking caused by errors from gulp plugins.
 const beep = require('beepbeep')
 const fs = require('fs')
+var del = require('del');
 const zip = require('gulp-zip') // Gulp zip
 
 /**
@@ -102,7 +103,7 @@ const reload = (done) => {
 
 // Helper function to get version number
 const getProjectVersion = () => {
-	let text = fs.readFileSync('wp-smartpay.php', 'utf-8')
+	let text = fs.readFileSync('smartpay.php', 'utf-8')
 
 	let match = /(?<=Version:\s*)\d.\d.\d/.exec(text)
 
@@ -121,18 +122,15 @@ const replaceVersion = (file, version) => {
 }
 
 // Make a zip bundle and store
-const makeBundle = () => {
-	let version = getProjectVersion()
+const copy = () => {
 	return gulp
 		.src([
 			'./**',
 			'./*/**',
-			'!./assets/scss',
+			'!./assets/scss/**',
 			'!./node_modules/**',
 			'!./temp/**',
-			'!gulpfile.js',
 			'!gulpfile.babel.js',
-			'!package.json',
 			'!*.json',
 			'!*.yml',
 			'!*.xml',
@@ -141,9 +139,24 @@ const makeBundle = () => {
 			'!*.lock',
 			'!*.gitignore',
 		])
-		.pipe(zip(`wp-smartpay-${version}.zip`))
-		.pipe(gulp.dest('temp'))
+		.pipe(gulp.dest('temp/smartpay'))
 }
+const bundle = () =>{
+	let version = getProjectVersion()
+	return gulp.src(['./temp/**', './temp/*/**',])
+						.pipe(zip(`smartpay-${version}.zip`))
+						.pipe(gulp.dest('./temp'))
+}
+// Remove pre-existing content from output folders
+var cleanTemp = function (done) {
+
+	// Clean the temp folder
+	del.sync(['temp/']);
+
+	// Signal completion
+	return done();
+
+};
 
 /**
  * Task: `styles`.
@@ -451,4 +464,4 @@ gulp.task(
  * Build release version.
  *
  */
-gulp.task('wp-build', gulp.series(makeBundle))
+gulp.task('release', gulp.series(cleanTemp, copy, bundle))
