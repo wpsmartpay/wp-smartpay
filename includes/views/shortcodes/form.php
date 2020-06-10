@@ -2,7 +2,9 @@
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
-$chosen_gateway = isset($_REQUEST['gateway']) && smartpay_is_gateway_active($_REQUEST['gateway']) ? $_REQUEST['gateway'] : smartpay_get_default_gateway();
+$_gateway = \sanitize_text_field($_REQUEST['gateway']);
+
+$chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;
 ?>
 
@@ -34,8 +36,8 @@ $has_payment_error = false;
                         <div class="form--amount-section">
                             <div class="form-amounts mb-2">
                                 <?php
-                                    $form_amounts = $form->get_amounts() ?? [];
-                                    $form_amount = reset($form_amounts) ?? 0;
+                                $form_amounts = $form->get_amounts() ?? [];
+                                $form_amount = reset($form_amounts) ?? 0;
                                 ?>
                                 <label class="form-amounts--label d-block m-0 mb-2"><?php _e('Select an amount', 'smartpay'); ?></label>
                                 <ul class="list-group m-0">
@@ -64,7 +66,7 @@ $has_payment_error = false;
 
                                 <!-- // Allow custom payment -->
                                 <?php
-                                    $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / count($form_amounts)) : $form_amount ?? 0;
+                                $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / count($form_amounts)) : $form_amount ?? 0;
                                 ?>
                                 <div class="form-group custom-amount-wrapper my-4 <?php echo !$form->allow_custom_amount ? 'd-none' : '' ?>">
                                     <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2"><?php _e('Pay custom amount', 'smartpay'); ?></label>

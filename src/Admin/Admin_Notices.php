@@ -81,14 +81,14 @@ final class Admin_Notices
 <?php
             echo ob_get_clean();
         }
-        if (isset($_GET['post_type']) && 'smartpay_payment' == $_GET['post_type'] && current_user_can('view_smartpay_reports') && smartpay_is_test_mode()) {
+        if (isset($_GET['post_type']) && 'smartpay_payment' == sanitize_text_field($_GET['post_type']) && current_user_can('view_smartpay_reports') && smartpay_is_test_mode()) {
             $notices['updated']['smartpay-payment-history-test-mode'] = sprintf(__('Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways'));
         }
 
         if (isset($_GET['smartpay-message'])) {
             // Shop reports errors
             if (current_user_can('view_smartpay_reports')) {
-                switch ($_GET['smartpay-message']) {
+                switch (sanitize_text_field($_GET['smartpay-message'])) {
                     case 'payment_deleted':
                         $notices['updated']['smartpay-payment-deleted'] = __('The payment has been deleted.', 'smartpay');
                         break;
@@ -106,7 +106,7 @@ final class Admin_Notices
 
             // Shop payments errors
             if (current_user_can('edit_smartpay_payments')) {
-                switch ($_GET['smartpay-message']) {
+                switch (sanitize_text_field($_GET['smartpay-message'])) {
                     case 'note-added':
                         $notices['updated']['smartpay-note-added'] = __('The payment note has been added successfully.', 'smartpay');
                         break;
@@ -140,8 +140,8 @@ final class Admin_Notices
      */
     function dismiss_notices()
     {
-        if (isset($_GET['smartpay_notice'])) {
-            update_user_meta(get_current_user_id(), '_smartpay_' . $_GET['smartpay_notice'] . '_dismissed', 1);
+        if (isset(sanitize_text_field($_GET['smartpay_notice']))) {
+            update_user_meta(get_current_user_id(), '_smartpay_' . sanitize_text_field($_GET['smartpay_notice'] . '_dismissed', 1));
             wp_redirect(remove_query_arg(array('smartpay_action', 'smartpay_notice')));
             exit;
         }

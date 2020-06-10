@@ -91,7 +91,7 @@ final class Payment
     public function process_payment()
     {
         // TODO: Need to refactor
-        if (isset($_POST['smartpay_action']) && 'smartpay_process_payment' === $_POST['smartpay_action']) {
+        if (isset($_POST['smartpay_action']) && 'smartpay_process_payment' === sanitize_text_field($_POST['smartpay_action'])) {
 
             if (!isset($_POST['smartpay_process_payment']) || !wp_verify_nonce($_POST['smartpay_process_payment'], 'smartpay_process_payment')) {
                 wp_redirect(home_url('/'));
@@ -104,12 +104,12 @@ final class Payment
 
             $payment_data = apply_filters('smartpay_payment_data', array(
                 'payment_type'   => $smartpay_payment_type,
-                'payment_data'   => $this->_get_payment_data($_POST),
+                'payment_data'   => $this->_get_payment_data(sanitize_post($_POST)),
                 'date'            => date('Y-m-d H:i:s', time()),
-                'amount'          => $this->_get_payment_amount($_POST),
+                'amount'          => $this->_get_payment_amount(sanitize_post($_POST)),
                 'currency'        => smartpay_get_currency() ?? 'USD',
                 'gateway'         => $smartpay_gateway,
-                'customer'        => $this->_get_payment_customer($_POST),
+                'customer'        => $this->_get_payment_customer(sanitize_post($_POST)),
                 'email'           => $smartpay_email,
                 'key'             => strtolower(md5($smartpay_email . date('Y-m-d H:i:s') . rand(1, 10))),
             ));
@@ -126,7 +126,7 @@ final class Payment
     {
         // TODO: Convert response to JSON
 
-        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != $_POST['data']['smartpay_action']) {
+        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field($_POST['data']['smartpay_action'])) {
             echo '<p class="text-danger">Payment process action not acceptable!</p>';
             die();
         }
@@ -136,16 +136,16 @@ final class Payment
             die();
         }
 
-        $validate = $this->_checkValidation($_POST['data'] ?? []);
+        $validate = $this->_checkValidation(sanitize_post($_POST['data']) ?? []);
 
-        if(!$validate) {
+        if (!$validate) {
             echo '<p class="text-danger">Payment data invalid!</p>';
             die();
         }
 
-        $payment_data = $this->_prepare_payment_data($_POST['data'] ?? []);
+        $payment_data = $this->_prepare_payment_data(sanitize_post($_POST['data']) ?? []);
 
-        if(!$payment_data || !is_array($payment_data)) {
+        if (!$payment_data || !is_array($payment_data)) {
             echo '<p class="text-danger">Payment data invalid!</p>';
             die();
         }
@@ -285,7 +285,7 @@ final class Payment
     {
         // TODO: Reform validation
         $email = $_data['smartpay_email'] ?? '';
-        if(!is_email($email)) return false;
+        if (!is_email($email)) return false;
 
         return true;
     }
@@ -320,7 +320,7 @@ final class Payment
         if (!empty($payment->ID)) {
             // Set session payment id
             smartpay_set_session_payment_id($payment->ID);
-        
+
             // Attach payment to customer
             $this->attach_customer_payment($payment);
 
@@ -352,7 +352,7 @@ final class Payment
 
     private function _process_gateway_payment($payment_data, $ajax = true)
     {
-        $gateway = $_POST['data']['smartpay_gateway'] ?? '';
+        $gateway = sanitize_text_field($_POST['data']['smartpay_gateway']) ?? '';
 
         if (!is_string($gateway) || !smartpay_is_gateway_active($gateway)) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';

@@ -199,9 +199,9 @@ final class Paddle extends Payment_Gateway
             echo '<p class="text-danger">API response error!</p>';
             return;
         }
-        
+
         update_post_meta($payment->ID, 'paddle_pay_link', $api_response_data->response->url);
-        
+
         echo $this->_pay_now_content($payment);
     }
 
@@ -285,14 +285,16 @@ final class Paddle extends Payment_Gateway
      */
     public function process_webhooks()
     {
-        if (isset($_GET['smartpay-listener']) && $_GET['smartpay-listener'] == 'paddle') {
+        $listener = sanitize_text_field($_GET['smartpay-listener']) ?? '';
 
-            $signature     = $_POST['p_signature'];
+        if (isset($listener) && $listener == 'paddle') {
+
+            $signature     = sanitize_text_field($_POST['p_signature']);
             $web_hook_data = stripslashes_deep($_POST);
-            $identifier    = $_GET['identifier'] ?? null;
+            $identifier    = sanitize_text_field($_GET['identifier']) ?? null;
             $alert_name    = $web_hook_data['alert_name'] ?? null;
             $alert_id      = $web_hook_data['alert_id'] ?? 'N/A';
-            $payment_id    = absint($web_hook_data['passthrough'] ?? $_GET['payment-id'] ?? null);
+            $payment_id    = absint($web_hook_data['passthrough'] ?? sanitize_text_field($_GET['payment-id']) ?? null);
 
             $responsible_alerts = [
                 'payment_succeeded'

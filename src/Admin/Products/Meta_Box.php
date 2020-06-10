@@ -27,7 +27,7 @@ final class Meta_Box
         add_action('add_meta_boxes', [$this, 'add_product_meta_boxes']);
 
         add_action('save_post_product', [$this, 'save_product_meta']);
-        
+
         add_action('wp_ajax_smartpay_delete_variation', [$this, 'ajax_delete_variation']);
 
         add_action('wp_ajax_smartpay_delete_product_variations', [$this, 'ajax_delete_product_variations']);
@@ -89,7 +89,7 @@ final class Meta_Box
             return;
         }
 
-        extract($_POST);
+        extract(sanitize_post($_POST));
 
         $product = new SmartPay_Product($post_id);
         $product->base_price     = floatval($base_price);
@@ -116,7 +116,7 @@ final class Meta_Box
         do_action('smartpay_save_product', $post_id, $post);
     }
 
-    
+
     /**
      * Delete product variation by ajax call.
      *
@@ -125,8 +125,8 @@ final class Meta_Box
      */
     public function ajax_delete_variation()
     {
-        $variation_id = $_POST['data']['variation_id'] ?? 0;
-        
+        $variation_id = sanitize_text_field($_POST['data']['variation_id']) ?? 0;
+
         if (!isset($_POST['data']['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['data']['smartpay_product_metabox_nonce'], 'smartpay_product_metabox_nonce') || !$variation_id) {
             return wp_send_json(array(
                 'success'   => false,
@@ -145,7 +145,6 @@ final class Meta_Box
                 'code'      => 200,
                 'message'   => 'The variation has been deleted.',
             ));
-            
         } catch (\Exception $e) {
 
             return wp_send_json(array(
@@ -164,8 +163,8 @@ final class Meta_Box
      */
     public function ajax_delete_product_variations()
     {
-        $product_id = $_POST['data']['product_id'] ?? 0;
-        
+        $product_id = sanitize_text_field($_POST['data']['product_id']) ?? 0;
+
         if (!isset($_POST['data']['smartpay_product_metabox_nonce']) || !wp_verify_nonce($_POST['data']['smartpay_product_metabox_nonce'], 'smartpay_product_metabox_nonce') || !$product_id) {
             return wp_send_json(array(
                 'success'   => false,
@@ -179,7 +178,7 @@ final class Meta_Box
 
             $variations = array_column($product->get_variations(), 'id');
 
-            foreach($variations as $variation_id) {
+            foreach ($variations as $variation_id) {
                 $variation = new Product_Variation($variation_id);
 
                 $variation->delete();
@@ -190,7 +189,6 @@ final class Meta_Box
                 'code'      => 200,
                 'message'   => 'All variations has been deleted.',
             ));
-            
         } catch (\Exception $e) {
 
             return wp_send_json(array(

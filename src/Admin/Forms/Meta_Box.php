@@ -82,7 +82,7 @@ final class Meta_Box
             return;
         }
 
-        extract($_POST);
+        extract(sanitize_post($_POST));
 
         $form = new SmartPay_Form($post_id);
         $filtered_amount = array_unique(array_filter($amounts));

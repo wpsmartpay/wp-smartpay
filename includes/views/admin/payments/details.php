@@ -2,7 +2,7 @@
 
 use SmartPay\Payments\SmartPay_Payment;
 
-$payment_id = intval($_GET['id'] ?? null);
+$payment_id = intval(sanitize_text_field($_GET['id']) ?? null);
 
 $payment = new SmartPay_Payment($payment_id);
 ?>
