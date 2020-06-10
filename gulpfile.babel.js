@@ -62,7 +62,7 @@ const remember = require('gulp-remember') //  Adds all the files it has ever see
 const plumber = require('gulp-plumber') // Prevent pipe breaking caused by errors from gulp plugins.
 const beep = require('beepbeep')
 const fs = require('fs')
-var del = require('del');
+var del = require('del')
 const zip = require('gulp-zip') // Gulp zip
 
 /**
@@ -141,22 +141,27 @@ const copy = () => {
 		])
 		.pipe(gulp.dest('temp/smartpay'))
 }
-const bundle = () =>{
+const bundle = () => {
 	let version = getProjectVersion()
-	return gulp.src(['./temp/**', './temp/*/**',])
-						.pipe(zip(`smartpay-${version}.zip`))
-						.pipe(gulp.dest('./temp'))
+
+	if (!version) {
+		notify.onError("Can't find version number!\n")
+		return
+	}
+
+	return gulp
+		.src(['./temp/**', './temp/*/**'])
+		.pipe(zip(`smartpay-${version}.zip`))
+		.pipe(gulp.dest('./temp'))
 }
 // Remove pre-existing content from output folders
 var cleanTemp = function (done) {
-
 	// Clean the temp folder
-	del.sync(['temp/']);
+	del.sync(['temp/'])
 
 	// Signal completion
-	return done();
-
-};
+	return done()
+}
 
 /**
  * Task: `styles`.
