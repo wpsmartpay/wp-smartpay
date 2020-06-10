@@ -31,9 +31,7 @@ abstract class Payment_Gateway
 
     public function process_webhooks()
     {
-        $listener  = sanitize_text_field($_GET['smartpay-listener']) ?? '';
-
-        if (isset($listener) && $listener == 'test') {
+        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'test') {
             echo 'test webhook';
             die();
         }

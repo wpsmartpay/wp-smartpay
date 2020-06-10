@@ -285,9 +285,7 @@ final class Paddle extends Payment_Gateway
      */
     public function process_webhooks()
     {
-        $listener = sanitize_text_field($_GET['smartpay-listener']) ?? '';
-
-        if (isset($listener) && $listener == 'paddle') {
+        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'paddle') {
 
             $signature     = sanitize_text_field($_POST['p_signature']);
             $web_hook_data = stripslashes_deep($_POST);
