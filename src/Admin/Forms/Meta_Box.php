@@ -97,7 +97,7 @@ final class Meta_Box
         $form->save();
 
         // Scope for other extentions
-        do_action('smartpay_save_form', $post_id, $post);
+        do_action('smartpay_save_form', $post_id, $form);
     }
 
     public function enqueue_form_metabox_scripts()
