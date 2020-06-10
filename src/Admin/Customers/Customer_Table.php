@@ -76,9 +76,9 @@ class Customer_Table extends \WP_List_Table
     {
         $input_id = $input_id . '-search-input';
 
-        if (!empty(sanitize_text_field($_REQUEST['orderby'])))
+        if (!empty($_REQUEST['orderby']))
             echo '<input type="hidden" name="orderby" value="' . esc_attr(sanitize_text_field($_REQUEST['orderby'])) . '" />';
-        if (!empty(sanitize_text_field($_REQUEST['order'])))
+        if (!empty($_REQUEST['order']))
             echo '<input type="hidden" name="order" value="' . esc_attr(sanitize_text_field($_REQUEST['order'])) . '" />';
 ?>
 <p class="search-box">
@@ -142,7 +142,7 @@ class Customer_Table extends \WP_List_Table
         $name       .= !empty($item['first_name'] && $item['last_name']) ? $item['first_name'] ?? '' . ' ' . $item['last_name'] ?? '' : 'Unnamed customer';
         // $user        = !empty($item['user_id']) ? $item['user_id'] : $item['email'];
         $customer    = new SmartPay_Customer($item['id']);
-        $view_url    = admin_url('edit.php?post_type=download&page=smartpay-customers&view=overview&id=' . $item['id']);
+        $view_url    = '#';
         // $actions     = array(
         //     'view'   => '<a href="' . $view_url . '">' . __('View', 'smartpay') . '</a>',
         //     'logs'   => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-reports&tab=logs&customer=' . $customer->id) . '">' . __('Download log', 'smartpay') . '</a>',

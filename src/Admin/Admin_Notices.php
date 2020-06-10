@@ -140,7 +140,7 @@ final class Admin_Notices
      */
     function dismiss_notices()
     {
-        if (isset(sanitize_text_field($_GET['smartpay_notice']))) {
+        if (isset($_GET['smartpay_notice'])) {
             update_user_meta(get_current_user_id(), '_smartpay_' . sanitize_text_field($_GET['smartpay_notice'] . '_dismissed', 1));
             wp_redirect(remove_query_arg(array('smartpay_action', 'smartpay_notice')));
             exit;
