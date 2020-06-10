@@ -245,7 +245,7 @@ final class Paddle extends Payment_Gateway
             return;
         }
 
-        if ('completed' == $status->status) {
+        if ('completed' == $payment->status) {
             echo '<p class="text-danger">Payment Already!</p>';
             return;
         }
