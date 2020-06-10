@@ -64,7 +64,7 @@ final class Admin
         wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/bootstrap.js', ['jquery'], SMARTPAY_VERSION);
         wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['smartpay-bootstrap'], SMARTPAY_VERSION);
         wp_register_script('smartpay-icons', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/feather.min.js', ['smartpay-bootstrap'], SMARTPAY_VERSION, true);
-        wp_register_script('smartpay-sweetalert', '//unpkg.com/sweetalert/dist/sweetalert.min.js', ['smartpay-bootstrap'], SMARTPAY_VERSION, true);
+        wp_register_script('smartpay-sweetalert', SMARTPAY_PLUGIN_ASSETS . '/js/vendor/sweetalert.min.js', ['smartpay-bootstrap'], SMARTPAY_VERSION, true);
 
         // Enqueue them
         wp_enqueue_style('smartpay-admin');
