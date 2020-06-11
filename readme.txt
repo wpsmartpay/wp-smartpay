@@ -60,9 +60,13 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 - A new menu item “SmartPay” should appear in your dashboard.
 
 == Screenshots ==
-1. WP SmartPay Download Manager
-2. Adding New Product
-3. Adding New Form
+1. Upload as many files needed for your product.
+2. Configure product base price with unlimited variations and their own set of price and files.
+3. Minimal product showcasing with less interaction for purchase
+4. Create unlimited payment forms with multiple payment options.
+5. Allow user to put custom amount on payment form
+6. Settings panel gives you enough control over your plugin.
+7. Seamless one click checkout
 
 == Changelog ==
 = [0.0.1] =
