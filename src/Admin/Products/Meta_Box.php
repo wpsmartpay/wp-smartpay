@@ -113,7 +113,7 @@ final class Meta_Box
         }
 
         // Scope for other extentions
-        do_action('smartpay_save_product', $post_id, $post);
+        do_action('smartpay_save_product', $post_id, $product);
     }
 
 
