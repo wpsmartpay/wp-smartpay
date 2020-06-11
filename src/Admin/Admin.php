@@ -91,7 +91,7 @@ final class Admin
             'SmartPay - Payment Forms',
             'All Forms',
             'manage_options',
-            'edit.php?post_type=smartpay_form',
+            'edit.php?post_type=smartpay_form'
         );
 
         add_submenu_page(
@@ -99,7 +99,7 @@ final class Admin
             __('SmartPay - Payment History', 'smartpay'),
             __('Payment History', 'smartpay'),
             'manage_options',
-            'edit.php?post_type=smartpay_payment',
+            'edit.php?post_type=smartpay_payment'
         );
 
         add_submenu_page(

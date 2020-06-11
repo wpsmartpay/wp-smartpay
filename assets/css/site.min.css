@@ -1,4 +1,4 @@
-.smartpay{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:16px;font-weight:400;line-height:1.5;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;color:#212529;text-align:left;background-color:#fff;/*! Bootstrap Grid v4.4.1 (https://getbootstrap.com/) Copyright 2011-2019 The Bootstrap Authors Copyright 2011-2019 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */}
+.smartpay{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";font-size:16px;font-weight:400;line-height:1.5;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;color:#212529;text-align:left;background-color:#fff;/*! Bootstrap Grid v4.5.0 (https://getbootstrap.com/) Copyright 2011-2020 The Bootstrap Authors Copyright 2011-2020 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */}
 .smartpay html{box-sizing:border-box;-ms-overflow-style:scrollbar}
 .smartpay *,.smartpay *::before,.smartpay *::after{box-sizing:inherit}
 .smartpay .container{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
@@ -7,7 +7,7 @@
 .smartpay .no-gutters{margin-right:0;margin-left:0}
 .smartpay .no-gutters>.col,.smartpay .no-gutters>[class*="col-"]{padding-right:0;padding-left:0}
 .smartpay .col-1,.smartpay .col-2,.smartpay .col-3,.smartpay .col-4,.smartpay .col-5,.smartpay .col-6,.smartpay .col-7,.smartpay .col-8,.smartpay .col-9,.smartpay .col-10,.smartpay .col-11,.smartpay .col-12,.smartpay .col,.smartpay .col-auto,.smartpay .col-sm-1,.smartpay .col-sm-2,.smartpay .col-sm-3,.smartpay .col-sm-4,.smartpay .col-sm-5,.smartpay .col-sm-6,.smartpay .col-sm-7,.smartpay .col-sm-8,.smartpay .col-sm-9,.smartpay .col-sm-10,.smartpay .col-sm-11,.smartpay .col-sm-12,.smartpay .col-sm,.smartpay .col-sm-auto,.smartpay .col-md-1,.smartpay .col-md-2,.smartpay .col-md-3,.smartpay .col-md-4,.smartpay .col-md-5,.smartpay .col-md-6,.smartpay .col-md-7,.smartpay .col-md-8,.smartpay .col-md-9,.smartpay .col-md-10,.smartpay .col-md-11,.smartpay .col-md-12,.smartpay .col-md,.smartpay .col-md-auto,.smartpay .col-lg-1,.smartpay .col-lg-2,.smartpay .col-lg-3,.smartpay .col-lg-4,.smartpay .col-lg-5,.smartpay .col-lg-6,.smartpay .col-lg-7,.smartpay .col-lg-8,.smartpay .col-lg-9,.smartpay .col-lg-10,.smartpay .col-lg-11,.smartpay .col-lg-12,.smartpay .col-lg,.smartpay .col-lg-auto,.smartpay .col-xl-1,.smartpay .col-xl-2,.smartpay .col-xl-3,.smartpay .col-xl-4,.smartpay .col-xl-5,.smartpay .col-xl-6,.smartpay .col-xl-7,.smartpay .col-xl-8,.smartpay .col-xl-9,.smartpay .col-xl-10,.smartpay .col-xl-11,.smartpay .col-xl-12,.smartpay .col-xl,.smartpay .col-xl-auto{position:relative;width:100%;padding-right:15px;padding-left:15px}
-.smartpay .col{flex-basis:0;flex-grow:1;max-width:100%}
+.smartpay .col{flex-basis:0;flex-grow:1;min-width:0;max-width:100%}
 .smartpay .row-cols-1>*{flex:0 0 100%;max-width:100%}
 .smartpay .row-cols-2>*{flex:0 0 50%;max-width:50%}
 .smartpay .row-cols-3>*{flex:0 0 33.3333333333%;max-width:33.3333333333%}
@@ -211,7 +211,7 @@
 .smartpay a:not([href]){color:inherit;text-decoration:none}
 .smartpay a:not([href]):hover{color:inherit;text-decoration:none}
 .smartpay pre,.smartpay code,.smartpay kbd,.smartpay samp{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:1em}
-.smartpay pre{margin-top:0;margin-bottom:1rem;overflow:auto}
+.smartpay pre{margin-top:0;margin-bottom:1rem;overflow:auto;-ms-overflow-style:scrollbar}
 .smartpay figure{margin:0 0 1rem}
 .smartpay img{vertical-align:middle;border-style:none}
 .smartpay svg{overflow:hidden;vertical-align:middle}
@@ -224,12 +224,12 @@
 .smartpay input,.smartpay button,.smartpay select,.smartpay optgroup,.smartpay textarea{margin:0;font-family:inherit;font-size:inherit;line-height:inherit}
 .smartpay button,.smartpay input{overflow:visible}
 .smartpay button,.smartpay select{text-transform:none}
+.smartpay [role="button"]{cursor:pointer}
 .smartpay select{word-wrap:normal}
 .smartpay button,.smartpay [type="button"],.smartpay [type="reset"],.smartpay [type="submit"]{-webkit-appearance:button}
 .smartpay button:not(:disabled),.smartpay [type="button"]:not(:disabled),.smartpay [type="reset"]:not(:disabled),.smartpay [type="submit"]:not(:disabled){cursor:pointer}
 .smartpay button::-moz-focus-inner,.smartpay [type="button"]::-moz-focus-inner,.smartpay [type="reset"]::-moz-focus-inner,.smartpay [type="submit"]::-moz-focus-inner{padding:0;border-style:none}
 .smartpay input[type="radio"],.smartpay input[type="checkbox"]{box-sizing:border-box;padding:0}
-.smartpay input[type="date"],.smartpay input[type="time"],.smartpay input[type="datetime-local"],.smartpay input[type="month"]{-webkit-appearance:listbox}
 .smartpay textarea{overflow:auto;resize:vertical}
 .smartpay fieldset{min-width:0;padding:0;margin:0;border:0}
 .smartpay legend{display:block;width:100%;max-width:100%;padding:0;margin-bottom:.5rem;font-size:1.5rem;line-height:inherit;color:inherit;white-space:normal}
@@ -297,10 +297,11 @@
 .smartpay .table-dark.table-hover tbody tr:hover{color:#fff;background-color:rgba(255,255,255,0.075)}
 .smartpay .table-responsive{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .smartpay .table-responsive>.table-bordered{border:0}
-.smartpay .btn{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;cursor:pointer;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+.smartpay .btn{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
 .smartpay .btn:hover{color:#212529;text-decoration:none}
 .smartpay .btn:focus,.smartpay .btn.focus{outline:0;box-shadow:0 0 0 .2rem rgba(57,79,167,0.25)}
 .smartpay .btn.disabled,.smartpay .btn:disabled{opacity:.65}
+.smartpay .btn:not(:disabled):not(.disabled){cursor:pointer}
 .smartpay a.btn.disabled,.smartpay fieldset:disabled a.btn{pointer-events:none}
 .smartpay .btn-primary{color:#fff;background-color:#394fa7;border-color:#394fa7}
 .smartpay .btn-primary:hover{color:#fff;background-color:#2f428a;border-color:#2c3d81}
@@ -400,7 +401,7 @@
 .smartpay .btn-outline-dark:not(:disabled):not(.disabled):active:focus,.smartpay .btn-outline-dark:not(:disabled):not(.disabled).active:focus,.show>.smartpay .btn-outline-dark.dropdown-toggle:focus{box-shadow:0 0 0 .2rem rgba(52,58,64,0.5)}
 .smartpay .btn-link{font-weight:400;color:#394fa7;text-decoration:none}
 .smartpay .btn-link:hover{color:#26346e;text-decoration:underline}
-.smartpay .btn-link:focus,.smartpay .btn-link.focus{text-decoration:underline;box-shadow:none}
+.smartpay .btn-link:focus,.smartpay .btn-link.focus{text-decoration:underline}
 .smartpay .btn-link:disabled,.smartpay .btn-link.disabled{color:#6c757d;pointer-events:none}
 .smartpay .btn-lg{padding:.5rem 1rem;font-size:1.25rem;line-height:1.5;border-radius:.3rem}
 .smartpay .btn-sm{padding:.25rem .5rem;font-size:.875rem;line-height:1.5;border-radius:.2rem}
@@ -413,8 +414,9 @@
 .smartpay .collapsing{position:relative;height:0;overflow:hidden;transition:height .35s ease}
 .smartpay .card{position:relative;display:flex;flex-direction:column;min-width:0;word-wrap:break-word;background-color:#fff;background-clip:border-box;border:1px solid rgba(0,0,0,0.125);border-radius:.25rem}
 .smartpay .card>hr{margin-right:0;margin-left:0}
-.smartpay .card>.list-group:first-child .list-group-item:first-child{border-top-left-radius:.25rem;border-top-right-radius:.25rem}
-.smartpay .card>.list-group:last-child .list-group-item:last-child{border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem}
+.smartpay .card>.list-group{border-top:inherit;border-bottom:inherit}
+.smartpay .card>.list-group:first-child{border-top-width:0;border-top-left-radius:calc(0.25rem - 1px);border-top-right-radius:calc(0.25rem - 1px)}
+.smartpay .card>.list-group:last-child{border-bottom-width:0;border-bottom-right-radius:calc(0.25rem - 1px);border-bottom-left-radius:calc(0.25rem - 1px)}
 .smartpay .card-body{flex:1 1 auto;min-height:1px;padding:1.25rem}
 .smartpay .card-title{margin-bottom:.75rem}
 .smartpay .card-subtitle{margin-top:-0.375rem;margin-bottom:0}
@@ -480,7 +482,7 @@
 .smartpay .modal-dialog-scrollable .modal-header,.smartpay .modal-dialog-scrollable .modal-footer{flex-shrink:0}
 .smartpay .modal-dialog-scrollable .modal-body{overflow-y:auto}
 .smartpay .modal-dialog-centered{display:flex;align-items:center;min-height:calc(100% - 1rem)}
-.smartpay .modal-dialog-centered::before{display:block;height:calc(100vh - 1rem);content:""}
+.smartpay .modal-dialog-centered::before{display:block;height:calc(100vh - 1rem);height:min-content;content:""}
 .smartpay .modal-dialog-centered.modal-dialog-scrollable{flex-direction:column;justify-content:center;height:100%}
 .smartpay .modal-dialog-centered.modal-dialog-scrollable .modal-content{max-height:none}
 .smartpay .modal-dialog-centered.modal-dialog-scrollable::before{content:none}
@@ -501,6 +503,7 @@
 .smartpay .form-control:focus{color:#495057;background-color:#fff;border-color:#8998d7;outline:0;box-shadow:0 0 0 .2rem rgba(57,79,167,0.25)}
 .smartpay .form-control::placeholder{color:#6c757d;opacity:1}
 .smartpay .form-control:disabled,.smartpay .form-control[readonly]{background-color:#e9ecef;opacity:1}
+.smartpay input[type="date"].form-control,.smartpay input[type="time"].form-control,.smartpay input[type="datetime-local"].form-control,.smartpay input[type="month"].form-control{appearance:none}
 .smartpay select.form-control:focus::-ms-value{color:#495057;background-color:#fff}
 .smartpay .form-control-file,.smartpay .form-control-range{display:block;width:100%}
 .smartpay .col-form-label{padding-top:calc(0.375rem + 1px);padding-bottom:calc(0.375rem + 1px);margin-bottom:0;font-size:inherit;line-height:1.5}
@@ -669,6 +672,9 @@
 .smartpay .float-left{float:left !important}
 .smartpay .float-right{float:right !important}
 .smartpay .float-none{float:none !important}
+.smartpay .user-select-all{user-select:all !important}
+.smartpay .user-select-auto{user-select:auto !important}
+.smartpay .user-select-none{user-select:none !important}
 .smartpay .overflow-auto{overflow:auto !important}
 .smartpay .overflow-hidden{overflow:hidden !important}
 .smartpay .position-static{position:static !important}
@@ -700,7 +706,6 @@
 .smartpay .min-vh-100{min-height:100vh !important}
 .smartpay .vw-100{width:100vw !important}
 .smartpay .vh-100{height:100vh !important}
-.smartpay .stretched-link::after{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;pointer-events:auto;content:"";background-color:rgba(0,0,0,0)}
 .smartpay .m-0{margin:0 !important}
 .smartpay .mt-0,.smartpay .my-0{margin-top:0 !important}
 .smartpay .mr-0,.smartpay .mx-0{margin-right:0 !important}
@@ -791,6 +796,7 @@
 .smartpay .mr-auto,.smartpay .mx-auto{margin-right:auto !important}
 .smartpay .mb-auto,.smartpay .my-auto{margin-bottom:auto !important}
 .smartpay .ml-auto,.smartpay .mx-auto{margin-left:auto !important}
+.smartpay .stretched-link::after{position:absolute;top:0;right:0;bottom:0;left:0;z-index:1;pointer-events:auto;content:"";background-color:rgba(0,0,0,0)}
 .smartpay .text-monospace{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace !important}
 .smartpay .text-justify{text-align:justify !important}
 .smartpay .text-wrap{white-space:normal !important}
@@ -831,7 +837,7 @@
 .smartpay .text-white-50{color:rgba(255,255,255,0.5) !important}
 .smartpay .text-hide{font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}
 .smartpay .text-decoration-none{text-decoration:none !important}
-.smartpay .text-break{word-break:break-word !important;overflow-wrap:break-word !important}
+.smartpay .text-break{word-wrap:break-word !important}
 .smartpay .text-reset{color:inherit !important}
 .smartpay .visible{visibility:visible !important}
 .smartpay .invisible{visibility:hidden !important}
@@ -839,26 +845,26 @@
 .smartpay .spinner-border-sm{width:1rem;height:1rem;border-width:.2em}
 .smartpay .spinner-grow{display:inline-block;width:2rem;height:2rem;vertical-align:text-bottom;background-color:currentColor;border-radius:50%;opacity:0;animation:spinner-grow .75s linear infinite}
 .smartpay .spinner-grow-sm{width:1rem;height:1rem}
-.smartpay .list-group{display:flex;flex-direction:column;padding-left:0;margin-bottom:0}
+.smartpay .list-group{display:flex;flex-direction:column;padding-left:0;margin-bottom:0;border-radius:.25rem}
 .smartpay .list-group-item-action{width:100%;color:#495057;text-align:inherit}
 .smartpay .list-group-item-action:hover,.smartpay .list-group-item-action:focus{z-index:1;color:#495057;text-decoration:none;background-color:#f8f9fa}
 .smartpay .list-group-item-action:active{color:#212529;background-color:#e9ecef}
 .smartpay .list-group-item{position:relative;display:block;padding:.75rem 1.25rem;background-color:#fff;border:1px solid rgba(0,0,0,0.125)}
-.smartpay .list-group-item:first-child{border-top-left-radius:.25rem;border-top-right-radius:.25rem}
-.smartpay .list-group-item:last-child{border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem}
+.smartpay .list-group-item:first-child{border-top-left-radius:inherit;border-top-right-radius:inherit}
+.smartpay .list-group-item:last-child{border-bottom-right-radius:inherit;border-bottom-left-radius:inherit}
 .smartpay .list-group-item.disabled,.smartpay .list-group-item:disabled{color:#6c757d;pointer-events:none;background-color:#fff}
 .smartpay .list-group-item.active{z-index:2;color:#fff;background-color:#394fa7;border-color:#394fa7}
 .smartpay .list-group-item+.smartpay .list-group-item{border-top-width:0}
 .smartpay .list-group-item+.smartpay .list-group-item.active{margin-top:-1px;border-top-width:1px}
 .smartpay .list-group-horizontal{flex-direction:row}
-.smartpay .list-group-horizontal .list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
-.smartpay .list-group-horizontal .list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
-.smartpay .list-group-horizontal .list-group-item.active{margin-top:0}
-.smartpay .list-group-horizontal .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
-.smartpay .list-group-horizontal .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
-.smartpay .list-group-flush .list-group-item{border-right-width:0;border-left-width:0;border-radius:0}
-.smartpay .list-group-flush .list-group-item:first-child{border-top-width:0}
-.smartpay .list-group-flush:last-child .list-group-item:last-child{border-bottom-width:0}
+.smartpay .list-group-horizontal>.list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
+.smartpay .list-group-horizontal>.list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
+.smartpay .list-group-horizontal>.list-group-item.active{margin-top:0}
+.smartpay .list-group-horizontal>.list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
+.smartpay .list-group-horizontal>.list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .list-group-flush{border-radius:0}
+.smartpay .list-group-flush>.list-group-item{border-width:0 0 1px}
+.smartpay .list-group-flush>.list-group-item:last-child{border-bottom-width:0}
 .smartpay .list-group-item-primary{color:#1e2957;background-color:#c8cee6}
 .smartpay .list-group-item-primary.list-group-item-action:hover,.smartpay .list-group-item-primary.list-group-item-action:focus{color:#1e2957;background-color:#b6bede}
 .smartpay .list-group-item-primary.list-group-item-action.active{color:#fff;background-color:#1e2957;border-color:#1e2957}
@@ -934,7 +940,7 @@
 .smartpay .form-control{transition:none}
 }@media(min-width:576px){.smartpay .container{max-width:540px}
 .smartpay .container,.smartpay .container-sm{max-width:540px}
-.smartpay .col-sm{flex-basis:0;flex-grow:1;max-width:100%}
+.smartpay .col-sm{flex-basis:0;flex-grow:1;min-width:0;max-width:100%}
 .smartpay .row-cols-sm-1>*{flex:0 0 100%;max-width:100%}
 .smartpay .row-cols-sm-2>*{flex:0 0 50%;max-width:50%}
 .smartpay .row-cols-sm-3>*{flex:0 0 33.3333333333%;max-width:33.3333333333%}
@@ -1131,7 +1137,7 @@
 .smartpay .modal-dialog-scrollable{max-height:calc(100% - 3.5rem)}
 .smartpay .modal-dialog-scrollable .modal-content{max-height:calc(100vh - 3.5rem)}
 .smartpay .modal-dialog-centered{min-height:calc(100% - 3.5rem)}
-.smartpay .modal-dialog-centered::before{height:calc(100vh - 3.5rem)}
+.smartpay .modal-dialog-centered::before{height:calc(100vh - 3.5rem);height:min-content}
 .smartpay .modal-sm{max-width:300px}
 .smartpay .form-inline label{display:flex;align-items:center;justify-content:center;margin-bottom:0}
 .smartpay .form-inline .form-group{display:flex;flex:0 0 auto;flex-flow:row wrap;align-items:center;margin-bottom:0}
@@ -1282,14 +1288,14 @@
 .smartpay .text-sm-right{text-align:right !important}
 .smartpay .text-sm-center{text-align:center !important}
 .smartpay .list-group-horizontal-sm{flex-direction:row}
-.smartpay .list-group-horizontal-sm .list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
-.smartpay .list-group-horizontal-sm .list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
-.smartpay .list-group-horizontal-sm .list-group-item.active{margin-top:0}
-.smartpay .list-group-horizontal-sm .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
-.smartpay .list-group-horizontal-sm .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .list-group-horizontal-sm>.list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
+.smartpay .list-group-horizontal-sm>.list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
+.smartpay .list-group-horizontal-sm>.list-group-item.active{margin-top:0}
+.smartpay .list-group-horizontal-sm>.list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
+.smartpay .list-group-horizontal-sm>.list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
 }@media(min-width:768px){.smartpay .container{max-width:720px}
 .smartpay .container,.smartpay .container-sm,.smartpay .container-md{max-width:720px}
-.smartpay .col-md{flex-basis:0;flex-grow:1;max-width:100%}
+.smartpay .col-md{flex-basis:0;flex-grow:1;min-width:0;max-width:100%}
 .smartpay .row-cols-md-1>*{flex:0 0 100%;max-width:100%}
 .smartpay .row-cols-md-2>*{flex:0 0 50%;max-width:50%}
 .smartpay .row-cols-md-3>*{flex:0 0 33.3333333333%;max-width:33.3333333333%}
@@ -1609,14 +1615,14 @@
 .smartpay .text-md-right{text-align:right !important}
 .smartpay .text-md-center{text-align:center !important}
 .smartpay .list-group-horizontal-md{flex-direction:row}
-.smartpay .list-group-horizontal-md .list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
-.smartpay .list-group-horizontal-md .list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
-.smartpay .list-group-horizontal-md .list-group-item.active{margin-top:0}
-.smartpay .list-group-horizontal-md .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
-.smartpay .list-group-horizontal-md .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .list-group-horizontal-md>.list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
+.smartpay .list-group-horizontal-md>.list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
+.smartpay .list-group-horizontal-md>.list-group-item.active{margin-top:0}
+.smartpay .list-group-horizontal-md>.list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
+.smartpay .list-group-horizontal-md>.list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
 }@media(min-width:992px){.smartpay .container{max-width:960px}
 .smartpay .container,.smartpay .container-sm,.smartpay .container-md,.smartpay .container-lg{max-width:960px}
-.smartpay .col-lg{flex-basis:0;flex-grow:1;max-width:100%}
+.smartpay .col-lg{flex-basis:0;flex-grow:1;min-width:0;max-width:100%}
 .smartpay .row-cols-lg-1>*{flex:0 0 100%;max-width:100%}
 .smartpay .row-cols-lg-2>*{flex:0 0 50%;max-width:50%}
 .smartpay .row-cols-lg-3>*{flex:0 0 33.3333333333%;max-width:33.3333333333%}
@@ -1937,14 +1943,14 @@
 .smartpay .text-lg-right{text-align:right !important}
 .smartpay .text-lg-center{text-align:center !important}
 .smartpay .list-group-horizontal-lg{flex-direction:row}
-.smartpay .list-group-horizontal-lg .list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
-.smartpay .list-group-horizontal-lg .list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
-.smartpay .list-group-horizontal-lg .list-group-item.active{margin-top:0}
-.smartpay .list-group-horizontal-lg .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
-.smartpay .list-group-horizontal-lg .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .list-group-horizontal-lg>.list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
+.smartpay .list-group-horizontal-lg>.list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
+.smartpay .list-group-horizontal-lg>.list-group-item.active{margin-top:0}
+.smartpay .list-group-horizontal-lg>.list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
+.smartpay .list-group-horizontal-lg>.list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
 }@media(min-width:1200px){.smartpay .container{max-width:1140px}
 .smartpay .container,.smartpay .container-sm,.smartpay .container-md,.smartpay .container-lg,.smartpay .container-xl{max-width:1140px}
-.smartpay .col-xl{flex-basis:0;flex-grow:1;max-width:100%}
+.smartpay .col-xl{flex-basis:0;flex-grow:1;min-width:0;max-width:100%}
 .smartpay .row-cols-xl-1>*{flex:0 0 100%;max-width:100%}
 .smartpay .row-cols-xl-2>*{flex:0 0 50%;max-width:50%}
 .smartpay .row-cols-xl-3>*{flex:0 0 33.3333333333%;max-width:33.3333333333%}
@@ -2265,11 +2271,11 @@
 .smartpay .text-xl-right{text-align:right !important}
 .smartpay .text-xl-center{text-align:center !important}
 .smartpay .list-group-horizontal-xl{flex-direction:row}
-.smartpay .list-group-horizontal-xl .list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
-.smartpay .list-group-horizontal-xl .list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
-.smartpay .list-group-horizontal-xl .list-group-item.active{margin-top:0}
-.smartpay .list-group-horizontal-xl .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
-.smartpay .list-group-horizontal-xl .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .list-group-horizontal-xl>.list-group-item:first-child{border-bottom-left-radius:.25rem;border-top-right-radius:0}
+.smartpay .list-group-horizontal-xl>.list-group-item:last-child{border-top-right-radius:.25rem;border-bottom-left-radius:0}
+.smartpay .list-group-horizontal-xl>.list-group-item.active{margin-top:0}
+.smartpay .list-group-horizontal-xl>.list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
+.smartpay .list-group-horizontal-xl>.list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
 }@media(max-width:1199.98px){.smartpay .table-responsive-xl{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .smartpay .table-responsive-xl>.table-bordered{border:0}
 }@media(max-width:991.98px){.smartpay .table-responsive-lg{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -2298,5 +2304,5 @@
 .smartpay .d-print-inline-flex{display:inline-flex !important}
 }@keyframes spinner-border{to{transform:rotate(360deg)}
 }@keyframes spinner-grow{0%{transform:scale(0)}
-50%{opacity:1}
+50%{opacity:1;transform:none}
 }

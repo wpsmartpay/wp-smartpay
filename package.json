@@ -55,7 +55,7 @@
   },
   "vendorCopy": [
     {
-      "from": "node_modules/bootstrap/dist/js/bootstrap.js",
+      "from": "node_modules/bootstrap/dist/js/bootstrap.min.js",
       "to": "assets/js/vendor/bootstrap.js"
     },
     {
