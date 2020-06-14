@@ -40,6 +40,7 @@
     "gulp-uglifycss": "^1.0.6",
     "gulp-wp-pot": "^2.0.7",
     "gulp-zip": "^5.0.1",
+    "lodash": "^4.17.15",
     "vendor-copy": "^2.0.0"
   },
   "scripts": {
