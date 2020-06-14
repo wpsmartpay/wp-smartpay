@@ -206,7 +206,7 @@ final class SmartPay
         $current_options = get_option('smartpay_settings', array());
 
         // Checks if the payment page option exists
-        $payment_page = array_key_exists('payment_page', $current_options) ? get_post($current_options['payment_page']) : false;
+        $payment_page = array_key_exists('payment_page', $current_options) ? $current_options['payment_page'] : false;
         if (empty($payment_page)) {
             // Checkout Page
             $payment_page = wp_insert_post(
@@ -224,7 +224,7 @@ final class SmartPay
 
         $payment_page = isset($payment_page) ? $payment_page : $current_options['payment_page'];
 
-        $payment_success_page = array_key_exists('payment_success_page', $current_options) ? get_post($current_options['payment_success_page']) : false;
+        $payment_success_page = array_key_exists('payment_success_page', $current_options) ? $current_options['payment_success_page'] : false;
         if (empty($payment_success_page)) {
             // Payment Confirmation (Success) Page
             $payment_success_page = wp_insert_post(
@@ -240,7 +240,7 @@ final class SmartPay
             );
         }
 
-        $payment_failure_page = array_key_exists('payment_failure_page_page', $current_options) ? get_post($current_options['payment_failure_page_page']) : false;
+        $payment_failure_page = array_key_exists('payment_failure_page', $current_options) ? $current_options['payment_failure_page'] : false;
         if (empty($payment_failure_page)) {
             // Payment Confirmation (Success) Page
             $payment_failure_page = wp_insert_post(
@@ -255,24 +255,28 @@ final class SmartPay
                 )
             );
         }
-
-        // Payment History (Success) Page
-        $payment_history_page = wp_insert_post(
-            array(
-                'post_title'     => __('Payment History', 'smartpay'),
-                'post_name'      => 'smartpay-payment-history',
-                'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_payment_history]'),
-                'post_status'    => 'publish',
-                'post_author'    => get_current_user_id(),
-                'post_type'      => 'page',
-                'comment_status' => 'closed'
-            )
-        );
+        
+        $payment_history_page = array_key_exists('payment_history_page', $current_options) ? $current_options['payment_history_page'] : false;
+            if (empty($payment_history_page)) {
+            // Payment History (Success) Page
+            $payment_history_page = wp_insert_post(
+                array(
+                    'post_title'     => __('Payment History', 'smartpay'),
+                    'post_name'      => 'smartpay-payment-history',
+                    'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_payment_history]'),
+                    'post_status'    => 'publish',
+                    'post_author'    => get_current_user_id(),
+                    'post_type'      => 'page',
+                    'comment_status' => 'closed'
+                )
+            );
+        }
 
         $options = array(
             'payment_page'          => $payment_page,
             'payment_success_page'  => $payment_success_page,
             'payment_failure_page'  => $payment_failure_page,
+            'payment_history_page'  => $payment_history_page,
             'gateways'              => ['paddle' => 1],
             'default_gateway'       => 'paddle'
         );
