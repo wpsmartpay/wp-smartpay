@@ -273,13 +273,18 @@ final class SmartPay
             );
         }
 
+        // TODO: check if previously set or not
         $options = array(
             'payment_page'          => $payment_page,
             'payment_success_page'  => $payment_success_page,
             'payment_failure_page'  => $payment_failure_page,
             'payment_history_page'  => $payment_history_page,
             'gateways'              => ['paddle' => 1],
-            'default_gateway'       => 'paddle'
+            'default_gateway'       => 'paddle',
+
+            // Email
+            'form_name'             => get_bloginfo('name'),
+            'form_email'            => get_bloginfo('admin_email'),
         );
 
         update_option('smartpay_settings', $options);
