@@ -221,7 +221,42 @@ final class Register_Setting
             'emails' => apply_filters(
                 'smartpay_settings_emails',
                 array(
-                    'main' => array(),
+                    'main' => array(
+                        'email_settings' => array(
+                            'id'   => 'email_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('General', 'smartpay') . '</h4>',
+                            'type' => 'header',
+                        ),
+                        'from_name' => array(
+                            'id'    => 'from_name',
+                            'name'  => __('Form Name', 'smartpay'),
+                            'desc'  => __('The name purchase receipts are said to come from. This should probably be your site or shop name.', 'smartpay'),
+                            'type'  => 'text',
+                        ),
+                        'form_email' => array(
+                            'id'    => 'form_email',
+                            'name'  => __('Form Email', 'smartpay'),
+                            'desc'  => __('Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                        'purchase_email_settings' => array(
+                            'id'   => 'purchase_email_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('Purchase Email', 'smartpay') . '</h4>',
+                            'type' => 'header',
+                        ),
+                        'purchase_email_subject' => array(
+                            'id'    => 'purchase_email_subject',
+                            'name'  => __('Purchase Email Subject', 'smartpay'),
+                            'desc'  => __('Enter the subject line for the purchase receipt email.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                        'purchase_email_heading' => array(
+                            'id'    => 'purchase_email_heading',
+                            'name'  => __('Purchase Email Heading', 'smartpay'),
+                            'desc'  => __('Enter the heading for the purchase receipt email.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                    ),
                 )
             ),
             /** License Settings */
@@ -673,7 +708,9 @@ final class Register_Setting
         $readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
         $size     = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
         $html     = '<input type="text" class="' . $class . ' ' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" ' . $name . ' value="' . esc_attr(stripslashes($value)) . '"' . $readonly . $disabled . ' placeholder="' . esc_attr($args['placeholder']) . '"/>';
-        $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+        $html    .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
+
+        // $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
         echo $html;
     }
 
@@ -700,8 +737,6 @@ final class Register_Setting
 
         return $class;
     }
-
-
 
     public function settings_textarea_callback($args)
     {
