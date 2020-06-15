@@ -28,7 +28,7 @@
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
 use SmartPay\Customers\Customer;
-use SmartPay\Customers\DB_Customer;
+use SmartPay\Emails\Email;
 use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
@@ -111,6 +111,7 @@ final class SmartPay
             self::$instance->customer  = Customer::instance();
             self::$instance->payment   = Payment::instance();
             self::$instance->shortcode = Shortcode::instance();
+            self::$instance->email     = Email::instance();
         }
         return self::$instance;
     }
@@ -255,9 +256,9 @@ final class SmartPay
                 )
             );
         }
-        
+
         $payment_history_page = array_key_exists('payment_history_page', $current_options) ? $current_options['payment_history_page'] : false;
-            if (empty($payment_history_page)) {
+        if (empty($payment_history_page)) {
             // Payment History (Success) Page
             $payment_history_page = wp_insert_post(
                 array(
