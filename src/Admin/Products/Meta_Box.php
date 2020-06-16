@@ -26,7 +26,7 @@ final class Meta_Box
         // Add metabox.
         add_action('add_meta_boxes', [$this, 'add_product_meta_boxes']);
 
-        add_action('save_post_product', [$this, 'save_product_meta']);
+        add_action('save_post_smartpay_product', [$this, 'save_product_meta']);
 
         add_action('wp_ajax_smartpay_delete_variation', [$this, 'ajax_delete_variation']);
 

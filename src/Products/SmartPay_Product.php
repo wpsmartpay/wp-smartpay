@@ -171,7 +171,7 @@ class SmartPay_Product
             return false;
         }
 
-        if ('product' !== $product->post_type) {
+        if ('smartpay_product' !== $product->post_type) {
             return false;
         }
 
@@ -561,7 +561,7 @@ class SmartPay_Product
         $product_id = wp_insert_post(array(
             'post_title'     => $this->title ?? '',
             'post_content'   => $this->description ?? '',
-            'post_type'      => 'product',
+            'post_type'      => 'smartpay_product',
             'post_status'    => $this->status ?? 'publish',
             'comment_status' => 'closed',
             'ping_status'    => 'closed',
@@ -672,10 +672,10 @@ class SmartPay_Product
     {
         $variations = array_column($this->variations, 'id');
 
-        foreach($variations as $variation_id) {
+        foreach ($variations as $variation_id) {
             wp_delete_post($variation_id);
         }
-        
+
         return wp_delete_post($this->_ID);
     }
 

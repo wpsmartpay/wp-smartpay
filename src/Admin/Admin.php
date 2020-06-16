@@ -84,10 +84,10 @@ final class Admin
 
     public function menu_item()
     {
-        remove_submenu_page('edit.php?post_type=product', 'post-new.php?post_type=product');
+        remove_submenu_page('edit.php?post_type=smartpay_product', 'post-new.php?post_type=smartpay_product');
 
         add_submenu_page(
-            'edit.php?post_type=product',
+            'edit.php?post_type=smartpay_product',
             'SmartPay - Payment Forms',
             'All Forms',
             'manage_options',
@@ -95,7 +95,7 @@ final class Admin
         );
 
         add_submenu_page(
-            'edit.php?post_type=product',
+            'edit.php?post_type=smartpay_product',
             __('SmartPay - Payment History', 'smartpay'),
             __('Payment History', 'smartpay'),
             'manage_options',
@@ -103,7 +103,7 @@ final class Admin
         );
 
         add_submenu_page(
-            'edit.php?post_type=product',
+            'edit.php?post_type=smartpay_product',
             __('SmartPay - Customers', 'smartpay'),
             __('Customers', 'smartpay'),
             'manage_options',
@@ -114,7 +114,7 @@ final class Admin
         );
 
         add_submenu_page(
-            'edit.php?post_type=product',
+            'edit.php?post_type=smartpay_product',
             'SmartPay - Settings',
             'Settings',
             'manage_options',
@@ -125,7 +125,7 @@ final class Admin
         );
 
         // add_submenu_page(
-        //     'edit.php?post_type=product',
+        //     'edit.php?post_type=smartpay_product',
         //     'SmartPay - Log',
         //     'Log',
         //     'manage_options',

@@ -103,10 +103,8 @@ final class Product
             'query_var'             => true,
             'menu_icon'             => \smartpay_get_svg_icon_url(),
             'capability_type'       => 'page',
-
-
         );
-        register_post_type('product', $args);
+        register_post_type('smartpay_product', $args);
 
         $args = array(
             'label'                 => __('Product variation', 'smartpay'),
@@ -122,10 +120,8 @@ final class Product
             'publicly_queryable'    => true,
             'query_var'             => true,
             'capability_type'       => 'page',
-
-
         );
-        register_post_type('product_variation', $args);
+        register_post_type('sp_product_variation', $args);
     }
 
     /**
