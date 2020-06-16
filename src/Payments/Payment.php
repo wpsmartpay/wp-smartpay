@@ -31,6 +31,8 @@ final class Payment
         add_action('wp_ajax_smartpay_process_payment', [$this, 'ajax_process_payment']);
 
         add_action('wp_ajax_nopriv_smartpay_process_payment', [$this, 'ajax_process_payment']);
+
+        add_action('smartpay_update_payment_status', [$this, 'complete_payment'], 100, 3);
     }
 
     /**
@@ -182,7 +184,7 @@ final class Payment
 
         switch ($payment_type) {
 
-            case 'product_purchase':
+            case 'product_payment':
 
                 $product_id = $_data['smartpay_product_id'] ?? '';
 
@@ -238,7 +240,7 @@ final class Payment
 
     private function _get_payment_amount($_data)
     {
-        if ('product_purchase' == $_data['smartpay_payment_type'] ?? '') {
+        if ('product_payment' == $_data['smartpay_payment_type'] ?? '') {
 
             $product = smartpay_get_product($_data['smartpay_product_id'] ?? '');
 
@@ -374,5 +376,33 @@ final class Payment
         $customer = new SmartPay_Customer($payment->email);
 
         $customer->attach_payment($payment->ID);
+    }
+
+    /**
+     * Complete a payment
+     *
+     * Performs all necessary actions to complete a payment.
+     *
+     * @since x.x.x
+     * @return void
+     */
+    public function complete_payment($payment, $new_status, $old_status)
+    {
+        // Make sure that payments are only completed once
+        if ($old_status == 'publish' || $old_status == 'complete') return;
+
+        // Make sure the payment completion is only processed when new status is complete
+        if ($new_status != 'publish' && $new_status != 'complete') return;
+
+        // Ensure this action only runs once ever
+        if (!empty($completed_date)) return;
+
+        $payment->completed_date = current_time('mysql');
+        $payment->save();
+
+        /** Runs when a payment is marked as "complete" **/
+        do_action('smartpay_complete_payment', $payment);
+
+        // TODO: Increase sales, amount and others
     }
 }

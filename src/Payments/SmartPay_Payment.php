@@ -474,13 +474,12 @@ class SmartPay_Payment
 
         $old_status = !empty($this->old_status) ? $this->old_status : false;
 
-        if ($old_status === $status) {
-            return false; // Don't permit status changes that aren't changes
-        }
+        // Don't permit status changes that aren't changes
+        if ($old_status === $status) return;
 
         $updated = false;
 
-        do_action('smartpay_before_payment_status_change', $this->ID, $status, $old_status);
+        do_action('smartpay_before_payment_status_change', $this, $status, $old_status);
 
         $update_fields = array('ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time('mysql'));
 
@@ -505,7 +504,7 @@ class SmartPay_Payment
         //         break;
         // }
 
-        do_action('smartpay_update_payment_status', $this->ID, $status, $old_status);
+        do_action('smartpay_update_payment_status', $this, $status, $old_status);
 
         return $updated;
     }
