@@ -11,22 +11,46 @@ if (!defined('ABSPATH')) {
 
 final class Email
 {
-    /** Holds the from name **/
+    /**
+     * Holds the from name
+     * 
+     * @since x.x.x
+     **/
     private $from_name = '';
 
-    /** Holds the from email **/
+    /**
+     * Holds the from email
+     * 
+     * @since x.x.x
+     **/
     private $from_email = '';
 
-    /** Holds the content type **/
+    /**
+     * Holds the content type
+     * 
+     * @since x.x.x
+     **/
     private $content_type = 'text/html';
 
-    /** Holds the content type is html **/
+    /**
+     * Holds the content type is html
+     * 
+     * @since x.x.x
+     **/
     private $html = true;
 
-    /** Holds the headers **/
+    /**
+     * Holds the headers
+     * 
+     * @since x.x.x
+     **/
     private $headers = '';
 
-    /** The single instance of this class **/
+    /**
+     * The single instance of this class
+     * 
+     * @since x.x.x
+     **/
     private static $instance = null;
 
     /**
@@ -38,6 +62,8 @@ final class Email
     private function __construct()
     {
         add_action('phpmailer_init', [$this, 'mailtrap']);
+
+        add_action('smartpay_complete_payment', [$this, 'send_payment_receipt'], 999, 1);
     }
 
     /**
@@ -69,7 +95,6 @@ final class Email
         $phpmailer->Username = '0f2bafb11669af';
         $phpmailer->Password = '6379f0acbb154e';
     }
-
 
     /**
      * Get the email from name
@@ -110,7 +135,7 @@ final class Email
      */
     public function get_content_type()
     {
-        if (!$this->content_type && $this->html) {
+        if ($this->html) {
             $this->content_type = 'text/html';
         } else {
             $this->content_type = 'text/plain';
@@ -142,7 +167,7 @@ final class Email
      *
      * @return void
      */
-    public function send_purchase_receipt($payment_id)
+    public function send_payment_receipt($payment_id)
     {
         if (!$payment_id) return;
 
@@ -152,24 +177,34 @@ final class Email
         $to_email = 'alaminfirdows@gmail.com';
 
         // Email Subject
-        $subject      = smartpay_get_option('purchase_email_subject', __('Purchase Receipt', 'smartpay'));
-        $subject      = wp_specialchars_decode($subject);
+        $subject      = smartpay_get_option('payment_email_subject', __('Payment Receipt', 'smartpay'));
+        $subject      = \wp_specialchars_decode($subject);
 
         // Heading
-        $heading      = smartpay_get_option('purchase_email_heading', __('Purchase Receipt', 'smartpay'));
+        $heading      = smartpay_get_option('payment_email_heading', __('Payment Receipt', 'smartpay'));
 
         // $attachments  = apply_filters('smartpay_receipt_attachments', array(), $payment_id, $payment_data);
 
         // Email body
-        $body      = 'Email body here!';
+        $body = '';
+
+        if ('product_purchase' == $payment->payment_type) {
+            $body = smartpay_view_render('mail/payment_receipt/product_purchase', ['payment' => $payment]);
+        } else if ('form_payment' == $payment->payment_type) {
+            $body = smartpay_view_render('mail/payment_receipt/form_payment', ['payment' => $payment]);
+        }
 
         $email = new SmartPay_Email;
         $email->to_email    = $to_email;
         $email->subject     = $subject;
-        $email->body        = $body;
+        $email->body        = wpautop($body);
         $email->headers     = $this->get_headers();
         $email->attachments = '';
 
         var_dump($email->send());
+
+        // echo '<pre>';
+        // echo($email_body);
+        // echo '</pre>';
     }
 }
