@@ -395,13 +395,13 @@ final class Payment
         if ($new_status != 'publish' && $new_status != 'complete') return;
 
         // Ensure this action only runs once ever
-        if (!empty($completed_date)) return;
+        if ($payment->completed_date) return;
 
         $payment->completed_date = current_time('mysql');
         $payment->save();
 
         /** Runs when a payment is marked as "complete" **/
-        do_action('smartpay_complete_payment', $payment);
+        do_action('smartpay_complete_payment', $payment->ID);
 
         // TODO: Increase sales, amount and others
     }

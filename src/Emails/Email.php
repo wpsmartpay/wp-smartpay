@@ -201,10 +201,6 @@ final class Email
         $email->headers     = $this->get_headers();
         $email->attachments = '';
 
-        var_dump($email->send());
-
-        // echo '<pre>';
-        // echo($email_body);
-        // echo '</pre>';
+        $email->send();
     }
 }

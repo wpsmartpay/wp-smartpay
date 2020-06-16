@@ -226,7 +226,7 @@ class SmartPay_Payment
     {
         $ignore = array('_ID');
 
-        if ($key === 'status') {
+        if ($key == 'status') {
             $this->old_status = $this->status;
         }
 
@@ -468,6 +468,8 @@ class SmartPay_Payment
      */
     public function update_status($status = false)
     {
+        if (!$status) return;
+
         if ($status == 'completed' || $status == 'complete') {
             $status = 'publish';
         }
@@ -485,8 +487,8 @@ class SmartPay_Payment
 
         $updated = wp_update_post(apply_filters('smartpay_update_payment_status_fields', $update_fields));
 
-        $this->status = $status;
-        $this->post_status = $status;
+        $this->status       = $status;
+        $this->post_status  = $status;
 
         $all_payment_statuses  = smartpay_get_payment_statuses();
         $this->status_nicename = array_key_exists($status, $all_payment_statuses) ? $all_payment_statuses[$status] : ucfirst($status);
