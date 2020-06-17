@@ -28,6 +28,9 @@ final class Shortcode
 
         add_shortcode('smartpay_payment_receipt', [$this, 'payment_receipt_shortcode']);
 
+        add_shortcode('smartpay_account', [$this, 'account_shortcode']);
+
+        // TODO: Maybe removed
         add_shortcode('smartpay_payment_history', [$this, 'payment_history_shortcode']);
     }
 
@@ -140,6 +143,20 @@ final class Shortcode
         ob_start();
 
         echo smartpay_view_render('shortcodes/payment_history', ['payments' => $customer->all_payments()]);
+
+        return ob_get_clean();
+    }
+
+    public function account_shortcode($atts)
+    {
+        // If not logged in or id not found, then return
+        if (!is_user_logged_in() || get_current_user_id() <= 0) return;
+
+        $customer = new SmartPay_Customer(get_current_user_id(), true);
+
+        ob_start();
+
+        echo smartpay_view_render('shortcodes/account', ['customer' => $customer]);
 
         return ob_get_clean();
     }
