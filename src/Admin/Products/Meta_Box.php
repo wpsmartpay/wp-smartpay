@@ -63,7 +63,7 @@ final class Meta_Box
             'product_metabox',
             __('Product Options', 'smartpay'),
             [$this, 'render_metabox'],
-            ['product'],
+            ['smartpay_product'],
             'normal',
             'high'
         );
