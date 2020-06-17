@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Utilities;
+namespace SmartPay\Admin\Utilities;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -22,6 +22,7 @@ final class Uninstall
      */
     private function __construct()
     {
+        register_deactivation_hook(SMARTPAY_FILE, [$this, 'deactivate']);
     }
 
     /**
@@ -41,5 +42,17 @@ final class Uninstall
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Plugin deactivate.
+     *
+     * @since x.x.x
+     * @access public
+     * @return void
+     */
+    public function deactivate()
+    {
+        # code...
     }
 }
