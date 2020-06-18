@@ -19,6 +19,13 @@ final class Install
     private static $instance = null;
 
     /**
+     * The installed plugin version
+     * @since x.x.x
+     * @access private
+     */
+    private $installed_version = '';
+
+    /**
      * Construct Install class.
      *
      * @since x.x.x
@@ -26,6 +33,8 @@ final class Install
      */
     private function __construct()
     {
+        $this->installed_version = get_option('smartpay_version');
+
         register_activation_hook(SMARTPAY_FILE, [$this, 'activate']);
     }
 
@@ -62,6 +71,8 @@ final class Install
         // If not installed then run installation process
         if (!$installed) {
             $this->_install();
+        } else if (-1 === version_compare($this->installed_version, SMARTPAY_VERSION)) {
+            $this->_upgrade();
         }
     }
 
@@ -91,6 +102,22 @@ final class Install
 
         // Set default settings
         $this->_set_default_settings();
+    }
+
+    /**
+     * Upgrade SmartPay.
+     *
+     * @since x.x.x
+     * @access private
+     * @return void
+     */
+    private function _upgrade()
+    {
+        if (-1 === version_compare($this->installed_version, 'x.x.x')) {
+            //
+        } else if (-1 === version_compare($this->installed_version, 'x.x.x')) {
+            //
+        }
     }
 
     /**
