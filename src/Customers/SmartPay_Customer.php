@@ -34,7 +34,7 @@ class SmartPay_Customer
      * @since  0.0.1
      * @var object
      */
-    // protected $wp_user = '';
+    protected $wp_user = '';
 
     /**
      * Customer first_name
@@ -178,7 +178,7 @@ class SmartPay_Customer
         $this->ID           = absint($customer->ID);
 
         $this->user_id      = absint($customer->user_id);
-        // $this->wp_user      = get_userdata($this->user_id);
+        $this->wp_user      = get_userdata($this->user_id)->data ?? null;
         $this->first_name   = $customer->first_name;
         $this->last_name    = $customer->last_name;
         $this->email        = $customer->email;
