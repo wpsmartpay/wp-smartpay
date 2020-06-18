@@ -156,7 +156,7 @@ final class Shortcode
 
         ob_start();
 
-        echo smartpay_view_render('shortcodes/account', ['customer' => $customer]);
+        echo smartpay_view_render('shortcodes/customer_dashboard', ['customer' => $customer]);
 
         return ob_get_clean();
     }

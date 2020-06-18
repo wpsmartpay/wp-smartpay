@@ -199,14 +199,14 @@ final class Install
             );
         }
 
-        // Setup customer account page
-        $customer_account_page = array_key_exists('customer_account_page', $smartpay_settings) ? $smartpay_settings['customer_account_page'] : false;
+        // Setup customer dashboard page
+        $customer_dashboard_page = array_key_exists('customer_dashboard_page', $smartpay_settings) ? $smartpay_settings['customer_dashboard_page'] : false;
 
-        if (empty($customer_account_page)) {
-            $customer_account_page = \wp_insert_post(
+        if (empty($customer_dashboard_page)) {
+            $customer_dashboard_page = \wp_insert_post(
                 array(
-                    'post_title'     => __('Account', 'smartpay'),
-                    'post_name'      => 'smartpay-customer-account',
+                    'post_title'     => __('Dashboard', 'smartpay'),
+                    'post_name'      => 'smartpay-customer-dashboard',
                     'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_dashboard]'),
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
@@ -221,7 +221,7 @@ final class Install
             'payment_success_page'  => $payment_success_page,
             'payment_failure_page'  => $payment_failure_page,
             'payment_history_page'  => $payment_history_page,
-            'customer_account_page' => $customer_account_page,
+            'customer_dashboard_page' => $customer_dashboard_page,
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));

@@ -1,27 +1,23 @@
 <style>
-.profile img {
-    height: 90px;
-    width: 90px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-}
+    .profile img {
+        height: 90px;
+        width: 90px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
 
-.profile h3 {
-    font-size: 20px;
-}
+    .profile h3 {
+        font-size: 20px;
+    }
 
-.product--header {
-    cursor: pointer;
-}
+    .product--header {
+        cursor: pointer;
+    }
 
-table td,
-table th {
-    border: none;
-}
+    table td,
+    table th {
+        border: none;
+    }
 </style>
-<?php
-// echo '<pre>';
-// var_dump($customer);
-?>
 
 <div class="smartpay">
     <div class="card border-light mb-3">
@@ -51,42 +47,42 @@ table th {
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="payments" role="tabpanel">
                                     <?php if (!is_array($customer->all_payments()) || !count($customer->all_payments())) : ?>
-                                    <div class="card">
-                                        <div class="card-body py-5">
-                                            <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
+                                        <div class="card">
+                                            <div class="card-body py-5">
+                                                <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php else : ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Item', 'smartpay'); ?>(s)</th>
-                                                    <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Item', 'smartpay'); ?>(s)</th>
+                                                        <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                                <?php foreach ($customer->all_payments() as $index => $payment) : ?>
-                                                <tr>
-                                                    <th scope="row"><?php echo '#' . $payment->ID; ?></th>
-                                                    <td><?php echo mysql2date('F j, Y', $payment->date); ?></td>
-                                                    <td><?php echo 'Items'; ?></td>
-                                                    <td class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                        <?php echo $payment->status_nicename; ?></td>
-                                                    <td class="text-muted">
-                                                        <strong class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                            <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
-                                                        </strong>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                    <?php foreach ($customer->all_payments() as $index => $payment) : ?>
+                                                        <tr>
+                                                            <th scope="row"><?php echo '#' . $payment->ID; ?></th>
+                                                            <td><?php echo mysql2date('F j, Y', $payment->date); ?></td>
+                                                            <td><?php echo 'Items'; ?></td>
+                                                            <td class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                                <?php echo $payment->status_nicename; ?></td>
+                                                            <td class="text-muted">
+                                                                <strong class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                                    <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
+                                                                </strong>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     <?php endif ?>
                                 </div>
 
@@ -99,40 +95,40 @@ table th {
                                     ?>
                                     <?php foreach (range(1, 2) as $i) : ?>
 
-                                    <div class="border mb-3 product">
-                                        <div class="p-3  product--header">
-                                            <div class="row" data-toggle="collapse" data-target="#collapse<?php echo $i; ?>">
-                                                <div class="col-sm-2 product--image">
-                                                    <img src="<?php echo $product->image; ?>" class="border" alt="">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <h5 class="mt-0"><?php echo $product->title; ?></h5>
-                                                    <p><strong>Variation:</strong> Pro</p>
+                                        <div class="border mb-3 product">
+                                            <div class="p-3  product--header">
+                                                <div class="row" data-toggle="collapse" data-target="#collapse<?php echo $i; ?>">
+                                                    <div class="col-sm-2 product--image">
+                                                        <img src="<?php echo $product->image; ?>" class="border" alt="">
+                                                    </div>
+                                                    <div class="col-sm-7">
+                                                        <h5 class="mt-0"><?php echo $product->title; ?></h5>
+                                                        <p><strong>Variation:</strong> Pro</p>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="p-3 bg-light collapse show" id="collapse<?php echo $i; ?>">
+                                                <p>Files</p>
+                                                <ul class="list-group">
+                                                    <?php foreach (range(1, 5) as $i) : ?>
+                                                        <li class="list-group-item p-2">
+                                                            <div class="d-flex align-items-center flex-wrap">
+                                                                <div>
+                                                                    <img src="<?php echo $product->image; ?>" style="height: 40px;" alt="">
+                                                                </div>
+                                                                <div class="ml-3">
+                                                                    <p class="m-0"><?php echo $product->title; ?></p>
+                                                                    <p class="text-muted m-0"><small>Size: 10kb</small></p>
+                                                                </div>
+                                                                <div class="ml-auto">
+                                                                    <button class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></button>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            </div>
                                         </div>
-                                        <div class="p-3 bg-light collapse show" id="collapse<?php echo $i; ?>">
-                                            <p>Files</p>
-                                            <ul class="list-group">
-                                                <?php foreach (range(1, 5) as $i) : ?>
-                                                <li class="list-group-item p-2">
-                                                    <div class="d-flex align-items-center flex-wrap">
-                                                        <div>
-                                                            <img src="<?php echo $product->image; ?>" style="height: 40px;" alt="">
-                                                        </div>
-                                                        <div class="ml-3">
-                                                            <p class="m-0"><?php echo $product->title; ?></p>
-                                                            <p class="text-muted m-0"><small>Size: 10kb</small></p>
-                                                        </div>
-                                                        <div class="ml-auto">
-                                                            <button class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </div>
-                                    </div>
                                     <?php endforeach; ?>
                                 </div>
 
