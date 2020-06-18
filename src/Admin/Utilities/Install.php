@@ -180,7 +180,7 @@ final class Install
                 array(
                     'post_title'     => __('Account', 'smartpay'),
                     'post_name'      => 'smartpay-customer-account',
-                    'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_account]'),
+                    'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_dashboard]'),
                     'post_status'    => 'publish',
                     'post_author'    => get_current_user_id(),
                     'post_type'      => 'page',
