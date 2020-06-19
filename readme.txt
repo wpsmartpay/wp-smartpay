@@ -4,7 +4,7 @@ Tags: download manager, digital product, donation, ecommerce, paddle, stripe, pa
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0.0
-Stable Tag: 0.0.1
+Stable Tag: 0.0.2
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
