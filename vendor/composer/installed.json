@@ -1,0 +1,58 @@
+[
+    {
+        "name": "themexpert/paddle-php",
+        "version": "dev-dev",
+        "version_normalized": "dev-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/themexpert/paddle-php.git",
+            "reference": "025b2360e723db6a08290d0d5a322c7003d89601"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/themexpert/paddle-php/zipball/025b2360e723db6a08290d0d5a322c7003d89601",
+            "reference": "025b2360e723db6a08290d0d5a322c7003d89601",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=7.0"
+        },
+        "time": "2020-05-07T09:48:15+00:00",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "ThemeXpert\\Paddle\\": [
+                    "src/",
+                    "src/Paddle"
+                ],
+                "ThemeXpert\\Paddle\\Util\\": "src/Util",
+                "ThemeXpert\\Paddle\\Product\\": "src/Paddle/Product",
+                "ThemeXpert\\Paddle\\Checkout\\": "src/Paddle/Checkout",
+                "ThemeXpert\\Paddle\\Subscription\\": "src/Paddle/Subscription",
+                "ThemeXpert\\Paddle\\Alert\\": "src/Paddle/Alert"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "ThemeXpert",
+                "email": "help@themexpert.com",
+                "homepage": "http://themexpert.com"
+            },
+            {
+                "name": "Al-Amin Firdows",
+                "email": "alaminfirdows@gmail.com"
+            }
+        ],
+        "description": "PHP Library for Paddle Payment Gateway.",
+        "homepage": "https://github.com/themexpert/paddle-php",
+        "keywords": [
+            "package",
+            "paddle"
+        ]
+    }
+]
