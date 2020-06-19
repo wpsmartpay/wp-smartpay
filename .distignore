@@ -1,10 +1,13 @@
 # Directories
 /.wordpress-org
+/.git
 /.github
+/node_modules
 /temp
 
 # Files
 .distignore
+.gitignore
 .editorconfig
 .eslintignore
 .eslintrc.js
