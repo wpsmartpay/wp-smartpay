@@ -76,7 +76,7 @@ class SmartPay_Email
 
     /**
      * Send the email
-     * 
+     *
      * @since x.x.x
      */
     public function send()
@@ -95,7 +95,7 @@ class SmartPay_Email
                     __("Email from SmartPay failed to send.\nSend time: %s\nTo: %s\nSubject: %s\n\n", 'smartpay'),
                     date_i18n('F j Y H:i:s', current_time('timestamp')),
                     $this->to_email,
-                    $this->subject,
+                    $this->subject
                 );
                 error_log($log_message);
                 return false;
