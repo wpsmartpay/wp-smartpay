@@ -12,10 +12,10 @@
 .eslintignore
 .eslintrc.js
 .prettierrc.js
-.composer.json
-.composer.lock
-.gulpfile.babel.js
-.package.json
-.package-lock.json
-.wpgulp.config.js
-.yarn.lock
+composer.json
+composer.lock
+gulpfile.babel.js
+package.json
+package-lock.json
+wpgulp.config.js
+yarn.lock
