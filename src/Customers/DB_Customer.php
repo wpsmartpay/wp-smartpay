@@ -333,7 +333,7 @@ class DB_Customer extends DB_Model
     {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
-        $sql = "CREATE TABLE " . $this->table_name . " (
+        $sql = "CREATE TABLE IF NOT EXISTS " . $this->table_name . " (
 		ID bigint(20) NOT NULL AUTO_INCREMENT,
 		user_id bigint(20) NOT NULL,
 		first_name mediumtext NOT NULL,

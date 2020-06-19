@@ -20,12 +20,6 @@ final class Product
     private function __construct()
     {
         add_action('init', [$this, 'register_products_post_type']);
-
-        add_filter('enter_title_here', [$this, 'change_default_title']);
-
-        add_filter('manage_product_posts_columns', [$this, 'product_columns']);
-
-        add_filter('manage_product_posts_custom_column', [$this, 'product_column_data'], 10, 2);
     }
 
     /**
@@ -103,10 +97,8 @@ final class Product
             'query_var'             => true,
             'menu_icon'             => \smartpay_get_svg_icon_url(),
             'capability_type'       => 'page',
-
-
         );
-        register_post_type('product', $args);
+        register_post_type('smartpay_product', $args);
 
         $args = array(
             'label'                 => __('Product variation', 'smartpay'),
@@ -122,33 +114,8 @@ final class Product
             'publicly_queryable'    => true,
             'query_var'             => true,
             'capability_type'       => 'page',
-
-
         );
-        register_post_type('product_variation', $args);
-    }
-
-    /**
-     * Change default "Enter title here" input
-     *
-     * @since 0.0.1
-     * @param string $title Default title placeholder text
-     * @return string $title New placeholder text
-     */
-    public function change_default_title($title)
-    {
-        if (!is_admin()) {
-            $title = __('Enter product name here', 'smartpay');
-            return $title;
-        }
-
-        $screen = get_current_screen();
-
-        if ('smartpay_product' == $screen->post_type) {
-            $title = __('Enter product name here', 'smartpay');
-        }
-
-        return $title;
+        register_post_type('sp_product_variation', $args);
     }
 
     public function get_product($product_id)
@@ -159,23 +126,5 @@ final class Product
     public function get_product_variation($variation_id)
     {
         return new Product_Variation($variation_id);
-    }
-
-    public function product_columns($columns)
-    {
-        return [
-            'cb' => $columns['cb'],
-            'title' => __('Title'),
-            'shortcode' => __('Shortcode'),
-            'date' => __('Date'),
-        ];
-    }
-
-    public function product_column_data($column, $post_id)
-    {
-        // shortcode column
-        if ('shortcode' === $column) {
-            echo '<input type="text" readonly="readonly" title="Click to select. Then press Ctrl+C (⌘+C on Mac) to copy." onclick="this.select();" value="[smartpay_product id=&quot;' . $post_id . '&quot;]">';
-        }
     }
 }

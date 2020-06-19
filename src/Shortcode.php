@@ -22,13 +22,17 @@ final class Shortcode
      */
     private function __construct()
     {
+        // Form shortcode
         add_shortcode('smartpay_form', [$this, 'form_shortcode']);
 
+        // Product shortcode
         add_shortcode('smartpay_product', [$this, 'product_shortcode']);
 
+        // Payment receipt shortcode
         add_shortcode('smartpay_payment_receipt', [$this, 'payment_receipt_shortcode']);
 
-        add_shortcode('smartpay_payment_history', [$this, 'payment_history_shortcode']);
+        // Customer dashboard shortcode
+        add_shortcode('smartpay_dashboard', [$this, 'dashboard_shortcode']);
     }
 
     /**
@@ -49,6 +53,12 @@ final class Shortcode
         return self::$instance;
     }
 
+    /**
+     * Form shortcode.
+     *
+     * @since 0.0.1
+     * @return void
+     */
     public function form_shortcode($atts)
     {
         extract(shortcode_atts([
@@ -79,6 +89,12 @@ final class Shortcode
         }
     }
 
+    /**
+     * Product shortcode.
+     *
+     * @since 0.0.1
+     * @return void
+     */
     public function product_shortcode($atts)
     {
         extract(shortcode_atts([
@@ -109,6 +125,12 @@ final class Shortcode
         }
     }
 
+    /**
+     * Payment receipt shortcode.
+     *
+     * @since 0.0.1
+     * @return void
+     */
     public function payment_receipt_shortcode($atts)
     {
         $payment_id = smartpay_get_session_payment_id();
@@ -130,7 +152,13 @@ final class Shortcode
         }
     }
 
-    public function payment_history_shortcode($atts)
+    /**
+     * Customer dashboard shortcode.
+     *
+     * @since x.x.x
+     * @return void
+     */
+    public function dashboard_shortcode($atts)
     {
         // If not logged in or id not found, then return
         if (!is_user_logged_in() || get_current_user_id() <= 0) return;
@@ -139,7 +167,7 @@ final class Shortcode
 
         ob_start();
 
-        echo smartpay_view_render('shortcodes/payment_history', ['payments' => $customer->all_payments()]);
+        echo smartpay_view_render('shortcodes/customer_dashboard', ['customer' => $customer]);
 
         return ob_get_clean();
     }

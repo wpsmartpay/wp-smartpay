@@ -124,7 +124,6 @@ final class Payment
             unset($actions['inline hide-if-no-js']);
 
             $actions = array_merge($actions, array(
-                // TODO:: Make dynamic
                 'manage' => sprintf(
                     '<a href="%1$s">%2$s</a>',
                     esc_url(admin_url('edit.php?post_type=product&page=payment-details&id=' . $post->ID)),

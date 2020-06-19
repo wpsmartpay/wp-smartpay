@@ -145,7 +145,7 @@ class Product_Variation
             return false;
         }
 
-        if ('product_variation' !== $variation->post_type) {
+        if ('sp_product_variation' !== $variation->post_type) {
             return false;
         }
 
@@ -430,7 +430,7 @@ class Product_Variation
             'post_title'     => $this->name ?? '',
             'post_content'   => $this->description ?? '',
             'post_parent'   => $this->parent ?? 0,
-            'post_type'      => 'product_variation',
+            'post_type'      => 'sp_product_variation',
             'post_status'    => $this->status ?? 'publish',
             'comment_status' => 'closed',
             'ping_status'    => 'closed',

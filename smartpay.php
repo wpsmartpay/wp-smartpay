@@ -28,7 +28,7 @@
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
 use SmartPay\Customers\Customer;
-use SmartPay\Customers\DB_Customer;
+use SmartPay\Emails\Email;
 use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
@@ -76,11 +76,8 @@ final class SmartPay
     private function __construct()
     {
         global $smartpay_options;
-        $smartpay_options = smartpay_get_settings();
 
-        if (is_admin()) {
-            Admin::instance();
-        }
+        $smartpay_options = smartpay_get_settings();
 
         // Define constants.
         $this->define_constants();
@@ -102,8 +99,8 @@ final class SmartPay
     public static function instance()
     {
         if (!isset(self::$instance) && !(self::$instance instanceof SmartPay)) {
-            self::$instance = new self();
 
+            self::$instance = new self();
             self::$instance->session   = Session::instance();
             self::$instance->product   = Product::instance();
             self::$instance->form      = Form::instance();
@@ -111,7 +108,13 @@ final class SmartPay
             self::$instance->customer  = Customer::instance();
             self::$instance->payment   = Payment::instance();
             self::$instance->shortcode = Shortcode::instance();
+            self::$instance->email     = Email::instance();
+
+            if (is_admin()) {
+                self::$instance->admin = Admin::instance();
+            }
         }
+
         return self::$instance;
     }
 
@@ -136,10 +139,8 @@ final class SmartPay
      * Define constant if not already defined
      *
      * @since 0.0.1
-     *
      * @param string $name
      * @param string|bool $value
-     *
      * @return void
      */
     private function define($name, $value)
@@ -158,128 +159,18 @@ final class SmartPay
      */
     private function init_actions()
     {
-        register_activation_hook(__FILE__, [$this, 'activate']);
-
-        // TODO: Implement deactivation hook
-        // register_deactivation_hook(__FILE__, [$this, 'deactivate']);
-
         add_action('plugins_loaded', array($this, 'on_plugins_loaded'), -1);
 
         add_action('wp_enqueue_scripts', [$this, 'enqueue_smartpay_scripts']);
     }
 
     /**
-     * Plugin activation hook.
+     * Action for another plugin.
      *
      * @since 0.0.1
      * @access public
      * @return void
      */
-    public function activate()
-    {
-        $installed = get_option('wp_smartpay_installed');
-        if (!$installed) {
-            update_option('wp_smartpay_installed', time());
-        }
-
-        update_option('smartpay_version', SMARTPAY_VERSION);
-
-        $this->create_pages();
-
-        // Create DB tables
-        Customer::create_db_table();
-    }
-
-    /**
-     * Create necessary pages.
-     *
-     * @since 0.0.1
-     * @access public
-     * @return void
-     */
-    public function create_pages()
-    {
-        if (false == get_option('smartpay_settings')) {
-            add_option('smartpay_settings');
-        }
-
-        $current_options = get_option('smartpay_settings', array());
-
-        // Checks if the payment page option exists
-        $payment_page = array_key_exists('payment_page', $current_options) ? get_post($current_options['payment_page']) : false;
-        if (empty($payment_page)) {
-            // Checkout Page
-            $payment_page = wp_insert_post(
-                array(
-                    'post_title'     => __('SmartPay Payment', 'smartpay'),
-                    'post_name'      => 'smartpay-payment',
-                    'post_content'   => '',
-                    'post_status'    => 'publish',
-                    'post_author'    => 1,
-                    'post_type'      => 'page',
-                    'comment_status' => 'closed'
-                )
-            );
-        }
-
-        $payment_page = isset($payment_page) ? $payment_page : $current_options['payment_page'];
-
-        $payment_success_page = array_key_exists('payment_success_page', $current_options) ? get_post($current_options['payment_success_page']) : false;
-        if (empty($payment_success_page)) {
-            // Payment Confirmation (Success) Page
-            $payment_success_page = wp_insert_post(
-                array(
-                    'post_title'     => __('Payment Confirmation', 'smartpay'),
-                    'post_name' => 'smartpay-payment-confirmation',
-                    'post_content'   => "<!-- wp:paragraph --><p>Thank you for your payment.</p><!-- /wp:paragraph --> <!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
-                    'post_status'    => 'publish',
-                    'post_author'    => get_current_user_id(),
-                    'post_type'      => 'page',
-                    'comment_status' => 'closed'
-                )
-            );
-        }
-
-        $payment_failure_page = array_key_exists('payment_failure_page_page', $current_options) ? get_post($current_options['payment_failure_page_page']) : false;
-        if (empty($payment_failure_page)) {
-            // Payment Confirmation (Success) Page
-            $payment_failure_page = wp_insert_post(
-                array(
-                    'post_title'     => __('Payment Failed', 'smartpay'),
-                    'post_name'      => 'smartpay-payment-failed',
-                    'post_content'   => __('<!-- wp:paragraph --><p>We\'re sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->', 'smartpay') . sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->\n", '[smartpay_payment_error show_to="admin"]' . "\n"),
-                    'post_status'    => 'publish',
-                    'post_author'    => get_current_user_id(),
-                    'post_type'      => 'page',
-                    'comment_status' => 'closed'
-                )
-            );
-        }
-
-        // Payment History (Success) Page
-        $payment_history_page = wp_insert_post(
-            array(
-                'post_title'     => __('Payment History', 'smartpay'),
-                'post_name'      => 'smartpay-payment-history',
-                'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_payment_history]'),
-                'post_status'    => 'publish',
-                'post_author'    => get_current_user_id(),
-                'post_type'      => 'page',
-                'comment_status' => 'closed'
-            )
-        );
-
-        $options = array(
-            'payment_page'          => $payment_page,
-            'payment_success_page'  => $payment_success_page,
-            'payment_failure_page'  => $payment_failure_page,
-            'gateways'              => ['paddle' => 1],
-            'default_gateway'       => 'paddle'
-        );
-
-        update_option('smartpay_settings', $options);
-    }
-
     public function on_plugins_loaded()
     {
         do_action('smartpay_loaded');

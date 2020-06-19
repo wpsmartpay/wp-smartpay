@@ -226,7 +226,7 @@ class SmartPay_Payment
     {
         $ignore = array('_ID');
 
-        if ($key === 'status') {
+        if ($key == 'status') {
             $this->old_status = $this->status;
         }
 
@@ -468,26 +468,27 @@ class SmartPay_Payment
      */
     public function update_status($status = false)
     {
+        if (!$status) return;
+
         if ($status == 'completed' || $status == 'complete') {
             $status = 'publish';
         }
 
         $old_status = !empty($this->old_status) ? $this->old_status : false;
 
-        if ($old_status === $status) {
-            return false; // Don't permit status changes that aren't changes
-        }
+        // Don't permit status changes that aren't changes
+        if ($old_status === $status) return;
 
         $updated = false;
 
-        do_action('smartpay_before_payment_status_change', $this->ID, $status, $old_status);
+        do_action('smartpay_before_payment_status_change', $this, $status, $old_status);
 
         $update_fields = array('ID' => $this->ID, 'post_status' => $status, 'edit_date' => current_time('mysql'));
 
         $updated = wp_update_post(apply_filters('smartpay_update_payment_status_fields', $update_fields));
 
-        $this->status = $status;
-        $this->post_status = $status;
+        $this->status       = $status;
+        $this->post_status  = $status;
 
         $all_payment_statuses  = smartpay_get_payment_statuses();
         $this->status_nicename = array_key_exists($status, $all_payment_statuses) ? $all_payment_statuses[$status] : ucfirst($status);
@@ -505,7 +506,7 @@ class SmartPay_Payment
         //         break;
         // }
 
-        do_action('smartpay_update_payment_status', $this->ID, $status, $old_status);
+        do_action('smartpay_update_payment_status', $this, $status, $old_status);
 
         return $updated;
     }
