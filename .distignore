@@ -5,7 +5,6 @@
 
 # Files
 .distignore
-.gitignore
 .editorconfig
 .eslintignore
 .eslintrc.js
