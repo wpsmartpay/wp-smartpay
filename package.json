@@ -52,7 +52,8 @@
     "images": "gulp images",
     "clearCache": "gulp clearCache",
     "translate": "gulp translate",
-    "vendorJSCopy": "vendor-copy"
+    "vendorJSCopy": "vendor-copy",
+    "release": "gulp release"
   },
   "vendorCopy": [
     {
