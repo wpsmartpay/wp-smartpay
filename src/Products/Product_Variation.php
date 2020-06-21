@@ -526,7 +526,7 @@ class Product_Variation
     /**
      * Delete the variation.
      *
-     * @since  x.x.x
+     * @since  0.0.2
      * @return bool  True of the deleted, false if it failed
      */
     public function delete()

@@ -383,7 +383,7 @@ final class Payment
      *
      * Performs all necessary actions to complete a payment.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return void
      */
     public function complete_payment($payment, $new_status, $old_status)

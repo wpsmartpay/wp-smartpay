@@ -47,7 +47,7 @@ final class Uninstall
     /**
      * Plugin deactivate.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access public
      * @return void
      */

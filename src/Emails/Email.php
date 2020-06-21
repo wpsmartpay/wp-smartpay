@@ -14,49 +14,49 @@ final class Email
     /**
      * Holds the from name
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $from_name = '';
 
     /**
      * Holds the from email
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $from_email = '';
 
     /**
      * Holds the content type
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $content_type = 'text/html';
 
     /**
      * Holds the content type is html
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $html = true;
 
     /**
      * Holds the headers
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $headers = '';
 
     /**
      * The single instance of this class
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private static $instance = null;
 
     /**
      * Construct Email class.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private function __construct()
@@ -72,7 +72,7 @@ final class Email
      * Ensures that only one instance of Email exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return object|Email
      * @access public
      */
@@ -99,7 +99,7 @@ final class Email
     /**
      * Get the email from name
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_from_name()
     {
@@ -113,7 +113,7 @@ final class Email
     /**
      * Get the email from address
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_from_email()
     {
@@ -131,7 +131,7 @@ final class Email
     /**
      * Get the email content type
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_content_type()
     {
@@ -147,7 +147,7 @@ final class Email
     /**
      * Get the email headers
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_headers()
     {
@@ -163,7 +163,7 @@ final class Email
     /**
      * Email the download link(s) and payment confirmation to user
      *
-     * @since x.x.x
+     * @since 0.0.2
      *
      * @return void
      */

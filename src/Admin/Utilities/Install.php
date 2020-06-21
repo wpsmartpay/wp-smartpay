@@ -13,14 +13,14 @@ final class Install
 {
     /**
      * The single instance of this class
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private static $instance = null;
 
     /**
      * The installed plugin version
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private $installed_version = '';
@@ -28,7 +28,7 @@ final class Install
     /**
      * Construct Install class.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private function __construct()
@@ -44,7 +44,7 @@ final class Install
      * Ensures that only one instance of Install exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return object|Install
      * @access public
      */
@@ -60,7 +60,7 @@ final class Install
     /**
      * Plugin activate.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access public
      * @return void
      */
@@ -79,7 +79,7 @@ final class Install
     /**
      * Install SmartPay.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */
@@ -107,7 +107,7 @@ final class Install
     /**
      * Upgrade SmartPay.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */
@@ -230,7 +230,7 @@ final class Install
     /**
      * Set default settings.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */

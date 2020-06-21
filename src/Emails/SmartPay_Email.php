@@ -12,42 +12,42 @@ class SmartPay_Email
     /**
      * Holds the to email
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     private $to_email = '';
 
     /**
      * Holds the email headers
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     private $headers = '';
 
     /**
      * The subject for the email
      *
-     * @since  x.x.x
+     * @since  0.0.2
      */
     private $subject = '';
 
     /**
      * The body for the email
      *
-     * @since  x.x.x
+     * @since  0.0.2
      */
     private $body = '';
 
     /**
      * The attachments for the email
      *
-     * @since  x.x.x
+     * @since  0.0.2
      */
     private $attachments = '';
 
     /**
      * Construct Email class.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     public function __construct()
@@ -57,7 +57,7 @@ class SmartPay_Email
     /**
      * Set a property
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function __set($key, $value)
     {
@@ -67,7 +67,7 @@ class SmartPay_Email
     /**
      * Get a property
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function __get($key)
     {
@@ -77,7 +77,7 @@ class SmartPay_Email
     /**
      * Send the email
      * 
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function send()
     {
