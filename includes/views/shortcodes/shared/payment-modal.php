@@ -12,7 +12,6 @@
                     <h2 class="payment-modal--title m-0 mb-3">
                         <?php echo $product->title ?? $form->title ?? 'Product/Form'; ?>
                     </h2>
-                    <p class="payment-modal--subtitle m-0 mb-3"><?php _e('Enter your info and complete payment!', 'smartpay'); ?></p>
                 </div>
                 <div class="modal-button">
                     <button class="btn modal-close"><i data-feather="x" width="21" height="21"></i></button>
@@ -28,7 +27,7 @@
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
                             <?php $gateways_index = array_keys($gateways); ?>
-                            <p class="payment-gateway--label single-gateway"><?php echo sprintf(__('Pay with ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p>
+                            <!-- <p class="payment-gateway--label single-gateway"><?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p> -->
                             <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
                             <!-- // If it has multiple payment gateway -->
@@ -54,20 +53,19 @@
                             <?php endif; ?>
                         </div>
 
-                        <div class="payment-modal--errors my-5" style="display: none">
-                        </div>
+                        <div class="payment-modal--errors" style="display: none"></div>
 
                         <div class="payment-modal--user-info mt-3">
                             <div class="row">
-                                <div class="col-sm-6 form-group mb-4">
+                                <div class="col-sm-6 form-group">
                                     <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" autocomplete="first_name" required>
                                 </div>
-                                <div class="col-sm-6 form-group mb-4">
+                                <div class="col-sm-6 form-group">
                                     <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" autocomplete="last_name" required>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col form-group mb-4">
+                                <div class="col form-group">
                                     <input type="email" placeholder="Email address" class="form-control" name="smartpay_email" id="smartpay_email" autocomplete="email" required>
                                 </div>
                             </div>
@@ -75,6 +73,11 @@
                             <button type="button" class="btn btn-success btn-block btn-lg smartpay-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>>
                                 <?php echo _e('Pay Now', 'smartpay'); ?>
                             </button>
+
+                            <?php $gateways_index = array_keys($gateways); ?>
+                            <?php if (count($gateways) == 1 && 'paddle' == reset($gateways_index)) : ?>
+                            <div class="mt-3"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/paddle-payment-methods.png'; ?>" class="img-fluid" alt="paddle-payment-methods"></div>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>

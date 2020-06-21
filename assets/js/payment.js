@@ -293,7 +293,7 @@ jQuery(document).ready(($) => {
 
 			// messages.forEach((message) => {
 			errorHTML.push(`
-                <div class="alert alert-danger py-3">
+                <div class="alert alert-danger">
                     <p class="m-0 form-error-text">${fieldName} ${messages[0]}</p>
                 </div>`)
 			// })

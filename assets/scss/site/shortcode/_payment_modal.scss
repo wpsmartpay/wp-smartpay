@@ -8,6 +8,20 @@
 			.modal-body {
 				display: flex;
 				justify-content: center;
+
+				.payment-modal--errors {
+					.alert {
+						padding: 8px 15px;
+						margin-bottom: 10px;
+						font-size: 14px;
+					}
+				}
+
+				form {
+					.form-group {
+						margin-bottom: 15px;
+					}
+				}
 			}
 
 			.step-2 {
