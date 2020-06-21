@@ -69,5 +69,12 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+
+= [0.0.3] =
+* Updated payment popup content
+
+= [0.0.2] =
+* 
+
 = [0.0.1] =
-* Inital release
+* Initial release
