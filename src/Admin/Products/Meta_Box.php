@@ -212,7 +212,7 @@ final class Meta_Box
     public function admin_footer_scripts()
     {
         global $post;
-        if ($post && $post->post_type == 'product') {
+        if ($post && 'smartpay_product' == $post->post_type) {
             echo '<script> document.getElementById("edit-slug-box").outerHTML = ""; </script>';
         }
     }
