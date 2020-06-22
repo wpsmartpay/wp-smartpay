@@ -7,6 +7,7 @@ use SmartPay\Admin\Settings\Setting;
 use SmartPay\Admin\Products\Product;
 use SmartPay\Admin\Forms\Form;
 use SmartPay\Admin\Payments\Payment;
+use SmartPay\Admin\Utilities\Upload;
 use SmartPay\Admin\Utilities\Install;
 use SmartPay\Admin\Utilities\Uninstall;
 
@@ -54,6 +55,7 @@ final class Admin
             self::$instance->product       = Product::instance();
             self::$instance->form          = Form::instance();
             self::$instance->payment       = Payment::instance();
+            self::$instance->upload        = Upload::instance();
             self::$instance->install       = Install::instance();
             self::$instance->uninstall     = Uninstall::instance();
         }
