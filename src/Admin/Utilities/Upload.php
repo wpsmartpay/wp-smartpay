@@ -17,7 +17,7 @@ final class Upload
     /**
      * Construct Upload class.
      *
-     * @since 0.0.1
+     * @since x.x.x
      * @access private
      */
     private function __construct()
@@ -33,7 +33,7 @@ final class Upload
      * Ensures that only one instance of Upload exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.0.1
+     * @since x.x.x
      * @return object|Upload
      * @access public
      */
