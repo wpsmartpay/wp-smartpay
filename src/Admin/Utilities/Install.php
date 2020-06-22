@@ -52,6 +52,7 @@ final class Install
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Install)) {
             self::$instance = new self();
+            self::$instance->upload = Upload::instance();
         }
 
         return self::$instance;
@@ -102,6 +103,9 @@ final class Install
 
         // Set default settings
         $this->_set_default_settings();
+
+        // Protect upload directory
+        self::$instance->upload->protect_upload_directory(true);
     }
 
     /**
