@@ -308,7 +308,7 @@ class SmartPay_Product
     {
         $the_query = new \WP_Query(array(
             'post_parent' => $this->ID,
-            'post_type' => 'product_variation',
+            'post_type' => 'sp_product_variation',
         ));
 
         $child_products = $the_query->have_posts() ? $the_query->get_posts() : [];
