@@ -120,7 +120,7 @@ final class Payment
             smartpay_set_session_payment_data($payment_data);
 
             // Send info to the gateway for payment processing
-            $this->_send_to_gateway($smartpay_gateway, $payment_data, false);
+            // $this->_send_to_gateway($smartpay_gateway, $payment_data, false);
         }
     }
 
@@ -184,7 +184,7 @@ final class Payment
 
         switch ($payment_type) {
 
-            case 'product_payment':
+            case 'product_purchase':
 
                 $product_id = $_data['smartpay_product_id'] ?? '';
 
