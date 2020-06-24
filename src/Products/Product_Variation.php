@@ -621,7 +621,7 @@ class Product_Variation
     {
         $can_purchase = true;
 
-        if ($this->post_status != 'publish') {
+        if ($this->status != 'publish') {
             $can_purchase = false;
         }
 
