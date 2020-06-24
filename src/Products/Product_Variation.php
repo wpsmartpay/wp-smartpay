@@ -360,11 +360,11 @@ class Product_Variation
      * Retrieve the files
      *
      * @since  0.0.1
-     * @return string files of the product
+     * @return array files of the product
      */
     public function get_files()
     {
-        return apply_filters('smartpay_product_get_files', $this->files, $this->ID);
+        return apply_filters('smartpay_product_variation_get_files', $this->files, $this->ID);
     }
 
     /**
@@ -389,7 +389,7 @@ class Product_Variation
             return $parent_files[$key];
         }, $this->files);
 
-        return apply_filters('smartpay_product_get_downloadable_files', $files, $this->ID);
+        return apply_filters('smartpay_product_variation_get_downloadable_files', $files, $this->ID);
     }
 
     /**
@@ -400,7 +400,7 @@ class Product_Variation
      */
     public function get_status()
     {
-        return apply_filters('smartpay_product_get_status', $this->status, $this->ID);
+        return apply_filters('smartpay_product_variation_get_status', $this->status, $this->ID);
     }
 
     /**
@@ -421,7 +421,7 @@ class Product_Variation
         // Never let sales be less than zero
         $this->sales = max($this->sales, 0);
 
-        return apply_filters('smartpay_product_get_sales', $this->files, $this->ID);;
+        return apply_filters('smartpay_product_variation_get_sales', $this->files, $this->ID);;
     }
 
     /**
@@ -436,7 +436,7 @@ class Product_Variation
             $this->sku = '-';
         }
 
-        return apply_filters('smartpay_product_get_sku', $this->sku, $this->ID);
+        return apply_filters('smartpay_product_variation_get_sku', $this->sku, $this->ID);
     }
 
     /**
@@ -529,7 +529,7 @@ class Product_Variation
 
                     default:
                         /** Used to save non-standard data. Developers can hook here if they want to save **/
-                        do_action('smartpay_product_data_save', $this, $key);
+                        do_action('smartpay_product_variation_data_save', $this, $key);
                         break;
                 }
             }
@@ -542,7 +542,7 @@ class Product_Variation
             $this->setup_variation($this->ID);
 
             /** This action fires anytime that $variation->save() is run **/
-            do_action('smartpay_product_variation_saved', $this->ID, $this);
+            do_action('smartpay_product_variation_variation_saved', $this->ID, $this);
         }
 
         return $saved;
@@ -575,7 +575,7 @@ class Product_Variation
 
             $this->sales = $total_sales;
 
-            do_action('smartpay_product_variation_increase_sales', $this->ID, $this->sales, $this);
+            do_action('smartpay_product_variation_variation_increase_sales', $this->ID, $this->sales, $this);
 
             return $this->sales;
         }
@@ -625,6 +625,6 @@ class Product_Variation
             $can_purchase = false;
         }
 
-        return (bool) apply_filters('smartpay_can_purchase_product_variation', $can_purchase, $this);
+        return (bool) apply_filters('smartpay_product_variation_can_purchase', $can_purchase, $this);
     }
 }
