@@ -368,6 +368,31 @@ class Product_Variation
     }
 
     /**
+     * Retrieve the downloadable files
+     *
+     * @since  0.0.1
+     * @return array files of the product
+     */
+    public function get_downloadable_files()
+    {
+        $parent = new SmartPay_Product($this->parent);
+
+        if (!$this->parent || !$parent) return [];
+
+        $parent_files = $parent->get_files();
+
+        $files = array_map(function ($file_id) use ($parent_files) {
+            $key = array_search($file_id, array_column($parent_files, 'id'));
+
+            if ($key < 0) return false;
+
+            return $parent_files[$key];
+        }, $this->files);
+
+        return apply_filters('smartpay_product_get_downloadable_files', $files, $this->ID);
+    }
+
+    /**
      * Retrieve the product status
      *
      * @since  0.0.1
