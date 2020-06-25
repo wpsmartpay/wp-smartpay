@@ -255,6 +255,7 @@ final class Process_Download
      *
      * If enabled, the file is symlinked to better support large file downloads
      *
+     * @since x.x.x
      * @param  string $file
      * @param  bool $redirect
      * @return void
@@ -371,6 +372,7 @@ final class Process_Download
     /**
      * Get the file content type
      *
+     * @since x.x.x
      * @param  string $extension file extension
      * @return string content type
      */
@@ -1262,9 +1264,9 @@ final class Process_Download
      * Reads file in chunks so big downloads are possible without changing PHP.INI
      * See http://codeigniter.com/wiki/Download_helper_for_large_files/
      *
+     * @since x.x.x
      * @param   string  $file The file
      * @param   boolean $retbytes Return the bytes of file
-     *
      * @return  bool|string If string, $status || $cnt
      */
     private function _readfile_chunked($file, $retbytes = true)
@@ -1379,7 +1381,6 @@ final class Process_Download
      * Determines if a file should be allowed to be downloaded by making sure it's within the wp-content directory.
      *
      * @since x.x.x
-     *
      * @param $file_details
      * @param $schemas
      * @param $requested_file
@@ -1434,19 +1435,17 @@ final class Process_Download
         $params = [
             'file'         => (int) $file_index,
             'payment_id'   => (int) $payment_id,
-            // 'email'        => rawurlencode($payment->email),
             'product_id'   => (int) $product_id,
             'variation_id' => (int) $variation_id,
             'ttl'          => rawurlencode($expire)
         ];
 
         $smartpay_file = rawurlencode(
-            sprintf('%d:%d:%d:%d:%s', $params['file'], $params['payment_id'], $params['product_id'], $params['variation_id'], $expire)
+            sprintf('%d:%d:%d:%d', $params['file'], $params['payment_id'], $params['product_id'], $params['variation_id'])
         );
 
         $args = [
             'smartpay_file' => $smartpay_file,
-            // 'file'       => $params['file'],
             'ttl'           => $params['ttl'],
         ];
 
@@ -1455,6 +1454,13 @@ final class Process_Download
         return add_query_arg($args, site_url('index.php'));
     }
 
+    /**
+     * Generate token
+     *
+     * @since x.x.x
+     * @param string $url
+     * @return string token
+     */
     private function _generate_token($url)
     {
         $args      = [];
@@ -1482,6 +1488,12 @@ final class Process_Download
         return $token;
     }
 
+    /**
+     * Check token is valid and have right permission
+     *
+     * @since x.x.x
+     * @return array
+     */
     private function _process_signed_download_url()
     {
         $response = [
@@ -1510,6 +1522,13 @@ final class Process_Download
         return $response;
     }
 
+    /**
+     * Check is token valid or not
+     *
+     * @since x.x.x
+     * @param string $url
+     * @return bool
+     */
     private function _validate_token($url = '')
     {
         $parts = parse_url($url);
