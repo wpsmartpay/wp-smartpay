@@ -337,3 +337,48 @@ function smartpay_get_file_extension($str)
     $parts = explode('.', $str);
     return end($parts);
 }
+
+/**
+ * Retrieve the absolute path to the file upload directory without the trailing slash
+ *
+ * @since  x.x.x
+ * @return string $path Absolute path to the SmartPay upload directory
+ */
+function smartpay_get_upload_dir()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay');
+    $path = $wp_upload_dir['basedir'] . '/smartpay';
+
+    return $path;
+}
+
+/**
+ * Retrieve the absolute path to the symlink directory
+ *
+ * @since  x.x.x
+ * @return string $path Absolute path to the symlink directory
+ */
+function smartpay_get_symlink_dir()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay/symlinks');
+    $path = $wp_upload_dir['basedir'] . '/smartpay/symlinks';
+
+    return $path;
+}
+
+/**
+ * Retrieve the URL of the symlink directory
+ *
+ * @since x.x.x
+ * @return string $url URL of the symlink directory
+ */
+function smartpay_get_symlink_url()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay/symlinks');
+    $url = $wp_upload_dir['baseurl'] . '/smartpay/symlinks';
+
+    return $url;
+}
