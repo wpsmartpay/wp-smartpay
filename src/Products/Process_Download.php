@@ -1517,7 +1517,6 @@ final class Process_Download
         $response['payment_id']   = $file_parts[1];
         $response['product_id']   = $file_parts[2];
         $response['variation_id'] = $file_parts[3];
-        $response['expire']       = $file_parts[4];
 
         return $response;
     }
