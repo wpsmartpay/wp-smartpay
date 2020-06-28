@@ -49,10 +49,27 @@ $payment = new SmartPay_Payment($payment_id);
                                 </h3>
                                 <span class="btn px-2 py-0 pb-1 <?php echo 'publish' == $payment->status ? 'btn-success' : 'btn-danger'; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
                             </div>
-                            <div class="col d-flex justify-content-end">
+                            <div class="col d-flex justify-content-center">
                                 <h3 class="h3 text-primary px-2 my-0 pb-1">
                                     <?php echo ucwords(str_replace('_', ' ', $payment->payment_type)); ?>
                                 </h3>
+                            </div>
+                            <div class="col d-flex justify-content-end">
+                                <form action="#" method="POST">
+                                    <?php wp_nonce_field('smartpay_update_payment', 'smartpay_update_payment'); ?>
+                                    <input type="hidden" id="payment_id" name="payment_id" value="<?php echo $payment->ID ?>">
+                                    <div class="input-group">
+                                        <select class="custom-select" id="payment_status" name="payment_status">
+                                            <option disabled><?php _e('Select status', 'smartpay') ?></option>
+                                            <?php foreach (smartpay_get_payment_statuses() as $key => $status) : ?>
+                                            <option value="<?php echo $key; ?>" <?php if ($payment->status == $key) echo 'selected'; ?>><?php echo $status; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-primary" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="d-flex flex-lg-row flex-column py-2">

@@ -2,6 +2,8 @@
 
 namespace SmartPay\Admin\Payments;
 
+use SmartPay\Payments\SmartPay_Payment;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -28,6 +30,8 @@ final class Payment
         add_filter('manage_smartpay_payment_posts_custom_column', [$this, 'smartpay_payment_column_data'], 10, 2);
 
         add_filter('post_row_actions', [$this, 'modify_smartpay_payment_admin_table'], 10, 2);
+
+        add_action('init', [$this, 'update_payment_status']);
     }
 
     /**
@@ -133,5 +137,22 @@ final class Payment
         }
 
         return $actions;
+    }
+
+    public function update_payment_status()
+    {
+        if (!isset($_POST['smartpay_update_payment']) || !wp_verify_nonce($_POST['smartpay_update_payment'], 'smartpay_update_payment')) {
+            return;
+        }
+
+        $payment_id     = $_POST['payment_id'] ?? 0;
+        $payment_status = $_POST['payment_status'] ?? '';
+
+        $payment = new SmartPay_Payment($payment_id);
+
+        if (!$payment_id || !$payment->ID || empty($payment_status)) return;
+
+        $payment->status = $payment_status;
+        $payment->save();
     }
 }
