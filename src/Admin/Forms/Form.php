@@ -69,7 +69,7 @@ final class Form
         if ('amount' === $column) {
             $amounts = get_post_meta($post_id, '_form_amounts', true);
 
-            $amounts = array_map(function($amount){
+            $amounts = array_map(function ($amount) {
                 return smartpay_amount_format($amount);
             }, $amounts);
 
@@ -85,6 +85,7 @@ final class Form
     {
         if ('smartpay_form' === $post->post_type) {
             unset($actions['inline hide-if-no-js']);
+            unset($actions['view']);
         }
 
         return $actions;
