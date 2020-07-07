@@ -405,4 +405,31 @@ final class Payment
 
         // TODO: Increase sales, amount and others
     }
+
+    /**
+     * Get all payments
+     *
+     * @return array|object
+     */
+    public static function all_payments($args = [])
+    {
+        $args = array_merge(array(
+            'numberposts'      => -1,
+            'category'         => 0,
+            'orderby'          => 'date',
+            'order'            => 'DESC',
+            'include'          => [],
+            'exclude'          => [],
+            'meta_key'         => '',
+            'meta_value'       => '',
+            'post_type'        => 'smartpay_payment',
+            'suppress_filters' => true,
+        ), $args);
+
+        $payments = (new \WP_Query)->query($args);
+
+        return array_map(function ($payment) {
+            return new SmartPay_Payment($payment->ID);
+        }, $payments);
+    }
 }

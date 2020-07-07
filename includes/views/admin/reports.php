@@ -1,123 +1,115 @@
-<?php ?>
+<?php
+
+$total_days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+
+$report = array_fill(1, $total_days, ['product_purchase' => 0, 'form_payment' => 0]);
+
+$report_data = SmartPay()->admin->report->get_report_data();
+
+foreach ($report_data as $index => $data) {
+    if (!$data->completed_date) continue;
+
+    $date = date('j', strtotime($data->completed_date));
+    $report[$date][$data->payment_type] += $data->amount ?? 0;
+}
+
+$product_purchases = array_column($report, 'product_purchase');
+$form_payments = array_column($report, 'form_payment');
+?>
 
 <div class="wrap">
     <h1><?php _e('Reports', 'smartpay'); ?></h1>
     <div class="smartpay">
         <div class="card">
-            <div id="chart" class="p-3 mb-4"></div>
+            <div id="revenueReport" class="p-3 mb-4"></div>
 
             <div class="border-top text-center mt-5">
                 <div class="row no-gutters">
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <div class="stats stats-highlight py-5">
-                            <div class="label text-uppercase">Total Conversations</div>
-                            <div class="metrics text-info">145</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Conversation touched (created, replied to, status changed, assigned), excluding spam and deleted">
+                            <div class="label text-uppercase">
+                                <?php _e('Total Earning', 'smartpay') ?>
+                            </div>
+                            <div class="metrics text-info">
+                                <?php echo array_sum($product_purchases) + array_sum($form_payments); ?>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-3 border-left">
+                    <div class="col-sm-4 border-left">
                         <div class="stats py-3">
-                            <div class="label text-uppercase">New Conversations</div>
-                            <div class="metrics">125</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Total amount of incoming conversations">
-                            </div>
+                            <div class="label text-uppercase"><?php _e('Total Product Purchase', 'smartpay') ?></div>
+                            <div class="metrics"><?php echo array_sum($product_purchases); ?></div>
                         </div>
                         <div class="stats py-3 border-top">
-                            <div class="label text-uppercase">Avg. Conversations Per Day</div>
-                            <div class="metrics">22</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Average number of incoming conversations per day">
-                            </div>
+                            <div class="label text-uppercase"><?php _e('Avg. Product Purchase', 'smartpay') ?></div>
+                            <div class="metrics"><?php echo (0 < array_sum($product_purchases)) ? number_format(array_sum($product_purchases) / count($form_payments)) : 0; ?></div>
                         </div>
                     </div>
-                    <div class="col-sm-3 border-left">
+                    <div class="col-sm-4 border-left">
                         <div class="stats py-3">
-                            <div class="label text-uppercase">Resolutions</div>
-                            <div class="metrics">110</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Total amount of conversations marked as closed.">
-                            </div>
+                            <div class="label text-uppercase"><?php _e('Total Form Payment', 'smartpay') ?></div>
+                            <div class="metrics"><?php echo array_sum($form_payments); ?></div>
                         </div>
                         <div class="stats py-3 border-top">
-                            <div class="label text-uppercase">Avg. Resolutions Per Day</div>
-                            <div class="metrics">5</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Average number of conversations marked as closed per day.">
-                            </div>
+                            <div class="label text-uppercase"><?php _e('Avg. Form Payment', 'smartpay') ?></div>
+                            <div class="metrics"><?php echo (0 < array_sum($form_payments)) ? number_format(array_sum($form_payments) / count($form_payments)) : 0; ?></div>
                         </div>
                     </div>
-                    <div class="col-sm-3 border-left">
-                        <div class="stats py-3">
-                            <div class="label text-uppercase">Customer Helped</div>
-                            <div class="metrics">95</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Total amount of customers that sent in a conversations(one customer may have multiple conversations) excluding spam and deleted.">
-                            </div>
-                        </div>
-                        <div class="stats py-3 border-top">
-                            <div class="label text-uppercase">Avg. Customer Per Day</div>
-                            <div class="metrics">5</div>
-                            <div class="previous text-muted">-1%</div>
-                            <div class="info" data-toggle="tooltip" title="" data-original-title="Average number of customers that sent in a conversations(one customer may have multiple conversations) excluding spam and deleted.">
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        var options = {
-            series: [{
-                name: 'Product Purchase',
-                data: [14, 4, 4, 4, 24, 4, 34, 4, 4]
-            }, {
-                name: 'Form Payment',
-                data: [4, 4, 4, 4, 4, 4, 4, 4, 4]
-            }],
-            chart: {
-                type: 'bar',
-                height: 350
+</div>
+</div>
+
+<script>
+    var options = {
+        series: [{
+            name: "<?php echo __('Product Purchase', 'smartpay'); ?>",
+            data: <?php echo json_encode(array_column($report, 'product_purchase')) ?>
+        }, {
+            name: "<?php echo __('Form Payment', 'smartpay'); ?>",
+            data: <?php echo json_encode(array_column($report, 'form_payment')) ?>
+        }],
+        chart: {
+            type: 'bar',
+            height: 350
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '50%'
             },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '20%'
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: ['1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', '1'],
-            },
-            yaxis: {
-                title: {
-                    text: '$ (revenue)'
-                }
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function(val) {
-                        return `$${val}`
-                    }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: <?php echo json_encode(array_keys($report)) ?>,
+        },
+        yaxis: {
+            title: {
+                text: 'Revenue'
+            }
+        },
+        fill: {
+            opacity: 1
+        },
+        tooltip: {
+            y: {
+                formatter: function(val) {
+                    return `${val}`
                 }
             }
-        };
+        }
+    };
 
-        var chart = new ApexCharts(document.querySelector("#chart"), options);
-        chart.render();
-    </script>
+    var chart = new ApexCharts(document.querySelector("#revenueReport"), options);
+    chart.render();
+</script>
 </div>

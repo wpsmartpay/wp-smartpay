@@ -2,6 +2,8 @@
 
 namespace SmartPay\Admin\Report;
 
+use SmartPay\Payments\SmartPay_Payment;
+
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
     exit;
@@ -56,5 +58,12 @@ final class Report
 
         // Enqueue them
         wp_enqueue_script('smartpay-apexcharts');
+    }
+
+    public function get_report_data()
+    {
+        return SmartPay()->payment->all_payments(
+            ['date_query' => [['after'    => '-1 month']]]
+        );
     }
 }
