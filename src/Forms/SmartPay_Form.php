@@ -387,8 +387,8 @@ class SmartPay_Form
      */
     private function _insert()
     {
-        if (0 != $this->ID) retur;
-        
+        if (0 != $this->ID) return;
+
         // Create a blank form
         $form_id = wp_insert_post(array(
             'post_title'     => $this->title ?? '',
