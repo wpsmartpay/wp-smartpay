@@ -130,7 +130,7 @@ final class Payment
             $actions = array_merge($actions, array(
                 'manage' => sprintf(
                     '<a href="%1$s">%2$s</a>',
-                    esc_url(admin_url('edit.php?post_type=product&page=payment-details&id=' . $post->ID)),
+                    esc_url(admin_url('edit.php?post_type=smartpay_product&page=payment-details&id=' . $post->ID)),
                     'View details'
                 )
             ));
