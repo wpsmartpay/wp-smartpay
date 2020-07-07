@@ -25,6 +25,8 @@ final class Product
         add_filter('manage_smartpay_product_posts_columns', [$this, 'product_columns']);
 
         add_filter('manage_smartpay_product_posts_custom_column', [$this, 'product_column_data'], 10, 2);
+
+        add_filter('post_row_actions', [$this, 'modify_admin_table'], 10, 2);
     }
 
     /**
@@ -87,5 +89,15 @@ final class Product
         if ('shortcode' === $column) {
             echo '<input type="text" readonly="readonly" title="Click to select. Then press Ctrl+C (⌘+C on Mac) to copy." onclick="this.select();" value="[smartpay_product id=&quot;' . $post_id . '&quot;]">';
         }
+    }
+
+    public function modify_admin_table($actions, $post)
+    {
+        if ('smartpay_product' === $post->post_type) {
+            unset($actions['view']);
+            unset($actions['inline hide-if-no-js']);
+        }
+
+        return $actions;
     }
 }
