@@ -2,11 +2,11 @@
 
 namespace SmartPay\Admin;
 
-use SmartPay\Admin\Customers\Customer_Table;
 use SmartPay\Admin\Settings\Setting;
 use SmartPay\Admin\Products\Product;
 use SmartPay\Admin\Forms\Form;
 use SmartPay\Admin\Payments\Payment;
+use SmartPay\Admin\Report\Report;
 use SmartPay\Admin\Utilities\Upload;
 use SmartPay\Admin\Utilities\Install;
 use SmartPay\Admin\Utilities\Uninstall;
@@ -52,6 +52,7 @@ final class Admin
 
             self::$instance->admin_notices = Admin_Notices::instance();
             self::$instance->setting       = Setting::instance();
+            self::$instance->report        = Report::instance();
             self::$instance->product       = Product::instance();
             self::$instance->form          = Form::instance();
             self::$instance->payment       = Payment::instance();
@@ -127,6 +128,17 @@ final class Admin
             'smartpay-setting',
             function () {
                 return smartpay_view('admin/setting');
+            }
+        );
+
+        add_submenu_page(
+            'edit.php?post_type=smartpay_product',
+            'SmartPay - Reports',
+            'Reports',
+            'manage_options',
+            'smartpay-reports',
+            function () {
+                return smartpay_view('admin/reports');
             }
         );
 
