@@ -40,7 +40,7 @@ $form_payments = array_filter(array_column($report, 'form_payment'));
                             <div class="label text-uppercase"><?php _e('Total Product Purchase', 'smartpay') ?></div>
                         </div>
                         <div class="stats py-4 border-top">
-                            <div class="metrics"><?php echo (0 < array_sum($product_purchases)) ? number_format(array_sum($product_purchases) / count($product_purchases)) : 0; ?></div>
+                            <div class="metrics"><?php echo (0 < array_sum($product_purchases)) ? smartpay_amount_format(number_format(array_sum($product_purchases) / count($product_purchases))) : 0; ?></div>
                             <div class="label text-uppercase"><?php _e('Avg. Product Purchase', 'smartpay') ?></div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@ $form_payments = array_filter(array_column($report, 'form_payment'));
                             <div class="label text-uppercase"><?php _e('Total Form Payment', 'smartpay') ?></div>
                         </div>
                         <div class="stats py-4 border-top">
-                            <div class="metrics"><?php echo (0 < array_sum($form_payments)) ? number_format(array_sum($form_payments) / count($form_payments)) : 0; ?></div>
+                            <div class="metrics"><?php echo (0 < array_sum($form_payments)) ? smartpay_amount_format(number_format(array_sum($form_payments) / count($form_payments))) : 0; ?></div>
                             <div class="label text-uppercase"><?php _e('Avg. Form Payment', 'smartpay') ?></div>
                         </div>
                     </div>
