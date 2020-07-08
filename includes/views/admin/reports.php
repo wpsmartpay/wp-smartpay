@@ -13,53 +13,52 @@ foreach ($report_data as $index => $data) {
     $report[$date][$data->payment_type] += $data->amount ?? 0;
 }
 
-$product_purchases = array_column($report, 'product_purchase');
-$form_payments = array_column($report, 'form_payment');
+$product_purchases = array_filter(array_column($report, 'product_purchase'));
+$form_payments = array_filter(array_column($report, 'form_payment'));
 ?>
 
 <div class="wrap">
-    <h1><?php _e('Reports', 'smartpay'); ?></h1>
+    <h1 class="wp-heading-inline"><?php _e('Reports', 'smartpay'); ?></h1>
     <div class="smartpay">
-        <div class="card">
-            <div id="revenueReport" class="p-3 mb-4"></div>
-
+        <div class="card report">
+            <div id="revenueReport" class="p-3 mb-4" style="min-height: 365px;"></div>
             <div class="border-top text-center mt-5">
                 <div class="row no-gutters">
-                    <div class="col-sm-4">
-                        <div class="stats stats-highlight py-5">
+                    <div class="col-sm-4 d-flex justify-content-center align-items-center">
+                        <div class="stats stats-highlight d-flex flex-column">
+                            <div class="metrics text-primary">
+                                <?php echo smartpay_amount_format(array_sum($product_purchases) + array_sum($form_payments)); ?>
+                            </div>
                             <div class="label text-uppercase">
                                 <?php _e('Total Earning', 'smartpay') ?>
                             </div>
-                            <div class="metrics text-info">
-                                <?php echo array_sum($product_purchases) + array_sum($form_payments); ?>
-                            </div>
                         </div>
                     </div>
                     <div class="col-sm-4 border-left">
-                        <div class="stats py-3">
+                        <div class="stats py-4">
+                            <div class="metrics"><?php echo smartpay_amount_format(array_sum($product_purchases)); ?></div>
                             <div class="label text-uppercase"><?php _e('Total Product Purchase', 'smartpay') ?></div>
-                            <div class="metrics"><?php echo array_sum($product_purchases); ?></div>
                         </div>
-                        <div class="stats py-3 border-top">
+                        <div class="stats py-4 border-top">
+                            <div class="metrics"><?php echo (0 < array_sum($product_purchases)) ? number_format(array_sum($product_purchases) / count($product_purchases)) : 0; ?></div>
                             <div class="label text-uppercase"><?php _e('Avg. Product Purchase', 'smartpay') ?></div>
-                            <div class="metrics"><?php echo (0 < array_sum($product_purchases)) ? number_format(array_sum($product_purchases) / count($form_payments)) : 0; ?></div>
                         </div>
                     </div>
                     <div class="col-sm-4 border-left">
-                        <div class="stats py-3">
+                        <div class="stats py-4">
+                            <div class="metrics"><?php echo smartpay_amount_format(array_sum($form_payments)); ?></div>
                             <div class="label text-uppercase"><?php _e('Total Form Payment', 'smartpay') ?></div>
-                            <div class="metrics"><?php echo array_sum($form_payments); ?></div>
                         </div>
-                        <div class="stats py-3 border-top">
-                            <div class="label text-uppercase"><?php _e('Avg. Form Payment', 'smartpay') ?></div>
+                        <div class="stats py-4 border-top">
                             <div class="metrics"><?php echo (0 < array_sum($form_payments)) ? number_format(array_sum($form_payments) / count($form_payments)) : 0; ?></div>
+                            <div class="label text-uppercase"><?php _e('Avg. Form Payment', 'smartpay') ?></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="clear"></div>
 </div>
 
 <script>
@@ -112,4 +111,3 @@ $form_payments = array_column($report, 'form_payment');
     var chart = new ApexCharts(document.querySelector("#revenueReport"), options);
     chart.render();
 </script>
-</div>

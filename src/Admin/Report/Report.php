@@ -63,7 +63,7 @@ final class Report
     public function get_report_data()
     {
         return SmartPay()->payment->all_payments(
-            ['date_query' => [['after'    => '-1 month']]]
+            ['date_query' => [['after'    => date('01-m-Y')]]]
         );
     }
 }
