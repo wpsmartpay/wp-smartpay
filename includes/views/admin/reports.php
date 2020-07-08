@@ -21,6 +21,7 @@ $form_payments = array_filter(array_column($report, 'form_payment'));
     <h1 class="wp-heading-inline"><?php _e('Reports', 'smartpay'); ?></h1>
     <div class="smartpay">
         <div class="card report">
+            <h3 class="px-4 pt-3"><?php _e('Monthly Report', 'smartpay') ?></h3>
             <div id="revenueReport" class="p-3 mb-4" style="min-height: 365px;"></div>
             <div class="border-top text-center mt-5">
                 <div class="row no-gutters">
