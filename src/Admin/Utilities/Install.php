@@ -221,10 +221,10 @@ final class Install
         }
 
         $options = array(
-            'payment_page'          => $payment_page,
-            'payment_success_page'  => $payment_success_page,
-            'payment_failure_page'  => $payment_failure_page,
-            'payment_history_page'  => $payment_history_page,
+            'payment_page'            => $payment_page,
+            'payment_success_page'    => $payment_success_page,
+            'payment_failure_page'    => $payment_failure_page,
+            'payment_history_page'    => $payment_history_page,
             'customer_dashboard_page' => $customer_dashboard_page,
         );
 

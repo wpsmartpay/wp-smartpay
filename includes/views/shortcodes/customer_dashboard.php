@@ -40,56 +40,56 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="payments" role="tabpanel">
                                     <?php if (!is_array($customer_payments) || !count($customer_payments)) : ?>
-                                    <div class="card">
-                                        <div class="card-body py-5">
-                                            <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
+                                        <div class="card">
+                                            <div class="card-body py-5">
+                                                <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php else : ?>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Item', 'smartpay'); ?>(s)</th>
-                                                    <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
-                                                    <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Item', 'smartpay'); ?>(s)</th>
+                                                        <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
 
-                                                <?php foreach ($customer_payments as $index => $payment) : ?>
-                                                <tr>
-                                                    <th scope="row"><?php echo '#' . $payment->ID; ?></th>
-                                                    <td><?php echo mysql2date('F j, Y', $payment->date); ?></td>
-                                                    <td><?php echo 'Items'; ?></td>
-                                                    <td class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                        <?php echo $payment->status_nicename; ?></td>
-                                                    <td class="text-muted">
-                                                        <strong class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                            <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
-                                                        </strong>
-                                                    </td>
-                                                </tr>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                    <?php foreach ($customer_payments as $index => $payment) : ?>
+                                                        <tr>
+                                                            <th scope="row"><?php echo '#' . $payment->ID; ?></th>
+                                                            <td><?php echo mysql2date('F j, Y', $payment->date); ?></td>
+                                                            <td><?php echo 'Items'; ?></td>
+                                                            <td class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                                <?php echo $payment->status_nicename; ?></td>
+                                                            <td class="text-muted">
+                                                                <strong class="<?php echo 'publish' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                                    <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
+                                                                </strong>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     <?php endif ?>
                                 </div>
 
                                 <div class="tab-pane fade" id="downloads" role="tabpanel">
                                     <?php if (!is_array($customer_active_payments) || !count($customer_active_payments)) : ?>
-                                    <div class="card">
-                                        <div class="card-body py-5">
-                                            <p class="text-info  m-0 text-center"><?php _e('You don\'t have downloadable item yet!', 'smartpay'); ?></p>
+                                        <div class="card">
+                                            <div class="card-body py-5">
+                                                <p class="text-info  m-0 text-center"><?php _e('You don\'t have downloadable item yet!', 'smartpay'); ?></p>
+                                            </div>
                                         </div>
-                                    </div>
                                     <?php else : ?>
-                                    <!-- // TODO: Check if payment exist -->
-                                    <?php foreach ($customer_active_payments as $index => $payment) : ?>
-                                    <?php
+                                        <!-- // TODO: Check if payment exist -->
+                                        <?php foreach ($customer_active_payments as $index => $payment) : ?>
+                                            <?php
                                             $product_id = $payment->payment_data['product_id'] ?? 0;
                                             $variation_id = $payment->payment_data['variation_id'] ?? 0;
                                             $product = new SmartPay_Product($product_id);
@@ -102,43 +102,43 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                                 $download_files = $product->get_downloadable_files();
                                             } ?>
 
-                                    <div class="border mb-3 product">
-                                        <div class="p-3  product--header">
-                                            <div class="row" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
-                                                <div class="col-sm-2 product--image">
-                                                    <img src="<?php echo $product->image; ?>" class="border" alt="">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <h5 class="mt-0"><?php echo $product->title; ?></h5>
-                                                    <?php if ($variation_id && $variation) : ?>
-                                                    <p><?php _e(sprintf('<strong>Variation: </strong>', 'smartpay') . $variation->name); ?></p>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
-                                            <p><?php _e('Files', 'smartpay'); ?></p>
-                                            <ul class="list-group">
-                                                <?php foreach ($download_files as $file_index => $file) : ?>
-                                                <li class="list-group-item p-2">
-                                                    <div class="d-flex align-items-center flex-wrap">
-                                                        <div>
-                                                            <img src="<?php echo $product->image; ?>" style="height: 40px;" alt="">
+                                            <div class="border mb-3 product">
+                                                <div class="p-3  product--header">
+                                                    <div class="row" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
+                                                        <div class="col-sm-2 product--image">
+                                                            <img src="<?php echo $product->image; ?>" class="border" alt="">
                                                         </div>
-                                                        <div class="ml-3">
-                                                            <p class="m-0"><?php echo $file['filename'] ?? ''; ?></p>
-                                                            <p class="text-muted m-0"><small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small></p>
-                                                        </div>
-                                                        <div class="ml-auto">
-                                                            <a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a>
+                                                        <div class="col-sm-7">
+                                                            <h5 class="mt-0"><?php echo $product->title; ?></h5>
+                                                            <?php if ($variation_id && $variation) : ?>
+                                                                <p><?php _e(sprintf('<strong>Variation: </strong>', 'smartpay') . $variation->name); ?></p>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
-                                                </li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <?php endforeach; ?>
+                                                </div>
+                                                <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
+                                                    <p><?php _e('Files', 'smartpay'); ?></p>
+                                                    <ul class="list-group">
+                                                        <?php foreach ($download_files as $file_index => $file) : ?>
+                                                            <li class="list-group-item p-2">
+                                                                <div class="d-flex align-items-center flex-wrap">
+                                                                    <div>
+                                                                        <img src="<?php echo $product->image; ?>" style="height: 40px;" alt="">
+                                                                    </div>
+                                                                    <div class="ml-3">
+                                                                        <p class="m-0"><?php echo $file['filename'] ?? ''; ?></p>
+                                                                        <p class="text-muted m-0"><small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small></p>
+                                                                    </div>
+                                                                    <div class="ml-auto">
+                                                                        <a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
                                     <?php endif; ?>
                                 </div>
 
