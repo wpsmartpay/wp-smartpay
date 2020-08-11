@@ -83,7 +83,7 @@ final class Customer
     /**
      * Update customer when wp-user updates
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param integer $user_id
      * @param \WP_User $old_user_data
      * @return void

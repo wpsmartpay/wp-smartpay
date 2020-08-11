@@ -17,7 +17,7 @@ final class Upload
     /**
      * Construct Upload class.
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @access private
      */
     private function __construct()
@@ -33,7 +33,7 @@ final class Upload
      * Ensures that only one instance of Upload exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @return object|Upload
      * @access public
      */
@@ -49,7 +49,7 @@ final class Upload
     /**
      * Separate upload directory for smartpay
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param $upload
      * @return void
      */
@@ -85,7 +85,7 @@ final class Upload
      * This function runs approximately once per day in order to ensure all folders
      * have their necessary protection files
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param bool $force
      */
     public function protect_upload_directory($force = false)
@@ -133,7 +133,7 @@ final class Upload
     /**
      * Create .htaccess file
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @return string
      */
     private function _get_htaccess_rules()
@@ -154,7 +154,7 @@ final class Upload
     /**
      * Scans all folders inside of /uploads/smartpay
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @return array $return List of files inside directory
      */
     private function _scan_folders($path = '', $return = array())

@@ -294,7 +294,7 @@ function smartpay_get_page_uri($page_id, $query_string = null)
 /**
  * Get User IP
  *
- * @since x.x.x
+ * @since 0.0.4
  * @return string $ip
  */
 function smartpay_get_ip()
@@ -328,7 +328,7 @@ function smartpay_get_ip()
 /**
  * Get File Extension
  *
- * @since x.x.x
+ * @since 0.0.4
  * @param string $str File name
  * @return string File extension
  */
@@ -341,7 +341,7 @@ function smartpay_get_file_extension($str)
 /**
  * Retrieve the absolute path to the file upload directory without the trailing slash
  *
- * @since  x.x.x
+ * @since  0.0.4
  * @return string $path Absolute path to the SmartPay upload directory
  */
 function smartpay_get_upload_dir()
@@ -356,7 +356,7 @@ function smartpay_get_upload_dir()
 /**
  * Retrieve the absolute path to the symlink directory
  *
- * @since  x.x.x
+ * @since  0.0.4
  * @return string $path Absolute path to the symlink directory
  */
 function smartpay_get_symlink_dir()
@@ -371,7 +371,7 @@ function smartpay_get_symlink_dir()
 /**
  * Retrieve the URL of the symlink directory
  *
- * @since x.x.x
+ * @since 0.0.4
  * @return string $url URL of the symlink directory
  */
 function smartpay_get_symlink_url()
