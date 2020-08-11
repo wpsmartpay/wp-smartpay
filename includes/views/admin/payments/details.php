@@ -49,10 +49,27 @@ $payment = new SmartPay_Payment($payment_id);
                                 </h3>
                                 <span class="btn px-2 py-0 pb-1 <?php echo 'publish' == $payment->status ? 'btn-success' : 'btn-danger'; ?>"><?php echo $payment->status_nicename ?? '-'; ?></span>
                             </div>
-                            <div class="col d-flex justify-content-end">
+                            <div class="col d-flex justify-content-center">
                                 <h3 class="h3 text-primary px-2 my-0 pb-1">
                                     <?php echo ucwords(str_replace('_', ' ', $payment->payment_type)); ?>
                                 </h3>
+                            </div>
+                            <div class="col d-flex justify-content-end">
+                                <form action="#" method="POST">
+                                    <?php wp_nonce_field('smartpay_update_payment', 'smartpay_update_payment'); ?>
+                                    <input type="hidden" id="payment_id" name="payment_id" value="<?php echo $payment->ID ?>">
+                                    <div class="input-group">
+                                        <select class="custom-select" id="payment_status" name="payment_status">
+                                            <option disabled><?php _e('Select status', 'smartpay') ?></option>
+                                            <?php foreach (smartpay_get_payment_statuses() as $key => $status) : ?>
+                                            <option value="<?php echo $key; ?>" <?php if ($payment->status == $key) echo 'selected'; ?>><?php echo $status; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-primary" type="submit">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="d-flex flex-lg-row flex-column py-2">
@@ -76,10 +93,18 @@ $payment = new SmartPay_Payment($payment_id);
                         </div>
                     </div>
                 </div>
+
                 <div id="checkout-details" class="postbox">
                     <h2 class="hndle"><?php echo ucwords(str_replace('_', ' ', $payment->payment_type)); ?> Details</h2>
                     <div class="smartpay">
                         <div class="d-flex flex-lg-row flex-column py-2">
+                            <?php if (!is_array($payment_data) || !count($payment_data)) : ?>
+
+                            <div class="col">
+                                <p class="text-center text-danger"><strong><?php _e('Payment data not found!', 'smartpay'); ?></strong></p>
+                            </div>
+
+                            <?php else : ?>
 
                             <!-- // Product purchase -->
                             <?php if ('product_purchase' == $payment->payment_type) : ?>
@@ -170,14 +195,25 @@ $payment = new SmartPay_Payment($payment_id);
                             <?php endif; ?>
 
                             <?php endif; ?>
+
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
+
                 <div id="customer-details" class="postbox ">
                     <?php $customer = $payment->customer; ?>
                     <h2 class="hndle"><span><?php _e('Customer Details', 'smartpay'); ?></span></h2>
                     <div class="smartpay">
                         <div class="d-flex flex-lg-row flex-column py-2">
+                            <?php if (!is_array($customer) || !count($customer)) : ?>
+
+                            <div class="col">
+                                <p class="text-center text-danger"><strong><?php _e('Payment data not found!', 'smartpay'); ?></strong></p>
+                            </div>
+
+                            <?php else : ?>
+
                             <div class="col">
                                 <p><strong><?php _e('First Name', 'smartpay'); ?></strong></p>
                                 <p><?php echo $customer['first_name'] ?: '-'; ?></p>
@@ -190,6 +226,8 @@ $payment = new SmartPay_Payment($payment_id);
                                 <p><strong><?php _e('Email', 'smartpay'); ?></strong></p>
                                 <p><?php echo $customer['email']; ?></p>
                             </div>
+
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

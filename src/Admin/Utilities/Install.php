@@ -52,6 +52,7 @@ final class Install
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Install)) {
             self::$instance = new self();
+            self::$instance->upload = Upload::instance();
         }
 
         return self::$instance;
@@ -102,6 +103,9 @@ final class Install
 
         // Set default settings
         $this->_set_default_settings();
+
+        // Protect upload directory
+        self::$instance->upload->protect_upload_directory(true);
     }
 
     /**
@@ -217,10 +221,10 @@ final class Install
         }
 
         $options = array(
-            'payment_page'          => $payment_page,
-            'payment_success_page'  => $payment_success_page,
-            'payment_failure_page'  => $payment_failure_page,
-            'payment_history_page'  => $payment_history_page,
+            'payment_page'            => $payment_page,
+            'payment_success_page'    => $payment_success_page,
+            'payment_failure_page'    => $payment_failure_page,
+            'payment_history_page'    => $payment_history_page,
             'customer_dashboard_page' => $customer_dashboard_page,
         );
 

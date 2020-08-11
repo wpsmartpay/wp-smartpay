@@ -23,6 +23,8 @@ final class Customer
     {
         // Process shortcode profile update
         add_action('init', [$this, 'process_shortcode_update_user_profile']);
+
+        add_action('profile_update', [$this, 'update_customer']);
     }
 
     /**
@@ -77,6 +79,44 @@ final class Customer
         } else {
             echo 'User profile updated.';
         }
+    }
+    /**
+     * Update customer when wp-user updates
+     *
+     * @since x.x.x
+     * @param integer $user_id
+     * @param \WP_User $old_user_data
+     * @return void
+     */
+    public function update_customer(int $user_id, \WP_User $old_user_data)
+    {
+        // $customer = new SmartPay_Customer($user_id, true);
+
+        // if (!$customer) return false;
+
+        // $user = get_userdata($user_id);
+
+        // if (empty($user) && $user->user_email !== $customer->email) return;
+
+
+
+
+
+
+        // $result = $this->update($customer->id, array('email' => $user->user_email));
+
+        // if ($result) {
+        //     // Update some payment meta if we need to
+        //     $payments_array = explode(',', $customer->payments);
+
+        //     if (!empty($payments_array)) {
+
+        //         foreach ($payments_array as $payment_id) {
+
+        //             // smartpay_update_payment_meta($payment_id, 'email', $user->user_email);
+        //         }
+        //     }
+        // }
     }
 
     /**

@@ -53,4 +53,24 @@
 	li.list-group-item {
 		margin: 0;
 	}
+
+	// Customer dashboard
+	.profile img {
+		height: 90px;
+		width: 90px;
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+	}
+
+	.profile h3 {
+		font-size: 20px;
+	}
+
+	.product--header {
+		cursor: pointer;
+	}
+
+	table td,
+	table th {
+		border: none;
+	}
 }

@@ -33,6 +33,7 @@ use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
 use SmartPay\Payments\Payment;
+use SmartPay\Products\Process_Download;
 use SmartPay\Session;
 
 // Exit if accessed directly.
@@ -101,14 +102,15 @@ final class SmartPay
         if (!isset(self::$instance) && !(self::$instance instanceof SmartPay)) {
 
             self::$instance = new self();
-            self::$instance->session   = Session::instance();
-            self::$instance->product   = Product::instance();
-            self::$instance->form      = Form::instance();
-            self::$instance->gateway   = Gateway::instance();
-            self::$instance->customer  = Customer::instance();
-            self::$instance->payment   = Payment::instance();
-            self::$instance->shortcode = Shortcode::instance();
-            self::$instance->email     = Email::instance();
+            self::$instance->session            = Session::instance();
+            self::$instance->product            = Product::instance();
+            self::$instance->form               = Form::instance();
+            self::$instance->gateway            = Gateway::instance();
+            self::$instance->customer           = Customer::instance();
+            self::$instance->payment            = Payment::instance();
+            self::$instance->shortcode          = Shortcode::instance();
+            self::$instance->email              = Email::instance();
+            self::$instance->process_download   = Process_Download::instance();
 
             if (is_admin()) {
                 self::$instance->admin = Admin::instance();

@@ -290,3 +290,95 @@ function smartpay_get_page_uri($page_id, $query_string = null)
 
     return $page_uri;
 }
+
+/**
+ * Get User IP
+ *
+ * @since x.x.x
+ * @return string $ip
+ */
+function smartpay_get_ip()
+{
+    $ip = false;
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = filter_var(wp_unslash($_SERVER['HTTP_CLIENT_IP']), FILTER_VALIDATE_IP);
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+
+        // To check ip is pass from proxy.
+        // Can include more than 1 ip, first is the public one.
+
+        $ips = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        if (is_array($ips)) {
+            $ip = filter_var($ips[0], FILTER_VALIDATE_IP);
+        }
+    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = filter_var(wp_unslash($_SERVER['REMOTE_ADDR']), FILTER_VALIDATE_IP);
+    }
+
+    $ip = false !== $ip ? $ip : '127.0.0.1';
+
+    // Fix potential CSV returned from $_SERVER variables.
+    $ip_array = explode(',', $ip);
+    $ip_array = array_map('trim', $ip_array);
+
+    return apply_filters('smartpay_get_ip', $ip_array[0]);
+}
+
+/**
+ * Get File Extension
+ *
+ * @since x.x.x
+ * @param string $str File name
+ * @return string File extension
+ */
+function smartpay_get_file_extension($str)
+{
+    $parts = explode('.', $str);
+    return end($parts);
+}
+
+/**
+ * Retrieve the absolute path to the file upload directory without the trailing slash
+ *
+ * @since  x.x.x
+ * @return string $path Absolute path to the SmartPay upload directory
+ */
+function smartpay_get_upload_dir()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay');
+    $path = $wp_upload_dir['basedir'] . '/smartpay';
+
+    return $path;
+}
+
+/**
+ * Retrieve the absolute path to the symlink directory
+ *
+ * @since  x.x.x
+ * @return string $path Absolute path to the symlink directory
+ */
+function smartpay_get_symlink_dir()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay/symlinks');
+    $path = $wp_upload_dir['basedir'] . '/smartpay/symlinks';
+
+    return $path;
+}
+
+/**
+ * Retrieve the URL of the symlink directory
+ *
+ * @since x.x.x
+ * @return string $url URL of the symlink directory
+ */
+function smartpay_get_symlink_url()
+{
+    $wp_upload_dir = wp_upload_dir();
+    wp_mkdir_p($wp_upload_dir['basedir'] . '/smartpay/symlinks');
+    $url = $wp_upload_dir['baseurl'] . '/smartpay/symlinks';
+
+    return $url;
+}
