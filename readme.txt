@@ -70,6 +70,17 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 
+= [0.0.4] =
+* Added report page for admin
+* Added Customer dashboard
+* Added file download for customers
+* Added payment receipt mail notification
+* Added folder and file protection for product
+
+* Updated payment modal
+* Updated form options
+* Updated product variations
+
 = [0.0.3] =
 * Updated payment popup content
 

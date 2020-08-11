@@ -16,7 +16,7 @@ final class Process_Download
     /**
      * Construct Process_Download class.
      *
-     * @since  x.x.x
+     * @since  0.0.4
      * @access private
      */
     private function __construct()
@@ -30,7 +30,7 @@ final class Process_Download
      * Ensures that only one instance of Process_Download exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since  x.x.x
+     * @since  0.0.4
      * @return object|Process_Download
      * @access public
      */
@@ -48,7 +48,7 @@ final class Process_Download
      *
      * Handles the file download process for product.
      *
-     * @since   x.x.x
+     * @since   0.0.4
      * @return  void
      * @access  public
      */
@@ -255,7 +255,7 @@ final class Process_Download
      *
      * If enabled, the file is symlinked to better support large file downloads
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param  string $file
      * @param  bool $redirect
      * @return void
@@ -314,7 +314,7 @@ final class Process_Download
     /**
      * Determine if the file being requested is hosted locally or not
      *
-     * @since  x.x.x
+     * @since  0.0.4
      * @param  string $requested_file The file being requested
      * @return bool If the file is hosted locally or not
      */
@@ -334,7 +334,7 @@ final class Process_Download
      *
      * Used during the symlink process to determine where to make the symlink point to
      *
-     * @since  x.x.x
+     * @since  0.0.4
      * @param  string $url The URL of the file requested
      * @return string If found to be locally hosted, the path to the file
      */
@@ -372,7 +372,7 @@ final class Process_Download
     /**
      * Get the file content type
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param  string $extension file extension
      * @return string content type
      */
@@ -1264,7 +1264,7 @@ final class Process_Download
      * Reads file in chunks so big downloads are possible without changing PHP.INI
      * See http://codeigniter.com/wiki/Download_helper_for_large_files/
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param   string  $file The file
      * @param   boolean $retbytes Return the bytes of file
      * @return  bool|string If string, $status || $cnt
@@ -1367,7 +1367,7 @@ final class Process_Download
     /**
      * Determines if we should use symbolic links during the file download process
      *
-     * @since  x.x.x
+     * @since  0.0.4
      * @return bool
      */
     private function _symlink_file_downloads()
@@ -1380,7 +1380,7 @@ final class Process_Download
     /**
      * Determines if a file should be allowed to be downloaded by making sure it's within the wp-content directory.
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param $file_details
      * @param $schemas
      * @param $requested_file
@@ -1410,7 +1410,7 @@ final class Process_Download
     /**
      * Get file download url with tocken
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param int $file_index
      * @param int $payment_id
      * @param int $product_id
@@ -1457,7 +1457,7 @@ final class Process_Download
     /**
      * Generate token
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param string $url
      * @return string token
      */
@@ -1491,7 +1491,7 @@ final class Process_Download
     /**
      * Check token is valid and have right permission
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @return array
      */
     private function _process_signed_download_url()
@@ -1524,7 +1524,7 @@ final class Process_Download
     /**
      * Check is token valid or not
      *
-     * @since x.x.x
+     * @since 0.0.4
      * @param string $url
      * @return bool
      */
