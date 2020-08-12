@@ -26,23 +26,6 @@ final class Product
     }
 
     /**
-     * Page template for smartpay_product
-     * 
-     * @since  x.x.x
-     * @param string $template
-     */
-    public function smartpay_product_page_template($template)
-    {
-        global $post;
-
-        if (is_singular('smartpay_product') && !locate_template('single-smartpay_product.php')) {
-            $template = SMARTPAY_DIR . '/includes/views/page-templates/single-smartpay_product.php';
-        }
-
-        return $template;
-    }
-
-    /**
      * Main Product Instance.
      *
      * Ensures that only one instance of Product exists in memory at any one
@@ -59,6 +42,23 @@ final class Product
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Page template for smartpay_product
+     * 
+     * @since  x.x.x
+     * @param string $template
+     */
+    public function smartpay_product_page_template($template)
+    {
+        global $post;
+
+        if (is_singular('smartpay_product') && !locate_template('single-smartpay_product.php')) {
+            $template = SMARTPAY_DIR . '/includes/views/page-templates/single-smartpay_product.php';
+        }
+
+        return $template;
     }
 
     /**

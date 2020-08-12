@@ -22,6 +22,9 @@ final class Form
     private function __construct()
     {
         add_action('init', [$this, 'register_smartpay_form_post_type']);
+
+        // Page template for form
+        add_filter('single_template', [$this, 'smartpay_form_page_template']);
     }
 
     /**
@@ -41,6 +44,23 @@ final class Form
         }
 
         return self::$instance;
+    }
+
+    /**
+     * Page template for smartpay_form
+     * 
+     * @since  x.x.x
+     * @param string $template
+     */
+    public function smartpay_form_page_template($template)
+    {
+        global $post;
+
+        if (is_singular('smartpay_form') && !locate_template('single-smartpay_form.php')) {
+            $template = SMARTPAY_DIR . '/includes/views/page-templates/single-smartpay_form.php';
+        }
+
+        return $template;
     }
 
     public function register_smartpay_form_post_type()
