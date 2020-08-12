@@ -926,7 +926,7 @@
 .smartpay .smartpay-form-shortcode .form--amount-section .amount.selected{box-shadow:0 0 0 2px #28a745}
 .smartpay .smartpay-form-shortcode .form--amount-section .amount .variation--description{margin-top:10px;color:#797874;font-size:17px}
 .smartpay .smartpay-form-shortcode .form--custom-amount{font-size:24px !important;padding:11px 15px !important;height:auto !important;font-weight:bold !important}
-.smartpay .smartpay-payment .payment-modal .modal-content{border:0;box-shadow:0 1px 2px rgba(0,0,0,0.15);min-height:80vh}
+.smartpay .smartpay-payment .payment-modal .modal-content{border:0;box-shadow:0 1px 2px rgba(0,0,0,0.15);min-height:400px}
 .smartpay .smartpay-payment .payment-modal .modal-content .modal-body{display:flex;justify-content:center}
 .smartpay .smartpay-payment .payment-modal .modal-content .modal-body .payment-modal--errors .alert{padding:8px 15px;margin-bottom:10px;font-size:14px}
 .smartpay .smartpay-payment .payment-modal .modal-content .modal-body form .form-group{margin-bottom:15px}
