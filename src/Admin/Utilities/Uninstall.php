@@ -17,7 +17,7 @@ final class Uninstall
     /**
      * Construct Uninstall class.
      *
-     * @since 0.0.1
+     * @since 0.0.2
      * @access private
      */
     private function __construct()
@@ -31,7 +31,7 @@ final class Uninstall
      * Ensures that only one instance of Uninstall exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since 0.0.1
+     * @since 0.0.2
      * @return object|Uninstall
      * @access public
      */
@@ -47,7 +47,7 @@ final class Uninstall
     /**
      * Plugin deactivate.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access public
      * @return void
      */

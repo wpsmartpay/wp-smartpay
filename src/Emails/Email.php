@@ -14,55 +14,53 @@ final class Email
     /**
      * Holds the from name
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $from_name = '';
 
     /**
      * Holds the from email
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $from_email = '';
 
     /**
      * Holds the content type
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $content_type = 'text/html';
 
     /**
      * Holds the content type is html
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $html = true;
 
     /**
      * Holds the headers
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private $headers = '';
 
     /**
      * The single instance of this class
      * 
-     * @since x.x.x
+     * @since 0.0.2
      **/
     private static $instance = null;
 
     /**
      * Construct Email class.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private function __construct()
     {
-        add_action('phpmailer_init', [$this, 'mailtrap']);
-
         add_action('smartpay_complete_payment', [$this, 'send_payment_receipt'], 999, 1);
     }
 
@@ -72,7 +70,7 @@ final class Email
      * Ensures that only one instance of Email exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return object|Email
      * @access public
      */
@@ -85,21 +83,10 @@ final class Email
         return self::$instance;
     }
 
-    // Mailtrap Config
-    public function mailtrap($phpmailer)
-    {
-        $phpmailer->isSMTP();
-        $phpmailer->Host = 'smtp.mailtrap.io';
-        $phpmailer->SMTPAuth = true;
-        $phpmailer->Port = 2525;
-        $phpmailer->Username = '0f2bafb11669af';
-        $phpmailer->Password = '6379f0acbb154e';
-    }
-
     /**
      * Get the email from name
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_from_name()
     {
@@ -113,7 +100,7 @@ final class Email
     /**
      * Get the email from address
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_from_email()
     {
@@ -131,7 +118,7 @@ final class Email
     /**
      * Get the email content type
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_content_type()
     {
@@ -147,7 +134,7 @@ final class Email
     /**
      * Get the email headers
      *
-     * @since x.x.x
+     * @since 0.0.2
      */
     public function get_headers()
     {
@@ -163,7 +150,7 @@ final class Email
     /**
      * Email the download link(s) and payment confirmation to user
      *
-     * @since x.x.x
+     * @since 0.0.2
      *
      * @return void
      */
@@ -174,7 +161,6 @@ final class Email
         $payment = new SmartPay_Payment(absint($payment_id));
 
         $to_email = $payment->email;
-        $to_email = 'alaminfirdows@gmail.com';
 
         // Email Subject
         $subject      = smartpay_get_option('payment_email_subject', __('Payment Receipt', 'smartpay'));

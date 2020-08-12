@@ -5,7 +5,7 @@
  * Description: Simplest way to sell digital downloads and fundraise with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
- * Version:     0.0.2
+ * Version:     0.0.4
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Text Domain: smartpay
@@ -33,6 +33,7 @@ use SmartPay\Forms\Form;
 use SmartPay\Gateways\Gateway;
 use SmartPay\Products\Product;
 use SmartPay\Payments\Payment;
+use SmartPay\Products\Process_Download;
 use SmartPay\Session;
 
 // Exit if accessed directly.
@@ -50,7 +51,7 @@ final class SmartPay
      *
      * @var string
      */
-    public $version = '0.0.1';
+    public $version = '0.0.4';
 
     /**
      * The single instance of this class
@@ -101,14 +102,15 @@ final class SmartPay
         if (!isset(self::$instance) && !(self::$instance instanceof SmartPay)) {
 
             self::$instance = new self();
-            self::$instance->session   = Session::instance();
-            self::$instance->product   = Product::instance();
-            self::$instance->form      = Form::instance();
-            self::$instance->gateway   = Gateway::instance();
-            self::$instance->customer  = Customer::instance();
-            self::$instance->payment   = Payment::instance();
-            self::$instance->shortcode = Shortcode::instance();
-            self::$instance->email     = Email::instance();
+            self::$instance->session            = Session::instance();
+            self::$instance->product            = Product::instance();
+            self::$instance->form               = Form::instance();
+            self::$instance->gateway            = Gateway::instance();
+            self::$instance->customer           = Customer::instance();
+            self::$instance->payment            = Payment::instance();
+            self::$instance->shortcode          = Shortcode::instance();
+            self::$instance->email              = Email::instance();
+            self::$instance->process_download   = Process_Download::instance();
 
             if (is_admin()) {
                 self::$instance->admin = Admin::instance();

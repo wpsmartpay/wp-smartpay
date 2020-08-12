@@ -120,7 +120,7 @@ final class Meta_Box
     /**
      * Delete product variation by ajax call.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return string|json response
      */
     public function ajax_delete_variation()
@@ -158,7 +158,7 @@ final class Meta_Box
     /**
      * Delete product's all variations by ajax call.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return string|json response
      */
     public function ajax_delete_product_variations()
@@ -212,7 +212,7 @@ final class Meta_Box
     public function admin_footer_scripts()
     {
         global $post;
-        if ($post && $post->post_type == 'product') {
+        if ($post && 'smartpay_product' == $post->post_type) {
             echo '<script> document.getElementById("edit-slug-box").outerHTML = ""; </script>';
         }
     }

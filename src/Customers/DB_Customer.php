@@ -24,8 +24,6 @@ class DB_Customer extends DB_Model
         $this->version     = '1.0';
         $this->primary_key = 'ID';
         $this->cache_group = 'customers';
-
-        // add_action('profile_update', array($this, 'update_customer_email_on_user_update'), 10, 2);
     }
 
     /**
@@ -121,46 +119,6 @@ class DB_Customer extends DB_Model
         }
 
         return (bool) $this->get_column_by('id', $field, $value);
-    }
-
-    /**
-     * Updates the email address of a customer record when the email on a user is updated
-     *
-     * @since  0.0.1
-     */
-    public function update_customer_email_on_user_update($user_id = 0, $old_user_data)
-    {
-
-        $customer = new SmartPay_Customer($user_id);
-
-        if (!$customer) {
-            return false;
-        }
-
-        $user = get_userdata($user_id);
-
-        if (!empty($user) && $user->user_email !== $customer->email) {
-
-            if (!$this->get_customer_by('email', $user->user_email)) {
-
-                $result = $this->update($customer->id, array('email' => $user->user_email));
-
-                if ($result) {
-                    // Update some payment meta if we need to
-                    $payments_array = explode(',', $customer->payments);
-
-                    if (!empty($payments_array)) {
-
-                        foreach ($payments_array as $payment_id) {
-
-                            // smartpay_update_payment_meta($payment_id, 'email', $user->user_email);
-                        }
-                    }
-
-                    do_action('smartpay_update_customer_email_on_user_update', $user, $customer);
-                }
-            }
-        }
     }
 
     /**

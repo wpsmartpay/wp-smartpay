@@ -308,7 +308,7 @@ class SmartPay_Product
     {
         $the_query = new \WP_Query(array(
             'post_parent' => $this->ID,
-            'post_type' => 'product_variation',
+            'post_type' => 'sp_product_variation',
         ));
 
         $child_products = $the_query->have_posts() ? $the_query->get_posts() : [];
@@ -490,11 +490,47 @@ class SmartPay_Product
      * Retrieve the files
      *
      * @since  0.0.1
-     * @return string files of the product
+     * @return array files of the product
      */
     public function get_files()
     {
         return apply_filters('smartpay_product_get_files', $this->files, $this->ID);
+    }
+
+    /**
+     * Retrieve the file downloads
+     *
+     * @since 2.2
+     * @param integer $variation_id
+     * @return array List of download files
+     */
+    public function get_downloadable_files($variation_id = null)
+    {
+        if (!is_null($variation_id) && $this->has_variations()) {
+
+            $variation = new Product_Variation($variation_id);
+
+            if (!$variation) return [];
+
+            $variation_files = $variation->get_files();
+
+            $product_files = $this->files;
+
+            $files = array_map(function ($file_id) use ($product_files) {
+                $key = array_search($file_id, array_column($product_files, 'id'));
+
+                if ($key < 0) return false;
+
+                return $product_files[$key];
+            }, $variation_files);
+
+            return apply_filters('smartpay_product_get_downloadable_files', $files, $this->ID);
+        } else {
+
+            $files = $this->files;
+        }
+
+        return apply_filters('smartpay_product_get_downloadable_files', $files, $this->ID);
     }
 
     /**
@@ -665,7 +701,7 @@ class SmartPay_Product
     /**
      * Delete the product.
      *
-     * @since  x.x.x
+     * @since  0.0.2
      * @return bool  True of the deleted, false if it failed
      */
     public function delete()

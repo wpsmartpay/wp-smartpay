@@ -13,14 +13,14 @@ final class Install
 {
     /**
      * The single instance of this class
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private static $instance = null;
 
     /**
      * The installed plugin version
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private $installed_version = '';
@@ -28,7 +28,7 @@ final class Install
     /**
      * Construct Install class.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      */
     private function __construct()
@@ -44,7 +44,7 @@ final class Install
      * Ensures that only one instance of Install exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return object|Install
      * @access public
      */
@@ -52,6 +52,7 @@ final class Install
     {
         if (!isset(self::$instance) && !(self::$instance instanceof Install)) {
             self::$instance = new self();
+            self::$instance->upload = Upload::instance();
         }
 
         return self::$instance;
@@ -60,7 +61,7 @@ final class Install
     /**
      * Plugin activate.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access public
      * @return void
      */
@@ -79,7 +80,7 @@ final class Install
     /**
      * Install SmartPay.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */
@@ -102,12 +103,15 @@ final class Install
 
         // Set default settings
         $this->_set_default_settings();
+
+        // Protect upload directory
+        self::$instance->upload->protect_upload_directory(true);
     }
 
     /**
      * Upgrade SmartPay.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */
@@ -217,10 +221,10 @@ final class Install
         }
 
         $options = array(
-            'payment_page'          => $payment_page,
-            'payment_success_page'  => $payment_success_page,
-            'payment_failure_page'  => $payment_failure_page,
-            'payment_history_page'  => $payment_history_page,
+            'payment_page'            => $payment_page,
+            'payment_success_page'    => $payment_success_page,
+            'payment_failure_page'    => $payment_failure_page,
+            'payment_history_page'    => $payment_history_page,
             'customer_dashboard_page' => $customer_dashboard_page,
         );
 
@@ -230,7 +234,7 @@ final class Install
     /**
      * Set default settings.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @access private
      * @return void
      */

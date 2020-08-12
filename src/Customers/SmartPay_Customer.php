@@ -255,6 +255,18 @@ class SmartPay_Customer
         }, $this->payments);
     }
 
+    public function active_payments()
+    {
+        return array_map(function ($payment_id) {
+
+            $payment = new SmartPay_Payment(intval($payment_id));
+
+            if (!$payment->ID || $this->_ID != $payment->customer['customer_id'] || 'publish' !==  $payment->status) return;
+
+            return $payment;
+        }, $this->payments);
+    }
+
     public static function create($data)
     {
         $customer = new self();

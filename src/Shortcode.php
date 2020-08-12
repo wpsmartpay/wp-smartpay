@@ -155,7 +155,7 @@ final class Shortcode
     /**
      * Customer dashboard shortcode.
      *
-     * @since x.x.x
+     * @since 0.0.2
      * @return void
      */
     public function dashboard_shortcode($atts)
