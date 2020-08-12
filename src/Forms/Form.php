@@ -88,7 +88,8 @@ final class Form
             'can_export'            => true,
             'has_archive'           => true,
             'exclude_from_search'   => true,
-            'publicly_queryable'    => false,
+            'publicly_queryable'    => true,
+            'query_var'             => true,
             'capability_type'       => 'page',
         );
         register_post_type('smartpay_form', $args);

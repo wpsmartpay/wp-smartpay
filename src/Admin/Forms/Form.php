@@ -85,7 +85,6 @@ final class Form
     {
         if ('smartpay_form' === $post->post_type) {
             unset($actions['inline hide-if-no-js']);
-            unset($actions['view']);
         }
 
         return $actions;
