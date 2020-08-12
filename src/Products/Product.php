@@ -20,6 +20,26 @@ final class Product
     private function __construct()
     {
         add_action('init', [$this, 'register_products_post_type']);
+
+        // Page template for product
+        add_filter('single_template', [$this, 'smartpay_product_page_template']);
+    }
+
+    /**
+     * Page template for smartpay_product
+     * 
+     * @since  x.x.x
+     * @param string $template
+     */
+    public function smartpay_product_page_template($template)
+    {
+        global $post;
+
+        if (is_singular('smartpay_product') && !locate_template('single-smartpay_product.php')) {
+            $template = SMARTPAY_DIR . '/includes/views/page-templates/single-smartpay_product.php';
+        }
+
+        return $template;
     }
 
     /**
