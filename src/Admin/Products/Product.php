@@ -94,7 +94,6 @@ final class Product
     public function modify_admin_table($actions, $post)
     {
         if ('smartpay_product' === $post->post_type) {
-            unset($actions['view']);
             unset($actions['inline hide-if-no-js']);
         }
 
