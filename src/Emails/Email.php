@@ -61,8 +61,6 @@ final class Email
      */
     private function __construct()
     {
-        add_action('phpmailer_init', [$this, 'mailtrap']);
-
         add_action('smartpay_complete_payment', [$this, 'send_payment_receipt'], 999, 1);
     }
 
@@ -83,17 +81,6 @@ final class Email
         }
 
         return self::$instance;
-    }
-
-    // Mailtrap Config
-    public function mailtrap($phpmailer)
-    {
-        $phpmailer->isSMTP();
-        $phpmailer->Host = 'smtp.mailtrap.io';
-        $phpmailer->SMTPAuth = true;
-        $phpmailer->Port = 2525;
-        $phpmailer->Username = '0f2bafb11669af';
-        $phpmailer->Password = '6379f0acbb154e';
     }
 
     /**
@@ -174,7 +161,6 @@ final class Email
         $payment = new SmartPay_Payment(absint($payment_id));
 
         $to_email = $payment->email;
-        $to_email = 'alaminfirdows@gmail.com';
 
         // Email Subject
         $subject      = smartpay_get_option('payment_email_subject', __('Payment Receipt', 'smartpay'));

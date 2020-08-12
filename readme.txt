@@ -1,10 +1,10 @@
 === WP SmartPay - WordPress Download Manager and Payment Form Plugin ===
-Contributors: themesgrove, parvezvai, alaminfirdows, anam_themexpert, shamsbd71
+Contributors: themesgrove
 Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
 Requires at least: 4.9
 Tested up to: 5.4
 Requires PHP: 7.0.0
-Stable Tag: 0.0.3
+Stable Tag: 0.0.4
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
@@ -26,12 +26,15 @@ Simply set up a payment form and start accepting credit cards and PayPal payment
 - One time and recurring payments
 - Drag and Drop File Upload
 - Create unlimited payment forms
+- Details Reporting
+- Customer management
+- Order management
 - Customize payment success & failure pages
 - Developer-friendly for building custom integrations
 - GDPR Friendly – Make your store GDPR compatible with just a few clicks.
 
 ####🧩 Payment Gateway Integrations
-- [Paddle](https://paddle.com/) - Built-in Paddle integration allows you to accept credit card and PayPal payments.
+- Paddle - Built-in Paddle integration allows you to accept credit card and PayPal payments.
 - bKash - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### Paddle for WordPress
@@ -85,7 +88,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 * Updated payment popup content
 
 = [0.0.2] =
-* 
+* Added Payment and Form cpt
 
 = [0.0.1] =
 * Initial release

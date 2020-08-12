@@ -1,0 +1,40 @@
+{
+    "name": "themexpert/paddle-php",
+    "description": "PHP Library for Paddle Payment Gateway.",
+    "keywords": [
+        "paddle",
+        "package"
+    ],
+    "homepage": "https://github.com/themexpert/paddle-php",
+    "license": "MIT",
+    "authors": [{
+            "name": "ThemeXpert",
+            "email": "help@themexpert.com",
+            "homepage": "http://themexpert.com"
+        },
+        {
+            "name": "Al-Amin Firdows",
+            "email": "alaminfirdows@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "ThemeXpert\\Paddle\\": [
+                "src/",
+                "src/Paddle"
+            ],
+            "ThemeXpert\\Paddle\\Util\\": "src/Util",
+            "ThemeXpert\\Paddle\\Product\\": "src/Paddle/Product",
+            "ThemeXpert\\Paddle\\Checkout\\": "src/Paddle/Checkout",
+            "ThemeXpert\\Paddle\\Subscription\\": "src/Paddle/Subscription",
+            "ThemeXpert\\Paddle\\Alert\\": "src/Paddle/Alert"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    }
+}
