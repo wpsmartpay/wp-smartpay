@@ -3,14 +3,7 @@
 function smartpay_payment_gateways()
 {
     // Default, built-in gateways
-    $gateways = array(
-        'paddle' => array(
-            'admin_label'    => __('Paddle', 'smartpay'),
-            'checkout_label' => __('Paddle', 'smartpay'),
-        ),
-    );
-
-    return apply_filters('smartpay_payment_gateways', $gateways);
+    return apply_filters('smartpay_gateways', SmartPay\Gateways\Gateway::gateways());
 }
 
 function smartpay_get_enabled_payment_gateways($sort = false)

@@ -50,15 +50,20 @@ final class Gateway
             'paddle' => array(
                 'admin_label'       => 'Paddle',
                 'checkout_label'    => 'Paddle'
+            ),
+            'paypal' => array(
+                'admin_label'       => 'Paypal',
+                'checkout_label'    => 'Paypal'
             )
         );
 
-        $gateways = apply_filters('smartpay_gateways', $gateways);
-        return $gateways;
+        return apply_filters('smartpay_gateways', $gateways);
     }
 
     public function include_gateways()
     {
+        // TODO: Update method to include
         Paddle::instance();
+        Paypal::instance();
     }
 }
