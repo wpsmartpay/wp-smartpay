@@ -111,40 +111,45 @@ final class Paypal_Standard extends Payment_Gateway
 
         // TODO: Rearrange data
         $paypal_args = array(
-            'charset'       => get_bloginfo('charset'), 'lc' => get_locale(),
-            'business' => $smartpay_options['paypal_email'],
-            'email' => $payment_data['email'],
-            'first_name' => $payment_data['customer']['first_name'],
-            'last_name' => $payment_data['customer']['last_name'],
-            'invoice' => $payment_data['key'],
-            'no_shipping' => '1',
-            'no_note' => '1',
-            'currency_code' => $payment_data['currency'],
-            'charset' => get_bloginfo('charset'),
-            'custom' => $payment->ID,
-            'rm' => '2',
-            'return' => smartpay_get_payment_success_page_uri(),
-            'cancel_return' => get_bloginfo('url'),
-            'notify_url' => $this->get_webhook_url($payment->ID),
-            'image_url' => '',
-            'cbt' => get_bloginfo('name'),
-            'bn' => 'WPSmartPay',
-            'upload' => '1',
+            'charset'       => get_bloginfo('charset'),
+            'lc'            => get_locale(),
+            'cbt'           => get_bloginfo('name'),
+            'page_style'    => 'paypal',
+            'bn'            => 'WPSmartPay',
+            'image_url'     => '',
 
-            'cmd' => '_cart',
-            'item_name_1' => 'Payment #' . $payment->ID,
+            'business'      => $smartpay_options['paypal_email'],
+
+            'cmd'           => '_cart',
+            'email'         => $payment_data['email'],
+            'first_name'    => $payment_data['customer']['first_name'],
+            'last_name'     => $payment_data['customer']['last_name'],
+            'currency_code' => $payment_data['currency'],
+
+            'custom'        => $payment->ID,
+            'invoice'       => $payment_data['key'],
+
+            'rm'            => 2,
+            'no_shipping'   => 1,
+            'no_note'       => 1,
+
+            'item_name_1'   => 'Payment #' . $payment->ID,
             'item_number_1' => $payment->ID,
-            'amount_1' => $payment_price,
-            'tax_rate' => 0,
-            'page_style' => 'paypal',
-            'upload'    => 1,
+            'amount_1'      => $payment_price,
+
+            'tax_rate'      => 0,
+            'upload'        => 1,
+
+            'return'        => smartpay_get_payment_success_page_uri(),
+            'cancel_return' => get_bloginfo('url'),
+            'notify_url'    => $this->get_webhook_url($payment->ID),
         );
 
         $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $payment_data);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
-        $content = '<p class="text-center">Redirecting to Paypal...</p>';
+        $content = '<p class="text-center">Redirecting to PayPal...</p>';
         $content .= '<script>window.location.replace("' . $paypal_redirect . '");</script>';
 
         echo $content;
