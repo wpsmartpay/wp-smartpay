@@ -8,13 +8,12 @@ use SmartPay\Payment_Gateway;
 if (!defined('ABSPATH')) {
     exit;
 }
-final class Paypal extends Payment_Gateway
+final class Paypal_Standard extends Payment_Gateway
 {
-    /**
-     * The single instance of this class
-     */
+    /** @var object|Paypal_Standard The single instance of this class */
     private static $instance = null;
 
+    /** @var array Supported currency */
     private static $supported_currency = ['AUD', 'BRL', 'CAD', 'CNY', 'CZK', 'DKK', 'EUR', 'HKD', 'HUF', 'INR', 'ILS', 'JPY', 'MYR', 'MXN', 'TWD', 'NZD', 'NOK', 'PHP', 'PLN', 'GBP', 'RUB', 'SGD', 'SEK', 'CHF', 'THB', 'USD'];
 
     /**
@@ -75,10 +74,6 @@ final class Paypal extends Payment_Gateway
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
 
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
-
-        add_filter('smartpay_payment_paypal_receipt', [$this, 'payment_receipt']);
-
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_payment_scripts']);
     }
 
     /**
@@ -98,7 +93,7 @@ final class Paypal extends Payment_Gateway
     {
         global $smartpay_options;
 
-        if (!$this->_set_credentials()) {
+        if (!$this->_check_credentials()) {
             // TODO: Implement smartpay_set_error
 
             die('Credentials error.');
@@ -149,79 +144,11 @@ final class Paypal extends Payment_Gateway
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
-        echo '<script>window.location.replace("' . $paypal_redirect . '");</script>';
+        $content = '<p class="text-center">Redirecting to Paypal...</p>';
+        $content .= '<script>window.location.replace("' . $paypal_redirect . '");</script>';
+
+        echo $content;
         return;
-    }
-
-    /**
-     * Payment receipt.
-     *
-     * @since  x.x.x
-     * @param object $payment
-     * @return void
-     * @access public
-     */
-    public function payment_receipt($payment)
-    {
-        if ('Paypal' != $payment->gateway) {
-            return;
-        }
-
-        // if($payment[])
-        // $payment_id = smartpay_set_session_payment_id();
-
-        echo $this->_pay_now_content($payment);
-    }
-
-    /**
-     * Generate pay now content.
-     *
-     * @since  x.x.x
-     * @param object $payment
-     * @access private
-     */
-    private function _pay_now_content($payment)
-    {
-        $vendor_id = smartpay_get_option('Paypal_vendor_id');
-
-        if (empty($vendor_id)) die('Credentials error.');
-
-        $Paypal_pay_link = get_post_meta($payment->ID, 'Paypal_pay_link', true);
-
-        if (!$Paypal_pay_link) {
-            die('Paypal pay link not found.');
-            return;
-        }
-
-        if ('completed' == $payment->status) {
-            echo '<p class="text-danger">Payment Already!</p>';
-            return;
-        }
-
-        $content = '';
-        $content .= '<p>' . __(
-            'Thank you for your order, please click the button below to pay with Paypal.',
-            'smartpay'
-        ) . '</p>';
-        $content .= '<div style="margin: 0 auto;text-align: center;">';
-        $content .= sprintf('<a href="#!" class="Paypal_button button alt" data-override="%s">Pay Now!</a>', $Paypal_pay_link);
-        $content .= '</div>';
-
-        $content .= '<script type="text/javascript">';
-        $content .= 'jQuery.getScript("https://cdn.Paypal.com/Paypal/Paypal.js", function(){';
-        $content .= 'Paypal.Setup({';
-        $content .= sprintf('vendor: %s', $vendor_id);
-        $content .= ' });';
-
-        // Open popup on page load
-        $content .= 'Paypal.Checkout.open({';
-        $content .= sprintf('override: "%s"', $Paypal_pay_link);
-        $content .= '});';
-
-        $content .= '});';
-        $content .= '</script>';
-
-        return $content;
     }
 
     /**
@@ -264,7 +191,7 @@ final class Paypal extends Payment_Gateway
                 die('Error.');
             }
 
-            if (!$this->_set_credentials()) {
+            if (!$this->_check_credentials()) {
                 echo __(sprintf(
                     'SmartPay-Paypal: Webhook requested [%s]; Payment #%s. API credentials not properly configured.',
                     $alert_id,
@@ -433,7 +360,7 @@ final class Paypal extends Payment_Gateway
      */
     public function gateway_section(array $sections = array()): array
     {
-        $sections['paypal'] = __('Paypal Standard', 'smartpay');
+        $sections['paypal'] = __('PayPal Standard', 'smartpay');
 
         return $sections;
     }
@@ -451,8 +378,8 @@ final class Paypal extends Payment_Gateway
         $gateway_settings = array(
             array(
                 'id'    => 'paypal_settings',
-                'name'  => '<h4 class="text-uppercase text-info my-1">' . __('Paypal Settings', 'smartpay') . '</h4>',
-                'desc'  => __('Configure your Paypal Standard Gateway Settings', 'smartpay'),
+                'name'  => '<h4 class="text-uppercase text-info my-1">' . __('PayPal Settings', 'smartpay') . '</h4>',
+                'desc'  => __('Configure your PayPal Standard Gateway Settings', 'smartpay'),
                 'type'  => 'header'
             ),
             array(
@@ -483,7 +410,7 @@ final class Paypal extends Payment_Gateway
             ),
             array(
                 'id'    => 'paypal_live_api_settings',
-                'name'  => '<strong>' . __('Paypal Live API Credentials', 'smartpay') . '</strong>',
+                'name'  => '<strong>' . __('PayPal Live API Credentials', 'smartpay') . '</strong>',
                 'type'  => 'header'
             ),
             array(
@@ -511,7 +438,7 @@ final class Paypal extends Payment_Gateway
             // Test account
             array(
                 'id'    => 'paypal_test_api_settings',
-                'name'  => '<strong>' . __('Paypal Test API Credentials', 'smartpay') . '</strong>',
+                'name'  => '<strong>' . __('PayPal Test API Credentials', 'smartpay') . '</strong>',
                 'type'  => 'header'
             ),
             array(
@@ -547,7 +474,7 @@ final class Paypal extends Payment_Gateway
      * @return boolean
      * @access private
      */
-    private function _set_credentials(): bool
+    private function _check_credentials(): bool
     {
         global $smartpay_options;
 
@@ -566,7 +493,7 @@ final class Paypal extends Payment_Gateway
         if (empty($paypal_email) || empty($api_username) || empty($api_password) || empty($api_signature)) {
             // TODO: Add smartpay payment error notice
 
-            die('SmartPay-Paypal: Set credentials; You must enter your vendor id, auth codes and public key for Paypal in gateway settings.');
+            die('SmartPay-PayPal: Set credentials; You must enter your vendor id, auth codes and public key for Paypal in gateway settings.');
             return false;
         }
 
@@ -575,14 +502,7 @@ final class Paypal extends Payment_Gateway
 
     public function unsupported_currency_notice()
     {
-        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by Paypal.</p></div>', 'smartpay');
-    }
-
-    public function enqueue_payment_scripts()
-    {
-        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION);
-
-        wp_enqueue_script('smartpay-payment');
+        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal.</p></div>', 'smartpay');
     }
 
     public function get_webhook_url($payment_id)
