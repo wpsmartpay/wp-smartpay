@@ -52,7 +52,7 @@ final class Gateway
                 'checkout_label'    => 'Paddle'
             ),
             'paypal' => array(
-                'admin_label'       => 'Paypal',
+                'admin_label'       => 'Paypal Standard',
                 'checkout_label'    => 'Paypal'
             )
         );
