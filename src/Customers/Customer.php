@@ -24,7 +24,7 @@ final class Customer
         // Process shortcode profile update
         add_action('init', [$this, 'process_shortcode_update_user_profile']);
 
-        add_action('profile_update', [$this, 'update_customer']);
+        // add_action('profile_update', [$this, 'update_customer']);
     }
 
     /**
