@@ -92,9 +92,10 @@ final class Paypal extends Payment_Gateway
     public function process_payment($payment_data)
     {
         return;
-        // var_dump($payment_data);
-        // exit;
+    }
 
+    public function ajax_process_payment($payment_data)
+    {
         global $smartpay_options;
 
         if (!$this->_set_credentials()) {
@@ -113,50 +114,43 @@ final class Paypal extends Payment_Gateway
 
         $payment_price = number_format($payment_data['amount'], 2);
 
+        // TODO: Rearrange data
         $paypal_args = array(
-            'business'      => $smartpay_options['paypal_email'],
-            'email'         => $payment_data['email'],
-            'first_name'    => $payment_data['first_name'],
-            'last_name'     => $payment_data['last_name'],
-            'invoice'       => $payment_data['key'],
-            'no_shipping'   => '1',
-            'shipping'      => '0',
-            'no_note'       => '1',
+            'charset'       => get_bloginfo('charset'), 'lc' => get_locale(),
+            'business' => $smartpay_options['paypal_email'],
+            'email' => $payment_data['email'],
+            'first_name' => $payment_data['customer']['first_name'],
+            'last_name' => $payment_data['customer']['last_name'],
+            'invoice' => $payment_data['key'],
+            'no_shipping' => '1',
+            'no_note' => '1',
             'currency_code' => $payment_data['currency'],
-            'charset'       => get_bloginfo('charset'),
-            'custom'        => $payment,
-            'rm'            => '2',
-            'return'        => get_permalink(smartpay_get_payment_success_page_uri()),
-            'cancel_return' => get_permalink(),
-            'notify_url'    => $this->get_webhook_url($payment->ID),
-            'image_url'     => '',
-            'cbt'           => get_bloginfo('name'),
-            'bn'            => 'WPSmartPay',
-            'cmd'           => '_cart',
-            'upload'        => '1',
+            'charset' => get_bloginfo('charset'),
+            'custom' => $payment->ID,
+            'rm' => '2',
+            'return' => smartpay_get_payment_success_page_uri(),
+            'cancel_return' => get_bloginfo('url'),
+            'notify_url' => $this->get_webhook_url($payment->ID),
+            'image_url' => '',
+            'cbt' => get_bloginfo('name'),
+            'bn' => 'WPSmartPay',
+            'upload' => '1',
 
-            // Items
-            'item_name_1'   => 'Payment #' . $payment->ID,
-            'quantity_1'    => 1,
-            'amount_1'      => $payment_price,
-
-            'discount_amount_cart' => 0,
-            'tax_cart'             => 0,
+            'cmd' => '_cart',
+            'item_name_1' => 'Payment #' . $payment->ID,
+            'item_number_1' => $payment->ID,
+            'amount_1' => $payment_price,
+            'tax_rate' => 0,
+            'page_style' => 'paypal',
+            'upload'    => 1,
         );
-
-        var_dump($paypal_args);
-        exit;
 
         $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $payment_data);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
-        return wp_redirect($paypal_redirect, 302);
-    }
-
-    public function ajax_process_payment($payment_data)
-    {
-        return $this->process_payment($payment_data);
+        echo '<script>window.location.replace("' . $paypal_redirect . '");</script>';
+        return;
     }
 
     /**
@@ -557,18 +551,24 @@ final class Paypal extends Payment_Gateway
     {
         global $smartpay_options;
 
-        $vendor_id          = $smartpay_options['Paypal_vendor_id']         ?? null;
-        $vendor_auth_code   = $smartpay_options['Paypal_vendor_auth_code']  ?? null;
-        $public_key         = $smartpay_options['Paypal_public_key']        ?? null;
+        $paypal_email       = $smartpay_options['paypal_email'] ?? null;
 
-        if (empty($vendor_id) || empty($vendor_auth_code) || empty($public_key)) {
+        if (smartpay_is_test_mode()) {
+            $api_username   = $smartpay_options['paypal_test_api_username']  ?? null;
+            $api_password   = $smartpay_options['paypal_test_api_password']  ?? null;
+            $api_signature  = $smartpay_options['paypal_test_api_signature'] ?? null;
+        } else {
+            $api_username   = $smartpay_options['paypal_live_api_username']  ?? null;
+            $api_password   = $smartpay_options['paypal_live_api_password']  ?? null;
+            $api_signature  = $smartpay_options['paypal_live_api_signature'] ?? null;
+        }
+
+        if (empty($paypal_email) || empty($api_username) || empty($api_password) || empty($api_signature)) {
             // TODO: Add smartpay payment error notice
 
             die('SmartPay-Paypal: Set credentials; You must enter your vendor id, auth codes and public key for Paypal in gateway settings.');
             return false;
         }
-
-        PaypalSDK::setApiCredentials($vendor_id, $vendor_auth_code);
 
         return true;
     }
@@ -596,7 +596,6 @@ final class Paypal extends Payment_Gateway
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)
     {
-
         $protocol = 'http://';
         if (is_ssl() || !$ssl_check) {
             $protocol = 'https://';
