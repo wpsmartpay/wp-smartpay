@@ -55,22 +55,35 @@
 	}
 
 	// Customer dashboard
-	.profile img {
-		height: 90px;
-		width: 90px;
-		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-	}
+	.customer-dashboard {
+		.profile img {
+			height: 90px;
+			width: 90px;
+			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+		}
 
-	.profile h3 {
-		font-size: 20px;
-	}
+		.profile h3 {
+			font-size: 20px;
+		}
 
-	.product--header {
-		cursor: pointer;
-	}
+		.product--header {
+			cursor: pointer;
+		}
 
-	table td,
-	table th {
-		border: none;
+		table td,
+		table th {
+			border: none;
+		}
+
+		.form-control {
+			font-size: 16px;
+			min-height: 40px;
+			padding: 5px 15px;
+		}
+
+		.btn {
+			font-size: 16px;
+			padding: 6px 10px;
+		}
 	}
 }

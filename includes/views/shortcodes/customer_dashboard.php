@@ -13,7 +13,7 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
 ?>
 
 <div class="smartpay">
-    <div class="card border-light mb-3">
+    <div class="customer-dashboard card border-light mb-3">
         <div class="card-body py-5">
             <div class="d-flex justify-content-center flex-column">
 
