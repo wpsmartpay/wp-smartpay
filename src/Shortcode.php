@@ -161,7 +161,10 @@ final class Shortcode
     public function dashboard_shortcode($atts)
     {
         // If not logged in or id not found, then return
-        if (!is_user_logged_in() || get_current_user_id() <= 0) return;
+        if (!is_user_logged_in() || get_current_user_id() <= 0) {
+            echo '<p>You must log in to access the dashboard!</p>';
+            return;
+        }
 
         $customer = new SmartPay_Customer(get_current_user_id(), true);
 
