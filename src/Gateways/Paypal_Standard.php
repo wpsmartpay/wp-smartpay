@@ -65,8 +65,6 @@ final class Paypal_Standard extends Payment_Gateway
      */
     private function init_actions()
     {
-        add_action('init', [$this, 'process_webhooks']);
-
         add_action('smartpay_paypal_process_payment', [$this, 'process_payment']);
 
         add_action('smartpay_paypal_ajax_process_payment', [$this, 'ajax_process_payment']);
@@ -74,6 +72,8 @@ final class Paypal_Standard extends Payment_Gateway
         add_filter('smartpay_settings_sections_gateways', [$this, 'gateway_section']);
 
         add_filter('smartpay_settings_gateways', [$this, 'gateway_settings']);
+
+        add_action('init', [$this, 'process_webhooks']);
     }
 
     /**
@@ -142,7 +142,10 @@ final class Paypal_Standard extends Payment_Gateway
 
             'return'        => smartpay_get_payment_success_page_uri(),
             'cancel_return' => get_bloginfo('url'),
-            'notify_url'    => $this->get_webhook_url($payment->ID),
+            'notify_url'    => get_bloginfo('url') . '/index.php?' . build_query([
+                'smartpay-listener' => 'paypal',
+                'payment-id'        => $payment->ID
+            ]),
         );
 
         $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $payment_data);
@@ -165,193 +168,149 @@ final class Paypal_Standard extends Payment_Gateway
      */
     public function process_webhooks()
     {
-        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'Paypal') {
+        global $smartpay_options;
 
-            $signature     = sanitize_text_field($_POST['p_signature']);
-            $web_hook_data = stripslashes_deep($_POST);
-            $identifier    = sanitize_text_field($_GET['identifier']) ?? null;
-            $alert_name    = $web_hook_data['alert_name'] ?? null;
-            $alert_id      = $web_hook_data['alert_id'] ?? 'N/A';
-            $payment_id    = absint($web_hook_data['passthrough'] ?? sanitize_text_field($_GET['payment-id']) ?? null);
+        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'paypal') {
 
-            $responsible_alerts = [
-                'payment_succeeded'
-            ];
+            // Fallback just in case post_max_size is lower than needed
+            if (ini_get('allow_url_fopen')) {
+                $post_data = file_get_contents('php://input');
+            } else {
+                // If allow_url_fopen is not enabled, then make sure that post_max_size is large enough
+                ini_set('post_max_size', '12M');
+            }
 
-            // If not responsible for regular payment then return
-            if (!in_array($alert_name, $responsible_alerts) && ($identifier != $this->fulfillment_webhook_identifier)) {
+            // Start the encoded data collection with notification command
+            $encoded_data = 'cmd=_notify-validate';
+
+            // Get current arg separator
+            $arg_separator = ini_get('arg_separator.output');
+
+            // Verify there is a post_data
+            if ($post_data || strlen($post_data) > 0) {
+                // Append the data
+                $encoded_data .= $arg_separator . $post_data;
+            } else {
+                // Check if POST is empty
+                if (empty($_POST)) {
+                    // Nothing to do
+                    return;
+                } else {
+                    // Loop through each POST
+                    foreach ($_POST as $key => $value) {
+                        // Encode the value and append the data
+                        $encoded_data .= $arg_separator . "$key=" . urlencode($value);
+                    }
+                }
+            }
+
+            // Convert collected post data to an array
+            parse_str($encoded_data, $encoded_data_array);
+
+            foreach ($encoded_data_array as $key => $value) {
+
+                if (false !== strpos($key, 'amp;')) {
+                    $new_key = str_replace('&amp;', '&', $key);
+                    $new_key = str_replace('amp;', '&', $new_key);
+
+                    unset($encoded_data_array[$key]);
+                    $encoded_data_array[$new_key] = $value;
+                }
+            }
+
+            // Validate the IPN
+            $remote_post_vars = array(
+                'method'      => 'POST',
+                'timeout'     => 45,
+                'redirection' => 5,
+                'httpversion' => '1.1',
+                'blocking'    => true,
+                'headers'     => array(
+                    'host'         => 'www.paypal.com',
+                    'connection'   => 'close',
+                    'content-type' => 'application/x-www-form-urlencoded',
+                    'post'         => '/cgi-bin/webscr HTTP/1.1',
+                    'user-agent'   => 'SmartPay IPN Verification/' . SMARTPAY_VERSION . '; ' . get_bloginfo('url')
+                ),
+                'sslverify'   => false,
+                'body'        => $encoded_data_array
+            );
+
+            // Get response
+            $api_response = wp_remote_post($this->get_paypal_redirect_url(true, true), $remote_post_vars);
+
+            if (is_wp_error($api_response)) {
+                return; // Something went wrong
+            }
+
+            if ('VERIFIED' !== wp_remote_retrieve_body($api_response) && $smartpay_options['disable_paypal_verification'] ?? false) {
+                return; // Response not okay
+            }
+
+            // Check if $post_data_array has been populated
+            if (!is_array($encoded_data_array) && !empty($encoded_data_array)) {
                 return;
             }
 
+            $defaults = array(
+                'txn_type'       => '',
+                'payment_status' => ''
+            );
+
+            $encoded_data_array = wp_parse_args($encoded_data_array, $defaults);
+
+            $payment_id = absint($encoded_data_array['custom'] ?? sanitize_text_field($_GET['payment-id']) ?? 0);
+
             $payment = smartpay_get_payment($payment_id);
 
-            // If payment id not found
+            // If payment not found
             if (!$payment) {
                 echo __(sprintf(
-                    'SmartPay-Paypal: Webhook requested [%s]; Smartpay payment not found for #%s.',
-                    $alert_id,
-                    $payment->ID
+                    'SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.',
+                    $payment_id
                 ), 'smartpay');
 
                 die('Error.');
             }
 
-            if (!$this->_check_credentials()) {
-                echo __(sprintf(
-                    'SmartPay-Paypal: Webhook requested [%s]; Payment #%s. API credentials not properly configured.',
-                    $alert_id,
-                    $payment->ID
-                ), 'smartpay');
+            $this->process_smartpay_paypal_web_accept($encoded_data_array, $payment);
+            return;
+        }
+    }
 
-                die('Error.');
+    /**
+     * Process web accept (one time) payment IPNs
+     *
+     * @since x.x.x
+     * @param array $data IPN Data
+     * @return void
+     */
+    public function process_smartpay_paypal_web_accept($data, $payment)
+    {
+        if ($data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded') {
+            return;
+        }
+
+        // Collect payment details
+        $paypal_amount  = $data['mc_gross'] ?? 0;
+        $payment_status = strtolower($data['payment_status'] ?? '');
+
+        if ($payment_status == 'refunded' || $payment_status == 'reversed') {
+            // TODO: Process a refund
+        } else {
+
+            if ('publish' == $payment->status) {
+                return; // Only complete payments once
             }
 
-            global $smartpay_options;
-
-            $public_key = $smartpay_options['Paypal_public_key'] ?? null;
-
-            if (empty($signature) || !count($web_hook_data) || empty($public_key)) {
-                echo __(sprintf(
-                    'SmartPay-Paypal: Webhook requested [%s]; Signature, Webhook data or Public key can not be empty. Payment #%s.',
-                    $alert_id,
-                    $payment->ID
-                ), 'smartpay');
-
-                die('Error.');
+            if (number_format((float) $paypal_amount, 2) < number_format((float) $payment->amount, 2)) {
+                return; // The prices don't match
             }
 
-            try {
-                $verify_signature = PaypalSDKVerify::webHookSignature($signature, $web_hook_data, $public_key);
-
-                if ($verify_signature) {
-                    if (true == $verify_signature['success']) {
-
-                        // Fulfillment webhooks.
-                        if ($identifier == $this->fulfillment_webhook_identifier) {
-                            /* Sent when a one-time purchase order is processed for a product with webhook fulfillment enabled */
-
-                            if ($payment->update_status('completed')) {
-                                // Paypal transaction id.
-                                $Paypal_order_id = sanitize_text_field($web_hook_data['p_order_id'] ?? null);
-
-                                if ($Paypal_order_id) {
-                                    smartpay_set_payment_transaction_id($payment->ID, $Paypal_order_id);
-                                }
-
-                                // $payment->add_note(__('Payment completed by Paypal fulfillment webhook.', 'smartpay'));
-
-                                echo __(sprintf(
-                                    'SmartPay-Paypal: Fulfillment webhook requested [%s]; Payment #%s completed.',
-                                    $alert_id,
-                                    $payment->ID
-                                ), 'smartpay');
-
-                                die('Success.');
-                            } else {
-                                // $payment->add_note(__('Payment can not completed by Paypal fulfillment webhook.', 'smartpay'));
-
-                                echo __(sprintf(
-                                    'SmartPay-Paypal: Fulfillment webhook requested [%s]; Payment #%s can not complete.',
-                                    $alert_id,
-                                    $payment->ID
-                                ), 'smartpay');
-
-                                die('Error.');
-                            }
-                        } else {
-                            // Other Webhooks.
-
-                            // Paypal transaction id.
-                            $Paypal_order_id = sanitize_text_field($web_hook_data['order_id'] ?? null);
-
-                            switch (strtolower($alert_name)) {
-
-                                case 'payment_succeeded':
-                                    /* Fired when a payment is made into your Paypal account. */
-
-                                    if ('publish' == smartpay_get_payment_status($payment->ID)) {
-                                        echo __(sprintf(
-                                            'SmartPay-Paypal: Webhook requested [%s]; Payment #%s was completed before.',
-                                            $alert_id,
-                                            $payment->ID
-                                        ), 'smartpay');
-
-                                        die('Success.');
-                                    }
-
-                                    if ($payment->update_status('completed')) {
-                                        if ($Paypal_order_id) {
-                                            smartpay_set_payment_transaction_id($payment->ID, $Paypal_order_id);
-                                        }
-
-                                        // $payment->add_note(__('Payment completed by Paypal webhook.', 'smartpay'));
-
-                                        echo __(sprintf(
-                                            'SmartPay-Paypal: Webhook requested [%s]; Payment #%s completed.',
-                                            $alert_id,
-                                            $payment->ID
-                                        ), 'smartpay');
-
-                                        die('Success.');
-                                    } else {
-                                        // $payment->add_note(__('Payment can not completed by Paypal webhook.', 'smartpay'));
-
-                                        echo __(sprintf(
-                                            'SmartPay-Paypal: Webhook requested [%s]; Payment #%s can not completed.',
-                                            $alert_id,
-                                            $payment->ID
-                                        ), 'smartpay');
-
-                                        die('Error.');
-                                    }
-                                    break;
-
-                                default:
-                                    echo __(sprintf(
-                                        'SmartPay-Paypal: Webhook requested [%s]; No action taken for payment #%s.',
-                                        $alert_id,
-                                        $payment->ID
-                                    ), 'smartpay');
-
-                                    die('Error.');
-                                    break;
-                            }
-                        }
-                    } else {
-                        // If signature is not valid
-                        echo __(sprintf(
-                            'SmartPay-Paypal: Webhook requested [%s]; Payment #%s. Webhook signature invalid. Errors: %s',
-                            $alert_id,
-                            $payment->ID,
-                            json_encode($verify_signature['error']['message'])
-                        ), 'smartpay');
-
-                        die('Error.');
-                    }
-                } else {
-                    // Other errors
-                    echo __(sprintf(
-                        'SmartPay-Paypal: Webhook requested [%s]; Payment #%s. Something went wrong! Error on checking Webhook signature.',
-                        $alert_id,
-                        $payment->ID
-                    ), 'smartpay');
-
-                    die('Error.');
-                }
-            } catch (Exception $e) {
-                // If fail to verify signature.
-                echo __(sprintf(
-                    'SmartPay-Paypal: Webhook requested [%s]; Payment #%s. Exception: %s.',
-                    $alert_id,
-                    $payment->ID,
-                    var_dump($e)
-                ), 'smartpay-woo');
-
-                die('Error.');
+            if ('completed' == $payment_status || smartpay_is_test_mode()) {
+                $payment->update_status('completed');
+                smartpay_set_payment_transaction_id($payment->ID, $data['txn_id']);
             }
-
-            // Send responce.
-            die();
         }
     }
 
@@ -467,6 +426,25 @@ final class Paypal_Standard extends Payment_Gateway
                 'type'  => 'text',
                 'size'  => 'regular',
             ),
+
+            $paddle_webhook_description_text = __(
+                sprintf(
+                    '<p>For PayPal to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
+                    'https://paypal.com/businessmanage/preferences/website',
+                    home_url("index.php?smartpay-listener=paypal")
+                ),
+                'smartpay'
+            ),
+
+            $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
+
+            array(
+                'id'    => 'paddle_webhook_description',
+                'type'  => 'descriptive_text',
+                'name'  => __('Instant Notification System (INS)', 'smartpay'),
+                'desc'  => $paddle_webhook_description_text,
+
+            ),
         );
 
         return array_merge($settings, ['paypal' => $gateway_settings]);
@@ -508,15 +486,6 @@ final class Paypal_Standard extends Payment_Gateway
     public function unsupported_currency_notice()
     {
         echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal.</p></div>', 'smartpay');
-    }
-
-    public function get_webhook_url($payment_id)
-    {
-        return get_bloginfo('url') . '/index.php?' . build_query(array(
-            'smartpay-listener' => 'paypal',
-            'identifier'        => 'fulfillment-webhook',
-            'payment-id'        => $payment_id
-        ));
     }
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)
