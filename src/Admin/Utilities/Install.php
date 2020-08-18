@@ -186,23 +186,6 @@ final class Install
             );
         }
 
-        // Setup payment history page
-        $payment_history_page = array_key_exists('payment_history_page', $smartpay_settings) ? $smartpay_settings['payment_history_page'] : false;
-
-        if (empty($payment_history_page)) {
-            $payment_history_page = \wp_insert_post(
-                array(
-                    'post_title'     => __('Payment History', 'smartpay'),
-                    'post_name'      => 'smartpay-payment-history',
-                    'post_content'   => sprintf("<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_payment_history]'),
-                    'post_status'    => 'publish',
-                    'post_author'    => get_current_user_id(),
-                    'post_type'      => 'page',
-                    'comment_status' => 'closed'
-                )
-            );
-        }
-
         // Setup customer dashboard page
         $customer_dashboard_page = array_key_exists('customer_dashboard_page', $smartpay_settings) ? $smartpay_settings['customer_dashboard_page'] : false;
 
