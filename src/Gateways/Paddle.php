@@ -308,7 +308,7 @@ final class Paddle extends Payment_Gateway
                 echo __(sprintf(
                     'SmartPay-Paddle: Webhook requested [%s]; Smartpay payment not found for #%s.',
                     $alert_id,
-                    $payment->ID
+                    $payment_id
                 ), 'smartpay');
 
                 die('Error.');
