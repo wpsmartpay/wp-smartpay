@@ -4,7 +4,7 @@ const { createElement } = wp.element
 registerBlockType('smartpay/product', {
 	title: 'SmartPay Product.',
 	description: 'Simple block to show a product',
-	icon: 'dashicon dashicons-feedback',
+	icon: 'format-aside',
 	category: 'widgets',
 	attributes: {
 		id: {
