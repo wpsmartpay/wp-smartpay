@@ -133,7 +133,7 @@ final class Shortcode
      */
     public function payment_receipt_shortcode($atts)
     {
-        $payment_id = smartpay_get_session_payment_id();
+        $payment_id = $_GET['payment-id'] ?? smartpay_get_session_payment_id();
 
         if (!isset($payment_id)) {
             return;

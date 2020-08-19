@@ -140,13 +140,20 @@ final class Paypal_Standard extends Payment_Gateway
             'tax_rate'      => 0,
             'upload'        => 1,
 
-            'return'        => smartpay_get_payment_success_page_uri(),
-            'cancel_return' => get_bloginfo('url'),
+            'return'        => smartpay_get_payment_success_page_uri() . '?' . build_query([
+                'payment-id' => $payment->ID
+            ]),
+            'cancel_return' => smartpay_get_payment_failure_page_uri() . '?' . build_query([
+                'payment-id' => $payment->ID
+            ]),
             'notify_url'    => get_bloginfo('url') . '/index.php?' . build_query([
                 'smartpay-listener' => 'paypal',
-                'payment-id'        => $payment->ID
+                'payment-id' => $payment->ID
             ]),
         );
+
+        var_dump($paypal_args);
+        exit;
 
         $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $payment_data);
 
