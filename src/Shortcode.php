@@ -139,6 +139,9 @@ final class Shortcode
             return;
         }
 
+        // Sometimes payment gateway need more time to complete a payment
+        sleep(3);
+
         $payment = smartpay_get_payment($payment_id);
 
         try {
