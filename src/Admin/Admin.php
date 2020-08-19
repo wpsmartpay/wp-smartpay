@@ -57,6 +57,7 @@ final class Admin
             self::$instance->form          = Form::instance();
             self::$instance->payment       = Payment::instance();
             self::$instance->upload        = Upload::instance();
+            self::$instance->block_editor  = Block_Editor::instance();
             self::$instance->install       = Install::instance();
             self::$instance->uninstall     = Uninstall::instance();
         }
