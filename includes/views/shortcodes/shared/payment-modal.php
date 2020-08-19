@@ -1,3 +1,10 @@
+<?php
+
+use SmartPay\Customers\SmartPay_Customer;
+
+$customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), true) : null;
+?>
+
 <div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content align-content-between">
@@ -27,7 +34,8 @@
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
                             <?php $gateways_index = array_keys($gateways); ?>
-                            <!-- <p class="payment-gateway--label single-gateway"><?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); ?></p> -->
+                            <!-- <p class="payment-gateway--label single-gateway"><?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); 
+                                                                                        ?></p> -->
                             <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
                             <!-- // If it has multiple payment gateway -->
@@ -49,7 +57,7 @@
                             <?php
                                 $has_payment_error = true;
                                 echo 'You must enable a payment gateway to proceed a payment.';
-                            ?>
+                                ?>
                             <?php endif; ?>
                         </div>
 
@@ -58,15 +66,15 @@
                         <div class="payment-modal--user-info mt-3">
                             <div class="row">
                                 <div class="col-sm-6 form-group">
-                                    <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" autocomplete="first_name" required>
+                                    <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" value="<?php echo $customer->first_name ?? ''; ?>" autocomplete="first_name" required>
                                 </div>
                                 <div class="col-sm-6 form-group">
-                                    <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" autocomplete="last_name" required>
+                                    <input type="text" placeholder="Last name" class="form-control" name="smartpay_last_name" id="smartpay_last_name" value="<?php echo $customer->last_name ?? ''; ?>" autocomplete="last_name" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col form-group">
-                                    <input type="email" placeholder="Email address" class="form-control" name="smartpay_email" id="smartpay_email" autocomplete="email" required>
+                                    <input type="email" placeholder="Email address" class="form-control" name="smartpay_email" id="smartpay_email" value="<?php echo $customer->email ?? ''; ?>" autocomplete="email" required>
                                 </div>
                             </div>
 
