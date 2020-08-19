@@ -4,7 +4,7 @@ const { createElement } = wp.element
 registerBlockType('smartpay/product', {
 	title: 'SmartPay Product.',
 	description: 'Simple block to show a product',
-	icon: 'universal-access-alt',
+	icon: 'dashicon dashicons-feedback',
 	category: 'widgets',
 	attributes: {
 		id: {
@@ -49,13 +49,18 @@ registerBlockType('smartpay/product', {
 								'select',
 								{
 									class: 'form-control form-control-sm',
+									onChange: saveId,
 								},
 								JSON.parse(
 									smartpay_product_block_data.products
-								).map((product, index) => {
+								).map((product) => {
 									return createElement(
 										'option',
-										null,
+										{
+											value: product.id,
+											selected:
+												product.id == attributes.id,
+										},
 										`${product.name} (#${product.id})`
 									)
 								})
