@@ -1,6 +1,6 @@
 const { registerBlockType } = wp.blocks
 const { createElement } = wp.element
-
+// Product block
 registerBlockType('smartpay/product', {
 	title: 'SmartPay Product.',
 	description: 'Simple block to show a product',
@@ -32,13 +32,13 @@ registerBlockType('smartpay/product', {
 						class: 'card-body text-center',
 					},
 					createElement('img', {
-						src: smartpay_product_block_data.logo,
+						src: smartpay_logo,
 						class: 'logo img-fluid',
 					}),
 					createElement(
 						'div',
 						{
-							class: 'd-flex justify-content-center mt-4',
+							class: 'd-flex justify-content-center mt-1',
 						},
 						createElement(
 							'div',
@@ -46,24 +46,35 @@ registerBlockType('smartpay/product', {
 								class: 'col-md-8',
 							},
 							createElement(
+								'h5',
+								{
+									class: 'text-center mb-3 m-0',
+									style: {
+										fontSize: '1rem',
+										fontWeight: 'normal',
+									},
+								},
+								'Select a Product'
+							),
+							createElement(
 								'select',
 								{
 									class: 'form-control form-control-sm',
 									onChange: saveId,
 								},
-								JSON.parse(
-									smartpay_product_block_data.products
-								).map((product) => {
-									return createElement(
-										'option',
-										{
-											value: product.id,
-											selected:
-												product.id == attributes.id,
-										},
-										`${product.name} (#${product.id})`
-									)
-								})
+								JSON.parse(smartpay_block_editor_products).map(
+									(product) => {
+										return createElement(
+											'option',
+											{
+												value: product.id,
+												selected:
+													product.id == attributes.id,
+											},
+											`${product.name} (#${product.id})`
+										)
+									}
+								)
 							)
 						)
 					)
@@ -80,3 +91,5 @@ registerBlockType('smartpay/product', {
 		)
 	},
 })
+
+// Form block
