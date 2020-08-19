@@ -152,9 +152,6 @@ final class Paypal_Standard extends Payment_Gateway
             ]),
         );
 
-        var_dump($paypal_args);
-        exit;
-
         $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $payment_data);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
