@@ -2,7 +2,7 @@ const { registerBlockType } = wp.blocks
 const { createElement } = wp.element
 // Product block
 registerBlockType('smartpay/product', {
-	title: 'SmartPay Product.',
+	title: 'SmartPay Product',
 	description: 'Simple block to show a product',
 	icon: 'format-aside',
 	category: 'widgets',
@@ -93,3 +93,93 @@ registerBlockType('smartpay/product', {
 })
 
 // Form block
+registerBlockType('smartpay/form', {
+	title: 'SmartPay Form',
+	description: 'Simple block to show a form',
+	icon: 'format-aside',
+	category: 'widgets',
+	attributes: {
+		id: {
+			type: 'string',
+		},
+	},
+	edit: ({ attributes, setAttributes }) => {
+		function saveId(event) {
+			setAttributes({ id: event.target.value })
+		}
+
+		return createElement(
+			'div',
+			{
+				class: 'smartpay',
+			},
+			createElement(
+				'div',
+				{
+					class: 'block-editor-form card py-4',
+				},
+				createElement(
+					'div',
+					{
+						class: 'card-body text-center',
+					},
+					createElement('img', {
+						src: smartpay_logo,
+						class: 'logo img-fluid',
+					}),
+					createElement(
+						'div',
+						{
+							class: 'd-flex justify-content-center mt-1',
+						},
+						createElement(
+							'div',
+							{
+								class: 'col-md-8',
+							},
+							createElement(
+								'h5',
+								{
+									class: 'text-center mb-3 m-0',
+									style: {
+										fontSize: '1rem',
+										fontWeight: 'normal',
+									},
+								},
+								'Select a form'
+							),
+							createElement(
+								'select',
+								{
+									class: 'form-control form-control-sm',
+									onChange: saveId,
+								},
+								JSON.parse(smartpay_block_editor_forms).map(
+									(form) => {
+										return createElement(
+											'option',
+											{
+												value: form.id,
+												selected:
+													form.id == attributes.id,
+											},
+											`${form.name} (#${form.id})`
+										)
+									}
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	},
+
+	save: ({ attributes }) => {
+		return createElement(
+			'div',
+			null,
+			`[smartpay_form id="${attributes.id}"]`
+		)
+	},
+})
