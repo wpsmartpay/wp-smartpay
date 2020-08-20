@@ -167,7 +167,7 @@ final class Email
         $subject      = \wp_specialchars_decode($subject);
 
         // Heading
-        $heading      = smartpay_get_option('payment_email_heading', __('Payment Receipt', 'smartpay'));
+        // $heading      = smartpay_get_option('payment_email_heading', __('Payment Receipt', 'smartpay'));
 
         // $attachments  = apply_filters('smartpay_receipt_attachments', array(), $payment_id, $payment_data);
 

@@ -233,8 +233,11 @@ final class Install
             'default_gateway'       => 'paddle',
 
             // Email
-            'form_name'             => get_bloginfo('name'),
-            'form_email'            => get_bloginfo('admin_email'),
+            'from_name'             => get_bloginfo('name'),
+            'from_email'            => get_bloginfo('admin_email'),
+
+            'payment_email_subject' => 'Payment Receipt - ' . get_bloginfo('name'),
+            'payment_email_heading' => 'Payment Receipt - ' . get_bloginfo('name'),
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));

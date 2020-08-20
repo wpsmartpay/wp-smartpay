@@ -233,9 +233,9 @@ final class Register_Setting
                             'desc'  => __('The name purchase receipts are said to come from. This should probably be your site or shop name.', 'smartpay'),
                             'type'  => 'text',
                         ),
-                        'form_email' => array(
-                            'id'    => 'form_email',
-                            'name'  => __('Form Email', 'smartpay'),
+                        'from_email' => array(
+                            'id'    => 'from_email',
+                            'name'  => __('From Email', 'smartpay'),
                             'desc'  => __('Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'smartpay'),
                             'type'  => 'text'
                         ),
@@ -244,14 +244,14 @@ final class Register_Setting
                             'name' => '<h4 class="text-uppercase text-info my-1">' . __('Purchase Email', 'smartpay') . '</h4>',
                             'type' => 'header',
                         ),
-                        'purchase_email_subject' => array(
-                            'id'    => 'purchase_email_subject',
+                        'payment_email_subject' => array(
+                            'id'    => 'payment_email_subject',
                             'name'  => __('Purchase Email Subject', 'smartpay'),
                             'desc'  => __('Enter the subject line for the purchase receipt email.', 'smartpay'),
                             'type'  => 'text'
                         ),
-                        'purchase_email_heading' => array(
-                            'id'    => 'purchase_email_heading',
+                        'payment_email_heading' => array(
+                            'id'    => 'payment_email_heading',
                             'name'  => __('Purchase Email Heading', 'smartpay'),
                             'desc'  => __('Enter the heading for the purchase receipt email.', 'smartpay'),
                             'type'  => 'text'
