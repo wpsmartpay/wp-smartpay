@@ -23,24 +23,24 @@
         <label for="amounts" class="text-muted my-2 d-block"><strong>Amounts</strong></label>
         <div id="form-amounts" class="form-row">
             <?php if (count($form->amounts ?? [])) : ?>
-            <?php foreach ($form->amounts as $index => $amount) : ?>
-            <div class="col-sm-2 amount-section mb-3">
-                <div class="input-group">
-                    <input type="text" class="form-control amount" id="<?php echo 'amounts[' . $index . ']'; ?>" name="<?php echo 'amounts[' . $index . ']'; ?>" value="<?php echo $amount; ?>" placeholder="5.0">
-                    <?php if ($index >= 1) : ?>
-                    <div class="input-group-append">
-                        <button class="btn btn-light border remove-amount" type="button"><i data-feather="x" width="17" height="17"></i></button>
+                <?php foreach ($form->amounts as $index => $amount) : ?>
+                    <div class="col-sm-2 amount-section mb-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control amount" id="<?php echo 'amounts[' . $index . ']'; ?>" name="<?php echo 'amounts[' . $index . ']'; ?>" value="<?php echo $amount; ?>">
+                            <?php if ($index >= 1) : ?>
+                                <div class="input-group-append">
+                                    <button class="btn btn-light border remove-amount" type="button"><i data-feather="x" width="17" height="17"></i></button>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
             <?php else : ?>
-            <div class="col-sm-2 amount-section mb-3">
-                <div class="form-group">
-                    <input type="text" class="form-control amount" id="amounts[0]" name="amounts[0]" placeholder="5.0">
+                <div class="col-sm-2 amount-section mb-3">
+                    <div class="form-group">
+                        <input type="text" class="form-control amount" id="amounts[0]" name="amounts[0]">
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
 
         </div>

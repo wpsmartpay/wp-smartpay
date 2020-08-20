@@ -289,7 +289,7 @@ jQuery(function ($) {
                             <input type="text"
                                 name="variations[${variationId}][additional_amount]"
                                 id="variations[${variationId}][additional_amount]"
-                                class="form-control" placeholder="1.0">
+                                class="form-control">
                         </div>
                     </div>
                     <div class="col d-flex align-items-center">
