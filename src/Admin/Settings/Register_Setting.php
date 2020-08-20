@@ -136,14 +136,14 @@ final class Register_Setting
                             'desc' => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                             'type' => 'header',
                         ),
-                        'payment_page' => array(
-                            'id'          => 'payment_page',
-                            'name'        => __('Payment Page', 'smartpay'),
-                            'desc'        => __(''),
-                            'type'        => 'page_select',
-                            'chosen'      => true,
-                            'placeholder' => __('Select a page', 'smartpay'),
-                        ),
+                        // 'payment_page' => array(
+                        //     'id'          => 'payment_page',
+                        //     'name'        => __('Payment Page', 'smartpay'),
+                        //     'desc'        => __(''),
+                        //     'type'        => 'page_select',
+                        //     'chosen'      => true,
+                        //     'placeholder' => __('Select a page', 'smartpay'),
+                        // ),
                         'payment_success_page' => array(
                             'id'          => 'payment_success_page',
                             'name'        => __('Payment Success Page', 'smartpay'),
