@@ -99,13 +99,15 @@ final class Shortcode
     {
         extract(shortcode_atts([
             'id' => null,
+            'behavior'  => 'popup',
+            'label'     => '',
         ], $atts));
 
         if (!isset($id)) return;
 
-        // TODO: Add message if no payment method setup
-
         $product = smartpay_get_product($id);
+
+        // TODO: Add message if no payment method setup
 
         if (!isset($product)) return;
 
@@ -117,7 +119,7 @@ final class Shortcode
         try {
             ob_start();
 
-            echo smartpay_view_render('shortcodes/product', ['product' => $product]);
+            echo smartpay_view_render('shortcodes/product', ['product' => $product, 'behavior' => $behavior, 'label' => $label]);
 
             return ob_get_clean();
         } catch (\Exception $e) {

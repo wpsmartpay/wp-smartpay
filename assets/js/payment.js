@@ -15,6 +15,29 @@ jQuery(document).ready(($) => {
 		}
 	)
 
+	/** Open product modal */
+	$(document.body).on(
+		'click',
+		'.smartpay-product-shortcode button.open-product-modal',
+		(e) => {
+			e.preventDefault()
+
+			let $productModal = $(e.currentTarget)
+				.parents('.smartpay-product-shortcode')
+				.find('.product-modal')
+
+			setTimeout(() => {
+				// Show product modal
+				$productModal.modal('show')
+
+				// Appending modal background inside the .smartpay div
+				$('.modal-backdrop')
+					.last()
+					.appendTo($(e.currentTarget).closest('.smartpay'))
+			}, 500)
+		}
+	)
+
 	/** ============= Form ============= **/
 
 	/** Select form fixed amount **/
@@ -40,6 +63,7 @@ jQuery(document).ready(($) => {
 				.val(selectedAmount)
 		}
 	)
+
 	/** Select form custom amount **/
 	$(document.body).on(
 		'focus',
@@ -79,9 +103,9 @@ jQuery(document).ready(($) => {
 				$paymentModal.modal('show')
 
 				// Appending modal background inside the .smartpay div
-				$('.modal-backdrop').appendTo(
-					$(e.currentTarget).closest('.smartpay')
-				)
+				$('.modal-backdrop')
+					.last()
+					.appendTo($(e.currentTarget).closest('.smartpay'))
 
 				// Reset button
 				$(e.currentTarget).text(buttonText).removeAttr('disabled')
@@ -262,12 +286,25 @@ jQuery(document).ready(($) => {
 				required: true,
 				value: 'smartpay_process_payment',
 			},
-			smartpay_process_payment: { required: true },
-			smartpay_gateway: { required: true },
-			smartpay_first_name: { required: true },
-			smartpay_last_name: { required: true },
-			smartpay_email: { required: true, email: true },
-			smartpay_payment_type: { required: true },
+			smartpay_process_payment: {
+				required: true,
+			},
+			smartpay_gateway: {
+				required: true,
+			},
+			smartpay_first_name: {
+				required: true,
+			},
+			smartpay_last_name: {
+				required: true,
+			},
+			smartpay_email: {
+				required: true,
+				email: true,
+			},
+			smartpay_payment_type: {
+				required: true,
+			},
 		}
 
 		const validator = new SmartPayFormValidator(data, rules)
