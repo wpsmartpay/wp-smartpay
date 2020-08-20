@@ -67,7 +67,7 @@ $has_payment_error = false;
 
                                     <!-- // Allow custom payment -->
                                     <?php
-                                    $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / count($form_amounts)) : $form_amount ?? 0;
+                                    $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / (count($form_amounts) ? count($form_amounts) : 1)) : $form_amount ?? '';
                                     ?>
                                     <div class="form-group custom-amount-wrapper my-4 <?php echo !$form->allow_custom_amount ? 'd-none' : '' ?>">
                                         <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2"><?php _e('Pay custom amount', 'smartpay'); ?></label>
