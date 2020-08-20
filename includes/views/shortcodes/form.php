@@ -6,6 +6,8 @@ $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;
+
+$form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / (count($form_amounts) ? count($form_amounts) : 1)) : $form_amount ?? '';
 ?>
 
 <?php if ('embedded' == $behavior) : ?>
@@ -66,9 +68,6 @@ $has_payment_error = false;
                                     </ul>
 
                                     <!-- // Allow custom payment -->
-                                    <?php
-                                    $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / (count($form_amounts) ? count($form_amounts) : 1)) : $form_amount ?? '';
-                                    ?>
                                     <div class="form-group custom-amount-wrapper my-4 <?php echo !$form->allow_custom_amount ? 'd-none' : '' ?>">
                                         <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2"><?php _e('Pay custom amount', 'smartpay'); ?></label>
                                         <input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="<?php echo esc_attr($form_amount); ?>" placeholder="<?php echo esc_attr($form_suggested_amount); ?>">
@@ -162,9 +161,6 @@ $has_payment_error = false;
                                                             </ul>
 
                                                             <!-- // Allow custom payment -->
-                                                            <?php
-                                                            $form_suggested_amount = is_array($form_amounts) ? intval(array_sum($form_amounts) / count($form_amounts)) : $form_amount ?? 0;
-                                                            ?>
                                                             <div class="form-group custom-amount-wrapper my-4 <?php echo !$form->allow_custom_amount ? 'd-none' : '' ?>">
                                                                 <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2"><?php _e('Pay custom amount', 'smartpay'); ?></label>
                                                                 <input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="<?php echo esc_attr($form_amount); ?>" placeholder="<?php echo esc_attr($form_suggested_amount); ?>">

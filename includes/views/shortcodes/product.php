@@ -8,8 +8,6 @@ $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;
-// var_dump($behavior);
-// exit;
 ?>
 
 <?php if ('embedded' == $behavior) : ?>
