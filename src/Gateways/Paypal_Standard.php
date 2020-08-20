@@ -480,7 +480,7 @@ final class Paypal_Standard extends Payment_Gateway
         if (empty($paypal_email) || empty($api_username) || empty($api_password) || empty($api_signature)) {
             // TODO: Add smartpay payment error notice
 
-            die('SmartPay-PayPal: Set credentials; You must enter your vendor id, auth codes and public key for Paypal in gateway settings.');
+            die('SmartPay-PayPal: Set credentials; You must enter your business email, api username and password for PayPal in gateway settings.');
             return false;
         }
 
