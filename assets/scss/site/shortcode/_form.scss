@@ -1,60 +1,65 @@
 .smartpay-form-shortcode {
-    .form {
-        &--title {
-            display: block;
-            margin-bottom: 1rem;
-            font-size: 26px;
-            font-weight: bold;
-            color: #252a2e;
-            line-height: 1.2;
-        }
+	.form {
+		&--title {
+			display: block;
+			margin-bottom: 1rem;
+			font-size: 26px;
+			font-weight: bold;
+			color: #252a2e;
+			line-height: 1.2;
+		}
 
-        &--description {
-            margin-bottom: 10px;
-            color: #252a2e;
-        }
+		&--description {
+			margin-bottom: 10px;
+			color: #252a2e;
+		}
 
-        &--amount-section {
-            transition: all 0.3s ease;
+		&--amount-section {
+			transition: all 0.3s ease;
 
-            .amount {
-                cursor: pointer;
-                transition: all 0.05s ease-in-out;
-                padding: 15px;
-                display: block;
-                text-decoration: none;
-                font-size: 17px;
-                box-sizing: border-box;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                margin-top: 10px;
-                background: #fff;
-                overflow: hidden;
-                color: #252a2e;
+			.amount {
+				cursor: pointer;
+				transition: all 0.05s ease-in-out;
+				padding: 15px;
+				display: block;
+				text-decoration: none;
+				font-size: 17px;
+				box-sizing: border-box;
+				border: 1px solid #ddd;
+				border-radius: 4px;
+				margin-top: 10px;
+				background: #fff;
+				overflow: hidden;
+				color: #252a2e;
 
-                label {
-                    cursor: pointer;
-                }
+				label {
+					cursor: pointer;
+				}
 
-                &.selected {
-                    box-shadow: 0 0 0 2px $success;
-                }
+				&.selected {
+					box-shadow: 0 0 0 2px $success;
+				}
 
-                .variation {
-                    &--description {
-                        margin-top: 10px;
-                        color: #797874;
-                        font-size: 17px;
-                    }
-                }
-            }
-        }
+				.variation {
+					&--description {
+						margin-top: 10px;
+						color: #797874;
+						font-size: 17px;
+					}
+				}
+			}
+		}
 
-        &--custom-amount{
-            font-size: 24px !important;
-            padding: 11px 15px !important;
-            height: auto !important;
-            font-weight: bold !important;
-        }
-    }
+		&--custom-amount {
+			font-size: 24px !important;
+			padding: 11px 15px !important;
+			height: auto !important;
+			font-weight: bold !important;
+		}
+	}
+
+	.btn {
+		font-size: 16px;
+		padding: 6px 10px;
+	}
 }
