@@ -62,7 +62,7 @@ $has_payment_error = false;
                                             <li class="list-group-item price m-0 my-2 py-4 selected">
                                                 <label class="d-block m-0">
                                                     <span class="price--amount"><?php echo smartpay_amount_format($product_price); ?></span>
-                                                    <h5 class="m-0 mt-3 price--title">Item Price</h5>
+                                                    <h5 class="m-0 mt-3 price--title"><?php echo _e('Sales Price', 'smartpay'); ?></h5>
                                                 </label>
                                             </li>
                                         <?php endif; ?>
