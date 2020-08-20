@@ -424,24 +424,24 @@ final class Paypal_Standard extends Payment_Gateway
                 'size'  => 'regular',
             ),
 
-            $paddle_webhook_description_text = __(
-                sprintf(
-                    '<p>For PayPal to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
-                    'https://paypal.com/businessmanage/preferences/website',
-                    home_url("index.php?smartpay-listener=paypal")
-                ),
-                'smartpay'
-            ),
+            // $paddle_webhook_description_text = __(
+            //     sprintf(
+            //         '<p>For PayPal to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
+            //         'https://paypal.com/businessmanage/preferences/website',
+            //         home_url("index.php?smartpay-listener=paypal")
+            //     ),
+            //     'smartpay'
+            // ),
 
-            $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
+            // $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
 
-            array(
-                'id'    => 'paddle_webhook_description',
-                'type'  => 'descriptive_text',
-                'name'  => __('Instant Notification System (INS)', 'smartpay'),
-                'desc'  => $paddle_webhook_description_text,
+            // array(
+            //     'id'    => 'paddle_webhook_description',
+            //     'type'  => 'descriptive_text',
+            //     'name'  => __('Instant Notification System (INS)', 'smartpay'),
+            //     'desc'  => $paddle_webhook_description_text,
 
-            ),
+            // ),
         );
 
         return array_merge($settings, ['paypal' => $gateway_settings]);
