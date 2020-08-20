@@ -53,6 +53,7 @@ final class Uninstall
      */
     public function deactivate()
     {
-        # code...
+        // Flush rewrite rules
+        flush_rewrite_rules();
     }
 }
