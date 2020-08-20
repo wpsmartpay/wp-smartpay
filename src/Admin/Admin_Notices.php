@@ -60,27 +60,15 @@ final class Admin_Notices
         if (!count(smartpay_get_enabled_payment_gateways(true))) {
             ob_start();
 ?>
-<div class="error">
-    <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
-    </p>
-</div>
+            <div class="error">
+                <p><?php printf(__('No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways')); ?>
+                </p>
+            </div>
 <?php
             echo ob_get_clean();
         }
 
         // Global (non-action-based) messages
-        if ((smartpay_get_option('payment_page', '') == '' || 'trash' == get_post_status(smartpay_get_option('payment_page', ''))) && current_user_can('edit_pages') && !get_user_meta(get_current_user_id(), '_smartpay_set_checkout_dismissed')) {
-            ob_start();
-        ?>
-<div class="error">
-    <p><?php printf(__('No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'smartpay'), admin_url('admin.php?page=smartpay-setting')); ?>
-    </p>
-    <p><a href="<?php echo esc_url(add_query_arg(array('smartpay_action' => 'dismiss_notices', 'smartpay_notice' => 'set_checkout'))); ?>"><?php _e('Dismiss Notice', 'smartpay'); ?></a>
-    </p>
-</div>
-<?php
-            echo ob_get_clean();
-        }
         if (isset($_GET['post_type']) && 'smartpay_payment' == sanitize_text_field($_GET['post_type']) && current_user_can('view_smartpay_reports') && smartpay_is_test_mode()) {
             $notices['updated']['smartpay-payment-history-test-mode'] = sprintf(__('Note: Test Mode is enabled. While in test mode no live transactions are processed. <a href="%s">Settings</a>.', 'smartpay'), admin_url('admin.php?page=smartpay-setting&tab=gateways'));
         }

@@ -93,10 +93,6 @@ msgstr ""
 msgid "No active payment gateway found. You must enable a payment gateway to proceed a payment. Visit <a href=\"%s\">Settings</a> to set one."
 msgstr ""
 
-#: src/Admin/Admin_Notices.php:76
-msgid "No checkout page has been configured. Visit <a href=\"%s\">Settings</a> to set one."
-msgstr ""
-
 #: src/Admin/Admin_Notices.php:78
 msgid "Dismiss Notice"
 msgstr ""
