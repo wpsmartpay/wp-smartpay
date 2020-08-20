@@ -363,66 +363,66 @@ final class Paypal_Standard extends Payment_Gateway
                 'type'  => 'checkbox',
             ),
             // TODO: Add url for documentation
-            array(
-                'id'    => 'paypal_api_keys_desc',
-                'name'  => '<h4 class="text-uppercase text-info my-1">' . __('API Credentials', 'smartpay') . '</h4>',
-                // 'desc'  => sprintf(__( '<p>API credentials are necessary to process PayPal refunds from inside WordPress.</p><p>These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.</p>', 'smartpay' ), '#'),
-                'type'  => 'descriptive_text',
-            ),
-            array(
-                'id'    => 'paypal_live_api_settings',
-                'name'  => '<strong>' . __('PayPal Live API Credentials', 'smartpay') . '</strong>',
-                'type'  => 'header'
-            ),
-            array(
-                'id'    => 'paypal_live_api_username',
-                'name'  => __('Live API Username', 'smartpay'),
-                'desc'  => __('Your PayPal live API username', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
-            array(
-                'id'    => 'paypal_live_api_password',
-                'name'  => __('Live API Password', 'smartpay'),
-                'desc'  => __('Your PayPal live API Password', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
-            array(
-                'id'    => 'paypal_live_api_signature',
-                'name'  => __('Live API Signature', 'smartpay'),
-                'desc'  => __('Your PayPal live API Signature', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
+            // array(
+            //     'id'    => 'paypal_api_keys_desc',
+            //     'name'  => '<h4 class="text-uppercase text-info my-1">' . __('API Credentials', 'smartpay') . '</h4>',
+            //     // 'desc'  => sprintf(__( '<p>API credentials are necessary to process PayPal refunds from inside WordPress.</p><p>These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.</p>', 'smartpay' ), '#'),
+            //     'type'  => 'descriptive_text',
+            // ),
+            // array(
+            //     'id'    => 'paypal_live_api_settings',
+            //     'name'  => '<strong>' . __('PayPal Live API Credentials', 'smartpay') . '</strong>',
+            //     'type'  => 'header'
+            // ),
+            // array(
+            //     'id'    => 'paypal_live_api_username',
+            //     'name'  => __('Live API Username', 'smartpay'),
+            //     'desc'  => __('Your PayPal live API username', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
+            // array(
+            //     'id'    => 'paypal_live_api_password',
+            //     'name'  => __('Live API Password', 'smartpay'),
+            //     'desc'  => __('Your PayPal live API Password', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
+            // array(
+            //     'id'    => 'paypal_live_api_signature',
+            //     'name'  => __('Live API Signature', 'smartpay'),
+            //     'desc'  => __('Your PayPal live API Signature', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
 
             // Test account
-            array(
-                'id'    => 'paypal_test_api_settings',
-                'name'  => '<strong>' . __('PayPal Test API Credentials', 'smartpay') . '</strong>',
-                'type'  => 'header'
-            ),
-            array(
-                'id'    => 'paypal_test_api_username',
-                'name'  => __('Test API Username', 'smartpay'),
-                'desc'  => __('Your PayPal test API username', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
-            array(
-                'id'    => 'paypal_test_api_password',
-                'name'  => __('Test API Password', 'smartpay'),
-                'desc'  => __('Your PayPal Test API Password', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
-            array(
-                'id'    => 'paypal_test_api_signature',
-                'name'  => __('Test API Signature', 'smartpay'),
-                'desc'  => __('Your PayPal Test API Signature', 'smartpay'),
-                'type'  => 'text',
-                'size'  => 'regular',
-            ),
+            // array(
+            //     'id'    => 'paypal_test_api_settings',
+            //     'name'  => '<strong>' . __('PayPal Test API Credentials', 'smartpay') . '</strong>',
+            //     'type'  => 'header'
+            // ),
+            // array(
+            //     'id'    => 'paypal_test_api_username',
+            //     'name'  => __('Test API Username', 'smartpay'),
+            //     'desc'  => __('Your PayPal test API username', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
+            // array(
+            //     'id'    => 'paypal_test_api_password',
+            //     'name'  => __('Test API Password', 'smartpay'),
+            //     'desc'  => __('Your PayPal Test API Password', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
+            // array(
+            //     'id'    => 'paypal_test_api_signature',
+            //     'name'  => __('Test API Signature', 'smartpay'),
+            //     'desc'  => __('Your PayPal Test API Signature', 'smartpay'),
+            //     'type'  => 'text',
+            //     'size'  => 'regular',
+            // ),
 
             // $paddle_webhook_description_text = __(
             //     sprintf(
@@ -460,20 +460,20 @@ final class Paypal_Standard extends Payment_Gateway
 
         $paypal_email       = $smartpay_options['paypal_email'] ?? null;
 
-        if (smartpay_is_test_mode()) {
-            $api_username   = $smartpay_options['paypal_test_api_username']  ?? null;
-            $api_password   = $smartpay_options['paypal_test_api_password']  ?? null;
-            $api_signature  = $smartpay_options['paypal_test_api_signature'] ?? null;
-        } else {
-            $api_username   = $smartpay_options['paypal_live_api_username']  ?? null;
-            $api_password   = $smartpay_options['paypal_live_api_password']  ?? null;
-            $api_signature  = $smartpay_options['paypal_live_api_signature'] ?? null;
-        }
+        // if (smartpay_is_test_mode()) {
+        //     $api_username   = $smartpay_options['paypal_test_api_username']  ?? null;
+        //     $api_password   = $smartpay_options['paypal_test_api_password']  ?? null;
+        //     $api_signature  = $smartpay_options['paypal_test_api_signature'] ?? null;
+        // } else {
+        //     $api_username   = $smartpay_options['paypal_live_api_username']  ?? null;
+        //     $api_password   = $smartpay_options['paypal_live_api_password']  ?? null;
+        //     $api_signature  = $smartpay_options['paypal_live_api_signature'] ?? null;
+        // }
 
-        if (empty($paypal_email) || empty($api_username) || empty($api_password) || empty($api_signature)) {
+        if (empty($paypal_email)) {
             // TODO: Add smartpay payment error notice
 
-            die('SmartPay-PayPal: Set credentials; You must enter your business email, api username and password for PayPal in gateway settings.');
+            die('SmartPay-PayPal: Set credentials; You must enter your business email for PayPal in gateway settings.');
             return false;
         }
 
