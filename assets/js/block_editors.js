@@ -8,7 +8,16 @@ registerBlockType('smartpay/product', {
 	category: 'widgets',
 	attributes: {
 		id: {
+			type: 'integer',
+			default: 0,
+		},
+		behavior: {
 			type: 'string',
+			default: '',
+		},
+		label: {
+			type: 'string',
+			default: '',
 		},
 	},
 	edit: ({ attributes, setAttributes }) => {
@@ -62,6 +71,14 @@ registerBlockType('smartpay/product', {
 									class: 'form-control form-control-sm',
 									onChange: saveId,
 								},
+								createElement(
+									'option',
+									{
+										value: 0,
+										selected: 0 == attributes.id,
+									},
+									'Select a product'
+								),
 								JSON.parse(smartpay_block_editor_products).map(
 									(product) => {
 										return createElement(
@@ -100,12 +117,21 @@ registerBlockType('smartpay/form', {
 	category: 'widgets',
 	attributes: {
 		id: {
+			type: 'integer',
+			default: 0,
+		},
+		behavior: {
 			type: 'string',
+			default: '',
+		},
+		label: {
+			type: 'string',
+			default: '',
 		},
 	},
 	edit: ({ attributes, setAttributes }) => {
 		function saveId(event) {
-			setAttributes({ id: event.target.value })
+			setAttributes({ id: parseInt(event.target.value) })
 		}
 
 		return createElement(
@@ -154,6 +180,14 @@ registerBlockType('smartpay/form', {
 									class: 'form-control form-control-sm',
 									onChange: saveId,
 								},
+								createElement(
+									'option',
+									{
+										value: 0,
+										selected: 0 == attributes.id,
+									},
+									'Select a form'
+								),
 								JSON.parse(smartpay_block_editor_forms).map(
 									(form) => {
 										return createElement(
@@ -179,7 +213,7 @@ registerBlockType('smartpay/form', {
 		return createElement(
 			'div',
 			null,
-			`[smartpay_form id="${attributes.id}"]`
+			`[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`
 		)
 	},
 })
