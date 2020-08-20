@@ -94,8 +94,8 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
             <div class="modal-body text-center mb-4 step-2">
                 <div class="col-11 pb-4 align-self-center">
                     <div class="mb-5">
-                        <div class="alert alert-danger py-3">
-                            <p class="m-0"><?php _e('Don\'t close this window before competing payment!', 'smartpay'); ?></p>
+                        <div class="alert alert-warning py-3">
+                            <p class="m-0"><?php _e('Don\'t close this window before completing payment!', 'smartpay'); ?></p>
                         </div>
                     </div>
                     <div class="dynamic-content">
