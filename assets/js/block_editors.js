@@ -22,7 +22,7 @@ registerBlockType('smartpay/product', {
 	},
 	edit: ({ attributes, setAttributes }) => {
 		function saveId(event) {
-			setAttributes({ id: event.target.value })
+			setAttributes({ id: parseInt(event.target.value) })
 		}
 
 		return createElement(
