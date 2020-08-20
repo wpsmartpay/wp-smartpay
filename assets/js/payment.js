@@ -77,6 +77,29 @@ jQuery(document).ready(($) => {
 		}
 	)
 
+	/** Open form modal */
+	$(document.body).on(
+		'click',
+		'.smartpay-form-shortcode button.open-form-modal',
+		(e) => {
+			e.preventDefault()
+
+			let $formModal = $(e.currentTarget)
+				.parents('.smartpay-form-shortcode')
+				.find('.form-modal')
+
+			setTimeout(() => {
+				// Show form modal
+				$formModal.modal('show')
+
+				// Appending modal background inside the .smartpay div
+				$('.modal-backdrop')
+					.last()
+					.appendTo($(e.currentTarget).closest('.smartpay'))
+			}, 500)
+		}
+	)
+
 	/** ============= Payment Modal ============= **/
 
 	/** Open payment form **/

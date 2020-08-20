@@ -63,6 +63,8 @@ final class Shortcode
     {
         extract(shortcode_atts([
             'id' => null,
+            'behavior'  => 'popup',
+            'label'     => '',
         ], $atts));
 
         if (!isset($id)) return;
@@ -81,7 +83,7 @@ final class Shortcode
         try {
             ob_start();
 
-            echo smartpay_view_render('shortcodes/form', ['form' => $form]);
+            echo smartpay_view_render('shortcodes/form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
 
             return ob_get_clean();
         } catch (\Exception $e) {
