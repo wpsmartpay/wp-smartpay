@@ -914,6 +914,7 @@
 .smartpay .visible{visibility:visible !important}
 .smartpay .invisible{visibility:hidden !important}
 .smartpay .file-uploader{border:1px dashed #ddd;border-radius:4px}
+.smartpay .variation-option:not(:first-child){border-top:2px solid #e3e3e3}
 .smartpay .card{max-width:100%;padding:0}
 .smartpay .card .card-header-tabs{margin-top:0}
 .smartpay .card .card-header-tabs .nav-link{text-decoration:none;font-weight:bold;padding:.7rem 1rem;text-transform:uppercase}

@@ -1,4 +1,8 @@
-.file-uploader{
+.file-uploader {
 	border: 1px dashed #ddd;
 	border-radius: 4px;
+}
+
+.variation-option:not(:first-child) {
+	border-top: 2px solid #e3e3e3;
 }
