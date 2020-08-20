@@ -139,14 +139,16 @@ final class Shortcode
     {
         $payment_id = intval($_GET['payment-id'] ?? smartpay_get_session_payment_id());
 
-        if (!$payment_id) {
-            return;
-        }
+        var_dump($payment_id);
 
         // Sometimes payment gateway need more time to complete a payment
         sleep(3);
 
         $payment = smartpay_get_payment($payment_id);
+
+        if (!$payment->ID) {
+            return;
+        }
 
         try {
 
