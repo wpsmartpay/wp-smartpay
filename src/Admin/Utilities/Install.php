@@ -106,9 +106,6 @@ final class Install
 
         // Protect upload directory
         self::$instance->upload->protect_upload_directory(true);
-
-        // Flush rewrite rules
-        flush_rewrite_rules();
     }
 
     /**
