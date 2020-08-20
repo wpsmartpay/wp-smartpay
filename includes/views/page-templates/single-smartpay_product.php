@@ -12,7 +12,7 @@ while (have_posts()) : the_post();
 
         $output = '<div class="smartpay">';
         $output .= '<div class="container py-3">';
-        $output .= smartpay_view_render('shortcodes/product', ['product' => $product]);
+        $output .= smartpay_view_render('shortcodes/product', ['product' => $product, 'behavior' => 'embedded']);
         $output .= '</div>';
         $output .= '</div>';
 
