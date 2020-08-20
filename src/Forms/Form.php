@@ -49,7 +49,7 @@ final class Form
     /**
      * Page template for smartpay_form
      * 
-     * @since  x.x.x
+     * @since  0.0.5
      * @param string $template
      */
     public function smartpay_form_page_template($template)

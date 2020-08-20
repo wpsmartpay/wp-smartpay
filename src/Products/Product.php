@@ -47,7 +47,7 @@ final class Product
     /**
      * Page template for smartpay_product
      * 
-     * @since  x.x.x
+     * @since  0.0.5
      * @param string $template
      */
     public function smartpay_product_page_template($template)

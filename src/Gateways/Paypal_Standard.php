@@ -19,7 +19,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Construct Paypal class.
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @access private
      */
     private function __construct()
@@ -43,7 +43,7 @@ final class Paypal_Standard extends Payment_Gateway
      * Ensures that only one instance of Paypal exists in memory at any one
      * time. Also prevents needing to define globals all over the place.
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @return object|Paypal
      * @access public
      */
@@ -60,7 +60,7 @@ final class Paypal_Standard extends Payment_Gateway
      * Initialize wp actions.
      *
      * @access private
-     * @since  x.x.x
+     * @since  0.0.5
      * @return void
      */
     private function init_actions()
@@ -79,7 +79,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Process webhook requests.
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @param array $payment_data
      * @return void
      * @access public
@@ -159,7 +159,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Process webhook requests.
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @return void
      * @access public
      */
@@ -278,7 +278,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Process web accept (one time) payment IPNs
      *
-     * @since x.x.x
+     * @since 0.0.5
      * @param array $data IPN Data
      * @return void
      */
@@ -314,7 +314,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Add Gateway subsection
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @param array $sections Gateway subsections
      * @return array
      * @access public
@@ -329,7 +329,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Register the gateway settings for Paypal
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @param array $settings
      * @return array
      * @access public
@@ -450,7 +450,7 @@ final class Paypal_Standard extends Payment_Gateway
     /**
      * Set and check API credentials
      *
-     * @since  x.x.x
+     * @since  0.0.5
      * @return boolean
      * @access private
      */
