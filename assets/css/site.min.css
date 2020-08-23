@@ -950,6 +950,7 @@
 .smartpay .smartpay-payment .payment-modal--user-info .form-control{font-size:16px;min-height:40px;padding:5px 15px}
 .smartpay .smartpay-payment button.open-payment-form,.smartpay .smartpay-payment button.smartpay-pay-now{font-size:16px;padding:6px 10px}
 .smartpay .smartpay-payment .overlay{background:rgba(255,255,255,0.9);position:absolute;left:0;top:0;width:100%;height:100%;display:none}
+.smartpay .smartpay-payment .modal-backdrop{background-color:#8e8e8e !important}
 .smartpay .modal-backdrop.show{opacity:.95;background-color:#f5f5f5}
 .smartpay ul.list-group,.smartpay li.list-group-item{margin:0}
 .smartpay .customer-dashboard .profile img{height:90px;width:90px;box-shadow:0 5px 15px rgba(0,0,0,0.08)}

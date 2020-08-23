@@ -128,7 +128,7 @@ jQuery(document).ready(($) => {
 				// Appending modal background inside the .smartpay div
 				$('.modal-backdrop')
 					.last()
-					.appendTo($(e.currentTarget).closest('.smartpay'))
+					.appendTo($(e.currentTarget).closest('.smartpay-payment'))
 
 				// Reset button
 				$(e.currentTarget).text(buttonText).removeAttr('disabled')
