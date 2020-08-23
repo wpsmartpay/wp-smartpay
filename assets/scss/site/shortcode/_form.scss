@@ -20,24 +20,30 @@
 			.amount {
 				cursor: pointer;
 				transition: all 0.05s ease-in-out;
-				padding: 15px;
+				padding: 12px !important;
 				display: block;
 				text-decoration: none;
-				font-size: 17px;
+				font-size: 20px !important;
 				box-sizing: border-box;
 				border: 1px solid #ddd;
 				border-radius: 4px;
-				margin-top: 10px;
 				background: #fff;
 				overflow: hidden;
 				color: #252a2e;
+				margin-bottom: 12px;
+				font-weight: bold !important;
+				font-family: inherit !important;
+
+				&--title {
+					font-size: 20px;
+				}
 
 				label {
 					cursor: pointer;
 				}
 
 				&.selected {
-					box-shadow: 0 0 0 2px $success;
+					box-shadow: 0 0 0 1px $success;
 				}
 
 				.variation {
@@ -50,11 +56,12 @@
 			}
 		}
 
+		.custom-amount-wrapper {
+			margin-top: 12px !important;
+		}
+
 		&--custom-amount {
-			font-size: 24px !important;
-			padding: 11px 15px !important;
 			height: auto !important;
-			font-weight: bold !important;
 		}
 	}
 
