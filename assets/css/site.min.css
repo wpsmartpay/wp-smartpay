@@ -903,7 +903,7 @@
 .smartpay .smartpay-product-shortcode .product--title{display:block;margin-bottom:1rem;font-size:26px;font-weight:bold;color:#252a2e;line-height:1.2}
 .smartpay .smartpay-product-shortcode .product--description{margin-bottom:10px;color:#252a2e}
 .smartpay .smartpay-product-shortcode .product--price-section{transition:all .3s ease}
-.smartpay .smartpay-product-shortcode .product--price-section .price{cursor:pointer;padding:12px;display:block;text-decoration:none;font-size:17px;box-sizing:border-box;border:1px solid #ddd;border-radius:4px;background:#fff;overflow:hidden;color:#252a2e;margin-bottom:14px;transition:all .1s ease-in-out}
+.smartpay .smartpay-product-shortcode .product--price-section .price{cursor:pointer;padding:12px;display:block;text-decoration:none;font-size:17px;box-sizing:border-box;border:1px solid #ddd;border-radius:4px;background:#fff;overflow:hidden;color:#252a2e;margin-bottom:12px;transition:all .1s ease-in-out}
 .smartpay .smartpay-product-shortcode .product--price-section .price label{cursor:pointer}
 .smartpay .smartpay-product-shortcode .product--price-section .price--amount{display:inline-block;background:#eee;padding:6px 10px;font-size:13px;font-weight:bold;position:relative;pointer-events:none;background:#eee;transition:all .1s ease-in-out}
 .smartpay .smartpay-product-shortcode .product--price-section .price--amount .base-price{color:#a2a2a2;margin-left:3px}
