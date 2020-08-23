@@ -19,18 +19,18 @@
 
 			.price {
 				cursor: pointer;
-				transition: all 0.05s ease-in-out;
-				padding: 15px;
+				padding: 12px;
 				display: block;
 				text-decoration: none;
 				font-size: 17px;
 				box-sizing: border-box;
 				border: 1px solid #ddd;
 				border-radius: 4px;
-				margin-top: 10px;
 				background: #fff;
 				overflow: hidden;
 				color: #252a2e;
+				margin-bottom: 14px;
+				transition: all 0.1s ease-in-out;
 
 				label {
 					cursor: pointer;
@@ -38,7 +38,6 @@
 
 				&--amount {
 					display: inline-block;
-					margin-bottom: 10px;
 					background: #eee;
 					padding: 6px 10px;
 					font-size: 13px;
@@ -46,9 +45,11 @@
 					position: relative;
 					pointer-events: none;
 					background: #eee;
+					transition: all 0.1s ease-in-out;
 
-					&:hover {
-						background: #fdce71;
+					.base-price {
+						color: #a2a2a2;
+						margin-left: 3px;
 					}
 
 					&:before,
@@ -64,6 +65,7 @@
 						margin-left: -16px;
 						-webkit-transform: scaleX(0.65);
 						transform: scaleX(0.65);
+						transition: all 0.1s ease-in-out;
 					}
 
 					&:before {
@@ -86,10 +88,14 @@
 				}
 
 				&.selected {
-					box-shadow: 0 0 0 2px $success;
+					box-shadow: 0 0 0 1px $success;
 
 					.price--amount {
 						background: #fdce71;
+
+						.base-price {
+							color: #a06b00;
+						}
 
 						&:before {
 							border-top-color: #fdce71;
@@ -102,8 +108,9 @@
 				}
 
 				&--title {
-					font-size: 20px;
-					font-weight: bold;
+					font-size: 17px;
+					margin-top: 10px !important;
+					font-weight: 400;
 					display: block;
 				}
 
