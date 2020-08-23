@@ -33,7 +33,7 @@ registerBlockType('smartpay/product', {
 			createElement(
 				'div',
 				{
-					class: 'block-editor-product card py-4',
+					class: 'block-editor-product container card py-4',
 				},
 				createElement(
 					'div',
@@ -68,7 +68,8 @@ registerBlockType('smartpay/product', {
 							createElement(
 								'select',
 								{
-									class: 'form-control form-control-sm',
+									class:
+										'form-control form-control-sm mx-auto',
 									onChange: saveId,
 								},
 								createElement(
