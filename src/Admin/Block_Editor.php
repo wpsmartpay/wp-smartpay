@@ -85,7 +85,7 @@ final class Block_Editor
 
     public function smartpay_block_editors()
     {
-        wp_register_script('smartpay-block-editors-js', SMARTPAY_PLUGIN_ASSETS . '/js/block_editors.js', ['wp-blocks']);
+        wp_register_script('smartpay-block-editors-js', SMARTPAY_PLUGIN_ASSETS . '/js/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
 
         // SmartPay logo
         wp_localize_script('smartpay-block-editors-js', 'smartpay_logo', SMARTPAY_PLUGIN_ASSETS . '/img/logo.png');
