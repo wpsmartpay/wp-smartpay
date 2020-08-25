@@ -3,18 +3,18 @@ const { registerBlockType } = wp.blocks
 const { Fragment } = wp.element
 
 import Sidebar from './components/Sidebar'
-import SelectForm from './components/SelectForm'
+import SelectProduct from './components/SelectProduct'
 
-export default registerBlockType('smartpay/form', {
-	title: __('SmartPay Form', 'smartpay'),
-	description: __('Simple block to show a form', 'smartpay'),
+export default registerBlockType('smartpay/product', {
+	title: __('SmartPay Product', 'smartpay'),
+	description: __('Simple block to show a product', 'smartpay'),
 	icon: 'format-aside',
 	category: 'widgets',
 
 	attributes: {
 		id: {
 			type: 'integer',
-			default: 0,
+			default: null,
 		},
 		behavior: {
 			type: 'string',
@@ -39,15 +39,15 @@ export default registerBlockType('smartpay/form', {
 			setAttributes({ label: label })
 		}
 
-		let formOptions = [
+		let productOptions = [
 			{
 				value: null,
-				label: __('Select a form', 'smartpay'),
+				label: __('Select a product', 'smartpay'),
 			},
-			...JSON.parse(smartpay_block_editor_forms).map((form) => {
+			...JSON.parse(smartpay_block_editor_products).map((product) => {
 				return {
-					value: form.id,
-					label: `(#${form.id}) ${form.name}`,
+					value: product.id,
+					label: `(#${product.id}) ${product.name}`,
 				}
 			}),
 		]
@@ -55,7 +55,7 @@ export default registerBlockType('smartpay/form', {
 		return (
 			<Fragment>
 				<div class="smartpay">
-					<div class="container block-editor form card py-4">
+					<div class="container block-editor product card py-4">
 						<div class="card-body text-center">
 							<img src={smartpay_logo} class="logo img-fluid" />
 							<div class="d-flex justify-content-center mt-1">
@@ -64,14 +64,14 @@ export default registerBlockType('smartpay/form', {
 										class="text-center mb-3 m-0 font-weight-normal"
 										style={{ fontSize: '16px' }}
 									>
-										{__('Select a Form', 'smartpay')}
+										{__('Select a Product', 'smartpay')}
 									</h5>
-									<SelectForm
-										formOptions={formOptions}
-										formId={attributes.id}
+									<SelectProduct
+										productOptions={productOptions}
+										productId={attributes.id}
 										onSetId={setId}
 										class="form-control form-control-sm mx-auto"
-									></SelectForm>
+									></SelectProduct>
 								</div>
 							</div>
 						</div>
@@ -90,7 +90,7 @@ export default registerBlockType('smartpay/form', {
 
 	save: ({ attributes }) => {
 		return (
-			<div>{`[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`}</div>
+			<div>{`[smartpay_product id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`}</div>
 		)
 	},
 })
