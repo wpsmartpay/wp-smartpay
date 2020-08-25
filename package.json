@@ -56,7 +56,7 @@
         "vendorJSCopy": "vendor-copy",
         "release": "gulp release",
         "build:scripts": "wp-scripts build assets/blocks/index.js --output-path=assets/js/blocks",
-        "build:start": "wp-scripts start assets/blocks/index.js --output-path=assets/js/blocks"
+        "watch:scripts": "wp-scripts start assets/blocks/index.js --output-path=assets/js/blocks"
     },
     "vendorCopy": [
         {
