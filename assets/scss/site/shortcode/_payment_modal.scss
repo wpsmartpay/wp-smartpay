@@ -15,6 +15,7 @@
 			.modal-body {
 				display: flex;
 				justify-content: center;
+				overflow: hidden;
 
 				.payment-modal--errors {
 					.alert {
