@@ -54,6 +54,10 @@ final class Gateway
             'paypal' => array(
                 'admin_label'       => 'PayPal Standard',
                 'checkout_label'    => 'PayPal'
+            ),
+            'stripe' => array(
+                'admin_label'       => 'Stripe',
+                'checkout_label'    => 'Stripe'
             )
         );
 
@@ -65,5 +69,6 @@ final class Gateway
         // TODO: Update method to include
         Paddle::instance();
         Paypal_Standard::instance();
+        Stripe::instance();
     }
 }
