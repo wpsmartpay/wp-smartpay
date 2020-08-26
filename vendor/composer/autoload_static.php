@@ -22,6 +22,7 @@ class ComposerStaticInita9031ece03b1d183d6ef75671418d08d
         ),
         'S' => 
         array (
+            'Stripe\\' => 7,
             'SmartPay\\' => 9,
         ),
     );
@@ -51,6 +52,10 @@ class ComposerStaticInita9031ece03b1d183d6ef75671418d08d
         array (
             0 => __DIR__ . '/..' . '/themexpert/paddle-php/src',
             1 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle',
+        ),
+        'Stripe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
         ),
         'SmartPay\\' => 
         array (

@@ -12,5 +12,6 @@ return array(
     'ThemeXpert\\Paddle\\Checkout\\' => array($vendorDir . '/themexpert/paddle-php/src/Paddle/Checkout'),
     'ThemeXpert\\Paddle\\Alert\\' => array($vendorDir . '/themexpert/paddle-php/src/Paddle/Alert'),
     'ThemeXpert\\Paddle\\' => array($vendorDir . '/themexpert/paddle-php/src', $vendorDir . '/themexpert/paddle-php/src/Paddle'),
+    'Stripe\\' => array($vendorDir . '/stripe/stripe-php/lib'),
     'SmartPay\\' => array($baseDir . '/src', $baseDir . '/src/Abstracts'),
 );
