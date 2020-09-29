@@ -45,16 +45,18 @@
 
                                         <!-- Form amount -->
                                     <?php else : ?>
-                                        <li class="list-group-item amount selected">
+                                        <li class="list-group-item amount form--fixed-amount selected">
                                             <label for="_form_amount" class="d-block m-0">
                                                 <input class="d-none" type="radio" name="_form_amount" id="_form_amount" value="<?php echo esc_attr($form_amount); ?>" checked>
-                                                <h5 class="m-0"><?php echo smartpay_amount_format($form_amount); ?></h5>
+                                                <h5 class="m-0 amount--title"><?php echo smartpay_amount_format($form_amount); ?></h5>
                                             </label>
                                         </li>
                                     <?php endif; ?>
                                 </ul>
 
                                 <!-- // Allow custom payment -->
+                                <?php
+                                $form_suggested_amount = is_array($form->get_amounts()) ? intval(array_sum($form->get_amounts()) / (count($form->get_amounts()) ?? 1)) : $form_amount ?? ''; ?>
                                 <div class="form-group custom-amount-wrapper m-0 <?php echo !$form->allow_custom_amount ? 'd-none' : '' ?>">
                                     <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2"><?php _e('Pay custom amount', 'smartpay'); ?></label>
                                     <input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="<?php echo esc_attr($form_amount); ?>" placeholder="<?php echo esc_attr($form_suggested_amount); ?>">

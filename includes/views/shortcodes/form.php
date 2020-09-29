@@ -6,8 +6,6 @@ $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;
-
-$form_suggested_amount = is_array($form->get_amounts()) ? intval(array_sum($form->get_amounts()) / (count($form->get_amounts()) ?? 1)) : $form_amount ?? '';
 ?>
 
 <?php if ('embedded' == $behavior) : ?>
