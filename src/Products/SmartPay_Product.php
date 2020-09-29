@@ -479,7 +479,7 @@ class SmartPay_Product
      * Retrieve the variations
      *
      * @since  0.0.1
-     * @return string variations of the product
+     * @return array variations of the product
      */
     public function get_variations()
     {

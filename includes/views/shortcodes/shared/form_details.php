@@ -3,22 +3,22 @@
         <!-- Form details -->
         <div class="card form">
             <?php if ($form->image) : ?>
-            <div class="bg-light form--image border-bottom">
-                <img src="<?php echo $form->image; ?>" class="card-img-top">
-            </div>
+                <div class="bg-light form--image border-bottom">
+                    <img src="<?php echo $form->image; ?>" class="card-img-top">
+                </div>
             <?php endif; ?>
 
             <div class="card-body p-5">
                 <div class="row">
                     <div class="col-sm-12 col-md-7 mb-3">
                         <?php if ($form->title) : ?>
-                        <h2 class="card-title form--title mt-0 mb-2"><?php echo $form->title; ?></h2>
+                            <h2 class="card-title form--title mt-0 mb-2"><?php echo $form->title; ?></h2>
                         <?php endif; ?>
 
                         <?php if ($form->description) : ?>
-                        <div class="card-text form--description">
-                            <?php echo $form->description; ?>
-                        </div>
+                            <div class="card-text form--description">
+                                <?php echo wpautop($form->description); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
 
@@ -32,25 +32,25 @@
                                 <label class="form-amounts--label d-block m-0 mb-2"><?php _e('Select an amount', 'smartpay'); ?></label>
                                 <ul class="list-group m-0">
                                     <?php if ($form->has_multiple_amount()) : ?>
-                                    <!-- // Multiple amounts -->
-                                    <?php foreach ($form_amounts as $index => $amount) : ?>
-                                    <li class="list-group-item amount form--fixed-amount <?php echo 0 == $index ? 'selected' : ''; ?>">
-                                        <label for="_form_amount_<?php echo esc_attr($index); ?>" class="d-block m-0">
-                                            <input class="d-none" type="radio" name="_form_amount" id="_form_amount_<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
-                                            <h5 class="m-0 amount--title"><?php echo smartpay_amount_format($amount); ?></h5>
-                                        </label>
-                                    </li>
+                                        <!-- // Multiple amounts -->
+                                        <?php foreach ($form_amounts as $index => $amount) : ?>
+                                            <li class="list-group-item amount form--fixed-amount <?php echo 0 == $index ? 'selected' : ''; ?>">
+                                                <label for="_form_amount_<?php echo esc_attr($index); ?>" class="d-block m-0">
+                                                    <input class="d-none" type="radio" name="_form_amount" id="_form_amount_<?php echo esc_attr($index); ?>" value="<?php echo esc_attr($amount); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
+                                                    <h5 class="m-0 amount--title"><?php echo smartpay_amount_format($amount); ?></h5>
+                                                </label>
+                                            </li>
 
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
 
-                                    <!-- Form amount -->
+                                        <!-- Form amount -->
                                     <?php else : ?>
-                                    <li class="list-group-item amount selected">
-                                        <label for="_form_amount" class="d-block m-0">
-                                            <input class="d-none" type="radio" name="_form_amount" id="_form_amount" value="<?php echo esc_attr($form_amount); ?>" checked>
-                                            <h5 class="m-0"><?php echo smartpay_amount_format($form_amount); ?></h5>
-                                        </label>
-                                    </li>
+                                        <li class="list-group-item amount selected">
+                                            <label for="_form_amount" class="d-block m-0">
+                                                <input class="d-none" type="radio" name="_form_amount" id="_form_amount" value="<?php echo esc_attr($form_amount); ?>" checked>
+                                                <h5 class="m-0"><?php echo smartpay_amount_format($form_amount); ?></h5>
+                                            </label>
+                                        </li>
                                     <?php endif; ?>
                                 </ul>
 
