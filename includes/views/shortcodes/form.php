@@ -21,13 +21,13 @@ $has_payment_error = false;
                                 <button type="button" class="btn modal-close close" data-dismiss="modal"><i data-feather="x" width="21" height="21"></i></button>
                             </div>
                         </div>
-                        <div class="modal-body text-center mb-4">
+                        <div class="modal-body text-center p-0">
                             <?php include  __DIR__ . '/shared/form_details.php'; ?>
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-success open-product-modal">
+            <button type="button" class="btn btn-success open-product-modal m-1">
                 <?php echo _e($label ?: 'Pay now', 'smartpay'); ?>
             </button>
         </div>
