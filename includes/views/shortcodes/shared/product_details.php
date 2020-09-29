@@ -62,7 +62,7 @@
                                                 <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
-                                                <?php echo _e('Sales Price', 'smartpay'); ?>
+                                                <?php echo _e('Sale Price', 'smartpay'); ?>
                                             </h5>
                                         </label>
                                     </li>
