@@ -64,7 +64,7 @@
                             </div>
 
                             <button type="button" class="btn btn-success btn-block btn-lg open-payment-form">
-                                <?php echo _e('Pay', 'smartpay'); ?>
+                                <?php echo _e('Make payment', 'smartpay'); ?>
                             </button>
                         </div>
                     </div> <!-- col -->
