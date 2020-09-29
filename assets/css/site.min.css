@@ -1,4 +1,4 @@
-.smartpay{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size:16px;font-weight:400;line-height:1.5;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;color:#212529;text-align:left;background-color:#fff;/*! Bootstrap Grid v4.4.1 (https://getbootstrap.com/) Copyright 2011-2019 The Bootstrap Authors Copyright 2011-2019 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */}
+.smartpay{font-family:inherit;font-size:16px;font-weight:400;line-height:1.5;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:rgba(0,0,0,0);margin:0;color:#212529;text-align:left;background-color:#fff;/*! Bootstrap Grid v4.4.1 (https://getbootstrap.com/) Copyright 2011-2019 The Bootstrap Authors Copyright 2011-2019 Twitter, Inc. Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */}
 .smartpay html{box-sizing:border-box;-ms-overflow-style:scrollbar}
 .smartpay *,.smartpay *::before,.smartpay *::after{box-sizing:inherit}
 .smartpay .container{width:100%;padding-right:15px;padding-left:15px;margin-right:auto;margin-left:auto}
@@ -924,7 +924,7 @@
 .smartpay .smartpay-form-shortcode .form--description{margin-bottom:10px;color:#252a2e}
 .smartpay .smartpay-form-shortcode .form--amount-section{transition:all .3s ease}
 .smartpay .smartpay-form-shortcode .form--amount-section .amount{cursor:pointer;transition:all .05s ease-in-out;padding:12px !important;display:block;text-decoration:none;font-size:20px !important;box-sizing:border-box;border:1px solid #ddd;border-radius:4px;background:#fff;overflow:hidden;color:#252a2e;margin-bottom:12px;font-weight:700;font-family:inherit !important;line-height:1.25}
-.smartpay .smartpay-form-shortcode .form--amount-section .amount--title{font-size:20px}
+.smartpay .smartpay-form-shortcode .form--amount-section .amount--title{font-size:20px;font-family:inherit}
 .smartpay .smartpay-form-shortcode .form--amount-section .amount label{cursor:pointer}
 .smartpay .smartpay-form-shortcode .form--amount-section .amount.selected{box-shadow:0 0 0 1px #28a745}
 .smartpay .smartpay-form-shortcode .form--amount-section .amount .variation--description{margin-top:10px;color:#797874;font-size:17px}
@@ -2314,6 +2314,7 @@
 .smartpay .list-group-horizontal-xl .list-group-item.active{margin-top:0}
 .smartpay .list-group-horizontal-xl .list-group-item+.list-group-item{border-top-width:1px;border-left-width:0}
 .smartpay .list-group-horizontal-xl .list-group-item+.list-group-item.active{margin-left:-1px;border-left-width:1px}
+.smartpay .modal-xl{max-width:950px}
 }@media(max-width:1199.98px){.smartpay .table-responsive-xl{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .smartpay .table-responsive-xl>.table-bordered{border:0}
 }@media(max-width:991.98px){.smartpay .table-responsive-lg{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
