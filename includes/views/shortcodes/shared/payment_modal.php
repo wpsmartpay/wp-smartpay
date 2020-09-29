@@ -14,8 +14,8 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                 </button>
 
                 <div class="d-flex flex-column justify-content-center modal-title">
-                    <h4 class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></h4>
-                    <h2 class="payment-modal--title amount m-0">123</h2>
+                    <p class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></p>
+                    <h2 class="payment-modal--title amount m-0">0</h2>
                 </div>
 
                 <button class="btn modal-close">
@@ -23,7 +23,7 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                 </button>
             </div>
 
-            <div class="modal-body p-0 text-center step-1">
+            <div class="modal-body p-1 text-center step-1">
                 <div class="align-self-center">
                     <form action="<?php echo $form_action; ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
@@ -91,7 +91,7 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
 
             </div>
 
-            <div class="modal-body p-0 text-center step-2">
+            <div class="modal-body p-1 text-center step-2">
                 <div class="align-self-center">
                     <div class="mb-5">
                         <div class="alert alert-warning py-3">
@@ -105,6 +105,7 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                     </div>
                 </div>
             </div>
+
             <div class="modal-loading justify-content-center align-items-center">
                 <div class="spinner-border text-secondary" style="width: 40px; height: 40px;">
                     <span class="sr-only">Loading...</span>

@@ -1,4 +1,4 @@
-jQuery(document).ready(($) => {
+jQuery(($) => {
 	/** ============= Product ============= **/
 
 	/** Select product variation **/
@@ -8,14 +8,15 @@ jQuery(document).ready(($) => {
 		(e) => {
 			$(e.currentTarget)
 				.parent()
-				.find('.variation')
+				.find('.variation') 
 				.removeClass('selected')
 
             $(e.currentTarget).addClass('selected')
             
-            const $paymentModalAmount = $(e.currentTarget).parents('.smartpay-product-shortcode').find('.payment-modal--title.amount');
-console.log($paymentModalAmount);
-            $paymentModalAmount.html($(e.currentTarget).find('.sale-price').html());
+            $(e.currentTarget)
+                .parents('.smartpay-product-shortcode')
+                .find('input[name="smartpay_product_price"]')
+                .val($(e.currentTarget).find('.sale-price').html());
 		}
 	)
 
@@ -117,10 +118,15 @@ console.log($paymentModalAmount);
             let $paymentModal = $parentWrapper.find('.payment-modal')
             let formData = getPaymentFormData($parentWrapper)
 
+            // Set payment amount
+            let paymentAmount = 0
 			if ('form_payment' === formData.smartpay_payment_type) {
-                const currencySymbol = $('#smartpay_currency_symbol').data('value');
-                $paymentModal.find('.amount').html(currencySymbol + formData.smartpay_form_amount)
-			}
+                const currencySymbol = $('#smartpay_currency_symbol').data('value')
+                paymentAmount = currencySymbol + formData.smartpay_form_amount
+			} else {
+                paymentAmount = formData.smartpay_product_price
+            }
+            $paymentModal.find('.amount').html(paymentAmount)
 
 			// Reset payment modal
 			resetPaymentModal($paymentModal)
@@ -266,10 +272,14 @@ console.log($paymentModalAmount);
 
 			smartpay_payment_type:
 				$wrapper.find('input[name="smartpay_payment_type"]').val() ||
-				null,
+                null,
+                
 			// Product purchase
 			smartpay_product_id:
 				$wrapper.find('input[name="smartpay_product_id"]').val() ||
+				null,
+			smartpay_product_price:
+				$wrapper.find('input[name="smartpay_product_price"]').val() ||
 				null,
 			smartpay_product_variation_id:
 				$wrapper
