@@ -33,7 +33,7 @@
                                                 <label for="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" class="d-block m-0">
                                                     <input class="d-none" type="radio" name="smartpay_product_variation_id" id="smartpay_product_variation_id_<?php echo esc_attr($variation['id']); ?>" value="<?php echo esc_attr($variation['id']); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
                                                     <div class="price--amount">
-                                                        <?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?>
+                                                        <span class="sale-price"> <?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
                                                         <?php if ($product->base_price > $product->sale_price) : ?>
                                                             <del class="base-price"><?php echo smartpay_amount_format($product->base_price + $variation['additional_amount']); ?></del>
                                                         <?php endif; ?>
@@ -56,7 +56,7 @@
                                         <li class="list-group-item price selected">
                                             <label class="d-block m-0">
                                                 <div class="price--amount">
-                                                    <?php echo smartpay_amount_format($product_price); ?>
+                                                    <span class="sale-price"> <?php echo smartpay_amount_format($product_price); ?></span>
                                                     <?php if ($product->base_price > $product->sale_price) : ?>
                                                         <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                     <?php endif; ?>
@@ -82,6 +82,7 @@
         <!-- Form Data -->
         <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
         <input type="hidden" name="smartpay_product_id" id="smartpay_product_id" value="<?php echo $product->ID ?? 0; ?>">
+        <input type="hidden" name="smartpay_product_price" id="smartpay_product_price" value="0">
         <!-- /Form Data -->
 
         <!-- Payment modal -->

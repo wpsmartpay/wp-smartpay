@@ -14,12 +14,8 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                 </button>
 
                 <div class="d-flex flex-column justify-content-center modal-title">
-                    <h4 class="payment-modal--small-title m-0">
-                        <?php echo __('Make a Payment', 'smartpay'); ?>
-                    </h4>
-                    <h2 class="payment-modal--title m-0">
-                        <?php echo $product->title ?? $form->title ?? 'Product/Form'; ?>
-                    </h2>
+                    <h4 class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></h4>
+                    <h2 class="payment-modal--title amount m-0">123</h2>
                 </div>
 
                 <button class="btn modal-close">
@@ -35,31 +31,31 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                         <div class="payment-modal--gateway">
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
-                            <?php $gateways_index = array_keys($gateways); ?>
-                            <!-- <p class="payment-gateway--label single-gateway"> -->
-                            <?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); 
+                                <?php $gateways_index = array_keys($gateways); ?>
+                                <!-- <p class="payment-gateway--label single-gateway"> -->
+                                <?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); 
                                 ?>
-                            <!-- </p> -->
-                            <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
+                                <!-- </p> -->
+                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
-                            <!-- // If it has multiple payment gateway -->
+                                <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
-                            <p class="payment-gateway--label"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
+                                <p class="payment-gateway--label"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
 
-                            <div class="gateways m-0 justify-content-center d-flex">
-                                <?php foreach ($gateways as $gateway_id => $gateway) : ?>
-                                <div class="gateway">
-                                    <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php echo esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
-                                    <label for="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" class="gateway--label">
-                                        <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img//' . $gateway_id . '.png'; ?>" alt="">
-                                        <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
-                                    </label>
+                                <div class="gateways m-0 justify-content-center d-flex">
+                                    <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                                        <div class="gateway">
+                                            <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php echo esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
+                                            <label for="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" class="gateway--label">
+                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img//' . $gateway_id . '.png'; ?>" alt="">
+                                                <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
                                 </div>
-                                <?php endforeach; ?>
-                            </div>
                             <?php else : ?>
 
-                            <?php
+                                <?php
                                 $has_payment_error = true;
                                 echo 'You must enable a payment gateway to proceed a payment.';
                                 ?>
@@ -87,7 +83,7 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
 
                             <?php $gateways_index = array_keys($gateways); ?>
                             <?php if (count($gateways) == 1 && 'paddle' == reset($gateways_index)) : ?>
-                            <div class="mt-3"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/paddle-payment-methods.png'; ?>" class="img-fluid" alt="paddle-payment-methods"></div>
+                                <div class="mt-3"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/paddle-payment-methods.png'; ?>" class="img-fluid" alt="paddle-payment-methods"></div>
                             <?php endif; ?>
                         </div>
                     </form>
@@ -117,3 +113,5 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
         </div>
     </div>
 </div>
+
+<div id="smartpay_currency_symbol" data-value="<?php echo smartpay_get_currency_symbol(); ?>"></div>

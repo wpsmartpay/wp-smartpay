@@ -11,7 +11,11 @@ jQuery(document).ready(($) => {
 				.find('.variation')
 				.removeClass('selected')
 
-			$(e.currentTarget).addClass('selected')
+            $(e.currentTarget).addClass('selected')
+            
+            const $paymentModalAmount = $(e.currentTarget).parents('.smartpay-product-shortcode').find('.payment-modal--title.amount');
+console.log($paymentModalAmount);
+            $paymentModalAmount.html($(e.currentTarget).find('.sale-price').html());
 		}
 	)
 
@@ -59,7 +63,7 @@ jQuery(document).ready(($) => {
 				.val()
 			$(e.currentTarget)
 				.parents('.form-amounts')
-				.find('#smartpay_custom_amount')
+				.find('.form--custom-amount')
 				.val(selectedAmount)
 		}
 	)
@@ -67,7 +71,7 @@ jQuery(document).ready(($) => {
 	/** Select form custom amount **/
 	$(document.body).on(
 		'focus',
-		'.smartpay-form-shortcode .form-amounts #smartpay_custom_amount',
+		'.smartpay-form-shortcode .form-amounts .form--custom-amount',
 		(e) => {
 			$(e.currentTarget)
 				.parents('.form-amounts')
@@ -108,10 +112,15 @@ jQuery(document).ready(($) => {
 		'.smartpay-payment button.open-payment-form',
 		(e) => {
 			e.preventDefault()
+			$parentWrapper = $(e.currentTarget).parents('.smartpay-payment')
 
-			let $paymentModal = $(e.currentTarget)
-				.parents('.smartpay-payment')
-				.find('.payment-modal')
+            let $paymentModal = $parentWrapper.find('.payment-modal')
+            let formData = getPaymentFormData($parentWrapper)
+
+			if ('form_payment' === formData.smartpay_payment_type) {
+                const currencySymbol = $('#smartpay_currency_symbol').data('value');
+                $paymentModal.find('.amount').html(currencySymbol + formData.smartpay_form_amount)
+			}
 
 			// Reset payment modal
 			resetPaymentModal($paymentModal)
@@ -238,7 +247,7 @@ jQuery(document).ready(($) => {
 	}
 
 	/** Prepare payment data **/
-	function getPaymentFormData($wrapper) {
+	function getPaymentFormData($wrapper, index = '') {
 		let data = {
 			smartpay_action: 'smartpay_process_payment',
 			smartpay_process_payment:
@@ -275,7 +284,9 @@ jQuery(document).ready(($) => {
 				null,
 		}
 
-		// console.log(data)
+		if (index) {
+			return data.index || null
+		}
 
 		return data
 	}
