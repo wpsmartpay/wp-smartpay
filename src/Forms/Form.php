@@ -71,7 +71,7 @@ final class Form
             'singular_name'         => __('SmartPay Form', 'smartpay'),
             'attributes'            => __('SmartPay Form Attributes', 'smartpay'),
             'parent_item_colon'     => __('Parent Form:', 'smartpay'),
-            'all_items'             => __('All Form', 'smartpay'),
+            'all_items'             => __('All Forms', 'smartpay'),
             'add_new_item'          => __('Add New Payment Form', 'smartpay'),
             'add_new'               => __('Add new', 'smartpay'),
             'new_item'              => __('New Form', 'smartpay'),

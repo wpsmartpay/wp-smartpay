@@ -74,7 +74,7 @@ final class Product
             'singular_name'         => __('Product', 'smartpay'),
             'attributes'            => __('Product Attributes', 'smartpay'),
             'parent_item_colon'     => __('Parent Product:', 'smartpay'),
-            'all_items'             => __('All Product', 'smartpay'),
+            'all_items'             => __('All Products', 'smartpay'),
             'add_new_item'          => __('Add New Product', 'smartpay'),
             'add_new'               => __('Add new', 'smartpay'),
             'new_item'              => __('New Product', 'smartpay'),
