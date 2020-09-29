@@ -136,7 +136,7 @@ final class Stripe extends Payment_Gateway
             <button class="btn-success btn-block btn-lg smartpay-stripe-payment" style="margin-top: 20px;font-size: 16px;padding: 6px 10px;border-radius: 4px;">' . __('Submit Payment', 'smartpay') . '</button>
         </form>';
 
-        $content .= '<script type="text/javascript" src="' . plugins_url('/assets/js/gateways/stripe.js', SMARTPAY_FILE) . '"></script>';
+        $content .= '<script type="text/javascript" src="' . plugins_url('/assets/js/gateways/stripe.js', SMARTPAY_PLUGIN_FILE) . '"></script>';
         echo $content;
 
         return;

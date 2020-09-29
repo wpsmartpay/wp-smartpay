@@ -22,7 +22,7 @@ final class Uninstall
      */
     private function __construct()
     {
-        register_deactivation_hook(SMARTPAY_FILE, [$this, 'deactivate']);
+        register_deactivation_hook(SMARTPAY_PLUGIN_FILE, [$this, 'deactivate']);
     }
 
     /**

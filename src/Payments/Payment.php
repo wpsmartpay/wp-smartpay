@@ -341,7 +341,7 @@ final class Payment
     public function enqueue_payment_scripts()
     {
 
-        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_FILE), array('jquery'), SMARTPAY_VERSION, true);
+        wp_register_script('smartpay-payment', plugins_url('/assets/js/payment.js', SMARTPAY_PLUGIN_FILE), array('jquery'), SMARTPAY_VERSION, true);
 
         wp_enqueue_script('smartpay-payment');
 

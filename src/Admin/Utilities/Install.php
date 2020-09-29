@@ -35,7 +35,7 @@ final class Install
     {
         $this->installed_version = get_option('smartpay_version');
 
-        register_activation_hook(SMARTPAY_FILE, [$this, 'activate']);
+        register_activation_hook(SMARTPAY_PLUGIN_FILE, [$this, 'activate']);
     }
 
     /**
