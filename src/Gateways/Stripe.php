@@ -144,7 +144,7 @@ final class Stripe extends Payment_Gateway
 
     public function make_payment()
     {
-        $secret_key = smartpay_is_test_mode() ? smartpay_get_option('test_secret_key') : smartpay_get_option('live_secret_key');
+        $secret_key = smartpay_is_test_mode() ? smartpay_get_option('stripe_test_secret_key') : smartpay_get_option('stripe_live_secret_key');
         $data = $_POST['data'];
 
         StripeSDK::setApiKey(trim($secret_key));
@@ -265,9 +265,7 @@ final class Stripe extends Payment_Gateway
 
     public function stripe_scripts()
     {
-        global $smartpay_options;
-
-        $publishable_key = smartpay_is_test_mode() ? $smartpay_options['stripe_test_publishable_key'] : $smartpay_options['stripe_live_publishable_key'];
+        $publishable_key = smartpay_is_test_mode() ? smartpay_get_option('stripe_test_publishable_key') : smartpay_get_option('stripe_live_publishable_key');
 
         wp_register_script('stripe-js', 'https://js.stripe.com/v3/', ['jquery'], SMARTPAY_VERSION);
         // wp_register_script('stripe-checkout', 'https://checkout.stripe.com/checkout.js', ['jquery'], SMARTPAY_VERSION);
