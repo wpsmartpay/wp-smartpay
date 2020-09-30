@@ -226,8 +226,10 @@ final class Install
 
         $options = array(
             // Gateway
+            'test_mode'             => 0,
             'gateways'              => ['paddle' => 1],
             'default_gateway'       => 'paddle',
+
 
             // Email
             'from_name'             => get_bloginfo('name'),

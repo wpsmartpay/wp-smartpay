@@ -606,7 +606,7 @@ final class Register_Setting
 
         $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
         $html          = '<div class="custom-control custom-switch">';
-        $html    .= '<input type="hidden"' . $name . ' value="-1" />';
+        $html    .= '<input type="hidden"' . $name . ' value="0" />';
         $html    .= '<input type="checkbox" class="custom-control-input" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" ' . $name . ' value="1" ' . $checked . '>';
         $html    .= '<label class="custom-control-label" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . $label . '</label>';
         $html    .= '</div>';
