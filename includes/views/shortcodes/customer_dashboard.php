@@ -102,13 +102,15 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                             } ?>
 
                                             <div class="border mb-3 product">
-                                                <div class="p-3  product--header">
-                                                    <div class="row" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
-                                                        <div class="col-sm-2 product--image">
-                                                            <img src="<?php echo $product->image; ?>" class="border" alt="">
-                                                        </div>
-                                                        <div class="col-sm-7">
-                                                            <h5 class="mt-0"><?php echo $product->title; ?></h5>
+                                                <div class="p-3 product--header">
+                                                    <div class="d-flex align-items-center" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
+                                                        <?php if ($product->image) : ?>
+                                                            <div class="product--image mr-3">
+                                                                <img src="<?php echo $product->image; ?>" class="border" alt="">
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="my-0"><?php echo $product->title; ?></h5>
                                                             <?php if ($variation_id && $variation) : ?>
                                                                 <p><?php _e(sprintf('<strong>Variation: </strong>', 'smartpay') . $variation->name); ?></p>
                                                             <?php endif; ?>
@@ -116,25 +118,27 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                                     </div>
                                                 </div>
                                                 <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
-                                                    <p><?php _e('Files', 'smartpay'); ?></p>
-                                                    <ul class="list-group">
-                                                        <?php foreach ($download_files as $file_index => $file) : ?>
-                                                            <li class="list-group-item p-2">
-                                                                <div class="d-flex align-items-center flex-wrap">
-                                                                    <div>
-                                                                        <img src="<?php echo $product->image; ?>" style="height: 40px;" alt="">
+                                                    <?php if ($download_files) : ?>
+                                                        <p><?php _e('Files', 'smartpay'); ?></p>
+                                                        <ul class="list-group">
+                                                            <?php foreach ($download_files as $file_index => $file) : ?>
+                                                                <li class="list-group-item p-2">
+                                                                    <div class="d-flex align-items-center flex-wrap">
+                                                                        <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
+                                                                        <div class="d-flex flex-grow-1 flex-column ml-3">
+                                                                            <p class="m-0"><?php echo $file['filename'] ?? ''; ?></p>
+                                                                            <div class="d-flex flex-row justify-content-between text-muted m-0">
+                                                                                <small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
                                                                     </div>
-                                                                    <div class="ml-3">
-                                                                        <p class="m-0"><?php echo $file['filename'] ?? ''; ?></p>
-                                                                        <p class="text-muted m-0"><small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small></p>
-                                                                    </div>
-                                                                    <div class="ml-auto">
-                                                                        <a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a>
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                        <?php endforeach; ?>
-                                                    </ul>
+                                                                </li>
+                                                            <?php endforeach; ?>
+                                                        </ul>
+                                                    <?php else : ?>
+                                                        <p class="mb-0 text-center"><?php _e('This item has no download file.', 'smartpay'); ?></p>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         <?php endforeach; ?>

@@ -64,9 +64,17 @@
 			font-size: 20px;
 		}
 
-		.product--header {
-			cursor: pointer;
-		}
+		.product{ 
+            &--header {
+                cursor: pointer;
+            }
+
+            &--image img{
+                width: 60px;
+                height: auto;
+                max-height: 60px;
+            }
+        }
 
 		table td,
 		table th {
@@ -77,11 +85,21 @@
 			font-size: 16px;
 			min-height: 40px;
 			padding: 5px 15px;
-		}
+        }
+        
+        .download-item-icon{
+            width: 50px;
+            height: auto;
+            max-height: 50px;
+        }
 
 		.btn {
 			font-size: 16px;
-			padding: 6px 10px;
+            padding: 6px 10px;
+            
+            &--download {
+                font-size: 14px;
+            }
 		}
 	}
 }

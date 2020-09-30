@@ -964,9 +964,12 @@
 .smartpay .customer-dashboard .profile img{height:90px;width:90px;box-shadow:0 5px 15px rgba(0,0,0,0.08)}
 .smartpay .customer-dashboard .profile h3{font-size:20px}
 .smartpay .customer-dashboard .product--header{cursor:pointer}
+.smartpay .customer-dashboard .product--image img{width:60px;height:auto;max-height:60px}
 .smartpay .customer-dashboard table td,.smartpay .customer-dashboard table th{border:0}
 .smartpay .customer-dashboard .form-control{font-size:16px;min-height:40px;padding:5px 15px}
+.smartpay .customer-dashboard .download-item-icon{width:50px;height:auto;max-height:50px}
 .smartpay .customer-dashboard .btn{font-size:16px;padding:6px 10px}
+.smartpay .customer-dashboard .btn--download{font-size:14px}
 .StripeElement{box-sizing:border-box;height:40px;padding:10px 12px;border:1px solid transparent;border-radius:4px;background-color:white;box-shadow:0 1px 3px 0 #e6ebf1;-webkit-transition:box-shadow 150ms ease;transition:box-shadow 150ms ease}
 .StripeElement--focus{box-shadow:0 1px 3px 0 #cfd7df}
 .StripeElement--invalid{border-color:#fa755a}
