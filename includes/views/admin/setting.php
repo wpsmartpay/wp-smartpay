@@ -121,8 +121,6 @@ ob_start();
         </div>
 
     </div>
-    <!-- container end
- -->
-
+    <!-- container end -->
 </div>
 <?php echo ob_get_clean(); ?>

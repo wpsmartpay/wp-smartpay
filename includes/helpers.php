@@ -271,7 +271,7 @@ function smartpay_sanitize_key($key)
 function smartpay_is_test_mode()
 {
     $is_test_mode = smartpay_get_option('test_mode', false);
-    return (bool)  $is_test_mode;
+    return (bool) $is_test_mode;
 }
 
 function smartpay_get_svg_icon_url()

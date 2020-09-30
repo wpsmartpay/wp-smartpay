@@ -18,9 +18,7 @@ class DB_Customer extends DB_Model
      */
     public function __construct()
     {
-        global $wpdb;
-
-        $this->table_name  = $wpdb->prefix . 'smartpay_customers';
+        $this->table_name  = 'smartpay_customers';
         $this->version     = '1.0';
         $this->primary_key = 'ID';
         $this->cache_group = 'customers';
@@ -82,7 +80,7 @@ class DB_Customer extends DB_Model
      * @since  0.0.1
      * @return  bool
      */
-    public function update($row_id = 0, $data = array(), $where = '')
+    public function update($row_id, $data = [], $where = '')
     {
         if (!$row_id) return;
 

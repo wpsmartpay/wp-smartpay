@@ -16,10 +16,9 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
     <div class="customer-dashboard card border-light mb-3">
         <div class="card-body py-5">
             <div class="d-flex justify-content-center flex-column">
-
                 <div class="profile d-flex justify-content-center flex-column">
                     <div class="mx-auto">
-                        <img class="rounded-circle" src="<?php echo esc_url(get_avatar_url($customer->wp_user->ID)); ?>" alt="Profile image">
+                        <img class="rounded-circle" src="<?php echo esc_url(get_avatar_url(get_current_user_id())); ?>" alt="Profile image">
                     </div>
                     <div class="text-center">
                         <h3 class="mt-4 mb-2"><?php echo ($customer->first_name ?? '') . ' ' . ($customer->last_name ?? ''); ?></h3>
