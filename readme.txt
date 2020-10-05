@@ -3,7 +3,7 @@ Contributors: themesgrove
 Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
 Requires at least: 4.9
 Tested up to: 5.5
-Requires PHP: 7.0.0
+Requires PHP: 7.2.0
 Stable Tag: 1.0.0-beta.1
 License: GNU Version 2 or later
 
