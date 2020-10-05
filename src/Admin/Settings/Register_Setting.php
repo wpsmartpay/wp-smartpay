@@ -260,19 +260,12 @@ final class Register_Setting
                 )
             ),
             /** License Settings */
-            'extensions' => apply_filters(
-                'smartpay_settings_extensions',
+            'licenses' => apply_filters(
+                'smartpay_settings_licenses',
                 array(
                     'main' => array(),
                 )
             ),
-            /** License Settings */
-            // 'licenses' => apply_filters(
-            //     'smartpay_settings_licenses',
-            //     array(
-            //         'main' => array(),
-            //     )
-            // ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -323,12 +316,9 @@ final class Register_Setting
             'emails'    => apply_filters('smartpay_settings_sections_emails', array(
                 'main'  => __('General', 'smartpay'),
             )),
-            'extensions'  => apply_filters('smartpay_settings_sections_extensions', array(
+            'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
                 'main'  => __('General', 'smartpay'),
             )),
-            // 'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
-            //     'main'  => __('General', 'smartpay'),
-            // )),
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -340,7 +330,6 @@ final class Register_Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
-        $tabs['extensions']   = __('Extensions', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
