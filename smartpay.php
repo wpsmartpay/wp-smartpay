@@ -28,7 +28,6 @@
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-
 // Includes vendor files.
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -42,4 +41,5 @@ function SmartPay()
 {
     return SmartPay\SmartPay::instance();
 }
-SmartPay();
+
+add_action('plugins_loaded', 'SmartPay');
