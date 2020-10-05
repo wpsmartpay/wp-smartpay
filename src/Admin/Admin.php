@@ -143,6 +143,17 @@ final class Admin
             }
         );
 
+        add_submenu_page(
+            'edit.php?post_type=smartpay_product',
+            'SmartPay - integrations',
+            'Integrations',
+            'manage_options',
+            'smartpay-integrations',
+            function () {
+                return smartpay_view('admin/integrations');
+            }
+        );
+
         // add_submenu_page(
         //     'edit.php?post_type=smartpay_product',
         //     'SmartPay - Log',
