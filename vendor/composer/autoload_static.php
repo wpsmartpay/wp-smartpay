@@ -11,52 +11,13 @@ class ComposerStaticInita9031ece03b1d183d6ef75671418d08d
     );
 
     public static $prefixLengthsPsr4 = array (
-        'T' => 
-        array (
-            'ThemeXpert\\Paddle\\Util\\' => 23,
-            'ThemeXpert\\Paddle\\Subscription\\' => 31,
-            'ThemeXpert\\Paddle\\Product\\' => 26,
-            'ThemeXpert\\Paddle\\Checkout\\' => 27,
-            'ThemeXpert\\Paddle\\Alert\\' => 24,
-            'ThemeXpert\\Paddle\\' => 18,
-        ),
         'S' => 
         array (
-            'Stripe\\' => 7,
             'SmartPay\\' => 9,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'ThemeXpert\\Paddle\\Util\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Util',
-        ),
-        'ThemeXpert\\Paddle\\Subscription\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle/Subscription',
-        ),
-        'ThemeXpert\\Paddle\\Product\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle/Product',
-        ),
-        'ThemeXpert\\Paddle\\Checkout\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle/Checkout',
-        ),
-        'ThemeXpert\\Paddle\\Alert\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle/Alert',
-        ),
-        'ThemeXpert\\Paddle\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/themexpert/paddle-php/src',
-            1 => __DIR__ . '/..' . '/themexpert/paddle-php/src/Paddle',
-        ),
-        'Stripe\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stripe/stripe-php/lib',
-        ),
         'SmartPay\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',

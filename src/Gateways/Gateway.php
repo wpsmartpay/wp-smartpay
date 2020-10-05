@@ -46,29 +46,17 @@ final class Gateway
 
     public static function gateways()
     {
-        $gateways = array(
-            'paddle' => array(
-                'admin_label'       => 'Paddle',
-                'checkout_label'    => 'Paddle'
-            ),
+        return array(
             'paypal' => array(
                 'admin_label'       => 'PayPal Standard',
                 'checkout_label'    => 'PayPal'
             ),
-            'stripe' => array(
-                'admin_label'       => 'Stripe',
-                'checkout_label'    => 'Stripe'
-            )
         );
-
-        return apply_filters('smartpay_gateways', $gateways);
     }
 
     public function include_gateways()
     {
         // TODO: Update method to include
-        Paddle::instance();
         Paypal_Standard::instance();
-        Stripe::instance();
     }
 }
