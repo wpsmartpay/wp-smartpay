@@ -115,26 +115,32 @@
 
 				.gateway {
 					flex: 0 1 33.3%;
-					display: flex;
+                    display: flex;
+                    
+                    &:not(:last-child) {
+                        padding-right: 8px;
+                    }
 
 					&--label {
-						height: 38px;
-						cursor: pointer;
-						border: 1px solid #ced4da;
-						border-radius: 4px;
-						padding: 3px;
-						width: 100%;
-						flex-wrap: wrap;
-						margin: 3px;
+						height: 36px;
+                        flex-wrap: wrap;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-around;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        width: 100%;
+                        margin-bottom: 4px;
+                        box-shadow: 0 0 0px 1px #ced4da;
 
 						img {
-							max-height: 100%;
-							width: auto;
+                            width: auto;
+                            height: 32px;
 						}
 					}
 
 					input[type='radio']:checked + label {
-						box-shadow: 0 0 0 1px #28a745;
+						box-shadow: 0 0 0 2px #28a745;
 					}
 				}
 			}

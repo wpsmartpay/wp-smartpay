@@ -951,9 +951,10 @@
 .smartpay .smartpay-payment .payment-modal--gateway--label{color:#6c757d}
 .smartpay .smartpay-payment .payment-modal--gateway .gateways{margin-bottom:20px !important;flex-wrap:wrap}
 .smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway{flex:0 1 33.3%;display:flex}
-.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway--label{height:38px;cursor:pointer;border:1px solid #ced4da;border-radius:4px;padding:3px;width:100%;flex-wrap:wrap;margin:3px}
-.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway--label img{max-height:100%;width:auto}
-.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway input[type='radio']:checked+label{box-shadow:0 0 0 1px #28a745}
+.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway:not(:last-child){padding-right:8px}
+.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway--label{height:36px;flex-wrap:wrap;display:flex;align-items:center;justify-content:space-around;cursor:pointer;border-radius:4px;width:100%;margin-bottom:4px;box-shadow:0 0 0 1px #ced4da}
+.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway--label img{width:auto;height:32px}
+.smartpay .smartpay-payment .payment-modal--gateway .gateways .gateway input[type='radio']:checked+label{box-shadow:0 0 0 2px #28a745}
 .smartpay .smartpay-payment .payment-modal--user-info .form-control{font-size:16px;height:38px;padding:5px 10px;border-radius:4px}
 .smartpay .smartpay-payment button.open-payment-form,.smartpay .smartpay-payment button.smartpay-pay-now{font-size:16px;padding:6px 10px;border-radius:4px}
 .smartpay .smartpay-payment .overlay{background:rgba(255,255,255,0.9);position:absolute;left:0;top:0;width:100%;height:100%;display:none}

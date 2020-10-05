@@ -32,7 +32,7 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
                                 <?php $gateways_index = array_keys($gateways); ?>
-                                <!-- <p class="payment-gateway--label single-gateway"> -->
+                                <!-- <p class="payment-gateway--label text-muted single-gateway"> -->
                                 <?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); 
                                 ?>
                                 <!-- </p> -->
@@ -40,14 +40,14 @@ $customer = is_user_logged_in() ? new SmartPay_Customer(get_current_user_id(), t
 
                                 <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
-                                <p class="payment-gateway--label"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
+                                <p class="payment-gateway--label text-muted"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
 
                                 <div class="gateways m-0 justify-content-center d-flex">
                                     <?php foreach ($gateways as $gateway_id => $gateway) : ?>
                                         <div class="gateway">
                                             <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php echo esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
                                             <label for="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" class="gateway--label">
-                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img//' . $gateway_id . '.png'; ?>" alt="">
+                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gateway_id . '.png'; ?>" alt="">
                                                 <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
                                             </label>
                                         </div>
