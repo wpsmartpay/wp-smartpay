@@ -227,8 +227,8 @@ final class Install
         $options = array(
             // Gateway
             'test_mode'             => 0,
-            'gateways'              => ['paddle' => 1],
-            'default_gateway'       => 'paddle',
+            'gateways'              => ['paypal' => 1],
+            'default_gateway'       => 'paypal',
 
 
             // Email
