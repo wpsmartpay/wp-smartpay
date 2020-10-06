@@ -226,17 +226,19 @@ final class Install
 
         $options = array(
             // Gateway
-            'test_mode'             => 0,
-            'gateways'              => ['paypal' => 1],
-            'default_gateway'       => 'paypal',
+            'test_mode'              => 0,
+            'gateways'               => ['paypal' => 1],
+            'default_gateway'        => 'paypal',
 
 
             // Email
-            'from_name'             => get_bloginfo('name'),
-            'from_email'            => get_bloginfo('admin_email'),
+            'from_name'              => get_bloginfo('name'),
+            'from_email'             => get_bloginfo('admin_email'),
 
-            'payment_email_subject' => 'Payment Receipt - ' . get_bloginfo('name'),
-            'payment_email_heading' => 'Payment Receipt - ' . get_bloginfo('name'),
+            'payment_email_subject'  => 'Payment Receipt - ' . get_bloginfo('name'),
+            'payment_email_heading'  => 'Payment Receipt - ' . get_bloginfo('name'),
+
+            'activated_integrations' => [],
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));
