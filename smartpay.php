@@ -41,5 +41,4 @@ function SmartPay()
 {
     return SmartPay\SmartPay::instance();
 }
-
-add_action('plugins_loaded', 'SmartPay');
+SmartPay();
