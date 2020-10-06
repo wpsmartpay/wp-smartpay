@@ -55,6 +55,15 @@ function smartpay_get_settings()
     return apply_filters('smartpay_get_settings', $settings);
 }
 
+function smartpay_update_settings(array $settings)
+{
+    $old_settings = get_option('smartpay_settings');
+
+    if (!($old_settings === $settings)) {
+        update_option('smartpay_settings', $settings);
+    }
+}
+
 function smartpay_get_option($key = '', $default = false)
 {
     global $smartpay_options;
