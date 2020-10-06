@@ -5,6 +5,7 @@ require_once __DIR__ . '/helpers/payment.php';
 require_once __DIR__ . '/helpers/product.php';
 require_once __DIR__ . '/helpers/form.php';
 require_once __DIR__ . '/helpers/customer.php';
+require_once __DIR__ . '/helpers/integration.php';
 
 function smartpay_view(string $file, array $data = [])
 {
