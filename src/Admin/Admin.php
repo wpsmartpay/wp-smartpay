@@ -10,6 +10,7 @@ use SmartPay\Admin\Report\Report;
 use SmartPay\Admin\Utilities\Upload;
 use SmartPay\Admin\Utilities\Install;
 use SmartPay\Admin\Utilities\Uninstall;
+use SmartPay\Admin\Integrations\Integrations;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -52,6 +53,7 @@ final class Admin
 
             self::$instance->admin_notices = Admin_Notices::instance();
             self::$instance->setting       = Setting::instance();
+            self::$instance->integrations  = Integrations::instance();
             self::$instance->report        = Report::instance();
             self::$instance->product       = Product::instance();
             self::$instance->form          = Form::instance();
