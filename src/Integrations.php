@@ -19,6 +19,7 @@ final class Integrations
      */
     private function __construct()
     {
+        //
     }
 
     /**
@@ -42,25 +43,20 @@ final class Integrations
     public static function integrations()
     {
         return [
-            'paddle'    => [
-                'name'      => 'Paddle',
-                'cover' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png',
-                'provider'  => '',
-                'installed' => false,
-                'activated' => false,
-                'excerpt'   => 'Paddle provides financial services for SaaS and Digital services.',
-                'categories'   => ['Payment Gateway'],
-
+            'paddle'    =>  [
+                'name'       => 'Paddle',
+                'excerpt'    => 'Paddle provides financial services for SaaS and Digital services.',
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Payment Gateway'],
             ],
             'stripe'    => [
-                'name'      => 'Stripe',
-                'cover' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png',
-                'provider'  => '',
-                'installed' => false,
-                'activated' => false,
-                'excerpt'   => 'Stripe is an American financial services providing company.',
-                'categories'   => ['Payment Gateway'],
-
+                'name'       => 'Stripe',
+                'excerpt'    => 'Stripe is an American financial services providing company.',
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png',
+                'type'       => 'pro',
+                'categories' => ['Payment Gateway'],
             ],
         ];
     }
