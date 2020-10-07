@@ -77,6 +77,7 @@ final class SmartPay
 
             self::$instance = new self();
             self::$instance->session            = Session::instance();
+            self::$instance->integrations       = Integrations::instance();
             self::$instance->product            = Product::instance();
             self::$instance->form               = Form::instance();
             self::$instance->gateway            = Gateway::instance();

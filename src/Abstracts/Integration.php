@@ -15,6 +15,13 @@ abstract class Integration
     abstract public static function config(): array;
 
     /**
+     * Called when the integration is boot
+     *
+     * @return void
+     */
+    abstract public function boot(): void;
+
+    /**
      * Called when the integration is being activate
      *
      * @return boolean

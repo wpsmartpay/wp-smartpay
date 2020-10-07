@@ -19,7 +19,7 @@ final class Integrations
      */
     private function __construct()
     {
-        //
+        add_action('plugins_loaded', [$this, 'boot_integrations'], 999);
     }
 
     /**
@@ -55,9 +55,21 @@ final class Integrations
                 'name'       => 'Stripe',
                 'excerpt'    => 'Stripe is an American financial services providing company.',
                 'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png',
+                'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
             ],
         ];
+    }
+
+    public function boot_integrations()
+    {
+        foreach (smartpay_active_integrations() as $namespace => $integration) {
+            smartpay_integration_get_manager($integration['manager'])->boot();
+
+            do_action('smartpay_integration_' . strtolower($namespace) . '_loaded');
+        }
+
+        do_action('smartpay_integrations_loaded');
     }
 }

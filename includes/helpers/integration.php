@@ -8,6 +8,14 @@ function smartpay_integrations()
     return apply_filters('smartpay_integrations', Integrations::integrations());
 }
 
+function smartpay_active_integrations()
+{
+    $integrations = smartpay_integrations();
+    $activated_integrations = smartpay_get_activated_integrations();
+
+    return array_intersect_key($integrations, array_flip($activated_integrations));
+}
+
 function smartpay_get_activated_integrations()
 {
     $integrations = smartpay_integrations();
@@ -21,9 +29,9 @@ function smartpay_integration_is_installed($integration)
     return isset($integration['manager']) && smartpay_integration_get_manager($integration['manager']);
 }
 
-function smartpay_integration_get_manager(string $integration): Integration
+function smartpay_integration_get_manager(string $manager): Integration
 {
-    return new $integration;
+    return new $manager;
 }
 
 function smartpay_integration_get_config(Integration $integration): array
