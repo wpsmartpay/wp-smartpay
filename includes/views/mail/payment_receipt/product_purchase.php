@@ -20,163 +20,231 @@ if ($variation_id && $variation) {
     $download_files = $product->get_downloadable_files();
 } ?>
 
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
-    <meta name="viewport" content="width=device-width">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Payment Receipt</title>
+    <meta charset="utf-8">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+    <!--[if mso]>
+    <xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml>
     <style>
-        @media only screen and (max-width: 620px) {
-            table[class=body] h1 {
-                font-size: 28px !important;
-                margin-bottom: 10px !important;
-            }
-
-            table[class=body] p,
-            table[class=body] ul,
-            table[class=body] ol,
-            table[class=body] td,
-            table[class=body] span,
-            table[class=body] a {
-                font-size: 16px !important;
-            }
-
-            table[class=body] .wrapper,
-            table[class=body] .article {
-                padding: 10px !important;
-            }
-
-            table[class=body] .content {
-                padding: 0 !important;
-            }
-
-            table[class=body] .container {
-                padding: 0 !important;
-                width: 100% !important;
-            }
-
-            table[class=body] .main {
-                border-left-width: 0 !important;
-                border-radius: 0 !important;
-                border-right-width: 0 !important;
-            }
-
-            table[class=body] .btn table {
-                width: 100% !important;
-            }
-
-            table[class=body] .btn a {
-                width: 100% !important;
-            }
-
-            table[class=body] .img-responsive {
-                height: auto !important;
-                max-width: 100% !important;
-                width: auto !important;
-            }
+      td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
+    </style>
+  <![endif]-->
+    <title><?php _e('Thank you for your payment', 'smartpay'); ?></title>
+    <style>
+        .hover-no-underline:hover {
+            text-decoration: none !important;
         }
 
-        /* -------------------------------------
-        PRESERVE THESE STYLES IN THE HEAD
-    ------------------------------------- */
-        @media all {
-            .ExternalClass {
-                width: 100%;
+        @media (max-width: 600px) {
+            .sm-block {
+                display: block !important;
             }
 
-            .ExternalClass,
-            .ExternalClass p,
-            .ExternalClass span,
-            .ExternalClass font,
-            .ExternalClass td,
-            .ExternalClass div {
-                line-height: 100%;
+            .sm-text-xl {
+                font-size: 20px !important;
             }
 
-            .apple-link a {
-                color: inherit !important;
-                font-family: inherit !important;
-                font-size: inherit !important;
-                font-weight: inherit !important;
-                line-height: inherit !important;
-                text-decoration: none !important;
+            .sm-text-32px {
+                font-size: 32px !important;
             }
 
-            .btn-primary table td:hover {
-                background-color: #34495e !important;
+            .sm-text-40px {
+                font-size: 40px !important;
             }
 
-            .btn-primary a:hover {
-                background-color: #34495e !important;
-                border-color: #34495e !important;
+            .sm-leading-16 {
+                line-height: 16px !important;
+            }
+
+            .sm-leading-24 {
+                line-height: 24px !important;
+            }
+
+            .sm-leading-28 {
+                line-height: 28px !important;
+            }
+
+            .sm-leading-32 {
+                line-height: 32px !important;
+            }
+
+            .sm-leading-36 {
+                line-height: 36px !important;
+            }
+
+            .sm-leading-40 {
+                line-height: 40px !important;
+            }
+
+            .sm-leading-44 {
+                line-height: 44px !important;
+            }
+
+            .sm-leading-64 {
+                line-height: 64px !important;
+            }
+
+            .sm-p-0 {
+                padding: 0 !important;
+            }
+
+            .sm-p-24 {
+                padding: 24px !important;
+            }
+
+            .sm-pb-16 {
+                padding-bottom: 16px !important;
+            }
+
+            .sm-pb-32 {
+                padding-bottom: 32px !important;
+            }
+
+            .sm-text-left {
+                text-align: left !important;
+            }
+
+            .sm-w-full {
+                width: 100% !important;
             }
         }
     </style>
 </head>
 
-<body class="" style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
-    <table border="0" cellpadding="0" cellspacing="0" class="body" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #f6f6f6;">
-        <tr>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
-            <td class="container" style="font-family: sans-serif; font-size: 14px; vertical-align: top; display: block; Margin: 0 auto; max-width: 580px; padding: 10px; width: 580px;">
-                <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
-
-                    <!-- START CENTERED WHITE CONTAINER -->
-                    <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Payment Receipt.</span>
-                    <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
-
-                        <!-- START MAIN CONTENT AREA -->
+<body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f2f2f7">
+    <div role="article" aria-roledescription="email" aria-label="<?php _e('Thank you for your payment', 'smartpay'); ?>" lang="en">
+        <table style="font-family: Arial, sans-serif; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+                <td align="center" style="background-color: #f2f2f7" bgcolor="#f2f2f7">
+                    <table class="sm-w-full" style="width: 600px" cellpadding="0" cellspacing="0" role="presentation">
                         <tr>
-                            <td class="wrapper" style="font-family: sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;">
-                                <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
+                            <td class="sm-p-24" style="padding: 48px 20px">
+                                <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                     <tr>
-                                        <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><?php echo __('Dear', 'smartpay') . ' ' . $customer_name . ','; ?></p>
-                                            <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><?php _e('Thank you for your payment. Please click on the link(s) below to download your files.', 'smartpay'); ?></p>
-                                            <ul class="list-group">
-                                                <?php foreach ($download_files as $file_index => $file) : ?>
-                                                    <li class="list-group-item p-2">
-                                                        <div class="d-flex align-items-center flex-wrap">
-                                                            <div class="ml-3">
-                                                                <p class="m-0"><?php echo $file['filename'] ?? ''; ?></p>
-                                                                <p class="text-muted m-0"><small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small></p>
-                                                            </div>
-                                                            <div class="ml-auto">
-                                                                <a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a>
-                                                            </div>
+                                        <td>
+                                            <div style="text-align: center">
+                                                <a href="<?php echo site_url(); ?>" style="text-decoration: none">
+                                                    <?php echo get_bloginfo('name'); ?>
+                                                </a>
+                                            </div>
+                                            <div class="sm-leading-64" style="line-height: 70px">&zwnj;</div>
+                                            <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td class="sm-p-0" style="padding-left: 64px; padding-right: 64px">
+                                                        <h1 class="sm-text-40px sm-leading-44" style="font-size: 28px; line-height: 56px; margin: 0; text-align: center; color: #5744cb">
+                                                            <?php _e('Thank you for your payment', 'smartpay'); ?>
+                                                        </h1>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
+                                            <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
+                                                <?php echo __('Payment ', 'smartpay') . ' #' . $payment->ID; ?>
+                                            </p>
+                                            <div class="sm-leading-40" style="line-height: 48px">&zwnj;</div>
+                                            <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                            <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
+                                            <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <th class="sm-w-full sm-block sm-pb-16" style="font-weight: 400; text-align: left; width: 50%" align="left">
+                                                        <p class="sm-text-32px sm-leading-36" style="font-weight: 700; font-size: 28px; line-height: 44px; margin: 0px; color: #4f5a68">
+                                                            <?php echo smartpay_amount_format($payment->amount); ?>
+                                                        </p>
+                                                    </th>
+                                                    <th class="sm-w-full sm-block" style="font-weight: 400; vertical-align: center; width: 50%" valign="center">
+                                                        <div class="sm-text-left" style="text-align: right">
+                                                            <a href="<?php echo site_url() . '/smartpay-customer-dashboard/'; ?>" class="hover-no-underline" style="font-size: 16px; color: #986dff; text-decoration: underline"><?php _e('My Account', 'smartpay'); ?></a>
                                                         </div>
-                                                    </li>
-                                                <?php endforeach; ?>
-                                            </ul>
+                                                    </th>
+                                                </tr>
+                                            </table>
+                                            <div class="sm-leading-40" style="line-height: 24px">&zwnj;</div>
+                                            <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
+                                                        <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Order details', 'smartpay'); ?></h3>
+                                                        <div style="line-height: 24px">&zwnj;</div>
+                                                        <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                            <tr>
+                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $product->title; ?></td>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo smartpay_amount_format($payment->payment_data['product_price']); ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
+                                                                    <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; vertical-align: top; width: 50%" valign="top"><?php _e('Total', 'smartpay'); ?></td>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo smartpay_amount_format($payment->payment_data['total_amount']); ?></td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <?php if (count($download_files)) : ?>
+                                                <div class="sm-leading-40" style="line-height: 24px">&zwnj;</div>
+                                                <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <tr>
+                                                        <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
+                                                            <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Downloads', 'smartpay'); ?></h3>
+                                                            <div style="line-height: 24px">&zwnj;</div>
+                                                            <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                                <?php foreach ($download_files as $file_index => $file) : ?>
+                                                                    <tr>
+                                                                        <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $file['filename'] ?? ''; ?></td>
+                                                                        <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
+                                                                            <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php endforeach; ?>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            <?php endif; ?>
+
+                                            <div class="sm-leading-40" style="line-height: 64px">&zwnj;</div>
+                                            <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                            <div class="sm-leading-40" style="line-height: 48px">&zwnj;</div>
+                                            <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td class="sm-w-full sm-block sm-pb-32" style="font-weight: 400; text-align: left; vertical-align: top; width: 50%" align="left" valign="top">
+                                                        <h4 style="font-size: 16px; line-height: 24px; margin: 0 0 8px; color: #4f5a68">Customer details</h4>
+                                                        <p style="font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68">
+                                                            <?php echo __('Name:', 'smartpay') . ' ' . $payment->customer['first_name'] . ' ' . $payment->customer['last_name']; ?>
+                                                            <br>
+                                                            <?php echo __('Email:', 'smartpay') . ' ' . $payment->customer['email']; ?>
+                                                            <br>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div style="line-height: 64px">&zwnj;</div>
+                                            <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                            <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
+                                            <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo __('You get this email because you sign up or purchase someting at ', 'smartpay') . get_bloginfo('name'); ?></p>
+                                            <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
                         </tr>
-
-                        <!-- END MAIN CONTENT AREA -->
                     </table>
-
-                    <!-- START FOOTER -->
-                    <div class="footer" style="clear: both; Margin-top: 10px; text-align: center; width: 100%;">
-                        <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
-                            <tr>
-                                <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                                    <?php echo bloginfo('name'); ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <!-- END FOOTER -->
-
-                    <!-- END CENTERED WHITE CONTAINER -->
-                </div>
-            </td>
-            <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">&nbsp;</td>
-        </tr>
-    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 
 </html>
