@@ -59,12 +59,24 @@ final class Integrations
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
             ],
+            'bkash' => [
+                'name'       => 'bKash',
+                'excerpt'    => 'bKash is a mobile financial service in Bangladesh.',
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/bkash.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Payment Gateway'],
+            ]
         ];
     }
 
     public function boot_integrations()
     {
         foreach (smartpay_active_integrations() as $namespace => $integration) {
+            if (!class_exists($integration['manager'])) {
+                continue;
+            }
+
             smartpay_integration_get_manager($integration['manager'])->boot();
 
             do_action('smartpay_integration_' . strtolower($namespace) . '_loaded');
