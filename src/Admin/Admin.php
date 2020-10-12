@@ -155,16 +155,23 @@ final class Admin
                 return smartpay_view('admin/integrations');
             }
         );
+        
+        $this->smartpay_pro_menu();
+        
+        do_action( 'smartpay_admin_add_menu_items' );
+    }
+    
+    private function smartpay_pro_menu()
+    {
+        if(array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())){
 
-        // add_submenu_page(
-        //     'edit.php?post_type=smartpay_product',
-        //     'SmartPay - Log',
-        //     'Log',
-        //     'manage_options',
-        //     'smartpay-log',
-        //     function () {
-        //         return smartpay_view('admin/debug-log');
-        //     }
-        // );
+            global $submenu;
+            
+            $submenu['edit.php?post_type=smartpay_product'][99] = [
+                "⭐ Upgrade to pro",
+                "manage_options",
+                'https://wpsmartpay.com',
+            ];
+        }
     }
 }

@@ -931,6 +931,7 @@
 .custom-switch-lg .custom-control-label::before{height:16px !important;width:32px !important;border-radius:20px !important}
 .custom-switch-lg .custom-control-label::after{top:6px !important;left:-34px !important;width:12px !important;height:12px !important}
 .custom-switch-lg .custom-control-input:checked+.custom-control-label::after{transform:translateX(16px) !important}
+.wp-submenu a[href^="https://wpsmartpay.com"]{color:#fcac33 !important}
 @media(prefers-reduced-motion:reduce){.smartpay .form-control{transition:none}
 .smartpay .custom-switch .custom-control-label::after{transition:none}
 .smartpay .custom-range::-webkit-slider-thumb{transition:none}
