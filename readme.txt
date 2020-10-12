@@ -14,8 +14,6 @@ The Simplest way to sell digital downloads and accept payments to run your busin
 
 Sell your product or set up payment forms with Stripe, PayPal, and Paddle. You can accept donations, crowdfunding, take service payments, and manage downloads with ease.
 
-== Description ==
-
 ###🪁 Sell Digital Products Effortlessly
 Whether it is ebooks, documents, graphics, songs, videos, photos, or any other media file type, sell it effortlessly with WP SmartPay.
 
