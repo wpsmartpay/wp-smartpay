@@ -482,7 +482,7 @@ final class Paypal_Standard extends Payment_Gateway
 
     public function unsupported_currency_notice()
     {
-        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal.</p></div>', 'smartpay');
+        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'edit.php?post_type=smartpay_product&page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay');
     }
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)
