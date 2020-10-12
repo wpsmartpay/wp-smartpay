@@ -7,9 +7,9 @@ require_once __DIR__ . '/helpers/form.php';
 require_once __DIR__ . '/helpers/customer.php';
 require_once __DIR__ . '/helpers/integration.php';
 
-function smartpay_view(string $file, array $data = [])
+function smartpay_view(string $file, array $data = [], string $path = SMARTPAY_DIR . '/includes/views')
 {
-    $file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
+    $file = $path . '/'. $file . '.php';
     if (file_exists($file)) {
         if (is_array($data)) {
             extract($data);
@@ -21,9 +21,9 @@ function smartpay_view(string $file, array $data = [])
     }
 }
 
-function smartpay_view_render(string $file, array $data = [])
+function smartpay_view_render(string $file, array $data = [], string $path = SMARTPAY_DIR . '/includes/views')
 {
-    $file = SMARTPAY_DIR . '/includes/views/' . $file . '.php';
+    $file = $path . '/'. $file . '.php';
     if (file_exists($file)) {
         if (is_array($data)) {
             extract($data);
