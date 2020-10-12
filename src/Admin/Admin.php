@@ -163,7 +163,7 @@ final class Admin
     
     private function smartpay_pro_menu()
     {
-        if(array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())){
+        if(!array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())){
 
             global $submenu;
             
