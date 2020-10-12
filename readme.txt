@@ -28,7 +28,7 @@ Set up a payment form and start accepting payments with Stripe, PayPal, and Padd
 
 Accept pre-defined payment or give your audience the flexibility to put in the amount they want.
 
-### 💁🏻 Who Is WP SmartPay For?
+###💁🏻 Who Is WP SmartPay For?
 - Coaches and consultants selling one-time and recurring services
 - Agencies and freelancers accepting one-time and recurring payment for services
 - Coaches and website selling eBooks and services
@@ -56,7 +56,7 @@ Accept pre-defined payment or give your audience the flexibility to put in the a
 - Embedded & overlay form display options
 - GDPR Friendly: Make your store GDPR compatible with just a few clicks.
 
-### 🔥 WP SmartPay Pro Features
+###🔥 WP SmartPay Pro Features
 
 If you need more functionality, you can upgrade to WP SmartPay Pro for these additional features:
 
@@ -114,6 +114,17 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+
+= [1.0.0] =
+* Added integrations support
+* Added more currency support
+* Selected PayPal as default payment gateway
+* Updated payment receipt email template
+* Updated customer dashboard
+* Updated payment modal design
+* Updated button text for product and form
+* Updated product and form modal margin
+* Fixed product description new line issue
 
 = [1.0.0-beta.1] =
 * Added Stripe payment gateway

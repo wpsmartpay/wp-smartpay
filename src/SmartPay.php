@@ -25,7 +25,7 @@ final class SmartPay
      *
      * @var string
      */
-    private $version = '1.0.0-beta.1';
+    private $version = '1.0.0';
 
     /**
      * The single instance of this class
