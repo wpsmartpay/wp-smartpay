@@ -141,17 +141,18 @@ class Customer_Table extends \WP_List_Table
         $name        = '#' . $item['id'] . ' ';
         $name       .= !empty($item['first_name'] && $item['last_name']) ? $item['first_name'] ?? '' . ' ' . $item['last_name'] ?? '' : 'Unnamed customer';
         // $user        = !empty($item['user_id']) ? $item['user_id'] : $item['email'];
-        $customer    = new SmartPay_Customer($item['id']);
-        $view_url    = '#';
+        // $customer    = new SmartPay_Customer($item['id']);
+        // $view_url    = '#';
         // $actions     = array(
         //     'view'   => '<a href="' . $view_url . '">' . __('View', 'smartpay') . '</a>',
         //     'logs'   => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-reports&tab=logs&customer=' . $customer->id) . '">' . __('Download log', 'smartpay') . '</a>',
         //     'delete' => '<a href="' . admin_url('edit.php?post_type=download&page=smartpay-customers&view=delete&id=' . $item['id']) . '">' . __('Delete', 'smartpay') . '</a>'
         // );
 
-        $pending  = smartpay_user_pending_verification($customer->user_id) ? ' <em>' . __('(Pending Verification)', 'smartpay') . '</em>' : '';
+        // $pending  = smartpay_user_pending_verification($customer->user_id) ? ' <em>' . __('(Pending Verification)', 'smartpay') . '</em>' : '';
 
-        return '<a href="' . esc_url($view_url) . '">' . $name . '</a>' . $pending;
+        return $name;
+        // return '<a href="' . esc_url($view_url) . '">' . $name . '</a>' . $pending;
         //  . $this->row_actions($actions);
     }
 
