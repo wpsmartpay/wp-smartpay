@@ -225,11 +225,13 @@ final class Install
         $smartpay_settings = get_option('smartpay_settings', []);
 
         $options = array(
+            // General
+            'currency'               => 'USD',
+            
             // Gateway
             'test_mode'              => 0,
             'gateways'               => ['paypal' => 1],
             'default_gateway'        => 'paypal',
-
 
             // Email
             'from_name'              => get_bloginfo('name'),
