@@ -1,6 +1,6 @@
 <?php
 
-use SmartPay\Integration;
+use SmartPay\Foundation\Integration;
 use SmartPay\Integrations;
 
 function smartpay_integrations()

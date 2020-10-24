@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay;
+namespace SmartPay\Foundation;
 
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
