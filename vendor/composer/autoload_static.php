@@ -20,8 +20,8 @@ class ComposerStaticInita9031ece03b1d183d6ef75671418d08d
     public static $prefixDirsPsr4 = array (
         'SmartPay\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
-            1 => __DIR__ . '/../..' . '/src/Abstracts',
+            0 => __DIR__ . '/../..' . '/app',
+            1 => __DIR__ . '/../..' . '/app/Abstracts',
         ),
     );
 

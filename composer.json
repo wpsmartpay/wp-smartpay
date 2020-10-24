@@ -5,8 +5,8 @@
 	"autoload": {
 		"psr-4": {
 			"SmartPay\\": [
-				"src/",
-				"src/Abstracts"
+				"app/",
+				"app/Abstracts"
 			]
 		},
 		"files": [
