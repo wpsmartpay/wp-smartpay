@@ -19,19 +19,25 @@ abstract class Integration
      *
      * @return void
      */
-    abstract public function boot(): void;
+    public function boot(){
+		//
+	}
 
     /**
      * Called when the integration is being activate
      *
      * @return boolean
      */
-    abstract public function activate(): bool;
+    public function activate(){
+		//
+	}
 
     /**
      * Called when the integration is being deactivate
      *
      * @return boolean
      */
-    abstract public function deactivate(): bool;
+    public function deactivate(){
+		//
+	}
 }

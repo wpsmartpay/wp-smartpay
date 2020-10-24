@@ -2,15 +2,19 @@
 
 namespace SmartPay;
 
+use SmartPay\Container\Container;
+
 // Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-final class Integrations
+final class Integrations extends Container
 {
     /**
      * The single instance of this class.
      */
-    private static $instance = null;
+	private static $instance = null;
+
+	private $integrationProviders = [];
 
     /**
      * Construct Integrations class.
@@ -19,7 +23,9 @@ final class Integrations
      */
     private function __construct()
     {
-        add_action('plugins_loaded', [$this, 'boot_integrations'], 999);
+		add_action('plugins_loaded', [$this, 'load_integrations'], 99);
+
+		add_action('init', [$this, 'boot_integrations']);
     }
 
     /**
@@ -70,18 +76,52 @@ final class Integrations
         ];
     }
 
-    public function boot_integrations()
+    public function load_integrations()
     {
         foreach (smartpay_active_integrations() as $namespace => $integration) {
-            if (!class_exists($integration['manager'])) {
-                continue;
-            }
 
-            smartpay_integration_get_manager($integration['manager'])->boot();
+			$manager = $integration['manager'];
 
-            do_action('smartpay_integration_' . strtolower($namespace) . '_loaded');
-        }
+			if(!$manager) {
+				continue;
+			}
+
+			if (!is_callable($manager)) {
+				$manager = $this->get($manager);
+			}
+
+			if ($manager instanceof Integration) {
+				array_push($this->integrationProviders, $manager);
+			}
+		}
+
+
+		// var_dump($this->integrationProviders);
+		array_walk($this->integrationProviders, function (Integration $provider) {
+			$this->registerIntegration($provider);
+		});
 
         do_action('smartpay_integrations_loaded');
-    }
+	}
+
+	public function boot_integrations()
+	{
+		array_walk($this->integrationProviders, function (Integration $integration) {
+			$this->bootIntegration($integration);
+		});
+	}
+
+	public function registerIntegration(Integration $integration)
+	{
+		if (method_exists($integration, 'register')) {
+			call_user_func([$integration, 'register']);
+		}
+	}
+
+	public function bootIntegration(Integration $integration)
+	{
+		if (method_exists($integration, 'boot')) {
+			call_user_func([$integration, 'boot']);
+		}
+	}
 }
