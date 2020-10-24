@@ -2,7 +2,7 @@
 
 namespace SmartPay\Gateways;
 
-use SmartPay\Payment_Gateway;
+use SmartPay\Foundation\Payment_Gateway;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

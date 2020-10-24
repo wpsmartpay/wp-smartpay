@@ -1,11 +1,8 @@
 <?php
 
-namespace SmartPay;
+namespace SmartPay\Foundation;
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
 abstract class Payment_Gateway
 {
