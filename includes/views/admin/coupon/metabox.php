@@ -1,5 +1,13 @@
 <div class="smartpay" id="smartpay-metabox" style="margin: -6px -12px -12px -12px;">
     <div class="d-flex">
+        <div class="col-12 border-bottom pb-1 pt-3">
+            <div class="form-group">
+                <!-- <label for="discount_type" class="text-muted my-2 d-block"><strong><?php _e('Short description', 'smartpay'); ?></strong></label> -->
+                <textarea class="form-control" id="description" name="description" placeholder="<?php _e('Coupon description', 'smartpay'); ?>"><?php echo $coupon->description ?? ''; ?></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex">
         <div class="col-3 bg-light border-right">
             <div class="py-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -18,21 +26,21 @@
                     <div class="form-row">
                         <div class="col-7">
                             <div class="form-group">
-                                <label for="type" class="text-muted my-2 d-block"><strong><?php _e('Discount type', 'smartpay'); ?></strong></label>
-                                <select class="form-control" id="type" name="type">
-                                    <option value="fixed"><?php _e('Fixed amount', 'smartpay'); ?></option>
-                                    <option value="percentage"><?php _e('Percentage', 'smartpay'); ?></option>
+                                <label for="discount_type" class="text-muted my-2 d-block"><strong><?php _e('Discount type', 'smartpay'); ?></strong></label>
+                                <select class="form-control" id="discount_type" name="discount_type" selected="<?php echo $coupon->discount_type ?? ''; ?>">
+                                    <option value="fixed" <?php echo ('afixedbc' === $coupon->discount_type) ? 'selected' : ''; ?>><?php _e('Fixed amount', 'smartpay'); ?></option>
+                                    <option value="percentage" <?php echo ('percentage' === $coupon->discount_type) ? 'selected' : ''; ?>><?php _e('Percentage', 'smartpay'); ?></option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="amount" class="text-muted my-2 d-block"><strong><?php _e('Coupon amount', 'smartpay'); ?></strong></label>
-                                <input type="text" class="form-control" id="amount" name="amount" placeholder="0">
+                                <label for="discount_amount" class="text-muted my-2 d-block"><strong><?php _e('Coupon amount', 'smartpay'); ?></strong></label>
+                                <input type="text" class="form-control" id="discount_amount" name="discount_amount" placeholder="0" value="<?php echo $coupon->discount_amount ?? ''; ?>">
                             </div>
 
                             <div class="form-group">
-                                <label for="expire_date" class="text-muted my-2 d-block"><strong><?php _e('Coupon expiry date', 'smartpay'); ?></strong></label>
-                                <input type="date" class="form-control" id="expire_date" name="expire_date" placeholder="Option name">
+                                <label for="expiry_date" class="text-muted my-2 d-block"><strong><?php _e('Coupon expiry date', 'smartpay'); ?></strong></label>
+                                <input type="date" class="form-control" id="expiry_date" name="expiry_date" value="<?php echo $coupon->expiry_date ?? ''; ?>">
                             </div>
                         </div>
                     </div>

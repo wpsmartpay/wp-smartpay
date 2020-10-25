@@ -22,8 +22,9 @@ final class CouponAdminServiceProvider extends ServiceProvider
 
         add_filter('manage_smartpay_product_posts_custom_column', [$this, 'product_column_data'], 10, 2);
 
-        add_filter('post_row_actions', [$this, 'modify_admin_table'], 10, 2);
+		add_filter('post_row_actions', [$this, 'modify_admin_table'], 10, 2);
 
+		add_filter('get_sample_permalink_html', [$this, 'remove_permalink'], 10, 2);
 	}
 
     public static function boot()
@@ -67,5 +68,14 @@ final class CouponAdminServiceProvider extends ServiceProvider
         }
 
         return $actions;
-    }
+	}
+
+	public function remove_permalink($html)
+	{
+		if('smartpay_coupon' === get_current_screen()->post_type){
+			return;
+		}
+
+		return $html;
+	}
 }
