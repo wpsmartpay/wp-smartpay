@@ -11,6 +11,7 @@ use SmartPay\Admin\Utilities\Upload;
 use SmartPay\Admin\Utilities\Install;
 use SmartPay\Admin\Utilities\Uninstall;
 use SmartPay\Admin\Integrations\Integrations;
+use SmartPay\Admin\Coupon\CouponAdminServiceProvider;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -53,7 +54,10 @@ final class Admin
 
             self::$instance->admin_notices = Admin_Notices::instance();
             self::$instance->setting       = Setting::instance();
-            self::$instance->integrations  = Integrations::instance();
+			self::$instance->integrations  = Integrations::instance();
+
+			//TODO: It  will be moved to service container later
+			self::$instance->admin 		   = CouponAdminServiceProvider::boot();
             self::$instance->report        = Report::instance();
             self::$instance->product       = Product::instance();
             self::$instance->form          = Form::instance();
@@ -121,6 +125,14 @@ final class Admin
             function () {
                 return smartpay_view('admin/customers/index');
             }
+		);
+
+        add_submenu_page(
+            'edit.php?post_type=smartpay_product',
+            'SmartPay - Coupons',
+            'Coupons',
+            'manage_options',
+            'edit.php?post_type=smartpay_coupon'
         );
 
         add_submenu_page(
@@ -155,18 +167,18 @@ final class Admin
                 return smartpay_view('admin/integrations');
             }
         );
-        
+
         $this->smartpay_pro_menu();
-        
+
         do_action( 'smartpay_admin_add_menu_items' );
     }
-    
+
     private function smartpay_pro_menu()
     {
         if(!array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())){
 
             global $submenu;
-            
+
             $submenu['edit.php?post_type=smartpay_product'][99] = [
                 "⭐ Upgrade to pro",
                 "manage_options",

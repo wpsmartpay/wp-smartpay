@@ -4,6 +4,7 @@ namespace SmartPay;
 
 use SmartPay\Shortcode;
 use SmartPay\Admin\Admin;
+use SmartPay\Coupon\CouponServiceProvider;
 use SmartPay\Customers\Customer;
 use SmartPay\Emails\Email;
 use SmartPay\Forms\Form;
@@ -77,7 +78,11 @@ final class SmartPay
 
             self::$instance = new self();
             self::$instance->session            = Session::instance();
-            self::$instance->integrations       = Integrations::instance();
+			self::$instance->integrations       = Integrations::instance();
+
+			//TODO: It will moved to service container later
+			self::$instance->coupon       		= CouponServiceProvider::boot();
+
             self::$instance->product            = Product::instance();
             self::$instance->form               = Form::instance();
             self::$instance->gateway            = Gateway::instance();
