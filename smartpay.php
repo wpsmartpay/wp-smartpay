@@ -25,13 +25,14 @@
  * GNU General Public License for more details.
  */
 
+use SmartPay\Activator;
+
 defined('ABSPATH') || exit;
 
 define('SMARTPAY_VERSION', '1.0.0');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
-
 
 // Create The Application
 $app = require __DIR__ . '/bootstrap.php';

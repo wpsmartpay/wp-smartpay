@@ -38,11 +38,16 @@ class ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12
         ),
     );
 
+    public static $classMap = array (
+        'CreateSmartpayProductsTable' => __DIR__ . '/../..' . '/database/migrations/create_product_table.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -4,6 +4,7 @@ namespace SmartPay\Providers;
 
 use SmartPay\Modules\Admin\Admin;
 use SmartPay\Framework\Support\ServiceProvider;
+use SmartPay\Models\Product;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -24,8 +25,11 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->make(Admin::class);
 
 
+        // echo '<pre>';
+        // var_dump(Product::find(3));
+        // die();
 
-
+        // \CreateProductsTable::up();
 
 
 

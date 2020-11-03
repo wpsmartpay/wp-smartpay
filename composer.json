@@ -13,6 +13,9 @@
     "files": [
       "app/Helpers/smartpay.php",
       "framework/helpers.php"
+    ],
+    "classmap": [
+      "database/migrations"
     ]
   }
 }
