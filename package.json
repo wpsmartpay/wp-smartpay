@@ -1,71 +1,26 @@
 {
-    "name": "your-project",
-    "description": "A WPGulp based project.",
-    "version": "1.0.0",
-    "author": "Author Name (https://twitter.com/MrAhmadAwais/)",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ahmadawais/WPGulp"
-    },
-    "license": "MIT",
-    "devDependencies": {
-        "@babel/core": "^7.0.0",
-        "@babel/preset-env": "^7.0.0",
-        "@babel/register": "^7.0.0",
-        "@wordpress/scripts": "12.1.1",
-        "beepbeep": "^1.2.2",
-        "bootstrap": "^4.4.1",
-        "browser-sync": "^2.26.12",
-        "del": "^5.1.0",
-        "eslint": "^5.5.0",
-        "eslint-config-wordpress": "^2.0.0",
-        "feather-icons": "^4.28.0",
-        "gulp": "^4.0.0",
-        "gulp-autoprefixer": "^6.0.0",
-        "gulp-babel": "^8.0.0",
-        "gulp-cache": "^1.0.2",
-        "gulp-concat": "^2.5.2",
-        "gulp-filter": "^5.1.0",
-        "gulp-imagemin": "^4.1.0",
-        "gulp-line-ending-corrector": "^1.0.1",
-        "gulp-merge-media-queries": "^0.2.1",
-        "gulp-notify": "^3.0.0",
-        "gulp-plumber": "^1.2.0",
-        "gulp-remember": "^1.0.1",
-        "gulp-rename": "^1.2.0",
-        "gulp-rtlcss": "^1.2.0",
-        "gulp-sass": "^4.0.1",
-        "gulp-sort": "^2.0.0",
-        "gulp-sourcemaps": "^2.6.2",
-        "gulp-uglify": "^3.0.0",
-        "gulp-uglifycss": "^1.0.6",
-        "gulp-wp-pot": "^2.0.7",
-        "gulp-zip": "^5.0.1",
-        "lodash": "^4.17.20",
-        "vendor-copy": "^2.0.0"
-    },
-    "scripts": {
-        "start": "gulp",
-        "styles": "gulp styles",
-        "stylesRTL": "gulp stylesRTL",
-        "vendorsJS": "gulp vendorsJS",
-        "customJS": "gulp customJS",
-        "images": "gulp images",
-        "clearCache": "gulp clearCache",
-        "translate": "gulp translate",
-        "vendorJSCopy": "vendor-copy",
-        "release": "gulp release",
-        "build:scripts": "wp-scripts build assets/blocks/index.js --output-path=assets/js/blocks",
-        "watch:scripts": "wp-scripts start assets/blocks/index.js --output-path=assets/js/blocks"
-    },
-    "vendorCopy": [
-        {
-            "from": "node_modules/bootstrap/dist/js/bootstrap.min.js",
-            "to": "assets/js/vendor/bootstrap.js"
-        },
-        {
-            "from": "node_modules/feather-icons/dist/feather.min.js",
-            "to": "assets/js/vendor/feather.min.js"
-        }
-    ]
+	"name": "your-project",
+	"description": "A WPGulp based project.",
+	"version": "1.0.0",
+	"author": "Author Name (https://twitter.com/MrAhmadAwais/)",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ahmadawais/WPGulp"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"bootstrap": "^4.5.3",
+		"cross-env": "^7.0",
+		"laravel-mix": "^5.0.1",
+		"sass-loader": "^8.0.0"
+	},
+	"scripts": {
+		"dev": "npm run development",
+		"prod": "npm run production",
+		"watch": "npm run development -- --watch",
+		"development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+		"production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+		"build:scripts": "wp-scripts build resources/blocks/index.js --output-path=publick/js/blocks",
+		"watch:scripts": "wp-scripts start resources/blocks/index.js --output-path=publick/js/blocks"
+	}
 }

@@ -6,5 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'SmartPay\\' => array($baseDir . '/src', $baseDir . '/src/Abstracts'),
+    'SmartPay\\Framework\\' => array($baseDir . '/framework'),
+    'SmartPay\\' => array($baseDir . '/app'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
 );

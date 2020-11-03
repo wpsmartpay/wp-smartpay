@@ -25,20 +25,16 @@
  * GNU General Public License for more details.
  */
 
-// Exit if accessed directly.
 defined('ABSPATH') || exit;
 
-// Includes vendor files.
-require_once __DIR__ . '/vendor/autoload.php';
+define('SMARTPAY_VERSION', '1.0.0');
+define('SMARTPAY_PLUGIN_FILE', __FILE__);
+define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
+define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
 
-// Define the necessary constants.
-if (!defined('SMARTPAY_PLUGIN_FILE')) {
-    define('SMARTPAY_PLUGIN_FILE', __FILE__);
-}
 
-// Initialize SmartPay.
-function SmartPay()
-{
-    return SmartPay\SmartPay::instance();
-}
-SmartPay();
+// Create The Application
+$app = require __DIR__ . '/bootstrap.php';
+
+// Run The Application
+$app->boot();

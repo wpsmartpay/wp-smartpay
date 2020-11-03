@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    '83fdbf87ef8f8161bb2c9f7f3d273bf8' => $baseDir . '/includes/helpers.php',
+    'b238f0d487b3f05b8f1fe4427c1c73ea' => $baseDir . '/app/Helpers/smartpay.php',
+    'ec0004d7b76e0f4a44ec19163e583dea' => $baseDir . '/framework/helpers.php',
 );

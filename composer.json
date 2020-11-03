@@ -1,16 +1,18 @@
 {
-	"name": "wp-smartpay/core",
-	"description": "A simple plugin for receiving payment.",
-	"require": {},
-	"autoload": {
-		"psr-4": {
-			"SmartPay\\": [
-				"src/",
-				"src/Abstracts"
-			]
-		},
-		"files": [
-			"includes/helpers.php"
-		]
-	}
+  "name": "wp-smartpay/core",
+  "description": "A simple plugin for receiving payment.",
+  "require": {
+    "php": "^7.2",
+    "psr/container": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "SmartPay\\": "app/",
+      "SmartPay\\Framework\\": "framework/"
+    },
+    "files": [
+      "app/Helpers/smartpay.php",
+      "framework/helpers.php"
+    ]
+  }
 }

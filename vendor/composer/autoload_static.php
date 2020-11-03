@@ -4,32 +4,45 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita9031ece03b1d183d6ef75671418d08d
+class ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12
 {
     public static $files = array (
-        '83fdbf87ef8f8161bb2c9f7f3d273bf8' => __DIR__ . '/../..' . '/includes/helpers.php',
+        'b238f0d487b3f05b8f1fe4427c1c73ea' => __DIR__ . '/../..' . '/app/Helpers/smartpay.php',
+        'ec0004d7b76e0f4a44ec19163e583dea' => __DIR__ . '/../..' . '/framework/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'SmartPay\\Framework\\' => 19,
             'SmartPay\\' => 9,
+        ),
+        'P' => 
+        array (
+            'Psr\\Container\\' => 14,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'SmartPay\\Framework\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/framework',
+        ),
         'SmartPay\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src',
-            1 => __DIR__ . '/../..' . '/src/Abstracts',
+            0 => __DIR__ . '/../..' . '/app',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita9031ece03b1d183d6ef75671418d08d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita9031ece03b1d183d6ef75671418d08d::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

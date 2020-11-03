@@ -1,0 +1,42 @@
+/*--------------------------------------------------------------
+# Bootstrap
+--------------------------------------------------------------*/
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+
+// Forms + Inputs
+@import '~bootstrap/scss/forms';
+@import '~bootstrap/scss/button-group';
+@import '~bootstrap/scss/input-group';
+@import '~bootstrap/scss/custom-forms';
+// Buttons
+@import '~bootstrap/scss/buttons';
+// Transitions
+@import '~bootstrap/scss/transitions';
+// Nav
+@import '~bootstrap/scss/nav';
+// Navbar
+@import '~bootstrap/scss/navbar';
+// Card
+@import '~bootstrap/scss/card';
+// Alert
+@import '~bootstrap/scss/alert';
+// List group
+@import '~bootstrap/scss/list-group';
+// Utilities
+@import '~bootstrap/scss/utilities';
+
+@import '~bootstrap/scss/tables';
+
+// Metabox
+@import './metabox';
+/*--------------------------------------------------------------
+# WP Css fix that override Bootstrap
+--------------------------------------------------------------*/
+@import './wpoverrides';
+
+.container-full {
+  margin: 0;
+  margin-left: -20px;
+}
