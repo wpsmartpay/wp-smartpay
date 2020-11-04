@@ -1,26 +1,35 @@
 {
-	"name": "your-project",
-	"description": "A WPGulp based project.",
-	"version": "1.0.0",
-	"author": "Author Name (https://twitter.com/MrAhmadAwais/)",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/ahmadawais/WPGulp"
-	},
-	"license": "MIT",
-	"devDependencies": {
-		"bootstrap": "^4.5.3",
-		"cross-env": "^7.0",
-		"laravel-mix": "^5.0.1",
-		"sass-loader": "^8.0.0"
-	},
-	"scripts": {
-		"dev": "npm run development",
-		"prod": "npm run production",
-		"watch": "npm run development -- --watch",
-		"development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-		"production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-		"build:scripts": "wp-scripts build resources/blocks/index.js --output-path=publick/js/blocks",
-		"watch:scripts": "wp-scripts start resources/blocks/index.js --output-path=publick/js/blocks"
-	}
+    "name": "your-project",
+    "description": "A WPGulp based project.",
+    "version": "1.0.0",
+    "author": "Author Name (https://twitter.com/MrAhmadAwais/)",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ahmadawais/WPGulp"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "bootstrap": "^4.5.3",
+        "popper.js": "^1.12",
+        "jquery": "^3.2",
+        "cross-env": "^7.0",
+        "laravel-mix": "^5.0.1",
+        "resolve-url-loader": "^3.1.0",
+        "sass": "^1.28.0",
+        "sass-loader": "^8.0.0",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "scripts": {
+        "dev": "npm run development",
+        "prod": "npm run production",
+        "watch": "npm run development -- --watch",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "build:scripts": "wp-scripts build resources/blocks/index.js --output-path=publick/js/blocks",
+        "watch:scripts": "wp-scripts start resources/blocks/index.js --output-path=publick/js/blocks"
+    },
+    "dependencies": {
+        "feather-icons": "^4.28.0",
+        "sweetalert2": "^10.9.0"
+    }
 }

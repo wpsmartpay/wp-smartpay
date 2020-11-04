@@ -83,7 +83,9 @@ class Admin
     {
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
-
+        
+        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery'], SMARTPAY_VERSION);
+        wp_enqueue_script('smartpay-admin');
         wp_localize_script(
             'smartpay-admin',
             'smartpay',

@@ -14,8 +14,10 @@ class CreateSmartpayProductsTable
             $sql = "CREATE TABLE $table (
                 `id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 `title` VARCHAR(255) NOT NULL,
-                `slug` VARCHAR(255) NOT NULL,
+                -- `slug` VARCHAR(255) NOT NULL,
                 `description` TEXT NULL,
+                `base_price` FLOAT DEFAULT 0,
+                `sale_price` FLOAT DEFAULT 0,
                 `files` LONGTEXT NULL,
                 `parent` INT UNSIGNED DEFAULT 0,
                 `status` VARCHAR(45) NULL DEFAULT 'Draft',
