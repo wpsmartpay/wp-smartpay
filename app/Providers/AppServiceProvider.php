@@ -2,6 +2,7 @@
 
 namespace SmartPay\Providers;
 
+use SmartPay\Framework\Http\Request;
 use SmartPay\Framework\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

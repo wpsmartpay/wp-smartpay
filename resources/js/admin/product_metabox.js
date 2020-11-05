@@ -15,6 +15,35 @@ jQuery(function($) {
         }
     )
 
+    /** Select cover **/
+    $(document.body).on(
+        'click',
+        '#featured_image_container .select-image',
+        e => {
+            e.preventDefault()
+
+            return new Promise(resolve => {
+                const media = new SmartPayMediaSelector({
+                    multiple: false,
+                    title: 'Select files',
+                    select: function(file) {
+                        const $container = $('#featured_image_container')
+
+                        $container.find("[name='images']").val(file.id)
+                        $container.find('.preview').removeClass('d-none')
+                        $container
+                            .find('.preview img')
+                            .attr('src', file?.sizes?.medium?.url)
+
+                        resolve(true)
+                    },
+                })
+
+                media.open()
+            })
+        }
+    )
+
     /** Remove file **/
     $(document.body).on('click', '#smartpay-metabox .remove-file', e => {
         const $filesItem = $(e.target).parents('.files-item')

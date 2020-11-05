@@ -46,8 +46,11 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        echo '<pre>';
-        dd($request);
+        // dd($request->all());
+        // echo '<pre>';
+        // dd($request);
+
+        die();
 
         $product = Product::create(
             [

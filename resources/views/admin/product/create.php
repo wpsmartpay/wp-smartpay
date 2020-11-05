@@ -15,23 +15,29 @@
         </div>
         <div class="container">
             <div class="mt-3">
-
-
                 <form id="create-product" action="<?php echo admin_url('admin.php?page=smartpay-products&action=store') ?>" method="POST">
                     <div class="form-group">
                         <input type="text" class="form-control" id="title" name="title" value="<?php echo $product->title ?? '' ?>" placeholder="Product title">
                     </div>
 
-                    <?php
-                    wp_editor('', 'unique_id', array(
-                        'textarea_rows' => 10,
-                    ));
-                    ?>
+                    <?php wp_editor('', 'description', ['textarea_rows' => 10]); ?>
 
+                    <div id="featured_image_container" class="my-3 d-flex flex-column">
+                        <div class="card p-3 mb-3 preview text-center d-none">
+                            <div>
+                                <img src="http://smartpay.test/wp-includes/images/media/default.png" class="" alt="">
+                            </div>
+                            <input type="hidden" name="images" value="">
+                        </div>
 
-                    <!-- <div class="form-group">
-                        <textarea class="form-control" id="description" name="description" placeholder="Description" rows="5"></textarea>
-                    </div> -->
+                        <div class="border rounded bg-light text-center p-5 select-image-box">
+                            <i data-feather="image" width="40" height="40"></i>
+                            <h3 class="mt-1">Cover Image</h3>
+                            <p class="text-muted">Select a featured image for this product</p>
+                            <button type="button" class="btn btn-light border px-3 select-image">Choose File</button>
+                        </div>
+
+                    </div>
 
                     <div id="smartpay-metabox">
                         <ul class="nav nav-tabs  nav-fill" id="myTab" role="tablist">
@@ -79,7 +85,7 @@
                                     </div>
                                 </div>
 
-                                <div class="p-3">
+                                <div class="my-3">
                                     <div class="border rounded bg-light text-center p-5 no-product-file-box" <?php echo count($product->files) ? 'style="display:none"' : '' ?>>
                                         <i data-feather="hard-drive" width="42" height="42"></i>
                                         <h3 class="text-muted">Upload or select files for this product</h3>
