@@ -5,6 +5,7 @@ namespace SmartPay\Framework;
 use SmartPay\Framework\Concerns\WordPressAction;
 use SmartPay\Framework\Container\Container;
 use SmartPay\Framework\Support\ServiceProvider;
+use SmartPay\Framework\Validation\ValidationServiceProvider;
 use SmartPay\Framework\View\ViewServiceProvider;
 
 class Application extends Container
@@ -137,6 +138,20 @@ class Application extends Container
     }
 
     /**
+     * Register container bindings for the application.
+     *
+     * @return void
+     */
+    protected function registerValidatorBindings()
+    {
+        $this->singleton('validator', function () {
+            $this->register(ValidationServiceProvider::class);
+
+            return $this->make('validator');
+        });
+    }
+
+    /**
      * Configure and load the given component and provider.
      *
      * @param  string  $config
@@ -206,32 +221,6 @@ class Application extends Container
         return parent::make($abstract, $parameters);
     }
 
-
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerComposerBindings()
-    {
-        $this->singleton('composer', function ($app) {
-            return new Composer($app->make('files'), $this->basePath());
-        });
-    }
-
-
-    /**
-     * Register container bindings for the application.
-     *
-     * @return void
-     */
-    protected function registerFilesBindings()
-    {
-        $this->singleton('files', function () {
-            return new Filesystem;
-        });
-    }
-
     /**
      * Get the path to the application "app" directory.
      *
@@ -294,32 +283,6 @@ class Application extends Container
     }
 
     /**
-     * Get the application namespace.
-     *
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    public function getNamespace()
-    {
-        if (!is_null($this->namespace)) {
-            return $this->namespace;
-        }
-
-        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
-
-        foreach ((array) data_get($composer, 'autoload.psr-4') as $namespace => $path) {
-            foreach ((array) $path as $pathChoice) {
-                if (realpath(app()->path()) == realpath(base_path() . '/' . $pathChoice)) {
-                    return $this->namespace = $namespace;
-                }
-            }
-        }
-
-        throw new RuntimeException('Unable to detect application namespace.');
-    }
-
-    /**
      * Flush the container of all bindings and resolved instances.
      *
      * @return void
@@ -354,7 +317,7 @@ class Application extends Container
             \SmartPay\Framework\Contracts\Foundation\Application::class => 'app',
             \SmartPay\Framework\Container\Container::class => 'app',
             \SmartPay\Framework\Contracts\Container\Container::class => 'app',
-            \Illuminate\Contracts\View\Factory::class => 'view',
+            \SmartPay\Framework\Contracts\View\Factory::class => 'view',
         ];
     }
 
@@ -365,6 +328,8 @@ class Application extends Container
      */
     public $availableBindings = [
         'view' => 'registerViewBindings',
-        \Illuminate\Contracts\View\Factory::class => 'registerViewBindings',
+        \SmartPay\Framework\Contracts\View\Factory::class => 'registerViewBindings',
+        'validator' => 'registerValidatorBindings',
+        \SmartPay\Framework\Contracts\Validation\Factory::class => 'registerValidatorBindings',
     ];
 }
