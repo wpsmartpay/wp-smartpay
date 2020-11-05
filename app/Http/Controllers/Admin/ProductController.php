@@ -2,6 +2,7 @@
 
 namespace SmartPay\Http\Controllers\Admin;
 
+use SmartPay\Framework\Http\Request;
 use SmartPay\Http\Controllers\Controller;
 
 use SmartPay\Models\Product;
@@ -40,6 +41,31 @@ class ProductController extends Controller
         //         'status' => 'aaa',
         //     ]
         // );
-        echo view('admin.product.create', ['product' => Product::find(1)]);
+        echo view('admin.product.create', ['product' => Product::findOrFail(1)]);
+    }
+
+    public function store(Request $request)
+    {
+        echo '<pre>';
+        dd($request);
+
+        $product = Product::create(
+            [
+                'title' => 'Test Product - Variation 1',
+                'description' => 'Test Product',
+                'files' => ['file - 1'],
+                'base_price' => 90,
+                'sale_price' => 80,
+                'parent' => 1,
+                'status' => 'aaa',
+            ]
+        );
+
+        wp_redirect(admin_url("admin.php?page=smartpay-products&action=edit&id={$product->id}"));
+    }
+
+    public function edit(Product $product)
+    {
+        echo view('admin.product.create', ['product' => $product]);
     }
 }

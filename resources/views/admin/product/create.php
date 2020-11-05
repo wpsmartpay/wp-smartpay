@@ -15,13 +15,23 @@
         </div>
         <div class="container">
             <div class="mt-3">
-                <form id="create-product">
+
+
+                <form id="create-product" action="<?php echo admin_url('admin.php?page=smartpay-products&action=store') ?>" method="POST">
                     <div class="form-group">
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Product title">
+                        <input type="text" class="form-control" id="title" name="title" value="<?php echo $product->title ?? '' ?>" placeholder="Product title">
                     </div>
-                    <div class="form-group">
-                        <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Description" rows="5"></textarea>
-                    </div>
+
+                    <?php
+                    wp_editor('', 'unique_id', array(
+                        'textarea_rows' => 10,
+                    ));
+                    ?>
+
+
+                    <!-- <div class="form-group">
+                        <textarea class="form-control" id="description" name="description" placeholder="Description" rows="5"></textarea>
+                    </div> -->
 
                     <div id="smartpay-metabox">
                         <ul class="nav nav-tabs  nav-fill" id="myTab" role="tablist">
@@ -204,33 +214,7 @@
 
                     </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    <button type="submit" class="btn btn-primary px-3"><?php _e('Publish', 'smartpay'); ?></button>
                 </form>
             </div>
         </div>

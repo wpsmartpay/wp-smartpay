@@ -5,6 +5,7 @@ namespace SmartPay\Modules\Admin;
 use SmartPay\Http\Controllers\Admin\ProductController;
 use SmartPay\Http\Controllers\Admin\FormController;
 use SmartPay\Http\Controllers\Admin\CustomerController;
+use SmartPay\Models\Product;
 
 class Admin
 {
@@ -48,7 +49,7 @@ class Admin
             __('Products', 'smartpay'),
             'manage_options',
             'smartpay-products',
-            [$this, 'productRoute']
+            [$this, 'renderProductPage']
         );
 
         add_submenu_page(
@@ -83,7 +84,7 @@ class Admin
     {
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
-        
+
         wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery'], SMARTPAY_VERSION);
         wp_enqueue_script('smartpay-admin');
         wp_localize_script(
@@ -93,15 +94,30 @@ class Admin
         );
     }
 
-    // TODO: Moved to route
-    public function productRoute()
+    public function renderProductPage()
     {
+        $page = $_GET['page'] ?? '';
         $action = $_GET['action'] ?? 'index';
 
-        if (method_exists(ProductController::class, $action)) {
-            echo $this->app->make(ProductController::class)->$action();
-        } else {
-            echo 'Route not found!';
+        if ('smartpay-products' !== $page) {
+            return;
+        }
+
+        $controller =  $this->app->make(ProductController::class);
+
+        if ('index' === $action) {
+            $controller->index();
+        }
+
+        if ('create' === $action) {
+            $controller->create();
+        }
+
+        if ('edit' === $action) {
+            $productId = $_GET['id'] ?? 0;
+            if (!!$productId) {
+                $controller->edit(Product::findOrFail($productId));
+            }
         }
     }
 

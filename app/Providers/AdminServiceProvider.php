@@ -23,22 +23,5 @@ class AdminServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->make(Admin::class);
-
-
-        // echo '<pre>';
-        // var_dump(Product::find(3));
-        // die();
-
-        // \CreateProductsTable::up();
-
-
-
-        $this->app->addAction('admin_init', function () {
-            if ('smartpay-products' == ($_GET['page'] ?? '') && 'store' == ($_GET['action'] ?? '')) {
-                echo 'product add';
-
-                die();
-            }
-        });
     }
 }
