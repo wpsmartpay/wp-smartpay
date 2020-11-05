@@ -21,7 +21,6 @@ jQuery(function($) {
         '#featured_image_container .select-image',
         e => {
             e.preventDefault()
-
             return new Promise(resolve => {
                 const media = new SmartPayMediaSelector({
                     multiple: false,
@@ -30,6 +29,7 @@ jQuery(function($) {
                         const $container = $('#featured_image_container')
 
                         $container.find("[name='images']").val(file.id)
+                        $container.find('.no-image').addClass('d-none')
                         $container.find('.preview').removeClass('d-none')
                         $container
                             .find('.preview img')

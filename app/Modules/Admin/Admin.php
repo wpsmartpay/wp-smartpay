@@ -3,6 +3,7 @@
 namespace SmartPay\Modules\Admin;
 
 use SmartPay\Http\Controllers\Admin\ProductController;
+use SmartPay\Http\Controllers\Rest\ProductController as ProductRestController;
 use SmartPay\Http\Controllers\Admin\FormController;
 use SmartPay\Http\Controllers\Admin\CustomerController;
 use SmartPay\Models\Product;
@@ -13,10 +14,19 @@ class Admin
 
     public function __construct($app)
     {
+
+        // echo json_encode([
+        //     ['id' => 1, 'name' => 'A'],
+        //     ['id' => 2, 'name' => 'B'],
+        //     ['id' => 3, 'name' => 'C'],
+        // ]);
+
         $this->app = $app;
 
         $this->registerAdminScripts();
         $this->registerAdminMenu();
+
+        add_action('rest_api_init', [$this, 'registerRestRoutes']);
     }
 
     protected function registerAdminScripts()
@@ -90,7 +100,12 @@ class Admin
         wp_localize_script(
             'smartpay-admin',
             'smartpay',
-            array('ajax_url' => admin_url('admin-ajax.php'))
+            array(
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'apiNonce' => wp_create_nonce('wp_rest')
+            )
         );
     }
 
@@ -141,5 +156,18 @@ class Admin
         } else {
             echo 'Route not found!';
         }
+    }
+
+    public function registerRestRoutes()
+    {
+        $productController = $this->app->make(ProductRestController::class);
+
+        register_rest_route('smartpay/v1/', 'products', [
+            [
+                'methods'   => 'POST',
+                'callback'  => [$productController, 'store'],
+                'permission_callback' => [$productController, 'middleware'],
+            ]
+        ]);
     }
 }

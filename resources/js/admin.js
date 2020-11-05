@@ -2,7 +2,7 @@ import 'bootstrap'
 import feather from 'feather-icons'
 
 import './admin/media-selector'
-import './admin/product_metabox'
+import './admin/product'
 
 jQuery(function($) {
     feather.replace()
