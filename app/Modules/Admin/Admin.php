@@ -47,7 +47,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
-                echo view('admin/admin', ['abc' => 123]);
+                echo view('admin');
             },
             smartpay_svg_icon(),
             25
@@ -59,7 +59,9 @@ class Admin
             __('Products', 'smartpay'),
             'manage_options',
             'smartpay-products',
-            [$this, 'renderProductPage']
+            function () {
+                echo view('admin');
+            }
         );
 
         add_submenu_page(
@@ -68,7 +70,9 @@ class Admin
             __('Forms', 'smartpay'),
             'manage_options',
             'smartpay-forms',
-            [$this, 'formRoute']
+            function () {
+                echo view('admin');
+            }
         );
 
         add_submenu_page(
@@ -77,7 +81,9 @@ class Admin
             __('Customers', 'smartpay'),
             'manage_options',
             'smartpay-customers',
-            [$this, 'customerRoute']
+            function () {
+                echo view('admin');
+            }
         );
 
         add_submenu_page(
@@ -86,7 +92,9 @@ class Admin
             __('Payments', 'smartpay'),
             'manage_options',
             'smartpay-payments',
-            [$this, 'customerRoute']
+            function () {
+                echo view('admin');
+            }
         );
     }
 
@@ -95,7 +103,7 @@ class Admin
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
 
-        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery'], SMARTPAY_VERSION);
+        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element'], SMARTPAY_VERSION);
         wp_enqueue_script('smartpay-admin');
         wp_localize_script(
             'smartpay-admin',
