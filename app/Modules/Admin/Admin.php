@@ -2,11 +2,8 @@
 
 namespace SmartPay\Modules\Admin;
 
-use SmartPay\Http\Controllers\Admin\ProductController;
-use SmartPay\Http\Controllers\Rest\ProductController as ProductRestController;
 use SmartPay\Http\Controllers\Admin\FormController;
 use SmartPay\Http\Controllers\Admin\CustomerController;
-use SmartPay\Models\Product;
 
 class Admin
 {
@@ -14,19 +11,10 @@ class Admin
 
     public function __construct($app)
     {
-
-        // echo json_encode([
-        //     ['id' => 1, 'name' => 'A'],
-        //     ['id' => 2, 'name' => 'B'],
-        //     ['id' => 3, 'name' => 'C'],
-        // ]);
-
         $this->app = $app;
 
         $this->registerAdminScripts();
         $this->registerAdminMenu();
-
-        add_action('rest_api_init', [$this, 'registerRestRoutes']);
     }
 
     protected function registerAdminScripts()
@@ -58,7 +46,7 @@ class Admin
             __('SmartPay - Products', 'smartpay'),
             __('Products', 'smartpay'),
             'manage_options',
-            'smartpay#/product/list',
+            'smartpay-product',
             function () {
                 echo view('admin');
             }
@@ -122,29 +110,6 @@ class Admin
 
     public function renderProductPage()
     {
-        $page = $_GET['page'] ?? '';
-        $action = $_GET['action'] ?? 'index';
-
-        if ('smartpay-products' !== $page) {
-            return;
-        }
-
-        $controller =  $this->app->make(ProductController::class);
-
-        if ('index' === $action) {
-            $controller->index();
-        }
-
-        if ('create' === $action) {
-            $controller->create();
-        }
-
-        if ('edit' === $action) {
-            $productId = $_GET['id'] ?? 0;
-            if (!!$productId) {
-                $controller->edit(Product::findOrFail($productId));
-            }
-        }
     }
 
     public function formRoute()
@@ -167,18 +132,5 @@ class Admin
         } else {
             echo 'Route not found!';
         }
-    }
-
-    public function registerRestRoutes()
-    {
-        $productController = $this->app->make(ProductRestController::class);
-
-        register_rest_route('smartpay/v1/', 'products', [
-            [
-                'methods'   => 'POST',
-                'callback'  => [$productController, 'store'],
-                'permission_callback' => [$productController, 'middleware'],
-            ]
-        ]);
     }
 }
