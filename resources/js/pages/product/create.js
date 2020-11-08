@@ -1,28 +1,33 @@
 import { __ } from '@wordpress/i18n'
+import { Container, Form, Button } from 'react-bootstrap'
 
 export const CreateProduct = () => {
     return (
         <>
             <div className="text-black bg-white border-bottom d-fixed">
-                <div className="container">
+                <Container>
                     <div className="d-flex align-items-center justify-content-between">
                         <h2 className="text-black">
                             {__('SmartPay', 'smartpay')}
                         </h2>
                         <div className="ml-auto">
-                            <button
+                            <Button
                                 type="button"
                                 className="btn btn-primary px-3"
                             >
                                 {__('Publish', 'smartpay')}
-                            </button>
+                            </Button>
                         </div>
                     </div>
-                </div>
+                </Container>
             </div>
-            <div className="container">
-                <div className="mt-3"></div>
-            </div>
+            <Container>
+                <Form className="my-3">
+                    <Form.Group controlId="title">
+                        <Form.Control type="text" placeholder="Product title" />
+                    </Form.Group>
+                </Form>
+            </Container>
         </>
     )
 }
