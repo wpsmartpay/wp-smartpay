@@ -4,6 +4,7 @@ namespace SmartPay\Modules\Admin;
 
 use SmartPay\Http\Controllers\Admin\ProductController;
 use SmartPay\Http\Controllers\Rest\ProductController as ProductRestController;
+use SmartPay\Http\Controllers\Rest\CouponController as CouponRestController;
 use SmartPay\Http\Controllers\Admin\FormController;
 use SmartPay\Http\Controllers\Admin\CustomerController;
 use SmartPay\Models\Product;
@@ -180,12 +181,21 @@ class Admin
     public function registerRestRoutes()
     {
         $productController = $this->app->make(ProductRestController::class);
+        $couponController = $this->app->make(CouponRestController::class);
 
         register_rest_route('smartpay/v1/', 'products', [
             [
                 'methods'   => 'POST',
                 'callback'  => [$productController, 'store'],
                 'permission_callback' => [$productController, 'middleware'],
+            ]
+        ]);
+
+        register_rest_route('smartpay/v1/', 'coupons', [
+            [
+                'methods'   => \WP_REST_Server::CREATABLE,
+                'callback'  => [$couponController, 'store'],
+                'permission_callback' => [$couponController, 'middleware'],
             ]
         ]);
     }

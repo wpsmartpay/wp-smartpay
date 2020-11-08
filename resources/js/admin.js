@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', event => {
     const SmartPay = () => {
         return (
             <div>
-                <CreateCoupon />
+                <CreateCoupon nonce={smartpay.apiNonce} resturl={smartpay.restUrl} />
             </div>
         )
     }

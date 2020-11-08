@@ -1,9 +1,39 @@
 import { __ } from '@wordpress/i18n'
-import {Container,Form,Tabs,Tab,Row,Col} from 'react-bootstrap'
+import {Container,Form,Tabs,Tab,Row,Col,Button} from 'react-bootstrap'
 
-export const CreateCoupon = () => {
+export const CreateCoupon = ({resturl,nonce}) => {
+    const couponCreateHandler = (event) => {
+        event.preventDefault();
+        fetch(`${resturl}/v1/coupons`,{
+            method: 'POST',
+            headers: {
+                'X-WP-Nonce': nonce
+            },
+            body: JSON.stringify({title: 'abc'})
+        })
+        .then(response => response.json())
+        .then(data => console.log(data));
+    }
     return (
         <>  
+            <div className="text-black bg-white border-bottom d-fixed">
+                <Container>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <h2 className="text-black">
+                            {__('SmartPay', 'smartpay')}
+                        </h2>
+                        <div className="ml-auto">
+                            <Button
+                                type="button"
+                                className="btn btn-primary px-3"
+                                onClick={couponCreateHandler}
+                            >
+                                {__('Publish', 'smartpay')}
+                            </Button>
+                        </div>
+                    </div>
+                </Container>
+            </div>
             <div class="py-5">
                 <Container>
                     <Row className="justify-content-center">
