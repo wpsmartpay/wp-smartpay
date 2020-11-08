@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
+import { MediaPlaceholder } from '@wordpress/block-editor';
 import { Container, Nav, Form, Button } from 'react-bootstrap'
 
 const { useEffect } = wp.element;

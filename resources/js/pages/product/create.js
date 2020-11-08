@@ -11,15 +11,27 @@ const formReducer = (state, data) => {
 }
 
 export const CreateProduct = () => {
-    const [product, setProductData] = useReducer(formReducer, () => {
-        return {
-            title: '',
-            description: '',
-        }
+    const [product, setProductData] = useReducer(formReducer, {
+        title: 'A',
+        cover: {
+            url: '',
+        },
+        description: '',
     })
 
     const _setProductData = e => {
         setProductData({ [e.target.name]: e.target.value })
+        console.log(product);
+    }
+
+    const selectCover = () => {
+        const mediaWindow = wp.media();
+
+        mediaWindow.open()
+        mediaWindow.on('select', function () {
+            let selection = mediaWindow.state().get('selection')
+            setProductData({ cover: { ...selection.first().toJSON() } })
+        });
     }
 
     const removeFile = (file, isVariation = false) => {
@@ -78,34 +90,44 @@ export const CreateProduct = () => {
                     </div>
                     <div className="my-3">
                         <div className="border rounded bg-light text-center p-5 select-image-box d-flex flex-column align-items-center">
-                            <div className="no-image">
-                                <i
-                                    data-feather="image"
-                                    width="40"
-                                    height="40"
-                                ></i>
-                                <h3 className="mt-1">
-                                    {__('Cover Image', 'smartpay')}
-                                </h3>
-                                <p className="text-muted">
-                                    {__(
-                                        'Select a featured image for this product',
-                                        'smartpay'
-                                    )}
-                                </p>
-                            </div>
-                            <div className="mb-3 preview text-center d-none">
-                                <div>
-                                    <img src="#" />
+                            {product.cover.url ? (
+                                <div className="mb-3 preview text-center">
+                                    <div>
+                                        <img src={product.cover.url} alt="" />
+                                    </div>
+                                    <Button
+                                        type="button"
+                                        onClick={selectCover}
+                                        className="btn btn-light border px-3 select-image"
+                                    >
+                                        {__('Choose File', 'smartpay')}
+                                    </Button>
                                 </div>
-                            </div>
-                            <Button
-                                type="button"
-                                onClick={createProduct}
-                                className="btn btn-light border px-3 select-image"
-                            >
-                                {__('Choose File', 'smartpay')}
-                            </Button>
+                            ) : (
+                                    <div className="no-image">
+                                        <i
+                                            data-feather="image"
+                                            width="40"
+                                            height="40"
+                                        ></i>
+                                        <h3 className="mt-1">
+                                            {__('Cover Image', 'smartpay')}
+                                        </h3>
+                                        <p className="text-muted">
+                                            {__(
+                                                'Select a featured image for this product',
+                                                'smartpay'
+                                            )}
+                                        </p>
+                                        <Button
+                                            type="button"
+                                            onClick={selectCover}
+                                            className="btn btn-light border px-3 select-image"
+                                        >
+                                            {__('Choose File', 'smartpay')}
+                                        </Button>
+                                    </div>
+                                )}
                         </div>
                     </div>
 
