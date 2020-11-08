@@ -14,14 +14,13 @@ class CreateSmartpayCouponsTable
             $sql = "CREATE TABLE $table (
                 `id` INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 `title` VARCHAR(255) NOT NULL,
-                -- `slug` VARCHAR(255) NOT NULL,
                 `description` TEXT NULL,
-                `base_price` FLOAT DEFAULT 0,
-                `sale_price` FLOAT DEFAULT 0,
-                `files` LONGTEXT NULL,
-                `parent` INT UNSIGNED DEFAULT 0,
+                `discount_type` VARCHAR(50) NOT NULL,
+                `discount_amount` FLOAT DEFAULT 0,
                 `status` VARCHAR(45) NULL DEFAULT 'Draft',
+                `expiry_date` TIMESTAMP NULL,
                 `created_by` INT NULL,
+                `extra` TEXT NULL,
                 `created_at` TIMESTAMP NULL,
                 `updated_at` TIMESTAMP NULL
             ) $charsetCollate";

@@ -39,6 +39,7 @@ class ComposerStaticInit5330c8b03b1fcbc3e232e454e5f41b12
     );
 
     public static $classMap = array (
+        'CreateSmartpayCouponsTable' => __DIR__ . '/../..' . '/database/migrations/create_coupon_table.php',
         'CreateSmartpayProductsTable' => __DIR__ . '/../..' . '/database/migrations/create_product_table.php',
     );
 

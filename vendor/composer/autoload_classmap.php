@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CreateSmartpayCouponsTable' => $baseDir . '/database/migrations/create_coupon_table.php',
     'CreateSmartpayProductsTable' => $baseDir . '/database/migrations/create_product_table.php',
 );
