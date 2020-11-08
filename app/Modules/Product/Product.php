@@ -22,7 +22,6 @@ class Product
 
     public function adminScripts()
     {
-        wp_enqueue_editor();
     }
 
     public function registerRestRoutes()

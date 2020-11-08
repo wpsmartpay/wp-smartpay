@@ -6,17 +6,17 @@
 
 .smartpay {
   /*!
-   * Bootstrap Grid v4.5.3 (https://getbootstrap.com/)
-   * Copyright 2011-2020 The Bootstrap Authors
-   * Copyright 2011-2020 Twitter, Inc.
-   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
-   */
+ * Bootstrap Grid v4.5.3 (https://getbootstrap.com/)
+ * Copyright 2011-2020 The Bootstrap Authors
+ * Copyright 2011-2020 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+ */
   /*--------------------------------------------------------------
-  # Bootstrap
-  --------------------------------------------------------------*/
+# Bootstrap
+--------------------------------------------------------------*/
   /*--------------------------------------------------------------
-  # WP Css fix that override Bootstrap
-  --------------------------------------------------------------*/
+# WP Css fix that override Bootstrap
+--------------------------------------------------------------*/
 }
 
 .smartpay html {
@@ -32,10 +32,10 @@
 
 .smartpay .container,
 .smartpay .container-fluid,
-.smartpay .container-xl,
-.smartpay .container-lg,
+.smartpay .container-sm,
 .smartpay .container-md,
-.smartpay .container-sm {
+.smartpay .container-lg,
+.smartpay .container-xl {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -44,35 +44,35 @@
 }
 
 @media (min-width: 576px) {
-  .smartpay .container-sm,
-  .smartpay .container {
+  .smartpay .container,
+  .smartpay .container-sm {
     max-width: 540px;
   }
 }
 
 @media (min-width: 768px) {
-  .smartpay .container-md,
+  .smartpay .container,
   .smartpay .container-sm,
-  .smartpay .container {
+  .smartpay .container-md {
     max-width: 720px;
   }
 }
 
 @media (min-width: 992px) {
-  .smartpay .container-lg,
-  .smartpay .container-md,
+  .smartpay .container,
   .smartpay .container-sm,
-  .smartpay .container {
+  .smartpay .container-md,
+  .smartpay .container-lg {
     max-width: 960px;
   }
 }
 
 @media (min-width: 1200px) {
-  .smartpay .container-xl,
-  .smartpay .container-lg,
-  .smartpay .container-md,
+  .smartpay .container,
   .smartpay .container-sm,
-  .smartpay .container {
+  .smartpay .container-md,
+  .smartpay .container-lg,
+  .smartpay .container-xl {
     max-width: 1140px;
   }
 }
@@ -90,81 +90,81 @@
 }
 
 .smartpay .no-gutters > .col,
-.smartpay .no-gutters > [class*=col-] {
+.smartpay .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
 }
 
-.smartpay .col-xl,
-.smartpay .col-xl-auto,
-.smartpay .col-xl-12,
-.smartpay .col-xl-11,
-.smartpay .col-xl-10,
-.smartpay .col-xl-9,
-.smartpay .col-xl-8,
-.smartpay .col-xl-7,
-.smartpay .col-xl-6,
-.smartpay .col-xl-5,
-.smartpay .col-xl-4,
-.smartpay .col-xl-3,
-.smartpay .col-xl-2,
-.smartpay .col-xl-1,
-.smartpay .col-lg,
-.smartpay .col-lg-auto,
-.smartpay .col-lg-12,
-.smartpay .col-lg-11,
-.smartpay .col-lg-10,
-.smartpay .col-lg-9,
-.smartpay .col-lg-8,
-.smartpay .col-lg-7,
-.smartpay .col-lg-6,
-.smartpay .col-lg-5,
-.smartpay .col-lg-4,
-.smartpay .col-lg-3,
-.smartpay .col-lg-2,
-.smartpay .col-lg-1,
-.smartpay .col-md,
-.smartpay .col-md-auto,
-.smartpay .col-md-12,
-.smartpay .col-md-11,
-.smartpay .col-md-10,
-.smartpay .col-md-9,
-.smartpay .col-md-8,
-.smartpay .col-md-7,
-.smartpay .col-md-6,
-.smartpay .col-md-5,
-.smartpay .col-md-4,
-.smartpay .col-md-3,
-.smartpay .col-md-2,
-.smartpay .col-md-1,
-.smartpay .col-sm,
-.smartpay .col-sm-auto,
-.smartpay .col-sm-12,
-.smartpay .col-sm-11,
-.smartpay .col-sm-10,
-.smartpay .col-sm-9,
-.smartpay .col-sm-8,
-.smartpay .col-sm-7,
-.smartpay .col-sm-6,
-.smartpay .col-sm-5,
-.smartpay .col-sm-4,
-.smartpay .col-sm-3,
-.smartpay .col-sm-2,
-.smartpay .col-sm-1,
+.smartpay .col-1,
+.smartpay .col-2,
+.smartpay .col-3,
+.smartpay .col-4,
+.smartpay .col-5,
+.smartpay .col-6,
+.smartpay .col-7,
+.smartpay .col-8,
+.smartpay .col-9,
+.smartpay .col-10,
+.smartpay .col-11,
+.smartpay .col-12,
 .smartpay .col,
 .smartpay .col-auto,
-.smartpay .col-12,
-.smartpay .col-11,
-.smartpay .col-10,
-.smartpay .col-9,
-.smartpay .col-8,
-.smartpay .col-7,
-.smartpay .col-6,
-.smartpay .col-5,
-.smartpay .col-4,
-.smartpay .col-3,
-.smartpay .col-2,
-.smartpay .col-1 {
+.smartpay .col-sm-1,
+.smartpay .col-sm-2,
+.smartpay .col-sm-3,
+.smartpay .col-sm-4,
+.smartpay .col-sm-5,
+.smartpay .col-sm-6,
+.smartpay .col-sm-7,
+.smartpay .col-sm-8,
+.smartpay .col-sm-9,
+.smartpay .col-sm-10,
+.smartpay .col-sm-11,
+.smartpay .col-sm-12,
+.smartpay .col-sm,
+.smartpay .col-sm-auto,
+.smartpay .col-md-1,
+.smartpay .col-md-2,
+.smartpay .col-md-3,
+.smartpay .col-md-4,
+.smartpay .col-md-5,
+.smartpay .col-md-6,
+.smartpay .col-md-7,
+.smartpay .col-md-8,
+.smartpay .col-md-9,
+.smartpay .col-md-10,
+.smartpay .col-md-11,
+.smartpay .col-md-12,
+.smartpay .col-md,
+.smartpay .col-md-auto,
+.smartpay .col-lg-1,
+.smartpay .col-lg-2,
+.smartpay .col-lg-3,
+.smartpay .col-lg-4,
+.smartpay .col-lg-5,
+.smartpay .col-lg-6,
+.smartpay .col-lg-7,
+.smartpay .col-lg-8,
+.smartpay .col-lg-9,
+.smartpay .col-lg-10,
+.smartpay .col-lg-11,
+.smartpay .col-lg-12,
+.smartpay .col-lg,
+.smartpay .col-lg-auto,
+.smartpay .col-xl-1,
+.smartpay .col-xl-2,
+.smartpay .col-xl-3,
+.smartpay .col-xl-4,
+.smartpay .col-xl-5,
+.smartpay .col-xl-6,
+.smartpay .col-xl-7,
+.smartpay .col-xl-8,
+.smartpay .col-xl-9,
+.smartpay .col-xl-10,
+.smartpay .col-xl-11,
+.smartpay .col-xl-12,
+.smartpay .col-xl,
+.smartpay .col-xl-auto {
   position: relative;
   width: 100%;
   padding-right: 15px;
@@ -188,8 +188,8 @@
 }
 
 .smartpay .row-cols-3 > * {
-  flex: 0 0 33.3333333333%;
-  max-width: 33.3333333333%;
+  flex: 0 0 33.33333333%;
+  max-width: 33.33333333%;
 }
 
 .smartpay .row-cols-4 > * {
@@ -203,8 +203,8 @@
 }
 
 .smartpay .row-cols-6 > * {
-  flex: 0 0 16.6666666667%;
-  max-width: 16.6666666667%;
+  flex: 0 0 16.66666667%;
+  max-width: 16.66666667%;
 }
 
 .smartpay .col-auto {
@@ -214,13 +214,13 @@
 }
 
 .smartpay .col-1 {
-  flex: 0 0 8.3333333333%;
-  max-width: 8.3333333333%;
+  flex: 0 0 8.33333333%;
+  max-width: 8.33333333%;
 }
 
 .smartpay .col-2 {
-  flex: 0 0 16.6666666667%;
-  max-width: 16.6666666667%;
+  flex: 0 0 16.66666667%;
+  max-width: 16.66666667%;
 }
 
 .smartpay .col-3 {
@@ -229,13 +229,13 @@
 }
 
 .smartpay .col-4 {
-  flex: 0 0 33.3333333333%;
-  max-width: 33.3333333333%;
+  flex: 0 0 33.33333333%;
+  max-width: 33.33333333%;
 }
 
 .smartpay .col-5 {
-  flex: 0 0 41.6666666667%;
-  max-width: 41.6666666667%;
+  flex: 0 0 41.66666667%;
+  max-width: 41.66666667%;
 }
 
 .smartpay .col-6 {
@@ -244,13 +244,13 @@
 }
 
 .smartpay .col-7 {
-  flex: 0 0 58.3333333333%;
-  max-width: 58.3333333333%;
+  flex: 0 0 58.33333333%;
+  max-width: 58.33333333%;
 }
 
 .smartpay .col-8 {
-  flex: 0 0 66.6666666667%;
-  max-width: 66.6666666667%;
+  flex: 0 0 66.66666667%;
+  max-width: 66.66666667%;
 }
 
 .smartpay .col-9 {
@@ -259,13 +259,13 @@
 }
 
 .smartpay .col-10 {
-  flex: 0 0 83.3333333333%;
-  max-width: 83.3333333333%;
+  flex: 0 0 83.33333333%;
+  max-width: 83.33333333%;
 }
 
 .smartpay .col-11 {
-  flex: 0 0 91.6666666667%;
-  max-width: 91.6666666667%;
+  flex: 0 0 91.66666667%;
+  max-width: 91.66666667%;
 }
 
 .smartpay .col-12 {
@@ -334,11 +334,11 @@
 }
 
 .smartpay .offset-1 {
-  margin-left: 8.3333333333%;
+  margin-left: 8.33333333%;
 }
 
 .smartpay .offset-2 {
-  margin-left: 16.6666666667%;
+  margin-left: 16.66666667%;
 }
 
 .smartpay .offset-3 {
@@ -346,11 +346,11 @@
 }
 
 .smartpay .offset-4 {
-  margin-left: 33.3333333333%;
+  margin-left: 33.33333333%;
 }
 
 .smartpay .offset-5 {
-  margin-left: 41.6666666667%;
+  margin-left: 41.66666667%;
 }
 
 .smartpay .offset-6 {
@@ -358,11 +358,11 @@
 }
 
 .smartpay .offset-7 {
-  margin-left: 58.3333333333%;
+  margin-left: 58.33333333%;
 }
 
 .smartpay .offset-8 {
-  margin-left: 66.6666666667%;
+  margin-left: 66.66666667%;
 }
 
 .smartpay .offset-9 {
@@ -370,11 +370,11 @@
 }
 
 .smartpay .offset-10 {
-  margin-left: 83.3333333333%;
+  margin-left: 83.33333333%;
 }
 
 .smartpay .offset-11 {
-  margin-left: 91.6666666667%;
+  margin-left: 91.66666667%;
 }
 
 @media (min-width: 576px) {
@@ -395,8 +395,8 @@
   }
 
   .smartpay .row-cols-sm-3 > * {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .row-cols-sm-4 > * {
@@ -410,8 +410,8 @@
   }
 
   .smartpay .row-cols-sm-6 > * {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-sm-auto {
@@ -421,13 +421,13 @@
   }
 
   .smartpay .col-sm-1 {
-    flex: 0 0 8.3333333333%;
-    max-width: 8.3333333333%;
+    flex: 0 0 8.33333333%;
+    max-width: 8.33333333%;
   }
 
   .smartpay .col-sm-2 {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-sm-3 {
@@ -436,13 +436,13 @@
   }
 
   .smartpay .col-sm-4 {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .col-sm-5 {
-    flex: 0 0 41.6666666667%;
-    max-width: 41.6666666667%;
+    flex: 0 0 41.66666667%;
+    max-width: 41.66666667%;
   }
 
   .smartpay .col-sm-6 {
@@ -451,13 +451,13 @@
   }
 
   .smartpay .col-sm-7 {
-    flex: 0 0 58.3333333333%;
-    max-width: 58.3333333333%;
+    flex: 0 0 58.33333333%;
+    max-width: 58.33333333%;
   }
 
   .smartpay .col-sm-8 {
-    flex: 0 0 66.6666666667%;
-    max-width: 66.6666666667%;
+    flex: 0 0 66.66666667%;
+    max-width: 66.66666667%;
   }
 
   .smartpay .col-sm-9 {
@@ -466,13 +466,13 @@
   }
 
   .smartpay .col-sm-10 {
-    flex: 0 0 83.3333333333%;
-    max-width: 83.3333333333%;
+    flex: 0 0 83.33333333%;
+    max-width: 83.33333333%;
   }
 
   .smartpay .col-sm-11 {
-    flex: 0 0 91.6666666667%;
-    max-width: 91.6666666667%;
+    flex: 0 0 91.66666667%;
+    max-width: 91.66666667%;
   }
 
   .smartpay .col-sm-12 {
@@ -545,11 +545,11 @@
   }
 
   .smartpay .offset-sm-1 {
-    margin-left: 8.3333333333%;
+    margin-left: 8.33333333%;
   }
 
   .smartpay .offset-sm-2 {
-    margin-left: 16.6666666667%;
+    margin-left: 16.66666667%;
   }
 
   .smartpay .offset-sm-3 {
@@ -557,11 +557,11 @@
   }
 
   .smartpay .offset-sm-4 {
-    margin-left: 33.3333333333%;
+    margin-left: 33.33333333%;
   }
 
   .smartpay .offset-sm-5 {
-    margin-left: 41.6666666667%;
+    margin-left: 41.66666667%;
   }
 
   .smartpay .offset-sm-6 {
@@ -569,11 +569,11 @@
   }
 
   .smartpay .offset-sm-7 {
-    margin-left: 58.3333333333%;
+    margin-left: 58.33333333%;
   }
 
   .smartpay .offset-sm-8 {
-    margin-left: 66.6666666667%;
+    margin-left: 66.66666667%;
   }
 
   .smartpay .offset-sm-9 {
@@ -581,11 +581,11 @@
   }
 
   .smartpay .offset-sm-10 {
-    margin-left: 83.3333333333%;
+    margin-left: 83.33333333%;
   }
 
   .smartpay .offset-sm-11 {
-    margin-left: 91.6666666667%;
+    margin-left: 91.66666667%;
   }
 }
 
@@ -607,8 +607,8 @@
   }
 
   .smartpay .row-cols-md-3 > * {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .row-cols-md-4 > * {
@@ -622,8 +622,8 @@
   }
 
   .smartpay .row-cols-md-6 > * {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-md-auto {
@@ -633,13 +633,13 @@
   }
 
   .smartpay .col-md-1 {
-    flex: 0 0 8.3333333333%;
-    max-width: 8.3333333333%;
+    flex: 0 0 8.33333333%;
+    max-width: 8.33333333%;
   }
 
   .smartpay .col-md-2 {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-md-3 {
@@ -648,13 +648,13 @@
   }
 
   .smartpay .col-md-4 {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .col-md-5 {
-    flex: 0 0 41.6666666667%;
-    max-width: 41.6666666667%;
+    flex: 0 0 41.66666667%;
+    max-width: 41.66666667%;
   }
 
   .smartpay .col-md-6 {
@@ -663,13 +663,13 @@
   }
 
   .smartpay .col-md-7 {
-    flex: 0 0 58.3333333333%;
-    max-width: 58.3333333333%;
+    flex: 0 0 58.33333333%;
+    max-width: 58.33333333%;
   }
 
   .smartpay .col-md-8 {
-    flex: 0 0 66.6666666667%;
-    max-width: 66.6666666667%;
+    flex: 0 0 66.66666667%;
+    max-width: 66.66666667%;
   }
 
   .smartpay .col-md-9 {
@@ -678,13 +678,13 @@
   }
 
   .smartpay .col-md-10 {
-    flex: 0 0 83.3333333333%;
-    max-width: 83.3333333333%;
+    flex: 0 0 83.33333333%;
+    max-width: 83.33333333%;
   }
 
   .smartpay .col-md-11 {
-    flex: 0 0 91.6666666667%;
-    max-width: 91.6666666667%;
+    flex: 0 0 91.66666667%;
+    max-width: 91.66666667%;
   }
 
   .smartpay .col-md-12 {
@@ -757,11 +757,11 @@
   }
 
   .smartpay .offset-md-1 {
-    margin-left: 8.3333333333%;
+    margin-left: 8.33333333%;
   }
 
   .smartpay .offset-md-2 {
-    margin-left: 16.6666666667%;
+    margin-left: 16.66666667%;
   }
 
   .smartpay .offset-md-3 {
@@ -769,11 +769,11 @@
   }
 
   .smartpay .offset-md-4 {
-    margin-left: 33.3333333333%;
+    margin-left: 33.33333333%;
   }
 
   .smartpay .offset-md-5 {
-    margin-left: 41.6666666667%;
+    margin-left: 41.66666667%;
   }
 
   .smartpay .offset-md-6 {
@@ -781,11 +781,11 @@
   }
 
   .smartpay .offset-md-7 {
-    margin-left: 58.3333333333%;
+    margin-left: 58.33333333%;
   }
 
   .smartpay .offset-md-8 {
-    margin-left: 66.6666666667%;
+    margin-left: 66.66666667%;
   }
 
   .smartpay .offset-md-9 {
@@ -793,11 +793,11 @@
   }
 
   .smartpay .offset-md-10 {
-    margin-left: 83.3333333333%;
+    margin-left: 83.33333333%;
   }
 
   .smartpay .offset-md-11 {
-    margin-left: 91.6666666667%;
+    margin-left: 91.66666667%;
   }
 }
 
@@ -819,8 +819,8 @@
   }
 
   .smartpay .row-cols-lg-3 > * {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .row-cols-lg-4 > * {
@@ -834,8 +834,8 @@
   }
 
   .smartpay .row-cols-lg-6 > * {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-lg-auto {
@@ -845,13 +845,13 @@
   }
 
   .smartpay .col-lg-1 {
-    flex: 0 0 8.3333333333%;
-    max-width: 8.3333333333%;
+    flex: 0 0 8.33333333%;
+    max-width: 8.33333333%;
   }
 
   .smartpay .col-lg-2 {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-lg-3 {
@@ -860,13 +860,13 @@
   }
 
   .smartpay .col-lg-4 {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .col-lg-5 {
-    flex: 0 0 41.6666666667%;
-    max-width: 41.6666666667%;
+    flex: 0 0 41.66666667%;
+    max-width: 41.66666667%;
   }
 
   .smartpay .col-lg-6 {
@@ -875,13 +875,13 @@
   }
 
   .smartpay .col-lg-7 {
-    flex: 0 0 58.3333333333%;
-    max-width: 58.3333333333%;
+    flex: 0 0 58.33333333%;
+    max-width: 58.33333333%;
   }
 
   .smartpay .col-lg-8 {
-    flex: 0 0 66.6666666667%;
-    max-width: 66.6666666667%;
+    flex: 0 0 66.66666667%;
+    max-width: 66.66666667%;
   }
 
   .smartpay .col-lg-9 {
@@ -890,13 +890,13 @@
   }
 
   .smartpay .col-lg-10 {
-    flex: 0 0 83.3333333333%;
-    max-width: 83.3333333333%;
+    flex: 0 0 83.33333333%;
+    max-width: 83.33333333%;
   }
 
   .smartpay .col-lg-11 {
-    flex: 0 0 91.6666666667%;
-    max-width: 91.6666666667%;
+    flex: 0 0 91.66666667%;
+    max-width: 91.66666667%;
   }
 
   .smartpay .col-lg-12 {
@@ -969,11 +969,11 @@
   }
 
   .smartpay .offset-lg-1 {
-    margin-left: 8.3333333333%;
+    margin-left: 8.33333333%;
   }
 
   .smartpay .offset-lg-2 {
-    margin-left: 16.6666666667%;
+    margin-left: 16.66666667%;
   }
 
   .smartpay .offset-lg-3 {
@@ -981,11 +981,11 @@
   }
 
   .smartpay .offset-lg-4 {
-    margin-left: 33.3333333333%;
+    margin-left: 33.33333333%;
   }
 
   .smartpay .offset-lg-5 {
-    margin-left: 41.6666666667%;
+    margin-left: 41.66666667%;
   }
 
   .smartpay .offset-lg-6 {
@@ -993,11 +993,11 @@
   }
 
   .smartpay .offset-lg-7 {
-    margin-left: 58.3333333333%;
+    margin-left: 58.33333333%;
   }
 
   .smartpay .offset-lg-8 {
-    margin-left: 66.6666666667%;
+    margin-left: 66.66666667%;
   }
 
   .smartpay .offset-lg-9 {
@@ -1005,11 +1005,11 @@
   }
 
   .smartpay .offset-lg-10 {
-    margin-left: 83.3333333333%;
+    margin-left: 83.33333333%;
   }
 
   .smartpay .offset-lg-11 {
-    margin-left: 91.6666666667%;
+    margin-left: 91.66666667%;
   }
 }
 
@@ -1031,8 +1031,8 @@
   }
 
   .smartpay .row-cols-xl-3 > * {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .row-cols-xl-4 > * {
@@ -1046,8 +1046,8 @@
   }
 
   .smartpay .row-cols-xl-6 > * {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-xl-auto {
@@ -1057,13 +1057,13 @@
   }
 
   .smartpay .col-xl-1 {
-    flex: 0 0 8.3333333333%;
-    max-width: 8.3333333333%;
+    flex: 0 0 8.33333333%;
+    max-width: 8.33333333%;
   }
 
   .smartpay .col-xl-2 {
-    flex: 0 0 16.6666666667%;
-    max-width: 16.6666666667%;
+    flex: 0 0 16.66666667%;
+    max-width: 16.66666667%;
   }
 
   .smartpay .col-xl-3 {
@@ -1072,13 +1072,13 @@
   }
 
   .smartpay .col-xl-4 {
-    flex: 0 0 33.3333333333%;
-    max-width: 33.3333333333%;
+    flex: 0 0 33.33333333%;
+    max-width: 33.33333333%;
   }
 
   .smartpay .col-xl-5 {
-    flex: 0 0 41.6666666667%;
-    max-width: 41.6666666667%;
+    flex: 0 0 41.66666667%;
+    max-width: 41.66666667%;
   }
 
   .smartpay .col-xl-6 {
@@ -1087,13 +1087,13 @@
   }
 
   .smartpay .col-xl-7 {
-    flex: 0 0 58.3333333333%;
-    max-width: 58.3333333333%;
+    flex: 0 0 58.33333333%;
+    max-width: 58.33333333%;
   }
 
   .smartpay .col-xl-8 {
-    flex: 0 0 66.6666666667%;
-    max-width: 66.6666666667%;
+    flex: 0 0 66.66666667%;
+    max-width: 66.66666667%;
   }
 
   .smartpay .col-xl-9 {
@@ -1102,13 +1102,13 @@
   }
 
   .smartpay .col-xl-10 {
-    flex: 0 0 83.3333333333%;
-    max-width: 83.3333333333%;
+    flex: 0 0 83.33333333%;
+    max-width: 83.33333333%;
   }
 
   .smartpay .col-xl-11 {
-    flex: 0 0 91.6666666667%;
-    max-width: 91.6666666667%;
+    flex: 0 0 91.66666667%;
+    max-width: 91.66666667%;
   }
 
   .smartpay .col-xl-12 {
@@ -1181,11 +1181,11 @@
   }
 
   .smartpay .offset-xl-1 {
-    margin-left: 8.3333333333%;
+    margin-left: 8.33333333%;
   }
 
   .smartpay .offset-xl-2 {
-    margin-left: 16.6666666667%;
+    margin-left: 16.66666667%;
   }
 
   .smartpay .offset-xl-3 {
@@ -1193,11 +1193,11 @@
   }
 
   .smartpay .offset-xl-4 {
-    margin-left: 33.3333333333%;
+    margin-left: 33.33333333%;
   }
 
   .smartpay .offset-xl-5 {
-    margin-left: 41.6666666667%;
+    margin-left: 41.66666667%;
   }
 
   .smartpay .offset-xl-6 {
@@ -1205,11 +1205,11 @@
   }
 
   .smartpay .offset-xl-7 {
-    margin-left: 58.3333333333%;
+    margin-left: 58.33333333%;
   }
 
   .smartpay .offset-xl-8 {
-    margin-left: 66.6666666667%;
+    margin-left: 66.66666667%;
   }
 
   .smartpay .offset-xl-9 {
@@ -1217,11 +1217,11 @@
   }
 
   .smartpay .offset-xl-10 {
-    margin-left: 83.3333333333%;
+    margin-left: 83.33333333%;
   }
 
   .smartpay .offset-xl-11 {
-    margin-left: 91.6666666667%;
+    margin-left: 91.66666667%;
   }
 }
 
@@ -4368,10 +4368,10 @@
   opacity: 1;
 }
 
-.smartpay input[type=date].form-control,
-.smartpay input[type=time].form-control,
-.smartpay input[type=datetime-local].form-control,
-.smartpay input[type=month].form-control {
+.smartpay input[type="date"].form-control,
+.smartpay input[type="time"].form-control,
+.smartpay input[type="datetime-local"].form-control,
+.smartpay input[type="month"].form-control {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -4471,7 +4471,7 @@
 }
 
 .smartpay .form-row > .col,
-.smartpay .form-row > [class*=col-] {
+.smartpay .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
 }
@@ -4527,7 +4527,7 @@
   display: none;
   max-width: 100%;
   padding: 0.25rem 0.5rem;
-  margin-top: 0.1rem;
+  margin-top: .1rem;
   font-size: 0.875rem;
   line-height: 1.5;
   color: #fff;
@@ -4642,7 +4642,7 @@
   display: none;
   max-width: 100%;
   padding: 0.25rem 0.5rem;
-  margin-top: 0.1rem;
+  margin-top: .1rem;
   font-size: 0.875rem;
   line-height: 1.5;
   color: #fff;
@@ -4922,10 +4922,10 @@
   margin-bottom: 0;
 }
 
-.smartpay .btn-group-toggle > .btn input[type=radio],
-.smartpay .btn-group-toggle > .btn input[type=checkbox],
-.smartpay .btn-group-toggle > .btn-group > .btn input[type=radio],
-.smartpay .btn-group-toggle > .btn-group > .btn input[type=checkbox] {
+.smartpay .btn-group-toggle > .btn input[type="radio"],
+.smartpay .btn-group-toggle > .btn input[type="checkbox"],
+.smartpay .btn-group-toggle > .btn-group > .btn input[type="radio"],
+.smartpay .btn-group-toggle > .btn-group > .btn input[type="checkbox"] {
   position: absolute;
   clip: rect(0, 0, 0, 0);
   pointer-events: none;
@@ -5054,8 +5054,8 @@
   border-radius: 0.25rem;
 }
 
-.smartpay .input-group-text input[type=radio],
-.smartpay .input-group-text input[type=checkbox] {
+.smartpay .input-group-text input[type="radio"],
+.smartpay .input-group-text input[type="checkbox"] {
   margin-top: 0;
 }
 
@@ -5199,7 +5199,7 @@
   width: 1rem;
   height: 1rem;
   content: "";
-  background: no-repeat 50%/50% 50%;
+  background: no-repeat 50% / 50% 50%;
 }
 
 .smartpay .custom-checkbox .custom-control-label::before {
@@ -6299,9 +6299,9 @@
   margin-top: 0.5rem;
 }
 
-.smartpay input[type=submit].btn-block,
-.smartpay input[type=reset].btn-block,
-.smartpay input[type=button].btn-block {
+.smartpay input[type="submit"].btn-block,
+.smartpay input[type="reset"].btn-block,
+.smartpay input[type="button"].btn-block {
   width: 100%;
 }
 
@@ -8115,7 +8115,7 @@
 }
 
 .smartpay .embed-responsive-21by9::before {
-  padding-top: 42.8571428571%;
+  padding-top: 42.85714286%;
 }
 
 .smartpay .embed-responsive-16by9::before {
@@ -8131,7 +8131,7 @@
 }
 
 .smartpay .embed-responsive-21by9::before {
-  padding-top: 42.8571428571%;
+  padding-top: 42.85714286%;
 }
 
 .smartpay .embed-responsive-16by9::before {

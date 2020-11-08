@@ -11,11 +11,11 @@
 // React
 
 const { render } = wp.element
+import domReady from '@wordpress/dom-ready'
 
-import { Header } from './components/layouts/header'
 import { CreateProduct } from './pages/product/create'
 
-window.addEventListener('DOMContentLoaded', event => {
+domReady(function() {
     const SmartPay = () => {
         return (
             <div>

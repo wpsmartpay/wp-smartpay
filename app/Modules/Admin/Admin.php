@@ -60,7 +60,7 @@ class Admin
             'manage_options',
             'smartpay-products',
             function () {
-                echo view('admin');
+                echo view('admin.form.create');
             }
         );
 
@@ -71,7 +71,7 @@ class Admin
             'manage_options',
             'smartpay-forms',
             function () {
-                echo view('admin');
+                echo view('admin.form.create');
             }
         );
 
@@ -115,6 +115,8 @@ class Admin
                 'apiNonce' => wp_create_nonce('wp_rest')
             )
         );
+
+        wp_enqueue_editor();
     }
 
     public function renderProductPage()
