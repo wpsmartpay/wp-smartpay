@@ -1,1 +1,1 @@
-export * from './products';
+import './products';

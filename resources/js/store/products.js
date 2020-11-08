@@ -8,10 +8,16 @@ const DEFAULT_STATE = {
 };
 
 const actions = {
-    getProducts(path) {
+    getProducts() {
         return {
-            type: 'FETCH_FROM_API',
-            path,
+            type: 'GET_PRODUCTS',
+            path: `${smartpay.restUrl}/v1/products`,
+        };
+    },
+    setProducts(products) {
+        return {
+            type: 'SET_PRODUCTS',
+            products
         };
     },
     addProduct(product) {
@@ -22,25 +28,14 @@ const actions = {
     },
 };
 
-export const PRODUCTS = registerStore('smartpay/products', {
+registerStore('smartpay/products', {
     reducer(state = DEFAULT_STATE, action) {
         switch (action.type) {
-            case 'FETCH_FROM_API':
-                state.isLoading = true;
-
-                apiFetch({
-                    path: `${smartpay.restUrl}/v1/products`,
-                    headers: {
-                        'X-WP-Nonce': smartpay.apiNonce,
-                    }
-                }).then(response => {
-                    state.isLoading = false;
-                    return {
-                        ...state,
-                        products: response,
-                    };
-                });
-
+            case 'SET_PRODUCTS':
+                return {
+                    ...state,
+                    products: state.products
+                }
             case 'ADD_PRODUCT':
                 return {
                     ...state,
@@ -66,14 +61,20 @@ export const PRODUCTS = registerStore('smartpay/products', {
     },
 
     controls: {
-        FETCH_FROM_API(action) {
-            return apiFetch({ path: action.path });
+        GET_PRODUCTS(action) {
+            return apiFetch({
+                path: action.path,
+                headers: {
+                    'X-WP-Nonce': smartpay.apiNonce,
+                }
+            })
         },
     },
 
     resolvers: {
         * getProducts() {
-            //
+            const products = yield actions.getProducts();
+            return actions.setProducts(products);
         },
     },
 });
