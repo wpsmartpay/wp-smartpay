@@ -58,9 +58,9 @@ class Admin
             __('SmartPay - Products', 'smartpay'),
             __('Products', 'smartpay'),
             'manage_options',
-            'smartpay-products',
+            'smartpay#/product/list',
             function () {
-                echo view('admin.form.create');
+                echo view('admin');
             }
         );
 
@@ -69,7 +69,7 @@ class Admin
             __('SmartPay - Forms', 'smartpay'),
             __('Forms', 'smartpay'),
             'manage_options',
-            'smartpay-forms',
+            'smartpay',
             function () {
                 echo view('admin.form.create');
             }
@@ -117,6 +117,7 @@ class Admin
         );
 
         wp_enqueue_editor();
+        wp_enqueue_media();
     }
 
     public function renderProductPage()
