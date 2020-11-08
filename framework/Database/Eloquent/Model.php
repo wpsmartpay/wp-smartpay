@@ -653,7 +653,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function freshTimestamp($timestamp = null)
     {
-        return fluentCrmTimestamp($timestamp);
+        return $timestamp;
     }
 
     public function isDirty($attributes = null)
