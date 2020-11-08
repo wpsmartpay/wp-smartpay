@@ -194,34 +194,34 @@ export const CreateProduct = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="my-3">
-                                        <div className="border rounded bg-light text-center p-5 no-product-file-box">
-                                            <i
-                                                data-feather="hard-drive"
-                                                width="42"
-                                                height="42"
-                                            ></i>
-                                            <h3 className="text-muted">
-                                                {__(
-                                                    'Upload or select files for this product',
-                                                    'smartpay'
-                                                )}
-                                            </h3>
-                                            <Button
-                                                type="button"
-                                                className="btn btn-light border shadow-sm upload-product-file"
-                                                onClick={() => {
-                                                    console.log(
-                                                        // TODO
-                                                        'Open media upload modal'
-                                                    )
-                                                }}
-                                            >
-                                                {__('Upload files', 'smartpay')}
-                                            </Button>
+                                        <div className="my-3">
+                                            <div className="border rounded bg-light text-center p-5 no-product-file-box">
+                                                <i
+                                                    data-feather="hard-drive"
+                                                    width="42"
+                                                    height="42"
+                                                ></i>
+                                                <h3 className="text-muted">
+                                                    {__(
+                                                        'Upload or select files for this product',
+                                                        'smartpay'
+                                                    )}
+                                                </h3>
+                                                <Button
+                                                    type="button"
+                                                    className="btn btn-light border shadow-sm upload-product-file"
+                                                    onClick={() => {
+                                                        console.log(
+                                                            // TODO
+                                                            'Open media upload modal'
+                                                        )
+                                                    }}
+                                                >
+                                                    {__('Upload files', 'smartpay')}
+                                                </Button>
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
                             </div>
                         </Tab>
                         <Tab
@@ -236,9 +236,7 @@ export const CreateProduct = () => {
                                             htmlFor="base_price"
                                             className="text-muted my-2 d-block"
                                         >
-                                            <strong>
-                                                {__('Base price', 'smartpay')}
-                                            </strong>
+                                            {__('Base price', 'smartpay')}
                                         </label>
                                         <input
                                             type="text"
@@ -246,7 +244,7 @@ export const CreateProduct = () => {
                                             id="base_price"
                                             name="base_price"
                                             value={product?.base_price || ''}
-                                            placeholder="Product base price"
+                                            placeholder={__('Base price', 'smartpay')}
                                             onChange={_setProductData}
                                         />
                                     </div>
@@ -257,16 +255,15 @@ export const CreateProduct = () => {
                                             htmlFor="sale_price"
                                             className="text-muted my-2 d-block"
                                         >
-                                            <strong>
-                                                {__('Sales price', 'smartpay')}
-                                            </strong>
+                                            {__('Sales price', 'smartpay')}
                                         </label>
                                         <input
                                             type="text"
+                                            className="form-control"
                                             id="sale_price"
                                             name="sale_price"
                                             value={product?.sale_price || ''}
-                                            placeholder="Product sale price"
+                                            placeholder={__('Sales price', 'smartpay')}
                                             onChange={_setProductData}
                                         />
                                     </div>
@@ -457,93 +454,93 @@ export const CreateProduct = () => {
                                                                 {variation
                                                                     ?.files
                                                                     ?.length ? (
-                                                                    <>
-                                                                        <ul className="list-group variation-files">
-                                                                            {variation?.files?.map(
-                                                                                file => {
-                                                                                    return (
-                                                                                        <li className="list-group-item m-0 d-flex justify-content-between files-item">
-                                                                                            <div className="custom-checkbox custom-checkbox-round">
-                                                                                                <input
-                                                                                                    type="checkbox"
-                                                                                                    className="custom-control-input variation-file"
-                                                                                                    id={`variation-file-${file.id}`}
-                                                                                                    name="file"
-                                                                                                    onChange={() => {
-                                                                                                        console.log(
-                                                                                                            'Toggle variation file'
-                                                                                                        )
-                                                                                                    }}
-                                                                                                    value={
-                                                                                                        file.id
-                                                                                                    }
-                                                                                                    checked //FIXME
-                                                                                                />
-                                                                                                <label
-                                                                                                    className="custom-control-label"
-                                                                                                    htmlFor={`variation-file-${file.id}`}
-                                                                                                >
-                                                                                                    {
-                                                                                                        file.name
-                                                                                                    }
-                                                                                                </label>
-                                                                                            </div>
-                                                                                        </li>
-                                                                                    )
-                                                                                }
-                                                                            )}
-                                                                        </ul>
+                                                                        <>
+                                                                            <ul className="list-group variation-files">
+                                                                                {variation?.files?.map(
+                                                                                    file => {
+                                                                                        return (
+                                                                                            <li className="list-group-item m-0 d-flex justify-content-between files-item">
+                                                                                                <div className="custom-checkbox custom-checkbox-round">
+                                                                                                    <input
+                                                                                                        type="checkbox"
+                                                                                                        className="custom-control-input variation-file"
+                                                                                                        id={`variation-file-${file.id}`}
+                                                                                                        name="file"
+                                                                                                        onChange={() => {
+                                                                                                            console.log(
+                                                                                                                'Toggle variation file'
+                                                                                                            )
+                                                                                                        }}
+                                                                                                        value={
+                                                                                                            file.id
+                                                                                                        }
+                                                                                                        checked //FIXME
+                                                                                                    />
+                                                                                                    <label
+                                                                                                        className="custom-control-label"
+                                                                                                        htmlFor={`variation-file-${file.id}`}
+                                                                                                    >
+                                                                                                        {
+                                                                                                            file.name
+                                                                                                        }
+                                                                                                    </label>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        )
+                                                                                    }
+                                                                                )}
+                                                                            </ul>
 
-                                                                        <div className="border rounded bg-light text-center p-3 mt-3">
-                                                                            <Button
-                                                                                type="button"
-                                                                                className="btn btn-sm btn-light border upload-product-file"
-                                                                                onClick={() => {
-                                                                                    //FIXME
-                                                                                    console.log(
-                                                                                        'Add new variation file'
-                                                                                    )
-                                                                                }}
-                                                                            >
-                                                                                {__(
-                                                                                    'Upload more file',
-                                                                                    'smartpay'
-                                                                                )}
-                                                                            </Button>
+                                                                            <div className="border rounded bg-light text-center p-3 mt-3">
+                                                                                <Button
+                                                                                    type="button"
+                                                                                    className="btn btn-sm btn-light border upload-product-file"
+                                                                                    onClick={() => {
+                                                                                        //FIXME
+                                                                                        console.log(
+                                                                                            'Add new variation file'
+                                                                                        )
+                                                                                    }}
+                                                                                >
+                                                                                    {__(
+                                                                                        'Upload more file',
+                                                                                        'smartpay'
+                                                                                    )}
+                                                                                </Button>
+                                                                            </div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <div className="form-group no-variation-file-box">
+                                                                            <div className="border rounded text-center p-5">
+                                                                                <i
+                                                                                    data-feather="package"
+                                                                                    width="42"
+                                                                                    height="42"
+                                                                                ></i>
+                                                                                <h3 className="text-muted">
+                                                                                    {__(
+                                                                                        'Associate files with this variant',
+                                                                                        'smartpay'
+                                                                                    )}
+                                                                                </h3>
+                                                                                <Button
+                                                                                    type="button"
+                                                                                    className="btn btn-light border shadow-sm select-variation-files"
+                                                                                    onClick={() => {
+                                                                                        //FIXME
+                                                                                        console.log(
+                                                                                            'Add new variation file'
+                                                                                        )
+                                                                                    }}
+                                                                                >
+                                                                                    {__(
+                                                                                        'Select files',
+                                                                                        'smartpay'
+                                                                                    )}
+                                                                                </Button>
+                                                                            </div>
                                                                         </div>
-                                                                    </>
-                                                                ) : (
-                                                                    <div className="form-group no-variation-file-box">
-                                                                        <div className="border rounded text-center p-5">
-                                                                            <i
-                                                                                data-feather="package"
-                                                                                width="42"
-                                                                                height="42"
-                                                                            ></i>
-                                                                            <h3 className="text-muted">
-                                                                                {__(
-                                                                                    'Associate files with this variant',
-                                                                                    'smartpay'
-                                                                                )}
-                                                                            </h3>
-                                                                            <Button
-                                                                                type="button"
-                                                                                className="btn btn-light border shadow-sm select-variation-files"
-                                                                                onClick={() => {
-                                                                                    //FIXME
-                                                                                    console.log(
-                                                                                        'Add new variation file'
-                                                                                    )
-                                                                                }}
-                                                                            >
-                                                                                {__(
-                                                                                    'Select files',
-                                                                                    'smartpay'
-                                                                                )}
-                                                                            </Button>
-                                                                        </div>
-                                                                    </div>
-                                                                )}
+                                                                    )}
                                                             </div>
                                                         </div>
                                                     )
@@ -560,32 +557,32 @@ export const CreateProduct = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="border rounded bg-light text-center p-5 no-variations-box">
-                                        <i
-                                            data-feather="layers"
-                                            width="42"
-                                            height="42"
-                                        ></i>
-                                        <h3>
-                                            {__(
-                                                'Offer variations of this product',
-                                                'smartpay'
-                                            )}
-                                        </h3>
-                                        <p className="text-muted">
-                                            {__(
-                                                'Sweeten the deal for your customers with different options for format, version, etc',
-                                                'smartpay'
-                                            )}
-                                        </p>
-                                        <button
-                                            type="button"
-                                            className="btn btn-light border shadow-sm add-variation"
-                                        >
-                                            {__('Add Variations', 'smartpay')}
-                                        </button>
-                                    </div>
-                                )}
+                                        <div className="border rounded bg-light text-center p-5 no-variations-box">
+                                            <i
+                                                data-feather="layers"
+                                                width="42"
+                                                height="42"
+                                            ></i>
+                                            <h3>
+                                                {__(
+                                                    'Offer variations of this product',
+                                                    'smartpay'
+                                                )}
+                                            </h3>
+                                            <p className="text-muted">
+                                                {__(
+                                                    'Sweeten the deal for your customers with different options for format, version, etc',
+                                                    'smartpay'
+                                                )}
+                                            </p>
+                                            <button
+                                                type="button"
+                                                className="btn btn-light border shadow-sm add-variation"
+                                            >
+                                                {__('Add Variations', 'smartpay')}
+                                            </button>
+                                        </div>
+                                    )}
                             </div>
                         </Tab>
                     </Tabs>

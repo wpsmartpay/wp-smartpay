@@ -4,7 +4,7 @@ import feather from 'feather-icons'
 // import './admin/media-selector'
 // import './admin/product'
 
-jQuery(function($) {
+jQuery(function ($) {
     feather.replace()
 })
 
@@ -17,13 +17,15 @@ import { HashRouter, Route } from 'react-router-dom'
 import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 
-domReady(function() {
+import './store/index'
+
+domReady(function () {
     const SmartPay = () => {
         return (
             <div>
                 <HashRouter>
-                    <Route exact path="/product/list" component={ProductList} />
-                    <Route path="/product/create" component={CreateProduct} />
+                    <Route exact path="/products/list" component={ProductList} />
+                    <Route path="/products/create" component={CreateProduct} />
                 </HashRouter>
             </div>
         )
