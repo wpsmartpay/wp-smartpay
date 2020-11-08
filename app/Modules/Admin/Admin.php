@@ -71,7 +71,7 @@ class Admin
             'manage_options',
             'smartpay-forms',
             function () {
-                echo view('admin');
+                echo view('admin.form.create');
             }
         );
 
