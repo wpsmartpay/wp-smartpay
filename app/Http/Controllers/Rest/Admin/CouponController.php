@@ -1,10 +1,9 @@
 <?php
 
-namespace SmartPay\Http\Controllers\Rest;
+namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 
-use SmartPay\Framework\Http\Request;
 use SmartPay\Models\Coupon;
 
 class CouponController extends RestController

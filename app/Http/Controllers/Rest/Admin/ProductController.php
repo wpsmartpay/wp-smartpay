@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Http\Controllers\Rest;
+namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Models\Product;
 use WP_REST_Request;

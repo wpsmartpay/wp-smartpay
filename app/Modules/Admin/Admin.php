@@ -2,9 +2,6 @@
 
 namespace SmartPay\Modules\Admin;
 
-use SmartPay\Http\Controllers\Admin\FormController;
-use SmartPay\Http\Controllers\Admin\CustomerController;
-
 class Admin
 {
     protected $app;

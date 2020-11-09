@@ -2,7 +2,7 @@
 
 namespace SmartPay\Modules\Payment;
 
-use SmartPay\Http\Controllers\Rest\PaymentController as PaymentRestController;
+use SmartPay\Http\Controllers\Rest\Admin\PaymentController;
 use WP_REST_Server;
 
 class Payment
@@ -25,7 +25,7 @@ class Payment
 
     public function registerRestRoutes()
     {
-        $paymentController = $this->app->make(PaymentRestController::class);
+        $paymentController = $this->app->make(PaymentController::class);
 
         register_rest_route('smartpay/v1/', 'payments', [
             [

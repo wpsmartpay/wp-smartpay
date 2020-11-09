@@ -2,7 +2,7 @@
 
 namespace SmartPay\Modules\Coupon;
 
-use SmartPay\Http\Controllers\Rest\CouponController as CouponRestController;
+use SmartPay\Http\Controllers\Rest\Admin\CouponController;
 use WP_REST_Server;
 
 class Coupon
@@ -25,7 +25,7 @@ class Coupon
 
     public function registerRestRoutes()
     {
-        $couponController = $this->app->make(CouponRestController::class);
+        $couponController = $this->app->make(CouponController::class);
 
         register_rest_route('smartpay/v1/', 'coupons', [
             [

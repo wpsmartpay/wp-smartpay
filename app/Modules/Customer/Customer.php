@@ -2,7 +2,7 @@
 
 namespace SmartPay\Modules\Customer;
 
-use SmartPay\Http\Controllers\Rest\CustomerController as CustomerRestController;
+use SmartPay\Http\Controllers\Rest\Admin\CustomerController;
 use WP_REST_Server;
 
 class Customer
@@ -25,7 +25,7 @@ class Customer
 
     public function registerRestRoutes()
     {
-        $productController = $this->app->make(CustomerRestController::class);
+        $productController = $this->app->make(CustomerController::class);
 
         register_rest_route('smartpay/v1/', 'products', [
             [

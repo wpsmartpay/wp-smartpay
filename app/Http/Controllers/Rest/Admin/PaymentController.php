@@ -1,6 +1,6 @@
 <?php
 
-namespace SmartPay\Http\Controllers\Rest;
+namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Payment;

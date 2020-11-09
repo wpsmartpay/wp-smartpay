@@ -2,7 +2,7 @@
 
 namespace SmartPay\Modules\Form;
 
-use SmartPay\Http\Controllers\Rest\FormController as FormRestController;
+use SmartPay\Http\Controllers\Rest\Admin\FormController;
 use WP_REST_Server;
 
 class Form
@@ -83,7 +83,7 @@ class Form
 
     public function registerRestRoutes()
     {
-        $formController = $this->app->make(FormRestController::class);
+        $formController = $this->app->make(FormController::class);
 
         register_rest_route('smartpay/v1/', 'forms', [
             [
