@@ -31,6 +31,9 @@ import { PaymentList } from './pages/payment/index'
 import { CreatePayment } from './pages/payment/create'
 import { EditPayment } from './pages/payment/edit'
 
+// Other pages
+import { NotFound } from './pages/not-found'
+
 import './store/index'
 
 domReady(function () {
@@ -106,6 +109,11 @@ domReady(function () {
                         exact
                         path="/payments/:paymentId/edit"
                         component={EditPayment}
+                    />
+
+                    {/* Not Found */}
+                    <Route
+                        component={NotFound}
                     />
                 </HashRouter>
             </div>
