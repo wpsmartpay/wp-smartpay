@@ -2,6 +2,9 @@
 
 namespace SmartPay\Modules\Form;
 
+use SmartPay\Http\Controllers\Rest\FormController as FormRestController;
+use WP_REST_Server;
+
 class Form
 {
     protected $app;
@@ -10,14 +13,8 @@ class Form
     {
         $this->app = $app;
 
-        $this->registerAdminScripts();
-
-        add_action('rest_api_init', [$this, 'registerRestRoutes']);
-    }
-
-    protected function registerAdminScripts()
-    {
-        add_action('admin_enqueue_scripts', [$this, 'adminScripts']);
+        $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
+        $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
     }
 
     public function adminScripts($hook)
@@ -86,6 +83,37 @@ class Form
 
     public function registerRestRoutes()
     {
-        //
+        $formController = $this->app->make(FormRestController::class);
+
+        register_rest_route('smartpay/v1/', 'forms', [
+            [
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => [$formController, 'index'],
+                'permission_callback' => [$formController, 'middleware'],
+            ],
+            [
+                'methods'   => WP_REST_Server::CREATABLE,
+                'callback'  => [$formController, 'store'],
+                'permission_callback' => [$formController, 'middleware'],
+            ],
+        ]);
+
+        register_rest_route('smartpay/v1/', 'forms/(?P<id>[\d]+)', [
+            [
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => [$formController, 'view'],
+                'permission_callback' => [$formController, 'middleware'],
+            ],
+            [
+                'methods'   => 'PUT, PATCH',
+                'callback'  => [$formController, 'update'],
+                'permission_callback' => [$formController, 'middleware'],
+            ],
+            [
+                'methods'   => WP_REST_Server::DELETABLE,
+                'callback'  => [$formController, 'delete'],
+                'permission_callback' => [$formController, 'middleware'],
+            ],
+        ]);
     }
 }

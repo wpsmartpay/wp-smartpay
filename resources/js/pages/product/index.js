@@ -57,6 +57,12 @@ export const ProductList = () => {
                                         <td className="d-none">{product.id}</td>
                                         <td>{product.title || ''}</td>
                                         <td>
+                                            <Link
+                                                className="btn-sm p-0 mr-2"
+                                                to={`/products/${product.id}/edit`}
+                                            >
+                                                {__('Edit', 'smartpay')}
+                                            </Link>
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
@@ -64,7 +70,7 @@ export const ProductList = () => {
                                                 }
                                                 variant="link"
                                             >
-                                                {__('Edit', 'smartpay')}
+                                                {__('Delete', 'smartpay')}
                                             </Button>
                                         </td>
                                     </tr>
