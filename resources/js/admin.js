@@ -6,12 +6,17 @@ import { HashRouter, Route } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
-// Products
+// Product
 import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
 
-// Coupons
+// Customer
+import { CustomerList } from './pages/customer/index'
+import { CreateCustomer } from './pages/customer/create'
+import { EditCustomer } from './pages/customer/edit'
+
+// Coupon
 import { CouponList } from './pages/coupon/index'
 import { CreateCoupon } from './pages/coupon/create'
 
@@ -23,7 +28,7 @@ domReady(function() {
             <div>
                 <HashRouter>
                     <Route exact path="/" component={Dashboard} />
-                    {/* Products */}
+                    {/* Product */}
                     <Route exact path="/products" component={ProductList} />
                     <Route
                         exact
@@ -36,7 +41,20 @@ domReady(function() {
                         component={EditProduct}
                     />
 
-                    {/* Coupons */}
+                    {/* Customer */}
+                    <Route exact path="/customers" component={CustomerList} />
+                    <Route
+                        exact
+                        path="/customers/create"
+                        component={CreateCustomer}
+                    />
+                    <Route
+                        exact
+                        path="/customers/:productId/edit"
+                        component={EditCustomer}
+                    />
+
+                    {/* Coupon */}
                     <Route exact path="/coupons" component={CouponList} />
                     <Route
                         exact
