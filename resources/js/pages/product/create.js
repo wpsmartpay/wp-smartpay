@@ -5,53 +5,131 @@ import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
 
 const defaults = {
     product: {
-        title: 'A',
-        cover: {
-            url: '',
-        },
+        title: '',
+        covers: [],
         description: '',
         variations: [],
+        base_price: '',
+        sale_price: '',
+        files: [],
     },
     variation: {
         title: '',
+        description: '',
         base_price: '',
         sale_price: '',
         files: [],
     },
 }
 
-const formReducer = (state, data) => {
+const productReducer = (product, data) => {
     return {
-        ...state,
+        ...product,
         ...data,
     }
 }
 
 export const CreateProduct = () => {
-    const [product, setProductData] = useReducer(formReducer, defaults.product)
+    const [product, setProductData] = useReducer(
+        productReducer,
+        defaults.product
+    )
 
-    const _setProductData = e => {
-        setProductData({ [e.target.name]: e.target.value })
-        console.log(product)
+    const _setProductData = event => {
+        setProductData({ [event.target.name]: event.target.value })
     }
 
-    const selectCover = () => {
-        const mediaWindow = wp.media()
+    const _setVariationData = (variation, event) => {
+        setVariationData(variation, { [event.target.name]: event.target.value })
+    }
 
-        mediaWindow.open()
-        mediaWindow.on('select', function() {
-            let selection = mediaWindow.state().get('selection')
-            setProductData({ cover: { ...selection.first().toJSON() } })
+    const setVariationData = (variation, data) => {
+        const productVariation = product.variations.filter(item => {
+            return item.id !== variation.id
+        })
+
+        setProductData({
+            variations: [...productVariation, { ...variation, ...data }],
         })
     }
 
-    const removeFile = (file, isVariation = false) => {
-        console.log(file)
+    const selectCover = () => {
+        const mediaWindow = wp.media({ multiple: true })
+
+        mediaWindow.open()
+        mediaWindow.on('select', function() {
+            const selection = mediaWindow.state().get('selection')
+
+            const covers = selection.toJSON().map(cover => {
+                return {
+                    attachment_id: cover.id,
+                    icon: cover.sizes.thumbnail.url || cover.icon,
+                    url: cover.url,
+                }
+            })
+
+            setProductData({ covers: [covers[0]] })
+            // setProductData({ covers: [...product.covers, ...covers] })
+        })
+    }
+
+    const addProductFile = (variation = false) => {
+        const mediaWindow = wp.media({ multiple: true })
+
+        mediaWindow.open()
+        mediaWindow.on('select', function() {
+            const selection = mediaWindow.state().get('selection')
+
+            const files = selection.toJSON().map(file => {
+                return {
+                    id: file.id,
+                    name: file.filename,
+                    icon: file.sizes.thumbnail.url || file.icon,
+                    mime: file.mime,
+                    size: file.filesizeHumanReadable,
+                    url: file.url,
+                }
+            })
+
+            setProductData({ files: [...product.files, ...files] })
+
+            if (!!variation) {
+                setVariationData(variation, {
+                    files: [...variation.files, ...files],
+                })
+            }
+        })
+    }
+
+    const removeProductFile = (file, variation = false) => {
+        if (!!variation) {
+            variation.files = [
+                ...variation.files.filter(variationFile => {
+                    return variationFile.id !== file.id
+                }),
+            ]
+
+            return
+        }
+
+        setProductData({
+            files: [
+                ...product.files.filter(productFile => {
+                    return productFile.id !== file.id
+                }),
+            ],
+        })
     }
 
     const addNewVariation = () => {
         setProductData({
-            variations: [...product.variations, defaults.variation],
+            variations: [
+                ...product.variations,
+                {
+                    ...defaults.variation,
+                    id: `new-${product.variations.length + 1}`,
+                },
+            ],
         })
     }
 
@@ -61,7 +139,8 @@ export const CreateProduct = () => {
     }
 
     const createProduct = data => {
-        console.log(tinyMCE.activeEditor.getContent())
+        // console.log(tinyMCE.activeEditor.getContent())
+        console.log(product)
 
         // dispatch('smartpay/products').addProduct({})
     }
@@ -104,20 +183,24 @@ export const CreateProduct = () => {
                     </div>
                     <div className="my-3">
                         <div className="border rounded bg-light text-center p-5 select-image-box d-flex flex-column align-items-center">
-                            {product.cover.url ? (
+                            {product.covers.length > 0 && (
                                 <div className="mb-3 preview text-center">
                                     <div>
-                                        <img src={product.cover.url} alt="" />
+                                        <img
+                                            src={product.covers[0].url}
+                                            className="img-fluid"
+                                        />
                                     </div>
                                     <Button
                                         type="button"
-                                        onClick={selectCover}
-                                        className="btn btn-light border px-3 select-image"
+                                        onClick={() => selectCover()}
+                                        className="btn btn-light border mt-3 px-3 select-image"
                                     >
                                         {__('Choose File', 'smartpay')}
                                     </Button>
                                 </div>
-                            ) : (
+                            )}
+                            {product.covers.length === 0 && (
                                 <div className="no-image">
                                     <i
                                         data-feather="image"
@@ -135,7 +218,7 @@ export const CreateProduct = () => {
                                     </p>
                                     <Button
                                         type="button"
-                                        onClick={selectCover}
+                                        onClick={() => selectCover()}
                                         className="btn btn-light border px-3 select-image"
                                     >
                                         {__('Choose File', 'smartpay')}
@@ -158,69 +241,67 @@ export const CreateProduct = () => {
                                             className="list-group product-files"
                                             id="product-files"
                                         >
-                                            {product?.files?.map(file => {
-                                                return (
-                                                    <li className="list-group-item list-group-item-action mb-0 files-item">
-                                                        <div className="d-flex">
-                                                            <div className="file-type">
-                                                                <img
-                                                                    src={
-                                                                        file.thump ||
-                                                                        '#'
-                                                                    }
-                                                                    alt={
-                                                                        file.name ||
-                                                                        ''
-                                                                    }
-                                                                    width="28"
-                                                                    height="28"
-                                                                />
-                                                            </div>
-                                                            <div className="d-flex justify-content-between w-100">
-                                                                <div className="d-flex flex-column ml-3">
-                                                                    <h5
-                                                                        className="file-name m-0"
-                                                                        dangerouslySetInnerHTML={{
-                                                                            __html:
-                                                                                file.name,
-                                                                        }}
-                                                                    ></h5>
-                                                                    <p
-                                                                        className="file-size text-muted m-0"
-                                                                        dangerouslySetInnerHTML={{
-                                                                            __html:
-                                                                                file.size,
-                                                                        }}
-                                                                    ></p>
+                                            {product?.files?.map(
+                                                (file, index) => {
+                                                    return (
+                                                        <li
+                                                            className="list-group-item list-group-item-action mb-0 files-item"
+                                                            key={index}
+                                                        >
+                                                            <div className="d-flex">
+                                                                <div className="file-type">
+                                                                    <img
+                                                                        src={
+                                                                            file.icon ||
+                                                                            ''
+                                                                        }
+                                                                        alt={
+                                                                            file.name ||
+                                                                            ''
+                                                                        }
+                                                                        width="28"
+                                                                        height="28"
+                                                                    />
                                                                 </div>
-                                                                <div className="">
-                                                                    <Button
-                                                                        type="button"
-                                                                        className="btn btn-light btn-sm pb-0 border remove-file"
-                                                                        onClick={removeFile(
-                                                                            file
-                                                                        )}
-                                                                    >
-                                                                        <i data-feather="trash"></i>
-                                                                    </Button>
+                                                                <div className="d-flex justify-content-between w-100">
+                                                                    <div className="d-flex flex-column ml-3">
+                                                                        <h5 className="file-name m-0">
+                                                                            {
+                                                                                file.name
+                                                                            }
+                                                                        </h5>
+                                                                        <p className="file-size text-muted m-0">
+                                                                            {
+                                                                                file.size
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="">
+                                                                        <Button
+                                                                            type="button"
+                                                                            className="btn btn-light btn-sm pb-0 border remove-file"
+                                                                            onClick={() =>
+                                                                                removeProductFile(
+                                                                                    file
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <i data-feather="trash"></i>
+                                                                        </Button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                )
-                                            })}
+                                                        </li>
+                                                    )
+                                                }
+                                            )}
                                         </ul>
 
                                         <div className="border rounded bg-light text-center p-3 mt-3">
                                             <button
                                                 type="button"
                                                 className="btn btn-secondary upload-product-file"
-                                                onClick={() => {
-                                                    console.log(
-                                                        // TODO
-                                                        'Open media upload modal'
-                                                    )
-                                                }}
+                                                onClick={() => addProductFile()}
                                             >
                                                 {__(
                                                     'Upload your files',
@@ -246,12 +327,7 @@ export const CreateProduct = () => {
                                             <Button
                                                 type="button"
                                                 className="btn btn-light border shadow-sm upload-product-file"
-                                                onClick={() => {
-                                                    console.log(
-                                                        // TODO
-                                                        'Open media upload modal'
-                                                    )
-                                                }}
+                                                onClick={() => addProductFile()}
                                             >
                                                 {__('Upload files', 'smartpay')}
                                             </Button>
@@ -279,9 +355,9 @@ export const CreateProduct = () => {
                                             className="form-control"
                                             id="base_price"
                                             name="base_price"
-                                            value={product?.base_price || ''}
+                                            value={product.base_price || ''}
                                             placeholder={__(
-                                                'Base price',
+                                                'eg. 100',
                                                 'smartpay'
                                             )}
                                             onChange={_setProductData}
@@ -303,7 +379,7 @@ export const CreateProduct = () => {
                                             name="sale_price"
                                             value={product?.sale_price || ''}
                                             placeholder={__(
-                                                'Sales price',
+                                                'eg. 90',
                                                 'smartpay'
                                             )}
                                             onChange={_setProductData}
@@ -343,8 +419,8 @@ export const CreateProduct = () => {
                                     </div>
                                 )}
 
-                                {/* Show no variation */}
-                                {!!product.variations.length && (
+                                {/* Show variation */}
+                                {product.variations.length > 0 && (
                                     <div className="card p-0 variations-secion">
                                         <div className="card-header bg-white p-0">
                                             <div className="d-flex px-3 py-2">
@@ -390,15 +466,15 @@ export const CreateProduct = () => {
                                                                             type="text"
                                                                             className="form-control"
                                                                             id={`variation-${variation.id}`}
-                                                                            name="name"
+                                                                            name="title"
                                                                             value={
-                                                                                variation.name
+                                                                                variation.title
                                                                             }
                                                                             placeholder="Option name"
-                                                                            onChange={e =>
-                                                                                setVariationData(
+                                                                            onChange={event =>
+                                                                                _setVariationData(
                                                                                     variation,
-                                                                                    e
+                                                                                    event
                                                                                 )
                                                                             }
                                                                         />
@@ -445,11 +521,14 @@ export const CreateProduct = () => {
                                                                             value={
                                                                                 variation.base_price
                                                                             }
-                                                                            placeholder="Option name"
-                                                                            onChange={e =>
-                                                                                setVariationData(
+                                                                            placeholder={__(
+                                                                                'eg. 100',
+                                                                                'smartpay'
+                                                                            )}
+                                                                            onChange={event =>
+                                                                                _setVariationData(
                                                                                     variation,
-                                                                                    e
+                                                                                    event
                                                                                 )
                                                                             }
                                                                         />
@@ -474,8 +553,12 @@ export const CreateProduct = () => {
                                                                             value={
                                                                                 variation.sale_price
                                                                             }
+                                                                            placeholder={__(
+                                                                                'eg. 90',
+                                                                                'smartpay'
+                                                                            )}
                                                                             onChange={event =>
-                                                                                setVariationData(
+                                                                                _setVariationData(
                                                                                     variation,
                                                                                     event
                                                                                 )
@@ -485,7 +568,6 @@ export const CreateProduct = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <div className="variation-option-body bg-light p-3">
                                                             <div className="form-group">
                                                                 <label
@@ -505,7 +587,7 @@ export const CreateProduct = () => {
                                                                         variation.description
                                                                     }
                                                                     onChange={event =>
-                                                                        setVariationData(
+                                                                        _setVariationData(
                                                                             variation,
                                                                             event
                                                                         )
@@ -520,6 +602,7 @@ export const CreateProduct = () => {
                                                                 </small>
                                                             </div>
 
+                                                            {/* Variation Files */}
                                                             <label className="text-muted my-2 d-block">
                                                                 <strong>
                                                                     {__(
@@ -528,14 +611,22 @@ export const CreateProduct = () => {
                                                                     )}
                                                                 </strong>
                                                             </label>
-                                                            {variation?.files
-                                                                ?.length ? (
+                                                            {variation.files
+                                                                .length > 0 && (
                                                                 <>
                                                                     <ul className="list-group variation-files">
                                                                         {variation?.files?.map(
-                                                                            file => {
+                                                                            (
+                                                                                file,
+                                                                                index
+                                                                            ) => {
                                                                                 return (
-                                                                                    <li className="list-group-item m-0 d-flex justify-content-between files-item">
+                                                                                    <li
+                                                                                        className="list-group-item m-0 d-flex justify-content-between files-item"
+                                                                                        key={
+                                                                                            index
+                                                                                        }
+                                                                                    >
                                                                                         <div className="custom-checkbox custom-checkbox-round">
                                                                                             <input
                                                                                                 type="checkbox"
@@ -550,7 +641,8 @@ export const CreateProduct = () => {
                                                                                                 value={
                                                                                                     file.id
                                                                                                 }
-                                                                                                checked //FIXME
+                                                                                                checked
+                                                                                                // FIXME
                                                                                             />
                                                                                             <label
                                                                                                 className="custom-control-label"
@@ -571,12 +663,11 @@ export const CreateProduct = () => {
                                                                         <Button
                                                                             type="button"
                                                                             className="btn btn-sm btn-light border upload-product-file"
-                                                                            onClick={() => {
-                                                                                //FIXME
-                                                                                console.log(
-                                                                                    'Add new variation file'
+                                                                            onClick={() =>
+                                                                                addProductFile(
+                                                                                    variation
                                                                                 )
-                                                                            }}
+                                                                            }
                                                                         >
                                                                             {__(
                                                                                 'Upload more file',
@@ -585,7 +676,11 @@ export const CreateProduct = () => {
                                                                         </Button>
                                                                     </div>
                                                                 </>
-                                                            ) : (
+                                                            )}
+
+                                                            {variation.files
+                                                                .length ===
+                                                                0 && (
                                                                 <div className="form-group no-variation-file-box">
                                                                     <div className="border rounded text-center p-5">
                                                                         <i
@@ -602,12 +697,11 @@ export const CreateProduct = () => {
                                                                         <Button
                                                                             type="button"
                                                                             className="btn btn-light border shadow-sm select-variation-files"
-                                                                            onClick={() => {
-                                                                                //FIXME
-                                                                                console.log(
-                                                                                    'Add new variation file'
+                                                                            onClick={() =>
+                                                                                addProductFile(
+                                                                                    variation
                                                                                 )
-                                                                            }}
+                                                                            }
                                                                         >
                                                                             {__(
                                                                                 'Select files',
