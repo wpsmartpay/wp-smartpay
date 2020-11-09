@@ -6,14 +6,30 @@ import { HashRouter, Route } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
-// Products
+// Product
 import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
 
-// Coupons
+// Form
+import { FormList } from './pages/form/index'
+import { CreateForm } from './pages/form/create'
+import { EditForm } from './pages/form/edit'
+
+// Customer
+import { CustomerList } from './pages/customer/index'
+import { CreateCustomer } from './pages/customer/create'
+import { EditCustomer } from './pages/customer/edit'
+
+// Coupon
 import { CouponList } from './pages/coupon/index'
 import { CreateCoupon } from './pages/coupon/create'
+import { EditCoupon } from './pages/coupon/edit'
+
+// Payment
+import { PaymentList } from './pages/payment/index'
+import { CreatePayment } from './pages/payment/create'
+import { EditPayment } from './pages/payment/edit'
 
 import './store/index'
 
@@ -22,13 +38,11 @@ domReady(function () {
         return (
             <div>
                 <HashRouter>
+                    {/* Dashboard */}
                     <Route exact path="/" component={Dashboard} />
-                    {/* Products */}
-                    <Route
-                        exact
-                        path="/products/list"
-                        component={ProductList}
-                    />
+
+                    {/* Product */}
+                    <Route exact path="/products" component={ProductList} />
                     <Route
                         exact
                         path="/products/create"
@@ -40,8 +54,30 @@ domReady(function () {
                         component={EditProduct}
                     />
 
-                    {/* Coupons */}
-                    <Route exact path="/coupons/list" component={CouponList} />
+                    {/* Form */}
+                    <Route exact path="/forms" component={FormList} />
+                    <Route exact path="/forms/create" component={CreateForm} />
+                    <Route
+                        exact
+                        path="/forms/:formId/edit"
+                        component={EditForm}
+                    />
+
+                    {/* Customer */}
+                    <Route exact path="/customers" component={CustomerList} />
+                    <Route
+                        exact
+                        path="/customers/create"
+                        component={CreateCustomer}
+                    />
+                    <Route
+                        exact
+                        path="/customers/:customerId/edit"
+                        component={EditCustomer}
+                    />
+
+                    {/* Coupon */}
+                    <Route exact path="/coupons" component={CouponList} />
                     <Route
                         exact
                         path="/coupons/create"
@@ -52,6 +88,24 @@ domReady(function () {
                                 nonce={smartpay.apiNonce}
                             />
                         )}
+                    />
+                    <Route
+                        exact
+                        path="/coupons/:couponId/edit"
+                        component={EditCoupon}
+                    />
+
+                    {/* Payment */}
+                    <Route exact path="/payments" component={PaymentList} />
+                    <Route
+                        exact
+                        path="/payments/create"
+                        component={CreatePayment}
+                    />
+                    <Route
+                        exact
+                        path="/payments/:paymentId/edit"
+                        component={EditPayment}
                     />
                 </HashRouter>
             </div>
