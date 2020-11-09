@@ -2,8 +2,8 @@
 
 namespace SmartPay\Providers;
 
-use SmartPay\Framework\Http\Request;
 use SmartPay\Framework\Support\ServiceProvider;
+use SmartPay\Modules\Shortcode\Shortcode;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,11 +14,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
+        $this->app->singleton(Shortcode::class, function ($app) {
+            return new Shortcode($app);
+        });
     }
 
     public function boot()
     {
-        //
+        $this->app->make(Shortcode::class);
     }
 }
