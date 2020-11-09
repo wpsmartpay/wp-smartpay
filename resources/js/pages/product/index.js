@@ -30,10 +30,10 @@ export const ProductList = () => {
                         <div className="ml-auto">
                             <Link
                                 role="button"
-                                className="btn btn-primary btn-sm text-decoration-none"
+                                className="btn btn-primary btn-sm text-decoration-none px-3"
                                 to="/products/create"
                             >
-                                {__('Create', 'smartpay')}
+                                {__('Add new', 'smartpay')}
                             </Link>
                         </div>
                     </div>
