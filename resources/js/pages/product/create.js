@@ -134,8 +134,11 @@ export const CreateProduct = () => {
     }
 
     const removeVariation = variation => {
-        // TODO
-        console.log('remove variation')
+        setProductData({
+            variations: product.variations.filter(item => {
+                return item.id !== variation.id
+            }),
+        })
     }
 
     const createProduct = data => {
