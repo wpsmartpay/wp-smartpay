@@ -75,6 +75,11 @@ domReady(function() {
                         path="/coupons/create"
                         component={CreateCoupon}
                     />
+                    <Route
+                        exact
+                        path="/coupons/:couponId/edit"
+                        component={EditCoupon}
+                    />
                 </HashRouter>
             </div>
         )
