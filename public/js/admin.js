@@ -117,7 +117,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("// removed by extract-text-webpack-plugin//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvc2Fzcy9hZG1pbi5zY3NzPzI1MTEiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJmaWxlIjoiLi9yZXNvdXJjZXMvc2Fzcy9hZG1pbi5zY3NzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLy8gcmVtb3ZlZCBieSBleHRyYWN0LXRleHQtd2VicGFjay1wbHVnaW4iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/sass/admin.scss\n");
+eval("// removed by extract-text-webpack-plugin//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvc2Fzcy9hZG1pbi5zY3NzP2EzN2EiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJmaWxlIjoiLi9yZXNvdXJjZXMvc2Fzcy9hZG1pbi5zY3NzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLy8gcmVtb3ZlZCBieSBleHRyYWN0LXRleHQtd2VicGFjay1wbHVnaW4iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/sass/admin.scss\n");
 
 /***/ }),
 
@@ -132,27 +132,15 @@ eval("// removed by extract-text-webpack-plugin//# sourceURL=[module]\n//# sourc
 
 /***/ }),
 
-/***/ "./resources/sass/block-editor/block-editor.scss":
-/*!*******************************************************!*\
-  !*** ./resources/sass/block-editor/block-editor.scss ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("// removed by extract-text-webpack-plugin//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvc2Fzcy9ibG9jay1lZGl0b3IvYmxvY2stZWRpdG9yLnNjc3M/ZDljMCJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSIsImZpbGUiOiIuL3Jlc291cmNlcy9zYXNzL2Jsb2NrLWVkaXRvci9ibG9jay1lZGl0b3Iuc2Nzcy5qcyIsInNvdXJjZXNDb250ZW50IjpbIi8vIHJlbW92ZWQgYnkgZXh0cmFjdC10ZXh0LXdlYnBhY2stcGx1Z2luIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./resources/sass/block-editor/block-editor.scss\n");
-
-/***/ }),
-
 /***/ 0:
-/*!*******************************************************************************************************************************************!*\
-  !*** multi ./resources/js/admin.js ./resources/sass/app.scss ./resources/sass/block-editor/block-editor.scss ./resources/sass/admin.scss ***!
-  \*******************************************************************************************************************************************/
+/*!*******************************************************************************************!*\
+  !*** multi ./resources/js/admin.js ./resources/sass/app.scss ./resources/sass/admin.scss ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! F:\xampp\htdocs\wpsmartpay\wp-content\plugins\wp-smartpay\resources\js\admin.js */"./resources/js/admin.js");
 __webpack_require__(/*! F:\xampp\htdocs\wpsmartpay\wp-content\plugins\wp-smartpay\resources\sass\app.scss */"./resources/sass/app.scss");
-__webpack_require__(/*! F:\xampp\htdocs\wpsmartpay\wp-content\plugins\wp-smartpay\resources\sass\block-editor\block-editor.scss */"./resources/sass/block-editor/block-editor.scss");
 module.exports = __webpack_require__(/*! F:\xampp\htdocs\wpsmartpay\wp-content\plugins\wp-smartpay\resources\sass\admin.scss */"./resources/sass/admin.scss");
 
 

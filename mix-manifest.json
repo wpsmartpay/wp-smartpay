@@ -1,7 +1,5 @@
 {
     "/public/js/admin.js": "/public/js/admin.js",
     "/public/css/app.css": "/public/css/app.css",
-    "/public/css/admin.css": "/public/css/admin.css",
-    "/public/js/block-editor.js": "/public/js/block-editor.js",
-    "/public/css/block-editor.css": "/public/css/block-editor.css"
+    "/public/css/admin.css": "/public/css/admin.css"
 }
