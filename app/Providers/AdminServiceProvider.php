@@ -7,6 +7,7 @@ use SmartPay\Modules\Product\Product;
 use SmartPay\Modules\Form\Form;
 use SmartPay\Modules\Coupon\Coupon;
 use SmartPay\Modules\Customer\Customer;
+use SmartPay\Modules\Payment\Payment;
 use SmartPay\Framework\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
@@ -37,6 +38,10 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton(Customer::class, function ($app) {
             return new Customer($app);
         });
+
+        $this->app->singleton(Payment::class, function ($app) {
+            return new Payment($app);
+        });
     }
 
     public function boot()
@@ -46,5 +51,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->make(Form::class);
         $this->app->make(Coupon::class);
         $this->app->make(Customer::class);
+        $this->app->make(Payment::class);
     }
 }
