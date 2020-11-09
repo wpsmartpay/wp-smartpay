@@ -22,8 +22,8 @@ class CreateSmartpayProductsTable
                 `parent` INT UNSIGNED DEFAULT 0,
                 `status` VARCHAR(45) NULL DEFAULT 'Draft',
                 `created_by` INT NULL,
-                `created_at` TIMESTAMP NULL,
-                `updated_at` TIMESTAMP NULL
+                `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) $charsetCollate";
 
             dbDelta($sql);

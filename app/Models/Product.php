@@ -18,6 +18,8 @@ class Product extends Model
         'status',
     ];
 
+    const PUBLISH = 'Published';
+
     public function setFilesAttribute($files)
     {
         $this->attributes['files'] = \json_encode($files);
