@@ -82,6 +82,17 @@ class Admin
                 echo view('admin');
             }
         );
+
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Settings', 'smartpay'),
+            __('Settings', 'smartpay'),
+            'manage_options',
+            'smartpay-settings',
+            function () {
+                echo view('settings');
+            }
+        );
     }
 
     public function adminScripts()
