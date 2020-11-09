@@ -4,7 +4,7 @@ import feather from 'feather-icons'
 // import './admin/media-selector'
 // import './admin/product'
 
-jQuery(function($) {
+jQuery(function ($) {
     feather.replace()
 })
 
@@ -24,7 +24,7 @@ import { CreateCoupon } from './pages/coupon/create'
 
 import './store/index'
 
-domReady(function() {
+domReady(function () {
     const SmartPay = () => {
         return (
             <div>
@@ -44,7 +44,13 @@ domReady(function() {
                     <Route
                         exact
                         path="/coupons/create"
-                        component={CreateCoupon}
+                        render={(props) => (
+                            <CreateCoupon
+                                {...props}
+                                resturl={smartpay.restUrl}
+                                nonce={smartpay.apiNonce}
+                            />
+                        )}
                     />
                 </HashRouter>
             </div>
