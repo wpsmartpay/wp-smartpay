@@ -24,6 +24,12 @@ import { EditCustomer } from './pages/customer/edit'
 // Coupon
 import { CouponList } from './pages/coupon/index'
 import { CreateCoupon } from './pages/coupon/create'
+import { EditCoupon } from './pages/coupon/edit'
+
+// Payment
+import { PaymentList } from './pages/payment/index'
+import { CreatePayment } from './pages/payment/create'
+import { EditPayment } from './pages/payment/edit'
 
 import './store/index'
 
@@ -79,6 +85,19 @@ domReady(function() {
                         exact
                         path="/coupons/:couponId/edit"
                         component={EditCoupon}
+                    />
+
+                    {/* Payment */}
+                    <Route exact path="/payments" component={PaymentList} />
+                    <Route
+                        exact
+                        path="/payments/create"
+                        component={CreatePayment}
+                    />
+                    <Route
+                        exact
+                        path="/payments/:paymentId/edit"
+                        component={EditPayment}
                     />
                 </HashRouter>
             </div>
