@@ -30,6 +30,7 @@
         "watch:scripts": "wp-scripts start resources/blocks/index.js --output-path=publick/js/blocks"
     },
     "dependencies": {
+        "@wordpress/element": "^2.18.0",
         "@wordpress/i18n": "^3.16.0",
         "feather-icons": "^4.28.0",
         "react-bootstrap": "^1.4.0"

@@ -1,11 +1,12 @@
 <?php
 
 namespace SmartPay\Http\Controllers\Rest;
+use SmartPay\Http\Controllers\RestController;
 
 use SmartPay\Framework\Http\Request;
-//use SmartPay\Models\Product;
+use SmartPay\Models\Coupon;
 
-class CouponController extends \WP_REST_Controller
+class CouponController extends RestController
 {
     /**
      * Check permissions for the posts.
@@ -24,10 +25,19 @@ class CouponController extends \WP_REST_Controller
 
     public function store(\WP_REST_Request $request)
     {
-        dd($request->get_body());
+        $data = \json_decode($request->get_body(),true);
+        $uid = get_current_user_id();
+        $coupon = new Coupon();
+        $coupon->title = $data['title'];
+        $coupon->description = $data['description'];
+        $coupon->discount_type = $data['discounttype'];
+        $coupon->discount_amount = $data['amount'];
+        $coupon->status = 'published';
+        $coupon->created_by = $uid;
+        $coupon->expiry_date = $data['expirydate'];
+        $coupon->save();
 
-        // $product =  Product::create([
-        //     // 'title' => $title,
-        // ]);
+        $response = new \WP_REST_Response($coupon, 200);
+        return $response;
     }
 }
