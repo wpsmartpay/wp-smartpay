@@ -18,6 +18,10 @@ import { Dashboard } from './pages/dashboard'
 import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 
+// Coupons
+import { CouponList } from './pages/coupon/index'
+import { CreateCoupon } from './pages/coupon/create'
+
 import './store/index'
 
 domReady(function() {
@@ -35,6 +39,12 @@ domReady(function() {
                         exact
                         path="/products/create"
                         component={CreateProduct}
+                    />
+                    <Route exact path="/coupons/list" component={CouponList} />
+                    <Route
+                        exact
+                        path="/coupons/create"
+                        component={CreateCoupon}
                     />
                 </HashRouter>
             </div>

@@ -57,9 +57,9 @@ class Admin
             __('SmartPay - Forms', 'smartpay'),
             __('Forms', 'smartpay'),
             'manage_options',
-            'smartpay-forms',
+            'smartpay#/forms/list',
             function () {
-                echo view('admin.form.create');
+                echo view('admin');
             }
         );
 
@@ -79,7 +79,7 @@ class Admin
             __('SmartPay - Coupons', 'smartpay'),
             __('Coupons', 'smartpay'),
             'manage_options',
-            'smartpay-coupons',
+            'smartpay#/coupons/list',
             function () {
                 echo view('admin');
             }
