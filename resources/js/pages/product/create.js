@@ -156,6 +156,8 @@ export const CreateProduct = () => {
             },
             body: JSON.stringify({ ...product, description: tinyMCE.activeEditor.getContent() }),
         }).then(response => {
+            setProductData(defaults.product)
+            tinymce.get("description").setContent("");
             setRespose({ type: 'success', message: 'Product created successfully' })
         })
     }
@@ -197,7 +199,11 @@ export const CreateProduct = () => {
                     </Form.Group>
                     <div id="description">
                         {wp.editor.initialize('description', {
-                            tinymce: true,
+                            tinymce: {
+                                onchange_callback: (inst) => {
+                                    console.log(inst.getBody().innerHTML);
+                                }
+                            },
                         })}
                     </div>
                     <div className="my-3">
