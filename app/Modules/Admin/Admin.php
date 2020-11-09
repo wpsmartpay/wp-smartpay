@@ -76,6 +76,17 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('SmartPay - Coupons', 'smartpay'),
+            __('Coupons', 'smartpay'),
+            'manage_options',
+            'smartpay-coupons',
+            function () {
+                echo view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('SmartPay - Payments', 'smartpay'),
             __('Payments', 'smartpay'),
             'manage_options',
