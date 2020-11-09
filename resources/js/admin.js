@@ -38,12 +38,14 @@ domReady(function() {
         return (
             <div>
                 <HashRouter>
+                    {/* Dashboard */}
                     <Route exact path="/" component={Dashboard} />
+
                     {/* Product */}
-                    <Route exact path="/forms" component={ProductList} />
+                    <Route exact path="/products" component={ProductList} />
                     <Route
                         exact
-                        path="/forms/create"
+                        path="/products/create"
                         component={CreateProduct}
                     />
                     <Route

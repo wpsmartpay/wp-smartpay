@@ -58,7 +58,7 @@ class Admin
             __('SmartPay - Customers', 'smartpay'),
             __('Customers', 'smartpay'),
             'manage_options',
-            'smartpay-customers',
+            'smartpay#/customers',
             function () {
                 echo view('admin');
             }
