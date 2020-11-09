@@ -117,12 +117,11 @@ export const CreateCoupon = ({ resturl, nonce }) => {
                                     <Tabs
                                         className="mb-3"
                                         fill
-                                        defaultActiveKey="home"
+                                        defaultActiveKey="general"
                                     >
                                         <Tab
-                                            tabClassName="text-decoration-none"
-                                            eventKey="home"
-                                            title="Home"
+                                            eventKey="general"
+                                            title="General"
                                         >
                                             <Row>
                                                 <Col>
@@ -179,11 +178,14 @@ export const CreateCoupon = ({ resturl, nonce }) => {
                                             </Form.Group>
                                         </Tab>
                                         <Tab
-                                            tabClassName="text-decoration-none"
-                                            eventKey="usage-restriction"
+                                            eventKey="usageRestriction"
                                             title="Usage Restriction"
                                         >
-                                            <p>Upgrade to pro</p>
+                                            <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
+                                                <h3 className="mt-1">
+                                                    {__('Upgrade to pro', 'smartpay')}
+                                                </h3>
+                                            </div>
                                         </Tab>
                                     </Tabs>
                                 </div>
