@@ -1,32 +1,31 @@
-
-import apiFetch from '@wordpress/api-fetch';
-const { registerStore } = wp.data;
+import apiFetch from '@wordpress/api-fetch'
+const { registerStore } = wp.data
 
 const DEFAULT_STATE = {
     isLoading: true,
     products: [],
-};
+}
 
 const actions = {
     getProducts() {
         return {
             type: 'GET_PRODUCTS',
             path: `${smartpay.restUrl}/v1/products`,
-        };
+        }
     },
     setProducts(products) {
         return {
             type: 'SET_PRODUCTS',
-            products
-        };
+            products,
+        }
     },
     addProduct(product) {
         return {
             type: 'ADD_PRODUCT',
             product,
-        };
+        }
     },
-};
+}
 
 registerStore('smartpay/products', {
     reducer(state = DEFAULT_STATE, action) {
@@ -34,18 +33,15 @@ registerStore('smartpay/products', {
             case 'SET_PRODUCTS':
                 return {
                     ...state,
-                    products: state.products
+                    products: action.products,
                 }
             case 'ADD_PRODUCT':
                 return {
                     ...state,
-                    products: [
-                        ...state.products,
-                        action.product,
-                    ]
+                    products: [...state.products, action.product],
                 }
             default:
-                return state;
+                return state
         }
     },
 
@@ -56,25 +52,28 @@ registerStore('smartpay/products', {
             return state.isLoading
         },
         getProducts(state) {
-            return state.products;
+            return state.products
         },
     },
 
     controls: {
         GET_PRODUCTS(action) {
+            console.log('from api')
             return apiFetch({
                 path: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
-                }
+                },
             })
         },
     },
 
     resolvers: {
-        * getProducts() {
-            const products = yield actions.getProducts();
-            return actions.setProducts(products);
+        *getProducts() {
+            console.log('Saga called')
+            const products = yield actions.getProducts()
+            console.log('Products loaded', products)
+            return actions.setProducts(products)
         },
     },
-});
+})

@@ -1,21 +1,23 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { MediaPlaceholder } from '@wordpress/block-editor';
-import { Container, Nav, Form, Button } from 'react-bootstrap'
+import { Container, Table, Button } from 'react-bootstrap'
 
-const { useEffect } = wp.element;
-const { select, dispatch } = wp.data;
+const { useEffect } = wp.element
+const { useSelect, dispatch } = wp.data
 
 export const ProductList = () => {
     useEffect(() => {
-        dispatch('smartpay/products').getProducts();
-    }, []);
+        dispatch('smartpay/products').getProducts()
+    }, [])
 
-    const addNewProduct = () => dispatch('smartpay/products').addProduct({ title: Math.trunc(Math.random() * 100) });
+    const products = useSelect(select =>
+        select('smartpay/products').getProducts()
+    )
 
-
-    const products = select("smartpay/products").getProducts();
-    { console.log(products) }
+    const deleteProduct = () => {
+        // FIXME
+        console.log('Delete product')
+    }
 
     return (
         <>
@@ -31,20 +33,47 @@ export const ProductList = () => {
                                 className="btn btn-primary btn-sm text-decoration-none"
                                 to="/products/create"
                             >
-                                Create
+                                {__('Create', 'smartpay')}
                             </Link>
-                            <button
-                                onClick={addNewProduct}
-                                className="btn btn-primary btn-sm text-decoration-none"
-                            >
-                                Add
-                            </button>
                         </div>
                     </div>
-                    {console.log(products)}
-                    {products.map((p, i) => <p key={i}>{p?.title}</p>)}
                 </Container>
             </div>
+
+            <Container>
+                <div className="card bg-white ">
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th className="d-none">#</th>
+                                <th>{__('Title', 'smartpay')}</th>
+                                <th>{__('Actions', 'smartpay')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products.map(product => {
+                                return (
+                                    <tr key={product.id}>
+                                        <td className="d-none">{product.id}</td>
+                                        <td>{product.title || ''}</td>
+                                        <td>
+                                            <Button
+                                                className="btn-sm p-0"
+                                                onClick={() =>
+                                                    deleteProduct(product)
+                                                }
+                                                variant="link"
+                                            >
+                                                {__('Edit', 'smartpay')}
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </Table>
+                </div>
+            </Container>
         </>
     )
-};
+}
