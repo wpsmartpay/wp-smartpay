@@ -8,30 +8,8 @@
         "url": "https://github.com/ahmadawais/WPGulp"
     },
     "license": "MIT",
-    "devDependencies": {
-        "@babel/preset-react": "^7.12.5",
-        "bootstrap": "^4.5.3",
-        "cross-env": "^7.0",
-        "jquery": "^3.2",
-        "laravel-mix": "^5.0.1",
-        "popper.js": "^1.12",
-        "resolve-url-loader": "^3.1.0",
-        "sass": "^1.28.0",
-        "sass-loader": "^8.0.0",
-        "vue-template-compiler": "^2.6.12"
-    },
-    "scripts": {
-        "dev": "npm run development",
-        "prod": "npm run production",
-        "watch": "npm run development -- --watch",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "build:scripts": "wp-scripts build resources/blocks/index.js --output-path=publick/js/blocks",
-        "watch:scripts": "wp-scripts start resources/blocks/index.js --output-path=publick/js/blocks"
-    },
     "dependencies": {
-        "feather-icons": "^4.28.0",
-        "sweetalert2": "^10.9.0",
+        "@wordpress/api-fetch": "^3.20.0",
         "@wordpress/base-styles": "^2.1.0",
         "@wordpress/block-editor": "^4.4.0",
         "@wordpress/block-library": "^2.23.0",
@@ -45,6 +23,40 @@
         "@wordpress/format-library": "^1.23.0",
         "@wordpress/i18n": "^3.15.0",
         "@wordpress/interface": "^0.8.0",
-        "@wordpress/media-utils": "^1.16.0"
+        "@wordpress/media-utils": "^1.16.0",
+        "@wordpress/plugins": "^2.23.0",
+        "react-router": "^5.2.0",
+        "react-router-dom": "^5.2.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.0.0",
+        "@babel/preset-react": "^7.12.5",
+        "@babel/register": "^7.0.0",
+        "@wordpress/env": "^2.0.0",
+        "@wordpress/eslint-plugin": "^7.2.0",
+        "@wordpress/scripts": "^12.5.0",
+        "bootstrap": "^4.5.3",
+        "cross-env": "^7.0",
+        "feather-icons": "^4.28.0",
+        "jquery": "^3.2",
+        "laravel-mix": "^5.0.9",
+        "popper.js": "^1.12",
+        "react-bootstrap": "^1.4.0",
+        "resolve-url-loader": "^3.1.0",
+        "sass": "^1.29.0",
+        "sass-loader": "^8.0.0",
+        "sweetalert2": "^10.9.0",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "scripts": {
+        "dev": "npm run development",
+        "prod": "npm run production",
+        "watch": "npm run development -- --watch",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch:editor": "wp-scripts start resources/block-editor/index.js --output-path=public/block-editor/",
+        "build:editor": "wp-scripts build resources/block-editor/index.js --output-path=public/block-editor/",
+        "watch:scripts": "wp-scripts start resources/block-editor/blocks/index.js --output-path=public/block-editor/blocks",
+        "build:scripts": "wp-scripts build resources/block-editor/blocks/index.js --output-path=public/block-editor/blocks"
     }
 }

@@ -254,7 +254,7 @@ html.wp-toolbar {
 body.block-editor-page {
   background: #fff;
   /* We hide legacy notices in Gutenberg Based Pages, because they were not designed in a way that scaled well.
-     Plugins can use Gutenberg notices if they need to pass on information to the user when they are editing. */
+	   Plugins can use Gutenberg notices if they need to pass on information to the user when they are editing. */
 }
 
 body.block-editor-page #wpcontent {
@@ -304,14 +304,14 @@ body.block-editor-page .media-frame select.attachment-filters:last-of-type {
   line-height: 1.8;
   color: #1e1e1e;
   /**
-   * Editor Normalization Styles
-   *
-   * These are only output in the editor, but styles here are prefixed .editor-styles-wrapper and affect the theming
-   * of the editor by themes.
-   * Why do these exist? Why not rely on browser defaults?
-   * These styles are necessary so long as CSS can bleed from the wp-admin into the editing canvas itself.
-   * Let's continue working to refactor these away, whether through Shadow DOM or better scoping of upstream styles.
-   */
+ * Editor Normalization Styles
+ *
+ * These are only output in the editor, but styles here are prefixed .editor-styles-wrapper and affect the theming
+ * of the editor by themes.
+ * Why do these exist? Why not rely on browser defaults?
+ * These styles are necessary so long as CSS can bleed from the wp-admin into the editing canvas itself.
+ * Let's continue working to refactor these away, whether through Shadow DOM or better scoping of upstream styles.
+ */
   /* Headings */
 }
 
@@ -329,7 +329,7 @@ body.block-editor-page .media-frame select.attachment-filters:last-of-type {
   padding: 10px;
 }
 
-.editor-styles-wrapper .block-editor-block-list__layout.is-root-container > .wp-block[data-align=full] {
+.editor-styles-wrapper .block-editor-block-list__layout.is-root-container > .wp-block[data-align="full"] {
   margin-left: -10px;
   margin-right: -10px;
 }

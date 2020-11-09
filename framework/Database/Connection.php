@@ -2,11 +2,8 @@
 
 namespace SmartPay\Framework\Database;
 
-use Viocon\Container;
-
 class Connection
 {
-
     /**
      * @var Container
      */
