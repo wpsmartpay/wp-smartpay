@@ -40,43 +40,37 @@ export const ProductList = () => {
                 </Container>
             </div>
 
-            <Container>
-                <div className="card bg-white ">
-                    <Table>
-                        <thead>
-                            <tr>
-                                <th className="d-none">#</th>
-                                <th>{__('Title', 'smartpay')}</th>
-                                <th>{__('Actions', 'smartpay')}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {products.map(product => {
-                                return (
-                                    <tr key={product.id}>
-                                        <td className="d-none">{product.id}</td>
-                                        <td>{product.title || ''}</td>
-                                        <td>
-                                            <Link
-                                                className="btn-sm p-0 mr-2"
-                                                to={`/products/${product.id}/edit`}
-                                            >
-                                                {__('Edit', 'smartpay')}
-                                            </Link>
-                                            <Button
-                                                className="btn-sm p-0"
-                                                onClick={() =>
-                                                    deleteProduct(product)
-                                                }
-                                                variant="link"
-                                            >
-                                                {__('Delete', 'smartpay')}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
+            <Container className="mt-3">
+                <div className="bg-white">
+                    <Table className='table'>
+                        <tr className="text-white bg-dark">
+                            <th className="w-75 text-left"><strong>{__('Title', 'smartpay')}</strong></th>
+                            <th className="w-25 text-right">{__('Actions', 'smartpay')}</th>
+                        </tr>
+                        {products.map(product => {
+                            return (
+                                <tr key={product.id}>
+                                    <td>{product.title || ''}</td>
+                                    <td className="text-right">
+                                        <Link
+                                            className="btn-sm p-0 mr-2"
+                                            to={`/products/${product.id}/edit`}
+                                        >
+                                            {__('Edit', 'smartpay')}
+                                        </Link>
+                                        <Button
+                                            className="btn-sm p-0"
+                                            onClick={() =>
+                                                deleteProduct(product)
+                                            }
+                                            variant="link"
+                                        >
+                                            {__('Delete', 'smartpay')}
+                                        </Button>
+                                    </td>
+                                </tr>
+                            )
+                        })}
                     </Table>
                 </div>
             </Container>
