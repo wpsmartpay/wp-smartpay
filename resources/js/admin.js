@@ -1,22 +1,15 @@
-// import 'bootstrap'
 import feather from 'feather-icons'
-
-// import './admin/media-selector'
-// import './admin/product'
-
-jQuery(function($) {
-    feather.replace()
-})
-
-// React
 
 const { render } = wp.element
 import domReady from '@wordpress/dom-ready'
 import { HashRouter, Route } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
+
+// Products
 import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
+import { EditProduct } from './pages/product/edit'
 
 // Coupons
 import { CouponList } from './pages/coupon/index'
@@ -30,6 +23,7 @@ domReady(function() {
             <div>
                 <HashRouter>
                     <Route exact path="/" component={Dashboard} />
+                    {/* Products */}
                     <Route
                         exact
                         path="/products/list"
@@ -40,6 +34,13 @@ domReady(function() {
                         path="/products/create"
                         component={CreateProduct}
                     />
+                    <Route
+                        exact
+                        path="/products/:productId/edit"
+                        component={EditProduct}
+                    />
+
+                    {/* Coupons */}
                     <Route exact path="/coupons/list" component={CouponList} />
                     <Route
                         exact
