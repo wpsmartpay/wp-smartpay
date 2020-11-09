@@ -19,34 +19,40 @@ const initialState = {
     expirydate: '',
 }
 
-const reducer = (state, { field, value }) => {
-    return {
-        ...state,
-        [field]: value,
+const reducer = (state, action) => {
+    if (action.type == 'reset') {
+        return initialState
     }
+
+    const result = { ...state }
+    result[action.type] = action.value
+    return result
 }
 
 export const CreateCoupon = ({ resturl, nonce }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const couponCreateHandler = event => {
+    const couponCreateHandler = (event) => {
         event.preventDefault()
+
         fetch(`${resturl}/v1/coupons`, {
             method: 'POST',
             headers: {
                 'X-WP-Nonce': nonce,
             },
             body: JSON.stringify(state),
-        }).then(response => {
+        }).then((response) => {
             if (response.status == 200) {
                 let $alert = document.getElementById('coupon-alert')
                 $alert.classList.remove('d-none')
             }
         })
+
+        dispatch({ type: 'reset' })
     }
 
-    const changeHandler = event => {
-        dispatch({ field: event.target.name, value: event.target.value })
+    const changeHandler = (event) => {
+        dispatch({ type: event.target.name, value: event.target.value })
     }
 
     return (
@@ -118,36 +124,48 @@ export const CreateCoupon = ({ resturl, nonce }) => {
                                             eventKey="home"
                                             title="Home"
                                         >
-                                            <Form.Group controlId="couponForm.discountType">
-                                                <Form.Label className="mb-2 d-inline-block">
-                                                    Discount type
-                                                </Form.Label>
-                                                <Form.Control
-                                                    name="discounttype"
-                                                    as="select"
-                                                    value={state.discounttype}
-                                                    onChange={changeHandler}
-                                                >
-                                                    <option value="fixed">
-                                                        Fixed Amount
-                                                    </option>
-                                                    <option value="percent">
-                                                        Percent
-                                                    </option>
-                                                </Form.Control>
-                                            </Form.Group>
-                                            <Form.Group controlId="couponForm.amount">
-                                                <Form.Label className="mb-2 d-inline-block">
-                                                    Coupon amount
-                                                </Form.Label>
-                                                <Form.Control
-                                                    name="amount"
-                                                    value={state.amount}
-                                                    onChange={changeHandler}
-                                                    type="text"
-                                                    placeholder="0"
-                                                />
-                                            </Form.Group>
+                                            <Row>
+                                                <Col>
+                                                    <Form.Group controlId="couponForm.discountType">
+                                                        <Form.Label className="mb-2 d-inline-block">
+                                                            Discount type
+                                                        </Form.Label>
+                                                        <Form.Control
+                                                            name="discounttype"
+                                                            as="select"
+                                                            value={
+                                                                state.discounttype
+                                                            }
+                                                            onChange={
+                                                                changeHandler
+                                                            }
+                                                        >
+                                                            <option value="fixed">
+                                                                Fixed Amount
+                                                            </option>
+                                                            <option value="percent">
+                                                                Percent
+                                                            </option>
+                                                        </Form.Control>
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col>
+                                                    <Form.Group controlId="couponForm.amount">
+                                                        <Form.Label className="mb-2 d-inline-block">
+                                                            Coupon amount
+                                                        </Form.Label>
+                                                        <Form.Control
+                                                            name="amount"
+                                                            value={state.amount}
+                                                            onChange={
+                                                                changeHandler
+                                                            }
+                                                            type="text"
+                                                            placeholder="0"
+                                                        />
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
                                             <Form.Group controlId="couponForm.expiryDate">
                                                 <Form.Label className="mb-2 d-inline-block">
                                                     Coupon expiry date

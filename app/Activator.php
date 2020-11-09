@@ -20,5 +20,7 @@ class Activator
     {
         \CreateSmartpayProductsTable::up();
         \CreateSmartpayCouponsTable::up();
+        \CreateSmartpayCustomersTable::up();
+        \CreateSmartpayPaymentsTable::up();
     }
 }

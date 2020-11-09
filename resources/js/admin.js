@@ -33,7 +33,7 @@ import { EditPayment } from './pages/payment/edit'
 
 import './store/index'
 
-domReady(function() {
+domReady(function () {
     const SmartPay = () => {
         return (
             <div>
@@ -81,7 +81,13 @@ domReady(function() {
                     <Route
                         exact
                         path="/coupons/create"
-                        component={CreateCoupon}
+                        render={(props) => (
+                            <CreateCoupon
+                                {...props}
+                                resturl={smartpay.restUrl}
+                                nonce={smartpay.apiNonce}
+                            />
+                        )}
                     />
                     <Route
                         exact
