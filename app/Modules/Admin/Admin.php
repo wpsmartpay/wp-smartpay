@@ -13,17 +13,7 @@ class Admin
     {
         $this->app = $app;
 
-        $this->registerAdminScripts();
-        $this->registerAdminMenu();
-    }
-
-    protected function registerAdminScripts()
-    {
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
-    }
-
-    protected function registerAdminMenu()
-    {
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
     }
 
@@ -46,7 +36,7 @@ class Admin
             __('SmartPay - Products', 'smartpay'),
             __('Products', 'smartpay'),
             'manage_options',
-            'smartpay#/products/list',
+            'smartpay#/products',
             function () {
                 echo view('admin');
             }
@@ -57,9 +47,9 @@ class Admin
             __('SmartPay - Forms', 'smartpay'),
             __('Forms', 'smartpay'),
             'manage_options',
-            'smartpay#/forms/list',
+            'smartpay#/forms',
             function () {
-                echo view('admin.form.create');
+                echo view('admin');
             }
         );
 
@@ -79,7 +69,7 @@ class Admin
             __('SmartPay - Coupons', 'smartpay'),
             __('Coupons', 'smartpay'),
             'manage_options',
-            'smartpay#/coupons/list',
+            'smartpay#/coupons',
             function () {
                 echo view('admin');
             }
@@ -90,7 +80,7 @@ class Admin
             __('SmartPay - Payments', 'smartpay'),
             __('Payments', 'smartpay'),
             'manage_options',
-            'smartpay-payments',
+            'smartpay#/payments',
             function () {
                 echo view('admin');
             }
@@ -117,31 +107,5 @@ class Admin
 
         wp_enqueue_editor();
         wp_enqueue_media();
-    }
-
-    public function renderProductPage()
-    {
-    }
-
-    public function formRoute()
-    {
-        $action = $_GET['action'] ?? 'index';
-
-        if (method_exists(FormController::class, $action)) {
-            echo $this->app->make(FormController::class)->$action();
-        } else {
-            echo 'Route not found!';
-        }
-    }
-
-    public function customerRoute()
-    {
-        $action = $_GET['action'] ?? 'index';
-
-        if (method_exists(CustomerController::class, $action)) {
-            echo $this->app->make(CustomerController::class)->$action();
-        } else {
-            echo 'Route not found!';
-        }
     }
 }
