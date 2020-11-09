@@ -24,11 +24,7 @@ domReady(function() {
                 <HashRouter>
                     <Route exact path="/" component={Dashboard} />
                     {/* Products */}
-                    <Route
-                        exact
-                        path="/products/list"
-                        component={ProductList}
-                    />
+                    <Route exact path="/products" component={ProductList} />
                     <Route
                         exact
                         path="/products/create"
@@ -41,7 +37,7 @@ domReady(function() {
                     />
 
                     {/* Coupons */}
-                    <Route exact path="/coupons/list" component={CouponList} />
+                    <Route exact path="/coupons" component={CouponList} />
                     <Route
                         exact
                         path="/coupons/create"
