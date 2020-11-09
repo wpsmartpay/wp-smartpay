@@ -11,6 +11,11 @@ import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
 
+// Form
+import { FormList } from './pages/form/index'
+import { CreateForm } from './pages/form/create'
+import { EditForm } from './pages/form/edit'
+
 // Customer
 import { CustomerList } from './pages/customer/index'
 import { CreateCustomer } from './pages/customer/create'
@@ -29,16 +34,25 @@ domReady(function() {
                 <HashRouter>
                     <Route exact path="/" component={Dashboard} />
                     {/* Product */}
-                    <Route exact path="/products" component={ProductList} />
+                    <Route exact path="/forms" component={ProductList} />
                     <Route
                         exact
-                        path="/products/create"
+                        path="/forms/create"
                         component={CreateProduct}
                     />
                     <Route
                         exact
                         path="/products/:productId/edit"
                         component={EditProduct}
+                    />
+
+                    {/* Form */}
+                    <Route exact path="/forms" component={FormList} />
+                    <Route exact path="/forms/create" component={CreateForm} />
+                    <Route
+                        exact
+                        path="/forms/:formId/edit"
+                        component={EditForm}
                     />
 
                     {/* Customer */}
@@ -50,7 +64,7 @@ domReady(function() {
                     />
                     <Route
                         exact
-                        path="/customers/:productId/edit"
+                        path="/customers/:customerId/edit"
                         component={EditCustomer}
                     />
 
