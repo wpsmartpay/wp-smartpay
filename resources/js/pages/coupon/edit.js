@@ -59,7 +59,7 @@ export const EditCoupon = () => {
                 </Container>
             </div>
             <Container>
-                <RR className="justify-content-center">
+                <Row className="justify-content-center">
                     <Col xs={9}>
                         <Alert
                             id="coupon-alert"
@@ -69,7 +69,7 @@ export const EditCoupon = () => {
                             Coupon Added Successfully
                         </Alert>
                     </Col>
-                </RR>
+                </Row>
             </Container>
 
             <div className="py-5">

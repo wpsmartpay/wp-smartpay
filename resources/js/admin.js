@@ -91,13 +91,7 @@ domReady(function () {
                         <Route
                             exact
                             path="/coupons/create"
-                            render={(props) => (
-                                <CreateCoupon
-                                    {...props}
-                                    resturl={smartpay.restUrl}
-                                    nonce={smartpay.apiNonce}
-                                />
-                            )}
+                            component={CreateCoupon}
                         />
                         <Route
                             exact

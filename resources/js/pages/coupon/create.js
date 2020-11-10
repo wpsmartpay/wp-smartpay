@@ -29,16 +29,16 @@ const reducer = (state, action) => {
     return result
 }
 
-export const CreateCoupon = ({ resturl, nonce }) => {
+export const CreateCoupon = () => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const couponCreateHandler = (event) => {
         event.preventDefault()
 
-        fetch(`${resturl}/v1/coupons`, {
+        fetch(`${smartpay.restUrl}/v1/coupons`, {
             method: 'POST',
             headers: {
-                'X-WP-Nonce': nonce,
+                'X-WP-Nonce': smartpay.apiNonce,
             },
             body: JSON.stringify(state),
         }).then((response) => {
