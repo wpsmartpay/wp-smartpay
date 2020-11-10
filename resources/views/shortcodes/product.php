@@ -14,8 +14,7 @@ $has_payment_error = false;
 ?>
 
 <?php if ('embedded' == $behavior) : ?>
-<?php //include  __DIR__ . '/shared/product_details.php'; 
-    ?>
+<?php include  __DIR__ . '/shared/product_details.php'; ?>
 
 <?php else : ?>
 <div class="smartpay" style="background: transparent;">

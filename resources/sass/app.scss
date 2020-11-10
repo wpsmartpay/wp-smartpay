@@ -1,119 +1,119 @@
 @import './variables';
 
 .smartpay {
-	font-family: inherit;
-	font-size: 16px;
-	font-weight: 400;
-	line-height: 1.5;
-	-webkit-text-size-adjust: 100%;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	margin: 0;
-	color: #212529;
-	text-align: left;
-	background-color: #fff;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    margin: 0;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
 
-	@import '~bootstrap/scss/bootstrap-grid';
+    @import '~bootstrap/scss/bootstrap-grid';
 
-	@import 'site/site';
+    @import 'site/site';
 
-	@import 'site/shortcode/product';
+    @import 'site/shortcode/product';
 
-	@import 'site/shortcode/form';
+    @import 'site/shortcode/form';
 
-	@import 'site/shortcode/payment_modal';
+    @import 'site/shortcode/payment_modal';
 
-	.modal-backdrop.show {
-		opacity: 0.95;
-		background-color: #f5f5f5;
-	}
+    .modal-backdrop.show {
+        opacity: 0.95;
+        background-color: #f5f5f5;
+    }
 
-	ul.list-group,
-	li.list-group-item {
-		margin: 0;
-	}
+    ul.list-group,
+    li.list-group-item {
+        margin: 0;
+    }
 
-	// Customer dashboard
-	.customer-dashboard {
-		.profile img {
-			height: 90px;
-			width: 90px;
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-		}
+    // Customer dashboard
+    .customer-dashboard {
+        .profile img {
+            height: 90px;
+            width: 90px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
 
-		.profile h3 {
-			font-size: 20px;
-		}
+        .profile h3 {
+            font-size: 20px;
+        }
 
-		.product{ 
+        .product {
             &--header {
                 cursor: pointer;
             }
 
-            &--image img{
+            &--image img {
                 width: 60px;
                 height: auto;
                 max-height: 60px;
             }
         }
 
-		table td,
-		table th {
-			border: none;
-		}
-
-		.form-control {
-			font-size: 16px;
-			min-height: 40px;
-			padding: 5px 15px;
+        table td,
+        table th {
+            border: none;
         }
-        
-        .download-item-icon{
+
+        .form-control {
+            font-size: 16px;
+            min-height: 40px;
+            padding: 5px 15px;
+        }
+
+        .download-item-icon {
             width: 50px;
             height: auto;
             max-height: 50px;
         }
 
-		.btn {
-			font-size: 16px;
+        .btn {
+            font-size: 16px;
             padding: 6px 10px;
-            
+
             &--download {
                 font-size: 14px;
             }
-		}
-	}
+        }
+    }
 }
 
 .StripeElement {
-	box-sizing: border-box;
+    box-sizing: border-box;
 
-	height: 40px;
+    height: 40px;
 
-	padding: 10px 12px;
+    padding: 10px 12px;
 
-	border: 1px solid transparent;
-	border-radius: 4px;
-	background-color: white;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background-color: white;
 
-	box-shadow: 0 1px 3px 0 #e6ebf1;
-	-webkit-transition: box-shadow 150ms ease;
-	transition: box-shadow 150ms ease;
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
 }
 
 .StripeElement--focus {
-	box-shadow: 0 1px 3px 0 #cfd7df;
+    box-shadow: 0 1px 3px 0 #cfd7df;
 }
 
 .StripeElement--invalid {
-	border-color: #fa755a;
+    border-color: #fa755a;
 }
 
 .StripeElement--webkit-autofill {
-	background-color: #fefde5 !important;
+    background-color: #fefde5 !important;
 }
 
 @media (min-width: 1200px) {
-	.smartpay .modal-xl {
-		max-width: 950px;
-	}
+    .smartpay .modal-xl {
+        max-width: 950px;
+    }
 }

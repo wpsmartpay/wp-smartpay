@@ -76,7 +76,6 @@ class Shortcode
         if (!isset($id)) return;
 
         $product = Product::where('id', $id)->first();
-        // TODO: Add message if no payment method setup
 
         if (!isset($product)) return;
 
@@ -88,7 +87,7 @@ class Shortcode
         try {
             ob_start();
 
-            echo view('shortcodes.product', ['product' => $product, 'behavior' => $behavior, 'label' => $label]);
+            echo smartpay_view('shortcodes.product', ['product' => $product, 'behavior' => $behavior, 'label' => $label]);
 
             return ob_get_clean();
         } catch (\Exception $e) {

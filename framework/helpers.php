@@ -33,7 +33,7 @@ if (!function_exists('base_path')) {
     }
 }
 
-if (!function_exists('view')) {
+if (!function_exists('smartpay_view')) {
     /**
      * Get the evaluated view contents for the given view.
      *
@@ -42,7 +42,7 @@ if (!function_exists('view')) {
      * @param  array  $mergeData
      * @return \Illuminate\View\View
      */
-    function view($view = null, $data = [], $mergeData = [])
+    function smartpay_view($view = null, $data = [], $mergeData = [])
     {
         $factory = app('view');
 

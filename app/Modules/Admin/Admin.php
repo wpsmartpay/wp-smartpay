@@ -26,7 +26,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             },
             smartpay_svg_icon(),
             25
@@ -39,7 +39,7 @@ class Admin
             'manage_options',
             'smartpay#/products',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             }
         );
 
@@ -50,7 +50,7 @@ class Admin
             'manage_options',
             'smartpay#/forms',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             }
         );
 
@@ -61,7 +61,7 @@ class Admin
             'manage_options',
             'smartpay#/customers',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             }
         );
 
@@ -72,7 +72,7 @@ class Admin
             'manage_options',
             'smartpay#/coupons',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             }
         );
 
@@ -83,7 +83,7 @@ class Admin
             'manage_options',
             'smartpay#/payments',
             function () {
-                echo view('admin');
+                echo smartpay_view('admin');
             }
         );
 
@@ -94,7 +94,7 @@ class Admin
             'manage_options',
             'smartpay-setting',
             function () {
-                echo view('settings');
+                echo smartpay_view('settings');
             }
         );
     }

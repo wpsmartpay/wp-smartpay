@@ -1,14 +1,10 @@
-<?php
-$productVariations = $product->variations;
-// var_dump(count($productVariations));
-?>
 <div class="smartpay">
     <div class="smartpay-product-shortcode smartpay-payment">
         <!-- Product details -->
         <div class="card product">
-            <?php if ($product->image) : ?>
+            <?php if (count($product->covers)) : ?>
             <div class="bg-light product--image border-bottom">
-                <img src="<?php echo $product->image; ?>" class="card-img-top">
+                <img src="<?php echo $product->covers[0]->url; ?>" class="card-img-top">
             </div>
             <?php endif; ?>
 
@@ -30,36 +26,31 @@ $productVariations = $product->variations;
                         <div class="product--price-section">
                             <div class="product-variations mb-2">
                                 <ul class="list-group">
-                                    <?php if (count($productVariations) > 0) : ?>
+                                    <?php if (count($product->variations) > 0) : ?>
                                     <!-- Variation prices -->
-                                    <?php foreach ($productVariations as $index => $variation) : ?>
-                                    <?php dd($variation); ?>
-                                    pppp
+                                    <?php foreach ($product->variations as $index => $variation) : ?>
                                     <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="smartpay_product_variation_id_<?php echo esc_attr($variation->id); ?>" class="d-block m-0">
                                             <input class="d-none" type="radio" name="smartpay_product_variation_id" id="smartpay_product_variation_id_<?php echo esc_attr($variation->id); ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
 
                                         </label>
                                     </li>
-                                    <!-- 
-                                            
-                                            <div class="price--amount">
-                                                <span class="sale-price"><?php echo smartpay_amount_format(($product_price + $variation['additional_amount'])); ?></span>
-                                                <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
-                                                <del class="base-price"><?php echo smartpay_amount_format($product->base_price + $variation['additional_amount']); ?></del>
-                                                <?php endif; ?>
-                                            </div>
-                                            <h5 class="m-0 price--title">
-                                                <?php echo esc_html(ucfirst($variation['name'])); ?>
-                                            </h5>
-                                            <?php if ($variation['description'] ?? false) : ?>
-                                            <p class="variation--description m-0">
-                                                <?php echo wpautop($variation['description']); ?>
-                                            </p>
-                                            <?php endif; ?>
-                                        </label>
-                                     -->
 
+
+                                    <div class="price--amount">
+                                        <span class="sale-price"><?php echo smartpay_amount_format(($variation->sale_price)); ?></span>
+                                        <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
+                                        <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
+                                        <?php endif; ?>
+                                    </div>
+                                    <h5 class="m-0 price--title">
+                                        <?php echo esc_html(ucfirst($variation->title)); ?>
+                                    </h5>
+                                    <?php if ($variation->description ?? false) : ?>
+                                    <p class="variation--description m-0">
+                                        <?php echo wpautop($variation->description); ?>
+                                    </p>
+                                    <?php endif; ?>
                                     <?php endforeach; ?>
 
                                     <!-- Product price -->
@@ -67,13 +58,13 @@ $productVariations = $product->variations;
                                     <li class="list-group-item price selected">
                                         <label class="d-block m-0">
                                             <div class="price--amount">
-                                                <span class="sale-price"><?php echo smartpay_amount_format($product_price); ?></span>
+                                                <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                 <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
-                                                <?php echo _e('Sale Price', 'smartpay'); ?>
+                                                <?php echo _e('Product Price', 'smartpay'); ?>
                                             </h5>
                                         </label>
                                     </li>
@@ -92,16 +83,9 @@ $productVariations = $product->variations;
 
         <!-- Form Data -->
         <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
-        <input type="hidden" name="smartpay_product_id" id="smartpay_product_id" value="<?php echo $product->ID ?? 0; ?>">
+        <input type="hidden" name="smartpay_product_id" id="smartpay_product_id" value="<?php echo $product->id ?? 0; ?>">
 
-        <?php
-        if (count($productVariations) > 0) {
-            $smartpay_product_price = $product_price + $product->variations[0]['additional_amount'];
-        } else {
-            $smartpay_product_price = $product_price;
-        }
-        ?>
-        <input type="hidden" name="smartpay_product_price" value="<?php echo smartpay_amount_format($smartpay_product_price ?? 0); ?>">
+        <input type="hidden" name="smartpay_product_price" value="<?php echo smartpay_amount_format($smartpay_product->sale_price ?? 0); ?>">
         <!-- /Form Data -->
 
         <!-- Payment modal -->
