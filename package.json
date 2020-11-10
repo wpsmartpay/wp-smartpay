@@ -25,6 +25,8 @@
         "@wordpress/interface": "^0.8.0",
         "@wordpress/media-utils": "^1.16.0",
         "@wordpress/plugins": "^2.23.0",
+        "apexcharts": "^3.22.2",
+        "react-apexcharts": "^1.3.7",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0"
     },
