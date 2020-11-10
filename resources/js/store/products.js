@@ -58,7 +58,6 @@ registerStore('smartpay/products', {
 
     controls: {
         GET_PRODUCTS(action) {
-            console.log('from api')
             return apiFetch({
                 path: action.path,
                 headers: {
@@ -70,9 +69,7 @@ registerStore('smartpay/products', {
 
     resolvers: {
         *getProducts() {
-            console.log('Saga called')
             const products = yield actions.getProducts()
-            console.log('Products loaded', products)
             return actions.setProducts(products)
         },
     },
