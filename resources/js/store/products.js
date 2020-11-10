@@ -100,10 +100,6 @@ registerStore('smartpay/products', {
         },
         *getProduct(id) {
             const product = yield actions.getProduct(id)
-
-            const products = yield actions.getProducts()
-            actions.setProducts(products)
-
             return actions.setProduct(product)
         },
     },

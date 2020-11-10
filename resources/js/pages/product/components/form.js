@@ -15,7 +15,7 @@ export const ProductForm = ({ product, setProductData }) => {
         wp.editor.initialize('description', {
             tinymce: true,
         })
-    }, 0)
+    }, 10)
 
     const _setProductData = (event) => {
         setProductData({ [event.target.name]: event.target.value })
@@ -65,10 +65,11 @@ export const ProductForm = ({ product, setProductData }) => {
             const selection = mediaWindow.state().get('selection')
 
             const files = selection.toJSON().map((file) => {
+                console.log(file)
                 return {
                     id: file.id,
                     name: file.filename,
-                    icon: file.sizes.thumbnail.url || file.icon,
+                    icon: file.sizes?.thumbnail?.url || file.icon,
                     mime: file.mime,
                     size: file.filesizeHumanReadable,
                     url: file.url,
@@ -139,9 +140,16 @@ export const ProductForm = ({ product, setProductData }) => {
                     onChange={_setProductData}
                 />
             </Form.Group>
-            <div id="description"></div>
+            <textarea
+                name="description"
+                id="description"
+                className="d-none"
+                value={product.description}
+                onChange={_setProductData}
+            ></textarea>
             <div className="my-3">
                 <div className="border rounded bg-light text-center p-5 select-image-box d-flex flex-column align-items-center">
+                    {console.log(product)}
                     {product.covers.length > 0 && (
                         <div className="mb-3 preview text-center">
                             <div>

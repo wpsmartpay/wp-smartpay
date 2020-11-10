@@ -4,7 +4,7 @@ export const ProductList = () => {}
 
 export const GetProduct = () => {}
 
-export const SaveProduct = body => {
+export const SaveProduct = (body) => {
     return apiFetch({
         path: `${smartpay.restUrl}/v1/products`,
         method: 'POST',
@@ -15,6 +15,16 @@ export const SaveProduct = body => {
     })
 }
 
-export const UpdateProduct = () => {}
+export const UpdateProduct = (id, body) => {
+    console.log('update', id)
+    return apiFetch({
+        path: `${smartpay.restUrl}/v1/products/${id}`,
+        method: 'PUT',
+        headers: {
+            'X-WP-Nonce': smartpay.apiNonce,
+        },
+        body: body,
+    })
+}
 
 export const DeleteProduct = () => {}

@@ -58,6 +58,7 @@ class ProductController extends \WP_REST_Controller
                 'base_price' => $request->base_price,
                 'sale_price' => $request->sale_price,
                 'files' => $request->files,
+                'covers' => $request->covers,
                 'status' => Product::PUBLISH,
             ]);
 
@@ -92,12 +93,56 @@ class ProductController extends \WP_REST_Controller
     {
         try {
             $product = Product::with(['variations'])->find($request->get_param('id'));
-            if ($product) {
-                return new WP_REST_Response($product);
+            if (!$product) {
+                return new WP_REST_Response(['message' => 'Product not found'], 404);
             }
 
-            return new WP_REST_Response('', 404);
+            return new WP_REST_Response($product);
         } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return new WP_REST_Response($e->getMessage(), 500);
+        }
+    }
+
+    public function update(WP_REST_Request $request): WP_REST_Response
+    {
+        global $wpdb;
+        $wpdb->query('START TRANSACTION');
+
+        try {
+            $product = Product::with(['variations'])->find($request->get_param('id'));
+
+            if (!$product) {
+                return new WP_REST_Response(['message' => 'Product not found'], 404);
+            }
+
+            $request = json_decode($request->get_body());
+
+            // Update product
+            $product->title = $request->title;
+            $product->description = $request->description;
+            $product->base_price = $request->base_price;
+            $product->sale_price = $request->sale_price;
+            $product->files = $request->files;
+            $product->covers = $request->covers;
+            $product->status = Product::PUBLISH;
+            $product->save();
+
+            // array_walk($request->variations, function ($variation) use ($product) {
+            //     Product::create([
+            //         'title' => $variation->title,
+            //         'description' => $variation->description,
+            //         'base_price' => $variation->base_price,
+            //         'sale_price' => $variation->sale_price,
+            //         'files' => $variation->files,
+            //         'parent' => $product->id,
+            //         'status' => Product::PUBLISH,
+            //     ]);
+            // });
+            $wpdb->query('COMMIT');
+            return new WP_REST_Response($product);
+        } catch (\Exception $e) {
+            $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }

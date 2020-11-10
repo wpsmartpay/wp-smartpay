@@ -13,21 +13,32 @@ class Product extends Model
         'description',
         'base_price',
         'sale_price',
+        'covers',
         'files',
         'parent',
         'status',
     ];
 
-    const PUBLISH = 'Published';
+    const PUBLISH = 'publish';
 
     public function setFilesAttribute($files)
     {
         $this->attributes['files'] = \json_encode($files);
     }
 
+    public function setCoversAttribute($covers)
+    {
+        $this->attributes['covers'] = \json_encode($covers);
+    }
+
     public function getFilesAttribute($files)
     {
         return \json_decode($files);
+    }
+
+    public function getCoversAttribute($covers)
+    {
+        return \json_decode($covers);
     }
 
     public function variations()

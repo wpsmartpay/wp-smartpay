@@ -14,17 +14,17 @@ const defaultProduct = {
     files: [],
 }
 
-export const CreateProduct = () => {
-    const productReducer = (product, data) => {
-        return {
-            ...product,
-            ...data,
-        }
+const reducer = (state, data) => {
+    return {
+        ...state,
+        ...data,
     }
+}
 
+export const CreateProduct = () => {
     const [response, setRespose] = useState({})
 
-    const [product, setProductData] = useReducer(productReducer, defaultProduct)
+    const [product, setProductData] = useReducer(reducer, defaultProduct)
 
     const createProduct = () => {
         SaveProduct(
@@ -32,8 +32,10 @@ export const CreateProduct = () => {
                 ...product,
                 description: tinyMCE.activeEditor.getContent(),
             })
-        ).then(response => {
+        ).then((response) => {
             setProductData(defaultProduct)
+
+            // TODO: Set product to store
             tinymce.get('description').setContent('')
             setRespose({
                 type: 'success',
