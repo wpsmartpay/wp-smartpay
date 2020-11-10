@@ -63,7 +63,7 @@ class ProductController extends \WP_REST_Controller
             ]);
 
             array_walk($request->variations, function ($variationData) use ($parent) {
-                $this->createVariation($variationData, $parent);
+                $this->createVariation($variationData, $parent->id);
             });
 
             $wpdb->query('COMMIT');

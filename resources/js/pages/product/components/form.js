@@ -16,7 +16,7 @@ export const ProductForm = ({ product, setProductData }) => {
         wp.editor.initialize('description', {
             tinymce: true,
         })
-    }, 10)
+    }, 100)
 
     const _setProductData = (event) => {
         setProductData({ [event.target.name]: event.target.value })
@@ -66,7 +66,6 @@ export const ProductForm = ({ product, setProductData }) => {
             const selection = mediaWindow.state().get('selection')
 
             const files = selection.toJSON().map((file) => {
-                console.log(file)
                 return {
                     id: file.id,
                     name: file.filename,
@@ -144,7 +143,6 @@ export const ProductForm = ({ product, setProductData }) => {
             ></textarea>
             <div className="my-3">
                 <div className="border rounded bg-light text-center p-5 select-image-box d-flex flex-column align-items-center">
-                    {console.log(product)}
                     {product.covers.length > 0 && (
                         <div className="mb-3 preview text-center">
                             <div>
@@ -258,25 +256,25 @@ export const ProductForm = ({ product, setProductData }) => {
                                 </div>
                             </>
                         ) : (
-                            <div className="my-3">
-                                <div className="border rounded bg-light text-center p-5 no-product-file-box">
-                                    <Feather.HardDrive size={42} />
-                                    <h3 className="text-muted">
-                                        {__(
-                                            'Upload or select files for this product',
-                                            'smartpay'
-                                        )}
-                                    </h3>
-                                    <Button
-                                        type="button"
-                                        className="btn btn-light border shadow-sm upload-product-file"
-                                        onClick={() => addProductFile()}
-                                    >
-                                        {__('Upload files', 'smartpay')}
-                                    </Button>
+                                <div className="my-3">
+                                    <div className="border rounded bg-light text-center p-5 no-product-file-box">
+                                        <Feather.HardDrive size={42} />
+                                        <h3 className="text-muted">
+                                            {__(
+                                                'Upload or select files for this product',
+                                                'smartpay'
+                                            )}
+                                        </h3>
+                                        <Button
+                                            type="button"
+                                            className="btn btn-light border shadow-sm upload-product-file"
+                                            onClick={() => addProductFile()}
+                                        >
+                                            {__('Upload files', 'smartpay')}
+                                        </Button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
                     </div>
                 </Tab>
                 <Tab
@@ -568,7 +566,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                         file.id
                                                                                     }
                                                                                     checked
-                                                                                    // FIXME
+                                                                                // FIXME
                                                                                 />
                                                                                 <label
                                                                                     className="custom-control-label"
@@ -606,34 +604,34 @@ export const ProductForm = ({ product, setProductData }) => {
 
                                                 {variation.files.length ===
                                                     0 && (
-                                                    <div className="form-group no-variation-file-box">
-                                                        <div className="border rounded text-center p-5">
-                                                            <Feather.Package
-                                                                size={42}
-                                                            />
-                                                            <h3 className="text-muted">
-                                                                {__(
-                                                                    'Associate files with this variant',
-                                                                    'smartpay'
-                                                                )}
-                                                            </h3>
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-light border shadow-sm select-variation-files"
-                                                                onClick={() =>
-                                                                    addProductFile(
-                                                                        variation
-                                                                    )
-                                                                }
-                                                            >
-                                                                {__(
-                                                                    'Select files',
-                                                                    'smartpay'
-                                                                )}
-                                                            </Button>
+                                                        <div className="form-group no-variation-file-box">
+                                                            <div className="border rounded text-center p-5">
+                                                                <Feather.Package
+                                                                    size={42}
+                                                                />
+                                                                <h3 className="text-muted">
+                                                                    {__(
+                                                                        'Associate files with this variant',
+                                                                        'smartpay'
+                                                                    )}
+                                                                </h3>
+                                                                <Button
+                                                                    type="button"
+                                                                    className="btn btn-light border shadow-sm select-variation-files"
+                                                                    onClick={() =>
+                                                                        addProductFile(
+                                                                            variation
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    {__(
+                                                                        'Select files',
+                                                                        'smartpay'
+                                                                    )}
+                                                                </Button>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
+                                                    )}
                                             </div>
                                         </div>
                                     )

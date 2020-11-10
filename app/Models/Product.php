@@ -23,7 +23,6 @@ class Product extends Model
 
     public function setFilesAttribute($files)
     {
-        dd(\json_encode($files));
         $this->attributes['files'] = \json_encode($files);
     }
 
