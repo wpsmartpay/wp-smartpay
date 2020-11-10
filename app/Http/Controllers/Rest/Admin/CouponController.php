@@ -23,6 +23,13 @@ class CouponController extends RestController
         return true;
     }
 
+    public function index(\WP_REST_Request $request)
+    {
+        $products = Coupon::all();
+
+        return new \WP_REST_Response($products);
+    }
+
     public function store(\WP_REST_Request $request)
     {
         $data = \json_decode($request->get_body(), true);

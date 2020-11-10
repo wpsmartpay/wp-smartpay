@@ -1,1 +1,2 @@
-import './products';
+import './products'
+import './coupons'
