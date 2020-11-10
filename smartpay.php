@@ -25,8 +25,6 @@
  * GNU General Public License for more details.
  */
 
-use SmartPay\Activator;
-
 defined('ABSPATH') || exit;
 
 define('SMARTPAY_VERSION', '1.0.0');

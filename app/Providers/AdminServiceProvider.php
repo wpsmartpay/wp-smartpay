@@ -4,13 +4,13 @@ namespace SmartPay\Providers;
 
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Admin\Admin;
-use SmartPay\Modules\Admin\Gateway;
 use SmartPay\Modules\Product\Product;
 use SmartPay\Modules\Form\Form;
 use SmartPay\Modules\Coupon\Coupon;
 use SmartPay\Modules\Customer\Customer;
 use SmartPay\Modules\Payment\Payment;
 use SmartPay\Modules\Setting\Setting;
+use SmartPay\Modules\Gateway\Gateway;
 
 class AdminServiceProvider extends ServiceProvider
 {

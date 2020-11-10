@@ -1,11 +1,12 @@
 <?php
 
-namespace SmartPay\Modules\Admin;
+namespace SmartPay\Modules\Gateway;
 
 class Gateway
 {
     public function __construct()
     {
+        //
     }
 
     public static function gateways()
