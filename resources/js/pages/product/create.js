@@ -1,10 +1,7 @@
 import { __ } from '@wordpress/i18n'
-import { useReducer, useState } from '@wordpress/element'
-import apiFetch from '@wordpress/api-fetch'
-const { useEffect } = wp.element
-const { useSelect, dispatch } = wp.data
-
 import { Container, Tabs, Tab, Form, Button, Alert } from 'react-bootstrap'
+import { SaveProduct } from '../../http/product.js'
+const { useReducer, useState } = wp.element
 
 const defaults = {
     product: {
@@ -39,6 +36,22 @@ export const CreateProduct = () => {
         productReducer,
         defaults.product
     )
+
+    const createProduct = () => {
+        SaveProduct(
+            JSON.stringify({
+                ...product,
+                description: tinyMCE.activeEditor.getContent(),
+            })
+        ).then(response => {
+            setProductData(defaults.product)
+            tinymce.get('description').setContent('')
+            setRespose({
+                type: 'success',
+                message: 'Product created successfully',
+            })
+        })
+    }
 
     const _setProductData = event => {
         setProductData({ [event.target.name]: event.target.value })
@@ -146,26 +159,6 @@ export const CreateProduct = () => {
         })
     }
 
-    const createProduct = () => {
-        apiFetch({
-            path: `${smartpay.restUrl}/v1/products`,
-            method: 'POST',
-            headers: {
-                'X-WP-Nonce': smartpay.apiNonce,
-            },
-            body: JSON.stringify({
-                ...product,
-                description: tinyMCE.activeEditor.getContent(),
-            }),
-        }).then(response => {
-            setProductData(defaults.product)
-            tinymce.get('description').setContent('')
-            setRespose({
-                type: 'success',
-                message: 'Product created successfully',
-            })
-        })
-    }
     return (
         <>
             <div className="text-black bg-white border-bottom d-fixed">
