@@ -11,72 +11,35 @@ import {
 } from 'react-bootstrap'
 import { useReducer, useEffect, useState } from '@wordpress/element'
 import { useParams } from 'react-router-dom'
-
-const initialState = {
-    title: '',
-    description: '',
-    discounttype: 'fixed',
-    amount: '',
-    expirydate: '',
-}
-
-const reducer = (state, action) => {
-    if (action.type == 'reset') {
-        return initialState
-    }
-
-    const result = { ...state }
-    result[action.type] = action.value
-    return result
-}
+const { useSelect, select, dispatch } = wp.data
 
 export const EditCoupon = () => {
-    let { couponId } = useParams()
-    const [data, setData] = useState({})
-    useEffect(() => {
-        fetch(`${smartpay.restUrl}/v1/coupons/${couponId}`, {
-            method: 'GET',
-            headers: {
-                'X-WP-Nonce': smartpay.apiNonce,
-            },
-        })
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                setData({ ...data })
-            })
-    }, [couponId])
-    const [state, dispatch] = useReducer(reducer, data)
+    const { couponId } = useParams()
 
-    console.log(data)
-    console.log(state)
+    const [coupon, setCoupon] = useState(null)
+
+    useEffect(() => {
+        const coupon = select('smartpay/coupons').getCoupon(couponId)
+        setCoupon(coupon)
+    }, [couponId, setCoupon])
 
     const changeHandler = (event) => {
-        dispatch({ type: event.target.name, value: event.target.value })
+        setCoupon({ ...coupon, ...{ [event.target.name]: event.target.value } })
     }
 
     const couponUpdateHandler = (event) => {
         event.preventDefault()
+        dispatch('smartpay/coupons').updateCoupon(coupon)
+    }
 
-        // fetch(`${resturl}/v1/coupons`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'X-WP-Nonce': nonce,
-        //     },
-        //     body: JSON.stringify(state),
-        // }).then((response) => {
-        //     if (response.status == 200) {
-        //         let $alert = document.getElementById('coupon-alert')
-        //         $alert.classList.remove('d-none')
-        //     }
-        // })
-
-        // dispatch({ type: 'reset' })
+    if (!coupon) {
+        return <p>Coupon {couponId} not found</p>
+    } else {
+        console.log(coupon)
     }
 
     return (
-        <>
+        <p>
             <div className="text-black bg-white border-bottom d-fixed">
                 <Container>
                     <div className="d-flex align-items-center justify-content-between">
@@ -117,7 +80,7 @@ export const EditCoupon = () => {
                                 <Form.Group controlId="couponForm.title">
                                     <Form.Control
                                         name="title"
-                                        value={state.title}
+                                        value={coupon.title}
                                         onChange={changeHandler}
                                         type="text"
                                         placeholder="Enter coupon code here"
@@ -126,7 +89,7 @@ export const EditCoupon = () => {
                                 <Form.Group controlId="couponForm.description">
                                     <Form.Control
                                         name="description"
-                                        value={state.description}
+                                        value={coupon.description}
                                         onChange={changeHandler}
                                         as="textarea"
                                         rows={3}
@@ -151,10 +114,10 @@ export const EditCoupon = () => {
                                                             Discount type
                                                         </Form.Label>
                                                         <Form.Control
-                                                            name="discounttype"
+                                                            name="discount_type"
                                                             as="select"
                                                             value={
-                                                                state.discounttype
+                                                                coupon.discount_type
                                                             }
                                                             onChange={
                                                                 changeHandler
@@ -175,8 +138,10 @@ export const EditCoupon = () => {
                                                             Coupon amount
                                                         </Form.Label>
                                                         <Form.Control
-                                                            name="amount"
-                                                            value={state.amount}
+                                                            name="discount_amount"
+                                                            value={
+                                                                coupon.discount_amount
+                                                            }
                                                             onChange={
                                                                 changeHandler
                                                             }
@@ -191,9 +156,9 @@ export const EditCoupon = () => {
                                                     Coupon expiry date
                                                 </Form.Label>
                                                 <Form.Control
-                                                    name="expirydate"
+                                                    name="expiry_date"
                                                     type="date"
-                                                    value={state.expirydate}
+                                                    value={coupon.expiry_date}
                                                     onChange={changeHandler}
                                                 />
                                             </Form.Group>
@@ -212,6 +177,6 @@ export const EditCoupon = () => {
                     </Row>
                 </Container>
             </div>
-        </>
+        </p>
     )
 }

@@ -17,4 +17,9 @@ class Coupon extends Model
         'expiry_date',
         'extra',
     ];
+
+    public function getExpiryDateAttribute($value)
+    {
+        return date('Y-m-d', strtotime($value));
+    }
 }

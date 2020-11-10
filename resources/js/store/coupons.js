@@ -19,10 +19,10 @@ const actions = {
             coupons,
         }
     },
-    addProduct(product) {
+    updateCoupon(coupon) {
         return {
-            type: 'ADD_PRODUCT',
-            product,
+            type: 'UPDATE_COUPON',
+            coupon,
         }
     },
 }
@@ -35,10 +35,16 @@ registerStore('smartpay/coupons', {
                     ...state,
                     coupons: action.coupons,
                 }
-            case 'ADD_PRODUCT':
+            case 'UPDATE_COUPON':
+                let updateCoupon
+                state.coupons.map(function (couponItem) {
+                    if (couponItem.id == action.coupon.id) {
+                        updateCoupon = { ...action.coupon }
+                    }
+                })
                 return {
                     ...state,
-                    coupons: [...state.coupons, action.product],
+                    coupons: [...state.coupons, updateCoupon],
                 }
             default:
                 return state
@@ -53,6 +59,11 @@ registerStore('smartpay/coupons', {
         },
         getCoupons(state) {
             return state.coupons
+        },
+        getCoupon(state, id) {
+            return JSON.parse(
+                JSON.stringify(state.coupons.find((c) => c.id === id))
+            )
         },
     },
 

@@ -14,7 +14,6 @@ export const CouponList = () => {
         select('smartpay/coupons').getCoupons()
     )
 
-    console.log(coupons)
     return (
         <>
             <div className="text-black bg-white border-bottom d-fixed">
