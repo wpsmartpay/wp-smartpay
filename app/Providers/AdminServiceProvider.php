@@ -4,11 +4,13 @@ namespace SmartPay\Providers;
 
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Admin\Admin;
+use SmartPay\Modules\Admin\Gateway;
 use SmartPay\Modules\Product\Product;
 use SmartPay\Modules\Form\Form;
 use SmartPay\Modules\Coupon\Coupon;
 use SmartPay\Modules\Customer\Customer;
 use SmartPay\Modules\Payment\Payment;
+use SmartPay\Modules\Setting\Setting;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,14 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->singleton(Payment::class, function ($app) {
             return new Payment($app);
         });
+
+        $this->app->singleton(Setting::class, function ($app) {
+            return new Setting($app);
+        });
+
+        $this->app->singleton(Gateway::class, function ($app) {
+            return new Gateway($app);
+        });
     }
 
     public function boot()
@@ -52,5 +62,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->make(Coupon::class);
         $this->app->make(Customer::class);
         $this->app->make(Payment::class);
+        $this->app->make(Setting::class);
+        $this->app->make(Gateway::class);
     }
 }
