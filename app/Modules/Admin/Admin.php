@@ -2,6 +2,8 @@
 
 namespace SmartPay\Modules\Admin;
 
+use SmartPay\Modules\Admin\Setting;
+
 class Admin
 {
     protected $app;
@@ -9,6 +11,8 @@ class Admin
     public function __construct($app)
     {
         $this->app = $app;
+
+        $this->app->build(Setting::class);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
@@ -88,7 +92,7 @@ class Admin
             __('SmartPay - Settings', 'smartpay'),
             __('Settings', 'smartpay'),
             'manage_options',
-            'smartpay-settings',
+            'smartpay-setting',
             function () {
                 echo view('settings');
             }

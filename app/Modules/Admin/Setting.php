@@ -1,12 +1,12 @@
 <?php
 
-namespace SmartPay\Modules\Setting;
+namespace SmartPay\Modules\Admin;
 
 class Setting
 {
-
     public function __construct()
     {
+        // die();
         add_action('admin_init', [$this, 'register_settings']);
     }
 

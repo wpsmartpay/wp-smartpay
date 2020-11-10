@@ -1,6 +1,6 @@
 <?php
 
-use SmartPay\Modules\Setting\Setting;
+use SmartPay\Modules\Admin\Setting;
 
 $settings_tabs  = Setting::settings_tabs();
 $all_settings   = Setting::get_registered_settings_sections();
