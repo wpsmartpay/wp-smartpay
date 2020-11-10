@@ -759,3 +759,74 @@ function smartpay_get_currencies()
 
     return $currencies;
 }
+
+function smartpay_sanitize_key($key)
+{
+    $key = preg_replace('/[^a-zA-Z0-9_\-\.\:\/]/', '', $key);
+    return $key;
+}
+
+function smartpay_payment_gateways()
+{
+    // Default, built-in gateways
+    return apply_filters('smartpay_gateways', SmartPay\Modules\Admin\Gateway::gateways());
+}
+
+function smartpay_get_enabled_payment_gateways($sort = false)
+{
+    $gateways = smartpay_payment_gateways();
+
+    $enabled  = (array) smartpay_get_option('gateways', false);
+
+    $gateway_list = array();
+
+    foreach ($gateways as $key => $gateway) {
+        if (isset($enabled[$key]) && $enabled[$key] == 1) {
+            $gateway_list[$key] = $gateway;
+        }
+    }
+
+    if (true === $sort) {
+        // Reorder our gateways so the default is first
+        $default_gateway_id = smartpay_get_default_gateway();
+
+        if (smartpay_is_gateway_active($default_gateway_id)) {
+            $default_gateway    = array($default_gateway_id => $gateway_list[$default_gateway_id]);
+            unset($gateway_list[$default_gateway_id]);
+
+            $gateway_list = array_merge($default_gateway, $gateway_list);
+        }
+    }
+
+    return $gateway_list;
+}
+
+function smartpay_get_default_gateway()
+{
+    $default = smartpay_get_option('default_gateway', 'paddle');
+
+    if (!smartpay_is_gateway_active($default)) {
+        $gateways = smartpay_get_enabled_payment_gateways();
+        $gateways = array_keys($gateways);
+        $default  = reset($gateways);
+    }
+
+    return $default;
+}
+
+
+function smartpay_get_settings()
+{
+    $settings = get_option('smartpay_settings');
+
+    if (empty($settings)) {
+        $general_settings = get_option('smartpay_settings_general') ? get_option('smartpay_settings_general') : [];
+        $gateway_settings = get_option('smartpay_settings_gateways') ? get_option('smartpay_settings_gateways') : [];
+        $email_settings   = get_option('smartpay_settings_emails') ? get_option('smartpay_settings_emails') : [];
+        $license_settings = get_option('smartpay_settings_licenses') ? get_option('smartpay_settings_licenses') : [];
+
+        $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings);
+        update_option('smartpay_settings', $settings);
+    }
+    return apply_filters('smartpay_get_settings', $settings);
+}

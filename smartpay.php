@@ -37,5 +37,9 @@ define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
 // Create The Application
 $app = require __DIR__ . '/bootstrap.php';
 
+global $smartpay_options;
+
+$smartpay_options = smartpay_get_settings();
+
 // Run The Application
 $app->boot();
