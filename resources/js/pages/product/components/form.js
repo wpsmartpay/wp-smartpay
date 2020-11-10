@@ -1,3 +1,4 @@
+import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button } from 'react-bootstrap'
 
@@ -16,7 +17,7 @@ export const ProductForm = ({ product, setProductData }) => {
         })
     }, 0)
 
-    const _setProductData = event => {
+    const _setProductData = (event) => {
         setProductData({ [event.target.name]: event.target.value })
     }
 
@@ -27,7 +28,7 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const setVariationData = (variation, data) => {
-        const productVariation = product.variations.filter(item => {
+        const productVariation = product.variations.filter((item) => {
             return item.id !== variation.id
         })
 
@@ -40,10 +41,10 @@ export const ProductForm = ({ product, setProductData }) => {
         const mediaWindow = wp.media({ multiple: true })
 
         mediaWindow.open()
-        mediaWindow.on('select', function() {
+        mediaWindow.on('select', function () {
             const selection = mediaWindow.state().get('selection')
 
-            const covers = selection.toJSON().map(cover => {
+            const covers = selection.toJSON().map((cover) => {
                 return {
                     attachment_id: cover.id,
                     icon: cover.sizes.thumbnail.url || cover.icon,
@@ -60,10 +61,10 @@ export const ProductForm = ({ product, setProductData }) => {
         const mediaWindow = wp.media({ multiple: true })
 
         mediaWindow.open()
-        mediaWindow.on('select', function() {
+        mediaWindow.on('select', function () {
             const selection = mediaWindow.state().get('selection')
 
-            const files = selection.toJSON().map(file => {
+            const files = selection.toJSON().map((file) => {
                 return {
                     id: file.id,
                     name: file.filename,
@@ -87,7 +88,7 @@ export const ProductForm = ({ product, setProductData }) => {
     const removeProductFile = (file, variation = false) => {
         if (!!variation) {
             variation.files = [
-                ...variation.files.filter(variationFile => {
+                ...variation.files.filter((variationFile) => {
                     return variationFile.id !== file.id
                 }),
             ]
@@ -97,7 +98,7 @@ export const ProductForm = ({ product, setProductData }) => {
 
         setProductData({
             files: [
-                ...product.files.filter(productFile => {
+                ...product.files.filter((productFile) => {
                     return productFile.id !== file.id
                 }),
             ],
@@ -116,9 +117,9 @@ export const ProductForm = ({ product, setProductData }) => {
         })
     }
 
-    const removeVariation = variation => {
+    const removeVariation = (variation) => {
         setProductData({
-            variations: product.variations.filter(item => {
+            variations: product.variations.filter((item) => {
                 return item.id !== variation.id
             }),
         })
@@ -160,7 +161,7 @@ export const ProductForm = ({ product, setProductData }) => {
                     )}
                     {product.covers.length === 0 && (
                         <div className="no-image">
-                            <i data-feather="image" width="40" height="40"></i>
+                            <Feather.Image size={40} />
                             <h3 className="mt-1">
                                 {__('Cover Image', 'smartpay')}
                             </h3>
@@ -233,7 +234,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     )
                                                                 }
                                                             >
-                                                                <i data-feather="trash"></i>
+                                                                <Feather.Trash />
                                                             </Button>
                                                         </div>
                                                     </div>
@@ -256,11 +257,7 @@ export const ProductForm = ({ product, setProductData }) => {
                         ) : (
                             <div className="my-3">
                                 <div className="border rounded bg-light text-center p-5 no-product-file-box">
-                                    <i
-                                        data-feather="hard-drive"
-                                        width="42"
-                                        height="42"
-                                    ></i>
+                                    <Feather.HardDrive size={42} />
                                     <h3 className="text-muted">
                                         {__(
                                             'Upload or select files for this product',
@@ -329,11 +326,7 @@ export const ProductForm = ({ product, setProductData }) => {
                         {/* Has no variation */}
                         {product.variations.length == 0 && (
                             <div className="border rounded bg-light text-center p-5 no-variations-box">
-                                <i
-                                    data-feather="layers"
-                                    width="42"
-                                    height="42"
-                                ></i>
+                                <Feather.Layers size={42} />
                                 <h3>
                                     {__(
                                         'Offer variations of this product',
@@ -368,11 +361,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                             type="button"
                                             className="btn btn-light border btn-sm my-1 ml-auto pb-0 shadow-sm remove-variation"
                                         >
-                                            <i
-                                                data-feather="trash"
-                                                width="16"
-                                                height="16"
-                                            ></i>
+                                            <Feather.Trash />
                                         </button>
                                     </div>
                                 </div>
@@ -404,7 +393,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     variation.title
                                                                 }
                                                                 placeholder="Option name"
-                                                                onChange={event =>
+                                                                onChange={(
+                                                                    event
+                                                                ) =>
                                                                     _setVariationData(
                                                                         variation,
                                                                         event
@@ -424,11 +415,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     )
                                                                 }
                                                             >
-                                                                <i
-                                                                    data-feather="trash"
-                                                                    width="20"
-                                                                    height="20"
-                                                                ></i>
+                                                                <Feather.Trash />
                                                             </button>
                                                         </div>
                                                     </div>
@@ -458,7 +445,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     'eg. 100',
                                                                     'smartpay'
                                                                 )}
-                                                                onChange={event =>
+                                                                onChange={(
+                                                                    event
+                                                                ) =>
                                                                     _setVariationData(
                                                                         variation,
                                                                         event
@@ -490,7 +479,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     'eg. 90',
                                                                     'smartpay'
                                                                 )}
-                                                                onChange={event =>
+                                                                onChange={(
+                                                                    event
+                                                                ) =>
                                                                     _setVariationData(
                                                                         variation,
                                                                         event
@@ -519,7 +510,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                         value={
                                                             variation.description
                                                         }
-                                                        onChange={event =>
+                                                        onChange={(event) =>
                                                             _setVariationData(
                                                                 variation,
                                                                 event
@@ -614,11 +605,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     0 && (
                                                     <div className="form-group no-variation-file-box">
                                                         <div className="border rounded text-center p-5">
-                                                            <i
-                                                                data-feather="package"
-                                                                width="42"
-                                                                height="42"
-                                                            ></i>
+                                                            <Feather.Package
+                                                                size={42}
+                                                            />
                                                             <h3 className="text-muted">
                                                                 {__(
                                                                     'Associate files with this variant',

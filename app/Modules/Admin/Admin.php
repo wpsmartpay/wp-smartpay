@@ -97,7 +97,6 @@ class Admin
 
     public function adminScripts()
     {
-
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
 

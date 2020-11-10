@@ -1,5 +1,3 @@
-import feather from 'feather-icons'
-
 const { render } = wp.element
 import domReady from '@wordpress/dom-ready'
 import { HashRouter, Route, Switch } from 'react-router-dom'
@@ -36,7 +34,7 @@ import { NotFound } from './pages/not-found'
 
 import './store/index'
 
-domReady(function() {
+domReady(function () {
     const SmartPay = () => {
         return (
             <div>
@@ -93,7 +91,7 @@ domReady(function() {
                         <Route
                             exact
                             path="/coupons/create"
-                            render={props => (
+                            render={(props) => (
                                 <CreateCoupon
                                     {...props}
                                     resturl={smartpay.restUrl}
@@ -129,6 +127,4 @@ domReady(function() {
     }
 
     render(<SmartPay />, document.getElementById('smartpay'))
-
-    feather.replace()
 })

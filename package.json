@@ -25,6 +25,7 @@
         "@wordpress/interface": "^0.8.0",
         "@wordpress/media-utils": "^1.16.0",
         "@wordpress/plugins": "^2.23.0",
+        "react-feather": "^2.0.8",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0"
     },
@@ -37,7 +38,6 @@
         "@wordpress/scripts": "^12.5.0",
         "bootstrap": "^4.5.3",
         "cross-env": "^7.0",
-        "feather-icons": "^4.28.0",
         "jquery": "^3.2",
         "laravel-mix": "^5.0.9",
         "popper.js": "^1.12",
