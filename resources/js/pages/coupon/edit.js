@@ -39,7 +39,7 @@ export const EditCoupon = () => {
     }
 
     return (
-        <p>
+        <>
             <div className="text-black bg-white border-bottom d-fixed">
                 <Container>
                     <div className="d-flex align-items-center justify-content-between">
@@ -177,6 +177,6 @@ export const EditCoupon = () => {
                     </Row>
                 </Container>
             </div>
-        </p>
+        </>
     )
 }

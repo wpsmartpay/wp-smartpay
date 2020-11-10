@@ -37,38 +37,42 @@ export const CouponList = () => {
             <Container className="mt-3">
                 <div className="bg-white">
                     <Table className="table">
-                        <tr className="text-white bg-dark">
-                            <th className="w-75 text-left">
-                                <strong>{__('Title', 'smartpay')}</strong>
-                            </th>
-                            <th className="w-25 text-right">
-                                {__('Actions', 'smartpay')}
-                            </th>
-                        </tr>
-                        {coupons.map((coupons) => {
-                            return (
-                                <tr key={coupons.id}>
-                                    <td>{coupons.title || ''}</td>
-                                    <td className="text-right">
-                                        <Link
-                                            className="btn-sm p-0 mr-2"
-                                            to={`/coupons/${coupons.id}/edit`}
-                                        >
-                                            {__('Edit', 'smartpay')}
-                                        </Link>
-                                        <Button
-                                            className="btn-sm p-0"
-                                            onClick={() =>
-                                                deleteProduct(coupons)
-                                            }
-                                            variant="link"
-                                        >
-                                            {__('Delete', 'smartpay')}
-                                        </Button>
-                                    </td>
-                                </tr>
-                            )
-                        })}
+                        <thead>
+                            <tr className="text-white bg-dark">
+                                <th className="w-75 text-left">
+                                    <strong>{__('Title', 'smartpay')}</strong>
+                                </th>
+                                <th className="w-25 text-right">
+                                    {__('Actions', 'smartpay')}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {coupons.map((coupons) => {
+                                return (
+                                    <tr key={coupons.id}>
+                                        <td>{coupons.title || ''}</td>
+                                        <td className="text-right">
+                                            <Link
+                                                className="btn-sm p-0 mr-2"
+                                                to={`/coupons/${coupons.id}/edit`}
+                                            >
+                                                {__('Edit', 'smartpay')}
+                                            </Link>
+                                            <Button
+                                                className="btn-sm p-0"
+                                                onClick={() =>
+                                                    deleteProduct(coupons)
+                                                }
+                                                variant="link"
+                                            >
+                                                {__('Delete', 'smartpay')}
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
                     </Table>
                 </div>
             </Container>
