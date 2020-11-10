@@ -27,7 +27,7 @@ class Payment
     {
         $paymentController = $this->app->make(PaymentController::class);
 
-        register_rest_route('smartpay/v1/', 'payments', [
+        register_rest_route('smartpay/v1', 'payments', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$paymentController, 'index'],
@@ -40,7 +40,7 @@ class Payment
             ],
         ]);
 
-        register_rest_route('smartpay/v1/', 'payments/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1', 'payments/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$paymentController, 'view'],

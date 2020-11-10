@@ -27,7 +27,7 @@ class Coupon
     {
         $couponController = $this->app->make(CouponController::class);
 
-        register_rest_route('smartpay/v1/', 'coupons', [
+        register_rest_route('smartpay/v1', 'coupons', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$couponController, 'index'],
@@ -40,7 +40,7 @@ class Coupon
             ],
         ]);
 
-        register_rest_route('smartpay/v1/', 'coupons/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1', 'coupons/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$couponController, 'view'],

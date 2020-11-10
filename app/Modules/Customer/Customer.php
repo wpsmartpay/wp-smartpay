@@ -27,35 +27,35 @@ class Customer
     {
         $productController = $this->app->make(CustomerController::class);
 
-        register_rest_route('smartpay/v1/', 'products', [
+        register_rest_route('smartpay/v1', 'customers', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$productController, 'index'],
                 'permission_callback' => [$productController, 'middleware'],
             ],
-            [
-                'methods'   => WP_REST_Server::CREATABLE,
-                'callback'  => [$productController, 'store'],
-                'permission_callback' => [$productController, 'middleware'],
-            ],
+            // [
+            //     'methods'   => WP_REST_Server::CREATABLE,
+            //     'callback'  => [$productController, 'store'],
+            //     'permission_callback' => [$productController, 'middleware'],
+            // ],
         ]);
 
-        register_rest_route('smartpay/v1/', 'products/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1', 'customers/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$productController, 'view'],
                 'permission_callback' => [$productController, 'middleware'],
             ],
-            [
-                'methods'   => 'PUT, PATCH',
-                'callback'  => [$productController, 'update'],
-                'permission_callback' => [$productController, 'middleware'],
-            ],
-            [
-                'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$productController, 'delete'],
-                'permission_callback' => [$productController, 'middleware'],
-            ],
+            // [
+            //     'methods'   => 'PUT, PATCH',
+            //     'callback'  => [$productController, 'update'],
+            //     'permission_callback' => [$productController, 'middleware'],
+            // ],
+            // [
+            //     'methods'   => WP_REST_Server::DELETABLE,
+            //     'callback'  => [$productController, 'delete'],
+            //     'permission_callback' => [$productController, 'middleware'],
+            // ],
         ]);
     }
 }

@@ -27,7 +27,7 @@ class Product
     {
         $productController = $this->app->make(ProductController::class);
 
-        register_rest_route('smartpay/v1/', 'products', [
+        register_rest_route('smartpay/v1', 'products', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$productController, 'index'],
@@ -40,7 +40,7 @@ class Product
             ],
         ]);
 
-        register_rest_route('smartpay/v1/', 'products/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1', 'products/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$productController, 'view'],

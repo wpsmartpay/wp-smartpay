@@ -85,7 +85,7 @@ class Form
     {
         $formController = $this->app->make(FormController::class);
 
-        register_rest_route('smartpay/v1/', 'forms', [
+        register_rest_route('smartpay/v1', 'forms', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$formController, 'index'],
@@ -98,7 +98,7 @@ class Form
             ],
         ]);
 
-        register_rest_route('smartpay/v1/', 'forms/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1', 'forms/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$formController, 'view'],
