@@ -19,9 +19,16 @@ const actions = {
             products,
         }
     },
-    addProduct(product) {
+    getProduct(id) {
         return {
-            type: 'ADD_PRODUCT',
+            type: 'GET_PRODUCT',
+            path: `${smartpay.restUrl}/v1/products/${id}`,
+            id,
+        }
+    },
+    setProduct(product) {
+        return {
+            type: 'SET_PRODUCT',
             product,
         }
     },
@@ -35,10 +42,15 @@ registerStore('smartpay/products', {
                     ...state,
                     products: action.products,
                 }
-            case 'ADD_PRODUCT':
+            case 'SET_PRODUCT':
                 return {
                     ...state,
-                    products: [...state.products, action.product],
+                    products: [
+                        ...state.products.filter(
+                            (product) => product.id !== action.id
+                        ),
+                        action.product,
+                    ],
                 }
             default:
                 return state
@@ -54,10 +66,24 @@ registerStore('smartpay/products', {
         getProducts(state) {
             return state.products
         },
+        getProduct(state, id) {
+            if (!state.products) {
+                return actions.getProduct(1)
+            }
+            return state.products.find((product) => product.id == id)
+        },
     },
 
     controls: {
         GET_PRODUCTS(action) {
+            return apiFetch({
+                path: action.path,
+                headers: {
+                    'X-WP-Nonce': smartpay.apiNonce,
+                },
+            })
+        },
+        GET_PRODUCT(action) {
             return apiFetch({
                 path: action.path,
                 headers: {
@@ -71,6 +97,14 @@ registerStore('smartpay/products', {
         *getProducts() {
             const products = yield actions.getProducts()
             return actions.setProducts(products)
+        },
+        *getProduct(id) {
+            const product = yield actions.getProduct(id)
+
+            const products = yield actions.getProducts()
+            actions.setProducts(products)
+
+            return actions.setProduct(product)
         },
     },
 })
