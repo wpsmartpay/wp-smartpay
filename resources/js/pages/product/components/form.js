@@ -8,6 +8,7 @@ const defaultVariation = {
     base_price: '',
     sale_price: '',
     files: [],
+    isSaved: false,
 }
 
 export const ProductForm = ({ product, setProductData }) => {
@@ -108,13 +109,7 @@ export const ProductForm = ({ product, setProductData }) => {
 
     const addNewVariation = () => {
         setProductData({
-            variations: [
-                ...product.variations,
-                {
-                    ...defaultVariation,
-                    id: `new-${product.variations.length + 1}`,
-                },
-            ],
+            variations: [...product.variations, defaultVariation],
         })
     }
 

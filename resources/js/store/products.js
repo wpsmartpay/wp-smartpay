@@ -47,7 +47,7 @@ registerStore('smartpay/products', {
                     ...state,
                     products: [
                         ...state.products.filter(
-                            (product) => product.id !== action.id
+                            (product) => product.id !== action.product.id
                         ),
                         action.product,
                     ],

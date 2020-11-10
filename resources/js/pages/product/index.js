@@ -10,7 +10,7 @@ export const ProductList = () => {
         dispatch('smartpay/products').getProducts()
     }, [])
 
-    const products = useSelect(select =>
+    const products = useSelect((select) =>
         select('smartpay/products').getProducts()
     )
 
@@ -54,9 +54,9 @@ export const ProductList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map(product => {
+                            {products.map((product, index) => {
                                 return (
-                                    <tr key={product.id}>
+                                    <tr key={index}>
                                         <td>{product.title || ''}</td>
                                         <td className="text-right">
                                             <Link

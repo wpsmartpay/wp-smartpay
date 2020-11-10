@@ -53,26 +53,19 @@ class ProductController extends \WP_REST_Controller
             $request = json_decode($request->get_body());
 
             $parent = Product::create([
-                'title' => $request->title,
+                'title' => $request->title ?? 'Unnamed product',
                 'description' => $request->description,
                 'base_price' => $request->base_price,
                 'sale_price' => $request->sale_price,
-                'files' => $request->files,
+                'files' => $request->files ?? [],
                 'covers' => $request->covers,
                 'status' => Product::PUBLISH,
             ]);
 
-            array_walk($request->variations, function ($variation) use ($parent) {
-                Product::create([
-                    'title' => $variation->title,
-                    'description' => $variation->description,
-                    'base_price' => $variation->base_price,
-                    'sale_price' => $variation->sale_price,
-                    'files' => $variation->files,
-                    'parent' => $parent->id,
-                    'status' => Product::PUBLISH,
-                ]);
+            array_walk($request->variations, function ($variationData) use ($parent) {
+                $this->createVariation($variationData, $parent);
             });
+
             $wpdb->query('COMMIT');
 
             return new WP_REST_Response($parent, 200);
@@ -123,28 +116,53 @@ class ProductController extends \WP_REST_Controller
             $product->description = $request->description;
             $product->base_price = $request->base_price;
             $product->sale_price = $request->sale_price;
-            $product->files = $request->files;
+            $product->files = $request->files ?? [];
             $product->covers = $request->covers;
             $product->status = Product::PUBLISH;
             $product->save();
 
-            // array_walk($request->variations, function ($variation) use ($product) {
-            //     Product::create([
-            //         'title' => $variation->title,
-            //         'description' => $variation->description,
-            //         'base_price' => $variation->base_price,
-            //         'sale_price' => $variation->sale_price,
-            //         'files' => $variation->files,
-            //         'parent' => $product->id,
-            //         'status' => Product::PUBLISH,
-            //     ]);
-            // });
+            array_walk($request->variations, function ($variationData) use ($product) {
+                if (!$variationData->id) {
+                    return $this->createVariation($variationData, $product->id);
+                }
+
+                $product->title = $variationData->title;
+                $product->description = $variationData->description;
+                $product->base_price = $variationData->base_price;
+                $product->sale_price = $variationData->sale_price;
+                $product->files = $variationData->files ?? [];
+                $product->status = Product::PUBLISH;
+                $product->save();
+            });
+
             $wpdb->query('COMMIT');
-            return new WP_REST_Response($product);
+            return new WP_REST_Response(['message' => 'Product updated']);
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }
+    }
+
+
+    /**
+     * Create variation
+     *
+     * @param object $data
+     * @param int $parentId
+     * @return Product
+     */
+    private function createVariation($data, $parentId): Product
+    {
+        return Product::create([
+            'title' => $data->title,
+            'description' => $data->description,
+            'base_price' => $data->base_price,
+            'sale_price' => $data->sale_price,
+            'covers' => [],
+            'files' => $data->files ?? [],
+            'parent' => $parentId,
+            'status' => Product::PUBLISH,
+        ]);
     }
 }

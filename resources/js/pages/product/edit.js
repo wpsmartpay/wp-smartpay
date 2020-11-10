@@ -5,8 +5,8 @@ import { useReducer, useState } from '@wordpress/element'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
-const { useEffect } = wp.element
-const { useSelect, select, dispatch } = wp.data
+const { useCallback, useEffect } = wp.element
+const { useSelect, select } = wp.data
 
 const defaultProduct = {
     title: '',
@@ -30,13 +30,19 @@ export const EditProduct = () => {
     const [product, setProductData] = useReducer(reducer, defaultProduct)
     const [response, setRespose] = useState({})
 
-    useSelect(() => {
-        const productData = select('smartpay/products').getProduct(productId)
+    const products = useSelect(
+        (select) => select('smartpay/products').getProducts(),
+        [productId]
+    )
 
-        if (productData) {
-            setProductData(productData)
-        }
-    }, [])
+    const getProduct = useCallback(() => {
+        const product = select('smartpay/products').getProduct(productId)
+        setProductData(product)
+    }, [productId])
+
+    useEffect(() => {
+        getProduct()
+    }, [productId, products])
 
     const Save = () => {
         UpdateProduct(
