@@ -103,7 +103,7 @@ export const Dashboard = () => {
                         </Row> */}
                     </Col>
                     <Col md={4}>
-                        <Card className="p-3 bg-ligh">
+                        <Card className="p-3 bg-light">
                             <h2>History</h2>
                         </Card>
                     </Col>
