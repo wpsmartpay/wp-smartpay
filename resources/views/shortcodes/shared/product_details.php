@@ -42,17 +42,17 @@
                                             <h5 class="m-0 price--title">
                                                 <?php echo esc_html(ucfirst($variation->title)); ?>
                                             </h5>
+                                            <?php if ($variation->description ?? false) : ?>
+                                            <p class="variation--description m-0">
+                                                <?php //echo wpautop($variation->description); 
+                                                            ?>
+                                                <?php echo $variation->description; ?>
+                                            </p>
+                                            <?php endif; ?>
                                         </label>
                                     </li>
 
 
-                                    <?php if ($variation->description ?? false) : ?>
-                                    <p class="variation--description m-0">
-                                        <?php //echo wpautop($variation->description); 
-                                                    ?>
-                                        <?php echo $variation->description; ?>
-                                    </p>
-                                    <?php endif; ?>
                                     <?php endforeach; ?>
 
                                     <!-- Product price -->
