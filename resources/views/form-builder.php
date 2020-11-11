@@ -1,0 +1,3 @@
+<div id="smartpay-form-block-editor" class="smartpay-form-block-editor block-editor">
+    Loading Editor...
+</div>

@@ -19,7 +19,7 @@ class Form
 
     public function adminScripts($hook)
     {
-        if ('smartpay_page_smartpay-forms' !== $hook) {
+        if ('smartpay_page_smartpay-form-builder' !== $hook) {
             return;
         }
 

@@ -56,6 +56,17 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('SmartPay - Forms', 'smartpay'),
+            __('Form Builder', 'smartpay'),
+            'manage_options',
+            'smartpay-form-builder',
+            function () {
+                echo smartpay_view('form-builder');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('SmartPay - Customers', 'smartpay'),
             __('Customers', 'smartpay'),
             'manage_options',
@@ -97,27 +108,47 @@ class Admin
                 echo smartpay_view('settings');
             }
         );
+
+        $this->smartpayProMenu();
+
+        do_action('smartpay_admin_add_menu_items');
     }
 
-    public function adminScripts()
+    private function smartpayProMenu()
     {
+        if (!array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())) {
+            global $submenu;
+
+            $submenu['smartpay'][99] = [
+                "⭐ Upgrade to pro",
+                "manage_options",
+                'https://wpsmartpay.com',
+            ];
+        }
+    }
+
+    public function adminScripts($hook)
+    {
+
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
 
-        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
-        wp_enqueue_script('smartpay-admin');
-        wp_localize_script(
-            'smartpay-admin',
-            'smartpay',
-            array(
-                'restUrl'  => get_rest_url('', 'smartpay'),
-                'adminUrl'  => admin_url('admin.php'),
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'apiNonce' => wp_create_nonce('wp_rest')
-            )
-        );
+        if ('toplevel_page_smartpay' === $hook) {
+            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'], SMARTPAY_VERSION, true);
+            wp_enqueue_script('smartpay-admin');
+            wp_localize_script(
+                'smartpay-admin',
+                'smartpay',
+                array(
+                    'restUrl'  => get_rest_url('', 'smartpay'),
+                    'adminUrl'  => admin_url('admin.php'),
+                    'ajax_url' => admin_url('admin-ajax.php'),
+                    'apiNonce' => wp_create_nonce('wp_rest')
+                )
+            );
 
-        wp_enqueue_editor();
-        wp_enqueue_media();
+            wp_enqueue_editor();
+            wp_enqueue_media();
+        }
     }
 }
