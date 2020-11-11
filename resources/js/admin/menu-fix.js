@@ -1,28 +1,22 @@
-function menuFix(slug) {
-    var $ = jQuery
-
-    let menuRoot = $('#toplevel_page_' + slug)
-    let currentUrl = window.location.href
-    let currentPath = currentUrl.substr(currentUrl.indexOf('admin.php'))
+jQuery(function ($) {
+    const menuRoot = $('#toplevel_page_smartpay')
+    const currentUrl = window.location.href
+    const currentPath = currentUrl.substr(currentUrl.indexOf('admin.php'))
 
     menuRoot.on('click', 'a', function () {
-        var self = $(this)
-
         $('ul.wp-submenu li', menuRoot).removeClass('current')
-
-        if (self.hasClass('wp-has-submenu')) {
+        if ($(this).hasClass('wp-has-submenu')) {
             $('li.wp-first-item', menuRoot).addClass('current')
         } else {
-            self.parents('li').addClass('current')
+            $(this).parents('li').addClass('current')
         }
     })
 
+    $('ul.wp-submenu li', menuRoot).removeClass('current')
     $('ul.wp-submenu a', menuRoot).each(function (index, el) {
         if ($(el).attr('href') === currentPath) {
             $(el).parent().addClass('current')
             return
         }
     })
-}
-
-export default menuFix
+})
