@@ -33,6 +33,8 @@ import { NotFound } from './pages/not-found'
 
 import './store/index'
 
+import menuFix from './admin/menu-fix'
+
 domReady(function () {
     const SmartPay = () => {
         return (
@@ -116,3 +118,5 @@ domReady(function () {
 
     render(<SmartPay />, document.getElementById('smartpay'))
 })
+
+menuFix('smartpay')

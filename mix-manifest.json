@@ -2,5 +2,6 @@
     "/public/js/admin.js": "/public/js/admin.js",
     "/public/js/app.js": "/public/js/app.js",
     "/public/css/app.css": "/public/css/app.css",
-    "/public/css/admin.css": "/public/css/admin.css"
+    "/public/css/admin.css": "/public/css/admin.css",
+    "/public/js/bootstrap.js": "/public/js/bootstrap.js"
 }
