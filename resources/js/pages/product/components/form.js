@@ -15,25 +15,31 @@ const defaultVariation = {
 export const ProductForm = ({ product, setProductData }) => {
 
     useEffect(() => {
-
-        console.log('changed');
-
-        tinymce.execCommand('mceRemoveEditor', true, 'description');
-        wp.editor.initialize('description', {
-            tinymce: {},
-        })
-
         const editor = tinymce.get('description')
+
         if (editor) {
-
-            console.log('changed');
             editor.setContent(product.description);
+        } else {
+            tinymce.execCommand('mceRemoveEditor', true, 'description');
+            wp.editor.initialize('description', {
+                tinymce: {
+                    setup: function (editor) {
+                        editor.on('change', function (e) {
+                            setProductData({ description: e.target.getContent() })
+                        });
+                    }
+                }
+            })
         }
-    }, [product])
+    }, [product, setDescription])
 
-    const _setProductData = (event) => {
-        setProductData({ [event.target.name]: event.target.value })
+    const setDescription = (e) => {
+        console.log(e);
     }
+
+    const _setProductData = (event) =>
+        setProductData({ [event.target.name]: event.target.value })
+
 
     const _setVariationData = (variation, event) => {
         setVariationData(variation, {
