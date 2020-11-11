@@ -1,4 +1,4 @@
-; (function ($) {
+jQuery(($) => {
     // SmartPayFormValidation
     window.SmartPayFormValidator = function (data, rules) {
         /** Instance to self. **/
@@ -9,7 +9,7 @@
         self.validate = () => {
             return Object.entries(this.rules).reduce(
                 (errors, [property, requirements]) => {
-                    itemErrors = []
+                    let itemErrors = []
 
                     // Check required validation
                     if (requirements.required) {
@@ -93,4 +93,6 @@
     window.JSUcfirst = function (string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
     }
-})(jQuery)
+})
+
+import './frontend/payment/payment.js'

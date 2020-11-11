@@ -10,7 +10,10 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
         <div class="modal-content">
             <div class="modal-header mx-auto">
                 <button class="btn back-to-first-step">
-                    <i data-feather="arrow-left" width="21" height="21"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
                 </button>
 
                 <div class="d-flex flex-column justify-content-center modal-title">
@@ -19,7 +22,10 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
                 </div>
 
                 <button class="btn modal-close">
-                    <i data-feather="x" width="21" height="21"></i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
 

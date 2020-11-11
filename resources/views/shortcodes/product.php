@@ -1,15 +1,11 @@
 <?php
 $product_price = $product->sale_price > -1 ? $product->sale_price : $product->base_price;
-
-// $form_action = smartpay_get_payment_page_uri();
-$form_action = '#';
-// $gateways = smartpay_get_enabled_payment_gateways(true);
-$gateways = [];
+$form_action = smartpay_get_payment_page_uri();
+$gateways = smartpay_get_enabled_payment_gateways(true);
 
 $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
-// $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
-$chosen_gateway = 'paddle';
+$chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;
 ?>
 
