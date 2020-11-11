@@ -30,7 +30,7 @@ export const CreateProduct = () => {
         SaveProduct(
             JSON.stringify({
                 ...product,
-                description: tinyMCE.activeEditor.getContent(),
+                description: tinymce.get('description').getContent(),
             })
         ).then((response) => {
             setProductData(defaultProduct)

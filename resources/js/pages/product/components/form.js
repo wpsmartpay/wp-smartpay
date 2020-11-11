@@ -16,6 +16,8 @@ export const ProductForm = ({ product, setProductData }) => {
 
     useEffect(() => {
 
+        console.log('changed');
+
         tinymce.execCommand('mceRemoveEditor', true, 'description');
         wp.editor.initialize('description', {
             tinymce: {},
@@ -23,6 +25,8 @@ export const ProductForm = ({ product, setProductData }) => {
 
         const editor = tinymce.get('description')
         if (editor) {
+
+            console.log('changed');
             editor.setContent(product.description);
         }
     }, [product])

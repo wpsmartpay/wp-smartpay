@@ -58,7 +58,7 @@ export const EditProduct = () => {
             productId,
             JSON.stringify({
                 ...product,
-                description: tinyMCE.activeEditor.getContent(),
+                description: tinymce.get('description').getContent(),
             })
         ).then((response) => {
             setRespose({

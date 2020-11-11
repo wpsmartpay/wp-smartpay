@@ -126,13 +126,15 @@ class ProductController extends \WP_REST_Controller
                     return $this->createVariation($variationData, $product->id);
                 }
 
-                $product->title = $variationData->title;
-                $product->description = $variationData->description;
-                $product->base_price = $variationData->base_price;
-                $product->sale_price = $variationData->sale_price;
-                $product->files = $variationData->files ?? [];
-                $product->status = Product::PUBLISH;
-                $product->save();
+                // Update variation
+                $variation = Product::find($variationData->id);
+                $variation->title = $variationData->title;
+                $variation->description = $variationData->description;
+                $variation->base_price = $variationData->base_price;
+                $variation->sale_price = $variationData->sale_price;
+                $variation->files = $variationData->files ?? [];
+                $variation->status = Product::PUBLISH;
+                $variation->save();
             });
 
             $wpdb->query('COMMIT');
@@ -143,7 +145,6 @@ class ProductController extends \WP_REST_Controller
             return new WP_REST_Response($e->getMessage(), 500);
         }
     }
-
 
     /**
      * Create variation
