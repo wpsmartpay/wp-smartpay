@@ -9,7 +9,7 @@ jQuery(($) => {
         self.validate = () => {
             return Object.entries(this.rules).reduce(
                 (errors, [property, requirements]) => {
-                    itemErrors = []
+                    let itemErrors = []
 
                     // Check required validation
                     if (requirements.required) {
