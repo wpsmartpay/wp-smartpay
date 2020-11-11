@@ -19,6 +19,7 @@ class Activator
     public function migrate()
     {
         \CreateSmartpayProductsTable::up();
+        \CreateSmartpayFormsTable::up();
         \CreateSmartpayCouponsTable::up();
         \CreateSmartpayCustomersTable::up();
         \CreateSmartpayPaymentsTable::up();

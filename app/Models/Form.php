@@ -8,5 +8,11 @@ class Form extends Model
 {
     protected $table = 'smartpay_forms';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'title',
+        'body',
+        'status',
+    ];
+
+    const PUBLISH = 'publish';
 }

@@ -18,6 +18,9 @@ class Coupon extends Model
         'extra',
     ];
 
+    const PUBLISH   = 'publish';
+    const DRAFT     = 'draft';
+
     public function getExpiryDateAttribute($value)
     {
         return date('Y-m-d', strtotime($value));
