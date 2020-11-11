@@ -83,7 +83,7 @@ export const EditProduct = () => {
                                         <Form.Control
                                             size="sm"
                                             type="text"
-                                            value="[123]"
+                                            value={`[smartpay_product id="${product.id}"]`}
                                             readOnly
                                             className="mr-2"
                                         />
