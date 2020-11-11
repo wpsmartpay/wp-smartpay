@@ -50,7 +50,7 @@ export const CreateProduct = () => {
                 <Container>
                     <div className="d-flex align-items-center justify-content-between">
                         <h2 className="text-black">
-                            {__('SmartPay', 'smartpay')}
+                            {__('Create Product', 'smartpay')}
                         </h2>
                         <div className="ml-auto">
                             <Button
