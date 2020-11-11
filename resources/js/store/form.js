@@ -19,14 +19,14 @@ const actions = {
             forms,
         }
     },
-    getProduct(id) {
+    getForm(id) {
         return {
             type: 'GET_FORM',
             path: `${smartpay.restUrl}/v1/forms/${id}`,
             id,
         }
     },
-    setProduct(form) {
+    setForm(form) {
         return {
             type: 'SET_FORM',
             form,
@@ -66,9 +66,9 @@ registerStore('smartpay/forms', {
         getForms(state) {
             return state.forms
         },
-        getProduct(state, id) {
+        getForm(state, id) {
             if (!state.forms) {
-                return actions.getProduct(1)
+                return actions.getForm(1)
             }
             return state.forms.find((form) => form.id == id)
         },
@@ -98,9 +98,9 @@ registerStore('smartpay/forms', {
             const forms = yield actions.getForms()
             return actions.setForms(forms)
         },
-        *getProduct(id) {
-            const form = yield actions.getProduct(id)
-            return actions.setProduct(form)
+        *getForm(id) {
+            const form = yield actions.getForm(id)
+            return actions.setForm(form)
         },
     },
 })

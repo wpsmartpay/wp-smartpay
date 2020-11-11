@@ -16,8 +16,7 @@ import { EditForm } from './pages/form/edit'
 
 // Customer
 import { CustomerList } from './pages/customer/index'
-import { CreateCustomer } from './pages/customer/create'
-import { EditCustomer } from './pages/customer/edit'
+import { ShowCustomer } from './pages/customer/show'
 
 // Coupon
 import { CouponList } from './pages/coupon/index'
@@ -77,13 +76,8 @@ domReady(function () {
                         />
                         <Route
                             exact
-                            path="/customers/create"
-                            component={CreateCustomer}
-                        />
-                        <Route
-                            exact
-                            path="/customers/:customerId/edit"
-                            component={EditCustomer}
+                            path="/customers/:customerId/"
+                            component={ShowCustomer}
                         />
 
                         {/* Coupon */}
