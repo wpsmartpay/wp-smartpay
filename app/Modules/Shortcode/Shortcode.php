@@ -3,6 +3,7 @@
 namespace SmartPay\Modules\Shortcode;
 
 use SmartPay\Models\Product;
+use SmartPay\Models\Form;
 
 class Shortcode
 {
@@ -29,34 +30,37 @@ class Shortcode
      */
     public function form_shortcode($atts)
     {
-        // extract(shortcode_atts([
-        //     'id' => null,
-        //     'behavior'  => 'popup',
-        //     'label'     => '',
-        // ], $atts));
+        extract(shortcode_atts([
+            'id' => null,
+            'behavior'  => 'popup',
+            'label'     => '',
+        ], $atts));
 
-        // if (!isset($id)) return;
+        if (!isset($id)) return;
 
-        // // TODO: Add message if no payment method setup
+        // TODO: Add message if no payment method setup
 
+        // TODO: need to remove
         // $form = smartpay_get_form($id);
+        $form = Form::where('id', $id)->first();
 
-        // if (!isset($form)) return;
+        if (!isset($form)) return;
 
+        // TODO: need to implement this function
         // if (!$form->can_pay()) {
         //     echo 'You can\'t pay on this form.';
         //     return;
         // }
 
-        // try {
-        //     ob_start();
+        try {
+            ob_start();
 
-        //     echo smartpay_view_render('shortcodes/form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
+            echo smartpay_view('shortcodes.form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
 
-        //     return ob_get_clean();
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
-        // }
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**

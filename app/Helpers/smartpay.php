@@ -803,6 +803,18 @@ function smartpay_get_enabled_payment_gateways($sort = false)
     return $gateway_list;
 }
 
+function smartpay_is_gateway_active($gateway)
+{
+    $gateways = smartpay_get_enabled_payment_gateways();
+
+    if (!is_array($gateways) || !count($gateways)) {
+        return;
+    }
+
+    $is_active = array_key_exists($gateway, $gateways);
+    return $is_active;
+}
+
 function smartpay_get_default_gateway()
 {
     $default = smartpay_get_option('default_gateway', 'paddle');
@@ -831,4 +843,22 @@ function smartpay_get_settings()
         update_option('smartpay_settings', $settings);
     }
     return apply_filters('smartpay_get_settings', $settings);
+}
+
+function smartpay_get_payment_page_uri($query_string = null)
+{
+    $page_id = absint(smartpay_get_option('payment_page', 0));
+
+    return smartpay_get_page_uri($page_id, $query_string);
+}
+
+function smartpay_get_page_uri($page_id, $query_string = null)
+{
+    $page_uri = get_permalink($page_id);
+
+    if ($query_string) {
+        $page_uri .= $query_string;
+    }
+
+    return $page_uri;
 }

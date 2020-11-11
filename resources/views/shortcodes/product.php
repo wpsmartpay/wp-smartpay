@@ -3,8 +3,7 @@ $product_price = $product->sale_price > -1 ? $product->sale_price : $product->ba
 
 // $form_action = smartpay_get_payment_page_uri();
 $form_action = '#';
-// $gateways = smartpay_get_enabled_payment_gateways(true);
-$gateways = [];
+$gateways = smartpay_get_enabled_payment_gateways(true);
 
 $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
