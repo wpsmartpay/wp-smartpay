@@ -46,53 +46,70 @@ domReady(function () {
                         <Route exact path="/" component={Dashboard} />
 
                         {/* Product */}
-                        <Route path="/products" component={ProductList} />
+                        <Route exact path="/products" component={ProductList} />
                         <Route
+                            exact
                             path="/products/create"
                             component={CreateProduct}
                         />
                         <Route
+                            exact
                             path="/products/:productId/edit"
                             component={EditProduct}
                         />
 
                         {/* Form */}
-                        <Route path="/forms" component={FormList} />
-                        <Route path="/forms/create" component={CreateForm} />
+                        <Route exact path="/forms" component={FormList} />
                         <Route
+                            exact
+                            path="/forms/create"
+                            component={CreateForm}
+                        />
+                        <Route
+                            exact
                             path="/forms/:formId/edit"
                             component={EditForm}
                         />
 
                         {/* Customer */}
-                        <Route path="/customers" component={CustomerList} />
                         <Route
+                            exact
+                            path="/customers"
+                            component={CustomerList}
+                        />
+                        <Route
+                            exact
                             path="/customers/create"
                             component={CreateCustomer}
                         />
                         <Route
+                            exact
                             path="/customers/:customerId/edit"
                             component={EditCustomer}
                         />
 
                         {/* Coupon */}
-                        <Route path="/coupons" component={CouponList} />
+                        <Route exact path="/coupons" component={CouponList} />
                         <Route
+                            exact
                             path="/coupons/create"
                             component={CreateCoupon}
                         />
                         <Route
+                            exact
                             path="/coupons/:couponId/edit"
                             component={EditCoupon}
                         />
 
                         {/* Payment */}
-                        <Route path="/payments" component={PaymentList} />
+                        <Route exact path="/payments" component={PaymentList} />
                         <Route
+                            exact
                             path="/payments/create"
                             component={CreatePayment}
                         />
                         <Route
+                            exact
                             path="/payments/:paymentId/edit"
                             component={EditPayment}
                         />
