@@ -99,23 +99,26 @@ class Admin
         );
     }
 
-    public function adminScripts()
+    public function adminScripts($hook)
     {
         wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-admin');
 
-        wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
-        wp_enqueue_script('smartpay-admin');
-        wp_localize_script(
-            'smartpay-admin',
-            'smartpay',
-            array(
-                'restUrl'  => get_rest_url('', 'smartpay'),
-                'adminUrl'  => admin_url('admin.php'),
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'apiNonce' => wp_create_nonce('wp_rest')
-            )
-        );
+
+        if ('toplevel_page_smartpay' == $hook) {
+            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
+            wp_enqueue_script('smartpay-admin');
+            wp_localize_script(
+                'smartpay-admin',
+                'smartpay',
+                array(
+                    'restUrl'  => get_rest_url('', 'smartpay'),
+                    'adminUrl'  => admin_url('admin.php'),
+                    'ajax_url' => admin_url('admin-ajax.php'),
+                    'apiNonce' => wp_create_nonce('wp_rest')
+                )
+            );
+        }
 
         wp_enqueue_editor();
         wp_enqueue_media();
