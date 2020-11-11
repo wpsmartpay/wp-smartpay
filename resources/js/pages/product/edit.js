@@ -36,8 +36,17 @@ export const EditProduct = () => {
     )
 
     const getProduct = useCallback(() => {
-        const product = select('smartpay/products').getProduct(productId)
+        let product = select('smartpay/products').getProduct(productId)
+
+        if (product && product.hasOwnProperty('variations')) {
+            product = {
+                ...product, variations: product.variations.map(variation => {
+                    return { ...variation, key: `old-${variation.id}` }
+                })
+            }
+        }
         setProductData(product)
+
     }, [productId])
 
     useEffect(() => {
@@ -51,14 +60,12 @@ export const EditProduct = () => {
                 ...product,
                 description: tinyMCE.activeEditor.getContent(),
             })
-        )
-
-        // .then((response) => {
-        setRespose({
-            type: 'success',
-            message: 'Product updated',
+        ).then((response) => {
+            setRespose({
+                type: 'success',
+                message: 'Product updated',
+            })
         })
-        // })
     }
 
     return (

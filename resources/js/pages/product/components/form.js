@@ -38,13 +38,10 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const setVariationData = (variation, data) => {
-        const productVariation = product.variations.filter((item) => {
-            return item.id !== variation.id
-        })
-
-        setProductData({
-            variations: [...productVariation, { ...variation, ...data }],
-        })
+        const variations = product.variations.map(v =>
+            v.key === variation.key ? { ...v, ...data } : v
+        );
+        setProductData({ variations })
     }
 
     const selectCover = () => {
@@ -124,7 +121,7 @@ export const ProductForm = ({ product, setProductData }) => {
     const removeVariation = (variation) => {
         setProductData({
             variations: product.variations.filter((item) => {
-                return item.id !== variation.id
+                return item.key !== variation.key
             }),
         })
     }
@@ -374,18 +371,18 @@ export const ProductForm = ({ product, setProductData }) => {
                                         </button>
                                     </div>
                                 </div>
-                                {product.variations.map((variation, index) => {
+                                {product.variations.map((variation) => {
                                     return (
                                         <div
                                             className="variation-option bg-light"
-                                            key={index}
+                                            key={variation.key}
                                         >
                                             <div className="variation-option__header p-3">
                                                 <div className="form-row">
                                                     <div className="col-11">
                                                         <div className="form-group m-0">
                                                             <label
-                                                                htmlFor={`variation-${variation.id}`}
+                                                                htmlFor={`variation-${variation.key}`}
                                                                 className="text-muted my-2 d-block"
                                                             >
                                                                 {__(
@@ -396,7 +393,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
-                                                                id={`variation-${variation.id}`}
+                                                                id={`variation-${variation.key}`}
                                                                 name="title"
                                                                 value={
                                                                     variation.title
@@ -434,7 +431,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label
-                                                                htmlFor={`variation-${variation.id}-base_price`}
+                                                                htmlFor={`variation-${variation.key}-base_price`}
                                                                 className="text-muted my-2 d-block"
                                                             >
                                                                 {__(
@@ -446,7 +443,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                 type="text"
                                                                 className="form-control"
                                                                 name="base_price"
-                                                                id={`variation-${variation.id}-base_price`}
+                                                                id={`variation-${variation.key}-base_price`}
                                                                 value={
                                                                     variation.base_price
                                                                 }
@@ -468,7 +465,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label
-                                                                htmlFor={`variation-${variation.id}-sale_price`}
+                                                                htmlFor={`variation-${variation.key}-sale_price`}
                                                                 className="text-muted my-2 d-block"
                                                             >
                                                                 {__(
@@ -480,7 +477,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                 type="text"
                                                                 className="form-control"
                                                                 name="sale_price"
-                                                                id={`variation-${variation.id}-sale_price`}
+                                                                id={`variation-${variation.key}-sale_price`}
                                                                 value={
                                                                     variation.sale_price
                                                                 }
@@ -504,7 +501,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                             <div className="variation-option-body bg-light p-3">
                                                 <div className="form-group">
                                                     <label
-                                                        htmlFor={`variation-${variation.id}-description`}
+                                                        htmlFor={`variation-${variation.key}-description`}
                                                         className="text-muted my-2 d-block"
                                                     >
                                                         {__(
@@ -515,7 +512,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     <textarea
                                                         className="form-control"
                                                         name="description"
-                                                        id={`variation-${variation.id}-description`}
+                                                        id={`variation-${variation.key}-description`}
                                                         value={
                                                             variation.description
                                                         }
