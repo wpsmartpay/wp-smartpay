@@ -2,11 +2,17 @@
 
 namespace SmartPay\Modules\Gateway;
 
+use SmartPay\Modules\Gateway\Gateways\PaypalStandard;
+
 class Gateway
 {
-    public function __construct()
+    protected $app;
+
+    public function __construct($app)
     {
-        //
+        $this->app = $app;
+
+        $this->app->make(PaypalStandard::class);
     }
 
     public static function gateways()
