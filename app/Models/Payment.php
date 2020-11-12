@@ -8,7 +8,22 @@ class Payment extends Model
 {
     protected $table = 'smartpay_payments';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'type',
+        'data',
+        'amount',
+        'currency',
+        'gateway',
+        'transaction_id',
+        'customer_id',
+        'email',
+        'key',
+        'parent_payment',
+        'mode',
+        'status',
+        'extra',
+        'completed_at',
+    ];
 
     const PENDING = 'pending';
 
