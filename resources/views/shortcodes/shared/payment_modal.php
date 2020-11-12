@@ -2,7 +2,15 @@
 
 use SmartPay\Models\Customer;
 
-$customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->first() : null;
+$customer = is_user_logged_in() ? Customer::where('user_id', get_current_user_id())->first() : null;
+
+$gateways = smartpay_get_enabled_payment_gateways(true);
+
+$_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
+
+$chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
+
+$has_payment_error = false;
 ?>
 
 <div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
@@ -18,7 +26,7 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
 
                 <div class="d-flex flex-column justify-content-center modal-title">
                     <p class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></p>
-                    <h2 class="payment-modal--title amount m-0">0</h2>
+                    <h2 class="payment-modal--title amount m-0">--</h2>
                 </div>
 
                 <button class="btn modal-close">
@@ -30,18 +38,18 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
             </div>
 
             <div class="modal-body p-1 text-center step-1">
-                <div class="align-self-center">
-                    <form action="<?php echo $form_action; ?>" method="POST">
+                <div class="align-self-center w-100">
+                    <form action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
                         <div class="payment-modal--gateway">
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
                             <?php $gateways_index = array_keys($gateways); ?>
-                            <!-- <p class="payment-gateway--label text-muted single-gateway"> -->
-                            <?php //echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])); 
-                                ?>
-                            <!-- </p> -->
+                            <p class="payment-gateway--label text-muted single-gateway">
+                                <?php echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label']));
+                                    ?>
+                            </p>
                             <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
                             <!-- // If it has multiple payment gateway -->
@@ -49,22 +57,20 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
                             <p class="payment-gateway--label text-muted"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
 
                             <div class="gateways m-0 justify-content-center d-flex">
-                                <?php foreach ($gateways as $gateway_id => $gateway) : ?>
+                                <?php foreach ($gateways as $gatewayId => $gateway) : ?>
                                 <div class="gateway">
-                                    <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" value="<?php echo esc_attr($gateway_id) ?>" <?php echo checked($gateway_id, $chosen_gateway, false); ?>>
-                                    <label for="<?php echo 'smartpay_gateway_' . esc_attr($gateway_id); ?>" class="gateway--label">
-                                        <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gateway_id . '.png'; ?>" alt="">
+                                    <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
+                                    <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
+                                        <!-- // FIXME: Make gateway image dynamic -->
+                                        <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
                                         <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
                                     </label>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
                             <?php else : ?>
-
-                            <?php
-                                $has_payment_error = true;
-                                echo 'You must enable a payment gateway to proceed a payment.';
-                                ?>
+                            <?php $has_payment_error = true; ?>
+                            <div class="alert alert-danger"><?php echo 'You must enable a payment gateway to proceed a payment.'; ?></div>
                             <?php endif; ?>
                         </div>
 
@@ -86,11 +92,6 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
                             <button type="button" class="btn btn-success btn-block btn-lg smartpay-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>>
                                 <?php echo _e('Pay Now', 'smartpay'); ?>
                             </button>
-
-                            <?php $gateways_index = array_keys($gateways); ?>
-                            <?php if (count($gateways) == 1 && 'paddle' == reset($gateways_index)) : ?>
-                            <div class="mt-3"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/paddle-payment-methods.png'; ?>" class="img-fluid" alt="paddle-payment-methods"></div>
-                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
@@ -121,6 +122,7 @@ $customer = is_user_logged_in() ? Customer::where('id', get_current_user_id())->
     </div>
 </div>
 
+<!-- // FIXME -->
 <!-- <div id="smartpay_currency_symbol" data-value="<?php //echo smartpay_get_currency_symbol(); 
                                                     ?>"></div> -->
-<div id="smartpay_currency_symbol" data-value="USD"></div>
+<div id="smartpay_currency_symbol" data-value="$"></div>

@@ -5,6 +5,7 @@ namespace SmartPay\Modules\Payment;
 use SmartPay\Models\Product;
 
 use SmartPay\Http\Controllers\Rest\Admin\PaymentController;
+use SmartPay\Models\Customer;
 use WP_REST_Server;
 
 class Payment
@@ -103,6 +104,25 @@ class Payment
         die();
     }
 
+    private function _process_gateway_payment($paymentData, $ajax = true)
+    {
+        $gateway = sanitize_text_field($_POST['data']['smartpay_gateway']) ?? '';
+
+        if (!is_string($gateway) || !smartpay_is_gateway_active($gateway)) {
+            echo '<p class="text-danger">Gateway is not active or not exist!</p>';
+            return;
+        }
+
+        $paymentData['gateway_nonce'] = wp_create_nonce('smartpay-gateway');
+
+        // gateway must match the ID used when registering the gateway
+        if ($ajax) {
+            do_action('smartpay_' . $gateway . '_ajax_process_payment', $paymentData);
+        } else {
+            do_action('smartpay_' . $gateway . '_process_payment', $paymentData);
+        }
+    }
+
     private function _checkValidation($_data)
     {
         // TODO: Reform validation
@@ -162,7 +182,7 @@ class Payment
                 } else {
 
                     return array(
-                        'product_id'    => $product->ID,
+                        'product_id'    => $product->id,
                         'product_price' => $product_price,
                         'total_amount'  => $product_price,
                     );
@@ -178,7 +198,7 @@ class Payment
                 if (empty($form_id) || empty($form)) return [];
 
                 return [
-                    'form_id' => $form->ID,
+                    'form_id' => $form->id,
                     'total_amount' => $_data['smartpay_form_amount'] ?? 0,
                 ];
                 break;
@@ -191,10 +211,10 @@ class Payment
 
     private function _get_payment_customer($_data)
     {
-        $customer = new SmartPay_Customer($_data['smartpay_email']);
+        $customer = Customer::where('email', $_data['smartpay_email'])->first();
 
-        if ($customer->ID) {
-            $customer_id = $customer->ID;
+        if ($customer->id) {
+            $customer_id = $customer->id;
         } else {
             $customer->user_id      = is_user_logged_in() ? get_current_user_id() : 0;
             $customer->first_name   = $_data['smartpay_first_name'];
@@ -210,5 +230,40 @@ class Payment
             'last_name'   => $_data['smartpay_last_name'] ?? '',
             'email'       => $_data['smartpay_email'] ?? '',
         ];
+    }
+
+    public function insertPayment($paymentData)
+    {
+        if (empty($paymentData)) return;
+
+        $payment = new \SmartPay\Models\Payment();
+        $payment->type   = $paymentData['payment_type'];
+        $payment->data   = json_encode($paymentData['payment_data']);
+        $payment->amount         = $paymentData['amount'];
+        $payment->currency       = $paymentData['currency'] ?? smartpay_get_currency();
+        $payment->gateway        = $paymentData['gateway'] ?? smartpay_get_default_gateway();
+        $payment->customer_id      = $paymentData['customer']['customer_id'];
+        $payment->email          = $paymentData['email'];
+        $payment->key            = $paymentData['key'];
+        $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
+        $payment->parent_payment = !empty($paymentData['parent']) ? absint($paymentData['parent']) : '';
+        $payment->status         = $paymentData['status'] ?? 'pending';
+
+        $payment->save();
+
+        do_action('smartpay_after_insert_payment', $payment);
+
+        if (!empty($payment->id)) {
+            // Set session payment id
+            //smartpay_set_session_payment_id($payment->ID);
+
+            // Attach payment to customer
+            // $this->attach_customer_payment($payment);
+
+            return $payment;
+        }
+
+        // Return false if no payment was inserted
+        return false;
     }
 }

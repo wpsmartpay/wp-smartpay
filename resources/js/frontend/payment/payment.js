@@ -32,7 +32,6 @@ jQuery(($) => {
                 .find('.product-modal')
 
             setTimeout(() => {
-                // Show product modal
                 $productModal.modal('show')
 
                 // Appending modal background inside the .smartpay div
@@ -139,7 +138,6 @@ jQuery(($) => {
                 .attr('disabled', 'disabled')
 
             setTimeout(() => {
-                // Show payment modal
                 $paymentModal.modal('show')
 
                 // Appending modal background inside the .smartpay div
@@ -275,25 +273,20 @@ jQuery(($) => {
             smartpay_payment_type:
                 $wrapper.find('input[name="smartpay_payment_type"]').val() ||
                 null,
+        }
 
-            // Product purchase
-            smartpay_product_id:
-                $wrapper.find('input[name="smartpay_product_id"]').val() ||
-                null,
-            smartpay_product_price:
+        if ('product_purchase' === data.smartpay_payment_type) {
+            data.smartpay_product_id =
+                $wrapper.find('input[name="smartpay_product_id"]').val() || null
+            data.smartpay_product_price =
                 $wrapper.find('input[name="smartpay_product_price"]').val() ||
-                null,
-            smartpay_product_variation_id:
-                $wrapper
-                    .find("input[name='smartpay_product_variation_id']:checked")
-                    .val() || null,
-
-            // Form payment
-            smartpay_form_id:
-                $wrapper.find('input[name="smartpay_form_id"]').val() || null,
-            smartpay_form_amount:
+                null
+        } else {
+            data.smartpay_form_id =
+                $wrapper.find('input[name="smartpay_form_id"]').val() || null
+            data.smartpay_form_amount =
                 $wrapper.find('input[name="smartpay_form_amount"]').val() ||
-                null,
+                null
         }
 
         if (index) {
