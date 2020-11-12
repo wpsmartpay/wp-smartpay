@@ -2,7 +2,7 @@
 
 use SmartPay\Framework\Container\Container;
 
-if (!function_exists('app')) {
+if (!function_exists('smartpay')) {
     /**
      * Get the available container instance.
      *
@@ -10,7 +10,7 @@ if (!function_exists('app')) {
      * @param  array  $parameters
      * @return mixed|\SmartPay\Framework\Application
      */
-    function app($make = null, array $parameters = [])
+    function smartpay($make = null, array $parameters = [])
     {
         if (is_null($make)) {
             return Container::getInstance();
@@ -29,7 +29,7 @@ if (!function_exists('base_path')) {
      */
     function base_path($path = '')
     {
-        return app()->basePath() . ($path ? '/' . $path : $path);
+        return smartpay()->basePath() . ($path ? '/' . $path : $path);
     }
 }
 
@@ -44,7 +44,7 @@ if (!function_exists('smartpay_view')) {
      */
     function smartpay_view($view = null, $data = [], $mergeData = [])
     {
-        $factory = app('view');
+        $factory = smartpay('view');
 
         if (func_num_args() === 0) {
             return $factory;
@@ -66,7 +66,7 @@ if (!function_exists('validator')) {
      */
     function validator($data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {
-        $factory = app('validator');
+        $factory = smartpay('validator');
 
         if (func_num_args() === 0) {
             return $factory;
