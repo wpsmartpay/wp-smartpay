@@ -1,9 +1,11 @@
 import {
-	Popover,
-	SlotFillProvider,
-	DropZoneProvider,
-	FocusReturnProvider,
+    Popover,
+    SlotFillProvider,
+    DropZoneProvider,
+    FocusReturnProvider,
 } from '@wordpress/components'
+
+import { useState } from '@wordpress/element'
 
 import { InterfaceSkeleton, FullscreenMode } from '@wordpress/interface'
 
@@ -13,29 +15,33 @@ import Sidebar from './components/sidebar'
 import BlockEditor from './components/block-editor'
 
 function Editor({ settings }) {
-	return (
-		<>
-			<FullscreenMode isActive={false} />
-			<SlotFillProvider>
-				<DropZoneProvider>
-					<FocusReturnProvider>
-						<InterfaceSkeleton
-							header={<Header />}
-							sidebar={<Sidebar />}
-							content={
-								<>
-									{/* <Notices /> */}
-									<BlockEditor settings={settings} />
-								</>
-							}
-						/>
+    const [formData, setformData] = useState('')
+    return (
+        <>
+            <FullscreenMode isActive={false} />
+            <SlotFillProvider>
+                <DropZoneProvider>
+                    <FocusReturnProvider>
+                        <InterfaceSkeleton
+                            header={<Header formData={formData} />}
+                            sidebar={<Sidebar />}
+                            content={
+                                <>
+                                    {/* <Notices /> */}
+                                    <BlockEditor
+                                        setformData={setformData}
+                                        settings={settings}
+                                    />
+                                </>
+                            }
+                        />
 
-						<Popover.Slot />
-					</FocusReturnProvider>
-				</DropZoneProvider>
-			</SlotFillProvider>
-		</>
-	)
+                        <Popover.Slot />
+                    </FocusReturnProvider>
+                </DropZoneProvider>
+            </SlotFillProvider>
+        </>
+    )
 }
 
 export default Editor

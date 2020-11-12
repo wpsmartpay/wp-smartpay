@@ -6,7 +6,7 @@ export const GetProduct = () => {}
 
 export const SaveProduct = (body) => {
     return apiFetch({
-        path: `${smartpay.restUrl}/v1/products`,
+        path: `/smartpay/v1/products`,
         method: 'POST',
         headers: {
             'X-WP-Nonce': smartpay.apiNonce,
@@ -18,7 +18,7 @@ export const SaveProduct = (body) => {
 export const UpdateProduct = (id, body) => {
     console.log('update', id)
     return apiFetch({
-        path: `${smartpay.restUrl}/v1/products/${id}`,
+        path: `/smartpay/v1/products/${id}`,
         method: 'PUT',
         headers: {
             'X-WP-Nonce': smartpay.apiNonce,

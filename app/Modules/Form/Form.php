@@ -3,6 +3,7 @@
 namespace SmartPay\Modules\Form;
 
 use SmartPay\Http\Controllers\Rest\Admin\FormController;
+use SmartPay\Models\Form as FormModel;
 use WP_REST_Server;
 
 class Form
@@ -34,6 +35,27 @@ class Form
             SMARTPAY_VERSION,
         );
 
+        register_block_type('smartpay/product', array(
+            'editor_script' => 'smartpay-block-editors-js',
+        ));
+
+        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_products', json_encode($this->get_product_data()));
+
+        register_block_type('smartpay/form', array(
+            'editor_script' => 'smartpay-block-editors-js',
+        ));
+
+        // wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_forms', json_encode($this->get_data('smartpay_form')));
+
+        // wp_localize_script(
+        //     'smartpay-form',
+        //     'smartpay',
+        //     [
+        //         'restUrl'  => get_rest_url('', 'smartpay'),
+        //         'apiNonce' => wp_create_nonce('wp_rest')
+        //     ]
+        // );
+
         // Inline the Editor Settings.
         wp_add_inline_script(
             'smartpay-form',
@@ -57,6 +79,12 @@ class Form
             ['wp-edit-blocks'],
             SMARTPAY_VERSION
         );
+    }
+
+    public function get_product_data()
+    {
+        $forms = FormModel::all();
+        return $forms;
     }
 
     public function block_editor_settings()
