@@ -21,7 +21,7 @@ class Form
     {
         $this->registerBlocks();
 
-        if ('smartpay_page_smartpay-form-builder' === $hook) {
+        if ('smartpay_page_smartpay-form' === $hook) {
             $this->registerFormEditor();
         }
     }
