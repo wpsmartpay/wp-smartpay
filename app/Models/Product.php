@@ -41,6 +41,11 @@ class Product extends Model
         return \json_decode($covers);
     }
 
+    public function getPriceAttribute()
+    {
+        return ($this->sale_price > -1) ? $this->sale_price : $this->base_price;
+    }
+
     public function variations()
     {
         return $this->hasMany(Product::class, 'parent', 'id');
