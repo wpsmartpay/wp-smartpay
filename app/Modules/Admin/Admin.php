@@ -59,7 +59,7 @@ class Admin
             __('SmartPay - Forms', 'smartpay'),
             __('Form Builder', 'smartpay'),
             'manage_options',
-            'smartpay-form-builder',
+            'smartpay-form',
             function () {
                 echo smartpay_view('form-builder');
             }

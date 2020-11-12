@@ -10,7 +10,7 @@ const actions = {
     getCustomers() {
         return {
             type: 'GET_CUSTOMERS',
-            path: `${smartpay.restUrl}/v1/customers`,
+            path: `/smartpay/v1/customers`,
         }
     },
     setCustomers(customers) {
@@ -22,7 +22,7 @@ const actions = {
     getCustomer(id) {
         return {
             type: 'GET_FORM',
-            path: `${smartpay.restUrl}/v1/customers/${id}`,
+            path: `/smartpay/v1/customers/${id}`,
             id,
         }
     },

@@ -31,10 +31,11 @@ class FormController extends RestController
 
     public function store(\WP_REST_Request $request)
     {
-        dd($request->get_body());
+        $form = new Form();
+        $form->body = $request->get_body();
+        $form->save();
 
-        $product =  Form::create([
-            // 'title' => $title,
-        ]);
+        $response = new \WP_REST_Response($form, 200);
+        return $response;
     }
 }
