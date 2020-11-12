@@ -44,6 +44,11 @@ function BlockEditor({ settings: _settings, setformData }) {
     }, [canUserCreateMedia, _settings])
 
     useEffect(() => {
+        // var data = window.location.href.split(
+        //     '/admin.php?page=smartpay-form&action=edit&id='
+        // )[1]
+        // console.log(data)
+
         const storedBlocks = window.localStorage.getItem('smartpayBlockEditor')
 
         if (storedBlocks?.length) {

@@ -8164,6 +8164,10 @@ function BlockEditor(_ref) {
     });
   }, [canUserCreateMedia, _settings]);
   Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+    // var data = window.location.href.split(
+    //     '/admin.php?page=smartpay-form&action=edit&id='
+    // )[1]
+    // console.log(data)
     var storedBlocks = window.localStorage.getItem('smartpayBlockEditor');
 
     if (storedBlocks === null || storedBlocks === void 0 ? void 0 : storedBlocks.length) {
