@@ -7,11 +7,11 @@ import Editor from './editor'
 import './styles.scss'
 
 domReady(function () {
-	const settings = window.smartPayBlockEditorSettings || {}
-	registerCoreBlocks()
+    const settings = window.smartPayBlockEditorSettings || {}
+    registerCoreBlocks()
 
-	render(
-		<Editor settings={settings} />,
-		document.getElementById('smartpay-form-block-editor')
-	)
+    render(
+        <Editor settings={settings} />,
+        document.getElementById('smartpay-form-block-editor')
+    )
 })

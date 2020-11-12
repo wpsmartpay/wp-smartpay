@@ -6537,6 +6537,272 @@ var save = function save(_ref) {
 
 /***/ }),
 
+/***/ "./resources/block-editor/blocks/forms/form/components/SelectForm.js":
+/*!***************************************************************************!*\
+  !*** ./resources/block-editor/blocks/forms/form/components/SelectForm.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var __ = wp.i18n.__;
+var SelectControl = wp.components.SelectControl;
+
+var SelectForm = /*#__PURE__*/function (_React$Component) {
+  _inherits(SelectForm, _React$Component);
+
+  var _super = _createSuper(SelectForm);
+
+  function SelectForm(props) {
+    _classCallCheck(this, SelectForm);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(SelectForm, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SelectControl, {
+        "class": this.props["class"],
+        value: this.props.formId,
+        onChange: this.props.onSetId,
+        options: this.props.formOptions
+      });
+    }
+  }]);
+
+  return SelectForm;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (SelectForm);
+
+/***/ }),
+
+/***/ "./resources/block-editor/blocks/forms/form/components/Sidebar.js":
+/*!************************************************************************!*\
+  !*** ./resources/block-editor/blocks/forms/form/components/Sidebar.js ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var __ = wp.i18n.__;
+var InspectorControls = wp.editor.InspectorControls;
+var _wp$components = wp.components,
+    SelectControl = _wp$components.SelectControl,
+    TextControl = _wp$components.TextControl,
+    CardBody = _wp$components.CardBody;
+
+var Sidebar = /*#__PURE__*/function (_React$Component) {
+  _inherits(Sidebar, _React$Component);
+
+  var _super = _createSuper(Sidebar);
+
+  function Sidebar(props) {
+    _classCallCheck(this, Sidebar);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(Sidebar, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(InspectorControls, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CardBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SelectControl, {
+        label: __('Shortcode behavior', 'smartpay'),
+        value: this.props.attributes.behavior,
+        onChange: this.props.onSetBehavior,
+        options: [{
+          value: null,
+          label: __('Select a behavior', 'smartpay'),
+          disabled: true
+        }, {
+          value: 'popup',
+          label: __('Popup', 'smartpay')
+        }, {
+          value: 'embedded',
+          label: __('Embedded', 'smartpay')
+        }]
+      }), 'popup' === this.props.attributes.behavior && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(TextControl, {
+        label: __('Button label', 'smartpay'),
+        value: this.props.attributes.label,
+        onChange: this.props.onSetLabel
+      })));
+    }
+  }]);
+
+  return Sidebar;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (Sidebar);
+
+/***/ }),
+
+/***/ "./resources/block-editor/blocks/forms/form/index.js":
+/*!***********************************************************!*\
+  !*** ./resources/block-editor/blocks/forms/form/index.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Sidebar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Sidebar */ "./resources/block-editor/blocks/forms/form/components/Sidebar.js");
+/* harmony import */ var _components_SelectForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/SelectForm */ "./resources/block-editor/blocks/forms/form/components/SelectForm.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var __ = wp.i18n.__;
+var registerBlockType = wp.blocks.registerBlockType;
+var Fragment = wp.element.Fragment;
+
+
+/* harmony default export */ __webpack_exports__["default"] = (registerBlockType('smartpay/form', {
+  title: __('SmartPay Form', 'smartpay'),
+  description: __('Simple block to show a form', 'smartpay'),
+  icon: 'format-aside',
+  category: 'widgets',
+  attributes: {
+    id: {
+      type: 'integer',
+      "default": 0
+    },
+    behavior: {
+      type: 'string',
+      "default": 'popup'
+    },
+    label: {
+      type: 'string',
+      "default": ''
+    }
+  },
+  edit: function edit(_ref) {
+    var attributes = _ref.attributes,
+        setAttributes = _ref.setAttributes;
+
+    function setId(id) {
+      setAttributes({
+        id: parseInt(id)
+      });
+    }
+
+    function setBehavior(behavior) {
+      setAttributes({
+        behavior: behavior
+      });
+    }
+
+    function setLabel(label) {
+      setAttributes({
+        label: label
+      });
+    }
+
+    var formOptions = [{
+      value: null,
+      label: __('Select a form', 'smartpay')
+    }].concat(_toConsumableArray(JSON.parse(smartpay_block_editor_forms).map(function (form) {
+      return {
+        value: form.id,
+        label: "(#".concat(form.id, ") ").concat(form.title)
+      };
+    })));
+    return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+      "class": "smartpay"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "container block-editor form card py-4"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "card-body text-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "d-flex justify-content-center mt-1"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "col-md-8"
+    }, /*#__PURE__*/React.createElement("h5", {
+      "class": "text-center mb-3 m-0 font-weight-normal",
+      style: {
+        fontSize: '16px'
+      }
+    }, __('Select a Form', 'smartpay')), /*#__PURE__*/React.createElement(_components_SelectForm__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      formOptions: formOptions,
+      formId: attributes.id,
+      onSetId: setId,
+      "class": "form-control form-control-sm mx-auto"
+    })))))), /*#__PURE__*/React.createElement(_components_Sidebar__WEBPACK_IMPORTED_MODULE_0__["default"], {
+      attributes: attributes,
+      onSetId: setId,
+      onSetBehavior: setBehavior,
+      onSetLabel: setLabel
+    }));
+  },
+  save: function save(_ref2) {
+    var attributes = _ref2.attributes;
+    return "<!-- wp:shortcode -->[smartpay_form id=\"".concat(attributes.id, "\" behavior=\"").concat(attributes.behavior, "\" label=\"").concat(attributes.label, "\"]<!-- /wp:shortcode -->");
+  }
+}));
+console.log('form select block');
+
+/***/ }),
+
 /***/ "./resources/block-editor/blocks/forms/index.js":
 /*!******************************************************!*\
   !*** ./resources/block-editor/blocks/forms/index.js ***!
@@ -6546,9 +6812,9 @@ var save = function save(_ref) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./elements */ "./resources/block-editor/blocks/forms/elements/index.js");
-// import './form'
-// import './name'
+/* harmony import */ var _form__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./form */ "./resources/block-editor/blocks/forms/form/index.js");
+/* harmony import */ var _elements__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./elements */ "./resources/block-editor/blocks/forms/elements/index.js");
+
 
 
 /***/ }),
@@ -6563,7 +6829,274 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./forms */ "./resources/block-editor/blocks/forms/index.js");
- // import './product'
+/* harmony import */ var _product__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./product */ "./resources/block-editor/blocks/product/index.js");
+
+
+
+/***/ }),
+
+/***/ "./resources/block-editor/blocks/product/components/SelectProduct.js":
+/*!***************************************************************************!*\
+  !*** ./resources/block-editor/blocks/product/components/SelectProduct.js ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var __ = wp.i18n.__;
+var SelectControl = wp.components.SelectControl;
+
+var SelectProduct = /*#__PURE__*/function (_React$Component) {
+  _inherits(SelectProduct, _React$Component);
+
+  var _super = _createSuper(SelectProduct);
+
+  function SelectProduct(props) {
+    _classCallCheck(this, SelectProduct);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(SelectProduct, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SelectControl, {
+        "class": this.props["class"],
+        value: this.props.productId,
+        onChange: this.props.onSetId,
+        options: this.props.productOptions
+      });
+    }
+  }]);
+
+  return SelectProduct;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (SelectProduct);
+
+/***/ }),
+
+/***/ "./resources/block-editor/blocks/product/components/Sidebar.js":
+/*!*********************************************************************!*\
+  !*** ./resources/block-editor/blocks/product/components/Sidebar.js ***!
+  \*********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+
+var __ = wp.i18n.__;
+var InspectorControls = wp.editor.InspectorControls;
+var _wp$components = wp.components,
+    SelectControl = _wp$components.SelectControl,
+    TextControl = _wp$components.TextControl,
+    CardBody = _wp$components.CardBody;
+
+var Sidebar = /*#__PURE__*/function (_React$Component) {
+  _inherits(Sidebar, _React$Component);
+
+  var _super = _createSuper(Sidebar);
+
+  function Sidebar(props) {
+    _classCallCheck(this, Sidebar);
+
+    return _super.call(this, props);
+  }
+
+  _createClass(Sidebar, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(InspectorControls, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CardBody, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(SelectControl, {
+        label: __('Shortcode behavior', 'smartpay'),
+        value: this.props.attributes.behavior,
+        onChange: this.props.onSetBehavior,
+        options: [{
+          value: null,
+          label: __('Select a behavior', 'smartpay'),
+          disabled: true
+        }, {
+          value: 'popup',
+          label: __('Popup', 'smartpay')
+        }, {
+          value: 'embedded',
+          label: __('Embedded', 'smartpay')
+        }]
+      }), 'popup' === this.props.attributes.behavior && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(TextControl, {
+        label: __('Button label', 'smartpay'),
+        value: this.props.attributes.label,
+        onChange: this.props.onSetLabel
+      })));
+    }
+  }]);
+
+  return Sidebar;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (Sidebar);
+
+/***/ }),
+
+/***/ "./resources/block-editor/blocks/product/index.js":
+/*!********************************************************!*\
+  !*** ./resources/block-editor/blocks/product/index.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_Sidebar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/Sidebar */ "./resources/block-editor/blocks/product/components/Sidebar.js");
+/* harmony import */ var _components_SelectProduct__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/SelectProduct */ "./resources/block-editor/blocks/product/components/SelectProduct.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var __ = wp.i18n.__;
+var registerBlockType = wp.blocks.registerBlockType;
+var Fragment = wp.element.Fragment;
+
+
+/* harmony default export */ __webpack_exports__["default"] = (registerBlockType('smartpay/product', {
+  title: __('SmartPay Product', 'smartpay'),
+  description: __('Simple block to show a product', 'smartpay'),
+  icon: 'format-aside',
+  category: 'widgets',
+  attributes: {
+    id: {
+      type: 'integer',
+      "default": null
+    },
+    behavior: {
+      type: 'string',
+      "default": 'popup'
+    },
+    label: {
+      type: 'string',
+      "default": ''
+    }
+  },
+  edit: function edit(_ref) {
+    var attributes = _ref.attributes,
+        setAttributes = _ref.setAttributes;
+
+    function setId(id) {
+      setAttributes({
+        id: parseInt(id)
+      });
+    }
+
+    function setBehavior(behavior) {
+      setAttributes({
+        behavior: behavior
+      });
+    }
+
+    function setLabel(label) {
+      setAttributes({
+        label: label
+      });
+    }
+
+    var productOptions = [{
+      value: null,
+      label: __('Select a product', 'smartpay')
+    }].concat(_toConsumableArray(JSON.parse(smartpay_block_editor_products).map(function (product) {
+      return {
+        value: product.id,
+        label: "(#".concat(product.id, ") ").concat(product.title)
+      };
+    })));
+    return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement("div", {
+      "class": "smartpay"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "container block-editor product card py-4"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "card-body text-center"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "d-flex justify-content-center mt-1"
+    }, /*#__PURE__*/React.createElement("div", {
+      "class": "col-md-8"
+    }, /*#__PURE__*/React.createElement("h5", {
+      "class": "text-center mb-3 m-0 font-weight-normal",
+      style: {
+        fontSize: '16px'
+      }
+    }, __('Select a Product', 'smartpay')), /*#__PURE__*/React.createElement(_components_SelectProduct__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      productOptions: productOptions,
+      productId: attributes.id,
+      onSetId: setId,
+      "class": "form-control form-control-sm mx-auto"
+    })))))), /*#__PURE__*/React.createElement(_components_Sidebar__WEBPACK_IMPORTED_MODULE_0__["default"], {
+      attributes: attributes,
+      onSetId: setId,
+      onSetBehavior: setBehavior,
+      onSetLabel: setLabel
+    }));
+  },
+  save: function save(_ref2) {
+    var attributes = _ref2.attributes;
+    return "<!-- wp:shortcode -->[smartpay_product id=\"".concat(attributes.id, "\" behavior=\"").concat(attributes.behavior, "\" label=\"").concat(attributes.label, "\"]<!-- /wp:shortcode -->");
+  }
+}));
 
 /***/ }),
 
@@ -6630,6 +7163,17 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["primitives"]; }());
+
+/***/ }),
+
+/***/ "react":
+/*!*********************************!*\
+  !*** external {"this":"React"} ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+(function() { module.exports = this["React"]; }());
 
 /***/ })
 

@@ -1,2 +1,2 @@
 import './forms'
-// import './product'
+import './product'

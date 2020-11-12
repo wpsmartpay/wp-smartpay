@@ -3,7 +3,6 @@
 namespace SmartPay\Modules\Form;
 
 use SmartPay\Http\Controllers\Rest\Admin\FormController;
-use SmartPay\Models\Form as FormModel;
 use WP_REST_Server;
 
 class Form
@@ -20,71 +19,11 @@ class Form
 
     public function adminScripts($hook)
     {
-        if ('smartpay_page_smartpay-form-builder' !== $hook) {
-            return;
+        $this->registerBlocks();
+
+        if ('smartpay_page_smartpay-form-builder' === $hook) {
+            $this->registerFormEditor();
         }
-
-        global $current_screen;
-
-        $current_screen->is_block_editor(true);
-
-        wp_enqueue_script(
-            'smartpay-form',
-            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.js',
-            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
-            SMARTPAY_VERSION,
-        );
-
-        register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-block-editors-js',
-        ));
-
-        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_products', json_encode($this->get_product_data()));
-
-        register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-block-editors-js',
-        ));
-
-        // wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_forms', json_encode($this->get_data('smartpay_form')));
-
-        // wp_localize_script(
-        //     'smartpay-form',
-        //     'smartpay',
-        //     [
-        //         'restUrl'  => get_rest_url('', 'smartpay'),
-        //         'apiNonce' => wp_create_nonce('wp_rest')
-        //     ]
-        // );
-
-        // Inline the Editor Settings.
-        wp_add_inline_script(
-            'smartpay-form',
-            'window.smartPayBlockEditorSettings = ' . wp_json_encode($this->block_editor_settings()) . ';'
-        );
-
-        // Preload server-registered block schemas.
-        wp_add_inline_script(
-            'wp-blocks',
-            'wp.blocks.unstable__bootstrapServerSideBlockDefinitions(' . wp_json_encode(get_block_editor_server_block_settings()) . ');'
-        );
-
-        // Editor default styles.
-        wp_enqueue_script('wp-format-library');
-        wp_enqueue_style('wp-format-library');
-
-        // Styles.
-        wp_enqueue_style(
-            'smartpay-form',
-            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.css',
-            ['wp-edit-blocks'],
-            SMARTPAY_VERSION
-        );
-    }
-
-    public function get_product_data()
-    {
-        $forms = FormModel::all();
-        return $forms;
     }
 
     public function block_editor_settings()
@@ -143,5 +82,75 @@ class Form
                 'permission_callback' => [$formController, 'middleware'],
             ],
         ]);
+    }
+
+    public function registerBlocks()
+    {
+        // Global
+        wp_enqueue_script('smartpay-block-editors-js', SMARTPAY_PLUGIN_ASSETS . '/block-editor/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
+
+        // Product
+        register_block_type('smartpay/product', array(
+            'editor_script' => 'smartpay-block-editors-js',
+        ));
+        $products = \SmartPay\Models\Product::where('parent', 0)->get();
+        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_products', json_encode($products));
+
+        // Form
+        register_block_type('smartpay/form', array(
+            'editor_script' => 'smartpay-block-editors-js',
+        ));
+        $forms = \SmartPay\Models\Form::all();
+        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_forms', json_encode($forms));
+    }
+
+
+
+
+    public function registerFormEditor()
+    {
+        global $current_screen;
+
+        $current_screen->is_block_editor(true);
+
+        // Editor
+        wp_enqueue_script(
+            'smartpay-form',
+            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.js',
+            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
+            SMARTPAY_VERSION,
+        );
+
+        wp_localize_script(
+            'smartpay-form',
+            'smartpay',
+            [
+                'apiNonce' => wp_create_nonce('wp_rest')
+            ]
+        );
+
+        // Inline the Editor Settings.
+        wp_add_inline_script(
+            'smartpay-form',
+            'window.smartPayBlockEditorSettings = ' . wp_json_encode($this->block_editor_settings()) . ';'
+        );
+
+        // Preload server-registered block schemas.
+        wp_add_inline_script(
+            'wp-blocks',
+            'wp.blocks.unstable__bootstrapServerSideBlockDefinitions(' . wp_json_encode(get_block_editor_server_block_settings()) . ');'
+        );
+
+        // Editor default styles.
+        wp_enqueue_script('wp-format-library');
+        wp_enqueue_style('wp-format-library');
+
+        // Styles.
+        wp_enqueue_style(
+            'smartpay-form',
+            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.css',
+            ['wp-edit-blocks'],
+            SMARTPAY_VERSION
+        );
     }
 }

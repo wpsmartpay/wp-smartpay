@@ -1,4 +1,3 @@
-// import './form'
-// import './name'
+import './form'
 
 import './elements'
