@@ -1,6 +1,7 @@
 <?php
 
 use SmartPay\Modules\Gateway\Gateway;
+use SmartPay\Modules\Payment\Payment;
 
 function smartpay_svg_icon()
 {
@@ -861,4 +862,29 @@ function smartpay_get_page_uri($page_id, $query_string = null)
     }
 
     return $page_uri;
+}
+
+function smartpay_insert_payment($paymentData)
+{
+    return smartpay()->get(Payment::class)->insertPayment($paymentData);
+}
+
+function smartpay_is_test_mode()
+{
+    $is_test_mode = smartpay_get_option('test_mode', false);
+    return (bool) $is_test_mode;
+}
+
+function smartpay_get_payment_success_page_uri($query_string = null)
+{
+    $page_id = absint(smartpay_get_option('payment_success_page', 0));
+
+    return smartpay_get_page_uri($page_id, $query_string);
+}
+
+function smartpay_get_payment_failure_page_uri($query_string = null)
+{
+    $page_id = absint(smartpay_get_option('payment_failure_page', 0));
+
+    return smartpay_get_page_uri($page_id, $query_string);
 }
