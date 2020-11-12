@@ -8417,11 +8417,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _wordpress_dom_ready__WEBPACK_IMPORTED_MODULE_0___default()(function () {
-  var settings = window.smartPayBlockEditorSettings || {};
-  Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_2__["registerCoreBlocks"])();
-  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["render"])( /*#__PURE__*/React.createElement(_editor__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    settings: settings
-  }), document.getElementById('smartpay-form-block-editor'));
+  var FormBuilder = function FormBuilder() {
+    var settings = window.smartPayBlockEditorSettings || {};
+    Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+      Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_2__["registerCoreBlocks"])();
+    }, []);
+    return /*#__PURE__*/React.createElement(_editor__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      settings: settings
+    });
+  };
+
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__["render"])( /*#__PURE__*/React.createElement(FormBuilder, null), document.getElementById('smartpay-form-block-editor'));
 });
 
 /***/ }),

@@ -6799,7 +6799,6 @@ var Fragment = wp.element.Fragment;
     return "<!-- wp:shortcode -->[smartpay_form id=\"".concat(attributes.id, "\" behavior=\"").concat(attributes.behavior, "\" label=\"").concat(attributes.label, "\"]<!-- /wp:shortcode -->");
   }
 }));
-console.log('form select block');
 
 /***/ }),
 

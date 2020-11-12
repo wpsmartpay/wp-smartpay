@@ -92,5 +92,3 @@ export default registerBlockType('smartpay/form', {
         return `<!-- wp:shortcode -->[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]<!-- /wp:shortcode -->`
     },
 })
-
-console.log('form select block')
