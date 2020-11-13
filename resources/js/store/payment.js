@@ -10,7 +10,7 @@ const actions = {
     getPayments() {
         return {
             type: 'GET_PAYMENTS',
-            path: `/smartpay/v1/payments`,
+            path: `${smartpay.restUrl}/v1/payments`,
         }
     },
     setPayments(payments) {
@@ -22,7 +22,7 @@ const actions = {
     getPayment(id) {
         return {
             type: 'GET_PAYMENT',
-            path: `/smartpay/v1/payments/${id}`,
+            path: `${smartpay.restUrl}/v1/payments/${id}`,
             id,
         }
     },

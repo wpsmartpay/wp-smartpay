@@ -10,7 +10,7 @@ const actions = {
     getCoupons() {
         return {
             type: 'GET_COUPONS',
-            path: `/smartpay/v1/coupons`,
+            path: `${smartpay.restUrl}/v1/coupons`,
         }
     },
     setCoupons(coupons) {

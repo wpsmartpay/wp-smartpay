@@ -10,7 +10,7 @@ const actions = {
     getForms() {
         return {
             type: 'GET_FORMS',
-            path: `/smartpay/v1/forms`,
+            path: `${smartpay.restUrl}/v1/forms`,
         }
     },
     setForms(forms) {
@@ -22,7 +22,7 @@ const actions = {
     getForm(id) {
         return {
             type: 'GET_FORM',
-            path: `/smartpay/v1/forms/${id}`,
+            path: `${smartpay.restUrl}/v1/forms/${id}`,
             id,
         }
     },
