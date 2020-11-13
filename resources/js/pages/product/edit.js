@@ -56,10 +56,7 @@ export const EditProduct = () => {
     const Save = () => {
         UpdateProduct(
             productId,
-            JSON.stringify({
-                ...product,
-                description: tinymce.get('description').getContent(),
-            })
+            JSON.stringify(product)
         ).then((response) => {
             setRespose({
                 type: 'success',

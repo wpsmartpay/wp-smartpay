@@ -27,16 +27,12 @@ export const CreateProduct = () => {
     const [product, setProductData] = useReducer(reducer, defaultProduct)
 
     const createProduct = () => {
-        SaveProduct(
-            JSON.stringify({
-                ...product,
-                description: tinymce.get('description').getContent(),
-            })
-        ).then((response) => {
+        console.log(product);
+        SaveProduct(JSON.stringify(product)).then((response) => {
             setProductData(defaultProduct)
-
-            // TODO: Set product to store
             tinymce.get('description').setContent('')
+
+            // TODO: Set data to store
             setRespose({
                 type: 'success',
                 message: 'Product created successfully',
