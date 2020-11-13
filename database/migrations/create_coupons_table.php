@@ -22,7 +22,7 @@ class CreateSmartpayCouponsTable
                 `discount_type` VARCHAR(50) NOT NULL,
                 `discount_amount` FLOAT DEFAULT 0,
                 `status` VARCHAR(45) DEFAULT '$defaultStatus',
-                `expiry_date` TIMESTAMP DEFAULT NULL,
+                `expiry_date` TIMESTAMP NULL DEFAULT NULL,
                 `created_by` BIGINT UNSIGNED DEFAULT 0,
                 `extra` LONGTEXT DEFAULT NULL,
                 `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
