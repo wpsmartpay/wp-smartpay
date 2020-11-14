@@ -2,6 +2,7 @@
 
 namespace SmartPay\Modules\Admin;
 
+use SmartPay\Modules\Admin\Report;
 use SmartPay\Modules\Admin\Setting;
 
 class Admin

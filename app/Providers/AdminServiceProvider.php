@@ -4,6 +4,7 @@ namespace SmartPay\Providers;
 
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Admin\Admin;
+use SmartPay\Modules\Admin\Report;
 use SmartPay\Modules\Product\Product;
 use SmartPay\Modules\Form\Form;
 use SmartPay\Modules\Coupon\Coupon;
@@ -22,6 +23,10 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Admin::class, function ($app) {
             return new Admin($app);
+        });
+
+        $this->app->singleton(Report::class, function ($app) {
+            return new Report($app);
         });
 
         $this->app->singleton(Product::class, function ($app) {
@@ -52,6 +57,7 @@ class AdminServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->app->make(Admin::class);
+        $this->app->make(Report::class);
         $this->app->make(Product::class);
         $this->app->make(Form::class);
         $this->app->make(Coupon::class);
