@@ -1,20 +1,23 @@
+
 import { __ } from '@wordpress/i18n'
-import { Container, Row, Col, Card, ListGroup, Nav } from 'react-bootstrap'
+import { useState } from '@wordpress/element'
+import { Container, Row, Col, Card, ListGroup, } from 'react-bootstrap'
 import { Report } from '../components/report/report'
+import apiFetch from '@wordpress/api-fetch'
 
 export const Dashboard = () => {
+    const [report, setReport] = useState([]);
 
-    const report = [
-        { date: '1-12-2020', product_purchase: 45, form_payment: 78 },
-        { date: '2-12-2020', product_purchase: 76, form_payment: 86 },
-        { date: '2-12-2020', product_purchase: 53, form_payment: 24 },
-        { date: '5-12-2020', product_purchase: 79, form_payment: 24 },
-        { date: '6-12-2020', product_purchase: 45, form_payment: 62 },
-        { date: '6-12-2020', product_purchase: 39, form_payment: 47 },
-        { date: '6-12-2020', product_purchase: 53, form_payment: 34 },
-    ]
-
-    console.log(report);
+    useEffect(() => {
+        apiFetch({
+            path: `${smartpay.restUrl}/v1/reports`,
+            headers: {
+                'X-WP-Nonce': smartpay.apiNonce,
+            },
+        }).then(response => {
+            setReport(response)
+        })
+    }, [])
 
     return (
         <>
@@ -49,7 +52,7 @@ export const Dashboard = () => {
                                     options={{
                                         chart: {
                                             type: 'bar',
-                                            height: 500,
+                                            height: 350,
                                             stacked: true,
                                             toolbar: {
                                                 show: true,
@@ -94,7 +97,7 @@ export const Dashboard = () => {
                                         // ],
                                         legend: {
                                             position: 'bottom',
-                                            offsetY: 40,
+                                            offsetY: 20,
                                         },
                                         fill: {
                                             opacity: 1,

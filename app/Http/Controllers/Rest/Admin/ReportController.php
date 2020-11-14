@@ -30,7 +30,7 @@ class ReportController extends RestController
         $report = [];
         foreach (range(1, $total_days) as $i) {
             $index = $i . '-' . date('m-y');
-            $report[$i] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
+            $report[] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
         }
 
         $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', 'completed')->get();
