@@ -1,9 +1,9 @@
 
 import { __ } from '@wordpress/i18n'
-import { Container, Row, Col, Card, ListGroup, } from 'react-bootstrap'
-import { Report } from '../components/report/report'
 import apiFetch from '@wordpress/api-fetch'
 import { useEffect, useState } from '@wordpress/element'
+import { Container, Row, Col, Card, ListGroup, } from 'react-bootstrap'
+import { Report } from '../components/report/report'
 
 export const Dashboard = () => {
     const [report, setReport] = useState([]);
