@@ -31,6 +31,12 @@ const actions = {
             coupon,
         }
     },
+    deleteCoupon(couponId) {
+        return {
+            type: 'DELETE_COUPON',
+            couponId,
+        }
+    },
 }
 
 registerStore('smartpay/coupons', {
@@ -54,6 +60,15 @@ registerStore('smartpay/coupons', {
                     coupons: state.coupons.map((coupon) =>
                         coupon.id === action.coupon.id ? action.coupon : coupon
                     ),
+                }
+            case 'DELETE_COUPON':
+                return {
+                    ...state,
+                    coupons: [
+                        ...state.coupons.filter(
+                            (coupons) => coupons.id !== action.couponId
+                        ),
+                    ],
                 }
             default:
                 return state

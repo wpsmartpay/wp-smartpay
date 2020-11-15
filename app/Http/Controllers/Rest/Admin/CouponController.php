@@ -79,4 +79,12 @@ class CouponController extends RestController
 
         return $response;
     }
+
+    public function destroy(WP_REST_Request $request): WP_REST_Response
+    {
+        $coupon = Coupon::find($request->get_param('id'));
+        $coupon->delete();
+
+        return new WP_REST_Response(['message' => 'Coupon deleted'], 200);
+    }
 }

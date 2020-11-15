@@ -1,19 +1,32 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
+import { Container, Table, Button, Alert } from 'react-bootstrap'
 
-const { useEffect } = wp.element
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
+
+import { DeleteCoupon } from '../../http/coupon'
 
 export const CouponList = () => {
     useEffect(() => {
         dispatch('smartpay/coupons').getCoupons()
     }, [])
 
+    const [response, setResponse] = useState({})
+
     const coupons = useSelect((select) =>
         select('smartpay/coupons').getCoupons()
     )
-    console.log(coupons)
+
+    const deleteCoupon = (couponId) => {
+        DeleteCoupon(couponId).then((response) => {
+            dispatch('smartpay/coupons').deleteCoupon(couponId)
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        })
+    }
 
     return (
         <>
@@ -36,6 +49,11 @@ export const CouponList = () => {
                 </Container>
             </div>
             <Container className="mt-3">
+                {response.message && (
+                    <Alert className="mt-3" variant={response.type}>
+                        {response.message}
+                    </Alert>
+                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
@@ -63,7 +81,7 @@ export const CouponList = () => {
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
-                                                    deleteProduct(coupons.id)
+                                                    deleteCoupon(coupons.id)
                                                 }
                                                 variant="link"
                                             >

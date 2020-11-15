@@ -21,3 +21,13 @@ export const UpdateCoupon = (id, body) => {
         body: body,
     })
 }
+
+export const DeleteCoupon = (couponId) => {
+    return apiFetch({
+        path: `${smartpay.restUrl}/v1/coupons/${couponId}`,
+        method: 'DELETE',
+        headers: {
+            'X-WP-Nonce': smartpay.apiNonce,
+        },
+    })
+}
