@@ -13,6 +13,7 @@ export const CouponList = () => {
     const coupons = useSelect((select) =>
         select('smartpay/coupons').getCoupons()
     )
+    console.log(coupons)
 
     return (
         <>
@@ -62,7 +63,7 @@ export const CouponList = () => {
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
-                                                    deleteProduct(coupons)
+                                                    deleteProduct(coupons.id)
                                                 }
                                                 variant="link"
                                             >

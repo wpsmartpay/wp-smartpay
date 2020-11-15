@@ -10,6 +10,7 @@ import {
     Alert,
 } from 'react-bootstrap'
 import { useReducer, useEffect, useState } from '@wordpress/element'
+import { UpdateCoupon } from '../../http/coupon'
 import { createHooks } from '@wordpress/hooks'
 import { useParams } from 'react-router-dom'
 const { useSelect, select, dispatch } = wp.data
@@ -20,6 +21,8 @@ export const EditCoupon = () => {
     const { couponId } = useParams()
 
     const [coupon, setCoupon] = useState(null)
+
+    const [response, setResponse] = useState({})
 
     useEffect(() => {
         const coupon = select('smartpay/coupons').getCoupon(couponId)
@@ -38,13 +41,18 @@ export const EditCoupon = () => {
         )
     }, [])
 
-    const changeHandler = (event) => {
+    const setCouponData = (event) => {
         setCoupon({ ...coupon, ...{ [event.target.name]: event.target.value } })
     }
 
-    const couponUpdateHandler = (event) => {
-        event.preventDefault()
-        dispatch('smartpay/coupons').updateCoupon(coupon)
+    const Save = (couponId, updatedCoupon) => {
+        UpdateCoupon(couponId, JSON.stringify(updatedCoupon)).then((response) =>
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        )
+        dispatch('smartpay/coupons').updateCoupon(updatedCoupon)
     }
 
     if (!coupon) {
@@ -70,7 +78,7 @@ export const EditCoupon = () => {
                             <Button
                                 type="button"
                                 className="btn btn-primary btn-sm text-decoration-none"
-                                onClick={couponUpdateHandler}
+                                onClick={() => Save(coupon.id, coupon)}
                             >
                                 {__('Update', 'smartpay')}
                             </Button>
@@ -81,13 +89,11 @@ export const EditCoupon = () => {
             <Container>
                 <Row className="justify-content-center">
                     <Col xs={9}>
-                        <Alert
-                            id="coupon-alert"
-                            className="mt-5 d-none"
-                            variant="success"
-                        >
-                            Coupon Added Successfully
-                        </Alert>
+                        {response.message && (
+                            <Alert className="mt-3" variant={response.type}>
+                                {response.message}
+                            </Alert>
+                        )}
                     </Col>
                 </Row>
             </Container>
@@ -101,7 +107,7 @@ export const EditCoupon = () => {
                                     <Form.Control
                                         name="title"
                                         value={coupon.title}
-                                        onChange={changeHandler}
+                                        onChange={setCouponData}
                                         type="text"
                                         placeholder="Enter coupon code here"
                                     />
@@ -110,7 +116,7 @@ export const EditCoupon = () => {
                                     <Form.Control
                                         name="description"
                                         value={coupon.description}
-                                        onChange={changeHandler}
+                                        onChange={setCouponData}
                                         as="textarea"
                                         rows={3}
                                         placeholder="Coupon description"
@@ -131,7 +137,10 @@ export const EditCoupon = () => {
                                                 <Col>
                                                     <Form.Group controlId="couponForm.discountType">
                                                         <Form.Label className="mb-2 d-inline-block">
-                                                            Discount type
+                                                            {__(
+                                                                'Discount type',
+                                                                'smartpay'
+                                                            )}
                                                         </Form.Label>
                                                         <Form.Control
                                                             name="discount_type"
@@ -140,14 +149,20 @@ export const EditCoupon = () => {
                                                                 coupon.discount_type
                                                             }
                                                             onChange={
-                                                                changeHandler
+                                                                setCouponData
                                                             }
                                                         >
                                                             <option value="fixed">
-                                                                Fixed Amount
+                                                                {__(
+                                                                    'Fixed Amount',
+                                                                    'smartpay'
+                                                                )}
                                                             </option>
                                                             <option value="percent">
-                                                                Percent
+                                                                {__(
+                                                                    'Percent',
+                                                                    'smartpay'
+                                                                )}
                                                             </option>
                                                         </Form.Control>
                                                     </Form.Group>
@@ -155,7 +170,10 @@ export const EditCoupon = () => {
                                                 <Col>
                                                     <Form.Group controlId="couponForm.amount">
                                                         <Form.Label className="mb-2 d-inline-block">
-                                                            Coupon amount
+                                                            {__(
+                                                                'Coupon amount',
+                                                                'smartpay'
+                                                            )}
                                                         </Form.Label>
                                                         <Form.Control
                                                             name="discount_amount"
@@ -163,7 +181,7 @@ export const EditCoupon = () => {
                                                                 coupon.discount_amount
                                                             }
                                                             onChange={
-                                                                changeHandler
+                                                                setCouponData
                                                             }
                                                             type="text"
                                                             placeholder="0"
@@ -173,13 +191,16 @@ export const EditCoupon = () => {
                                             </Row>
                                             <Form.Group controlId="couponForm.expiryDate">
                                                 <Form.Label className="mb-2 d-inline-block">
-                                                    Coupon expiry date
+                                                    {__(
+                                                        'Coupon expiry date',
+                                                        'smartpay'
+                                                    )}
                                                 </Form.Label>
                                                 <Form.Control
                                                     name="expiry_date"
                                                     type="date"
                                                     value={coupon.expiry_date}
-                                                    onChange={changeHandler}
+                                                    onChange={setCouponData}
                                                 />
                                             </Form.Group>
                                         </Tab>
