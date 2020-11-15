@@ -49,17 +49,6 @@ class Admin
             __('SmartPay - Forms', 'smartpay'),
             __('Forms', 'smartpay'),
             'manage_options',
-            'smartpay#/forms',
-            function () {
-                echo smartpay_view('admin');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('SmartPay - Forms', 'smartpay'),
-            __('Form Builder', 'smartpay'),
-            'manage_options',
             'smartpay-form',
             function () {
                 echo smartpay_view('form-builder');
