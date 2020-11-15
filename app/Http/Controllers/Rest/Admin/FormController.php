@@ -31,11 +31,24 @@ class FormController extends RestController
 
     public function store(\WP_REST_Request $request)
     {
-        $form = new Form();
-        $form->body = $request->get_body();
-        $form->save();
+        global $wpdb;
+        $wpdb->query('START TRANSACTION');
 
-        $response = new \WP_REST_Response($form, 200);
-        return $response;
+        try {
+            $request = json_decode($request->get_body());
+            $form = new Form();
+            $form->title = $request->title ?? __('Untitled Form', 'smartpay');
+            $form->body = $request->body;
+            $form->save();
+
+            return new WP_REST_Response([
+                'form'      => $form,
+                'message'   => 'Form created'
+            ]);
+        } catch (\Exception $e) {
+            $wpdb->query('ROLLBACK');
+            error_log($e->getMessage());
+            return new WP_REST_Response($e->getMessage(), 500);
+        }
     }
 }

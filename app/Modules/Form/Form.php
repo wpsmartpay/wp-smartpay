@@ -87,24 +87,22 @@ class Form
     public function registerBlocks()
     {
         // Global
-        wp_enqueue_script('smartpay-block-editors-js', SMARTPAY_PLUGIN_ASSETS . '/block-editor/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
+        wp_enqueue_script('smartpay-form-js', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
 
         // Product
         register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-block-editors-js',
+            'editor_script' => 'smartpay-form-js',
         ));
         $products = \SmartPay\Models\Product::where('parent', 0)->get();
-        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_products', json_encode($products));
+        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_products', json_encode($products));
 
         // Form
         register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-block-editors-js',
+            'editor_script' => 'smartpay-form-js',
         ));
         $forms = \SmartPay\Models\Form::all();
-        wp_localize_script('smartpay-block-editors-js', 'smartpay_block_editor_forms', json_encode($forms));
+        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_forms', json_encode($forms));
     }
-
-
 
 
     public function registerFormEditor()
@@ -116,7 +114,7 @@ class Form
         // Editor
         wp_enqueue_script(
             'smartpay-form',
-            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.js',
+            SMARTPAY_PLUGIN_ASSETS . '/form-builder/index.js',
             ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
             SMARTPAY_VERSION
         );
@@ -148,7 +146,7 @@ class Form
         // Styles.
         wp_enqueue_style(
             'smartpay-form',
-            SMARTPAY_PLUGIN_ASSETS . '/block-editor/index.css',
+            SMARTPAY_PLUGIN_ASSETS . '/form-builder/index.css',
             ['wp-edit-blocks'],
             SMARTPAY_VERSION
         );

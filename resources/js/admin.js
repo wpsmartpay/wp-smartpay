@@ -1,5 +1,5 @@
-const { render } = wp.element
 import domReady from '@wordpress/dom-ready'
+import { render } from '@wordpress/element'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'

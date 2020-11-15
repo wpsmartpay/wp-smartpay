@@ -56,9 +56,9 @@
         "watch": "npm run development -- --watch",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch:editor": "wp-scripts start resources/block-editor/index.js --output-path=public/block-editor/",
-        "build:editor": "wp-scripts build resources/block-editor/index.js --output-path=public/block-editor/",
-        "watch:scripts": "wp-scripts start resources/block-editor/blocks/index.js --output-path=public/block-editor/blocks",
-        "build:scripts": "wp-scripts build resources/block-editor/blocks/index.js --output-path=public/block-editor/blocks"
+        "watch:blocks": "wp-scripts start resources/blocks/index.js --output-path=public/blocks",
+        "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks",
+        "watch:form": "wp-scripts start resources/form-builder/index.js --output-path=public/form-builder",
+        "build:form": "wp-scripts build resources/form-builder/index.js --output-path=public/form-builder"
     }
 }
