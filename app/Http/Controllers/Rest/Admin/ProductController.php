@@ -156,6 +156,17 @@ class ProductController extends \WP_REST_Controller
         }
     }
 
+    public function destroy(WP_REST_Request $request): WP_REST_Response
+    {
+        $product = Product::with(['variations'])->find($request->get_param('id'));
+        $product->delete();
+        foreach ($product->variations as $variation) {
+            $variation->delete();
+        }
+
+        return new WP_REST_Response(['message' => 'Product deleted'], 200);
+    }
+
     /**
      * Create variation
      *

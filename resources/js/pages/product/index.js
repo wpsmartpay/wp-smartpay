@@ -1,11 +1,13 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
-
-const { useEffect } = wp.element
+import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { DeleteProduct } from '../../http/product'
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const ProductList = () => {
+    const [response, setResponse] = useState({})
+
     useEffect(() => {
         dispatch('smartpay/products').getProducts()
     }, [])
@@ -14,9 +16,14 @@ export const ProductList = () => {
         select('smartpay/products').getProducts()
     )
 
-    const deleteProduct = () => {
-        // FIXME
-        console.log('Delete product')
+    const deleteProduct = (productId) => {
+        DeleteProduct(productId).then((response) => {
+            dispatch('smartpay/products').deleteProduct(productId)
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        })
     }
 
     return (
@@ -41,6 +48,11 @@ export const ProductList = () => {
             </div>
 
             <Container className="mt-3">
+                {response.message && (
+                    <Alert className="mt-3" variant={response.type}>
+                        {response.message}
+                    </Alert>
+                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
@@ -68,7 +80,7 @@ export const ProductList = () => {
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
-                                                    deleteProduct(product)
+                                                    deleteProduct(product.id)
                                                 }
                                                 variant="link"
                                             >

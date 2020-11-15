@@ -10,8 +10,11 @@ import {
     Alert,
 } from 'react-bootstrap'
 import { useReducer, useEffect, useState } from '@wordpress/element'
+import { createHooks } from '@wordpress/hooks'
 import { useParams } from 'react-router-dom'
 const { useSelect, select, dispatch } = wp.data
+
+const restrictionElement = createHooks()
 
 export const EditCoupon = () => {
     const { couponId } = useParams()
@@ -22,6 +25,18 @@ export const EditCoupon = () => {
         const coupon = select('smartpay/coupons').getCoupon(couponId)
         setCoupon(coupon)
     }, [couponId, setCoupon])
+
+    useEffect(() => {
+        restrictionElement.addFilter(
+            'restrictionElementContent',
+            'smartpay',
+            function ($content) {
+                let contentElement = <p>{__('Upgrade to pro', 'smartpay')}</p>
+                $content.push(contentElement)
+                return $content
+            }
+        )
+    }, [])
 
     const changeHandler = (event) => {
         setCoupon({ ...coupon, ...{ [event.target.name]: event.target.value } })
@@ -37,6 +52,11 @@ export const EditCoupon = () => {
     } else {
         console.log(coupon)
     }
+
+    let restrictionElementOutput = restrictionElement.applyFilters(
+        'restrictionElementContent',
+        []
+    )
 
     return (
         <>
@@ -168,7 +188,7 @@ export const EditCoupon = () => {
                                             eventKey="usage-restriction"
                                             title="Usage Restriction"
                                         >
-                                            <p>Upgrade to pro</p>
+                                            {restrictionElementOutput}
                                         </Tab>
                                     </Tabs>
                                 </div>
