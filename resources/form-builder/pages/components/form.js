@@ -12,7 +12,7 @@ import { Form } from 'react-bootstrap'
 import { BlockEditor } from '../../components/block-editor'
 import { Sidebar } from '../../components/sidebar'
 
-export const FormForm = ({ form, setformData, shouldReset }) => {
+export const FormForm = ({ form, setformData, shouldReset = false }) => {
     return (
         <>
             <div className="bg-white mt-5">

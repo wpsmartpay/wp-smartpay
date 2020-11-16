@@ -26,7 +26,7 @@ const reducer = (state, data) => {
 }
 
 export const EditProduct = () => {
-    let { productId } = useParams()
+    const { productId } = useParams()
     const [product, setProductData] = useReducer(reducer, defaultProduct)
     const [response, setRespose] = useState({})
 
@@ -40,13 +40,13 @@ export const EditProduct = () => {
 
         if (product && product.hasOwnProperty('variations')) {
             product = {
-                ...product, variations: product.variations.map(variation => {
+                ...product,
+                variations: product.variations.map((variation) => {
                     return { ...variation, key: `old-${variation.id}` }
-                })
+                }),
             }
         }
         setProductData(product)
-
     }, [productId])
 
     useEffect(() => {
@@ -54,10 +54,7 @@ export const EditProduct = () => {
     }, [productId, products])
 
     const Save = () => {
-        UpdateProduct(
-            productId,
-            JSON.stringify(product)
-        ).then((response) => {
+        UpdateProduct(productId, JSON.stringify(product)).then((response) => {
             setRespose({
                 type: 'success',
                 message: 'Product updated',

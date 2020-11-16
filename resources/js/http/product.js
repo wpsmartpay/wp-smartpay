@@ -1,8 +1,8 @@
 import apiFetch from '@wordpress/api-fetch'
 
-export const ProductList = () => { }
+export const ProductList = () => {}
 
-export const GetProduct = () => { }
+export const GetProduct = () => {}
 
 export const SaveProduct = (body) => {
     return apiFetch({
@@ -16,7 +16,6 @@ export const SaveProduct = (body) => {
 }
 
 export const UpdateProduct = (id, body) => {
-    console.log('update', id)
     return apiFetch({
         path: `${smartpay.restUrl}/v1/products/${id}`,
         method: 'PUT',
@@ -27,4 +26,4 @@ export const UpdateProduct = (id, body) => {
     })
 }
 
-export const DeleteProduct = () => { }
+export const DeleteProduct = () => {}

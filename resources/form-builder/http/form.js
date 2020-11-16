@@ -10,3 +10,14 @@ export const Save = (body) => {
         body: body,
     })
 }
+
+export const Update = (id, body) => {
+    return apiFetch({
+        path: `smartpay/v1/forms/${id}`,
+        method: 'PUT',
+        headers: {
+            'X-WP-Nonce': smartpay.apiNonce,
+        },
+        body: body,
+    })
+}

@@ -45,10 +45,10 @@ export const BlockEditor = ({
     }, [canUserCreateMedia, _settings])
 
     useEffect(() => {
-        if (storedBlocks?.length) {
+        if (!blocks.length && storedBlocks?.length) {
             handleUpdateBlocks(storedBlocks)
         }
-    }, [])
+    }, [storedBlocks])
 
     useEffect(() => {
         onBlockUpdate(blocks)
