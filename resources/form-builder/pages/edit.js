@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState, useReducer } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
-import { Container, Alert, Button } from 'react-bootstrap'
+import { Container, Alert, Button, Form as BSForm } from 'react-bootstrap'
 
 import { Update } from '../http/form'
 import { FormForm } from './components/form'
@@ -63,12 +63,21 @@ export const EditForm = () => {
                             {__('Create New Form', 'smartpay')}
                         </h2>
                         <div className="ml-auto">
-                            <Button
-                                onClick={updateForm}
-                                className="btn btn-primary btn-sm text-decoration-none px-3"
-                            >
-                                {__('Publish', 'smartpay')}
-                            </Button>
+                            <div className="d-flex flex-row">
+                                <BSForm.Control
+                                    size="sm"
+                                    type="text"
+                                    value={`[smartpay_form id="${form.id}"]`}
+                                    readOnly
+                                    className="mr-2"
+                                />
+                                <Button
+                                    onClick={updateForm}
+                                    className="btn btn-primary btn-sm text-decoration-none px-3"
+                                >
+                                    {__('Publish', 'smartpay')}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Container>

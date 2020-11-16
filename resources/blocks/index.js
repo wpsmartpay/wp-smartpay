@@ -1,2 +1,4 @@
 import './forms'
-import './product'
+// import './product'
+
+console.log('blocks')
