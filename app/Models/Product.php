@@ -21,6 +21,17 @@ class Product extends Model
 
     const PUBLISH = 'publish';
 
+    public static function boot()
+    {
+        static::creating(function ($form) {
+            $time = date('Y-m-d h-i-s');
+
+            $form->created_at = $time;
+            $form->updated_at = $time;
+            $form->created_by = $form->created_by ?: get_current_user_id();
+        });
+    }
+
     public function setFilesAttribute($files)
     {
         $this->attributes['files'] = \json_encode($files);

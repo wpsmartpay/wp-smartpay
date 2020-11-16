@@ -237,12 +237,12 @@ class Payment
         if (empty($paymentData)) return;
 
         $payment = new \SmartPay\Models\Payment();
-        $payment->type   = $paymentData['payment_type'];
-        $payment->data   = json_encode($paymentData['payment_data']);
+        $payment->type           = $paymentData['payment_type'];
+        $payment->data           = json_encode($paymentData['payment_data']);
         $payment->amount         = $paymentData['amount'];
         $payment->currency       = $paymentData['currency'] ?? smartpay_get_currency();
         $payment->gateway        = $paymentData['gateway'] ?? smartpay_get_default_gateway();
-        $payment->customer_id      = $paymentData['customer']['customer_id'];
+        $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
