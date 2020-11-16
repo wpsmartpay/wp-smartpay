@@ -2,14 +2,19 @@
 
 namespace SmartPay;
 
+use SmartPay\Modules\Admin\Utilities\Upload;
+
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 class Activator
 {
+    private $upload;
     public function __construct()
     {
         $this->migrate();
         $this->_create_pages();
+        // FIXME
+        $this->upload = new Upload();
     }
 
     public static function boot()

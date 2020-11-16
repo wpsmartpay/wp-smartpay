@@ -5,6 +5,7 @@ namespace SmartPay\Http\Controllers\Rest\Admin;
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Customer;
 use WP_REST_Response;
+use WP_REST_Request;
 
 class CustomerController extends RestController
 {
@@ -24,17 +25,25 @@ class CustomerController extends RestController
         return true;
     }
 
-    public function index(\WP_REST_Request $request)
+    public function index(WP_REST_Request $request)
     {
         return new WP_REST_Response(Customer::all());
     }
 
-    public function store(\WP_REST_Request $request)
+    public function store(WP_REST_Request $request)
     {
         dd($request->get_body());
 
         $product =  Customer::create([
             //
         ]);
+    }
+
+    public function destroy(WP_REST_Request $request): WP_REST_Response
+    {
+        $customer = Customer::find($request->get_param('id'));
+        $customer->delete();
+
+        return new WP_REST_Response(['message' => 'Customer deleted'], 200);
     }
 }
