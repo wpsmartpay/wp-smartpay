@@ -28,14 +28,4 @@ class Payment extends Model
     const PENDING = 'pending';
 
     const PRODUCT_PURCHASE = 'product_purchase';
-
-    public static function boot()
-    {
-        static::creating(function ($form) {
-            $time = date('Y-m-d h-i-s');
-
-            $form->created_at = $time;
-            $form->updated_at = $time;
-        });
-    }
 }

@@ -24,10 +24,6 @@ class Coupon extends Model
     public static function boot()
     {
         static::creating(function ($coupon) {
-            $time = date('Y-m-d h-i-s');
-
-            $coupon->created_at = $time;
-            $coupon->updated_at = $time;
             $coupon->created_by = $coupon->created_by ?: get_current_user_id();
         });
     }
