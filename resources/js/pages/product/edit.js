@@ -1,11 +1,16 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
+import {
+    useReducer,
+    useState,
+    useCallback,
+    useEffect,
+} from '@wordpress/element'
 import { Container, Form, Button, Alert } from 'react-bootstrap'
-import { useReducer, useState } from '@wordpress/element'
+
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
-const { useCallback, useEffect } = wp.element
 const { useSelect, select } = wp.data
 
 const defaultProduct = {

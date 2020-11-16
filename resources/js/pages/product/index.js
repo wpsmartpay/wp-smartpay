@@ -8,10 +8,6 @@ const { useSelect, dispatch } = wp.data
 export const ProductList = () => {
     const [response, setResponse] = useState({})
 
-    useEffect(() => {
-        dispatch('smartpay/products').getProducts()
-    }, [])
-
     const products = useSelect((select) =>
         select('smartpay/products').getProducts()
     )

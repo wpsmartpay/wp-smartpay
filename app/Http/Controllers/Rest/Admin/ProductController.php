@@ -83,7 +83,7 @@ class ProductController extends RestController
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
-    public function view(WP_REST_Request $request): WP_REST_Response
+    public function show(WP_REST_Request $request): WP_REST_Response
     {
         $product = Product::with(['variations'])->find($request->get_param('id'));
 
