@@ -32,6 +32,12 @@ const actions = {
             payment,
         }
     },
+    deletePayment(paymentId) {
+        return {
+            type: 'DELETE_PAYMENT',
+            paymentId,
+        }
+    },
 }
 
 registerStore('smartpay/payments', {
@@ -50,6 +56,15 @@ registerStore('smartpay/payments', {
                             (payment) => payment.id !== action.payment.id
                         ),
                         action.payment,
+                    ],
+                }
+            case 'DELETE_PAYMENT':
+                return {
+                    ...state,
+                    payments: [
+                        ...state.payments.filter(
+                            (payment) => payment.id !== action.paymentId
+                        ),
                     ],
                 }
             default:
