@@ -36,7 +36,7 @@ class FormController extends RestController
     {
         $forms = Form::orderBy('id', 'DESC')->get();
 
-        return new WP_REST_Response($forms);
+        return new WP_REST_Response(['forms' => $forms]);
     }
 
     /**
