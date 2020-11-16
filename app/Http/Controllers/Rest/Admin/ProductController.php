@@ -2,14 +2,15 @@
 
 namespace SmartPay\Http\Controllers\Rest\Admin;
 
+use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Product;
 use WP_REST_Request;
 use WP_REST_Response;
 
-class ProductController extends \WP_REST_Controller
+class ProductController extends RestController
 {
     /**
-     * Check permissions for the posts.
+     * Check permissions for the request.
      *
      * @param WP_REST_Request $request.
      * @return \WP_Error|bool
@@ -33,7 +34,7 @@ class ProductController extends \WP_REST_Controller
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $products = Product::where('parent', 0)->get();
+        $products = Product::where('parent', 0)->orderBy('id', 'DESC')->get();
 
         return new WP_REST_Response($products);
     }
@@ -68,7 +69,7 @@ class ProductController extends \WP_REST_Controller
 
             $wpdb->query('COMMIT');
 
-            return new WP_REST_Response($product, 200);
+            return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
@@ -84,17 +85,13 @@ class ProductController extends \WP_REST_Controller
      */
     public function view(WP_REST_Request $request): WP_REST_Response
     {
-        try {
-            $product = Product::with(['variations'])->find($request->get_param('id'));
-            if (!$product) {
-                return new WP_REST_Response(['message' => 'Product not found'], 404);
-            }
+        $product = Product::with(['variations'])->find($request->get_param('id'));
 
-            return new WP_REST_Response($product);
-        } catch (\Exception $e) {
-            error_log($e->getMessage());
-            return new WP_REST_Response($e->getMessage(), 500);
+        if (!$product) {
+            return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
         }
+
+        return new WP_REST_Response($product);
     }
 
     public function update(WP_REST_Request $request): WP_REST_Response
@@ -106,7 +103,7 @@ class ProductController extends \WP_REST_Controller
             $product = Product::with(['variations'])->find($request->get_param('id'));
 
             if (!$product) {
-                return new WP_REST_Response(['message' => 'Product not found'], 404);
+                return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
             }
 
             $request = json_decode($request->get_body());
@@ -138,7 +135,7 @@ class ProductController extends \WP_REST_Controller
             });
 
             $wpdb->query('COMMIT');
-            return new WP_REST_Response(['message' => 'Product updated']);
+            return new WP_REST_Response(['product' => $product, 'message' => __('Product updated', 'smartpay')]);
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
@@ -146,15 +143,36 @@ class ProductController extends \WP_REST_Controller
         }
     }
 
+    /**
+     * Delete product
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
     public function destroy(WP_REST_Request $request): WP_REST_Response
     {
-        $product = Product::with(['variations'])->find($request->get_param('id'));
-        $product->delete();
-        foreach ($product->variations as $variation) {
-            $variation->delete();
-        }
+        global $wpdb;
+        $wpdb->query('START TRANSACTION');
 
-        return new WP_REST_Response(['message' => 'Product deleted'], 200);
+        try {
+            $product = Product::with(['variations'])->find($request->get_param('id'));
+
+            if (!$product) {
+                return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
+            }
+
+            foreach ($product->variations as $variation) {
+                $variation->delete();
+            }
+
+            $product->delete();
+
+            return new WP_REST_Response(['message' => __('Product deleted', 'smartpay')], 200);
+        } catch (\Exception $e) {
+            $wpdb->query('ROLLBACK');
+            error_log($e->getMessage());
+            return new WP_REST_Response($e->getMessage(), 500);
+        }
     }
 
     /**

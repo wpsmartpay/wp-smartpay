@@ -4,13 +4,15 @@ namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Payment;
+use WP_REST_Request;
+use WP_REST_Response;
 
 class ReportController extends RestController
 {
     /**
-     * Check permissions for the posts.
+     * Check permissions for the request.
      *
-     * @param \WP_REST_Request $request.
+     * @param WP_REST_Request $request.
      */
     public function middleware($request)
     {
@@ -23,7 +25,13 @@ class ReportController extends RestController
         return true;
     }
 
-    public function index(\WP_REST_Request $request)
+    /**
+     * Get monthly report
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function index(WP_REST_Request $request): WP_REST_Response
     {
         $total_days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
 
@@ -33,7 +41,7 @@ class ReportController extends RestController
             $report[] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
         }
 
-        $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', 'completed')->get();
+        $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', 'completed')->orderBy('id', 'DESC')->get();
 
         foreach ($report_data as $index => $data) {
             if (!$data->completed_at) continue;
