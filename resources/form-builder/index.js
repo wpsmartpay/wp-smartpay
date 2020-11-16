@@ -8,6 +8,8 @@ import { FormList } from './pages/index'
 import { CreateForm } from './pages/create'
 import { EditForm } from './pages/edit'
 
+import { NotFound } from '../js/pages/not-found'
+
 import './styles.scss'
 import './store/index'
 
@@ -27,6 +29,9 @@ domReady(function () {
                             path="/:formId/edit"
                             component={EditForm}
                         />
+
+                        {/* Not Found */}
+                        <Route component={NotFound} />
                     </Switch>
                 </HashRouter>
             </div>

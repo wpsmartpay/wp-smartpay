@@ -1,36 +1,30 @@
 import { __ } from '@wordpress/i18n'
-import { Container, Form, Alert, Button } from 'react-bootstrap'
-import { InterfaceSkeleton } from '@wordpress/interface'
-import { useState } from '@wordpress/element'
-import { serialize, parse } from '@wordpress/blocks'
-import {
-    Popover,
-    SlotFillProvider,
-    DropZoneProvider,
-    FocusReturnProvider,
-} from '@wordpress/components'
+import { Container, Alert, Button } from 'react-bootstrap'
+import { useState, useReducer } from '@wordpress/element'
 import { Save } from '../http/form'
 
-import { BlockEditor } from '../components/block-editor'
-import { Sidebar } from '../components/sidebar'
+import { FormForm } from './components/form'
 
 const defaultFormData = {
     title: '',
     body: '',
 }
 
+const reducer = (state, data) => {
+    return {
+        ...state,
+        ...data,
+    }
+}
+
 export const CreateForm = () => {
-    const [form, setform] = useState(defaultFormData)
+    const [form, setformData] = useReducer(reducer, defaultFormData)
     const [response, setRespose] = useState({})
     const [shouldReset, setShouldReset] = useState(false)
 
-    const setformData = (data) => {
-        setform({ ...form, ...data })
-    }
-
     const SaveForm = () => {
         Save(JSON.stringify(form)).then((response) => {
-            setform(defaultFormData)
+            setformData(defaultFormData)
             setShouldReset(true)
 
             // TODO: Set data to store
@@ -77,54 +71,12 @@ export const CreateForm = () => {
                         {response.message}
                     </Alert>
                 )}
-                <div className="bg-white mt-5">
-                    <Form.Group controlId="title" className="mb-5">
-                        <Form.Control
-                            type="text"
-                            name="title"
-                            value={form.title || ''}
-                            onChange={(e) => {
-                                setformData({
-                                    [e.target.name]: e.target.value,
-                                })
-                            }}
-                            placeholder={__(
-                                'Your awesome product title here',
-                                'smartpay'
-                            )}
-                        />
-                    </Form.Group>
 
-                    <SlotFillProvider>
-                        <DropZoneProvider>
-                            <FocusReturnProvider>
-                                <InterfaceSkeleton
-                                    content={
-                                        <BlockEditor
-                                            resetBlocks={shouldReset}
-                                            onBlockUpdate={(blocks) => {
-                                                setformData({
-                                                    body: serialize(blocks),
-                                                })
-                                            }}
-                                            settings={
-                                                window.smartPayBlockEditorSettings ||
-                                                {}
-                                            }
-                                            storedBlocks={parse(form.body)}
-                                        />
-                                    }
-                                    sidebar={
-                                        <div>
-                                            <Sidebar />
-                                        </div>
-                                    }
-                                />
-                                <Popover.Slot />
-                            </FocusReturnProvider>
-                        </DropZoneProvider>
-                    </SlotFillProvider>
-                </div>
+                <FormForm
+                    form={form}
+                    shouldReset={shouldReset}
+                    setformData={setformData}
+                />
             </Container>
         </>
     )

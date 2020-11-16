@@ -59,7 +59,7 @@ export const FormList = () => {
                                         <td className="text-right">
                                             <Link
                                                 className="btn-sm p-0 mr-2"
-                                                to={`/forms/${form.id}/edit`}
+                                                to={`/${form.id}/edit`}
                                             >
                                                 {__('Edit', 'smartpay')}
                                             </Link>
