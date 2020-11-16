@@ -605,18 +605,18 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         $time = $this->freshTimestamp();
 
         if (!$this->isDirty(static::UPDATED_AT)) {
-            $this->{static::UPDATED_AT} = $time;
+            $this->{static::UPDATED_AT} = date('Y-m-d h-i-s', $time);
         }
 
         if (!$this->exists && !$this->isDirty(static::CREATED_AT)) {
-            $this->{static::CREATED_AT} = $time;
+            $this->{static::CREATED_AT} = date('Y-m-d h-i-s', $time);
         }
     }
 
     public function delete()
     {
         if (is_null($this->getKeyName())) {
-            throw new Exception('No primary key defined on model.');
+            throw new \Exception('No primary key defined on model.');
         }
 
         if (!$this->exists) {
@@ -651,9 +651,9 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         return static::UPDATED_AT;
     }
 
-    public function freshTimestamp($timestamp = null)
+    public function freshTimestamp()
     {
-        return $timestamp;
+        return time();
     }
 
     public function isDirty($attributes = null)
