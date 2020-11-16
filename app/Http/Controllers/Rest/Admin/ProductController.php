@@ -53,7 +53,7 @@ class ProductController extends \WP_REST_Controller
             $request = json_decode($request->get_body());
 
             $product = new Product();
-            $product->title = $request->title ?? 'Unnamed product';
+            $product->title = $request->title ?? 'Untitled product';
             $product->description = $request->description;
             $product->base_price = $request->base_price;
             $product->sale_price = $request->sale_price;
@@ -61,16 +61,6 @@ class ProductController extends \WP_REST_Controller
             $product->covers = $request->covers ?? [];
             $product->status = Product::PUBLISH;
             $product->save();
-
-            // $parent = Product::create([
-            //     'title' => $request->title ?? 'Unnamed product',
-            //     'description' => $request->description,
-            //     'base_price' => $request->base_price,
-            //     'sale_price' => $request->sale_price,
-            //     'files' => $request->files ?? [],
-            //     'covers' => $request->covers,
-            //     'status' => Product::PUBLISH,
-            // ]);
 
             array_walk($request->variations, function ($variationData) use ($product) {
                 $this->createVariation($variationData, $product->id);

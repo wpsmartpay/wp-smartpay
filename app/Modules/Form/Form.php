@@ -68,7 +68,7 @@ class Form
         register_rest_route('smartpay/v1', 'forms/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
-                'callback'  => [$formController, 'view'],
+                'callback'  => [$formController, 'show'],
                 'permission_callback' => [$formController, 'middleware'],
             ],
             [

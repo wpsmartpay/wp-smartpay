@@ -27923,6 +27923,7 @@ var CreateForm = function CreateForm() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EditForm", function() { return EditForm; });
 var EditForm = function EditForm() {
+  console.log('object');
   return /*#__PURE__*/React.createElement("p", null, "Form Edit");
 };
 
