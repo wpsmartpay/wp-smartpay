@@ -50,7 +50,7 @@ class Payment
         register_rest_route('smartpay/v1', 'payments/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
-                'callback'  => [$paymentController, 'view'],
+                'callback'  => [$paymentController, 'show'],
                 'permission_callback' => [$paymentController, 'middleware'],
             ],
             [
@@ -60,7 +60,7 @@ class Payment
             ],
             [
                 'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$paymentController, 'delete'],
+                'callback'  => [$paymentController, 'destroy'],
                 'permission_callback' => [$paymentController, 'middleware'],
             ],
         ]);

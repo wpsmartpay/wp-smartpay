@@ -43,7 +43,7 @@ class Product
         register_rest_route('smartpay/v1', 'products/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
-                'callback'  => [$productController, 'view'],
+                'callback'  => [$productController, 'show'],
                 'permission_callback' => [$productController, 'middleware'],
             ],
             [

@@ -43,7 +43,7 @@ class Customer
         register_rest_route('smartpay/v1', 'customers/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
-                'callback'  => [$productController, 'view'],
+                'callback'  => [$productController, 'show'],
                 'permission_callback' => [$productController, 'middleware'],
             ],
             // [
@@ -53,7 +53,7 @@ class Customer
             // ],
             // [
             //     'methods'   => WP_REST_Server::DELETABLE,
-            //     'callback'  => [$productController, 'delete'],
+            //     'callback'  => [$productController, 'destroy'],
             //     'permission_callback' => [$productController, 'middleware'],
             // ],
         ]);
