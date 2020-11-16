@@ -50,11 +50,9 @@ registerStore('smartpay/coupons', {
             case 'SET_COUPON':
                 return {
                     ...state,
-                    coupons: [...state.coupons, action.coupon],
+                    coupons: [action.coupon, ...state.coupons],
                 }
             case 'UPDATE_COUPON':
-                console.log(action.coupon)
-                console.log(state.coupons)
                 return {
                     ...state,
                     coupons: state.coupons.map((coupon) =>

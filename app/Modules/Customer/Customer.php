@@ -51,11 +51,11 @@ class Customer
             //     'callback'  => [$productController, 'update'],
             //     'permission_callback' => [$productController, 'middleware'],
             // ],
-            // [
-            //     'methods'   => WP_REST_Server::DELETABLE,
-            //     'callback'  => [$productController, 'delete'],
-            //     'permission_callback' => [$productController, 'middleware'],
-            // ],
+            [
+                'methods'   => WP_REST_Server::DELETABLE,
+                'callback'  => [$productController, 'destroy'],
+                'permission_callback' => [$productController, 'middleware'],
+            ],
         ]);
     }
 }

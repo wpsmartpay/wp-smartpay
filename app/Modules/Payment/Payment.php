@@ -60,7 +60,7 @@ class Payment
             ],
             [
                 'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$paymentController, 'delete'],
+                'callback'  => [$paymentController, 'destroy'],
                 'permission_callback' => [$paymentController, 'middleware'],
             ],
         ]);

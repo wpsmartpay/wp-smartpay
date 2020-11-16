@@ -1,9 +1,11 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
+import { Container, Table, Button, Alert } from 'react-bootstrap'
 
-const { useEffect } = wp.element
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
+
+import { DeletePayment } from '../../http/payment'
 
 export const PaymentList = () => {
     useEffect(() => {
@@ -14,9 +16,16 @@ export const PaymentList = () => {
         select('smartpay/payments').getPayments()
     )
 
-    const deletePayment = () => {
-        // FIXME
-        console.log('Delete payment')
+    const [response, setResponse] = useState({})
+
+    const deletePayment = (paymentId) => {
+        DeletePayment(paymentId).then((response) => {
+            dispatch('smartpay/payments').deletePayment(paymentId)
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        })
     }
 
     return (
@@ -32,6 +41,11 @@ export const PaymentList = () => {
             </div>
 
             <Container className="mt-3">
+                {response.message && (
+                    <Alert className="mt-3" variant={response.type}>
+                        {response.message}
+                    </Alert>
+                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
@@ -56,6 +70,9 @@ export const PaymentList = () => {
                                 <th className="w-30 text-left">
                                     <strong>{__('Date', 'smartpay')}</strong>
                                 </th>
+                                <th className="w-30 text-left">
+                                    <strong>{__('Actions', 'smartpay')}</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,10 +84,21 @@ export const PaymentList = () => {
                                             {/* FIXME */}
                                             {payment.customer_id}
                                         </td>
-                                        <td>{payment.amount}</td>
+                                        <td>{`${payment.currency}${payment.amount} `}</td>
                                         <td>{payment.type}</td>
                                         <td>{payment.status}</td>
                                         <td>{payment.completed_at}</td>
+                                        <td>
+                                            <Button
+                                                className="btn-sm p-0"
+                                                onClick={() =>
+                                                    deletePayment(payment.id)
+                                                }
+                                                variant="link"
+                                            >
+                                                {__('Delete', 'smartpay')}
+                                            </Button>
+                                        </td>
                                     </tr>
                                 )
                             })}

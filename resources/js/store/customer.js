@@ -10,7 +10,7 @@ const actions = {
     getCustomers() {
         return {
             type: 'GET_CUSTOMERS',
-            path: `${smartpay.restUrl}/smartpay/v1/customers`,
+            path: `${smartpay.restUrl}/v1/customers`,
         }
     },
     setCustomers(customers) {
@@ -22,7 +22,7 @@ const actions = {
     getCustomer(id) {
         return {
             type: 'GET_FORM',
-            path: `${smartpay.restUrl}/smartpay/v1/customers/${id}`,
+            path: `${smartpay.restUrl}/v1/customers/${id}`,
             id,
         }
     },
@@ -30,6 +30,12 @@ const actions = {
         return {
             type: 'SET_FORM',
             customer,
+        }
+    },
+    deleteCustomer(customerId) {
+        return {
+            type: 'DELETE_CUSTOMER',
+            customerId,
         }
     },
 }
@@ -50,6 +56,15 @@ registerStore('smartpay/customers', {
                             (customer) => customer.id !== action.customer.id
                         ),
                         action.customer,
+                    ],
+                }
+            case 'DELETE_CUSTOMER':
+                return {
+                    ...state,
+                    customers: [
+                        ...state.customers.filter(
+                            (customer) => customer.id !== action.customerId
+                        ),
                     ],
                 }
             default:
