@@ -9,11 +9,11 @@ import {
     Button,
     Alert,
 } from 'react-bootstrap'
-import { useReducer, useEffect, useState } from '@wordpress/element'
+import { useEffect, useState } from '@wordpress/element'
 import { UpdateCoupon } from '../../http/coupon'
 import { createHooks } from '@wordpress/hooks'
 import { useParams } from 'react-router-dom'
-const { useSelect, select, dispatch } = wp.data
+const { select, dispatch } = wp.data
 
 const restrictionElement = createHooks()
 
@@ -45,14 +45,14 @@ export const EditCoupon = () => {
         setCoupon({ ...coupon, ...{ [event.target.name]: event.target.value } })
     }
 
-    const Save = (couponId, updatedCoupon) => {
-        UpdateCoupon(couponId, JSON.stringify(updatedCoupon)).then((response) =>
+    const Save = () => {
+        UpdateCoupon(couponId, JSON.stringify(coupon)).then((response) =>
             setResponse({
                 type: 'success',
                 message: __(response.message, 'smartpay'),
             })
         )
-        dispatch('smartpay/coupons').updateCoupon(updatedCoupon)
+        dispatch('smartpay/coupons').updateCoupon(coupon)
     }
 
     if (!coupon) {
@@ -78,7 +78,7 @@ export const EditCoupon = () => {
                             <Button
                                 type="button"
                                 className="btn btn-primary btn-sm text-decoration-none"
-                                onClick={() => Save(coupon.id, coupon)}
+                                onClick={Save}
                             >
                                 {__('Update', 'smartpay')}
                             </Button>
