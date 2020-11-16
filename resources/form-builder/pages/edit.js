@@ -23,7 +23,7 @@ export const EditForm = () => {
     const { formId } = useParams()
 
     const [form, setformData] = useReducer(reducer, defaultFormData)
-    const [response, setRespose] = useState({})
+    const [response, setResponse] = useState({})
 
     const formData = useSelect(
         (select) => select('smartpay/forms').getForm(formId),
@@ -34,11 +34,11 @@ export const EditForm = () => {
         setformData(formData)
     }, [formId, formData])
 
-    const UpdateForm = () => {
+    const updateForm = () => {
         Update(formId, JSON.stringify(form)).then((response) => {
             dispatch('smartpay/forms').updateForm(form)
 
-            setRespose({
+            setResponse({
                 type: 'success',
                 message: __(response.message, 'smartpay'),
             })
@@ -64,7 +64,7 @@ export const EditForm = () => {
                         </h2>
                         <div className="ml-auto">
                             <Button
-                                onClick={UpdateForm}
+                                onClick={updateForm}
                                 className="btn btn-primary btn-sm text-decoration-none px-3"
                             >
                                 {__('Publish', 'smartpay')}

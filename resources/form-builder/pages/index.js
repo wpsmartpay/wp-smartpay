@@ -1,20 +1,31 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
-
-const { useEffect } = wp.element
-const { useSelect, dispatch } = wp.data
+import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { useState, useEffect } from '@wordpress/element'
+import { useSelect, dispatch } from '@wordpress/data'
+import { Delete } from '../http/form'
 
 export const FormList = () => {
+    const [forms, setForms] = useState([])
+    const [response, setResponse] = useState({})
+
+    const formsData = useSelect(
+        (select) => select('smartpay/forms').getForms(),
+        []
+    )
+
     useEffect(() => {
-        dispatch('smartpay/forms').getForms()
-    }, [])
+        setForms(formsData)
+    }, [formsData])
 
-    const forms = useSelect((select) => select('smartpay/forms').getForms())
-
-    const deleteForm = () => {
-        // FIXME
-        console.log('Delete form')
+    const deleteForm = (formId) => {
+        Delete(formId).then((response) => {
+            dispatch('smartpay/forms').deleteForm(formId)
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        })
     }
 
     return (
@@ -39,6 +50,12 @@ export const FormList = () => {
             </div>
 
             <Container className="mt-3">
+                {response.message && (
+                    <Alert className="mt-3" variant={response.type}>
+                        {response.message}
+                    </Alert>
+                )}
+
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
@@ -66,7 +83,7 @@ export const FormList = () => {
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
-                                                    deleteProduct(form)
+                                                    deleteForm(form.id)
                                                 }
                                                 variant="link"
                                             >

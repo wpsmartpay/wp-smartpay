@@ -20,16 +20,16 @@ const reducer = (state, data) => {
 
 export const CreateForm = () => {
     const [form, setformData] = useReducer(reducer, defaultFormData)
-    const [response, setRespose] = useState({})
+    const [response, setResponse] = useState({})
     const [shouldReset, setShouldReset] = useState(false)
 
-    const SaveForm = () => {
+    const saveForm = () => {
         Save(JSON.stringify(form)).then((response) => {
             setformData(defaultFormData)
             setShouldReset(true)
 
             dispatch('smartpay/forms').setForm(response.form)
-            setRespose({
+            setResponse({
                 type: 'success',
                 message: __(response.message, 'smartpay'),
             })
@@ -55,7 +55,7 @@ export const CreateForm = () => {
                         </h2>
                         <div className="ml-auto">
                             <Button
-                                onClick={SaveForm}
+                                onClick={saveForm}
                                 className="btn btn-primary btn-sm text-decoration-none px-3"
                             >
                                 {__('Publish', 'smartpay')}

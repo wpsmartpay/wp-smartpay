@@ -78,7 +78,7 @@ class Form
             ],
             [
                 'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$formController, 'delete'],
+                'callback'  => [$formController, 'destroy'],
                 'permission_callback' => [$formController, 'middleware'],
             ],
         ]);

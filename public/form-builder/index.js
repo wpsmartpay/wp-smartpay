@@ -27693,13 +27693,14 @@ Sidebar.InspectorFill = InspectorFill;
 /*!*********************************************!*\
   !*** ./resources/form-builder/http/form.js ***!
   \*********************************************/
-/*! exports provided: Save, Update */
+/*! exports provided: Save, Update, Delete */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Save", function() { return Save; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Update", function() { return Update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Delete", function() { return Delete; });
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -27721,6 +27722,15 @@ var Update = function Update(id, body) {
       'X-WP-Nonce': smartpay.apiNonce
     },
     body: body
+  });
+};
+var Delete = function Delete(formId) {
+  return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: "smartpay/v1/forms/".concat(formId),
+    method: 'DELETE',
+    headers: {
+      'X-WP-Nonce': smartpay.apiNonce
+    }
   });
 };
 
@@ -27912,19 +27922,19 @@ var CreateForm = function CreateForm() {
   var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["useState"])({}),
       _useState2 = _slicedToArray(_useState, 2),
       response = _useState2[0],
-      setRespose = _useState2[1];
+      setResponse = _useState2[1];
 
   var _useState3 = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
       shouldReset = _useState4[0],
       setShouldReset = _useState4[1];
 
-  var SaveForm = function SaveForm() {
+  var saveForm = function saveForm() {
     Object(_http_form__WEBPACK_IMPORTED_MODULE_4__["Save"])(JSON.stringify(form)).then(function (response) {
       setformData(defaultFormData);
       setShouldReset(true);
       Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__["dispatch"])('smartpay/forms').setForm(response.form);
-      setRespose({
+      setResponse({
         type: 'success',
         message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
       });
@@ -27947,7 +27957,7 @@ var CreateForm = function CreateForm() {
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Create New Form', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "ml-auto"
   }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-    onClick: SaveForm,
+    onClick: saveForm,
     className: "btn btn-primary btn-sm text-decoration-none px-3"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay')))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
     style: {
@@ -28031,7 +28041,7 @@ var EditForm = function EditForm() {
   var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])({}),
       _useState2 = _slicedToArray(_useState, 2),
       response = _useState2[0],
-      setRespose = _useState2[1];
+      setResponse = _useState2[1];
 
   var formData = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["useSelect"])(function (select) {
     return select('smartpay/forms').getForm(formId);
@@ -28040,10 +28050,10 @@ var EditForm = function EditForm() {
     setformData(formData);
   }, [formId, formData]);
 
-  var UpdateForm = function UpdateForm() {
+  var updateForm = function updateForm() {
     Object(_http_form__WEBPACK_IMPORTED_MODULE_5__["Update"])(formId, JSON.stringify(form)).then(function (response) {
       Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["dispatch"])('smartpay/forms').updateForm(form);
-      setRespose({
+      setResponse({
         type: 'success',
         message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
       });
@@ -28066,7 +28076,7 @@ var EditForm = function EditForm() {
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Create New Form', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "ml-auto"
   }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
-    onClick: UpdateForm,
+    onClick: updateForm,
     className: "btn btn-primary btn-sm text-decoration-none px-3"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay')))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], {
     style: {
@@ -28097,24 +28107,55 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var useEffect = wp.element.useEffect;
-var _wp$data = wp.data,
-    useSelect = _wp$data.useSelect,
-    dispatch = _wp$data.dispatch;
+
+
+
+
 var FormList = function FormList() {
-  useEffect(function () {
-    dispatch('smartpay/forms').getForms();
-  }, []);
-  var forms = useSelect(function (select) {
-    return select('smartpay/forms').getForms();
-  });
+  var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])([]),
+      _useState2 = _slicedToArray(_useState, 2),
+      forms = _useState2[0],
+      setForms = _useState2[1];
 
-  var deleteForm = function deleteForm() {
-    // FIXME
-    console.log('Delete form');
+  var _useState3 = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])({}),
+      _useState4 = _slicedToArray(_useState3, 2),
+      response = _useState4[0],
+      setResponse = _useState4[1];
+
+  var formsData = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["useSelect"])(function (select) {
+    return select('smartpay/forms').getForms();
+  }, []);
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+    setForms(formsData);
+  }, [formsData]);
+
+  var deleteForm = function deleteForm(formId) {
+    Object(_http_form__WEBPACK_IMPORTED_MODULE_5__["Delete"])(formId).then(function (response) {
+      Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["dispatch"])('smartpay/forms').deleteForm(formId);
+      setResponse({
+        type: 'success',
+        message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
+      });
+    });
   };
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
@@ -28131,7 +28172,10 @@ var FormList = function FormList() {
     to: "create"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Add new', 'smartpay')))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], {
     className: "mt-3"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, response.message && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Alert"], {
+    className: "mt-3",
+    variant: response.type
+  }, response.message), /*#__PURE__*/React.createElement("div", {
     className: "bg-white"
   }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Table"], {
     className: "table"
@@ -28152,7 +28196,7 @@ var FormList = function FormList() {
     }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Edit', 'smartpay')), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
       className: "btn-sm p-0",
       onClick: function onClick() {
-        return deleteProduct(form);
+        return deleteForm(form.id);
       },
       variant: "link"
     }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Delete', 'smartpay'))));
@@ -28263,7 +28307,7 @@ registerStore('smartpay/forms', {
       case 'DELETE_FORM':
         return _objectSpread(_objectSpread({}, state), {}, {
           forms: _toConsumableArray(state.forms.filter(function (form) {
-            return form.id !== action.form.id;
+            return form.id !== action.id;
           }))
         });
 

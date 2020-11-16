@@ -21,3 +21,13 @@ export const Update = (id, body) => {
         body: body,
     })
 }
+
+export const Delete = (formId) => {
+    return apiFetch({
+        path: `smartpay/v1/forms/${formId}`,
+        method: 'DELETE',
+        headers: {
+            'X-WP-Nonce': smartpay.apiNonce,
+        },
+    })
+}
