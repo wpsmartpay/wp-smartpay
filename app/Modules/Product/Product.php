@@ -53,7 +53,7 @@ class Product
             ],
             [
                 'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$productController, 'delete'],
+                'callback'  => [$productController, 'destroy'],
                 'permission_callback' => [$productController, 'middleware'],
             ],
         ]);

@@ -32,6 +32,12 @@ const actions = {
             product,
         }
     },
+    deleteProduct(productId) {
+        return {
+            type: 'DELETE_PRODUCT',
+            productId,
+        }
+    },
 }
 
 registerStore('smartpay/products', {
@@ -50,6 +56,15 @@ registerStore('smartpay/products', {
                             (product) => product.id !== action.product.id
                         ),
                         action.product,
+                    ],
+                }
+            case 'DELETE_PRODUCT':
+                return {
+                    ...state,
+                    products: [
+                        ...state.products.filter(
+                            (product) => product.id !== action.productId
+                        ),
                     ],
                 }
             default:

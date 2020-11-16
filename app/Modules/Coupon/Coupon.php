@@ -53,7 +53,7 @@ class Coupon
             ],
             [
                 'methods'   => WP_REST_Server::DELETABLE,
-                'callback'  => [$couponController, 'delete'],
+                'callback'  => [$couponController, 'destroy'],
                 'permission_callback' => [$couponController, 'middleware'],
             ],
         ]);

@@ -25,6 +25,18 @@ const actions = {
             coupon,
         }
     },
+    setCoupon(coupon) {
+        return {
+            type: 'SET_COUPON',
+            coupon,
+        }
+    },
+    deleteCoupon(couponId) {
+        return {
+            type: 'DELETE_COUPON',
+            couponId,
+        }
+    },
 }
 
 registerStore('smartpay/coupons', {
@@ -35,16 +47,28 @@ registerStore('smartpay/coupons', {
                     ...state,
                     coupons: action.coupons,
                 }
-            case 'UPDATE_COUPON':
-                let updateCoupon
-                state.coupons.map(function (couponItem) {
-                    if (couponItem.id == action.coupon.id) {
-                        updateCoupon = { ...action.coupon }
-                    }
-                })
+            case 'SET_COUPON':
                 return {
                     ...state,
-                    coupons: [...state.coupons, updateCoupon],
+                    coupons: [...state.coupons, action.coupon],
+                }
+            case 'UPDATE_COUPON':
+                console.log(action.coupon)
+                console.log(state.coupons)
+                return {
+                    ...state,
+                    coupons: state.coupons.map((coupon) =>
+                        coupon.id === action.coupon.id ? action.coupon : coupon
+                    ),
+                }
+            case 'DELETE_COUPON':
+                return {
+                    ...state,
+                    coupons: [
+                        ...state.coupons.filter(
+                            (coupons) => coupons.id !== action.couponId
+                        ),
+                    ],
                 }
             default:
                 return state
@@ -61,9 +85,7 @@ registerStore('smartpay/coupons', {
             return state.coupons
         },
         getCoupon(state, id) {
-            return JSON.parse(
-                JSON.stringify(state.coupons.find((c) => c.id === id))
-            )
+            return state.coupons.find((coupon) => coupon.id == id)
         },
     },
 

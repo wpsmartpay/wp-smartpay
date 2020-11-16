@@ -9,50 +9,47 @@ import {
     Button,
     Alert,
 } from 'react-bootstrap'
-import { useReducer } from '@wordpress/element'
+import { useReducer, useState } from '@wordpress/element'
+const { dispatch } = wp.data
+import { SaveCoupon } from '../../http/coupon'
 
 const initialState = {
     title: '',
     description: '',
-    discounttype: 'fixed',
-    amount: '',
-    expirydate: '',
+    discount_type: 'fixed',
+    discount_amount: '',
+    expiry_date: '',
 }
 
-const reducer = (state, action) => {
+const reducer = (coupon, action) => {
     if (action.type == 'reset') {
         return initialState
     }
 
-    const result = { ...state }
+    const result = { ...coupon }
     result[action.type] = action.value
     return result
 }
 
 export const CreateCoupon = () => {
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [coupon, setCoupon] = useReducer(reducer, initialState)
+    const [response, setResponse] = useState({})
 
-    const couponCreateHandler = (event) => {
+    const createCoupon = (event) => {
         event.preventDefault()
-
-        fetch(`${smartpay.restUrl}/v1/coupons`, {
-            method: 'POST',
-            headers: {
-                'X-WP-Nonce': smartpay.apiNonce,
-            },
-            body: JSON.stringify(state),
-        }).then((response) => {
-            if (response.status == 200) {
-                let $alert = document.getElementById('coupon-alert')
-                $alert.classList.remove('d-none')
-            }
+        SaveCoupon(JSON.stringify(coupon)).then((response) => {
+            dispatch('smartpay/coupons').setCoupon(response)
+            setResponse({
+                type: 'success',
+                message: __('Coupon Created', 'smartpay'),
+            })
         })
 
-        dispatch({ type: 'reset' })
+        setCoupon({ type: 'reset' })
     }
 
-    const changeHandler = (event) => {
-        dispatch({ type: event.target.name, value: event.target.value })
+    const setCouponData = (event) => {
+        setCoupon({ type: event.target.name, value: event.target.value })
     }
 
     return (
@@ -67,7 +64,7 @@ export const CreateCoupon = () => {
                             <Button
                                 type="button"
                                 className="btn btn-primary btn-sm text-decoration-none"
-                                onClick={couponCreateHandler}
+                                onClick={createCoupon}
                             >
                                 {__('Publish', 'smartpay')}
                             </Button>
@@ -78,13 +75,11 @@ export const CreateCoupon = () => {
             <Container>
                 <Row className="justify-content-center">
                     <Col xs={9}>
-                        <Alert
-                            id="coupon-alert"
-                            className="mt-5 d-none"
-                            variant="success"
-                        >
-                            Coupon Added Successfully
-                        </Alert>
+                        {response.message && (
+                            <Alert className="mt-3" variant={response.type}>
+                                {response.message}
+                            </Alert>
+                        )}
                     </Col>
                 </Row>
             </Container>
@@ -97,8 +92,8 @@ export const CreateCoupon = () => {
                                 <Form.Group controlId="couponForm.title">
                                     <Form.Control
                                         name="title"
-                                        value={state.title}
-                                        onChange={changeHandler}
+                                        value={coupon.title}
+                                        onChange={setCouponData}
                                         type="text"
                                         placeholder="Enter coupon code here"
                                     />
@@ -106,8 +101,8 @@ export const CreateCoupon = () => {
                                 <Form.Group controlId="couponForm.description">
                                     <Form.Control
                                         name="description"
-                                        value={state.description}
-                                        onChange={changeHandler}
+                                        value={coupon.description}
+                                        onChange={setCouponData}
                                         as="textarea"
                                         rows={3}
                                         placeholder="Coupon description"
@@ -119,31 +114,37 @@ export const CreateCoupon = () => {
                                         fill
                                         defaultActiveKey="general"
                                     >
-                                        <Tab
-                                            eventKey="general"
-                                            title="General"
-                                        >
+                                        <Tab eventKey="general" title="General">
                                             <Row>
                                                 <Col>
                                                     <Form.Group controlId="couponForm.discountType">
                                                         <Form.Label className="mb-2 d-inline-block">
-                                                            Discount type
+                                                            {__(
+                                                                'Discount type',
+                                                                'smartpay'
+                                                            )}
                                                         </Form.Label>
                                                         <Form.Control
-                                                            name="discounttype"
+                                                            name="discount_type"
                                                             as="select"
                                                             value={
-                                                                state.discounttype
+                                                                coupon.discount_type
                                                             }
                                                             onChange={
-                                                                changeHandler
+                                                                setCouponData
                                                             }
                                                         >
                                                             <option value="fixed">
-                                                                Fixed Amount
+                                                                {__(
+                                                                    'Fixed Amount',
+                                                                    'smartpay'
+                                                                )}
                                                             </option>
                                                             <option value="percent">
-                                                                Percent
+                                                                {__(
+                                                                    'Percent',
+                                                                    'smartpay'
+                                                                )}
                                                             </option>
                                                         </Form.Control>
                                                     </Form.Group>
@@ -151,13 +152,18 @@ export const CreateCoupon = () => {
                                                 <Col>
                                                     <Form.Group controlId="couponForm.amount">
                                                         <Form.Label className="mb-2 d-inline-block">
-                                                            Coupon amount
+                                                            {__(
+                                                                'Coupon amount',
+                                                                'smartpay'
+                                                            )}
                                                         </Form.Label>
                                                         <Form.Control
-                                                            name="amount"
-                                                            value={state.amount}
+                                                            name="discount_amount"
+                                                            value={
+                                                                coupon.discount_amount
+                                                            }
                                                             onChange={
-                                                                changeHandler
+                                                                setCouponData
                                                             }
                                                             type="text"
                                                             placeholder="0"
@@ -167,13 +173,16 @@ export const CreateCoupon = () => {
                                             </Row>
                                             <Form.Group controlId="couponForm.expiryDate">
                                                 <Form.Label className="mb-2 d-inline-block">
-                                                    Coupon expiry date
+                                                    {__(
+                                                        'Coupon expiry date',
+                                                        'smartpay'
+                                                    )}
                                                 </Form.Label>
                                                 <Form.Control
-                                                    name="expirydate"
+                                                    name="expiry_date"
                                                     type="date"
-                                                    value={state.expirydate}
-                                                    onChange={changeHandler}
+                                                    value={coupon.expiry_date}
+                                                    onChange={setCouponData}
                                                 />
                                             </Form.Group>
                                         </Tab>
@@ -183,7 +192,10 @@ export const CreateCoupon = () => {
                                         >
                                             <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
                                                 <h3 className="mt-1">
-                                                    {__('Upgrade to pro', 'smartpay')}
+                                                    {__(
+                                                        'Upgrade to pro',
+                                                        'smartpay'
+                                                    )}
                                                 </h3>
                                             </div>
                                         </Tab>

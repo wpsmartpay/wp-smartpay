@@ -3,7 +3,8 @@
 namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
-
+use WP_REST_Request;
+use WP_REST_Response;
 use SmartPay\Models\Coupon;
 
 class CouponController extends RestController
@@ -23,40 +24,67 @@ class CouponController extends RestController
         return true;
     }
 
-    public function index(\WP_REST_Request $request)
+    public function index(WP_REST_Request $request)
     {
         $products = Coupon::all();
 
-        return new \WP_REST_Response($products);
+        return new WP_REST_Response($products);
     }
 
-    public function store(\WP_REST_Request $request)
+    public function store(WP_REST_Request $request)
     {
         $data = \json_decode($request->get_body(), true);
         $uid = get_current_user_id();
         $coupon = new Coupon();
         $coupon->title = $data['title'];
         $coupon->description = $data['description'];
-        $coupon->discount_type = $data['discounttype'];
-        $coupon->discount_amount = $data['amount'];
+        $coupon->discount_type = $data['discount_type'];
+        $coupon->discount_amount = $data['discount_amount'];
         $coupon->status = 'published';
         $coupon->created_by = $uid;
-        $coupon->expiry_date = $data['expirydate'];
+        $coupon->expiry_date = $data['expiry_date'];
         $coupon->save();
 
-        $response = new \WP_REST_Response($coupon, 200);
+        $response = new WP_REST_Response($coupon, 200);
         return $response;
     }
 
-    public function view(\WP_REST_Request $request)
+    public function view(WP_REST_Request $request)
     {
         $id = $request['id'];
         $coupon = Coupon::find($id);
         if (isset($coupon)) {
-            $response = new \WP_REST_Response($coupon, 200);
+            $response = new WP_REST_Response($coupon, 200);
         } else {
-            $response = new \WP_REST_Response($coupon, 400);
+            $response = new WP_REST_Response($coupon, 400);
         }
         return $response;
+    }
+
+    public function update(WP_REST_Request $request)
+    {
+        $data = \json_decode($request->get_body(), true);
+        $coupon = Coupon::find($request->get_param('id'));
+        if (isset($coupon)) {
+            $coupon->title = $data['title'];
+            $coupon->description = $data['description'];
+            $coupon->discount_type = $data['discount_type'];
+            $coupon->discount_amount = $data['discount_amount'];
+            $coupon->expiry_date = $data['expiry_date'];
+            $coupon->save();
+            $response = new WP_REST_Response(['message' => 'Coupon Updated'], 200);
+        } else {
+            $response = new WP_REST_Response(['message' => 'Coupon not Found'], 400);
+        }
+
+        return $response;
+    }
+
+    public function destroy(WP_REST_Request $request): WP_REST_Response
+    {
+        $coupon = Coupon::find($request->get_param('id'));
+        $coupon->delete();
+
+        return new WP_REST_Response(['message' => 'Coupon deleted'], 200);
     }
 }
