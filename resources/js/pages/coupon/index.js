@@ -5,13 +5,9 @@ import { Container, Table, Button, Alert } from 'react-bootstrap'
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
-import { DeleteCoupon } from '../../http/coupon'
+import { Delete } from '../../http/coupon'
 
 export const CouponList = () => {
-    useEffect(() => {
-        dispatch('smartpay/coupons').getCoupons()
-    }, [])
-
     const [response, setResponse] = useState({})
 
     const coupons = useSelect((select) =>
@@ -19,7 +15,7 @@ export const CouponList = () => {
     )
 
     const deleteCoupon = (couponId) => {
-        DeleteCoupon(couponId).then((response) => {
+        Delete(couponId).then((response) => {
             dispatch('smartpay/coupons').deleteCoupon(couponId)
             setResponse({
                 type: 'success',

@@ -122,12 +122,12 @@ registerStore('smartpay/forms', {
 
     resolvers: {
         *getForms() {
-            const forms = yield actions.getForms()
-            return actions.setForms(forms)
+            const response = yield actions.getForms()
+            return actions.setForms(response?.forms)
         },
         *getForm(id) {
-            const form = yield actions.getForm(id)
-            return actions.setForm(form)
+            const response = yield actions.getForm(id)
+            return actions.setForm(response?.form)
         },
     },
 })

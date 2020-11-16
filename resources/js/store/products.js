@@ -10,7 +10,7 @@ const actions = {
     getProducts() {
         return {
             type: 'GET_PRODUCTS',
-            path: `smartpay/v1/products`,
+            path: `${smartpay.restUrl}/v1/products`,
         }
     },
     setProducts(products) {
@@ -22,7 +22,7 @@ const actions = {
     getProduct(id) {
         return {
             type: 'GET_PRODUCT',
-            path: `smartpay/v1/products/${id}`,
+            path: `${smartpay.restUrl}/v1/products/${id}`,
             id,
         }
     },
