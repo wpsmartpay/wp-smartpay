@@ -1,16 +1,10 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { Container, Alert, Button } from 'react-bootstrap'
-import {
-    useCallback,
-    useEffect,
-    useState,
-    useReducer,
-} from '@wordpress/element'
+import { useEffect, useState, useReducer } from '@wordpress/element'
+import { useSelect, dispatch } from '@wordpress/data'
 
-import { useSelect, select } from '@wordpress/data'
 import { Update } from '../http/form'
-
 import { FormForm } from './components/form'
 
 const defaultFormData = {
@@ -30,25 +24,20 @@ export const EditForm = () => {
 
     const [form, setformData] = useReducer(reducer, defaultFormData)
     const [response, setRespose] = useState({})
-    const [shouldReset, setShouldReset] = useState(false)
 
-    const forms = useSelect((select) => select('smartpay/forms').getForms(), [
-        formId,
-    ])
-
-    const getForm = useCallback(() => {
-        let form = select('smartpay/forms').getForm(formId)
-        setformData(form)
-    }, [formId])
+    const formData = useSelect(
+        (select) => select('smartpay/forms').getForm(formId),
+        [formId]
+    )
 
     useEffect(() => {
-        getForm()
-    }, [formId, forms])
+        setformData(formData)
+    }, [formId, formData])
 
     const UpdateForm = () => {
         Update(formId, JSON.stringify(form)).then((response) => {
-            // TODO: Set data to store
-            // TODO: Toggle reset value
+            dispatch('smartpay/forms').updateForm(form)
+
             setRespose({
                 type: 'success',
                 message: __(response.message, 'smartpay'),

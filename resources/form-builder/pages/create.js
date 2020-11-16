@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Alert, Button } from 'react-bootstrap'
 import { useState, useReducer } from '@wordpress/element'
-import { Save } from '../http/form'
+import { dispatch } from '@wordpress/data'
 
+import { Save } from '../http/form'
 import { FormForm } from './components/form'
 
 const defaultFormData = {
@@ -27,8 +28,7 @@ export const CreateForm = () => {
             setformData(defaultFormData)
             setShouldReset(true)
 
-            // TODO: Set data to store
-            // TODO: Toggle reset value
+            dispatch('smartpay/forms').setForm(response.form)
             setRespose({
                 type: 'success',
                 message: __(response.message, 'smartpay'),

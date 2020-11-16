@@ -27866,8 +27866,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
-/* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/form */ "./resources/form-builder/pages/components/form.js");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
+/* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/form */ "./resources/form-builder/pages/components/form.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -27885,6 +27887,7 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -27917,11 +27920,10 @@ var CreateForm = function CreateForm() {
       setShouldReset = _useState4[1];
 
   var SaveForm = function SaveForm() {
-    Object(_http_form__WEBPACK_IMPORTED_MODULE_3__["Save"])(JSON.stringify(form)).then(function (response) {
+    Object(_http_form__WEBPACK_IMPORTED_MODULE_4__["Save"])(JSON.stringify(form)).then(function (response) {
       setformData(defaultFormData);
-      setShouldReset(true); // TODO: Set data to store
-      // TODO: Toggle reset value
-
+      setShouldReset(true);
+      Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__["dispatch"])('smartpay/forms').setForm(response.form);
       setRespose({
         type: 'success',
         message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
@@ -27954,7 +27956,7 @@ var CreateForm = function CreateForm() {
   }, response.message && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Alert"], {
     className: "mt-3",
     variant: response.type
-  }, response.message), /*#__PURE__*/React.createElement(_components_form__WEBPACK_IMPORTED_MODULE_4__["FormForm"], {
+  }, response.message), /*#__PURE__*/React.createElement(_components_form__WEBPACK_IMPORTED_MODULE_5__["FormForm"], {
     form: form,
     shouldReset: shouldReset,
     setformData: setformData
@@ -28031,26 +28033,16 @@ var EditForm = function EditForm() {
       response = _useState2[0],
       setRespose = _useState2[1];
 
-  var _useState3 = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      shouldReset = _useState4[0],
-      setShouldReset = _useState4[1];
-
-  var forms = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["useSelect"])(function (select) {
-    return select('smartpay/forms').getForms();
-  }, [formId]);
-  var getForm = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useCallback"])(function () {
-    var form = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["select"])('smartpay/forms').getForm(formId);
-    setformData(form);
+  var formData = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["useSelect"])(function (select) {
+    return select('smartpay/forms').getForm(formId);
   }, [formId]);
   Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
-    getForm();
-  }, [formId, forms]);
+    setformData(formData);
+  }, [formId, formData]);
 
   var UpdateForm = function UpdateForm() {
     Object(_http_form__WEBPACK_IMPORTED_MODULE_5__["Update"])(formId, JSON.stringify(form)).then(function (response) {
-      // TODO: Set data to store
-      // TODO: Toggle reset value
+      Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["dispatch"])('smartpay/forms').updateForm(form);
       setRespose({
         type: 'success',
         message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
@@ -28229,6 +28221,18 @@ var actions = {
       type: 'SET_FORM',
       form: form
     };
+  },
+  updateForm: function updateForm(form) {
+    return {
+      type: 'UPDATE_FORM',
+      form: form
+    };
+  },
+  deleteForm: function deleteForm(id) {
+    return {
+      type: 'DELETE_FORM',
+      id: id
+    };
   }
 };
 registerStore('smartpay/forms', {
@@ -28244,9 +28248,23 @@ registerStore('smartpay/forms', {
 
       case 'SET_FORM':
         return _objectSpread(_objectSpread({}, state), {}, {
-          forms: [].concat(_toConsumableArray(state.forms.filter(function (form) {
+          forms: [action.form].concat(_toConsumableArray(state.forms.filter(function (form) {
             return form.id !== action.form.id;
-          })), [action.form])
+          })))
+        });
+
+      case 'UPDATE_FORM':
+        return _objectSpread(_objectSpread({}, state), {}, {
+          forms: state.forms.map(function (form) {
+            return form.id === action.form.id ? action.form : form;
+          })
+        });
+
+      case 'DELETE_FORM':
+        return _objectSpread(_objectSpread({}, state), {}, {
+          forms: _toConsumableArray(state.forms.filter(function (form) {
+            return form.id !== action.form.id;
+          }))
         });
 
       default:
@@ -28263,11 +28281,11 @@ registerStore('smartpay/forms', {
     },
     getForm: function getForm(state, id) {
       if (!state.forms) {
-        return actions.getForm(1);
+        return actions.getForm(id);
       }
 
       return state.forms.find(function (form) {
-        return form.id == id;
+        return form.id === id;
       });
     }
   },

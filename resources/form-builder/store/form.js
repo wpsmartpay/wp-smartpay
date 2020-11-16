@@ -32,6 +32,18 @@ const actions = {
             form,
         }
     },
+    updateForm(form) {
+        return {
+            type: 'UPDATE_FORM',
+            form,
+        }
+    },
+    deleteForm(id) {
+        return {
+            type: 'DELETE_FORM',
+            id,
+        }
+    },
 }
 
 registerStore('smartpay/forms', {
@@ -46,10 +58,27 @@ registerStore('smartpay/forms', {
                 return {
                     ...state,
                     forms: [
+                        action.form,
                         ...state.forms.filter(
                             (form) => form.id !== action.form.id
                         ),
-                        action.form,
+                    ],
+                }
+            case 'UPDATE_FORM':
+                return {
+                    ...state,
+                    forms: state.forms.map((form) =>
+                        form.id === action.form.id ? action.form : form
+                    ),
+                }
+
+            case 'DELETE_FORM':
+                return {
+                    ...state,
+                    forms: [
+                        ...state.forms.filter(
+                            (form) => form.id !== action.form.id
+                        ),
                     ],
                 }
             default:
@@ -68,9 +97,9 @@ registerStore('smartpay/forms', {
         },
         getForm(state, id) {
             if (!state.forms) {
-                return actions.getForm(1)
+                return actions.getForm(id)
             }
-            return state.forms.find((form) => form.id == id)
+            return state.forms.find((form) => form.id === id)
         },
     },
 
