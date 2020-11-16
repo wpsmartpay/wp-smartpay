@@ -56,10 +56,7 @@ class FormController extends RestController
         $form->status = Form::PUBLISH;
         $form->save();
 
-        return new WP_REST_Response([
-            'form' => $form,
-            'message' => 'Form created'
-        ], 200);
+        return new WP_REST_Response(['form' => $form, 'message' => 'Form created']);
     }
 
     /**
@@ -99,7 +96,7 @@ class FormController extends RestController
         $form->status = Form::PUBLISH;
         $form->save();
 
-        return new WP_REST_Response(['message' => 'Form updated']);
+        return new WP_REST_Response(['form' => $form, 'message' => 'Form updated']);
     }
 
     /**
