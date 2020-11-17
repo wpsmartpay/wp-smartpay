@@ -5,27 +5,27 @@ export const save = ({ attributes }) => {
         <div className="form-element">
             <div className="form-row">
                 <div className="col">
-                    <label for="first_name">
+                    <label for="smartpay_first_name">
                         {__('First Name', 'smartpay')}
                     </label>
                     <input
                         type="text"
                         className="form-control"
-                        id="first_name"
-                        name="first_name"
+                        id="smartpay_first_name"
+                        name="smartpay_first_name"
                     />
                 </div>
 
                 {attributes.showLastName && (
                     <div className="col">
-                        <label for="last_name">
+                        <label for="smartpay_last_name">
                             {__('Last Name', 'smartpay')}
                         </label>
                         <input
                             type="text"
                             className="form-control"
-                            id="last_name"
-                            name="last_name"
+                            id="smartpay_last_name"
+                            name="smartpay_last_name"
                         />
                     </div>
                 )}

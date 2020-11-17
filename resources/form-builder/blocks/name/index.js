@@ -4,7 +4,7 @@ import { edit } from './edit'
 import { save } from './save'
 
 export const name = {
-    namespace: 'smartpay-form-element/name',
+    namespace: 'smartpay-form/name',
     settings: {
         title: __('Name Fields', 'smartpay'),
         description: __('Name fields', 'smartpay'),
