@@ -52,10 +52,10 @@ registerStore('smartpay/customers', {
                 return {
                     ...state,
                     customers: [
+                        action.customer,
                         ...state.customers.filter(
                             (customer) => customer.id !== action.customer.id
                         ),
-                        action.customer,
                     ],
                 }
             case 'DELETE_CUSTOMER':

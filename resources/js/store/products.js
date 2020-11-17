@@ -57,7 +57,12 @@ registerStore('smartpay/products', {
             case 'SET_PRODUCT':
                 return {
                     ...state,
-                    products: [action.product, ...state.products],
+                    products: [
+                        action.product,
+                        ...state.products.filter(
+                            (product) => product.id !== action.product.id
+                        ),
+                    ],
                 }
             case 'UPDATE_PRODUCT':
                 return {

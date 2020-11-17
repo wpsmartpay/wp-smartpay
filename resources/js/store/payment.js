@@ -46,10 +46,10 @@ registerStore('smartpay/payments', {
                 return {
                     ...state,
                     payments: [
+                        action.payment,
                         ...state.payments.filter(
                             (payment) => payment.id !== action.payment.id
                         ),
-                        action.payment,
                     ],
                 }
             default:

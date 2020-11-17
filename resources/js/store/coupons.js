@@ -57,7 +57,12 @@ registerStore('smartpay/coupons', {
             case 'SET_COUPON':
                 return {
                     ...state,
-                    coupons: [action.coupon, ...state.coupons],
+                    coupons: [
+                        action.coupon,
+                        ...state.coupons.filter(
+                            (coupon) => coupon.id !== action.coupon.id
+                        ),
+                    ],
                 }
             case 'UPDATE_COUPON':
                 return {

@@ -48,10 +48,10 @@ registerStore('smartpay/forms', {
                 return {
                     ...state,
                     forms: [
+                        action.form,
                         ...state.forms.filter(
                             (form) => form.id !== action.form.id
                         ),
-                        action.form,
                     ],
                 }
             default:
