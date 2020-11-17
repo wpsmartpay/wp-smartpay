@@ -143,11 +143,16 @@ class Admin
         } else {
         }
 
-        $this->registerBlocks();
+        $this->registerBlocks($hook);
     }
 
-    public function registerBlocks()
+    public function registerBlocks($hook)
     {
+        // Exclude blocks from the form-builder
+        if ('smartpay_page_smartpay-form' === $hook) {
+            return;
+        }
+
         // Global
         wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor']);
 
