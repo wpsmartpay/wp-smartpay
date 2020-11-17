@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
 import { Container, Table, Button, Alert } from 'react-bootstrap'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCustomer } from '../../http/customer'
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
@@ -17,12 +18,22 @@ export const CustomerList = () => {
     const [response, setResponse] = useState({})
 
     const deleteCustomer = (customerId) => {
-        DeleteCustomer(customerId).then((response) => {
-            dispatch('smartpay/customers').deleteCustomer(customerId)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
-            })
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                DeleteCustomer(customerId).then((response) => {
+                    dispatch('smartpay/customers').deleteCustomer(customerId)
+                    setResponse({
+                        type: 'success',
+                        message: __(response.message, 'smartpay'),
+                    })
+                })
+            }
         })
     }
 
