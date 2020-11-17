@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Container, Table, Button, Alert } from 'react-bootstrap'
 import { useState, useEffect } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Delete } from '../http/form'
 
 export const FormList = () => {
@@ -19,12 +20,22 @@ export const FormList = () => {
     }, [formsData])
 
     const deleteForm = (formId) => {
-        Delete(formId).then((response) => {
-            dispatch('smartpay/forms').deleteForm(formId)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
-            })
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Delete(formId).then((response) => {
+                    dispatch('smartpay/forms').deleteForm(formId)
+                    setResponse({
+                        type: 'success',
+                        message: __(response.message, 'smartpay'),
+                    })
+                })
+            }
         })
     }
 

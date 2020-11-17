@@ -166,7 +166,7 @@ class ProductController extends RestController
             }
 
             $product->delete();
-
+            $wpdb->query('COMMIT');
             return new WP_REST_Response(['message' => __('Product deleted', 'smartpay')], 200);
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
