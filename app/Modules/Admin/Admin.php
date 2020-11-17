@@ -123,8 +123,6 @@ class Admin
         wp_enqueue_style('smartpay-admin');
 
         if ('toplevel_page_smartpay' === $hook) {
-            wp_enqueue_editor();
-            wp_enqueue_media();
 
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
@@ -138,6 +136,11 @@ class Admin
                     'apiNonce' => wp_create_nonce('wp_rest')
                 )
             );
+
+            // WARN: Enqueue to bottom
+            wp_enqueue_editor();
+            wp_enqueue_media();
+        } else {
         }
 
         $this->registerBlocks();
@@ -146,7 +149,7 @@ class Admin
     public function registerBlocks()
     {
         // Global
-        wp_enqueue_script('smartpay-form-js', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
+        wp_enqueue_script('smartpay-form-js', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor']);
 
         // Product
         register_block_type('smartpay/product', array(
