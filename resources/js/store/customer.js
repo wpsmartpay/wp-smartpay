@@ -10,7 +10,7 @@ const actions = {
     getCustomers() {
         return {
             type: 'GET_CUSTOMERS',
-            path: `${smartpay.restUrl}/smartpay/v1/customers`,
+            path: `${smartpay.restUrl}/v1/customers`,
         }
     },
     setCustomers(customers) {
@@ -22,7 +22,7 @@ const actions = {
     getCustomer(id) {
         return {
             type: 'GET_FORM',
-            path: `${smartpay.restUrl}/smartpay/v1/customers/${id}`,
+            path: `${smartpay.restUrl}/v1/customers/${id}`,
             id,
         }
     },
@@ -95,12 +95,12 @@ registerStore('smartpay/customers', {
 
     resolvers: {
         *getCustomers() {
-            const customers = yield actions.getCustomers()
-            return actions.setCustomers(customers)
+            const response = yield actions.getCustomers()
+            return actions.setCustomers(response?.customers)
         },
         *getCustomer(id) {
-            const customer = yield actions.getCustomer(id)
-            return actions.setCustomer(customer)
+            const response = yield actions.getCustomer(id)
+            return actions.setCustomer(response?.customer)
         },
     },
 })
