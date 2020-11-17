@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
-
-const { useEffect } = wp.element
+import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { DeleteCustomer } from '../../http/customer'
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const CustomerList = () => {
@@ -14,9 +14,16 @@ export const CustomerList = () => {
         select('smartpay/customers').getCustomers()
     )
 
-    const deleteCustomer = () => {
-        // FIXME
-        console.log('Delete customer')
+    const [response, setResponse] = useState({})
+
+    const deleteCustomer = (customerId) => {
+        DeleteCustomer(customerId).then((response) => {
+            dispatch('smartpay/customers').deleteCustomer(customerId)
+            setResponse({
+                type: 'success',
+                message: __(response.message, 'smartpay'),
+            })
+        })
     }
 
     return (
@@ -32,6 +39,11 @@ export const CustomerList = () => {
             </div>
 
             <Container className="mt-3">
+                {response.message && (
+                    <Alert className="mt-3" variant={response.type}>
+                        {response.message}
+                    </Alert>
+                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
@@ -67,10 +79,9 @@ export const CustomerList = () => {
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
-                                                    deleteCustomer(customer)
+                                                    deleteCustomer(customer.id)
                                                 }
                                                 variant="link"
-                                                disabled
                                             >
                                                 {__('Delete', 'smartpay')}
                                             </Button>

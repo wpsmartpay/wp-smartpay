@@ -32,6 +32,12 @@ const actions = {
             customer,
         }
     },
+    deleteCustomer(customerId) {
+        return {
+            type: 'DELETE_CUSTOMER',
+            customerId,
+        }
+    },
 }
 
 registerStore('smartpay/customers', {
@@ -50,6 +56,15 @@ registerStore('smartpay/customers', {
                             (customer) => customer.id !== action.customer.id
                         ),
                         action.customer,
+                    ],
+                }
+            case 'DELETE_CUSTOMER':
+                return {
+                    ...state,
+                    customers: [
+                        ...state.customers.filter(
+                            (customer) => customer.id !== action.customerId
+                        ),
                     ],
                 }
             default:
