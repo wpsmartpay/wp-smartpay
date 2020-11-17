@@ -32,6 +32,12 @@ const actions = {
             product,
         }
     },
+    updateProduct(product) {
+        return {
+            type: 'UPDATE_PRODUCT',
+            product,
+        }
+    },
     deleteProduct(productId) {
         return {
             type: 'DELETE_PRODUCT',
@@ -49,18 +55,20 @@ registerStore('smartpay/products', {
                     products: action.products,
                 }
             case 'SET_PRODUCT':
-                if (!action.product) {
-                    return state
-                }
                 return {
                     ...state,
-                    products: [
-                        ...state.products.filter(
-                            (product) => product.id !== action.product.id
-                        ),
-                        action.product,
-                    ],
+                    products: [action.product, ...state.products],
                 }
+            case 'UPDATE_PRODUCT':
+                return {
+                    ...state,
+                    products: state.products.map((product) =>
+                        product.id === action.product.id
+                            ? action.product
+                            : product
+                    ),
+                }
+
             case 'DELETE_PRODUCT':
                 return {
                     ...state,

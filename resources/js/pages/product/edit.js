@@ -1,17 +1,12 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
-import {
-    useReducer,
-    useState,
-    useCallback,
-    useEffect,
-} from '@wordpress/element'
+import { useReducer, useState, useEffect } from '@wordpress/element'
 import { Container, Form, Button, Alert } from 'react-bootstrap'
 
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
-const { useSelect, select } = wp.data
+const { useSelect, dispatch } = wp.data
 
 const defaultProduct = {
     title: '',
@@ -53,9 +48,10 @@ export const EditProduct = () => {
 
     const Save = () => {
         UpdateProduct(productId, JSON.stringify(product)).then((response) => {
+            dispatch('smartpay/products').updateProduct(response.product)
             setRespose({
                 type: 'success',
-                message: 'Product updated',
+                message: __(response.message, 'smartpay'),
             })
         })
     }
