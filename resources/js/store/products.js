@@ -49,6 +49,9 @@ registerStore('smartpay/products', {
                     products: action.products,
                 }
             case 'SET_PRODUCT':
+                if (!action.product) {
+                    return state
+                }
                 return {
                     ...state,
                     products: [

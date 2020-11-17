@@ -34,7 +34,7 @@ class ProductController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $products = Product::where('parent', 0)->orderBy('id', 'DESC')->get();
+        $products = Product::where('parent', 0)->with(['variations'])->orderBy('id', 'DESC')->get();
 
         return new WP_REST_Response(['products' => $products]);
     }
@@ -91,7 +91,7 @@ class ProductController extends RestController
             return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
         }
 
-        return new WP_REST_Response($product);
+        return new WP_REST_Response(['product' => $product]);
     }
 
     public function update(WP_REST_Request $request): WP_REST_Response
