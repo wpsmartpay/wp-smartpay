@@ -2,15 +2,20 @@ import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
 import { Container, Table, Button, Alert } from 'react-bootstrap'
 import { DeleteProduct } from '../../http/product'
-const { useEffect, useState } = wp.element
+import { useEffect, useState } from '@wordpress/element'
 const { useSelect, dispatch } = wp.data
 
 export const ProductList = () => {
+    const [products, setProducts] = useState([])
     const [response, setResponse] = useState({})
 
-    const products = useSelect((select) =>
+    const productList = useSelect((select) =>
         select('smartpay/products').getProducts()
     )
+
+    useEffect(() => {
+        setProducts(productList)
+    }, [productList])
 
     const deleteProduct = (productId) => {
         DeleteProduct(productId).then((response) => {

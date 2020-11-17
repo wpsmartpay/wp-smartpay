@@ -36,7 +36,7 @@ class ProductController extends RestController
     {
         $products = Product::where('parent', 0)->orderBy('id', 'DESC')->get();
 
-        return new WP_REST_Response(['product' => $products]);
+        return new WP_REST_Response(['products' => $products]);
     }
 
     /**

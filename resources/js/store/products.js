@@ -110,12 +110,12 @@ registerStore('smartpay/products', {
 
     resolvers: {
         *getProducts() {
-            const products = yield actions.getProducts()
-            return actions.setProducts(products)
+            const response = yield actions.getProducts()
+            return actions.setProducts(response?.products)
         },
         *getProduct(id) {
-            const product = yield actions.getProduct(id)
-            return actions.setProduct(product)
+            const response = yield actions.getProduct(id)
+            return actions.setProduct(response?.product)
         },
     },
 })
