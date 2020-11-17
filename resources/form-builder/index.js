@@ -10,11 +10,15 @@ import { EditForm } from './pages/edit'
 
 import { NotFound } from '../js/pages/not-found'
 
+import { registerSmartPayFormBlocks } from './blocks'
+
 import './styles.scss'
 import './store/index'
 
 domReady(function () {
     registerCoreBlocks()
+
+    registerSmartPayFormBlocks()
 
     const SmartPayForm = () => {
         return (

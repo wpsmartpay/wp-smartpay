@@ -5,7 +5,9 @@
             <div class="card-body p-5">
                 <?php //ar_dump($form); 
                 ?>
-                <?php echo $form->body; ?>
+                <form action="">
+                    <?php echo $form->body; ?>
+                </form>
             </div> <!-- card-body -->
         </div>
     </div>
