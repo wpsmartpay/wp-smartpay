@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
 import { Container, Table, Button, Alert } from 'react-bootstrap'
-
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
@@ -19,12 +19,22 @@ export const PaymentList = () => {
     const [response, setResponse] = useState({})
 
     const deletePayment = (paymentId) => {
-        DeletePayment(paymentId).then((response) => {
-            dispatch('smartpay/payments').deletePayment(paymentId)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
-            })
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                DeletePayment(paymentId).then((response) => {
+                    dispatch('smartpay/payments').deletePayment(paymentId)
+                    setResponse({
+                        type: 'success',
+                        message: __(response.message, 'smartpay'),
+                    })
+                })
+            }
         })
     }
 
