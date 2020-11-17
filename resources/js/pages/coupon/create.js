@@ -11,7 +11,7 @@ import {
 } from 'react-bootstrap'
 import { useReducer, useState } from '@wordpress/element'
 const { dispatch } = wp.data
-import { SaveCoupon } from '../../http/coupon'
+import { Save } from '../../http/coupon'
 
 const initialState = {
     title: '',
@@ -37,11 +37,11 @@ export const CreateCoupon = () => {
 
     const createCoupon = (event) => {
         event.preventDefault()
-        SaveCoupon(JSON.stringify(coupon)).then((response) => {
-            dispatch('smartpay/coupons').setCoupon(response)
+        Save(JSON.stringify(coupon)).then((response) => {
+            dispatch('smartpay/coupons').setCoupon(response.coupon)
             setResponse({
                 type: 'success',
-                message: __('Coupon Created', 'smartpay'),
+                message: __(response.message, 'smartpay'),
             })
         })
 
@@ -72,140 +72,128 @@ export const CreateCoupon = () => {
                     </div>
                 </Container>
             </div>
-            <Container>
+
+            <Container className="mt-3">
                 <Row className="justify-content-center">
                     <Col xs={9}>
                         {response.message && (
-                            <Alert className="mt-3" variant={response.type}>
+                            <Alert className="mb-3" variant={response.type}>
                                 {response.message}
                             </Alert>
                         )}
+                        <Form>
+                            <Form.Group controlId="couponForm.title">
+                                <Form.Control
+                                    name="title"
+                                    value={coupon.title}
+                                    onChange={setCouponData}
+                                    type="text"
+                                    placeholder="Enter coupon code here"
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="couponForm.description">
+                                <Form.Control
+                                    name="description"
+                                    value={coupon.description}
+                                    onChange={setCouponData}
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Coupon description"
+                                />
+                            </Form.Group>
+                            <div className="py-2">
+                                <Tabs
+                                    className="mb-3"
+                                    fill
+                                    defaultActiveKey="general"
+                                >
+                                    <Tab eventKey="general" title="General">
+                                        <Row>
+                                            <Col>
+                                                <Form.Group controlId="couponForm.discountType">
+                                                    <Form.Label className="mb-2 d-inline-block">
+                                                        {__(
+                                                            'Discount type',
+                                                            'smartpay'
+                                                        )}
+                                                    </Form.Label>
+                                                    <Form.Control
+                                                        name="discount_type"
+                                                        as="select"
+                                                        value={
+                                                            coupon.discount_type
+                                                        }
+                                                        onChange={setCouponData}
+                                                    >
+                                                        <option value="fixed">
+                                                            {__(
+                                                                'Fixed Amount',
+                                                                'smartpay'
+                                                            )}
+                                                        </option>
+                                                        <option value="percent">
+                                                            {__(
+                                                                'Percent',
+                                                                'smartpay'
+                                                            )}
+                                                        </option>
+                                                    </Form.Control>
+                                                </Form.Group>
+                                            </Col>
+                                            <Col>
+                                                <Form.Group controlId="couponForm.amount">
+                                                    <Form.Label className="mb-2 d-inline-block">
+                                                        {__(
+                                                            'Coupon amount',
+                                                            'smartpay'
+                                                        )}
+                                                    </Form.Label>
+                                                    <Form.Control
+                                                        name="discount_amount"
+                                                        value={
+                                                            coupon.discount_amount
+                                                        }
+                                                        onChange={setCouponData}
+                                                        type="text"
+                                                        placeholder="0"
+                                                    />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+                                        <Form.Group controlId="couponForm.expiryDate">
+                                            <Form.Label className="mb-2 d-inline-block">
+                                                {__(
+                                                    'Coupon expiry date',
+                                                    'smartpay'
+                                                )}
+                                            </Form.Label>
+                                            <Form.Control
+                                                name="expiry_date"
+                                                type="date"
+                                                value={coupon.expiry_date}
+                                                onChange={setCouponData}
+                                            />
+                                        </Form.Group>
+                                    </Tab>
+                                    <Tab
+                                        eventKey="usageRestriction"
+                                        title="Usage Restriction"
+                                    >
+                                        <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
+                                            <h3 className="mt-1">
+                                                {__(
+                                                    'Upgrade to pro',
+                                                    'smartpay'
+                                                )}
+                                            </h3>
+                                        </div>
+                                    </Tab>
+                                </Tabs>
+                            </div>
+                        </Form>
                     </Col>
                 </Row>
             </Container>
-
-            <div className="py-5">
-                <Container>
-                    <Row className="justify-content-center">
-                        <Col xs={9}>
-                            <Form>
-                                <Form.Group controlId="couponForm.title">
-                                    <Form.Control
-                                        name="title"
-                                        value={coupon.title}
-                                        onChange={setCouponData}
-                                        type="text"
-                                        placeholder="Enter coupon code here"
-                                    />
-                                </Form.Group>
-                                <Form.Group controlId="couponForm.description">
-                                    <Form.Control
-                                        name="description"
-                                        value={coupon.description}
-                                        onChange={setCouponData}
-                                        as="textarea"
-                                        rows={3}
-                                        placeholder="Coupon description"
-                                    />
-                                </Form.Group>
-                                <div className="py-2">
-                                    <Tabs
-                                        className="mb-3"
-                                        fill
-                                        defaultActiveKey="general"
-                                    >
-                                        <Tab eventKey="general" title="General">
-                                            <Row>
-                                                <Col>
-                                                    <Form.Group controlId="couponForm.discountType">
-                                                        <Form.Label className="mb-2 d-inline-block">
-                                                            {__(
-                                                                'Discount type',
-                                                                'smartpay'
-                                                            )}
-                                                        </Form.Label>
-                                                        <Form.Control
-                                                            name="discount_type"
-                                                            as="select"
-                                                            value={
-                                                                coupon.discount_type
-                                                            }
-                                                            onChange={
-                                                                setCouponData
-                                                            }
-                                                        >
-                                                            <option value="fixed">
-                                                                {__(
-                                                                    'Fixed Amount',
-                                                                    'smartpay'
-                                                                )}
-                                                            </option>
-                                                            <option value="percent">
-                                                                {__(
-                                                                    'Percent',
-                                                                    'smartpay'
-                                                                )}
-                                                            </option>
-                                                        </Form.Control>
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col>
-                                                    <Form.Group controlId="couponForm.amount">
-                                                        <Form.Label className="mb-2 d-inline-block">
-                                                            {__(
-                                                                'Coupon amount',
-                                                                'smartpay'
-                                                            )}
-                                                        </Form.Label>
-                                                        <Form.Control
-                                                            name="discount_amount"
-                                                            value={
-                                                                coupon.discount_amount
-                                                            }
-                                                            onChange={
-                                                                setCouponData
-                                                            }
-                                                            type="text"
-                                                            placeholder="0"
-                                                        />
-                                                    </Form.Group>
-                                                </Col>
-                                            </Row>
-                                            <Form.Group controlId="couponForm.expiryDate">
-                                                <Form.Label className="mb-2 d-inline-block">
-                                                    {__(
-                                                        'Coupon expiry date',
-                                                        'smartpay'
-                                                    )}
-                                                </Form.Label>
-                                                <Form.Control
-                                                    name="expiry_date"
-                                                    type="date"
-                                                    value={coupon.expiry_date}
-                                                    onChange={setCouponData}
-                                                />
-                                            </Form.Group>
-                                        </Tab>
-                                        <Tab
-                                            eventKey="usageRestriction"
-                                            title="Usage Restriction"
-                                        >
-                                            <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
-                                                <h3 className="mt-1">
-                                                    {__(
-                                                        'Upgrade to pro',
-                                                        'smartpay'
-                                                    )}
-                                                </h3>
-                                            </div>
-                                        </Tab>
-                                    </Tabs>
-                                </div>
-                            </Form>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
         </>
     )
 }

@@ -11,7 +11,7 @@ class SelectForm extends React.Component {
     render() {
         return (
             <SelectControl
-                class={this.props.class}
+                className={this.props.class}
                 value={this.props.formId}
                 onChange={this.props.onSetId}
                 options={this.props.formOptions}

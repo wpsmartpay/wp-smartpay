@@ -9,11 +9,6 @@ import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
 
-// Form
-import { FormList } from './pages/form/index'
-import { CreateForm } from './pages/form/create'
-import { EditForm } from './pages/form/edit'
-
 // Customer
 import { CustomerList } from './pages/customer/index'
 import { ShowCustomer } from './pages/customer/show'
@@ -55,19 +50,6 @@ domReady(function () {
                             exact
                             path="/products/:productId/edit"
                             component={EditProduct}
-                        />
-
-                        {/* Form */}
-                        <Route exact path="/forms" component={FormList} />
-                        <Route
-                            exact
-                            path="/forms/create"
-                            component={CreateForm}
-                        />
-                        <Route
-                            exact
-                            path="/forms/:formId/edit"
-                            component={EditForm}
                         />
 
                         {/* Customer */}

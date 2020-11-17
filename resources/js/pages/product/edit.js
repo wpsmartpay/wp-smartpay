@@ -1,12 +1,12 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
+import { useReducer, useState, useEffect } from '@wordpress/element'
 import { Container, Form, Button, Alert } from 'react-bootstrap'
-import { useReducer, useState } from '@wordpress/element'
+
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
-const { useCallback, useEffect } = wp.element
-const { useSelect, select } = wp.data
+const { useSelect, dispatch } = wp.data
 
 const defaultProduct = {
     title: '',
@@ -30,34 +30,28 @@ export const EditProduct = () => {
     const [product, setProductData] = useReducer(reducer, defaultProduct)
     const [response, setRespose] = useState({})
 
-    const products = useSelect(
-        (select) => select('smartpay/products').getProducts(),
+    const productData = useSelect(
+        (select) => select('smartpay/products').getProduct(productId),
         [productId]
     )
 
-    const getProduct = useCallback(() => {
-        let product = select('smartpay/products').getProduct(productId)
-
-        if (product && product.hasOwnProperty('variations')) {
-            product = {
-                ...product,
-                variations: product.variations.map((variation) => {
+    useEffect(() => {
+        if (productData && productData.hasOwnProperty('variations')) {
+            setProductData({
+                ...productData,
+                variations: productData.variations.map((variation) => {
                     return { ...variation, key: `old-${variation.id}` }
                 }),
-            }
+            })
         }
-        setProductData(product)
-    }, [productId])
-
-    useEffect(() => {
-        getProduct()
-    }, [productId, products])
+    }, [productData])
 
     const Save = () => {
         UpdateProduct(productId, JSON.stringify(product)).then((response) => {
+            dispatch('smartpay/products').updateProduct(response.product)
             setRespose({
                 type: 'success',
-                message: 'Product updated',
+                message: __(response.message, 'smartpay'),
             })
         })
     }

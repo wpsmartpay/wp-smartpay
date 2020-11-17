@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch'
 
-export const SaveCoupon = (body) => {
+export const Save = (body) => {
     return apiFetch({
         path: `${smartpay.restUrl}/v1/coupons`,
         method: 'POST',
@@ -11,7 +11,7 @@ export const SaveCoupon = (body) => {
     })
 }
 
-export const UpdateCoupon = (id, body) => {
+export const Update = (id, body) => {
     return apiFetch({
         path: `${smartpay.restUrl}/v1/coupons/${id}`,
         method: 'PUT',
@@ -22,7 +22,7 @@ export const UpdateCoupon = (id, body) => {
     })
 }
 
-export const DeleteCoupon = (couponId) => {
+export const Delete = (couponId) => {
     return apiFetch({
         path: `${smartpay.restUrl}/v1/coupons/${couponId}`,
         method: 'DELETE',

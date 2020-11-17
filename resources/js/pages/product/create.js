@@ -4,6 +4,8 @@ import { useReducer, useState } from '@wordpress/element'
 import { SaveProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
+const { dispatch } = wp.data
+
 const defaultProduct = {
     title: '',
     covers: [],
@@ -27,15 +29,14 @@ export const CreateProduct = () => {
     const [product, setProductData] = useReducer(reducer, defaultProduct)
 
     const createProduct = () => {
-        console.log(product);
         SaveProduct(JSON.stringify(product)).then((response) => {
             setProductData(defaultProduct)
             tinymce.get('description').setContent('')
 
-            // TODO: Set data to store
+            dispatch('smartpay/products').setProduct(response.product)
             setRespose({
                 type: 'success',
-                message: 'Product created successfully',
+                message: __(response.message, 'smartpay'),
             })
         })
     }

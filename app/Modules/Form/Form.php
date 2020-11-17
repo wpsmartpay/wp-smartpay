@@ -86,22 +86,6 @@ class Form
 
     public function registerBlocks()
     {
-        // Global
-        wp_enqueue_script('smartpay-form-js', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-edit-post']);
-
-        // Product
-        register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-form-js',
-        ));
-        $products = \SmartPay\Models\Product::where('parent', 0)->get();
-        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_products', json_encode($products));
-
-        // Form
-        register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-form-js',
-        ));
-        $forms = \SmartPay\Models\Form::all();
-        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_forms', json_encode($forms));
     }
 
 

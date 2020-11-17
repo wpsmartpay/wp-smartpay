@@ -19,10 +19,11 @@ const actions = {
             coupons,
         }
     },
-    updateCoupon(coupon) {
+    getCoupon(id) {
         return {
-            type: 'UPDATE_COUPON',
-            coupon,
+            type: 'GET_COUPON',
+            path: `${smartpay.restUrl}/v1/coupons/${id}`,
+            id,
         }
     },
     setCoupon(coupon) {
@@ -31,10 +32,16 @@ const actions = {
             coupon,
         }
     },
-    deleteCoupon(couponId) {
+    updateCoupon(coupon) {
+        return {
+            type: 'UPDATE_COUPON',
+            coupon,
+        }
+    },
+    deleteCoupon(id) {
         return {
             type: 'DELETE_COUPON',
-            couponId,
+            id,
         }
     },
 }
@@ -50,7 +57,12 @@ registerStore('smartpay/coupons', {
             case 'SET_COUPON':
                 return {
                     ...state,
-                    coupons: [action.coupon, ...state.coupons],
+                    coupons: [
+                        action.coupon,
+                        ...state.coupons.filter(
+                            (coupon) => coupon.id !== action.coupon.id
+                        ),
+                    ],
                 }
             case 'UPDATE_COUPON':
                 return {
@@ -59,12 +71,13 @@ registerStore('smartpay/coupons', {
                         coupon.id === action.coupon.id ? action.coupon : coupon
                     ),
                 }
+
             case 'DELETE_COUPON':
                 return {
                     ...state,
                     coupons: [
                         ...state.coupons.filter(
-                            (coupons) => coupons.id !== action.couponId
+                            (coupon) => coupon.id !== action.id
                         ),
                     ],
                 }
@@ -83,7 +96,10 @@ registerStore('smartpay/coupons', {
             return state.coupons
         },
         getCoupon(state, id) {
-            return state.coupons.find((coupon) => coupon.id == id)
+            if (!state.coupons) {
+                return actions.getCoupon(id)
+            }
+            return state.coupons.find((coupon) => coupon.id === id)
         },
     },
 
@@ -96,12 +112,24 @@ registerStore('smartpay/coupons', {
                 },
             })
         },
+        GET_COUPON(action) {
+            return apiFetch({
+                path: action.path,
+                headers: {
+                    'X-WP-Nonce': smartpay.apiNonce,
+                },
+            })
+        },
     },
 
     resolvers: {
         *getCoupons() {
-            const coupons = yield actions.getCoupons()
-            return actions.setCoupons(coupons)
+            const response = yield actions.getCoupons()
+            return actions.setCoupons(response?.coupons)
+        },
+        *getCoupon(id) {
+            const response = yield actions.getCoupon(id)
+            return actions.setCoupon(response?.coupon)
         },
     },
 })

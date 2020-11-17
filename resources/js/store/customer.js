@@ -52,10 +52,10 @@ registerStore('smartpay/customers', {
                 return {
                     ...state,
                     customers: [
+                        action.customer,
                         ...state.customers.filter(
                             (customer) => customer.id !== action.customer.id
                         ),
-                        action.customer,
                     ],
                 }
             case 'DELETE_CUSTOMER':
@@ -110,12 +110,12 @@ registerStore('smartpay/customers', {
 
     resolvers: {
         *getCustomers() {
-            const customers = yield actions.getCustomers()
-            return actions.setCustomers(customers)
+            const response = yield actions.getCustomers()
+            return actions.setCustomers(response?.customers)
         },
         *getCustomer(id) {
-            const customer = yield actions.getCustomer(id)
-            return actions.setCustomer(customer)
+            const response = yield actions.getCustomer(id)
+            return actions.setCustomer(response?.customer)
         },
     },
 })

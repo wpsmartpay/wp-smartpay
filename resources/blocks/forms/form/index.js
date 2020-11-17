@@ -54,14 +54,14 @@ export default registerBlockType('smartpay/form', {
 
         return (
             <Fragment>
-                <div class="smartpay">
-                    <div class="container block-editor form card py-4">
-                        <div class="card-body text-center">
-                            {/* <img src={smartpay_logo} class="logo img-fluid" /> */}
-                            <div class="d-flex justify-content-center mt-1">
-                                <div class="col-md-8">
+                <div className="smartpay">
+                    <div className="container block-editor form card py-4">
+                        <div className="card-body text-center">
+                            {/* <img src={smartpay_logo} className="logo img-fluid" /> */}
+                            <div className="d-flex justify-content-center mt-1">
+                                <div className="col-md-8">
                                     <h5
-                                        class="text-center mb-3 m-0 font-weight-normal"
+                                        className="text-center mb-3 m-0 font-weight-normal"
                                         style={{ fontSize: '16px' }}
                                     >
                                         {__('Select a Form', 'smartpay')}
@@ -70,7 +70,7 @@ export default registerBlockType('smartpay/form', {
                                         formOptions={formOptions}
                                         formId={attributes.id}
                                         onSetId={setId}
-                                        class="form-control form-control-sm mx-auto"
+                                        className="form-control form-control-sm mx-auto"
                                     ></SelectForm>
                                 </div>
                             </div>
@@ -89,6 +89,6 @@ export default registerBlockType('smartpay/form', {
     },
 
     save: ({ attributes }) => {
-        return `<!-- wp:shortcode -->[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]<!-- /wp:shortcode -->`
+        return `[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`
     },
 })

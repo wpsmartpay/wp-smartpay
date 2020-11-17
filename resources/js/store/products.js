@@ -10,7 +10,7 @@ const actions = {
     getProducts() {
         return {
             type: 'GET_PRODUCTS',
-            path: `smartpay/v1/products`,
+            path: `${smartpay.restUrl}/v1/products`,
         }
     },
     setProducts(products) {
@@ -22,13 +22,19 @@ const actions = {
     getProduct(id) {
         return {
             type: 'GET_PRODUCT',
-            path: `smartpay/v1/products/${id}`,
+            path: `${smartpay.restUrl}/v1/products/${id}`,
             id,
         }
     },
     setProduct(product) {
         return {
             type: 'SET_PRODUCT',
+            product,
+        }
+    },
+    updateProduct(product) {
+        return {
+            type: 'UPDATE_PRODUCT',
             product,
         }
     },
@@ -52,12 +58,22 @@ registerStore('smartpay/products', {
                 return {
                     ...state,
                     products: [
+                        action.product,
                         ...state.products.filter(
                             (product) => product.id !== action.product.id
                         ),
-                        action.product,
                     ],
                 }
+            case 'UPDATE_PRODUCT':
+                return {
+                    ...state,
+                    products: state.products.map((product) =>
+                        product.id === action.product.id
+                            ? action.product
+                            : product
+                    ),
+                }
+
             case 'DELETE_PRODUCT':
                 return {
                     ...state,
@@ -110,12 +126,12 @@ registerStore('smartpay/products', {
 
     resolvers: {
         *getProducts() {
-            const products = yield actions.getProducts()
-            return actions.setProducts(products)
+            const response = yield actions.getProducts()
+            return actions.setProducts(response?.products)
         },
         *getProduct(id) {
-            const product = yield actions.getProduct(id)
-            return actions.setProduct(product)
+            const response = yield actions.getProduct(id)
+            return actions.setProduct(response?.product)
         },
     },
 })

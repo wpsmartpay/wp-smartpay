@@ -27988,11 +27988,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
 /* harmony import */ var _components_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/form */ "./resources/form-builder/pages/components/form.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
@@ -28033,26 +28033,26 @@ var EditForm = function EditForm() {
   var _useParams = Object(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
       formId = _useParams.formId;
 
-  var _useReducer = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useReducer"])(reducer, defaultFormData),
+  var _useReducer = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["useReducer"])(reducer, defaultFormData),
       _useReducer2 = _slicedToArray(_useReducer, 2),
       form = _useReducer2[0],
       setformData = _useReducer2[1];
 
-  var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])({}),
+  var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["useState"])({}),
       _useState2 = _slicedToArray(_useState, 2),
       response = _useState2[0],
       setResponse = _useState2[1];
 
-  var formData = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["useSelect"])(function (select) {
+  var formData = Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__["useSelect"])(function (select) {
     return select('smartpay/forms').getForm(formId);
   }, [formId]);
-  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(function () {
     setformData(formData);
   }, [formId, formData]);
 
   var updateForm = function updateForm() {
     Object(_http_form__WEBPACK_IMPORTED_MODULE_5__["Update"])(formId, JSON.stringify(form)).then(function (response) {
-      Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__["dispatch"])('smartpay/forms').updateForm(form);
+      Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__["dispatch"])('smartpay/forms').updateForm(form);
       setResponse({
         type: 'success',
         message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay')
@@ -28069,20 +28069,28 @@ var EditForm = function EditForm() {
       top: '32px',
       zIndex: 99
     }
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], null, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex align-items-center justify-content-between"
   }, /*#__PURE__*/React.createElement("h2", {
     className: "text-black"
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Create New Form', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "ml-auto"
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "d-flex flex-row"
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Form"].Control, {
+    size: "sm",
+    type: "text",
+    value: "[smartpay_form id=\"".concat(form.id, "\"]"),
+    readOnly: true,
+    className: "mr-2"
+  }), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
     onClick: updateForm,
     className: "btn btn-primary btn-sm text-decoration-none px-3"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay')))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay'))))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], {
     style: {
       marginTop: '80px'
     }
-  }, response.message && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Alert"], {
+  }, response.message && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Alert"], {
     className: "mt-3",
     variant: response.type
   }, response.message), /*#__PURE__*/React.createElement(_components_form__WEBPACK_IMPORTED_MODULE_6__["FormForm"], {
@@ -28353,7 +28361,7 @@ registerStore('smartpay/forms', {
   },
   resolvers: {
     getForms: /*#__PURE__*/regeneratorRuntime.mark(function getForms() {
-      var forms;
+      var response;
       return regeneratorRuntime.wrap(function getForms$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -28362,8 +28370,8 @@ registerStore('smartpay/forms', {
               return actions.getForms();
 
             case 2:
-              forms = _context.sent;
-              return _context.abrupt("return", actions.setForms(forms));
+              response = _context.sent;
+              return _context.abrupt("return", actions.setForms(response === null || response === void 0 ? void 0 : response.forms));
 
             case 4:
             case "end":
@@ -28373,7 +28381,7 @@ registerStore('smartpay/forms', {
       }, getForms);
     }),
     getForm: /*#__PURE__*/regeneratorRuntime.mark(function getForm(id) {
-      var form;
+      var response;
       return regeneratorRuntime.wrap(function getForm$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -28382,8 +28390,8 @@ registerStore('smartpay/forms', {
               return actions.getForm(id);
 
             case 2:
-              form = _context2.sent;
-              return _context2.abrupt("return", actions.setForm(form));
+              response = _context2.sent;
+              return _context2.abrupt("return", actions.setForm(response === null || response === void 0 ? void 0 : response.form));
 
             case 4:
             case "end":
