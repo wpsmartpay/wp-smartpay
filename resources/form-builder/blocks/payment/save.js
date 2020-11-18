@@ -4,19 +4,23 @@ export const save = ({ attributes }) => {
     return (
         <div className="form-element">
             <div className="row justify-content-between">
-                <div className="col">
+                <div className="col form-amounts">
                     {attributes.amounts.map((amount, index) => {
                         return (
                             <div
-                                class="custom-control custom-radio"
+                                class="custom-control custom-radio form--fixed-amount"
                                 key={index}
                             >
                                 <input
                                     type="radio"
                                     id={`smartpay-amount-${index}`}
-                                    name="smartpay_amount"
+                                    name="_form_amount"
                                     class="custom-control-input"
                                     value={amount.value}
+                                    checked={
+                                        amount.value ===
+                                        attributes.defaultAmount
+                                    }
                                 />
                                 <label
                                     class="custom-control-label ml-4"
@@ -27,9 +31,15 @@ export const save = ({ attributes }) => {
                             </div>
                         )
                     })}
+                    <input
+                        type="hidden"
+                        class="form--custom-amount"
+                        name="smartpay_amount"
+                        value={attributes.defaultAmount}
+                    />
                 </div>
 
-                {attributes.showOptions && (
+                {/* {attributes.showOptions && (
                     <div className="col">
                         {attributes.options.map((option, index) => {
                             return (
@@ -53,10 +63,10 @@ export const save = ({ attributes }) => {
                             )
                         })}
                     </div>
-                )}
+                )} */}
             </div>
             <div className="mt-3">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success open-payment-form">
                     {__('Pay Now', 'smartpay')}
                 </button>
             </div>

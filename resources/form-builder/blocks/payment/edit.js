@@ -4,14 +4,16 @@ import {
     FlexItem,
     RadioControl,
     CheckboxControl,
-    ToggleControl,
+    // ToggleControl,
     PanelBody,
     TextControl,
     Button,
+    SelectControl,
 } from '@wordpress/components'
 import { InspectorControls } from '@wordpress/block-editor'
 import { Icon, handle, closeSmall, plus } from '@wordpress/icons'
 import { __ } from '@wordpress/i18n'
+import { setDefaultBlockName } from '@wordpress/blocks'
 
 export const edit = ({ attributes, setAttributes }) => {
     const onShowOptionsChange = (show) => {
@@ -69,6 +71,10 @@ export const edit = ({ attributes, setAttributes }) => {
         })
     }
 
+    const setDefaultAmount = (amount) => {
+        setAttributes({ defaultAmount: amount })
+    }
+
     return (
         <>
             <div className="form-element">
@@ -83,7 +89,7 @@ export const edit = ({ attributes, setAttributes }) => {
                                     value: amount.value,
                                 }
                             })}
-                            onChange={() => {}}
+                            onChange={setDefaultAmount}
                         />
                     </FlexBlock>
 
@@ -178,9 +184,27 @@ export const edit = ({ attributes, setAttributes }) => {
                         <Icon icon={plus} />
                         {__('Add new', 'smartpay')}
                     </Button>
+
+                    <div
+                        style={{
+                            marginTop: '20px',
+                        }}
+                    >
+                        <SelectControl
+                            label={__('Select default:')}
+                            value={attributes.defaultAmount}
+                            onChange={setDefaultAmount}
+                            options={attributes.amounts.map((amount, index) => {
+                                return {
+                                    value: amount.value,
+                                    label: `${amount.label} - $${amount.value}`,
+                                }
+                            })}
+                        />
+                    </div>
                 </PanelBody>
 
-                {attributes.showOptions && (
+                {/* {attributes.showOptions && (
                     <PanelBody title={__('Options', 'smartpay')}>
                         {attributes.options.map((option, index) => {
                             return (
@@ -235,7 +259,7 @@ export const edit = ({ attributes, setAttributes }) => {
                             {__('Add new', 'smartpay')}
                         </Button>
                     </PanelBody>
-                )}
+                )} */}
             </InspectorControls>
         </>
     )
