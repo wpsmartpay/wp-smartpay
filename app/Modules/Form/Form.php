@@ -19,14 +19,13 @@ class Form
 
     public function adminScripts($hook)
     {
-        $this->registerBlocks();
-
         if ('smartpay_page_smartpay-form' === $hook) {
             $this->registerFormEditor();
+            $this->registerBlocks();
         }
     }
 
-    public function block_editor_settings()
+    public function editorSettings()
     {
         $settings = array(
             'disableCustomColors'    => get_theme_support('disable-custom-colors'),
@@ -83,12 +82,11 @@ class Form
             ],
         ]);
     }
-
-    public function registerBlocks()
-    {
-    }
-
-
+    /**
+     * Register form editor
+     *
+     * @return void
+     */
     public function registerFormEditor()
     {
         global $current_screen;
@@ -114,7 +112,7 @@ class Form
         // Inline the Editor Settings.
         wp_add_inline_script(
             'smartpay-form',
-            'window.smartPayBlockEditorSettings = ' . wp_json_encode($this->block_editor_settings()) . ';'
+            'window.smartPayBlockEditorSettings = ' . wp_json_encode($this->editorSettings()) . ';'
         );
 
         // Preload server-registered block schemas.
@@ -134,5 +132,9 @@ class Form
             ['wp-edit-blocks'],
             SMARTPAY_VERSION
         );
+    }
+
+    public function registerBlocks()
+    {
     }
 }

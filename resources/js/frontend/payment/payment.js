@@ -50,17 +50,18 @@ jQuery(($) => {
         '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
         (e) => {
             // e.preventDefault()
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.amount')
-                .removeClass('selected')
+            // $(e.currentTarget)
+            //     .parents('.form-amounts')
+            //     .find('.amount')
+            //     .removeClass('selected')
 
-            $(e.currentTarget).addClass('selected')
+            // $(e.currentTarget).addClass('selected')
 
             // Change the custom amount value on selecting form amount
             var selectedAmount = $(e.currentTarget)
                 .find('input[name="_form_amount"]')
                 .val()
+
             $(e.currentTarget)
                 .parents('.form-amounts')
                 .find('.form--custom-amount')
@@ -69,17 +70,17 @@ jQuery(($) => {
     )
 
     /** Select form custom amount **/
-    $(document.body).on(
-        'focus',
-        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
-        (e) => {
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.amount')
-                .removeClass('selected')
-            $(e.currentTarget).addClass('selected')
-        }
-    )
+    // $(document.body).on(
+    //     'focus',
+    //     '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+    //     (e) => {
+    //         $(e.currentTarget)
+    //             .parents('.form-amounts')
+    //             .find('.amount')
+    //             .removeClass('selected')
+    //         $(e.currentTarget).addClass('selected')
+    //     }
+    // )
 
     /** Open form modal */
     $(document.body).on(
@@ -123,7 +124,7 @@ jQuery(($) => {
                 const currencySymbol = $('#smartpay_currency_symbol').data(
                     'value'
                 )
-                paymentAmount = currencySymbol + formData.smartpay_form_amount
+                paymentAmount = currencySymbol + formData.smartpay_amount
             } else {
                 paymentAmount = formData.smartpay_product_price
             }
@@ -284,9 +285,8 @@ jQuery(($) => {
         } else {
             data.smartpay_form_id =
                 $wrapper.find('input[name="smartpay_form_id"]').val() || null
-            data.smartpay_form_amount =
-                $wrapper.find('input[name="smartpay_form_amount"]').val() ||
-                null
+            data.smartpay_amount =
+                $wrapper.find('input[name="smartpay_amount"]').val() || null
         }
 
         if (index) {

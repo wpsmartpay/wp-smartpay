@@ -58,6 +58,7 @@ export default registerBlockType('smartpay/form', {
                     <div className="container block-editor form card py-4">
                         <div className="card-body text-center">
                             {/* <img src={smartpay_logo} className="logo img-fluid" /> */}
+                            <strong>{__('SmartPay', 'smartpay')}</strong>
                             <div className="d-flex justify-content-center mt-1">
                                 <div className="col-md-8">
                                     <h5

@@ -272,6 +272,7 @@ body.block-editor-page .media-frame select.attachment-filters:last-of-type {
     font-size: inherit;
     font-family: monospace;
 }
+
 .smartpay-block-editor,
 .components-modal__frame {
     box-sizing: border-box;
@@ -295,12 +296,12 @@ body.block-editor-page .media-frame select.attachment-filters:last-of-type {
 }
 
 .interface-interface-skeleton__content {
-    width: 75%;
+    width: 70%;
     left: 0px;
 }
 
 .interface-interface-skeleton__sidebar {
-    width: 25%;
+    width: 30%;
     right: 0px;
 }
 

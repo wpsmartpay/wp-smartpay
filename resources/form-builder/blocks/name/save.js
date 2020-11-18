@@ -1,16 +1,35 @@
-import { Button } from '@wordpress/components'
-
 import { __ } from '@wordpress/i18n'
 
 export const save = ({ attributes }) => {
-	console.log(attributes)
-	return (
-		<div className={'form-element'}>
-			<input name="first_name" label="First Name" />
+    return (
+        <div className="form-element">
+            <div className="form-row">
+                <div className="col">
+                    <label for="smartpay_first_name">
+                        {__('First Name', 'smartpay')}
+                    </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="smartpay_first_name"
+                        name="smartpay_first_name"
+                    />
+                </div>
 
-			{attributes.showLastName && (
-				<input name="last_name" label="Last Name" />
-			)}
-		</div>
-	)
+                {attributes.showLastName && (
+                    <div className="col">
+                        <label for="smartpay_last_name">
+                            {__('Last Name', 'smartpay')}
+                        </label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="smartpay_last_name"
+                            name="smartpay_last_name"
+                        />
+                    </div>
+                )}
+            </div>
+        </div>
+    )
 }

@@ -143,26 +143,34 @@ class Admin
         } else {
         }
 
-        $this->registerBlocks();
+        $this->registerBlocks($hook);
     }
 
-    public function registerBlocks()
+    public function registerBlocks($hook)
     {
+        // Exclude blocks from the form-builder
+        if ('smartpay_page_smartpay-form' === $hook) {
+            return;
+        }
+
         // Global
-        wp_enqueue_script('smartpay-form-js', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor']);
+        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor']);
 
         // Product
         register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-form-js',
+            'editor_script' => 'smartpay-editor-blocks',
         ));
-        $products = \SmartPay\Models\Product::where('parent', 0)->get();
-        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_products', json_encode($products));
 
         // Form
         register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-form-js',
+            'editor_script' => 'smartpay-editor-blocks',
         ));
+
+        // TODO: Get data from store
+        $products = \SmartPay\Models\Product::where('parent', 0)->get();
+        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_products', json_encode($products));
+
         $forms = \SmartPay\Models\Form::all();
-        wp_localize_script('smartpay-form-js', 'smartpay_block_editor_forms', json_encode($forms));
+        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_forms', json_encode($forms));
     }
 }
