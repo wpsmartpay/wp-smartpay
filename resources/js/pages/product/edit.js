@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
-import { useReducer, useState, useEffect } from '@wordpress/element'
+import { useReducer, useEffect } from '@wordpress/element'
 import { Container, Form, Button, Alert } from 'react-bootstrap'
-
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
@@ -28,7 +28,6 @@ const reducer = (state, data) => {
 export const EditProduct = () => {
     const { productId } = useParams()
     const [product, setProductData] = useReducer(reducer, defaultProduct)
-    const [response, setRespose] = useState({})
 
     const productData = useSelect(
         (select) => select('smartpay/products').getProduct(productId),
@@ -49,9 +48,19 @@ export const EditProduct = () => {
     const Save = () => {
         UpdateProduct(productId, JSON.stringify(product)).then((response) => {
             dispatch('smartpay/products').updateProduct(response.product)
-            setRespose({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
             })
         })
     }
@@ -89,11 +98,6 @@ export const EditProduct = () => {
                     </div>
 
                     <Container>
-                        {response.message && (
-                            <Alert className="mt-3" variant={response.type}>
-                                {response.message}
-                            </Alert>
-                        )}
                         <ProductForm
                             product={product}
                             setProductData={setProductData}

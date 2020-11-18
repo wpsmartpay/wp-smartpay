@@ -7,9 +7,15 @@ const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const CouponList = () => {
-    const coupons = useSelect((select) =>
+    const [coupons, setCoupons] = useState([])
+
+    const couponList = useSelect((select) =>
         select('smartpay/coupons').getCoupons()
     )
+
+    useEffect(() => {
+        setCoupons(couponList)
+    }, [couponList])
 
     const deleteCoupon = (couponId) => {
         Swal.fire({

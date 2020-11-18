@@ -8,7 +8,6 @@ const { useSelect, dispatch } = wp.data
 
 export const ProductList = () => {
     const [products, setProducts] = useState([])
-    const [response, setResponse] = useState({})
 
     const productList = useSelect((select) =>
         select('smartpay/products').getProducts()
@@ -29,9 +28,19 @@ export const ProductList = () => {
             if (result.isConfirmed) {
                 DeleteProduct(productId).then((response) => {
                     dispatch('smartpay/products').deleteProduct(productId)
-                    setResponse({
-                        type: 'success',
-                        message: __(response.message, 'smartpay'),
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
                     })
                 })
             }
@@ -60,11 +69,6 @@ export const ProductList = () => {
             </div>
 
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>

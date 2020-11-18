@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Button, Alert } from 'react-bootstrap'
-import { useReducer, useState } from '@wordpress/element'
+import { useReducer } from '@wordpress/element'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { SaveProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 
@@ -24,8 +25,6 @@ const reducer = (state, data) => {
 }
 
 export const CreateProduct = () => {
-    const [response, setRespose] = useState({})
-
     const [product, setProductData] = useReducer(reducer, defaultProduct)
 
     const createProduct = () => {
@@ -34,9 +33,19 @@ export const CreateProduct = () => {
             tinymce.get('description').setContent('')
 
             dispatch('smartpay/products').setProduct(response.product)
-            setRespose({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
             })
         })
     }
@@ -63,11 +72,6 @@ export const CreateProduct = () => {
             </div>
 
             <Container>
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
                 <ProductForm
                     product={product}
                     setProductData={setProductData}

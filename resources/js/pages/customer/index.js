@@ -1,21 +1,21 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCustomer } from '../../http/customer'
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const CustomerList = () => {
-    useEffect(() => {
-        dispatch('smartpay/customers').getCustomers()
-    }, [])
+    const [customers, setCustomers] = useState([])
 
-    const customers = useSelect((select) =>
+    const customerList = useSelect((select) =>
         select('smartpay/customers').getCustomers()
     )
 
-    const [response, setResponse] = useState({})
+    useEffect(() => {
+        setCustomers(customerList)
+    }, [customerList])
 
     const deleteCustomer = (customerId) => {
         Swal.fire({
@@ -28,9 +28,19 @@ export const CustomerList = () => {
             if (result.isConfirmed) {
                 DeleteCustomer(customerId).then((response) => {
                     dispatch('smartpay/customers').deleteCustomer(customerId)
-                    setResponse({
-                        type: 'success',
-                        message: __(response.message, 'smartpay'),
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
                     })
                 })
             }
@@ -50,11 +60,6 @@ export const CustomerList = () => {
             </div>
 
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
