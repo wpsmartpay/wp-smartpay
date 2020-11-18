@@ -62,7 +62,7 @@ export const EditCoupon = () => {
                 <Container>
                     <div className="d-flex align-items-center justify-content-between">
                         <h2 className="text-black">
-                            {__('SmartPay', 'smartpay')}
+                            {__('Edit Coupon', 'smartpay')}
                         </h2>
                         <div className="ml-auto">
                             <Button
@@ -70,7 +70,7 @@ export const EditCoupon = () => {
                                 className="btn btn-primary btn-sm text-decoration-none"
                                 onClick={Save}
                             >
-                                {__('Update', 'smartpay')}
+                                {__('Save', 'smartpay')}
                             </Button>
                         </div>
                     </div>

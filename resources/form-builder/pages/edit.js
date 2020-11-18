@@ -60,7 +60,7 @@ export const EditForm = () => {
                 <Container>
                     <div className="d-flex align-items-center justify-content-between">
                         <h2 className="text-black">
-                            {__('Create New Form', 'smartpay')}
+                            {__('Edit Form', 'smartpay')}
                         </h2>
                         <div className="ml-auto">
                             <div className="d-flex flex-row">
@@ -75,7 +75,7 @@ export const EditForm = () => {
                                     onClick={updateForm}
                                     className="btn btn-primary btn-sm text-decoration-none px-3"
                                 >
-                                    {__('Publish', 'smartpay')}
+                                    {__('Save', 'smartpay')}
                                 </Button>
                             </div>
                         </div>

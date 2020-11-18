@@ -1,12 +1,11 @@
-
 import { __ } from '@wordpress/i18n'
 import apiFetch from '@wordpress/api-fetch'
 import { useEffect, useState } from '@wordpress/element'
-import { Container, Row, Col, Card, ListGroup, } from 'react-bootstrap'
+import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap'
 import { Report } from '../components/report/report'
 
 export const Dashboard = () => {
-    const [report, setReport] = useState([]);
+    const [report, setReport] = useState([])
 
     useEffect(() => {
         apiFetch({
@@ -14,7 +13,7 @@ export const Dashboard = () => {
             headers: {
                 'X-WP-Nonce': smartpay.apiNonce,
             },
-        }).then(response => {
+        }).then((response) => {
             setReport(response)
         })
     }, [])
@@ -33,20 +32,32 @@ export const Dashboard = () => {
             </div>
             <Container fluid>
                 <Row className="mt-2">
-                    <Col md={8}>
+                    <Col md={12}>
                         <div className="p-3">
-                            <h2 className="m-0 mb-3">{__('Monthly Report', 'smartpay')}</h2>
+                            <h2 className="m-0 mb-3">
+                                {__('Monthly Report', 'smartpay')}
+                            </h2>
                             <Card className="m-0 p-3">
                                 <Report
-                                    height='350'
+                                    height="350"
                                     series={[
                                         {
-                                            name: __('Product Purchase', 'smartpay'),
-                                            data: report.map(data => data.product_purchase),
+                                            name: __(
+                                                'Product Purchase',
+                                                'smartpay'
+                                            ),
+                                            data: report.map(
+                                                (data) => data.product_purchase
+                                            ),
                                         },
                                         {
-                                            name: __('Form Payment', 'smartpay'),
-                                            data: report.map(data => data.form_payment),
+                                            name: __(
+                                                'Form Payment',
+                                                'smartpay'
+                                            ),
+                                            data: report.map(
+                                                (data) => data.form_payment
+                                            ),
                                         },
                                     ]}
                                     options={{
@@ -64,11 +75,11 @@ export const Dashboard = () => {
                                         plotOptions: {
                                             bar: {
                                                 horizontal: false,
-                                                columnWidth: '60%'
+                                                columnWidth: '60%',
                                             },
                                         },
                                         dataLabels: {
-                                            enabled: false
+                                            enabled: false,
                                         },
                                         // stroke: {
                                         //     show: true,
@@ -76,12 +87,14 @@ export const Dashboard = () => {
                                         //     colors: ['transparent']
                                         // },
                                         xaxis: {
-                                            categories: report.map((data) => data.date),
+                                            categories: report.map(
+                                                (data) => data.date
+                                            ),
                                         },
                                         yaxis: {
                                             title: {
-                                                text: 'Revenue'
-                                            }
+                                                text: 'Revenue',
+                                            },
                                         },
                                         // responsive: [
                                         //     {
@@ -107,7 +120,7 @@ export const Dashboard = () => {
                             </Card>
                         </div>
                     </Col>
-                    <Col md={4}>
+                    {/* <Col md={4}>
                         <div className="py-3">
                             <h2 className="m-0 mb-3">{__('Recent Payments')}</h2>
                             <ListGroup>
@@ -119,7 +132,7 @@ export const Dashboard = () => {
                                 </ListGroup.Item>
                             </ListGroup>
                         </div>
-                    </Col>
+                    </Col> */}
                 </Row>
             </Container>
         </>

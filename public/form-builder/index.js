@@ -28670,7 +28670,7 @@ var EditForm = function EditForm() {
     className: "d-flex align-items-center justify-content-between"
   }, /*#__PURE__*/React.createElement("h2", {
     className: "text-black"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Create New Form', 'smartpay')), /*#__PURE__*/React.createElement("div", {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Edit Form', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "ml-auto"
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-row"
@@ -28683,7 +28683,7 @@ var EditForm = function EditForm() {
   }), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Button"], {
     onClick: updateForm,
     className: "btn btn-primary btn-sm text-decoration-none px-3"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay'))))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Save', 'smartpay'))))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["Container"], {
     style: {
       marginTop: '80px'
     }
