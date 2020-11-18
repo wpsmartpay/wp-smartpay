@@ -14,7 +14,7 @@ export default registerBlockType('smartpay/product', {
     attributes: {
         id: {
             type: 'integer',
-            default: null,
+            default: 0,
         },
         behavior: {
             type: 'string',
@@ -54,14 +54,15 @@ export default registerBlockType('smartpay/product', {
 
         return (
             <Fragment>
-                <div class="smartpay">
-                    <div class="container block-editor product card py-4">
-                        <div class="card-body text-center">
-                            {/* <img src={smartpay_logo} class="logo img-fluid" /> */}
-                            <div class="d-flex justify-content-center mt-1">
-                                <div class="col-md-8">
+                <div className="smartpay">
+                    <div className="container block-editor product card py-4">
+                        <div className="card-body text-center">
+                            {/* <img src={smartpay_logo} className="logo img-fluid" /> */}
+                            <strong>{__('SmartPay', 'smartpay')}</strong>
+                            <div className="d-flex justify-content-center mt-1">
+                                <div className="col-md-8">
                                     <h5
-                                        class="text-center mb-3 m-0 font-weight-normal"
+                                        className="text-center mb-3 m-0 font-weight-normal"
                                         style={{ fontSize: '16px' }}
                                     >
                                         {__('Select a Product', 'smartpay')}
@@ -70,7 +71,7 @@ export default registerBlockType('smartpay/product', {
                                         productOptions={productOptions}
                                         productId={attributes.id}
                                         onSetId={setId}
-                                        class="form-control form-control-sm mx-auto"
+                                        className="form-control form-control-sm mx-auto"
                                     ></SelectProduct>
                                 </div>
                             </div>
@@ -89,6 +90,6 @@ export default registerBlockType('smartpay/product', {
     },
 
     save: ({ attributes }) => {
-        return `<!-- wp:shortcode -->[smartpay_product id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]<!-- /wp:shortcode -->`
+        return `[smartpay_product id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`
     },
 })
