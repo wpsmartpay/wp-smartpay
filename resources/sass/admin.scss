@@ -68,7 +68,8 @@
 
 // sweetalert
 
-body.toplevel_page_smartpay.swal2-toast-shown {
+body.toplevel_page_smartpay.swal2-toast-shown,
+body.smartpay_page_smartpay-form.swal2-toast-shown {
     .swal2-container.swal2-top-end {
         position: absolute;
         top: 80px;

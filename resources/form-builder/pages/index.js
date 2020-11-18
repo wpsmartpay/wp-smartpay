@@ -8,7 +8,6 @@ import { Delete } from '../http/form'
 
 export const FormList = () => {
     const [forms, setForms] = useState([])
-    const [response, setResponse] = useState({})
 
     const formsData = useSelect(
         (select) => select('smartpay/forms').getForms(),
@@ -30,9 +29,19 @@ export const FormList = () => {
             if (result.isConfirmed) {
                 Delete(formId).then((response) => {
                     dispatch('smartpay/forms').deleteForm(formId)
-                    setResponse({
-                        type: 'success',
-                        message: __(response.message, 'smartpay'),
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
                     })
                 })
             }
@@ -61,12 +70,6 @@ export const FormList = () => {
             </div>
 
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
-
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
