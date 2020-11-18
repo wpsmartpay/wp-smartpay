@@ -1,4 +1,4 @@
-<div class="smartpay">
+<div class="smartpay" style="margin: 0 auto;">
     <div class="smartpay-form-shortcode smartpay-payment">
         <div class="card form">
             <div class="card-body p-5">

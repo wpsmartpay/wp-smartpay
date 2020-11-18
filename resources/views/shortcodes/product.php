@@ -3,7 +3,7 @@
 <?php include  __DIR__ . '/shared/product_details.php'; ?>
 
 <?php else : ?>
-<div class="smartpay" style="background: transparent;">
+<div class="smartpay" style="margin: 0 auto; background: transparent;">
     <div class="smartpay-product-shortcode">
         <div class="modal fade product-modal">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl">
