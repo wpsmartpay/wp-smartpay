@@ -99,6 +99,18 @@ class Admin
             }
         );
 
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Integrations', 'smartpay'),
+            __('Integrations', 'smartpay'),
+            'manage_options',
+            'smartpay-integrations',
+            function () {
+                echo smartpay_view('integrations');
+            }
+        );
+
+
         $this->smartpayProMenu();
 
         do_action('smartpay_admin_add_menu_items');

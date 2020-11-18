@@ -39,5 +39,16 @@ global $smartpay_options;
 
 $smartpay_options = smartpay_get_settings();
 
-// Run The Application
-$app->boot();
+add_action('plugins_loaded', function () {
+    // do_action('smartpay_loaded');
+});
+
+add_action('init', function () use ($app) {
+    // echo "SmartPay:: Init <br>";
+    // do_action('smartpay_init');
+
+    // Run The Application
+    $app->boot();
+
+    // do_action('smartpay_after_init');
+});

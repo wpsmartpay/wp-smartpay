@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/integration.php';
+
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Payment\Payment;
 

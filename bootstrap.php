@@ -12,6 +12,7 @@ $app = new SmartPay\Framework\Application(__DIR__);
 $app->register(SmartPay\Providers\AppServiceProvider::class);
 $app->register(SmartPay\Providers\AdminServiceProvider::class);
 $app->register(SmartPay\Providers\RouteServiceProvider::class);
+$app->register(SmartPay\Providers\IntegrationServiceProvider::class);
 
 register_activation_hook(SMARTPAY_PLUGIN_FILE, [Activator::class, 'boot']);
 
