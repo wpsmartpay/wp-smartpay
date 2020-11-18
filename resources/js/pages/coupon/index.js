@@ -1,16 +1,12 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-
-const { useEffect, useState } = wp.element
+import { DeleteCoupon } from '../../http/coupon'
+const { useEffect } = wp.element
 const { useSelect, dispatch } = wp.data
 
-import { Delete } from '../../http/coupon'
-
 export const CouponList = () => {
-    const [response, setResponse] = useState({})
-
     const coupons = useSelect((select) =>
         select('smartpay/coupons').getCoupons()
     )
@@ -26,9 +22,19 @@ export const CouponList = () => {
             if (result.isConfirmed) {
                 DeleteCoupon(couponId).then((response) => {
                     dispatch('smartpay/coupons').deleteCoupon(couponId)
-                    setResponse({
-                        type: 'success',
-                        message: __(response.message, 'smartpay'),
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
                     })
                 })
             }
@@ -56,11 +62,6 @@ export const CouponList = () => {
                 </Container>
             </div>
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>

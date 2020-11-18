@@ -22,7 +22,7 @@ export const Update = (id, body) => {
     })
 }
 
-export const Delete = (couponId) => {
+export const DeleteCoupon = (couponId) => {
     return apiFetch({
         path: `${smartpay.restUrl}/v1/coupons/${couponId}`,
         method: 'DELETE',
