@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCoupon } from '../../http/coupon'
-const { useEffect } = wp.element
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const CouponList = () => {

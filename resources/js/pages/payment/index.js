@@ -8,15 +8,15 @@ const { useSelect, dispatch } = wp.data
 import { DeletePayment } from '../../http/payment'
 
 export const PaymentList = () => {
-    useEffect(() => {
-        dispatch('smartpay/payments').getPayments()
-    }, [])
+    const [payments, setPayments] = useState([])
 
-    const payments = useSelect((select) =>
+    const paymentList = useSelect((select) =>
         select('smartpay/payments').getPayments()
     )
 
-    const [response, setResponse] = useState({})
+    useEffect(() => {
+        setPayments(paymentList)
+    }, [paymentList])
 
     const deletePayment = (paymentId) => {
         Swal.fire({
@@ -29,9 +29,19 @@ export const PaymentList = () => {
             if (result.isConfirmed) {
                 DeletePayment(paymentId).then((response) => {
                     dispatch('smartpay/payments').deletePayment(paymentId)
-                    setResponse({
-                        type: 'success',
-                        message: __(response.message, 'smartpay'),
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
                     })
                 })
             }
@@ -51,11 +61,6 @@ export const PaymentList = () => {
             </div>
 
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
