@@ -16,9 +16,9 @@ import './styles.scss'
 import './store/index'
 
 domReady(function () {
-    registerCoreBlocks()
-
     registerSmartPayFormBlocks()
+
+    registerCoreBlocks()
 
     const SmartPayForm = () => {
         return (

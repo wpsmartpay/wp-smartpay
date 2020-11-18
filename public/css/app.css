@@ -11382,68 +11382,17 @@
   padding: 6px 10px;
 }
 
-.smartpay .smartpay-form-shortcode .form--title {
-  display: block;
-  margin-bottom: 1rem;
-  font-size: 26px;
-  font-weight: bold;
-  color: #252a2e;
-  line-height: 1.2;
+.smartpay .smartpay-form-shortcode .form .form-control {
+  height: 38px;
+  font-size: 16px;
 }
 
-.smartpay .smartpay-form-shortcode .form--description {
-  margin-bottom: 10px;
-  color: #252a2e;
+.smartpay .smartpay-form-shortcode .form .form-control:focus {
+  color: #000000;
 }
 
-.smartpay .smartpay-form-shortcode .form--amount-section {
-  transition: all 0.3s ease;
-}
-
-.smartpay .smartpay-form-shortcode .form--amount-section .amount {
-  cursor: pointer;
-  transition: all 0.05s ease-in-out;
-  padding: 12px !important;
-  display: block;
-  text-decoration: none;
-  font-size: 20px !important;
-  box-sizing: border-box;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fff;
-  overflow: hidden;
-  color: #252a2e;
-  margin-bottom: 12px;
-  font-weight: 700;
-  font-family: inherit !important;
-  line-height: 1.25;
-}
-
-.smartpay .smartpay-form-shortcode .form--amount-section .amount--title {
-  font-size: 20px;
-  font-family: inherit;
-}
-
-.smartpay .smartpay-form-shortcode .form--amount-section .amount label {
-  cursor: pointer;
-}
-
-.smartpay .smartpay-form-shortcode .form--amount-section .amount.selected {
-  box-shadow: 0 0 0 1px #28a745;
-}
-
-.smartpay .smartpay-form-shortcode .form--amount-section .amount .variation--description {
-  margin-top: 10px;
-  color: #797874;
-  font-size: 17px;
-}
-
-.smartpay .smartpay-form-shortcode .form .custom-amount-wrapper {
-  margin-top: 12px !important;
-}
-
-.smartpay .smartpay-form-shortcode .form--custom-amount {
-  height: auto !important;
+.smartpay .smartpay-form-shortcode .form-element {
+  margin-bottom: 16px;
 }
 
 .smartpay .smartpay-form-shortcode .btn {

@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n'
 export const save = ({ attributes }) => {
     return (
         <div className="form-element">
-            <div className="d-flex justify-content-between">
+            <div className="row justify-content-between">
                 <div className="col">
                     {attributes.amounts.map((amount, index) => {
                         return (

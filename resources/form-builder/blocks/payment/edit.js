@@ -121,17 +121,16 @@ export const edit = ({ attributes, setAttributes }) => {
             </div>
 
             <InspectorControls>
-                <PanelBody
+                {/* <PanelBody
                     title={__('Settings', 'smartpay')}
                     initialOpen={true}
-                >
-                    <ToggleControl
+                >  <ToggleControl
                         label={__('Show options fields', 'smartpay')}
                         checked={attributes.showOptions}
                         value={true}
                         onChange={onShowOptionsChange}
-                    />
-                </PanelBody>
+                    /> 
+                </PanelBody>*/}
                 <PanelBody title={__('Amounts', 'smartpay')}>
                     {attributes.amounts.map((amount, index) => {
                         return (

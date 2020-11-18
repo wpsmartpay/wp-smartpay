@@ -1,74 +1,89 @@
 .smartpay-form-shortcode {
-	.form {
-		&--title {
-			display: block;
-			margin-bottom: 1rem;
-			font-size: 26px;
-			font-weight: bold;
-			color: #252a2e;
-			line-height: 1.2;
-		}
+    .form {
+        .form-control {
+            height: 38px;
+            font-size: 16px;
 
-		&--description {
-			margin-bottom: 10px;
-			color: #252a2e;
-		}
+            &:focus {
+                color: #000000;
+            }
+        }
+    }
 
-		&--amount-section {
-			transition: all 0.3s ease;
+    .form-element {
+        margin-bottom: 16px;
+    }
 
-			.amount {
-				cursor: pointer;
-				transition: all 0.05s ease-in-out;
-				padding: 12px !important;
-				display: block;
-				text-decoration: none;
-				font-size: 20px !important;
-				box-sizing: border-box;
-				border: 1px solid #ddd;
-				border-radius: 4px;
-				background: #fff;
-				overflow: hidden;
-				color: #252a2e;
-				margin-bottom: 12px;
-				font-weight: 700;
-				font-family: inherit !important;
-				line-height: 1.25;
+    // .form {
+    // 	&--title {
+    // 		display: block;
+    // 		margin-bottom: 1rem;
+    // 		font-size: 26px;
+    // 		font-weight: bold;
+    // 		color: #252a2e;
+    // 		line-height: 1.2;
+    // 	}
 
-				&--title {
-					font-size: 20px;
-					font-family: inherit;
-				}
+    // 	&--description {
+    // 		margin-bottom: 10px;
+    // 		color: #252a2e;
+    // 	}
 
-				label {
-					cursor: pointer;
-				}
+    // 	&--amount-section {
+    // 		transition: all 0.3s ease;
 
-				&.selected {
-					box-shadow: 0 0 0 1px $success;
-				}
+    // 		.amount {
+    // 			cursor: pointer;
+    // 			transition: all 0.05s ease-in-out;
+    // 			padding: 12px !important;
+    // 			display: block;
+    // 			text-decoration: none;
+    // 			font-size: 20px !important;
+    // 			box-sizing: border-box;
+    // 			border: 1px solid #ddd;
+    // 			border-radius: 4px;
+    // 			background: #fff;
+    // 			overflow: hidden;
+    // 			color: #252a2e;
+    // 			margin-bottom: 12px;
+    // 			font-weight: 700;
+    // 			font-family: inherit !important;
+    // 			line-height: 1.25;
 
-				.variation {
-					&--description {
-						margin-top: 10px;
-						color: #797874;
-						font-size: 17px;
-					}
-				}
-			}
-		}
+    // 			&--title {
+    // 				font-size: 20px;
+    // 				font-family: inherit;
+    // 			}
 
-		.custom-amount-wrapper {
-			margin-top: 12px !important;
-		}
+    // 			label {
+    // 				cursor: pointer;
+    // 			}
 
-		&--custom-amount {
-			height: auto !important;
-		}
-	}
+    // 			&.selected {
+    // 				box-shadow: 0 0 0 1px $success;
+    // 			}
 
-	.btn {
-		font-size: 16px;
-		padding: 6px 10px;
-	}
+    // 			.variation {
+    // 				&--description {
+    // 					margin-top: 10px;
+    // 					color: #797874;
+    // 					font-size: 17px;
+    // 				}
+    // 			}
+    // 		}
+    // 	}
+
+    // 	.custom-amount-wrapper {
+    // 		margin-top: 12px !important;
+    // 	}
+
+    // 	&--custom-amount {
+    // 		height: auto !important;
+    // 	}
+    // }
+
+    .btn {
+        font-size: 16px;
+        padding: 6px 10px;
+    }
 }

@@ -27937,14 +27937,6 @@ var edit = function edit(_ref) {
   }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Button"], {
     isPrimary: true
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Pay Now', 'smartpay')))), /*#__PURE__*/React.createElement(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__["InspectorControls"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
-    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Settings', 'smartpay'),
-    initialOpen: true
-  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["ToggleControl"], {
-    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Show options fields', 'smartpay'),
-    checked: attributes.showOptions,
-    value: true,
-    onChange: onShowOptionsChange
-  })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Amounts', 'smartpay')
   }, attributes.amounts.map(function (amount, index) {
     return /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
@@ -28106,7 +28098,7 @@ var save = function save(_ref) {
   return /*#__PURE__*/React.createElement("div", {
     className: "form-element"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "d-flex justify-content-between"
+    className: "row justify-content-between"
   }, /*#__PURE__*/React.createElement("div", {
     className: "col"
   }, attributes.amounts.map(function (amount, index) {
@@ -28398,8 +28390,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _wordpress_dom_ready__WEBPACK_IMPORTED_MODULE_0___default()(function () {
-  Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_3__["registerCoreBlocks"])();
   Object(_blocks__WEBPACK_IMPORTED_MODULE_8__["registerSmartPayFormBlocks"])();
+  Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_3__["registerCoreBlocks"])();
 
   var SmartPayForm = function SmartPayForm() {
     return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["HashRouter"], null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Switch"], null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
