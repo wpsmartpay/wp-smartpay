@@ -13,6 +13,7 @@ class Activator
     {
         $this->migrate();
         $this->_create_pages();
+        $this->_set_default_settings();
         // FIXME
         $this->upload = new Upload();
     }
@@ -99,6 +100,39 @@ class Activator
             'payment_success_page'    => $payment_success_page,
             'payment_failure_page'    => $payment_failure_page,
             'customer_dashboard_page' => $customer_dashboard_page,
+        );
+
+        update_option('smartpay_settings', array_merge($smartpay_settings, $options));
+    }
+
+    /**
+     * Set default settings.
+     *
+     * @since 0.0.2
+     * @access private
+     * @return void
+     */
+    private function _set_default_settings()
+    {
+        $smartpay_settings = get_option('smartpay_settings', []);
+
+        $options = array(
+            // General
+            'currency'               => 'USD',
+
+            // Gateway
+            'test_mode'              => 0,
+            'gateways'               => ['paypal' => 1],
+            'default_gateway'        => 'paypal',
+
+            // Email
+            'from_name'              => get_bloginfo('name'),
+            'from_email'             => get_bloginfo('admin_email'),
+
+            'payment_email_subject'  => 'Payment Receipt - ' . get_bloginfo('name'),
+            'payment_email_heading'  => 'Payment Receipt - ' . get_bloginfo('name'),
+
+            'activated_integrations' => [],
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useEffect, useState, useReducer } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
 import { Container, Alert, Button, Form as BSForm } from 'react-bootstrap'
-
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Update } from '../http/form'
 import { FormForm } from './components/form'
 
@@ -38,9 +38,19 @@ export const EditForm = () => {
         Update(formId, JSON.stringify(form)).then((response) => {
             dispatch('smartpay/forms').updateForm(form)
 
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
             })
         })
     }
@@ -84,12 +94,6 @@ export const EditForm = () => {
             </div>
 
             <Container style={{ marginTop: '80px' }}>
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
-
                 <FormForm form={form} setformData={setformData} />
             </Container>
         </>

@@ -1,17 +1,9 @@
 import { __ } from '@wordpress/i18n'
-import {
-    Container,
-    Form,
-    Tabs,
-    Tab,
-    Row,
-    Col,
-    Button,
-    Alert,
-} from 'react-bootstrap'
-import { useReducer, useState } from '@wordpress/element'
+import { Container, Form, Tabs, Tab, Row, Col, Button } from 'react-bootstrap'
+import { useReducer } from '@wordpress/element'
 const { dispatch } = wp.data
 import { Save } from '../../http/coupon'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 const initialState = {
     title: '',
@@ -33,15 +25,25 @@ const reducer = (coupon, action) => {
 
 export const CreateCoupon = () => {
     const [coupon, setCoupon] = useReducer(reducer, initialState)
-    const [response, setResponse] = useState({})
 
     const createCoupon = (event) => {
         event.preventDefault()
         Save(JSON.stringify(coupon)).then((response) => {
             dispatch('smartpay/coupons').setCoupon(response.coupon)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
+
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
             })
         })
 
@@ -76,11 +78,6 @@ export const CreateCoupon = () => {
             <Container className="mt-3">
                 <Row className="justify-content-center">
                     <Col xs={9}>
-                        {response.message && (
-                            <Alert className="mb-3" variant={response.type}>
-                                {response.message}
-                            </Alert>
-                        )}
                         <Form>
                             <Form.Group controlId="couponForm.title">
                                 <Form.Control

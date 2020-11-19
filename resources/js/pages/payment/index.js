@@ -1,22 +1,51 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
-
-const { useEffect } = wp.element
+import { Container, Table, Button, Alert } from 'react-bootstrap'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
-export const PaymentList = () => {
-    useEffect(() => {
-        dispatch('smartpay/payments').getPayments()
-    }, [])
+import { DeletePayment } from '../../http/payment'
 
-    const payments = useSelect((select) =>
+export const PaymentList = () => {
+    const [payments, setPayments] = useState([])
+
+    const paymentList = useSelect((select) =>
         select('smartpay/payments').getPayments()
     )
 
-    const deletePayment = () => {
-        // FIXME
-        console.log('Delete payment')
+    useEffect(() => {
+        setPayments(paymentList)
+    }, [paymentList])
+
+    const deletePayment = (paymentId) => {
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                DeletePayment(paymentId).then((response) => {
+                    dispatch('smartpay/payments').deletePayment(paymentId)
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
+                    })
+                })
+            }
+        })
     }
 
     return (
@@ -56,6 +85,9 @@ export const PaymentList = () => {
                                 <th className="w-30 text-left">
                                     <strong>{__('Date', 'smartpay')}</strong>
                                 </th>
+                                <th className="w-30 text-left">
+                                    <strong>{__('Actions', 'smartpay')}</strong>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,10 +99,21 @@ export const PaymentList = () => {
                                             {/* FIXME */}
                                             {payment.customer_id}
                                         </td>
-                                        <td>{payment.amount}</td>
+                                        <td>{`${payment.currency}${payment.amount} `}</td>
                                         <td>{payment.type}</td>
                                         <td>{payment.status}</td>
                                         <td>{payment.completed_at}</td>
+                                        <td>
+                                            <Button
+                                                className="btn-sm p-0"
+                                                onClick={() =>
+                                                    deletePayment(payment.id)
+                                                }
+                                                variant="link"
+                                            >
+                                                {__('Delete', 'smartpay')}
+                                            </Button>
+                                        </td>
                                     </tr>
                                 )
                             })}

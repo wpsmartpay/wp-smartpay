@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 import { Container, Table, Button, Alert } from 'react-bootstrap'
 import { useState, useEffect } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Delete } from '../http/form'
 
 export const FormList = () => {
     const [forms, setForms] = useState([])
-    const [response, setResponse] = useState({})
 
     const formsData = useSelect(
         (select) => select('smartpay/forms').getForms(),
@@ -19,12 +19,32 @@ export const FormList = () => {
     }, [formsData])
 
     const deleteForm = (formId) => {
-        Delete(formId).then((response) => {
-            dispatch('smartpay/forms').deleteForm(formId)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
-            })
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Delete(formId).then((response) => {
+                    dispatch('smartpay/forms').deleteForm(formId)
+                    Swal.fire({
+                        toast: true,
+                        icon: 'success',
+                        title: __(response.message, 'smartpay'),
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        showClass: {
+                            popup: 'swal2-noanimation',
+                        },
+                        hideClass: {
+                            popup: '',
+                        },
+                    })
+                })
+            }
         })
     }
 
@@ -50,12 +70,6 @@ export const FormList = () => {
             </div>
 
             <Container className="mt-3">
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
-
                 <div className="bg-white">
                     <Table className="table">
                         <thead>

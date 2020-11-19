@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n'
 import { Container, Alert, Button } from 'react-bootstrap'
 import { useState, useReducer } from '@wordpress/element'
 import { dispatch } from '@wordpress/data'
-
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Save } from '../http/form'
 import { FormForm } from './components/form'
 
@@ -20,7 +20,6 @@ const reducer = (state, data) => {
 
 export const CreateForm = () => {
     const [form, setformData] = useReducer(reducer, defaultFormData)
-    const [response, setResponse] = useState({})
     const [shouldReset, setShouldReset] = useState(false)
 
     const saveForm = () => {
@@ -29,9 +28,19 @@ export const CreateForm = () => {
             setShouldReset(true)
 
             dispatch('smartpay/forms').setForm(response.form)
-            setResponse({
-                type: 'success',
-                message: __(response.message, 'smartpay'),
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
             })
         })
     }
@@ -66,12 +75,6 @@ export const CreateForm = () => {
             </div>
 
             <Container style={{ marginTop: '80px' }}>
-                {response.message && (
-                    <Alert className="mt-3" variant={response.type}>
-                        {response.message}
-                    </Alert>
-                )}
-
                 <FormForm
                     form={form}
                     shouldReset={shouldReset}

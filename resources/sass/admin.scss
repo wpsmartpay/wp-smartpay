@@ -1,3 +1,5 @@
+@import '~sweetalert2/src/sweetalert2';
+
 *,
 *::before,
 *::after {
@@ -62,4 +64,14 @@
 .wp-submenu a[href^="https://wpsmartpay.com"]
 {
     color: #fcac33 !important;
+}
+
+// sweetalert
+
+body.toplevel_page_smartpay.swal2-toast-shown,
+body.smartpay_page_smartpay-form.swal2-toast-shown {
+    .swal2-container.swal2-top-end {
+        position: absolute;
+        top: 80px;
+    }
 }
