@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Button, Alert } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 import { useReducer } from '@wordpress/element'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { SaveProduct } from '../../http/product'
@@ -26,6 +27,7 @@ const reducer = (state, data) => {
 
 export const CreateProduct = () => {
     const [product, setProductData] = useReducer(reducer, defaultProduct)
+    const history = useHistory()
 
     const createProduct = () => {
         SaveProduct(JSON.stringify(product)).then((response) => {
@@ -47,6 +49,8 @@ export const CreateProduct = () => {
                     popup: '',
                 },
             })
+
+            history.push(`/products/${response.product.id}/edit`)
         })
     }
 
