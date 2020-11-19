@@ -141,6 +141,23 @@ jQuery(($) => {
             setTimeout(() => {
                 $paymentModal.modal('show')
 
+                if (formData.smartpay_first_name) {
+                    $paymentModal
+                        .find('input[name="smartpay_first_name"]')
+                        .val(formData.smartpay_first_name)
+                }
+
+                if (formData.smartpay_last_name) {
+                    $paymentModal
+                        .find('input[name="smartpay_last_name"]')
+                        .val(formData.smartpay_last_name)
+                }
+
+                if (formData.smartpay_email) {
+                    $paymentModal
+                        .find('input[name="smartpay_email"]')
+                        .val(formData.smartpay_email)
+                }
                 // Appending modal background inside the .smartpay div
                 $('.modal-backdrop')
                     .last()
@@ -190,7 +207,7 @@ jQuery(($) => {
             $parentWrapper.find('.modal-loading').css('display', 'flex')
 
             let formData = getPaymentFormData($parentWrapper)
-
+            console.log(formData)
             let validation = checkPaymentFormValidation(formData)
 
             // Hide all errors
@@ -210,7 +227,6 @@ jQuery(($) => {
                     action: 'smartpay_process_payment',
                     data: formData,
                 }
-
                 jQuery.post(smartpay.ajax_url, data, (response) => {
                     // Show second step
                     $paymentSecondStep.css('display', 'flex')

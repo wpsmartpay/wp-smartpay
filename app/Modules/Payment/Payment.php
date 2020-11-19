@@ -3,6 +3,7 @@
 namespace SmartPay\Modules\Payment;
 
 use SmartPay\Models\Product;
+use SmartPay\Models\Form;
 
 use SmartPay\Http\Controllers\Rest\Admin\PaymentController;
 use SmartPay\Models\Customer;
@@ -193,7 +194,7 @@ class Payment
 
                 $form_id = $_data['smartpay_form_id'] ?? '';
 
-                $form = smartpay_get_form($form_id);
+                $form = Form::where('id', $form_id)->first();
 
                 if (empty($form_id) || empty($form)) return [];
 
