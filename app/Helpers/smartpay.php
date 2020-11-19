@@ -890,3 +890,12 @@ function smartpay_get_payment_failure_page_uri($query_string = null)
 
     return smartpay_get_page_uri($page_id, $query_string);
 }
+
+function smartpay_update_settings(array $settings)
+{
+    $old_settings = get_option('smartpay_settings');
+
+    if (!($old_settings === $settings)) {
+        update_option('smartpay_settings', $settings);
+    }
+}

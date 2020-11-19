@@ -18,10 +18,15 @@ function smartpay_active_integrations()
 
 function smartpay_get_activated_integrations()
 {
-    $integrations = smartpay_integrations();
-    $activated_integrations = (array) smartpay_get_option('activated_integrations', []);
+    $integrations = (array) smartpay_get_option('integrations', []);
 
-    return array_intersect(array_keys($integrations), $activated_integrations);
+    $activated_integrations = array_filter($integrations, function ($integration) {
+        if ($integration['active']) {
+            return $integration;
+        }
+    });
+
+    return array_keys($activated_integrations);
 }
 
 function smartpay_integration_is_installed($integration)
