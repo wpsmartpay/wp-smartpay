@@ -217,12 +217,13 @@ class Payment
         if ($customer->id) {
             $customer_id = $customer->id;
         } else {
+            $customer = new Customer();
             $customer->user_id      = is_user_logged_in() ? get_current_user_id() : 0;
             $customer->first_name   = $_data['smartpay_first_name'];
             $customer->last_name    = $_data['smartpay_last_name'];
             $customer->email        = $_data['smartpay_email'];
 
-            $customer_id = $customer->insert();
+            $customer_id = $customer->save();
         }
 
         return [
