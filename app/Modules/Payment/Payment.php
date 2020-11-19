@@ -70,7 +70,6 @@ class Payment
     function ajax_process_payment()
     {
         // TODO: Convert response to JSON
-
         if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field($_POST['data']['smartpay_action'])) {
             echo '<p class="text-danger">Payment process action not acceptable!</p>';
             die();
@@ -136,7 +135,6 @@ class Payment
     private function _prepare_payment_data($_data)
     {
         $payment_data = $this->_get_payment_data($_data);
-
         return apply_filters('smartpay_prepare_payment_data', array(
             'payment_type'  => $_data['smartpay_payment_type'],
             'payment_data'  => $payment_data,
@@ -147,6 +145,7 @@ class Payment
             'customer'      => $this->_get_payment_customer($_data),
             'email'         => $_data['smartpay_email'],
             'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+            'smartpay_form_extra_data'  => $_data['smartpay_form_extra_data']
         ));
     }
 
@@ -200,7 +199,7 @@ class Payment
 
                 return [
                     'form_id' => $form->id,
-                    'total_amount' => $_data['smartpay_form_amount'] ?? 0,
+                    'total_amount' => $_data['smartpay_amount'] ?? 0,
                 ];
                 break;
 
@@ -237,16 +236,16 @@ class Payment
     public function insertPayment($paymentData)
     {
         if (empty($paymentData)) return;
-
         $payment = new \SmartPay\Models\Payment();
         $payment->type           = $paymentData['payment_type'];
         $payment->data           = json_encode($paymentData['payment_data']);
         $payment->amount         = $paymentData['amount'];
         $payment->currency       = $paymentData['currency'] ?? smartpay_get_currency();
         $payment->gateway        = $paymentData['gateway'] ?? smartpay_get_default_gateway();
-        $payment->customer_id    = $paymentData['customer']['customer_id'];
+        $payment->customer       = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
+        $payment->extra          = json_encode($paymentData['smartpay_form_extra_data']);
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
         $payment->parent_payment = !empty($paymentData['parent']) ? absint($paymentData['parent']) : '';
         $payment->status         = $paymentData['status'] ?? 'pending';

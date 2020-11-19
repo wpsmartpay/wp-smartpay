@@ -104,6 +104,12 @@ export const PaymentList = () => {
                                         <td>{payment.status}</td>
                                         <td>{payment.completed_at}</td>
                                         <td>
+                                            <Link
+                                                className="btn-sm p-0 mr-2"
+                                                to="/payments/:paymentId/edit"
+                                            >
+                                                {__('View', 'smartpay')}
+                                            </Link>
                                             <Button
                                                 className="btn-sm p-0"
                                                 onClick={() =>
