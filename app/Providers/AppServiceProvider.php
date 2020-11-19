@@ -11,6 +11,7 @@ use SmartPay\Modules\Payment\Payment;
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Frontend\Common;
 use SmartPay\Modules\Shortcode\Shortcode;
+use SmartPay\Modules\Integration\Integration;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +54,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Shortcode::class, function ($app) {
             return new Shortcode($app);
         });
+
+        $this->app->singleton(Integration::class, function ($app) {
+            return new Integration($app);
+        });
     }
 
     public function boot()
@@ -65,5 +70,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(Gateway::class);
         $this->app->make(Common::class);
         $this->app->make(Shortcode::class);
+        $this->app->make(Integration::class);
     }
 }

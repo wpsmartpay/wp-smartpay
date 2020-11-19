@@ -4,6 +4,15 @@ namespace SmartPay\Modules\Integration;
 
 class Integration
 {
+    protected $app;
+
+    public function __construct($app)
+    {
+        $this->app = $app;
+
+        add_action('init', [$this, 'bootIntegrations'], 999);
+    }
+
     public static function getIntegrations()
     {
         return [
@@ -31,6 +40,26 @@ class Integration
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
             ]
-        ];;
+        ];
+    }
+
+    public static function getIntegrationManager(string $manager)
+    {
+        return smartpay()->make($manager);
+    }
+
+    public function bootIntegrations()
+    {
+        foreach (smartpay_active_integrations() as $namespace => $integration) {
+            if (!class_exists($integration['manager'])) {
+                continue;
+            }
+
+            smartpay_integration_get_manager($integration['manager'])->boot();
+
+            do_action('smartpay_integration_' . strtolower($namespace) . '_loaded');
+        }
+
+        do_action('smartpay_integrations_loaded');
     }
 }
