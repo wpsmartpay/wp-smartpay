@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
@@ -106,7 +106,7 @@ export const PaymentList = () => {
                                         <td>
                                             <Link
                                                 className="btn-sm p-0 mr-2"
-                                                to="/payments/:paymentId/edit"
+                                                to={`/payments/${payment.id}/edit`}
                                             >
                                                 {__('View', 'smartpay')}
                                             </Link>

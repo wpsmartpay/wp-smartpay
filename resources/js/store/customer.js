@@ -21,14 +21,14 @@ const actions = {
     },
     getCustomer(id) {
         return {
-            type: 'GET_FORM',
+            type: 'GET_CUSTOMER',
             path: `${smartpay.restUrl}/v1/customers/${id}`,
             id,
         }
     },
     setCustomer(customer) {
         return {
-            type: 'SET_FORM',
+            type: 'SET_CUSTOMER',
             customer,
         }
     },
@@ -48,7 +48,7 @@ registerStore('smartpay/customers', {
                     ...state,
                     customers: action.customers,
                 }
-            case 'SET_FORM':
+            case 'SET_CUSTOMER':
                 return {
                     ...state,
                     customers: [
@@ -98,7 +98,7 @@ registerStore('smartpay/customers', {
                 },
             })
         },
-        GET_FORM(action) {
+        GET_CUSTOMER(action) {
             return apiFetch({
                 path: action.path,
                 headers: {
