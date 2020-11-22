@@ -10,6 +10,8 @@ import {
 } from 'react-bootstrap'
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
+import { Update } from '../../http/payment'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { useEffect, useReducer, useState } from '@wordpress/element'
 const { useSelect, dispatch } = wp.data
 
@@ -58,7 +60,25 @@ export const EditPayment = () => {
         setPaymentData({ [event.target.name]: event.target.value })
     }
 
-    const Save = () => {}
+    const Save = () => {
+        Update(paymentId, JSON.stringify(payment)).then((response) => {
+            dispatch('smartpay/payments').updatePayment(response.payment)
+            Swal.fire({
+                toast: true,
+                icon: 'success',
+                title: __(response.message, 'smartpay'),
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                showClass: {
+                    popup: 'swal2-noanimation',
+                },
+                hideClass: {
+                    popup: '',
+                },
+            })
+        })
+    }
     return (
         <>
             {payment && (
@@ -94,7 +114,8 @@ export const EditPayment = () => {
                                             <span
                                                 className={
                                                     'btn px-2 py-0 pb-1 ' +
-                                                    (payment.status == 'publish'
+                                                    (payment.status ==
+                                                    'complete'
                                                         ? 'btn-success'
                                                         : 'btn-danger')
                                                 }
@@ -163,6 +184,7 @@ export const EditPayment = () => {
                                                 <Button
                                                     class="btn btn-outline-primary"
                                                     type="button"
+                                                    onClick={Save}
                                                 >
                                                     {__('Save', 'smartpay')}
                                                 </Button>

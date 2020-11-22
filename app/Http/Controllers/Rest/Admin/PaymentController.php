@@ -86,10 +86,10 @@ class PaymentController extends RestController
             return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);
         }
 
-        $request = json_decode($request->get_body());
+        $request = json_decode($request->get_body(), true);
 
-        // $payment->status = Payment::PENDING;
-        // $payment->save();
+        $payment->status = $request['status'];
+        $payment->save();
 
         return new WP_REST_Response(['payment' => $payment, 'message' => __('Payment updated', 'smartpay')]);
     }
