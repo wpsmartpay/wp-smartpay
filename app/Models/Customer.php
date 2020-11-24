@@ -9,4 +9,9 @@ class Customer extends Model
     protected $table = 'smartpay_customers';
 
     protected $fillable = [];
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'customer_id', 'id');
+    }
 }

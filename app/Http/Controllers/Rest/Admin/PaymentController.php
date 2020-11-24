@@ -63,7 +63,7 @@ class PaymentController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $payment = Payment::find($request->get_param('id'));
+        $payment = Payment::with(['customer'])->find($request->get_param('id'));
 
         if (!$payment) {
             return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);

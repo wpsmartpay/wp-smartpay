@@ -10,7 +10,7 @@ class Integration
     {
         $this->app = $app;
 
-        add_action('init', [$this, 'bootIntegrations'], 999);
+        add_action('plugins_loaded', [$this, 'bootIntegrations']);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
 
@@ -55,7 +55,10 @@ class Integration
 
     public function bootIntegrations()
     {
+
         foreach (smartpay_active_integrations() as $namespace => $integration) {
+            // var_dump($integration);
+            // die();
             if (!class_exists($integration['manager'])) {
                 continue;
             }
