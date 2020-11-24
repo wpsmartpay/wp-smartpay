@@ -16,11 +16,11 @@ class PaymentController extends RestController
      */
     public function middleware(WP_REST_Request $request)
     {
-        if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
-                'status' => is_user_logged_in() ? 403 : 401,
-            ]);
-        }
+        // if (!current_user_can('manage_options')) {
+        //     return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+        //         'status' => is_user_logged_in() ? 403 : 401,
+        //     ]);
+        // }
 
         return true;
     }
@@ -63,7 +63,7 @@ class PaymentController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $payment = Payment::find($request->get_param('id'));
+        $payment = Payment::with(['customer'])->find($request->get_param('id'));
 
         if (!$payment) {
             return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);
