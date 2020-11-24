@@ -1,7 +1,7 @@
 <div class="smartpay" style="margin: 0 auto;">
     <div class="smartpay-form-shortcode smartpay-payment">
         <div class="card form">
-            <div class="card-body p-5">
+            <div class="card-body smartpay_form_builder_wrapper p-5">
                 <?php $action = '' ?>
                 <form action="" method="POST">
                     <?php echo $form->body; ?>

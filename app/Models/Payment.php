@@ -2,6 +2,7 @@
 
 namespace SmartPay\Models;
 
+use SmartPay\Models\Customer;
 use SmartPay\Framework\Database\Eloquent\Model;
 
 class Payment extends Model

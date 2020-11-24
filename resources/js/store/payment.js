@@ -32,6 +32,12 @@ const actions = {
             payment,
         }
     },
+    updatePayment(payment) {
+        return {
+            type: 'UPDATE_PAYMENT',
+            payment,
+        }
+    },
     deletePayment(paymentId) {
         return {
             type: 'DELETE_PAYMENT',
@@ -57,6 +63,15 @@ registerStore('smartpay/payments', {
                             (payment) => payment.id !== action.payment.id
                         ),
                     ],
+                }
+            case 'UPDATE_PAYMENT':
+                return {
+                    ...state,
+                    payments: state.payments.map((payment) =>
+                        payment.id === action.payment.id
+                            ? action.payment
+                            : payment
+                    ),
                 }
             case 'DELETE_PAYMENT':
                 return {

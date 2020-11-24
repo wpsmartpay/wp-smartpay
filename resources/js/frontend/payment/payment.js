@@ -141,6 +141,24 @@ jQuery(($) => {
             setTimeout(() => {
                 $paymentModal.modal('show')
 
+                if (formData.smartpay_first_name) {
+                    $paymentModal
+                        .find('input[name="smartpay_first_name"]')
+                        .val(formData.smartpay_first_name)
+                }
+
+                if (formData.smartpay_last_name) {
+                    $paymentModal
+                        .find('input[name="smartpay_last_name"]')
+                        .val(formData.smartpay_last_name)
+                }
+
+                if (formData.smartpay_email) {
+                    $paymentModal
+                        .find('input[name="smartpay_email"]')
+                        .val(formData.smartpay_email)
+                }
+
                 // Appending modal background inside the .smartpay div
                 $('.modal-backdrop')
                     .last()
@@ -190,7 +208,6 @@ jQuery(($) => {
             $parentWrapper.find('.modal-loading').css('display', 'flex')
 
             let formData = getPaymentFormData($parentWrapper)
-
             let validation = checkPaymentFormValidation(formData)
 
             // Hide all errors
@@ -210,7 +227,6 @@ jQuery(($) => {
                     action: 'smartpay_process_payment',
                     data: formData,
                 }
-
                 jQuery.post(smartpay.ajax_url, data, (response) => {
                     // Show second step
                     $paymentSecondStep.css('display', 'flex')
@@ -255,6 +271,23 @@ jQuery(($) => {
 
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
+        let smartpay_form_extra_data = {}
+        if (
+            $wrapper.find(
+                '.smartpay_form_builder_wrapper > form input[name^="smartpay_"]'
+            ).length
+        ) {
+            $wrapper
+                .find(
+                    '.smartpay_form_builder_wrapper > form input[name^="smartpay_"]'
+                )
+                .each(function (index, item) {
+                    smartpay_form_extra_data[$(item).attr('name')] = $(
+                        item
+                    ).val()
+                })
+        }
+
         let data = {
             smartpay_action: 'smartpay_process_payment',
             smartpay_process_payment:
@@ -274,6 +307,7 @@ jQuery(($) => {
             smartpay_payment_type:
                 $wrapper.find('input[name="smartpay_payment_type"]').val() ||
                 null,
+            smartpay_form_extra_data: smartpay_form_extra_data || null,
         }
 
         if ('product_purchase' === data.smartpay_payment_type) {
