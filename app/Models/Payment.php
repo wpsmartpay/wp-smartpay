@@ -27,12 +27,77 @@ class Payment extends Model
     ];
 
     const PENDING = 'pending';
+    const COMPLETED = 'completed';
+    const REFUNDED = 'refunded';
+    const FAILED = 'failed';
+    const ABANDONED = 'abandoned';
+    const REVOKED = 'revoked';
+    const PROCESSING = 'processing';
 
     const PRODUCT_PURCHASE = 'product_purchase';
+    const FORM_PAYMENT = 'form_payment';
 
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
+    public function getTypeAttribute($type)
+    {
+        switch ($type) {
+            case self::PRODUCT_PURCHASE:
+            default:
+                return 'Product Purchase';
+                break;
+
+            case self::FORM_PAYMENT:
+                return 'Form Payment';
+                break;
+        }
+    }
+
+    public function getStatusAttribute($status)
+    {
+        switch ($status) {
+            case self::PENDING:
+            default:
+                return 'Pending';
+                break;
+
+            case self::COMPLETED:
+                return 'Completed';
+                break;
+
+            case self::REFUNDED:
+                return 'Refunded';
+                break;
+
+            case self::FAILED:
+                return 'Failed';
+                break;
+
+            case self::ABANDONED:
+                return 'Abandoned';
+                break;
+
+            case self::REVOKED:
+                return 'Revoked';
+                break;
+
+            case self::PROCESSING:
+                return 'Processing';
+                break;
+        }
+    }
+
+    public function setDataAttribute($data)
+    {
+        $this->attributes['data'] = \json_encode($data);
+    }
+
+    public function getDataAttribute($data)
+    {
+        return json_decode($data);
     }
 
     /**
