@@ -30,6 +30,11 @@ class Payment extends Model
 
     const PRODUCT_PURCHASE = 'product_purchase';
 
+    public function customer()
+    {
+        return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
     /**
      * Update payment status
      *
