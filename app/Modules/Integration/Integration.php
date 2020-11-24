@@ -10,12 +10,11 @@ class Integration
     {
         $this->app = $app;
 
-        add_action('plugins_loaded', [$this, 'bootIntegrations']);
+        $this->app->addAction('plugins_loaded', [$this, 'bootIntegrations'], 99);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
 
         add_action('wp_ajax_toggle_integration_activation', [$this, 'toggleIntegrationActivation']);
-        add_action('wp_ajax_nopriv_toggle_integration_activation', [$this, 'toggleIntegrationActivation']);
     }
 
     public static function getIntegrations()
@@ -55,10 +54,7 @@ class Integration
 
     public function bootIntegrations()
     {
-
         foreach (smartpay_active_integrations() as $namespace => $integration) {
-            // var_dump($integration);
-            // die();
             if (!class_exists($integration['manager'])) {
                 continue;
             }

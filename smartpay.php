@@ -39,18 +39,13 @@ global $smartpay_options;
 
 $smartpay_options = smartpay_get_settings();
 
-add_action('plugins_loaded', function () {
+add_action('plugins_loaded', function () use ($app) {
     do_action('smartpay_loaded');
-});
-
-add_action('init', function () use ($app) {
-    do_action('smartpay_init');
 
     // Run The Application
     $app->boot();
-
-    do_action('smartpay_after_init');
 });
 
-// dd($smartpay_options);
-// update_option('smartpay_settings', array_merge($smartpay_options, ['activated_integrations' => ['paddle']]));
+add_action('init', function () {
+    do_action('smartpay_init');
+});
