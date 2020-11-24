@@ -272,6 +272,6 @@ class Payment
         $payment->completed_at = current_time('mysql');
         $payment->save();
 
-        do_action('smartpay_payment_completed', $payment->id);
+        do_action('smartpay_payment_completed', $payment);
     }
 }
