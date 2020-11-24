@@ -7,6 +7,7 @@ mix.webpackConfig({
     },
 })
     .copy('resources/js/frontend/bootstrap.js', 'public/js')
+    .copy('resources/js/admin/integration.js', 'public/js')
     .js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .js('resources/js/admin.js', 'public/js')

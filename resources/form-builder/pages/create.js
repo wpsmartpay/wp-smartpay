@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
-import { Container, Alert, Button } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 import { useState, useReducer } from '@wordpress/element'
 import { dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -21,6 +22,7 @@ const reducer = (state, data) => {
 export const CreateForm = () => {
     const [form, setformData] = useReducer(reducer, defaultFormData)
     const [shouldReset, setShouldReset] = useState(false)
+    const history = useHistory()
 
     const saveForm = () => {
         Save(JSON.stringify(form)).then((response) => {
@@ -42,6 +44,7 @@ export const CreateForm = () => {
                     popup: '',
                 },
             })
+            history.push(`/${response.form.id}/edit`)
         })
     }
 

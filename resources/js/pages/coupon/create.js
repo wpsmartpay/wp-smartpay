@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Form, Tabs, Tab, Row, Col, Button } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom'
 import { useReducer } from '@wordpress/element'
 const { dispatch } = wp.data
 import { Save } from '../../http/coupon'
@@ -25,6 +26,7 @@ const reducer = (coupon, action) => {
 
 export const CreateCoupon = () => {
     const [coupon, setCoupon] = useReducer(reducer, initialState)
+    const history = useHistory()
 
     const createCoupon = (event) => {
         event.preventDefault()
@@ -45,9 +47,10 @@ export const CreateCoupon = () => {
                     popup: '',
                 },
             })
-        })
 
-        setCoupon({ type: 'reset' })
+            setCoupon({ type: 'reset' })
+            history.push(`/coupons/${response.coupon.id}/edit`)
+        })
     }
 
     const setCouponData = (event) => {
