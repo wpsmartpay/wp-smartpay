@@ -15,7 +15,7 @@ class Product extends Model
         'sale_price',
         'covers',
         'files',
-        'parent',
+        'parent_id',
         'status',
     ];
 
@@ -53,8 +53,13 @@ class Product extends Model
         return ($this->sale_price > -1) ? $this->sale_price : $this->base_price;
     }
 
+    public function parent()
+    {
+        return $this->hasOne(Product::class, 'id', 'parent_id');
+    }
+
     public function variations()
     {
-        return $this->hasMany(Product::class, 'parent', 'id');
+        return $this->hasMany(Product::class, 'parent_id', 'id');
     }
 }
