@@ -37,6 +37,20 @@ class Payment extends Model
     const PRODUCT_PURCHASE = 'product_purchase';
     const FORM_PAYMENT = 'form_payment';
 
+    public static function boot()
+    {
+        static::saving(function ($payment) {
+            if ($payment->isDirty('status')) {
+                do_action(
+                    'smartpay_update_payment_status',
+                    $payment,
+                    $payment->status,
+                    $payment->original['status']
+                );
+            }
+        });
+    }
+
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');

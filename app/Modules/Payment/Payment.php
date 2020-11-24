@@ -7,6 +7,7 @@ use SmartPay\Models\Form;
 
 use SmartPay\Http\Controllers\Rest\Admin\PaymentController;
 use SmartPay\Models\Customer;
+use SmartPay\Models\Payment as PaymentModel;
 use WP_REST_Server;
 
 class Payment
@@ -17,18 +18,12 @@ class Payment
     {
         $this->app = $app;
 
-        $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
-
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
 
-        add_action('wp_ajax_smartpay_process_payment', [$this, 'ajax_process_payment']);
+        $this->app->addAction('wp_ajax_smartpay_process_payment', [$this, 'ajax_process_payment']);
+        $this->app->addAction('wp_ajax_nopriv_smartpay_process_payment', [$this, 'ajax_process_payment']);
 
-        add_action('wp_ajax_nopriv_smartpay_process_payment', [$this, 'ajax_process_payment']);
-    }
-
-    public function adminScripts()
-    {
-        //
+        $this->app->addAction('smartpay_update_payment_status', [$this, 'onPaymentComplete'], 10, 3);
     }
 
     public function registerRestRoutes()
@@ -266,5 +261,17 @@ class Payment
 
         // Return false if no payment was inserted
         return false;
+    }
+
+    public function onPaymentComplete($payment, $newStatus, $oldStatus)
+    {
+        if ($newStatus !== PaymentModel::COMPLETED || !$payment->completed_at) {
+            return;
+        }
+
+        $payment->completed_at = current_time('mysql');
+        $payment->save();
+
+        do_action('smartpay_payment_completed', $payment->id);
     }
 }
