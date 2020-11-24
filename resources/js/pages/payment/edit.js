@@ -5,7 +5,6 @@ import {
     Row,
     Col,
     InputGroup,
-    FormControl,
     Form,
 } from 'react-bootstrap'
 import { __ } from '@wordpress/i18n'
@@ -14,11 +13,6 @@ import { Update } from '../../http/payment'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { useEffect, useReducer, useState } from '@wordpress/element'
 const { useSelect, dispatch } = wp.data
-
-const defaultPaymentData = {
-    title: '',
-    body: '',
-}
 
 const reducer = (state, data) => {
     return {
@@ -30,39 +24,28 @@ const reducer = (state, data) => {
 export const EditPayment = () => {
     const { paymentId } = useParams()
 
-    const [payment, setPaymentData] = useReducer(reducer, defaultPaymentData)
-    const [customer, setCustomerData] = useState({})
+    const [payment, setPaymentData] = useReducer(reducer, {})
+    const [paymentStatus, setPaymentStatus] = useState('pending')
 
     const paymentData = useSelect(
         (select) => select('smartpay/payments').getPayment(paymentId),
         [paymentId]
     )
-    const customerData = useSelect(
-        (select) => {
-            if (payment.customer) {
-                return select('smartpay/customers').getCustomer(
-                    payment.customer
-                )
-            }
-        },
-        [payment]
-    )
 
     useEffect(() => {
         setPaymentData(paymentData)
+        setPaymentStatus(paymentData?.status)
     }, [paymentId, paymentData])
 
-    useEffect(() => {
-        setCustomerData(customerData)
-    }, [payment, customerData])
-
-    const _setPaymentData = (event) => {
-        setPaymentData({ [event.target.name]: event.target.value })
+    const _setPaymentStatus = (status) => {
+        setPaymentStatus(status)
     }
 
     const Save = () => {
-        Update(paymentId, JSON.stringify(payment)).then((response) => {
-            dispatch('smartpay/payments').updatePayment(response.payment)
+        Update(
+            paymentId,
+            JSON.stringify({ ...payment, status: paymentStatus })
+        ).then((response) => {
             Swal.fire({
                 toast: true,
                 icon: 'success',
@@ -77,8 +60,11 @@ export const EditPayment = () => {
                     popup: '',
                 },
             })
+
+            dispatch('smartpay/payments').updatePayment(response.payment)
         })
     }
+
     return (
         <>
             {payment && (
@@ -90,13 +76,55 @@ export const EditPayment = () => {
                                     {__('Edit Payment', 'smartpay')}
                                 </h2>
                                 <div className="ml-auto">
-                                    <Button
-                                        type="button"
-                                        className="btn btn-primary btn-sm text-decoration-none"
-                                        onClick={Save}
-                                    >
-                                        {__('Update', 'smartpay')}
-                                    </Button>
+                                    <InputGroup size="sm">
+                                        <Form.Control
+                                            name="status"
+                                            as="select"
+                                            value={paymentStatus}
+                                            onChange={(e) =>
+                                                _setPaymentStatus(
+                                                    e.target.value
+                                                )
+                                            }
+                                        >
+                                            <option disabled>
+                                                {__(
+                                                    'Select Status',
+                                                    'smartpay'
+                                                )}
+                                            </option>
+                                            <option value="pending">
+                                                {__('Pending', 'smartpay')}
+                                            </option>
+                                            <option value="complete">
+                                                {__('Complete', 'smartpay')}
+                                            </option>
+                                            <option value="refunded">
+                                                {__('Refunded', 'smartpay')}
+                                            </option>
+                                            <option value="failed">
+                                                {__('Failed', 'smartpay')}
+                                            </option>
+                                            <option value="abandoned">
+                                                {__('Abandoned', 'smartpay')}
+                                            </option>
+                                            <option value="revoked">
+                                                {__('Revoked', 'smartpay')}
+                                            </option>
+                                            <option value="processing">
+                                                {__('Processing', 'smartpay')}
+                                            </option>
+                                        </Form.Control>
+                                        <InputGroup.Append>
+                                            <Button
+                                                className="btn btn-primary btn-sm text-decoration-none text-white"
+                                                type="button"
+                                                onClick={Save}
+                                            >
+                                                {__('Update', 'smartpay')}
+                                            </Button>
+                                        </InputGroup.Append>
+                                    </InputGroup>
                                 </div>
                             </div>
                         </Container>
@@ -104,18 +132,17 @@ export const EditPayment = () => {
                     <Container>
                         <Card>
                             <Card.Body>
-                                <h3 className="text-black">
-                                    {__('Details', 'smartpay')}
-                                </h3>
-                                <Row className="py-3 align-items-center border-bottom">
+                                <Row className="pb-3 align-items-center border-bottom">
                                     <Col>
                                         <div className="d-flex align-items-center">
-                                            <h3 className="my-1 mr-3">$10</h3>
+                                            <h3 className="my-1 mr-3">
+                                                ${payment?.amount || 0}
+                                            </h3>
                                             <span
                                                 className={
                                                     'btn px-2 py-0 pb-1 ' +
                                                     (payment.status ==
-                                                    'complete'
+                                                    'Completed'
                                                         ? 'btn-success'
                                                         : 'btn-danger')
                                                 }
@@ -125,71 +152,9 @@ export const EditPayment = () => {
                                         </div>
                                     </Col>
                                     <Col>
-                                        <h3 className="text-primary m-0 text-center">
-                                            {payment.type == 'product_purchase'
-                                                ? __(
-                                                      'Product Purchase',
-                                                      'smartpay'
-                                                  )
-                                                : __(
-                                                      'Form Payment',
-                                                      'smartpay'
-                                                  )}
-                                            {}
+                                        <h3 className="text-primary m-0 text-right">
+                                            {payment.type}
                                         </h3>
-                                    </Col>
-                                    <Col>
-                                        <InputGroup>
-                                            <Form.Control
-                                                name="status"
-                                                as="select"
-                                                value={payment.status}
-                                                onChange={_setPaymentData}
-                                            >
-                                                <option disabled>
-                                                    {__(
-                                                        'Select Status',
-                                                        'smartpay'
-                                                    )}
-                                                </option>
-                                                <option value="pending">
-                                                    {__('Pending', 'smartpay')}
-                                                </option>
-                                                <option value="complete">
-                                                    {__('Complete', 'smartpay')}
-                                                </option>
-                                                <option value="refunded">
-                                                    {__('Refunded', 'smartpay')}
-                                                </option>
-                                                <option value="failed">
-                                                    {__('Failed', 'smartpay')}
-                                                </option>
-                                                <option value="abandoned">
-                                                    {__(
-                                                        'Abandoned',
-                                                        'smartpay'
-                                                    )}
-                                                </option>
-                                                <option value="revoked">
-                                                    {__('Revoked', 'smartpay')}
-                                                </option>
-                                                <option value="processing">
-                                                    {__(
-                                                        'Processing',
-                                                        'smartpay'
-                                                    )}
-                                                </option>
-                                            </Form.Control>
-                                            <InputGroup.Append>
-                                                <Button
-                                                    class="btn btn-outline-primary"
-                                                    type="button"
-                                                    onClick={Save}
-                                                >
-                                                    {__('Save', 'smartpay')}
-                                                </Button>
-                                            </InputGroup.Append>
-                                        </InputGroup>
                                     </Col>
                                 </Row>
                                 <Row>
@@ -232,12 +197,61 @@ export const EditPayment = () => {
                                         <p>{payment.transaction_id}</p>
                                     </Col>
                                 </Row>
-                            </Card.Body>
-                        </Card>
-                        {payment.type == 'form_payment' && (
-                            <>
-                                <Card>
-                                    <Card.Body>
+
+                                {payment.type == 'Product Purchase' && (
+                                    <>
+                                        <h3 className="text-black">
+                                            {__('Product Details', 'smartpay')}
+                                        </h3>
+                                        <Row>
+                                            <Col>
+                                                <p>
+                                                    <strong>
+                                                        {__(
+                                                            'Product',
+                                                            'smartpay'
+                                                        )}
+                                                    </strong>
+                                                </p>
+                                                <p>
+                                                    {`# ${payment?.data?.product_id}` ||
+                                                        '-'}
+                                                </p>
+                                            </Col>
+                                            <Col>
+                                                <p>
+                                                    <strong>
+                                                        {__(
+                                                            'Product Price',
+                                                            'smartpay'
+                                                        )}
+                                                    </strong>
+                                                </p>
+                                                <p>
+                                                    {`${payment?.currency} ${payment?.data?.product_price}` ||
+                                                        '-'}
+                                                </p>
+                                            </Col>
+                                            <Col>
+                                                <p>
+                                                    <strong>
+                                                        {__(
+                                                            'Total Amount',
+                                                            'smartpay'
+                                                        )}
+                                                    </strong>
+                                                </p>
+                                                <p>
+                                                    {`${payment?.currency} ${payment?.data?.total_amount}` ||
+                                                        '-'}
+                                                </p>
+                                            </Col>
+                                        </Row>
+                                    </>
+                                )}
+
+                                {payment.type == 'Form Payment' && (
+                                    <>
                                         <h3 className="text-black">
                                             {__(
                                                 'Form Payment Details',
@@ -265,14 +279,11 @@ export const EditPayment = () => {
                                                 <p>$10</p>
                                             </Col>
                                         </Row>
-                                    </Card.Body>
-                                </Card>
-                            </>
-                        )}
-                        {customer && (
-                            <>
-                                <Card>
-                                    <Card.Body>
+                                    </>
+                                )}
+
+                                {payment?.customer && (
+                                    <>
                                         <h3 className="text-black">
                                             {__('Customer Details', 'smartpay')}
                                         </h3>
@@ -286,7 +297,12 @@ export const EditPayment = () => {
                                                         )}
                                                     </strong>
                                                 </p>
-                                                <p>{customer.first_name}</p>
+                                                <p>
+                                                    {
+                                                        payment?.customer
+                                                            ?.first_name
+                                                    }
+                                                </p>
                                             </Col>
                                             <Col>
                                                 <p>
@@ -297,7 +313,12 @@ export const EditPayment = () => {
                                                         )}
                                                     </strong>
                                                 </p>
-                                                <p>{customer.last_name}</p>
+                                                <p>
+                                                    {
+                                                        payment?.customer
+                                                            ?.last_name
+                                                    }
+                                                </p>
                                             </Col>
                                             <Col>
                                                 <p>
@@ -308,13 +329,15 @@ export const EditPayment = () => {
                                                         )}
                                                     </strong>
                                                 </p>
-                                                <p>{customer.email}</p>
+                                                <p>
+                                                    {payment?.customer?.email}
+                                                </p>
                                             </Col>
                                         </Row>
-                                    </Card.Body>
-                                </Card>
-                            </>
-                        )}
+                                    </>
+                                )}
+                            </Card.Body>
+                        </Card>
                     </Container>
                 </>
             )}
