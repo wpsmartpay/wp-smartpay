@@ -28,4 +28,16 @@ class Payment extends Model
     const PENDING = 'pending';
 
     const PRODUCT_PURCHASE = 'product_purchase';
+
+    /**
+     * Update payment status
+     *
+     * @param string $status
+     * @return void
+     */
+    public function updateStatus($status)
+    {
+        $this->status = $status;
+        return $this->save();
+    }
 }
