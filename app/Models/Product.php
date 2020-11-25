@@ -40,12 +40,12 @@ class Product extends Model
 
     public function getFilesAttribute($files)
     {
-        return \json_decode($files);
+        return \json_decode($files, true);
     }
 
     public function getCoversAttribute($covers)
     {
-        return \json_decode($covers);
+        return \json_decode($covers, true);
     }
 
     public function getPriceAttribute()
