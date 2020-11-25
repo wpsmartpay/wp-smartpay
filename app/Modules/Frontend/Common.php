@@ -42,7 +42,7 @@ class Common
     {
         $customerController = $this->app->make(CustomerController::class);
 
-        register_rest_route('smartpay/v1/public/', 'customers/(?P<id>[\d]+)', [
+        register_rest_route('smartpay/v1/public', 'customers/(?P<id>[\d]+)', [
             [
                 'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$customerController, 'show'],

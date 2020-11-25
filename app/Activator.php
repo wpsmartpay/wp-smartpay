@@ -8,7 +8,7 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 class Activator
 {
-    private $upload;
+    public $upload;
     public function __construct()
     {
         $this->migrate();
