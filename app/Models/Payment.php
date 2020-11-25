@@ -40,14 +40,14 @@ class Payment extends Model
     public static function boot()
     {
         static::saving(function ($payment) {
-            // if ($payment->isDirty('status')) {
-            do_action(
-                'smartpay_update_payment_status',
-                $payment,
-                $payment->attributes['status'],
-                $payment->original['status']
-            );
-            // }
+            if ($payment->isDirty('status')) {
+                do_action(
+                    'smartpay_update_payment_status',
+                    $payment,
+                    $payment->attributes['status'],
+                    $payment->original['status']
+                );
+            }
         });
     }
 
@@ -112,6 +112,16 @@ class Payment extends Model
     public function getDataAttribute($data)
     {
         return json_decode($data, true);
+    }
+
+    public function setExtraAttribute($extra)
+    {
+        $this->attributes['extra'] = \json_encode($extra);
+    }
+
+    public function getExtraAttribute($extra)
+    {
+        return json_decode($extra, true);
     }
 
     /**
