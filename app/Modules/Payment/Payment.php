@@ -152,45 +152,27 @@ class Payment
 
             case 'product_purchase':
 
-                $product_id = $_data['smartpay_product_id'] ?? '';
+                $productId = $_data['smartpay_product_id'] ?? 0;
 
-                $variation_id = $_data['smartpay_product_variation_id'] ?? '';
+                $product = Product::where('id', $productId)->first();
 
-                $product = Product::where('id', $product_id)->first();
+                if (empty($productId) || empty($product)) return [];
 
-                if (empty($product_id) || empty($product)) return [];
+                return [
+                    'product_id'    => $product->id,
+                    'product_price' => $product->price,
+                    'total_amount'  => $product->price,
+                ];
 
-                $product_price = $product->sale_price ?? $product->base_price;
-
-                if (count($product->variations) > 0 && !empty($variation_id)) {
-
-                    $variation = Product::where('id', $variation_id)->first();
-
-                    return array(
-                        'product_id'        => $product_id,
-                        'variation_id'      => $variation_id,
-                        'variation_name'    => $variation->name,
-                        'product_price'     => $product_price,
-                        'additional_amount' => $variation->additional_amount,
-                        'total_amount'      => $product_price + $variation->additional_amount,
-                    );
-                } else {
-
-                    return array(
-                        'product_id'    => $product->id,
-                        'product_price' => $product_price,
-                        'total_amount'  => $product_price,
-                    );
-                }
                 break;
 
             case 'form_payment':
 
-                $form_id = $_data['smartpay_form_id'] ?? '';
+                $formId = $_data['smartpay_form_id'] ?? 0;
 
-                $form = Form::where('id', $form_id)->first();
+                $form = Form::where('id', $formId)->first();
 
-                if (empty($form_id) || empty($form)) return [];
+                if (empty($formId) || empty($form)) return [];
 
                 return [
                     'form_id' => $form->id,
@@ -233,16 +215,16 @@ class Payment
         if (empty($paymentData)) return;
         $payment = new \SmartPay\Models\Payment();
         $payment->type           = $paymentData['payment_type'];
-        $payment->data           = json_encode($paymentData['payment_data']);
+        $payment->data           = $paymentData['payment_data'];
         $payment->amount         = $paymentData['amount'];
         $payment->currency       = $paymentData['currency'] ?? smartpay_get_currency();
         $payment->gateway        = $paymentData['gateway'] ?? smartpay_get_default_gateway();
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->extra          = json_encode($paymentData['smartpay_form_extra_data']);
+        $payment->extra          = $paymentData['smartpay_form_extra_data']; // FIXME
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
-        $payment->parent_payment = !empty($paymentData['parent']) ? absint($paymentData['parent']) : '';
+        // $payment->parent_id = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : '';
         $payment->status         = $paymentData['status'] ?? 'pending';
 
         $payment->save();
