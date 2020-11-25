@@ -107,6 +107,6 @@ class Product extends Model
      */
     public function isParent(): bool
     {
-        return !$this->isVariation();
+        return !$this->hasVariations();
     }
 }
