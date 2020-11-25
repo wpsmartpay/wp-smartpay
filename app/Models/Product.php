@@ -53,6 +53,15 @@ class Product extends Model
         return ($this->sale_price > -1) ? $this->sale_price : $this->base_price;
     }
 
+    public function getFormattedTitleAttribute()
+    {
+        if ($this->isVariation()) {
+            return "{$this->parent->title} - $this->title";
+        }
+
+        return $this->title;
+    }
+
     public function parent()
     {
         return $this->hasOne(Product::class, 'id', 'parent_id');
@@ -61,5 +70,43 @@ class Product extends Model
     public function variations()
     {
         return $this->hasMany(Product::class, 'parent_id', 'id');
+    }
+
+    /**
+     * Check if product has variations
+     *
+     * @return boolean
+     */
+    public function hasVariations(): bool
+    {
+        if (!property_exists($this, 'variations')) {
+            $this->load('variations');
+        }
+
+        return !!count($this->variations);
+    }
+
+    /**
+     * Check if product is variation
+     *
+     * @return boolean
+     */
+    public function isVariation(): bool
+    {
+        if (!property_exists($this, 'parent')) {
+            $this->load('parent');
+        }
+
+        return !!$this->parent;
+    }
+
+    /**
+     * Check if product is parent
+     *
+     * @return boolean
+     */
+    public function isParent(): bool
+    {
+        return !$this->isVariation();
     }
 }
