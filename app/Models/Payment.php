@@ -19,7 +19,7 @@ class Payment extends Model
         'customer_id',
         'email',
         'key',
-        'parent_payment',
+        'parent_id',
         'mode',
         'status',
         'extra',

@@ -27,7 +27,7 @@ class CreateSmartpayPaymentsTable
                 `customer_id` BIGINT UNSIGNED DEFAULT 0,
                 `email` VARCHAR(75) NOT NULL,
                 `key` VARCHAR(255) DEFAULT NULL,
-                `parent_payment` BIGINT UNSIGNED DEFAULT NULL,
+                `parent_id` BIGINT UNSIGNED DEFAULT NULL,
                 `mode` VARCHAR(75) DEFAULT 'Live',
                 `status` VARCHAR(75) DEFAULT '$defaultStatus',
                 `extra` LONGTEXT DEFAULT NULL,
