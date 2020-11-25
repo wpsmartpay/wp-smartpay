@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton(Email::class, function ($app) {
+            return new Email($app);
+        });
 
         $this->app->singleton(Product::class, function ($app) {
             return new Product($app);
@@ -59,14 +62,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Integration::class, function ($app) {
             return new Integration($app);
         });
-
-        $this->app->singleton(Email::class, function ($app) {
-            return new Email($app);
-        });
     }
 
     public function boot()
     {
+        $this->app->make(Email::class);
         $this->app->make(Product::class);
         $this->app->make(Form::class);
         $this->app->make(Coupon::class);
@@ -76,6 +76,5 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(Common::class);
         $this->app->make(Shortcode::class);
         $this->app->make(Integration::class);
-        $this->app->make(Email::class);
     }
 }
