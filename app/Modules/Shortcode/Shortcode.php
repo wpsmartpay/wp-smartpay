@@ -4,6 +4,7 @@ namespace SmartPay\Modules\Shortcode;
 
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
+use SmartPay\Models\Customer;
 
 class Shortcode
 {
@@ -142,18 +143,17 @@ class Shortcode
      */
     public function dashboard_shortcode($atts)
     {
-        // // If not logged in or id not found, then return
-        // if (!is_user_logged_in() || get_current_user_id() <= 0) {
-        //     echo '<p>You must log in to access the dashboard!</p>';
-        //     return;
-        // }
+        // If not logged in or id not found, then return
+        if (!is_user_logged_in() || get_current_user_id() <= 0) {
+            echo '<p>You must log in to access the dashboard!</p>';
+            return;
+        }
 
-        // $customer = new SmartPay_Customer(get_current_user_id(), true);
+        $customer = Customer::with('payments')->where('user_id', get_current_user_id())->first();
+        ob_start();
 
-        // ob_start();
+        echo smartpay_view('shortcodes.customer_dashboard', ['customer' => $customer]);
 
-        // echo smartpay_view_render('shortcodes/customer_dashboard', ['customer' => $customer]);
-
-        // return ob_get_clean();
+        return ob_get_clean();
     }
 }

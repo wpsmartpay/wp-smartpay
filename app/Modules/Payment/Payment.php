@@ -237,7 +237,7 @@ class Payment
         $payment->amount         = $paymentData['amount'];
         $payment->currency       = $paymentData['currency'] ?? smartpay_get_currency();
         $payment->gateway        = $paymentData['gateway'] ?? smartpay_get_default_gateway();
-        $payment->customer       = $paymentData['customer']['customer_id'];
+        $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
         $payment->extra          = json_encode($paymentData['smartpay_form_extra_data']);

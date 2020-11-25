@@ -18,4 +18,9 @@ class Customer extends Model
 
         return "$this->first_name";
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'customer_id', 'id');
+    }
 }

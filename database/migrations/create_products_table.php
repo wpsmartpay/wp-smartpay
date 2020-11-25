@@ -23,7 +23,7 @@ class CreateSmartpayProductsTable
                 `sale_price` FLOAT DEFAULT 0,
                 `files` MEDIUMTEXT DEFAULT NULL,
                 `covers` MEDIUMTEXT DEFAULT NULL,
-                `parent` BIGINT UNSIGNED DEFAULT 0,
+                `parent_id` BIGINT UNSIGNED DEFAULT 0,
                 `status` VARCHAR(45) NOT NULL DEFAULT '$defaultStatus',
                 `extra` LONGTEXT DEFAULT NULL,
                 `created_by` BIGINT UNSIGNED DEFAULT 0,
