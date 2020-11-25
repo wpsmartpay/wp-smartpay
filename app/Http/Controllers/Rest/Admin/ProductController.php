@@ -34,7 +34,7 @@ class ProductController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $products = Product::where('parent', 0)->with(['variations'])->orderBy('id', 'DESC')->get();
+        $products = Product::where('parent_id', 0)->with(['variations'])->orderBy('id', 'DESC')->get();
 
         return new WP_REST_Response(['products' => $products]);
     }

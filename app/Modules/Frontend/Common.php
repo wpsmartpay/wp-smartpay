@@ -2,6 +2,9 @@
 
 namespace SmartPay\Modules\Frontend;
 
+use WP_REST_Server;
+use SmartPay\Http\Controllers\Rest\CustomerController;
+
 class Common
 {
     protected $app;
@@ -11,6 +14,7 @@ class Common
         $this->app = $app;
 
         $this->app->addAction('wp_enqueue_scripts', [$this, 'enqueueScripts']);
+        $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
     }
 
     public function enqueueScripts()
@@ -32,5 +36,23 @@ class Common
                 'apiNonce' => wp_create_nonce('wp_rest')
             )
         );
+    }
+
+    public function registerRestRoutes()
+    {
+        $customerController = $this->app->make(CustomerController::class);
+
+        register_rest_route('smartpay/v1/public/', 'customers/(?P<id>[\d]+)', [
+            [
+                'methods'   => WP_REST_Server::READABLE,
+                'callback'  => [$customerController, 'show'],
+                'permission_callback' => [$customerController, 'middleware'],
+            ],
+            [
+                'methods'   => 'PUT, PATCH',
+                'callback'  => [$customerController, 'update'],
+                'permission_callback' => [$customerController, 'middleware'],
+            ],
+        ]);
     }
 }

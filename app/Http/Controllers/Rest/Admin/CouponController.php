@@ -90,7 +90,7 @@ class CouponController extends RestController
             return new WP_REST_Response(['message' => __('Coupon not found', 'smartpay')], 404);
         }
 
-        $request = json_decode($request->get_body(), true);
+        $request = \json_decode($request->get_body(), true);
 
         $coupon->title           = $request['title'];
         $coupon->description     = $request['description'];

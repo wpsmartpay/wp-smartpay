@@ -179,7 +179,7 @@ class Admin
         ));
 
         // TODO: Get data from store
-        $products = \SmartPay\Models\Product::where('parent', 0)->get();
+        $products = \SmartPay\Models\Product::where('parent_id', 0)->get();
         wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_products', json_encode($products));
 
         $forms = \SmartPay\Models\Form::all();
