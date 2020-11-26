@@ -7,8 +7,6 @@ if (!property_exists($payment, 'customer')) {
     $payment->load('customer');
 }
 
-$downloader = smartpay()->make(Downloader::class);
-
 $productId     = absint($payment->data['product_id'] ?? 0);
 $product       = Product::with('parent')->find($productId);
 ?>
@@ -30,83 +28,83 @@ $product       = Product::with('parent')->find($productId);
   <![endif]-->
     <title><?php _e('Thank you for your payment', 'smartpay'); ?></title>
     <style>
-        .hover-no-underline:hover {
-            text-decoration: none !important;
+    .hover-no-underline:hover {
+        text-decoration: none !important;
+    }
+
+    @media (max-width: 600px) {
+        .sm-block {
+            display: block !important;
         }
 
-        @media (max-width: 600px) {
-            .sm-block {
-                display: block !important;
-            }
-
-            .sm-text-xl {
-                font-size: 20px !important;
-            }
-
-            .sm-text-32px {
-                font-size: 32px !important;
-            }
-
-            .sm-text-40px {
-                font-size: 40px !important;
-            }
-
-            .sm-leading-16 {
-                line-height: 16px !important;
-            }
-
-            .sm-leading-24 {
-                line-height: 24px !important;
-            }
-
-            .sm-leading-28 {
-                line-height: 28px !important;
-            }
-
-            .sm-leading-32 {
-                line-height: 32px !important;
-            }
-
-            .sm-leading-36 {
-                line-height: 36px !important;
-            }
-
-            .sm-leading-40 {
-                line-height: 40px !important;
-            }
-
-            .sm-leading-44 {
-                line-height: 44px !important;
-            }
-
-            .sm-leading-64 {
-                line-height: 64px !important;
-            }
-
-            .sm-p-0 {
-                padding: 0 !important;
-            }
-
-            .sm-p-24 {
-                padding: 24px !important;
-            }
-
-            .sm-pb-16 {
-                padding-bottom: 16px !important;
-            }
-
-            .sm-pb-32 {
-                padding-bottom: 32px !important;
-            }
-
-            .sm-text-left {
-                text-align: left !important;
-            }
-
-            .sm-w-full {
-                width: 100% !important;
-            }
+        .sm-text-xl {
+            font-size: 20px !important;
         }
+
+        .sm-text-32px {
+            font-size: 32px !important;
+        }
+
+        .sm-text-40px {
+            font-size: 40px !important;
+        }
+
+        .sm-leading-16 {
+            line-height: 16px !important;
+        }
+
+        .sm-leading-24 {
+            line-height: 24px !important;
+        }
+
+        .sm-leading-28 {
+            line-height: 28px !important;
+        }
+
+        .sm-leading-32 {
+            line-height: 32px !important;
+        }
+
+        .sm-leading-36 {
+            line-height: 36px !important;
+        }
+
+        .sm-leading-40 {
+            line-height: 40px !important;
+        }
+
+        .sm-leading-44 {
+            line-height: 44px !important;
+        }
+
+        .sm-leading-64 {
+            line-height: 64px !important;
+        }
+
+        .sm-p-0 {
+            padding: 0 !important;
+        }
+
+        .sm-p-24 {
+            padding: 24px !important;
+        }
+
+        .sm-pb-16 {
+            padding-bottom: 16px !important;
+        }
+
+        .sm-pb-32 {
+            padding-bottom: 32px !important;
+        }
+
+        .sm-text-left {
+            text-align: left !important;
+        }
+
+        .sm-w-full {
+            width: 100% !important;
+        }
+    }
     </style>
 </head>
 
@@ -184,28 +182,28 @@ $product       = Product::with('parent')->find($productId);
                                             </table>
 
                                             <?php if (count($product->files)) : ?>
-                                                <div class="sm-leading-40" style="line-height: 24px">&zwnj;</div>
-                                                <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
-                                                    <tr>
-                                                        <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
-                                                            <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Downloads', 'smartpay'); ?></h3>
-                                                            <div style="line-height: 24px">&zwnj;</div>
-                                                            <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
-                                                                <?php foreach ($product->files as $file) : ?>
-                                                                    <tr>
-                                                                        <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $file['name'] ?? 'Download Item'; ?></td>
-                                                                        <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo $downloader->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
-                                                                            <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
-                                                                        </td>
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <div class="sm-leading-40" style="line-height: 24px">&zwnj;</div>
+                                            <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
+                                                        <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Downloads', 'smartpay'); ?></h3>
+                                                        <div style="line-height: 24px">&zwnj;</div>
+                                                        <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                            <?php foreach ($product->files as $file) : ?>
+                                                            <tr>
+                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $file['name'] ?? 'Download Item'; ?></td>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
+                                                                    <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
+                                                                </td>
+                                                            </tr>
+                                                            <?php endforeach; ?>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                             <?php endif; ?>
 
                                             <div class="sm-leading-40" style="line-height: 64px">&zwnj;</div>
