@@ -26,9 +26,11 @@
                         <div class="product--price-section">
                             <div class="product-variations mb-2">
                                 <ul class="list-group">
-                                    <?php if (count($product->variations)) : ?>
+                                    <?php
+                                    if (count($product->variations)) : ?>
                                     <!-- Variations -->
-                                    <?php foreach ($product->variations as $index => $variation) : ?>
+                                    <?php
+                                        foreach ($product->variations as $index => $variation) : ?>
                                     <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
                                             <input class="d-none" type="radio" name="smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
@@ -55,6 +57,7 @@
                                     <?php else : ?>
                                     <li class="list-group-item price selected">
                                         <label class="d-block m-0">
+                                            <input class="d-none" type="radio" name="smartpay_product_id" value="<?php echo esc_attr($product->id); ?>" checked>
                                             <div class="price--amount">
                                                 <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
