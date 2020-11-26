@@ -124,6 +124,12 @@ class Payment extends Model
         return json_decode($extra, true);
     }
 
+    //FIXME
+    public function getType()
+    {
+        return $this->attributes['type'];
+    }
+
     /**
      * Update payment status
      *

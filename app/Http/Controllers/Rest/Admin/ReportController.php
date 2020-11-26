@@ -47,7 +47,8 @@ class ReportController extends RestController
             if (!$data->completed_at) continue;
 
             $date = date('d', strtotime($data->completed_at));
-            $report[$date][$data->type] += $data->amount ?? 0;
+            // FIXME
+            $report[$date][$data->getType()] += $data->amount ?? 0;
         }
 
         return new \WP_REST_Response($report);
