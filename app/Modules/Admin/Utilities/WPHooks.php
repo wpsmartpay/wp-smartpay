@@ -26,6 +26,10 @@ class WPHooks
      */
     public function setSmartPayUploadDir($upload)
     {
+        if (!isset($_SERVER['HTTP_REFERER'])) {
+            return $upload;
+        }
+
         preg_match("/^.+?\?page=(.+)$/is", $_SERVER['HTTP_REFERER'], $match);
 
         if (isset($match[1]) && $match[1] == 'smartpay') {
