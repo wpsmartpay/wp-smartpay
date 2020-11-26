@@ -31,7 +31,7 @@ class CreateSmartpayPaymentsTable
                 `mode` VARCHAR(75) DEFAULT 'Live',
                 `status` VARCHAR(75) DEFAULT '$defaultStatus',
                 `extra` LONGTEXT DEFAULT NULL,
-                `completed_at` TIMESTAMP DEFAULT NULL,
+                `completed_at` DATETIME DEFAULT NULL,
                 `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             ) $charsetCollate";
