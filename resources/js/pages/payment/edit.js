@@ -334,8 +334,7 @@ export const EditPayment = () => {
                             </Card.Body>
                         </Card>
                         {/* TODO */}
-
-                        {payment.extra && (
+                        {payment.extra?.form_data && (
                             <Card>
                                 <Card.Body>
                                     <>
@@ -344,13 +343,13 @@ export const EditPayment = () => {
                                         </h3>
                                         <Row>
                                             <Col>
-                                                {Object.keys(payment.extra).map(
-                                                    (key, index) => (
-                                                        <p key={index}>
-                                                            {`${key} : ${payment.extra[key]}`}
-                                                        </p>
-                                                    )
-                                                )}
+                                                {Object.keys(
+                                                    payment.extra.form_data
+                                                ).map((key, index) => (
+                                                    <p key={index}>
+                                                        {`${key} : ${payment.extra.form_data[key]}`}
+                                                    </p>
+                                                ))}
                                             </Col>
                                         </Row>
                                     </>

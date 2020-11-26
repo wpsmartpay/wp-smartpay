@@ -130,6 +130,14 @@ class Payment
     private function _prepare_payment_data($_data)
     {
         $payment_data = $this->_get_payment_data($_data);
+
+        // TODO: Make another method to get extra
+
+        $extra = [];
+        if ('form_payment' === $_data['smartpay_payment_type']) {
+            $extra['form_data'] = $_data['smartpay_form_extra_data'] ?? [];
+        }
+
         return apply_filters('smartpay_prepare_payment_data', array(
             'payment_type'  => $_data['smartpay_payment_type'],
             'payment_data'  => $payment_data,
@@ -140,7 +148,7 @@ class Payment
             'customer'      => $this->_get_payment_customer($_data),
             'email'         => $_data['smartpay_email'],
             'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
-            'smartpay_form_extra_data'  => $_data['smartpay_form_extra_data']
+            'extra'         => $extra
         ));
     }
 
@@ -222,13 +230,14 @@ class Payment
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->extra          = $paymentData['smartpay_form_extra_data']; // FIXME
+        $payment->extra          = $paymentData['extra'];
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
-        // $payment->parent_id = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : '';
+        $payment->parent_id      = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : 0;
         $payment->status         = $paymentData['status'] ?? 'pending';
 
         $payment->save();
 
+        // TODO: Move to model
         do_action('smartpay_after_insert_payment', $payment);
 
         if (!empty($payment->id)) {
