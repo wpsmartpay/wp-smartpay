@@ -96,3 +96,4 @@ jQuery(($) => {
 })
 
 import './frontend/payment/payment.js'
+import './frontend/shortcode.js'

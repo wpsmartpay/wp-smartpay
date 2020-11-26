@@ -2,11 +2,7 @@
 
 namespace SmartPay\Modules\Admin\Utilities;
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-    exit;
-}
-
+defined('ABSPATH') || exit;
 class Upload
 {
     /**
@@ -31,12 +27,10 @@ class Upload
      */
     public function set_smartpay_upload_dir($upload)
     {
-        // FIXME
-        // Get the current post_id
-        $id = (isset($_REQUEST['post_id']) ? $_REQUEST['post_id'] : '');
 
-        if ('smartpay_product' == get_post_type($id)) {
+        preg_match("/^.+?\?page=(.+)$/is", $_SERVER['HTTP_REFERER'], $match);
 
+        if ($match[1] == 'smartpay') {
             // $this->protect_upload_directory(true);
 
             // If year/month organization is enabled

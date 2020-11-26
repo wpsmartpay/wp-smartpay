@@ -8,7 +8,7 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 class Activator
 {
-    private $upload;
+    public $upload;
     public function __construct()
     {
         $this->migrate();
@@ -132,7 +132,7 @@ class Activator
             'payment_email_subject'  => 'Payment Receipt - ' . get_bloginfo('name'),
             'payment_email_heading'  => 'Payment Receipt - ' . get_bloginfo('name'),
 
-            'activated_integrations' => [],
+            'integrations' => [],
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));

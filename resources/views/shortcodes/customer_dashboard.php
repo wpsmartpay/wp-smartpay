@@ -128,6 +128,7 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                                                 <small><?php _e(sprintf('Size: ', 'smartpay') . $file->size ?? ''); ?></small>
                                                             </div>
                                                         </div>
+                                                        // FIXME: Add download file url
                                                         <a href="<?php //echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); 
                                                                                     ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
                                                     </div>
@@ -147,9 +148,9 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                     <!-- <div class="alert alert-danger text-center">
                                         You should check in on some of those fields below.
                                     </div> -->
-                                    <form class="my-5" action="<?php echo $update_profile_action; ?>" method="POST">
+                                    <form class="my-5" action="#" method="POST">
                                         <?php wp_nonce_field('smartpay_process_profile_update', 'smartpay_process_profile_update'); ?>
-
+                                        <input type="hidden" name="customer_id" value="<?php echo esc_attr($customer->id); ?>">
                                         <div class="form-row mb-2">
                                             <div class="form-group col">
                                                 <label for="first_name"><?php _e('First Name', 'smartpay'); ?></label>
