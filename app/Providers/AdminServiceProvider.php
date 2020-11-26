@@ -5,7 +5,7 @@ namespace SmartPay\Providers;
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Admin\Admin;
 use SmartPay\Modules\Admin\Report;
-use SmartPay\Modules\Admin\Utilities\Upload;
+use SmartPay\Modules\Admin\Utilities\WPHooks;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -24,8 +24,8 @@ class AdminServiceProvider extends ServiceProvider
             return new Report($app);
         });
 
-        $this->app->singleton(Upload::class, function ($app) {
-            return new Upload();
+        $this->app->singleton(WPHooks::class, function ($app) {
+            return new WPHooks();
         });
     }
 
@@ -33,6 +33,6 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->app->make(Admin::class);
         $this->app->make(Report::class);
-        $this->app->make(Upload::class);
+        $this->app->make(WPHooks::class);
     }
 }

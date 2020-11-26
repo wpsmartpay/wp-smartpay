@@ -14,8 +14,8 @@ class Activator
         $this->migrate();
         $this->_create_pages();
         $this->_set_default_settings();
-        // FIXME
-        $this->upload = new Upload();
+
+        smartpay()->make(Upload::class)->protectDirectory(true);
     }
 
     public static function boot()
