@@ -256,7 +256,7 @@ class Payment
 
     public function onPaymentComplete($payment, $newStatus, $oldStatus)
     {
-        if ($newStatus !== PaymentModel::COMPLETED || !$payment->completed_at) {
+        if (PaymentModel::COMPLETED !== $newStatus || $payment->completed_at) {
             return;
         }
 
