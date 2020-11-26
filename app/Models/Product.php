@@ -109,4 +109,21 @@ class Product extends Model
     {
         return !$this->hasVariations();
     }
+
+    /**
+     * Checks if the product can be purchased
+     *
+     * @since  0.0.1
+     * @return bool
+     */
+    public function isPurchasable()
+    {
+        $isPurchasable = true;
+
+        if (self::PUBLISH !== $this->attributes['status']) {
+            $isPurchasable = false;
+        }
+
+        return (bool) apply_filters('smartpay_product_is_purchasable', $isPurchasable, $this);
+    }
 }
