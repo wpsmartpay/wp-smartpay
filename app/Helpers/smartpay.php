@@ -899,3 +899,50 @@ function smartpay_update_settings(array $settings)
         update_option('smartpay_settings', $settings);
     }
 }
+
+/**
+ * Get User IP
+ *
+ * @since 0.0.4
+ * @return string $ip
+ */
+function smartpay_get_ip()
+{
+    $ip = false;
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = filter_var(wp_unslash($_SERVER['HTTP_CLIENT_IP']), FILTER_VALIDATE_IP);
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+
+        // To check ip is pass from proxy.
+        // Can include more than 1 ip, first is the public one.
+
+        $ips = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        if (is_array($ips)) {
+            $ip = filter_var($ips[0], FILTER_VALIDATE_IP);
+        }
+    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = filter_var(wp_unslash($_SERVER['REMOTE_ADDR']), FILTER_VALIDATE_IP);
+    }
+
+    $ip = false !== $ip ? $ip : '127.0.0.1';
+
+    // Fix potential CSV returned from $_SERVER variables.
+    $ip_array = explode(',', $ip);
+    $ip_array = array_map('trim', $ip_array);
+
+    return apply_filters('smartpay_get_ip', $ip_array[0]);
+}
+
+/**
+ * Get File Extension
+ *
+ * @since 0.0.4
+ * @param string $str File name
+ * @return string File extension
+ */
+function smartpay_get_file_extension($str)
+{
+    $parts = explode('.', $str);
+    return end($parts);
+}
