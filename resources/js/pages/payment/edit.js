@@ -11,20 +11,13 @@ import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { Update } from '../../http/payment'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { useEffect, useReducer, useState } from '@wordpress/element'
+import { useEffect, useState } from '@wordpress/element'
 const { useSelect, dispatch } = wp.data
-
-const reducer = (state, data) => {
-    return {
-        ...state,
-        ...data,
-    }
-}
 
 export const EditPayment = () => {
     const { paymentId } = useParams()
 
-    const [payment, setPaymentData] = useReducer(reducer, {})
+    const [payment, setPaymentData] = useState({})
     const [paymentStatus, setPaymentStatus] = useState('pending')
 
     const paymentData = useSelect(
@@ -73,7 +66,7 @@ export const EditPayment = () => {
                         <Container>
                             <div className="d-flex align-items-center justify-content-between">
                                 <h2 className="text-black">
-                                    {__('Edit Payment', 'smartpay')}
+                                    {__('Payment Details', 'smartpay')}
                                 </h2>
                                 <div className="ml-auto">
                                     <InputGroup size="sm">
@@ -96,8 +89,8 @@ export const EditPayment = () => {
                                             <option value="pending">
                                                 {__('Pending', 'smartpay')}
                                             </option>
-                                            <option value="complete">
-                                                {__('Complete', 'smartpay')}
+                                            <option value="completed">
+                                                {__('Completed', 'smartpay')}
                                             </option>
                                             <option value="refunded">
                                                 {__('Refunded', 'smartpay')}
@@ -194,7 +187,7 @@ export const EditPayment = () => {
                                                 )}
                                             </strong>
                                         </p>
-                                        <p>{payment.transaction_id}</p>
+                                        <p>{payment?.transaction_id || '-'}</p>
                                     </Col>
                                 </Row>
 
@@ -265,7 +258,7 @@ export const EditPayment = () => {
                                                         {__('Form', 'smartpay')}
                                                     </strong>
                                                 </p>
-                                                <p># {payment.data}</p>
+                                                <p># {payment.data?.form_id}</p>
                                             </Col>
                                             <Col>
                                                 <p>
@@ -276,7 +269,9 @@ export const EditPayment = () => {
                                                         )}
                                                     </strong>
                                                 </p>
-                                                <p>$10</p>
+                                                <p>
+                                                    {payment.data?.total_amount}
+                                                </p>
                                             </Col>
                                         </Row>
                                     </>
@@ -338,6 +333,30 @@ export const EditPayment = () => {
                                 )}
                             </Card.Body>
                         </Card>
+                        {/* TODO */}
+
+                        {payment.extra && (
+                            <Card>
+                                <Card.Body>
+                                    <>
+                                        <h3 className="text-black">
+                                            {__('Form Data', 'smartpay')}
+                                        </h3>
+                                        <Row>
+                                            <Col>
+                                                {Object.keys(payment.extra).map(
+                                                    (key, index) => (
+                                                        <p key={index}>
+                                                            {`${key} : ${payment.extra[key]}`}
+                                                        </p>
+                                                    )
+                                                )}
+                                            </Col>
+                                        </Row>
+                                    </>
+                                </Card.Body>
+                            </Card>
+                        )}
                     </Container>
                 </>
             )}

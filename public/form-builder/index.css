@@ -1,2 +1,254 @@
-.smartpay-block-editor-sidebar{background:#fff;color:#1e1e1e;height:100vh;overflow:hidden;z-index:100000}@media (min-width: 600px){.smartpay-block-editor-sidebar{-webkit-overflow-scrolling:touch;height:auto;overflow:auto}}@media (min-width: 600px){.smartpay-block-editor-sidebar{display:block}}.smartpay-block-editor-sidebar>.components-panel{border-color:#ced4da}.smartpay-block-editor-sidebar>.components-panel>.components-panel__header{background:#ddd}.smartpay-block-editor-sidebar .block-editor-block-inspector__card{margin:0}.smartpay-block-editor__block-list{margin:0 20px}.smartpay-block-editor__block-list .block-editor-block-list__block{margin-left:auto;margin-right:auto}html.wp-toolbar{background:#fff}body.block-editor-page{background:#fff}body.block-editor-page #wpcontent{padding-left:0}body.block-editor-page #wpbody-content{padding-bottom:0}body.block-editor-page #wpbody-content>div:not(.block-editor):not(#screen-meta){display:none}body.block-editor-page #wpfooter{display:none}body.block-editor-page .a11y-speak-region{left:-1px;top:-1px}body.block-editor-page ul#adminmenu a.wp-has-current-submenu::after,body.block-editor-page ul#adminmenu>li.current>a.current::after{border-right-color:#fff}body.block-editor-page .media-frame select.attachment-filters:last-of-type{width:auto;max-width:100%}.smartpay-block-editor{min-height:calc(100vh - 32px)}.editor-styles-wrapper{width:100%;font-family:"Noto Serif",serif;font-size:16px;line-height:1.8;color:#1e1e1e}.editor-styles-wrapper body{font-family:"Noto Serif",serif;font-size:16px;line-height:1.8;color:#1e1e1e;padding:10px}.editor-styles-wrapper .block-editor-block-list__layout.is-root-container>.wp-block[data-align="full"]{margin-left:-10px;margin-right:-10px}.editor-styles-wrapper h1,.editor-styles-wrapper h2,.editor-styles-wrapper h3{line-height:1.4}.editor-styles-wrapper h1{font-size:2.44em;margin-top:0.67em;margin-bottom:0.67em}.editor-styles-wrapper h2{font-size:1.95em;margin-top:0.83em;margin-bottom:0.83em}.editor-styles-wrapper h3{font-size:1.56em;margin-top:1em;margin-bottom:1em}.editor-styles-wrapper h4{font-size:1.25em;line-height:1.5;margin-top:1.33em;margin-bottom:1.33em}.editor-styles-wrapper h5{font-size:1em;margin-top:1.67em;margin-bottom:1.67em}.editor-styles-wrapper h6{font-size:0.8em;margin-top:2.33em;margin-bottom:2.33em}.editor-styles-wrapper h1,.editor-styles-wrapper h2,.editor-styles-wrapper h3,.editor-styles-wrapper h4,.editor-styles-wrapper h5,.editor-styles-wrapper h6{color:inherit}.editor-styles-wrapper p{font-size:inherit;line-height:inherit;margin-top:28px;margin-bottom:28px}.editor-styles-wrapper ul,.editor-styles-wrapper ol{margin-bottom:28px;padding-left:1.3em;margin-left:1.3em}.editor-styles-wrapper ul ul,.editor-styles-wrapper ul ol,.editor-styles-wrapper ol ul,.editor-styles-wrapper ol ol{margin-bottom:0}.editor-styles-wrapper ul li,.editor-styles-wrapper ol li{margin-bottom:initial}.editor-styles-wrapper ul{list-style-type:disc}.editor-styles-wrapper ol{list-style-type:decimal}.editor-styles-wrapper ul ul,.editor-styles-wrapper ol ul{list-style-type:circle}.editor-styles-wrapper .wp-align-wrapper{max-width:580px}.editor-styles-wrapper .wp-align-wrapper>.wp-block,.editor-styles-wrapper .wp-align-wrapper.wp-align-full{max-width:none}.editor-styles-wrapper .wp-align-wrapper.wp-align-wide{max-width:1100px}.editor-styles-wrapper a{transition:none}.editor-styles-wrapper code,.editor-styles-wrapper kbd{padding:0;margin:0;background:inherit;font-size:inherit;font-family:monospace}.smartpay-block-editor,.components-modal__frame{box-sizing:border-box}.smartpay-block-editor *,.smartpay-block-editor *::before,.smartpay-block-editor *::after,.components-modal__frame *,.components-modal__frame *::before,.components-modal__frame *::after{box-sizing:inherit}.interface-interface-skeleton__body{position:relative}.interface-interface-skeleton__content,.interface-interface-skeleton__sidebar{position:absolute}.interface-interface-skeleton__content{width:70%;left:0px}.interface-interface-skeleton__sidebar{width:30%;right:0px}
+/**
+ * Colors
+ */
+/**
+ * Deprecated colors.
+ * Please avoid using these.
+ */
+/**
+ * Colors
+ */
+/**
+ * Deprecated colors.
+ * Please avoid using these.
+ */
+/**
+ * Fonts & basic variables.
+ */
+/**
+ * Grid System.
+ * https://make.wordpress.org/design/2019/10/31/proposal-a-consistent-spacing-system-for-wordpress/
+ */
+/**
+ * Dimensions.
+ */
+/**
+ * Shadows.
+ */
+/**
+ * Editor widths.
+ */
+/**
+ * Block UI.
+ */
+/**
+ * Border radii.
+ */
+/**
+ * Block paddings.
+ */
+/**
+ * Breakpoint mixins
+ */
+/**
+ * Long content fade mixin
+ *
+ * Creates a fading overlay to signify that the content is longer
+ * than the space allows.
+ */
+/**
+ * Focus styles.
+ */
+/**
+ * Applies editor left position to the selector passed as argument
+ */
+/**
+ * Styles that are reused verbatim in a few places
+ */
+/**
+ * Allows users to opt-out of animations via OS-level preferences.
+ */
+/**
+ * Reset default styles for JavaScript UI based pages.
+ * This is a WP-admin agnostic reset
+ */
+/**
+ * Reset the WP Admin page styles for Gutenberg-like pages.
+ */
+/**
+ * Breakpoints & Media Queries
+ */
+.smartpay-block-editor-sidebar {
+  background: #fff;
+  color: #1e1e1e;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 100000; }
+  @media (min-width: 600px) {
+    .smartpay-block-editor-sidebar {
+      -webkit-overflow-scrolling: touch;
+      height: auto;
+      overflow: auto; } }
+  @media (min-width: 600px) {
+    .smartpay-block-editor-sidebar {
+      display: block; } }
+  .smartpay-block-editor-sidebar > .components-panel {
+    border-color: #ced4da; }
+    .smartpay-block-editor-sidebar > .components-panel > .components-panel__header {
+      background: #ddd; }
+  .smartpay-block-editor-sidebar .block-editor-block-inspector__card {
+    margin: 0; }
 
+.smartpay-block-editor__block-list {
+  margin: 0 20px; }
+  .smartpay-block-editor__block-list .block-editor-block-list__block {
+    margin-left: auto;
+    margin-right: auto; }
+
+html.wp-toolbar {
+  background: #fff; }
+
+body.block-editor-page {
+  background: #fff;
+  /* We hide legacy notices in Gutenberg Based Pages, because they were not designed in a way that scaled well.
+	   Plugins can use Gutenberg notices if they need to pass on information to the user when they are editing. */ }
+  body.block-editor-page #wpcontent {
+    padding-left: 0; }
+  body.block-editor-page #wpbody-content {
+    padding-bottom: 0; }
+  body.block-editor-page #wpbody-content > div:not(.block-editor):not(#screen-meta) {
+    display: none; }
+  body.block-editor-page #wpfooter {
+    display: none; }
+  body.block-editor-page .a11y-speak-region {
+    left: -1px;
+    top: -1px; }
+  body.block-editor-page ul#adminmenu a.wp-has-current-submenu::after,
+  body.block-editor-page ul#adminmenu > li.current > a.current::after {
+    border-right-color: #fff; }
+  body.block-editor-page .media-frame select.attachment-filters:last-of-type {
+    width: auto;
+    max-width: 100%; }
+
+.smartpay-block-editor {
+  min-height: calc(100vh - 32px); }
+
+.editor-styles-wrapper {
+  width: 100%;
+  font-family: "Noto Serif", serif;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #1e1e1e;
+  /**
+ * Editor Normalization Styles
+ *
+ * These are only output in the editor, but styles here are prefixed .editor-styles-wrapper and affect the theming
+ * of the editor by themes.
+ * Why do these exist? Why not rely on browser defaults?
+ * These styles are necessary so long as CSS can bleed from the wp-admin into the editing canvas itself.
+ * Let's continue working to refactor these away, whether through Shadow DOM or better scoping of upstream styles.
+ */
+  /* Headings */ }
+  .editor-styles-wrapper body {
+    font-family: "Noto Serif", serif;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #1e1e1e;
+    padding: 10px; }
+  .editor-styles-wrapper .block-editor-block-list__layout.is-root-container > .wp-block[data-align="full"] {
+    margin-left: -10px;
+    margin-right: -10px; }
+  .editor-styles-wrapper h1,
+  .editor-styles-wrapper h2,
+  .editor-styles-wrapper h3 {
+    line-height: 1.4; }
+  .editor-styles-wrapper h1 {
+    font-size: 2.44em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em; }
+  .editor-styles-wrapper h2 {
+    font-size: 1.95em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em; }
+  .editor-styles-wrapper h3 {
+    font-size: 1.56em;
+    margin-top: 1em;
+    margin-bottom: 1em; }
+  .editor-styles-wrapper h4 {
+    font-size: 1.25em;
+    line-height: 1.5;
+    margin-top: 1.33em;
+    margin-bottom: 1.33em; }
+  .editor-styles-wrapper h5 {
+    font-size: 1em;
+    margin-top: 1.67em;
+    margin-bottom: 1.67em; }
+  .editor-styles-wrapper h6 {
+    font-size: 0.8em;
+    margin-top: 2.33em;
+    margin-bottom: 2.33em; }
+  .editor-styles-wrapper h1,
+  .editor-styles-wrapper h2,
+  .editor-styles-wrapper h3,
+  .editor-styles-wrapper h4,
+  .editor-styles-wrapper h5,
+  .editor-styles-wrapper h6 {
+    color: inherit; }
+  .editor-styles-wrapper p {
+    font-size: inherit;
+    line-height: inherit;
+    margin-top: 28px;
+    margin-bottom: 28px; }
+  .editor-styles-wrapper ul,
+  .editor-styles-wrapper ol {
+    margin-bottom: 28px;
+    padding-left: 1.3em;
+    margin-left: 1.3em; }
+    .editor-styles-wrapper ul ul,
+    .editor-styles-wrapper ul ol,
+    .editor-styles-wrapper ol ul,
+    .editor-styles-wrapper ol ol {
+      margin-bottom: 0; }
+    .editor-styles-wrapper ul li,
+    .editor-styles-wrapper ol li {
+      margin-bottom: initial; }
+  .editor-styles-wrapper ul {
+    list-style-type: disc; }
+  .editor-styles-wrapper ol {
+    list-style-type: decimal; }
+  .editor-styles-wrapper ul ul,
+  .editor-styles-wrapper ol ul {
+    list-style-type: circle; }
+  .editor-styles-wrapper .wp-align-wrapper {
+    max-width: 580px; }
+    .editor-styles-wrapper .wp-align-wrapper > .wp-block, .editor-styles-wrapper .wp-align-wrapper.wp-align-full {
+      max-width: none; }
+    .editor-styles-wrapper .wp-align-wrapper.wp-align-wide {
+      max-width: 1100px; }
+  .editor-styles-wrapper a {
+    transition: none; }
+  .editor-styles-wrapper code,
+  .editor-styles-wrapper kbd {
+    padding: 0;
+    margin: 0;
+    background: inherit;
+    font-size: inherit;
+    font-family: monospace; }
+
+.smartpay-block-editor,
+.components-modal__frame {
+  box-sizing: border-box; }
+  .smartpay-block-editor *,
+  .smartpay-block-editor *::before,
+  .smartpay-block-editor *::after,
+  .components-modal__frame *,
+  .components-modal__frame *::before,
+  .components-modal__frame *::after {
+    box-sizing: inherit; }
+
+.interface-interface-skeleton__body {
+  position: relative; }
+
+.interface-interface-skeleton__content, .interface-interface-skeleton__sidebar {
+  position: absolute; }
+
+.interface-interface-skeleton__content {
+  width: 70%;
+  left: 0px; }
+
+.interface-interface-skeleton__sidebar {
+  width: 30%;
+  right: 0px; }
+
+
+/*# sourceMappingURL=index.css.map*/
