@@ -1,12 +1,13 @@
 <?php
 
 use SmartPay\Models\Product;
+use SmartPay\Modules\Frontend\Utilities\Downloader;
 
 if (!property_exists($payment, 'customer')) {
     $payment->load('customer');
 }
 
-// $download = Process_Download::instance();
+$downloader = smartpay()->make(Downloader::class);
 
 $productId     = absint($payment->data['product_id'] ?? 0);
 $product       = Product::with('parent')->find($productId);
@@ -152,7 +153,7 @@ $product       = Product::with('parent')->find($productId);
                                                     <th class="sm-w-full sm-block" style="font-weight: 400; vertical-align: center; width: 50%" valign="center">
                                                         <div class="sm-text-left" style="text-align: right">
                                                             <!-- FIXME: Set dynamic URL -->
-                                                            <a href="<?php echo site_url() . '/smartpay-customer-dashboard/'; ?>" class="hover-no-underline" style="font-size: 16px; color: #986dff; text-decoration: underline"><?php _e('My Account', 'smartpay'); ?></a>
+                                                            <a href="<?php echo site_url() . '/smartpay-customer-dashboard'; ?>" class="hover-no-underline" style="font-size: 16px; color: #986dff; text-decoration: underline"><?php _e('My Account', 'smartpay'); ?></a>
                                                         </div>
                                                     </th>
                                                 </tr>
@@ -190,12 +191,10 @@ $product       = Product::with('parent')->find($productId);
                                                             <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Downloads', 'smartpay'); ?></h3>
                                                             <div style="line-height: 24px">&zwnj;</div>
                                                             <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
-                                                                <?php foreach ($product->files as $file_index => $file) : ?>
+                                                                <?php foreach ($product->files as $file) : ?>
                                                                     <tr>
                                                                         <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $file['name'] ?? 'Download Item'; ?></td>
-                                                                        <!-- FIXME -->
-                                                                        <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php //echo $download->get_file_download_url($file_index, $payment->id, $productId); 
-                                                                                                                                                                                                                                    ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
+                                                                        <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo $downloader->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">

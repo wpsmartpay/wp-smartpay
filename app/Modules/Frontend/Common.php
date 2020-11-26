@@ -2,6 +2,8 @@
 
 namespace SmartPay\Modules\Frontend;
 
+use SmartPay\Modules\Frontend\Utilities\Downloader;
+
 class Common
 {
     protected $app;
@@ -9,6 +11,8 @@ class Common
     public function __construct($app)
     {
         $this->app = $app;
+
+        $this->app->make(Downloader::class);
 
         $this->app->addAction('wp_enqueue_scripts', [$this, 'enqueueScripts']);
     }

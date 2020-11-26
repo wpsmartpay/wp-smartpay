@@ -2,6 +2,7 @@
 
 namespace SmartPay\Modules\Product;
 
+use SmartPay\Framework\Application;
 use SmartPay\Http\Controllers\Rest\Admin\ProductController;
 use WP_REST_Server;
 
@@ -9,7 +10,7 @@ class Product
 {
     protected $app;
 
-    public function __construct($app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
 

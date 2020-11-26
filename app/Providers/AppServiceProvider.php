@@ -13,6 +13,7 @@ use SmartPay\Modules\Frontend\Common;
 use SmartPay\Modules\Shortcode\Shortcode;
 use SmartPay\Modules\Integration\Integration;
 use SmartPay\Modules\Email\Email;
+use SmartPay\Modules\Frontend\Utilities\Downloader;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,6 +62,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(Integration::class, function ($app) {
             return new Integration($app);
+        });
+
+        $this->app->singleton(Downloader::class, function ($app) {
+            return new Downloader($app);
         });
     }
 
