@@ -149,7 +149,13 @@ class Shortcode
             return;
         }
 
-        $customer = Customer::with('payments')->where('user_id', get_current_user_id())->first();
+        $customer = Customer::with('payments')->where('user_id', get_current_user_id())->orWhere('email', wp_get_current_user()->user_email)->first();
+
+        if (!$customer) {
+            echo '<p>We don\'t find any account, please register or contact to admin!</p>';
+            return;
+        }
+
         ob_start();
 
         echo smartpay_view('shortcodes.customer_dashboard', ['customer' => $customer]);

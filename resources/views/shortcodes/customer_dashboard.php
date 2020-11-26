@@ -1,13 +1,9 @@
 <?php
 
 use SmartPay\Models\Product;
-
-global $wp;
-
+use SmartPay\Modules\Frontend\Utilities\Downloader;
 
 $activePayments = $customer->payments()->where('status', 'completed')->get();
-// dd($activePayments);
-$update_profile_action = home_url(add_query_arg(array(), $wp->request));
 ?>
 
 <div class="smartpay">
@@ -19,8 +15,8 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                         <img class="rounded-circle" src="<?php echo esc_url(get_avatar_url(get_current_user_id())); ?>" alt="Profile image">
                     </div>
                     <div class="text-center">
-                        <h3 class="mt-4 mb-2"><?php echo ($customer->first_name ?? '') . ' ' . ($customer->last_name ?? ''); ?></h3>
-                        <p class="my-0" class=""><?php echo $customer->email ?? ''; ?></p>
+                        <h3 class="mt-4 mb-2"><?php echo ($customer->full_name ?? ''); ?></h3>
+                        <p class="my-0" class="text-muted"><?php echo $customer->email ?? ''; ?></p>
                     </div>
                 </div>
 
@@ -83,54 +79,47 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                     </div>
                                     <?php else : ?>
                                     <?php foreach ($activePayments as $index => $payment) : ?>
-                                    <?php
-                                            // FIXME: Add accessor
-                                            if ('Product Purchase' !== $payment->type) {
-                                                continue;
-                                            } ?>
-                                    <?php
-                                            $paymentData = json_decode($payment->data);
-                                            $product_id = $paymentData->product_id ?? 0;
-                                            $product = Product::with(['parent'])->find($product_id);
-                                            $download_files = $product->files;
-                                            // dd($download_files);
-                                            ?>
 
+                                    <!-- // FIXME: Add accessor -->
+                                    <?php if ('Product Purchase' !== $payment->type) continue; ?>
+
+                                    <?php $productId = $payment->data['product_id'] ?? 0; ?>
+                                    <?php $product = Product::with(['parent'])->find($productId); ?>
+
+                                    <?php if (!$productId || !$product) : ?>
+                                    <p>Product Not available</p>
+                                    <?php else : ?>
                                     <div class="border mb-3 product">
                                         <div class="p-3 product--header">
                                             <div class="d-flex align-items-center" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
-                                                <?php
-                                                        $covers = $product->parent ? $product->parent->covers : $product->covers;
-                                                        if (count($covers)) : ?>
+                                                <?php $covers = $product->isParent() ? $product->covers : $product->parent->covers; ?>
+                                                <?php if (count($covers)) : ?>
                                                 <div class="product--image mr-3">
-                                                    <img src="<?php echo $covers[0]->icon; ?>" class="border" alt="">
+                                                    <img src="<?php echo $covers[0]['icon']; ?>" class="border" alt="">
                                                 </div>
                                                 <?php endif; ?>
                                                 <div class="flex-grow-1">
-                                                    <?php $title = $product->parent ? $product->parent->title . '-' . $product->title : $product->title;
-                                                            ?>
-                                                    <h5 class="my-0"><?php echo $title; ?></h5>
+                                                    <h5 class="my-0"><?php echo $product->formatted_title; ?></h5>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
-                                            <?php if ($download_files) : ?>
+                                            <?php $downloadFiles = $product->files; ?>
+                                            <?php if ($downloadFiles) : ?>
                                             <p><?php _e('Files', 'smartpay'); ?></p>
                                             <ul class="list-group">
-                                                <?php foreach ($download_files as $file_index => $file) : ?>
+                                                <?php foreach ($downloadFiles as $file) : ?>
                                                 <li class="list-group-item p-2">
                                                     <div class="d-flex align-items-center flex-wrap">
-                                                        <img src="<?php echo $file->icon; ?>" class="download-item-icon" alt="">
+                                                        <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
                                                         <div class="d-flex flex-grow-1 flex-column ml-3">
-                                                            <p class="m-0"><?php echo $file->name ?? ''; ?></p>
+                                                            <p class="m-0"><?php echo $file['name'] ?? ''; ?></p>
                                                             <div class="d-flex flex-row justify-content-between text-muted m-0">
-                                                                <small><?php _e(sprintf('Size: ', 'smartpay') . $file->size ?? ''); ?></small>
+                                                                <small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small>
                                                             </div>
                                                         </div>
-                                                        // FIXME: Add download file url
-                                                        <a href="<?php //echo $download->get_file_download_url($file_index, $payment->ID, $product_id, $variation_id); 
-                                                                                    ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
+                                                        <a href="<?php echo smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
                                                     </div>
                                                 </li>
                                                 <?php endforeach; ?>
@@ -140,6 +129,7 @@ $update_profile_action = home_url(add_query_arg(array(), $wp->request));
                                             <?php endif; ?>
                                         </div>
                                     </div>
+                                    <?php endif; ?>
                                     <?php endforeach; ?>
                                     <?php endif; ?>
                                 </div>
