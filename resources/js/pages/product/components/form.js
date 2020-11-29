@@ -1,6 +1,7 @@
+import './forms.css'
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
-import { Tabs, Tab, Form, Button } from 'react-bootstrap'
+import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
 const { useEffect } = wp.element
 
 const defaultVariation = {
@@ -13,24 +14,23 @@ const defaultVariation = {
 }
 
 export const ProductForm = ({ product, setProductData }) => {
-
     useEffect(() => {
-        tinymce.execCommand('mceRemoveEditor', true, 'description');
+        tinymce.execCommand('mceRemoveEditor', true, 'description')
         wp.oldEditor.initialize('description', {
             tinymce: {
                 setup: function (editor) {
                     editor.on('change', function (e) {
                         setProductData({ description: e.target.getContent() })
-                    });
-                }
-            }
+                    })
+                },
+            },
         })
     }, [])
 
     useEffect(() => {
         const editor = tinymce.get('description')
         if (editor && !editor.getContent()) {
-            editor.setContent(product.description);
+            editor.setContent(product.description)
         }
     }, [product])
 
@@ -45,9 +45,9 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const setVariationData = (variation, data) => {
-        const variations = product.variations.map(v =>
+        const variations = product.variations.map((v) =>
             v.key === variation.key ? { ...v, ...data } : v
-        );
+        )
         setProductData({ variations })
     }
 
@@ -121,7 +121,10 @@ export const ProductForm = ({ product, setProductData }) => {
 
     const addNewVariation = () => {
         setProductData({
-            variations: [...product.variations, { ...defaultVariation, key: `new-${Date.now()}` }],
+            variations: [
+                ...product.variations,
+                { ...defaultVariation, key: `new-${Date.now()}` },
+            ],
         })
     }
 
@@ -133,68 +136,87 @@ export const ProductForm = ({ product, setProductData }) => {
         })
     }
 
+    const toggleVariationFile = (variation, file, include = true) => {
+        if (include) {
+            variation.files.push(file)
+        } else {
+            variation.files = variation.files.filter(
+                (vFile) => vFile.id != file.id
+            )
+        }
+    }
+
     return (
         <Form className="my-3">
-            <Form.Group controlId="title">
-                <Form.Control
-                    type="text"
-                    name="title"
-                    value={product?.title || ''}
-                    placeholder={__(
-                        'Your awesome product title here',
-                        'smartpay'
-                    )}
-                    onChange={_setProductData}
-                />
-            </Form.Group>
-            <Form.Control as="textarea"
-                name="description"
-                id="description"
-                value={product.description}
-                onChange={_setProductData}
-            />
-            <div className="my-3">
-                <div className="border rounded bg-light text-center p-5 select-image-box d-flex flex-column align-items-center">
-                    {product.covers.length > 0 && (
-                        <div className="mb-3 preview text-center">
-                            <div>
-                                <img
-                                    src={product.covers[0].url}
-                                    className="img-fluid"
+            <Card className="mb-4">
+                <Card.Body className="bg-white">
+                    <Row>
+                        <Col md={8}>
+                            <Form.Group controlId="title">
+                                <Form.Control
+                                    type="text"
+                                    name="title"
+                                    value={product?.title || ''}
+                                    placeholder={__(
+                                        'Your awesome product title here',
+                                        'smartpay'
+                                    )}
+                                    onChange={_setProductData}
                                 />
-                            </div>
-                            <Button
-                                type="button"
-                                onClick={() => selectCover()}
-                                className="btn btn-light border mt-3 px-3 select-image"
-                            >
-                                {__('Choose File', 'smartpay')}
-                            </Button>
-                        </div>
-                    )}
-                    {product.covers.length === 0 && (
-                        <div className="no-image">
-                            <Feather.Image size={40} />
-                            <h3 className="mt-1">
-                                {__('Cover Image', 'smartpay')}
-                            </h3>
-                            <p className="text-muted">
-                                {__(
-                                    'Select a featured image for this product',
-                                    'smartpay'
+                            </Form.Group>
+                            <Form.Control
+                                as="textarea"
+                                name="description"
+                                id="description"
+                                value={product.description}
+                                onChange={_setProductData}
+                            />
+                        </Col>
+                        <Col md={4}>
+                            <div className="border rounded bg-light text-center p-4 select-image-box d-flex flex-column align-items-center">
+                                {product.covers.length > 0 && (
+                                    <div className="mb-3 preview text-center">
+                                        <div>
+                                            <img
+                                                src={product.covers[0].url}
+                                                className="img-fluid"
+                                            />
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            onClick={() => selectCover()}
+                                            className="btn btn-light border mt-3 px-3 select-image"
+                                        >
+                                            {__('Choose File', 'smartpay')}
+                                        </Button>
+                                    </div>
                                 )}
-                            </p>
-                            <Button
-                                type="button"
-                                onClick={() => selectCover()}
-                                className="btn btn-light border px-3 select-image"
-                            >
-                                {__('Choose File', 'smartpay')}
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            </div>
+                                {product.covers.length === 0 && (
+                                    <div className="no-image">
+                                        <Feather.Image size={40} />
+                                        <h3 className="mt-1">
+                                            {__('Cover Image', 'smartpay')}
+                                        </h3>
+                                        <p className="text-muted">
+                                            {__(
+                                                'Select a featured image for this product',
+                                                'smartpay'
+                                            )}
+                                        </p>
+                                        <Button
+                                            type="button"
+                                            onClick={() => selectCover()}
+                                            className="btn btn-light border px-3 select-image"
+                                        >
+                                            {__('Choose File', 'smartpay')}
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
 
             <Tabs fill defaultActiveKey="files">
                 <Tab
@@ -268,25 +290,23 @@ export const ProductForm = ({ product, setProductData }) => {
                                 </div>
                             </>
                         ) : (
-                                <div className="my-3">
-                                    <div className="border rounded bg-light text-center p-5 no-product-file-box">
-                                        <Feather.HardDrive size={42} />
-                                        <h3 className="text-muted">
-                                            {__(
-                                                'Upload or select files for this product',
-                                                'smartpay'
-                                            )}
-                                        </h3>
-                                        <Button
-                                            type="button"
-                                            className="btn btn-light border shadow-sm upload-product-file"
-                                            onClick={() => addProductFile()}
-                                        >
-                                            {__('Upload files', 'smartpay')}
-                                        </Button>
-                                    </div>
-                                </div>
-                            )}
+                            <div className="border border-top-0 rounded bg-light text-center p-5 no-product-file-box">
+                                <Feather.HardDrive size={42} />
+                                <h3 className="text-muted">
+                                    {__(
+                                        'Upload or select files for this product',
+                                        'smartpay'
+                                    )}
+                                </h3>
+                                <Button
+                                    type="button"
+                                    className="btn btn-light border shadow-sm upload-product-file"
+                                    onClick={() => addProductFile()}
+                                >
+                                    {__('Upload files', 'smartpay')}
+                                </Button>
+                            </div>
+                        )}
                     </div>
                 </Tab>
                 <Tab
@@ -294,50 +314,52 @@ export const ProductForm = ({ product, setProductData }) => {
                     className="text-decoration-none"
                     title={__('Pricing', 'smartpay')}
                 >
-                    <div className="form-row">
-                        <div className="col-6">
-                            <div className="form-group">
-                                <label
-                                    htmlFor="base_price"
-                                    className="text-muted my-2 d-block"
-                                >
-                                    {__('Base price', 'smartpay')}
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="base_price"
-                                    name="base_price"
-                                    value={product.base_price || ''}
-                                    placeholder={__('eg. 100', 'smartpay')}
-                                    onChange={_setProductData}
-                                />
+                    {!product.variations.length && (
+                        <div className="form-row">
+                            <div className="col-6">
+                                <div className="form-group">
+                                    <label
+                                        htmlFor="base_price"
+                                        className="text-muted my-2 d-block"
+                                    >
+                                        {__('Base price', 'smartpay')}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="base_price"
+                                        name="base_price"
+                                        value={product.base_price || ''}
+                                        placeholder={__('eg. 100', 'smartpay')}
+                                        onChange={_setProductData}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-6">
+                                <div className="form-group">
+                                    <label
+                                        htmlFor="sale_price"
+                                        className="text-muted my-2 d-block"
+                                    >
+                                        {__('Sales price', 'smartpay')}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="sale_price"
+                                        name="sale_price"
+                                        value={product?.sale_price || ''}
+                                        placeholder={__('eg. 90', 'smartpay')}
+                                        onChange={_setProductData}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        <div className="col-6">
-                            <div className="form-group">
-                                <label
-                                    htmlFor="sale_price"
-                                    className="text-muted my-2 d-block"
-                                >
-                                    {__('Sales price', 'smartpay')}
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="sale_price"
-                                    name="sale_price"
-                                    value={product?.sale_price || ''}
-                                    placeholder={__('eg. 90', 'smartpay')}
-                                    onChange={_setProductData}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    )}
 
                     <div className="smartpay-variations">
                         {/* Has no variation */}
-                        {product.variations.length == 0 && (
+                        {!product.variations.length && (
                             <div className="border rounded bg-light text-center p-5 no-variations-box">
                                 <Feather.Layers size={42} />
                                 <h3>
@@ -364,7 +386,7 @@ export const ProductForm = ({ product, setProductData }) => {
 
                         {/* Show variation */}
                         {product.variations.length > 0 && (
-                            <div className="card p-0 variations-secion">
+                            <div className="card p-0 mt-0 variations-secion">
                                 <div className="card-header bg-white p-0">
                                     <div className="d-flex px-3 py-2">
                                         <h3 className="m-0 pt-1 d-flex">
@@ -548,14 +570,23 @@ export const ProductForm = ({ product, setProductData }) => {
                                                         )}
                                                     </strong>
                                                 </label>
-                                                {variation.files.length > 0 && (
+
+                                                {product.files.length && (
                                                     <>
                                                         <ul className="list-group variation-files">
-                                                            {variation?.files?.map(
+                                                            {product?.files?.map(
                                                                 (
                                                                     file,
                                                                     index
                                                                 ) => {
+                                                                    const fileIndex = variation.files.findIndex(
+                                                                        (
+                                                                            vFile
+                                                                        ) =>
+                                                                            file.id ===
+                                                                            vFile.id
+                                                                    )
+
                                                                     return (
                                                                         <li
                                                                             className="list-group-item m-0 d-flex justify-content-between files-item"
@@ -567,22 +598,32 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                 <input
                                                                                     type="checkbox"
                                                                                     className="custom-control-input variation-file"
-                                                                                    id={`variation-file-${file.id}`}
+                                                                                    id={`variation-${variation.id}-file-${file.id}`}
                                                                                     name="file"
-                                                                                    onChange={() => {
-                                                                                        console.log(
-                                                                                            'Toggle variation file'
+                                                                                    onChange={(
+                                                                                        event
+                                                                                    ) =>
+                                                                                        toggleVariationFile(
+                                                                                            variation,
+                                                                                            file,
+                                                                                            event
+                                                                                                .target
+                                                                                                .checked
                                                                                         )
-                                                                                    }}
+                                                                                    }
                                                                                     value={
                                                                                         file.id
                                                                                     }
-                                                                                    checked
-                                                                                // FIXME
+                                                                                    checked={
+                                                                                        fileIndex >=
+                                                                                        0
+                                                                                            ? true
+                                                                                            : false
+                                                                                    }
                                                                                 />
                                                                                 <label
                                                                                     className="custom-control-label"
-                                                                                    htmlFor={`variation-file-${file.id}`}
+                                                                                    htmlFor={`variation-${variation.id}-file-${file.id}`}
                                                                                 >
                                                                                     {
                                                                                         file.name
@@ -614,36 +655,35 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </>
                                                 )}
 
-                                                {variation.files.length ===
-                                                    0 && (
-                                                        <div className="form-group no-variation-file-box">
-                                                            <div className="border rounded text-center p-5">
-                                                                <Feather.Package
-                                                                    size={42}
-                                                                />
-                                                                <h3 className="text-muted">
-                                                                    {__(
-                                                                        'Associate files with this variant',
-                                                                        'smartpay'
-                                                                    )}
-                                                                </h3>
-                                                                <Button
-                                                                    type="button"
-                                                                    className="btn btn-light border shadow-sm select-variation-files"
-                                                                    onClick={() =>
-                                                                        addProductFile(
-                                                                            variation
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    {__(
-                                                                        'Select files',
-                                                                        'smartpay'
-                                                                    )}
-                                                                </Button>
-                                                            </div>
+                                                {!product.files.length && (
+                                                    <div className="form-group no-variation-file-box">
+                                                        <div className="border rounded text-center p-5">
+                                                            <Feather.Package
+                                                                size={42}
+                                                            />
+                                                            <h3 className="text-muted">
+                                                                {__(
+                                                                    'Associate files with this variant',
+                                                                    'smartpay'
+                                                                )}
+                                                            </h3>
+                                                            <Button
+                                                                type="button"
+                                                                className="btn btn-light border shadow-sm select-variation-files"
+                                                                onClick={() =>
+                                                                    addProductFile(
+                                                                        variation
+                                                                    )
+                                                                }
+                                                            >
+                                                                {__(
+                                                                    'Select files',
+                                                                    'smartpay'
+                                                                )}
+                                                            </Button>
                                                         </div>
-                                                    )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     )

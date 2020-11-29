@@ -29,12 +29,12 @@ class WPHooks
         if (!isset($_SERVER['HTTP_REFERER'])) {
             return $upload;
         }
-
         preg_match("/^.+?\?page=(.+)$/is", $_SERVER['HTTP_REFERER'], $match);
 
         if (isset($match[1]) && $match[1] == 'smartpay') {
 
-            smartpay()->make(Upload::class)->protectDirectory();
+            // $upload = new Upload;
+            // $upload->protectDirectory();
 
             // If year/month organization is enabled
             if (get_option('uploads_use_yearmonth_folders')) {

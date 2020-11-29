@@ -1,0 +1,5 @@
+.smartpay input:checked ~ .custom-control-label::before {
+    color: #fff !important;
+    border-color: #394fa7 !important;
+    background-color: #394fa7 !important;
+}
