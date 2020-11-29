@@ -73,9 +73,12 @@ export const FormList = () => {
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
-                            <tr className="text-white bg-dark">
+                            <tr className="bg-light">
                                 <th className="w-75 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
+                                </th>
+                                <th className="w-20 text-left">
+                                    {__('Date', 'smartpay')}
                                 </th>
                                 <th className="w-25 text-right">
                                     {__('Actions', 'smartpay')}
@@ -83,10 +86,19 @@ export const FormList = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {!forms.length && (
+                                <tr>
+                                    <td className="text-center" colSpan="3">
+                                        {__('No form found.', 'smartpay')}
+                                    </td>
+                                </tr>
+                            )}
+
                             {forms.map((form, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{form.title || ''}</td>
+                                        <td>{form.updated_at || ''}</td>
                                         <td className="text-right">
                                             <Link
                                                 className="btn-sm p-0 mr-2"

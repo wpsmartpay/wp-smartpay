@@ -63,7 +63,7 @@ export const CustomerList = () => {
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
-                            <tr className="text-white bg-dark">
+                            <tr className="bg-light">
                                 <th className="w-50 text-left">
                                     <strong>{__('Name', 'smartpay')}</strong>
                                 </th>
@@ -76,6 +76,14 @@ export const CustomerList = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {!customers.length && (
+                                <tr>
+                                    <td className="text-center" colSpan="3">
+                                        {__('No customer found.', 'smartpay')}
+                                    </td>
+                                </tr>
+                            )}
+
                             {customers.map((customer, index) => {
                                 return (
                                     <tr key={index}>

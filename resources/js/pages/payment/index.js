@@ -64,7 +64,7 @@ export const PaymentList = () => {
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
-                            <tr className="text-white bg-dark">
+                            <tr className="bg-light">
                                 <th className="w-5 text-left">
                                     <strong>{__('ID', 'smartpay')}</strong>
                                 </th>
@@ -91,6 +91,14 @@ export const PaymentList = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {!payments.length && (
+                                <tr>
+                                    <td className="text-center" colSpan="7">
+                                        {__('No payment found.', 'smartpay')}
+                                    </td>
+                                </tr>
+                            )}
+
                             {payments.map((payment, index) => {
                                 return (
                                     <tr key={index}>

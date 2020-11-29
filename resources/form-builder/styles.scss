@@ -21,12 +21,7 @@ body.block-editor-page {
 }
 
 .smartpay-block-editor {
-    // position: absolute;
-    // top: 0;
-    // right: 0;
-    // bottom: 0;
-    // left: 0;
-    min-height: calc(100vh - 32px);
+    min-height: 40vh;
 }
 
 .editor-styles-wrapper {
@@ -67,6 +62,7 @@ body.block-editor-page {
     &__content {
         width: 70%;
         left: 0px;
+        background: #fff;
     }
     &__sidebar {
         width: 30%;

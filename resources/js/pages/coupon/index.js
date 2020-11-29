@@ -71,16 +71,24 @@ export const CouponList = () => {
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
-                            <tr className="text-white bg-dark">
+                            <tr className="bg-light">
                                 <th className="w-75 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
-                                <th className="w-25 text-right">
+                                <th className="w-25 text-left">
                                     {__('Actions', 'smartpay')}
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
+                            {!coupons.length && (
+                                <tr>
+                                    <td className="text-center" colSpan="2">
+                                        {__('No coupon found.', 'smartpay')}
+                                    </td>
+                                </tr>
+                            )}
+
                             {coupons.map((coupons) => {
                                 return (
                                     <tr key={coupons.id}>

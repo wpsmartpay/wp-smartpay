@@ -70,22 +70,34 @@ export const ProductList = () => {
 
             <Container className="mt-3">
                 <div className="bg-white">
-                    <Table className="table">
+                    <Table>
                         <thead>
-                            <tr className="text-white bg-dark">
+                            <tr className="bg-light">
                                 <th className="w-75 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
-                                <th className="w-25 text-right">
+                                <th className="w-20 text-left">
+                                    {__('Date', 'smartpay')}
+                                </th>
+                                <th className="w-30 text-right">
                                     {__('Actions', 'smartpay')}
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
+                            {!products.length && (
+                                <tr>
+                                    <td className="text-center" colSpan="3">
+                                        {__('No product found.', 'smartpay')}
+                                    </td>
+                                </tr>
+                            )}
+
                             {products.map((product, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{product.title || ''}</td>
+                                        <td>{product.updated_at || ''}</td>
                                         <td className="text-right">
                                             <Link
                                                 className="btn-sm p-0 mr-2"

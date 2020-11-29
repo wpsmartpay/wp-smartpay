@@ -15,7 +15,7 @@ import { Sidebar } from '../../components/sidebar'
 export const FormForm = ({ form, setformData, shouldReset = false }) => {
     return (
         <>
-            <div className="bg-white mt-5">
+            <div className="mt-5">
                 <Form.Group controlId="title" className="mb-5">
                     <Form.Control
                         type="text"
