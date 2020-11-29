@@ -33,6 +33,15 @@ class ReportController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
+
+        return new \WP_REST_Response([
+            'monthly_report' => $this->monthlyReport(),
+            'recent_payments' => $this->recentPayments(),
+        ]);
+    }
+
+    public function monthlyReport()
+    {
         $total_days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
 
         $report = [];
@@ -41,7 +50,7 @@ class ReportController extends RestController
             $report[] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
         }
 
-        $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', 'completed')->orderBy('id', 'DESC')->get();
+        $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', Payment::COMPLETED)->orderBy('id', 'DESC')->get();
 
         foreach ($report_data as $index => $data) {
             if (!$data->completed_at) continue;
@@ -51,6 +60,11 @@ class ReportController extends RestController
             $report[$date][$data->getType()] += $data->amount ?? 0;
         }
 
-        return new \WP_REST_Response($report);
+        return $report;
+    }
+
+    public function recentPayments()
+    {
+        return Payment::where('status', Payment::COMPLETED)->orderBy('id', 'DESC')->limit(20)->get();
     }
 }

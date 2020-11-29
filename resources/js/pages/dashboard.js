@@ -4,8 +4,15 @@ import { useEffect, useState } from '@wordpress/element'
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap'
 import { Report } from '../components/report/report'
 
+import dayjs from 'dayjs'
+const relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
+
 export const Dashboard = () => {
-    const [report, setReport] = useState([])
+    const [report, setReport] = useState({
+        monthly_report: [],
+        recent_payments: [],
+    })
 
     useEffect(() => {
         apiFetch({
@@ -32,8 +39,8 @@ export const Dashboard = () => {
             </div>
             <Container fluid>
                 <Row className="mt-2">
-                    <Col md={12}>
-                        <div className="p-3">
+                    <Col md={9}>
+                        <div className="py-3">
                             <h2 className="m-0 mb-3">
                                 {__('Monthly Report', 'smartpay')}
                             </h2>
@@ -46,7 +53,7 @@ export const Dashboard = () => {
                                                 'Product Purchase',
                                                 'smartpay'
                                             ),
-                                            data: report.map(
+                                            data: report?.monthly_report.map(
                                                 (data) => data.product_purchase
                                             ),
                                         },
@@ -55,7 +62,7 @@ export const Dashboard = () => {
                                                 'Form Payment',
                                                 'smartpay'
                                             ),
-                                            data: report.map(
+                                            data: report?.monthly_report.map(
                                                 (data) => data.form_payment
                                             ),
                                         },
@@ -87,7 +94,7 @@ export const Dashboard = () => {
                                         //     colors: ['transparent']
                                         // },
                                         xaxis: {
-                                            categories: report.map(
+                                            categories: report?.monthly_report.map(
                                                 (data) => data.date
                                             ),
                                         },
@@ -120,19 +127,33 @@ export const Dashboard = () => {
                             </Card>
                         </div>
                     </Col>
-                    {/* <Col md={4}>
+                    <Col md={3}>
                         <div className="py-3">
-                            <h2 className="m-0 mb-3">{__('Recent Payments')}</h2>
+                            <h2 className="m-0 mb-3">
+                                {__('Recent Payments')}
+                            </h2>
                             <ListGroup>
-                                <ListGroup.Item>
-                                    Link 1
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    Link 2
-                                </ListGroup.Item>
+                                {!report.recent_payments.length && (
+                                    <p>{__('No payment found', 'smartpay')}</p>
+                                )}
+                                {report.recent_payments.map((payment) => {
+                                    return (
+                                        <ListGroup.Item
+                                            className="d-flex justify-content-between align-items-center"
+                                            key={payment.id}
+                                        >
+                                            {`$${payment.amount} paid by ${payment.email}`}
+                                            <span>
+                                                {dayjs(
+                                                    payment.created_at
+                                                ).fromNow()}
+                                            </span>
+                                        </ListGroup.Item>
+                                    )
+                                })}
                             </ListGroup>
                         </div>
-                    </Col> */}
+                    </Col>
                 </Row>
             </Container>
         </>
