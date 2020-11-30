@@ -73,7 +73,7 @@ export const EditPayment = () => {
                                         <Form.Control
                                             name="status"
                                             as="select"
-                                            value={paymentStatus}
+                                            value={paymentStatus.toLowerCase()}
                                             onChange={(e) =>
                                                 _setPaymentStatus(
                                                     e.target.value
