@@ -125,210 +125,147 @@ export const EditPayment = () => {
                     <Container>
                         <Card>
                             <Card.Body>
-                                <Row className="pb-3 align-items-center border-bottom">
-                                    <Col>
-                                        <div className="d-flex align-items-center">
-                                            <h3 className="my-1 mr-3">
-                                                ${payment?.amount || 0}
-                                            </h3>
-                                            <span
-                                                className={
-                                                    'btn px-2 py-0 pb-1 ' +
-                                                    (payment.status ==
-                                                    'Completed'
-                                                        ? 'btn-success'
-                                                        : 'btn-danger')
-                                                }
-                                            >
-                                                {__(payment.status, 'smartpay')}
-                                            </span>
-                                        </div>
-                                    </Col>
-                                    <Col>
-                                        <h3 className="text-primary m-0 text-right">
-                                            {payment.type}
+                                <div className="d-flex pb-3 border-bottom justify-content-between align-items-center">
+                                    <div className="d-flex align-items-center">
+                                        <h3 className="my-1 mr-3">
+                                            ${payment?.amount || 0}
                                         </h3>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <p>
-                                            <strong>
-                                                {__('Date', 'smartpay')}
-                                            </strong>
-                                        </p>
-                                        <p>{payment.created_at}</p>
-                                    </Col>
-                                    <Col>
-                                        <p>
-                                            <strong>
-                                                {__('Customer', 'smartpay')}
-                                            </strong>
-                                        </p>
-                                        <p>{payment.email}</p>
-                                    </Col>
-                                    <Col>
-                                        <p>
-                                            <strong>
-                                                {__(
-                                                    'Payment Method',
-                                                    'smartpay'
-                                                )}
-                                            </strong>
-                                        </p>
-                                        <p>{payment.gateway}</p>
-                                    </Col>
-                                    <Col>
-                                        <p>
-                                            <strong>
-                                                {__(
-                                                    'Transaction ID',
-                                                    'smartpay'
-                                                )}
-                                            </strong>
-                                        </p>
-                                        <p>{payment?.transaction_id || '-'}</p>
-                                    </Col>
-                                </Row>
+                                        <span
+                                            className={
+                                                'px-2 py-1 text-white rounded ' +
+                                                (payment.status == 'Completed'
+                                                    ? 'bg-success'
+                                                    : 'bg-danger')
+                                            }
+                                        >
+                                            {__(payment.status, 'smartpay')}
+                                        </span>
+                                    </div>
+                                    <h3 className="text-primary m-0 text-right">
+                                        {payment.type}
+                                    </h3>
+                                </div>
+                                <p>
+                                    <strong>{__('Date', 'smartpay')}:</strong>
+                                    <span>{payment.created_at}</span>
+                                </p>
+                                <p>
+                                    <strong>
+                                        {__('Customer', 'smartpay')}:
+                                    </strong>
+                                    <span>{payment.email}</span>
+                                </p>
+                                <p>
+                                    <strong>
+                                        {__('Payment Method', 'smartpay')}:
+                                    </strong>
+                                    <span>{payment.gateway}</span>
+                                </p>
+                                {payment?.transaction_id && (
+                                    <p>
+                                        <strong>
+                                            {__('Transaction ID', 'smartpay')}:
+                                        </strong>
+                                        <span>
+                                            {payment?.transaction_id || '-'}
+                                        </span>
+                                    </p>
+                                )}
 
                                 {payment.type == 'Product Purchase' && (
                                     <>
-                                        <h3 className="text-black">
+                                        <h3 className="text-black mt-4">
                                             {__('Product Details', 'smartpay')}
                                         </h3>
-                                        <Row>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Product',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {`# ${payment?.data?.product_id}` ||
-                                                        '-'}
-                                                </p>
-                                            </Col>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Product Price',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {`${payment?.currency} ${payment?.data?.product_price}` ||
-                                                        '-'}
-                                                </p>
-                                            </Col>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Total Amount',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {`${payment?.currency} ${payment?.data?.total_amount}` ||
-                                                        '-'}
-                                                </p>
-                                            </Col>
-                                        </Row>
+                                        <p>
+                                            <strong>
+                                                {__('Product', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {`# ${payment?.data?.product_id}` ||
+                                                    '-'}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__(
+                                                    'Product Price',
+                                                    'smartpay'
+                                                )}
+                                            </strong>
+                                            <span>
+                                                {`${payment?.currency} ${payment?.data?.product_price}` ||
+                                                    '-'}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Total Amount', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {`${payment?.currency} ${payment?.data?.total_amount}` ||
+                                                    '-'}
+                                            </span>
+                                        </p>
                                     </>
                                 )}
 
                                 {payment.type == 'Form Payment' && (
                                     <>
-                                        <h3 className="text-black">
+                                        <h3 className="text-black mt-4">
                                             {__(
                                                 'Form Payment Details',
                                                 'smartpay'
                                             )}
                                         </h3>
-                                        <Row>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__('Form', 'smartpay')}
-                                                    </strong>
-                                                </p>
-                                                <p># {payment.data?.form_id}</p>
-                                            </Col>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Total Amount',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {payment.data?.total_amount}
-                                                </p>
-                                            </Col>
-                                        </Row>
+                                        <p>
+                                            <strong>
+                                                {__('Form', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                # {payment.data?.form_id}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Total Amount', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {payment.data?.total_amount}
+                                            </span>
+                                        </p>
                                     </>
                                 )}
 
                                 {payment?.customer && (
                                     <>
-                                        <h3 className="text-black">
+                                        <h3 className="text-black mt-4">
                                             {__('Customer Details', 'smartpay')}
                                         </h3>
-                                        <Row>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'First Name',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {
-                                                        payment?.customer
-                                                            ?.first_name
-                                                    }
-                                                </p>
-                                            </Col>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Last Name',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {
-                                                        payment?.customer
-                                                            ?.last_name
-                                                    }
-                                                </p>
-                                            </Col>
-                                            <Col>
-                                                <p>
-                                                    <strong>
-                                                        {__(
-                                                            'Email',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
-                                                </p>
-                                                <p>
-                                                    {payment?.customer?.email}
-                                                </p>
-                                            </Col>
-                                        </Row>
+                                        <p>
+                                            <strong>
+                                                {__('First Name', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {payment?.customer?.first_name}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Last Name', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {payment?.customer?.last_name}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Email', 'smartpay')}
+                                            </strong>
+                                            <span>
+                                                {payment?.customer?.email}
+                                            </span>
+                                        </p>
                                     </>
                                 )}
                             </Card.Body>
@@ -341,17 +278,13 @@ export const EditPayment = () => {
                                         <h3 className="text-black">
                                             {__('Form Data', 'smartpay')}
                                         </h3>
-                                        <Row>
-                                            <Col>
-                                                {Object.keys(
-                                                    payment.extra.form_data
-                                                ).map((key, index) => (
-                                                    <p key={index}>
-                                                        {`${key} : ${payment.extra.form_data[key]}`}
-                                                    </p>
-                                                ))}
-                                            </Col>
-                                        </Row>
+                                        {Object.keys(
+                                            payment.extra.form_data
+                                        ).map((key, index) => (
+                                            <p key={index}>
+                                                {`${key} : ${payment.extra.form_data[key]}`}
+                                            </p>
+                                        ))}
                                     </>
                                 </Card.Body>
                             </Card>
