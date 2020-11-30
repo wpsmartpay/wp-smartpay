@@ -20,7 +20,7 @@ class Shortcode
         add_shortcode('smartpay_payment_receipt', [$this, 'payment_receipt_shortcode']);
 
         // Customer dashboard shortcode
-        add_shortcode('smartpay_dashboard', [$this, 'dashboard_shortcode']);
+        add_shortcode('smartpay_dashboard', [$this, 'dashboardShortcode']);
     }
 
     /**
@@ -141,7 +141,7 @@ class Shortcode
      * @since 0.0.2
      * @return void
      */
-    public function dashboard_shortcode($atts)
+    public function dashboardShortcode($atts)
     {
         // If not logged in or id not found, then return
         if (!is_user_logged_in() || get_current_user_id() <= 0) {

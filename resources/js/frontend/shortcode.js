@@ -21,6 +21,10 @@ jQuery(document.body).on(
         const customerId =
             $parentWrapper.find('input[name=customer_id]').val() || 0
 
+        if (!customerId) {
+            return
+        }
+
         apiFetch({
             path: `${smartpay.restUrl}/v1/public/customers/${customerId}`,
             method: 'PUT',
@@ -30,14 +34,18 @@ jQuery(document.body).on(
             body: JSON.stringify(data),
         })
             .then((response) => {
-                $parentWrapper.append(
-                    `<div class="alert alert-success text-center mb-4">${response.message}</div>`
-                )
+                $parentWrapper
+                    .find('#form-response')
+                    .append(
+                        `<div class="alert alert-success text-center mb-4">Profile updated</div>`
+                    )
             })
             .catch((error) => {
-                $parentWrapper.append(
-                    `<div class="alert alert-danger text-center mb-4">${error.message}</div>`
-                )
+                $parentWrapper
+                    .find('form-response')
+                    .append(
+                        `<div class="alert alert-danger text-center mb-4">${error.message}</div>`
+                    )
             })
     }
 )
