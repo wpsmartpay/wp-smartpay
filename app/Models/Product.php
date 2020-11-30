@@ -28,24 +28,24 @@ class Product extends Model
         });
     }
 
-    public function setFilesAttribute($files)
-    {
-        $this->attributes['files'] = \json_encode($files);
-    }
-
-    public function setCoversAttribute($covers)
-    {
-        $this->attributes['covers'] = \json_encode($covers);
-    }
-
     public function getFilesAttribute($files)
     {
         return \json_decode($files, true);
     }
 
+    public function setFilesAttribute($files)
+    {
+        $this->attributes['files'] = \json_encode($files);
+    }
+
     public function getCoversAttribute($covers)
     {
         return \json_decode($covers, true);
+    }
+
+    public function setCoversAttribute($covers)
+    {
+        $this->attributes['covers'] = \json_encode($covers);
     }
 
     public function getPriceAttribute()

@@ -30,6 +30,26 @@ import './store/index'
 
 import './admin/menu-fix'
 
+// const files = [
+//     { id: 1, name: 'A' },
+//     { id: 2, name: 'B' },
+//     { id: 3, name: 'C' },
+// ]
+
+// const varFiles = [
+//     { id: 1, name: 'A' },
+//     { id: 3, name: 'C' },
+// ]
+
+// files.map((file) => {
+//     const key = varFiles.findIndex((vFile) => {
+//         return file.id === vFile.id ? true : false
+//     })
+//     // console.log(file.name)
+//     console.log(key)
+//     console.log(key >= 0 ? 'checked' : 'unchecked')
+// })
+
 domReady(function () {
     const SmartPay = () => {
         return (

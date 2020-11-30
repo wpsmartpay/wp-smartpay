@@ -2,7 +2,7 @@ import './forms.css'
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
-const { useEffect } = wp.element
+const { useEffect, useState } = wp.element
 
 const defaultVariation = {
     title: '',
@@ -136,14 +136,16 @@ export const ProductForm = ({ product, setProductData }) => {
         })
     }
 
-    const toggleVariationFile = (variation, file, include = true) => {
-        if (include) {
+    const toggleVariationFile = (variation, file, shouldInclude = true) => {
+        let files = {}
+        if (shouldInclude) {
             variation.files.push(file)
+            files = variation.files
         } else {
-            variation.files = variation.files.filter(
-                (vFile) => vFile.id != file.id
-            )
+            files = variation.files.filter((vFile) => vFile.id != file.id)
         }
+
+        setVariationData(variation, { files: files })
     }
 
     return (
@@ -579,13 +581,19 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                     file,
                                                                     index
                                                                 ) => {
-                                                                    const fileIndex = variation.files.findIndex(
-                                                                        (
-                                                                            vFile
-                                                                        ) =>
-                                                                            file.id ===
-                                                                            vFile.id
-                                                                    )
+                                                                    const isFileExist =
+                                                                        variation.files.findIndex(
+                                                                            (
+                                                                                vFile
+                                                                            ) => {
+                                                                                return file.id ===
+                                                                                    vFile.id
+                                                                                    ? true
+                                                                                    : false
+                                                                            }
+                                                                        ) >= 0
+                                                                            ? true
+                                                                            : false
 
                                                                     return (
                                                                         <li
@@ -615,10 +623,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                         file.id
                                                                                     }
                                                                                     checked={
-                                                                                        fileIndex >=
-                                                                                        0
-                                                                                            ? true
-                                                                                            : false
+                                                                                        isFileExist
                                                                                     }
                                                                                 />
                                                                                 <label
