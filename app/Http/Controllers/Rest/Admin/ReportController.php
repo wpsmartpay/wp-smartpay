@@ -50,12 +50,15 @@ class ReportController extends RestController
             $report[] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
         }
 
-        $report_data = Payment::where('completed_at', '>=', date('Y-m-d') . ' 00:00:00')->where('status', Payment::COMPLETED)->orderBy('id', 'DESC')->get();
+        $startDate = date('Y-m-01') . ' 00:00:00';
+        $endDate = current_time('mysql');
+
+        $report_data = Payment::whereBetween('completed_at', $startDate, $endDate)->where('status', Payment::COMPLETED)->orderBy('id', 'DESC')->get();
 
         foreach ($report_data as $index => $data) {
             if (!$data->completed_at) continue;
 
-            $date = date('d', strtotime($data->completed_at));
+            $date = date('j', strtotime($data->completed_at));
             // FIXME
             $report[$date][$data->getType()] += $data->amount ?? 0;
         }

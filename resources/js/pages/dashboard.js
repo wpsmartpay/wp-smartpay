@@ -10,8 +10,8 @@ dayjs.extend(relativeTime)
 
 export const Dashboard = () => {
     const [report, setReport] = useState({
-        monthly_report: [],
-        recent_payments: [],
+        monthlyReport: [],
+        recentPayments: [],
     })
 
     useEffect(() => {
@@ -21,7 +21,10 @@ export const Dashboard = () => {
                 'X-WP-Nonce': smartpay.apiNonce,
             },
         }).then((response) => {
-            setReport(response)
+            setReport({
+                monthlyReport: response.monthly_report,
+                recentPayments: response.recent_payments,
+            })
         })
     }, [])
 
@@ -53,7 +56,7 @@ export const Dashboard = () => {
                                                 'Product Purchase',
                                                 'smartpay'
                                             ),
-                                            data: report?.monthly_report.map(
+                                            data: report?.monthlyReport.map(
                                                 (data) => data.product_purchase
                                             ),
                                         },
@@ -62,7 +65,7 @@ export const Dashboard = () => {
                                                 'Form Payment',
                                                 'smartpay'
                                             ),
-                                            data: report?.monthly_report.map(
+                                            data: report?.monthlyReport.map(
                                                 (data) => data.form_payment
                                             ),
                                         },
@@ -94,7 +97,7 @@ export const Dashboard = () => {
                                         //     colors: ['transparent']
                                         // },
                                         xaxis: {
-                                            categories: report?.monthly_report.map(
+                                            categories: report?.monthlyReport.map(
                                                 (data) => data.date
                                             ),
                                         },
@@ -133,10 +136,10 @@ export const Dashboard = () => {
                                 {__('Recent Payments')}
                             </h2>
                             <ListGroup>
-                                {!report.recent_payments.length && (
+                                {!report.recentPayments.length && (
                                     <p>{__('No payment found', 'smartpay')}</p>
                                 )}
-                                {report.recent_payments.map((payment) => {
+                                {report.recentPayments.map((payment) => {
                                     return (
                                         <ListGroup.Item
                                             className="d-flex justify-content-between align-items-center"
