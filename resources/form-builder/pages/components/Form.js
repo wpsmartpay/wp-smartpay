@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n'
 
-import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
-import { FormBuilderTab } from './FormBuilderTab'
-import { FormOptionTab } from './FormOptionTab'
+import { Container, Form, Card, Accordion, Button } from 'react-bootstrap'
+import { FormBuilder } from './FormBuilder'
+import { AccordionPanel } from './AccordionPanel'
+import { FormAmount } from './FormAmount'
 
 export const FormForm = ({
     form,
@@ -54,29 +55,25 @@ export const FormForm = ({
                 </Container>
             </div>
 
-            <Container style={{ marginTop: '80px' }}>
-                <div className="mt-5">
-                    <Tabs fill defaultActiveKey="builder">
-                        <Tab
-                            eventKey="builder"
-                            className="text-decoration-none mt-3"
-                            title={__('Builder', 'smartpay')}
-                        >
-                            <FormBuilderTab
+            <Container style={{ marginTop: '80px' }} className="pt-2">
+                <Accordion defaultActiveKey="amounts">
+                    <AccordionPanel
+                        eventKey="amounts"
+                        title={__('Form Amounts', 'smartpay')}
+                        body={<FormAmount />}
+                    />
+                    <AccordionPanel
+                        eventKey="builder"
+                        title={__('Form Builder', 'smartpay')}
+                        body={
+                            <FormBuilder
                                 form={form}
                                 setFormData={setFormData}
                                 shouldReset={shouldReset}
                             />
-                        </Tab>
-                        <Tab
-                            eventKey="setting"
-                            className="text-decoration-none mt-3"
-                            title={__('Setting', 'smartpay')}
-                        >
-                            <FormOptionTab />
-                        </Tab>
-                    </Tabs>
-                </div>
+                        }
+                    />
+                </Accordion>
             </Container>
         </>
     )

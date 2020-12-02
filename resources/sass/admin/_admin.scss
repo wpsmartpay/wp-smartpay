@@ -48,3 +48,15 @@
 .table {
     border-spacing: 0;
 }
+
+.btn svg {
+    margin-bottom: -3px;
+}
+
+input::placeholder {
+    color: rgb(170, 170, 170) !important;
+}
+
+.card {
+    margin-top: 0px;
+}

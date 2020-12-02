@@ -1,4 +1,3 @@
-// import '@wordpress/editor'
 import '@wordpress/format-library'
 import { useSelect } from '@wordpress/data'
 import { useEffect, useState, useMemo } from '@wordpress/element'
