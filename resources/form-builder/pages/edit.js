@@ -5,7 +5,7 @@ import { useSelect, dispatch } from '@wordpress/data'
 import { Container, Alert, Button, Form as BSForm } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Update } from '../http/form'
-import { FormForm } from './components/form'
+import { FormForm } from './components/Form'
 
 const defaultFormData = {
     title: '',
@@ -22,7 +22,7 @@ const reducer = (state, data) => {
 export const EditForm = () => {
     const { formId } = useParams()
 
-    const [form, setformData] = useReducer(reducer, defaultFormData)
+    const [form, setFormData] = useReducer(reducer, defaultFormData)
     const [response, setResponse] = useState({})
 
     const formData = useSelect(
@@ -31,7 +31,7 @@ export const EditForm = () => {
     )
 
     useEffect(() => {
-        setformData(formData)
+        setFormData(formData)
     }, [formId, formData])
 
     const updateForm = () => {
@@ -94,7 +94,7 @@ export const EditForm = () => {
             </div>
 
             <Container style={{ marginTop: '80px' }}>
-                <FormForm form={form} setformData={setformData} />
+                <FormForm form={form} setFormData={setFormData} />
             </Container>
         </>
     )
