@@ -11,7 +11,7 @@ const defaultAmount = {
 
 const geneateKey = () => Math.random().toString(36).substr(2, 9)
 
-export const FormAmount = () => {
+export const FormAmounts = () => {
     const [amounts, setAmounts] = useState([
         { ...defaultAmount, key: geneateKey() },
     ])
@@ -21,6 +21,10 @@ export const FormAmount = () => {
     }
 
     const removeAmountRow = (key) => {
+        if (amounts.length <= 1) {
+            return
+        }
+
         setAmounts([...amounts.filter((amount) => key !== amount.key)])
     }
 
@@ -33,32 +37,35 @@ export const FormAmount = () => {
     }
 
     return (
-        <>
-            <div className="col-md-6 mx-auto py-4">
-                {amounts.map((amount, index) => {
-                    return (
-                        <div key={index}>
-                            <AmountRow
-                                amount={amount}
-                                setAmount={setAmount}
-                                removeAmountRow={removeAmountRow}
-                            />
-                        </div>
-                    )
-                })}
+        <Card>
+            <Card.Body>
+                <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
+                <div className="col-md-6 mx-auto py-4">
+                    {amounts.map((amount, index) => {
+                        return (
+                            <div key={index}>
+                                <AmountRow
+                                    amount={amount}
+                                    setAmount={setAmount}
+                                    removeAmountRow={removeAmountRow}
+                                />
+                            </div>
+                        )
+                    })}
 
-                <div className="mt-4">
-                    <Button onClick={addNewAmountRow} size="sm">
-                        <PlusIcon
-                            size={18}
-                            style={{ marginBottom: '-4px' }}
-                            className="mr-2"
-                        />
-                        <span>{__('Add New Amount', 'smartpay')}</span>
-                    </Button>
+                    <div className="mt-4">
+                        <Button onClick={addNewAmountRow} size="sm">
+                            <PlusIcon
+                                size={18}
+                                style={{ marginBottom: '-4px' }}
+                                className="mr-2"
+                            />
+                            <span>{__('Add New Amount', 'smartpay')}</span>
+                        </Button>
+                    </div>
                 </div>
-            </div>
-        </>
+            </Card.Body>
+        </Card>
     )
 }
 

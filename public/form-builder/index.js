@@ -50549,7 +50549,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var _FormBuilder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormBuilder */ "./resources/form-builder/pages/components/FormBuilder.js");
 /* harmony import */ var _AccordionPanel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./AccordionPanel */ "./resources/form-builder/pages/components/AccordionPanel.js");
-/* harmony import */ var _FormAmount__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FormAmount */ "./resources/form-builder/pages/components/FormAmount.js");
+/* harmony import */ var _FormAmounts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FormAmounts */ "./resources/form-builder/pages/components/FormAmounts.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -50594,37 +50594,39 @@ var FormForm = function FormForm(_ref) {
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Publish', 'smartpay')))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
     style: {
       marginTop: '80px'
-    },
-    className: "pt-2"
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Accordion"], {
-    defaultActiveKey: "amounts"
-  }, /*#__PURE__*/React.createElement(_AccordionPanel__WEBPACK_IMPORTED_MODULE_3__["AccordionPanel"], {
-    eventKey: "amounts",
-    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Form Amounts', 'smartpay'),
-    body: /*#__PURE__*/React.createElement(_FormAmount__WEBPACK_IMPORTED_MODULE_4__["FormAmount"], null)
-  }), /*#__PURE__*/React.createElement(_AccordionPanel__WEBPACK_IMPORTED_MODULE_3__["AccordionPanel"], {
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mt-5"
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tabs"], {
+    fill: true,
+    defaultActiveKey: "builder"
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
     eventKey: "builder",
-    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Form Builder', 'smartpay'),
-    body: /*#__PURE__*/React.createElement(_FormBuilder__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], {
-      form: form,
-      setFormData: setFormData,
-      shouldReset: shouldReset
-    })
-  }))));
+    className: "text-decoration-none mt-3",
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Builder', 'smartpay')
+  }, /*#__PURE__*/React.createElement(_FormBuilder__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], {
+    form: form,
+    setFormData: setFormData,
+    shouldReset: shouldReset
+  })), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
+    eventKey: "options",
+    className: "text-decoration-none mt-3",
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Options', 'smartpay')
+  }, /*#__PURE__*/React.createElement(_FormAmounts__WEBPACK_IMPORTED_MODULE_5__["FormAmounts"], null))))));
 };
 
 /***/ }),
 
-/***/ "./resources/form-builder/pages/components/FormAmount.js":
-/*!***************************************************************!*\
-  !*** ./resources/form-builder/pages/components/FormAmount.js ***!
-  \***************************************************************/
-/*! exports provided: FormAmount */
+/***/ "./resources/form-builder/pages/components/FormAmounts.js":
+/*!****************************************************************!*\
+  !*** ./resources/form-builder/pages/components/FormAmounts.js ***!
+  \****************************************************************/
+/*! exports provided: FormAmounts */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormAmount", function() { return FormAmount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormAmounts", function() { return FormAmounts; });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
@@ -50671,7 +50673,7 @@ var geneateKey = function geneateKey() {
   return Math.random().toString(36).substr(2, 9);
 };
 
-var FormAmount = function FormAmount() {
+var FormAmounts = function FormAmounts() {
   var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])([_objectSpread(_objectSpread({}, defaultAmount), {}, {
     key: geneateKey()
   })]),
@@ -50686,6 +50688,10 @@ var FormAmount = function FormAmount() {
   };
 
   var removeAmountRow = function removeAmountRow(key) {
+    if (amounts.length <= 1) {
+      return;
+    }
+
     setAmounts(_toConsumableArray(amounts.filter(function (amount) {
       return key !== amount.key;
     })));
@@ -50697,7 +50703,9 @@ var FormAmount = function FormAmount() {
     })));
   };
 
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], null, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"].Body, null, /*#__PURE__*/React.createElement("h2", {
+    className: "m-0"
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Form Amounts', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "col-md-6 mx-auto py-4"
   }, amounts.map(function (amount, index) {
     return /*#__PURE__*/React.createElement("div", {
@@ -50718,7 +50726,7 @@ var FormAmount = function FormAmount() {
       marginBottom: '-4px'
     },
     className: "mr-2"
-  }), /*#__PURE__*/React.createElement("span", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Add New Amount', 'smartpay'))))));
+  }), /*#__PURE__*/React.createElement("span", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Add New Amount', 'smartpay')))))));
 };
 
 var AmountRow = function AmountRow(_ref) {

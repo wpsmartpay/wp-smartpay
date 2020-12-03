@@ -1,9 +1,17 @@
 import { __ } from '@wordpress/i18n'
 
-import { Container, Form, Card, Accordion, Button } from 'react-bootstrap'
+import {
+    Container,
+    Card,
+    Accordion,
+    Tabs,
+    Tab,
+    Form,
+    Button,
+} from 'react-bootstrap'
 import { FormBuilder } from './FormBuilder'
 import { AccordionPanel } from './AccordionPanel'
-import { FormAmount } from './FormAmount'
+import { FormAmounts } from './FormAmounts'
 
 export const FormForm = ({
     form,
@@ -55,25 +63,29 @@ export const FormForm = ({
                 </Container>
             </div>
 
-            <Container style={{ marginTop: '80px' }} className="pt-2">
-                <Accordion defaultActiveKey="amounts">
-                    <AccordionPanel
-                        eventKey="amounts"
-                        title={__('Form Amounts', 'smartpay')}
-                        body={<FormAmount />}
-                    />
-                    <AccordionPanel
-                        eventKey="builder"
-                        title={__('Form Builder', 'smartpay')}
-                        body={
+            <Container style={{ marginTop: '80px' }}>
+                <div className="mt-5">
+                    <Tabs fill defaultActiveKey="builder">
+                        <Tab
+                            eventKey="builder"
+                            className="text-decoration-none mt-3"
+                            title={__('Builder', 'smartpay')}
+                        >
                             <FormBuilder
                                 form={form}
                                 setFormData={setFormData}
                                 shouldReset={shouldReset}
                             />
-                        }
-                    />
-                </Accordion>
+                        </Tab>
+                        <Tab
+                            eventKey="options"
+                            className="text-decoration-none mt-3"
+                            title={__('Options', 'smartpay')}
+                        >
+                            <FormAmounts />
+                        </Tab>
+                    </Tabs>
+                </div>
             </Container>
         </>
     )
