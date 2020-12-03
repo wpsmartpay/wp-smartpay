@@ -1,21 +1,12 @@
 import { __ } from '@wordpress/i18n'
 
-import {
-    Container,
-    Card,
-    Accordion,
-    Tabs,
-    Tab,
-    Form,
-    Button,
-} from 'react-bootstrap'
+import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
 import { FormBuilder } from './FormBuilder'
-import { AccordionPanel } from './AccordionPanel'
 import { FormAmounts } from './FormAmounts'
 
 export const FormForm = ({
     form,
-    saveForm,
+    onSubmit,
     setFormData,
     shouldReset = false,
 }) => {
@@ -35,7 +26,7 @@ export const FormForm = ({
                     <div className="d-flex align-items-center justify-content-between py-2">
                         <div className="w-50">
                             <Form.Control
-                                className="mr-3"
+                                className="mr-3 border-0"
                                 size="sm"
                                 type="text"
                                 name="title"
@@ -52,12 +43,26 @@ export const FormForm = ({
                             />
                         </div>
                         <div className="ml-auto">
-                            <Button
-                                onClick={saveForm}
-                                className="btn btn-primary btn-sm text-decoration-none px-3"
-                            >
-                                {__('Publish', 'smartpay')}
-                            </Button>
+                            <div className="d-flex flex-row">
+                                {form.id && (
+                                    <Form.Control
+                                        size="sm"
+                                        type="text"
+                                        value={`[smartpay_form id="${form.id}"]`}
+                                        readOnly
+                                        className="mr-2"
+                                    />
+                                )}
+                                <Button
+                                    onClick={onSubmit}
+                                    className="btn btn-primary btn-sm text-decoration-none px-3"
+                                >
+                                    {__(
+                                        form.id ? 'Save' : 'Publish',
+                                        'smartpay'
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Container>

@@ -23,7 +23,6 @@ export const EditForm = () => {
     const { formId } = useParams()
 
     const [form, setFormData] = useReducer(reducer, defaultFormData)
-    const [response, setResponse] = useState({})
 
     const formData = useSelect(
         (select) => select('smartpay/forms').getForm(formId),
@@ -57,7 +56,7 @@ export const EditForm = () => {
 
     return (
         <>
-            <div
+            {/* <div
                 className="text-black bg-white border-bottom"
                 style={{
                     position: 'fixed',
@@ -91,11 +90,13 @@ export const EditForm = () => {
                         </div>
                     </div>
                 </Container>
-            </div>
+            </div> */}
 
-            <Container style={{ marginTop: '80px' }}>
-                <FormForm form={form} setFormData={setFormData} />
-            </Container>
+            <FormForm
+                onSubmit={updateForm}
+                form={form}
+                setFormData={setFormData}
+            />
         </>
     )
 }
