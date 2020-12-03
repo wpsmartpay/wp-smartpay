@@ -1,6 +1,8 @@
 import { __ } from '@wordpress/i18n'
-
+import { parse } from '@wordpress/blocks'
 import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
+import { Alert } from '../../components/Alert'
+
 import { FormBuilder } from './FormBuilder'
 import { FormAmounts } from './FormAmounts'
 
@@ -10,6 +12,38 @@ export const FormForm = ({
     setFormData,
     shouldReset = false,
 }) => {
+    const checkRequiredBlocks = (blocks) => {
+        const requiredBlocks = { name: 0, email: 0 }
+
+        if (blocks.length) {
+            blocks.map((block) => {
+                if ('smartpay-form/name' === block.name) {
+                    requiredBlocks.name = requiredBlocks.name + 1
+                } else if ('smartpay-form/email' === block.name) {
+                    requiredBlocks.email = requiredBlocks.email + 1
+                }
+            })
+        }
+
+        return requiredBlocks
+    }
+
+    const saveForm = () => {
+        const requiredBlocks = checkRequiredBlocks(parse(form.body))
+
+        if (requiredBlocks.name < 1) {
+            Alert('You must have one name field', 'error')
+        } else if (requiredBlocks.name > 1) {
+            Alert('Your form contains more than one name field', 'error')
+        } else if (requiredBlocks.email < 1) {
+            Alert('You must have one email field', 'error')
+        } else if (requiredBlocks.email > 1) {
+            Alert('Your form contains more than one email field', 'error')
+        } else {
+            onSubmit()
+        }
+    }
+
     return (
         <>
             <div
@@ -54,7 +88,7 @@ export const FormForm = ({
                                     />
                                 )}
                                 <Button
-                                    onClick={onSubmit}
+                                    onClick={saveForm}
                                     className="btn btn-primary btn-sm text-decoration-none px-3"
                                 >
                                     {__(

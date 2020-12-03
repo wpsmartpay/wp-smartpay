@@ -49892,6 +49892,40 @@ var save = function save(_ref) {
 
 /***/ }),
 
+/***/ "./resources/form-builder/components/Alert.js":
+/*!****************************************************!*\
+  !*** ./resources/form-builder/components/Alert.js ***!
+  \****************************************************/
+/*! exports provided: Alert */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Alert", function() { return Alert; });
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.js */ "./node_modules/sweetalert2/dist/sweetalert2.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_0__);
+
+var Alert = function Alert(message) {
+  var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'success';
+  var position = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'top-end';
+  sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_0___default.a.fire({
+    toast: true,
+    icon: type,
+    title: message,
+    position: position,
+    showConfirmButton: false,
+    timer: 2000,
+    showClass: {
+      popup: 'swal2-noanimation'
+    },
+    hideClass: {
+      popup: ''
+    }
+  });
+};
+
+/***/ }),
+
 /***/ "./resources/form-builder/components/block-editor/index.js":
 /*!*****************************************************************!*\
   !*** ./resources/form-builder/components/block-editor/index.js ***!
@@ -50178,10 +50212,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FormForm", function() { return FormForm; });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var _FormBuilder__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./FormBuilder */ "./resources/form-builder/pages/components/FormBuilder.js");
-/* harmony import */ var _FormAmounts__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FormAmounts */ "./resources/form-builder/pages/components/FormAmounts.js");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
+/* harmony import */ var _components_Alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Alert */ "./resources/form-builder/components/Alert.js");
+/* harmony import */ var _FormBuilder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FormBuilder */ "./resources/form-builder/pages/components/FormBuilder.js");
+/* harmony import */ var _FormAmounts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FormAmounts */ "./resources/form-builder/pages/components/FormAmounts.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
 
 
 
@@ -50193,6 +50232,42 @@ var FormForm = function FormForm(_ref) {
       setFormData = _ref.setFormData,
       _ref$shouldReset = _ref.shouldReset,
       shouldReset = _ref$shouldReset === void 0 ? false : _ref$shouldReset;
+
+  var checkRequiredBlocks = function checkRequiredBlocks(blocks) {
+    var requiredBlocks = {
+      name: 0,
+      email: 0
+    };
+
+    if (blocks.length) {
+      blocks.map(function (block) {
+        if ('smartpay-form/name' === block.name) {
+          requiredBlocks.name = requiredBlocks.name + 1;
+        } else if ('smartpay-form/email' === block.name) {
+          requiredBlocks.email = requiredBlocks.email + 1;
+        }
+      });
+    }
+
+    return requiredBlocks;
+  };
+
+  var saveForm = function saveForm() {
+    var requiredBlocks = checkRequiredBlocks(Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["parse"])(form.body));
+
+    if (requiredBlocks.name < 1) {
+      Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('You must have one name field', 'error');
+    } else if (requiredBlocks.name > 1) {
+      Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('Your form contains more than one name field', 'error');
+    } else if (requiredBlocks.email < 1) {
+      Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('You must have one email field', 'error');
+    } else if (requiredBlocks.email > 1) {
+      Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('Your form contains more than one email field', 'error');
+    } else {
+      onSubmit();
+    }
+  };
+
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "text-black bg-white border-bottom",
     style: {
@@ -50202,11 +50277,11 @@ var FormForm = function FormForm(_ref) {
       top: '32px',
       zIndex: 99
     }
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], null, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], null, /*#__PURE__*/React.createElement("div", {
     className: "d-flex align-items-center justify-content-between py-2"
   }, /*#__PURE__*/React.createElement("div", {
     className: "w-50"
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Form"].Control, {
     className: "mr-3 border-0",
     size: "sm",
     type: "text",
@@ -50220,37 +50295,37 @@ var FormForm = function FormForm(_ref) {
     className: "ml-auto"
   }, /*#__PURE__*/React.createElement("div", {
     className: "d-flex flex-row"
-  }, form.id && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
+  }, form.id && /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Form"].Control, {
     size: "sm",
     type: "text",
     value: "[smartpay_form id=\"".concat(form.id, "\"]"),
     readOnly: true,
     className: "mr-2"
-  }), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
-    onClick: onSubmit,
+  }), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Button"], {
+    onClick: saveForm,
     className: "btn btn-primary btn-sm text-decoration-none px-3"
-  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(form.id ? 'Save' : 'Publish', 'smartpay'))))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Container"], {
+  }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(form.id ? 'Save' : 'Publish', 'smartpay'))))))), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Container"], {
     style: {
       marginTop: '80px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "mt-5"
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tabs"], {
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Tabs"], {
     fill: true,
     defaultActiveKey: "builder"
-  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
+  }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Tab"], {
     eventKey: "builder",
     className: "text-decoration-none mt-3",
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Builder', 'smartpay')
-  }, /*#__PURE__*/React.createElement(_FormBuilder__WEBPACK_IMPORTED_MODULE_2__["FormBuilder"], {
+  }, /*#__PURE__*/React.createElement(_FormBuilder__WEBPACK_IMPORTED_MODULE_4__["FormBuilder"], {
     form: form,
     setFormData: setFormData,
     shouldReset: shouldReset
-  })), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Tab"], {
+  })), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["Tab"], {
     eventKey: "options",
     className: "text-decoration-none mt-3",
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Options', 'smartpay')
-  }, /*#__PURE__*/React.createElement(_FormAmounts__WEBPACK_IMPORTED_MODULE_3__["FormAmounts"], null))))));
+  }, /*#__PURE__*/React.createElement(_FormAmounts__WEBPACK_IMPORTED_MODULE_5__["FormAmounts"], null))))));
 };
 
 /***/ }),
