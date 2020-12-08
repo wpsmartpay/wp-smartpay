@@ -49685,7 +49685,8 @@ var save = function save(_ref) {
     type: "email",
     className: "form-control",
     id: attributes.attributes.name,
-    name: "smartpay_form[".concat(attributes.attributes.name, "]")
+    name: "smartpay_form[".concat(attributes.attributes.name, "]"),
+    required: attributes.attributes.isRequired
   }));
 };
 
@@ -49907,7 +49908,8 @@ var save = function save(_ref) {
     type: "number",
     className: "form-control",
     id: attributes.attributes.name,
-    name: "smartpay_form[".concat(attributes.attributes.name, "]")
+    name: "smartpay_form[".concat(attributes.attributes.name, "]"),
+    required: attributes.attributes.isRequired
   }));
 };
 
@@ -50128,7 +50130,8 @@ var save = function save(_ref) {
     type: "text",
     className: "form-control",
     id: attributes.attributes.name,
-    name: "smartpay_form[".concat(attributes.attributes.name, "]")
+    name: "smartpay_form[".concat(attributes.attributes.name, "]"),
+    required: attributes.attributes.isRequired
   }));
 };
 

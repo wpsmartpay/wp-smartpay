@@ -11,6 +11,7 @@ export const save = ({ attributes }) => {
                 className="form-control"
                 id={attributes.attributes.name}
                 name={`smartpay_form[${attributes.attributes.name}]`}
+                required={attributes.attributes.isRequired}
             />
         </div>
     )
