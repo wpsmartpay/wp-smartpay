@@ -49626,6 +49626,227 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./resources/form-builder/blocks/TextInput/edit.js":
+/*!*********************************************************!*\
+  !*** ./resources/form-builder/blocks/TextInput/edit.js ***!
+  \*********************************************************/
+/*! exports provided: edit */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edit", function() { return edit; });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+var edit = function edit(_ref) {
+  var attributes = _ref.attributes,
+      setAttributes = _ref.setAttributes;
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+    if (attributes.attributes.name) {
+      return;
+    }
+
+    setAttributesData({
+      name: Math.random().toString(36).substr(2, 11)
+    });
+  }, []);
+
+  var setSettingsData = function setSettingsData(data) {
+    setAttributes({
+      settings: _objectSpread(_objectSpread({}, attributes.settings), data)
+    });
+  };
+
+  var setAttributesData = function setAttributesData(data) {
+    setAttributes({
+      attributes: _objectSpread(_objectSpread({}, attributes.attributes), data)
+    });
+  };
+
+  var setValidationRulesData = function setValidationRulesData(validationRules) {
+    setAttributes({
+      validationRules: validationRules
+    });
+  };
+
+  var toggleValidationRule = function toggleValidationRule(isRequired) {
+    setAttributesData({
+      isRequired: isRequired
+    });
+    var validationRules = [];
+
+    if (isRequired) {
+      validationRules = [].concat(_toConsumableArray(attributes.validationRules), [{
+        required: {
+          value: true,
+          message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('This field is required', 'smartpay')
+        }
+      }]);
+    } else {
+      validationRules = attributes.validationRules.filter(function (rule) {
+        return 'required' !== Object.keys(rule)[0];
+      });
+    }
+
+    setValidationRulesData(validationRules);
+  };
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "form-element"
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    label: attributes.settings.label,
+    placeholder: attributes.attributes.placeholder
+  })), /*#__PURE__*/React.createElement(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__["InspectorControls"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Settings', 'smartpay'),
+    initialOpen: true
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Label', 'smartpay'),
+    value: attributes.settings.label,
+    onChange: function onChange(value) {
+      setSettingsData({
+        label: value
+      });
+    }
+  }), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Placeholder', 'smartpay'),
+    value: attributes.attributes.placeholder,
+    className: "mt-3",
+    onChange: function onChange(value) {
+      setAttributesData({
+        placeholder: value
+      });
+    }
+  }), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["ToggleControl"], {
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Is required', 'smartpay'),
+    checked: attributes.attributes.isRequired,
+    value: true,
+    className: "mt-3",
+    onChange: function onChange(value) {
+      toggleValidationRule(value);
+    }
+  }))));
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/TextInput/index.js":
+/*!**********************************************************!*\
+  !*** ./resources/form-builder/blocks/TextInput/index.js ***!
+  \**********************************************************/
+/*! exports provided: TextInput */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TextInput", function() { return TextInput; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/index.js");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./resources/form-builder/blocks/TextInput/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./resources/form-builder/blocks/TextInput/save.js");
+
+
+
+
+var TextInput = {
+  namespace: 'smartpay-form/text-input',
+  settings: {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Text Input Fields', 'smartpay'),
+    description: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Text Input fields', 'smartpay'),
+    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["page"],
+    keywords: ['input', 'text'],
+    attributes: {
+      attributes: {
+        type: Object,
+        "default": {
+          name: '',
+          value: '',
+          "class": '',
+          placeholder: '',
+          isRequired: false
+        }
+      },
+      settings: {
+        type: Object,
+        "default": {
+          visible: true,
+          label: 'Text Input',
+          adminLabel: '',
+          helpMessage: '',
+          labelPosition: 'top'
+        }
+      },
+      validationRules: {
+        type: Array,
+        "default": []
+      }
+    },
+    edit: _edit__WEBPACK_IMPORTED_MODULE_2__["edit"],
+    save: _save__WEBPACK_IMPORTED_MODULE_3__["save"]
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/TextInput/save.js":
+/*!*********************************************************!*\
+  !*** ./resources/form-builder/blocks/TextInput/save.js ***!
+  \*********************************************************/
+/*! exports provided: save */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "save", function() { return save; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+
+var save = function save(_ref) {
+  var attributes = _ref.attributes;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "form-element"
+  }, /*#__PURE__*/React.createElement("label", {
+    "for": "smartpay_first_name"
+  }, attributes), /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "smartpay_first_name",
+    name: "smartpay_first_name"
+  }));
+};
+
+/***/ }),
+
 /***/ "./resources/form-builder/blocks/email/edit.js":
 /*!*****************************************************!*\
   !*** ./resources/form-builder/blocks/email/edit.js ***!
@@ -49739,12 +49960,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_library__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _name__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./name */ "./resources/form-builder/blocks/name/index.js");
 /* harmony import */ var _email__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./email */ "./resources/form-builder/blocks/email/index.js");
+/* harmony import */ var _TextInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TextInput */ "./resources/form-builder/blocks/TextInput/index.js");
+
 
 
 
 
 var unregisterBlocks = ['core/quote', 'core/archives', 'core/audio', 'core/calendar', 'core/categories', 'core/latest-comments', 'core/latest-posts', 'core/missing', 'core/more', 'core/nextpage', 'core/preformatted', 'core/pullquote', 'core/rss', 'core/search', 'core/social-links', 'core/social-link', 'core-embed/twitter', 'core-embed/youtube', 'core-embed/facebook', 'core-embed/instagram', 'core-embed/wordpress', 'core-embed/soundcloud', 'core-embed/spotify', 'core-embed/flickr', 'core-embed/vimeo', 'core-embed/animoto', 'core-embed/cloudup', 'core-embed/collegehumor', 'core-embed/crowdsignal', 'core-embed/dailymotion', 'core-embed/imgur', 'core-embed/issuu', 'core-embed/kickstarter', 'core-embed/meetup-com', 'core-embed/mixcloud', 'core-embed/polldaddy', 'core-embed/reddit', 'core-embed/reverbnation', 'core-embed/screencast', 'core-embed/scribd', 'core-embed/slideshare', 'core-embed/smugmug', 'core-embed/speaker-deck', 'core-embed/tiktok', 'core-embed/ted', 'core-embed/tumblr', 'core-embed/videopress', 'core-embed/wordpress-tv', 'core-embed/amazon-kindle', 'core/tag-cloud', 'core/verse', 'core/video'];
-var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"]];
+var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextInput__WEBPACK_IMPORTED_MODULE_4__["TextInput"]];
 var registerBlocks = function registerBlocks() {
   Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__["registerCoreBlocks"])(); // Remove core blocks
 
@@ -50253,7 +50476,8 @@ var FormForm = function FormForm(_ref) {
   };
 
   var saveForm = function saveForm() {
-    var requiredBlocks = checkRequiredBlocks(Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["parse"])(form.body));
+    var blocks = Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["parse"])(form.body);
+    var requiredBlocks = checkRequiredBlocks(blocks);
 
     if (requiredBlocks.name < 1) {
       Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('You must have one name field', 'error');
@@ -50513,6 +50737,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_interface__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/interface */ "./node_modules/@wordpress/interface/build-module/index.js");
 /* harmony import */ var _components_block_editor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/block-editor */ "./resources/form-builder/components/block-editor/index.js");
 /* harmony import */ var _components_sidebar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/sidebar */ "./resources/form-builder/components/sidebar/index.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -50523,6 +50749,21 @@ var FormBuilder = function FormBuilder(_ref) {
   var form = _ref.form,
       setFormData = _ref.setFormData,
       shouldReset = _ref.shouldReset;
+
+  var makeFormFields = function makeFormFields(blocks) {
+    var fields = [];
+    blocks.map(function (block) {
+      var _block$attributes, _block$attributes$att;
+
+      var fieldName = block === null || block === void 0 ? void 0 : (_block$attributes = block.attributes) === null || _block$attributes === void 0 ? void 0 : (_block$attributes$att = _block$attributes.attributes) === null || _block$attributes$att === void 0 ? void 0 : _block$attributes$att.name;
+
+      if (fieldName) {
+        fields.push(_defineProperty({}, fieldName, block.attributes));
+      }
+    });
+    return fields;
+  };
+
   return /*#__PURE__*/React.createElement("div", {
     className: "smartpay-form-block-editor block-editor",
     style: {
@@ -50533,7 +50774,8 @@ var FormBuilder = function FormBuilder(_ref) {
       resetBlocks: shouldReset,
       onBlockUpdate: function onBlockUpdate(blocks) {
         setFormData({
-          body: Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["serialize"])(blocks)
+          body: Object(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__["serialize"])(blocks),
+          fields: makeFormFields(blocks)
         });
       },
       settings: window.smartPayBlockEditorSettings || {},
@@ -50593,7 +50835,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var defaultFormData = {
   title: 'Untitled Form',
-  body: "<!-- wp:smartpay-form/name -->\n        <div class=\"wp-block-smartpay-form-name form-element\"><div class=\"form-row\"><div class=\"col\"><label for=\"smartpay_first_name\">First Name</label><input type=\"text\" class=\"form-control\" id=\"smartpay_first_name\" name=\"smartpay_first_name\"/></div><div class=\"col\"><label for=\"smartpay_last_name\">Last Name</label><input type=\"text\" class=\"form-control\" id=\"smartpay_last_name\" name=\"smartpay_last_name\"/></div></div></div>\n        <!-- /wp:smartpay-form/name -->\n\n        <!-- wp:smartpay-form/email -->\n        <div class=\"wp-block-smartpay-form-email form-element\"><div class=\"form-group\"><label for=\"smartpay_email\">Email</label><input type=\"email\" class=\"form-control\" id=\"smartpay_email\" name=\"smartpay_email\"/></div></div>\n        <!-- /wp:smartpay-form/email -->"
+  body: "<!-- wp:smartpay-form/name -->\n        <div class=\"wp-block-smartpay-form-name form-element\"><div class=\"form-row\"><div class=\"col\"><label for=\"smartpay_first_name\">First Name</label><input type=\"text\" class=\"form-control\" id=\"smartpay_first_name\" name=\"smartpay_first_name\"/></div><div class=\"col\"><label for=\"smartpay_last_name\">Last Name</label><input type=\"text\" class=\"form-control\" id=\"smartpay_last_name\" name=\"smartpay_last_name\"/></div></div></div>\n        <!-- /wp:smartpay-form/name -->\n\n        <!-- wp:smartpay-form/email -->\n        <div class=\"wp-block-smartpay-form-email form-element\"><div class=\"form-group\"><label for=\"smartpay_email\">Email</label><input type=\"email\" class=\"form-control\" id=\"smartpay_email\" name=\"smartpay_email\"/></div></div>\n        <!-- /wp:smartpay-form/email -->",
+  fields: []
 };
 
 var reducer = function reducer(state, data) {
@@ -50663,11 +50906,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
-/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.js */ "./node_modules/sweetalert2/dist/sweetalert2.js");
-/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
-/* harmony import */ var _components_Form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/Form */ "./resources/form-builder/pages/components/Form.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.js */ "./node_modules/sweetalert2/dist/sweetalert2.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _http_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../http/form */ "./resources/form-builder/http/form.js");
+/* harmony import */ var _components_Form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Form */ "./resources/form-builder/pages/components/Form.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -50693,10 +50935,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-
 var defaultFormData = {
   title: '',
-  body: ''
+  body: '',
+  fields: []
 };
 
 var reducer = function reducer(state, data) {
@@ -50720,9 +50962,10 @@ var EditForm = function EditForm() {
   }, [formId, formData]);
 
   var updateForm = function updateForm() {
-    Object(_http_form__WEBPACK_IMPORTED_MODULE_6__["Update"])(formId, JSON.stringify(form)).then(function (response) {
+    console.log(JSON.stringify(form));
+    Object(_http_form__WEBPACK_IMPORTED_MODULE_5__["Update"])(formId, JSON.stringify(form)).then(function (response) {
       Object(_wordpress_data__WEBPACK_IMPORTED_MODULE_3__["dispatch"])('smartpay/forms').updateForm(form);
-      sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_5___default.a.fire({
+      sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_4___default.a.fire({
         toast: true,
         icon: 'success',
         title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])(response.message, 'smartpay'),
@@ -50739,7 +50982,7 @@ var EditForm = function EditForm() {
     });
   };
 
-  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Form__WEBPACK_IMPORTED_MODULE_7__["FormForm"], {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_components_Form__WEBPACK_IMPORTED_MODULE_6__["FormForm"], {
     onSubmit: updateForm,
     form: form,
     setFormData: setFormData

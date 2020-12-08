@@ -11,6 +11,20 @@ import { BlockEditor } from '../../components/block-editor'
 import { Sidebar } from '../../components/sidebar'
 
 export const FormBuilder = ({ form, setFormData, shouldReset }) => {
+    const makeFormFields = (blocks) => {
+        let fields = []
+
+        blocks.map((block) => {
+            const fieldName = block?.attributes?.attributes?.name
+
+            if (fieldName) {
+                fields.push({ [fieldName]: block.attributes })
+            }
+        })
+
+        return fields
+    }
+
     return (
         <div
             className="smartpay-form-block-editor block-editor"
@@ -26,6 +40,7 @@ export const FormBuilder = ({ form, setFormData, shouldReset }) => {
                                     onBlockUpdate={(blocks) => {
                                         setFormData({
                                             body: serialize(blocks),
+                                            fields: makeFormFields(blocks),
                                         })
                                     }}
                                     settings={

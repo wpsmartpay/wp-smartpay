@@ -15,6 +15,7 @@ const defaultFormData = {
         <!-- wp:smartpay-form/email -->
         <div class="wp-block-smartpay-form-email form-element"><div class="form-group"><label for="smartpay_email">Email</label><input type="email" class="form-control" id="smartpay_email" name="smartpay_email"/></div></div>
         <!-- /wp:smartpay-form/email -->`,
+    fields: [],
 }
 
 const reducer = (state, data) => {

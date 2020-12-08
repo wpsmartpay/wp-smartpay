@@ -1,8 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState, useReducer } from '@wordpress/element'
+import { useEffect, useReducer } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
-import { Container, Alert, Button, Form as BSForm } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Update } from '../http/form'
 import { FormForm } from './components/Form'
@@ -10,6 +9,7 @@ import { FormForm } from './components/Form'
 const defaultFormData = {
     title: '',
     body: '',
+    fields: [],
 }
 
 const reducer = (state, data) => {
@@ -34,6 +34,7 @@ export const EditForm = () => {
     }, [formId, formData])
 
     const updateForm = () => {
+        console.log(JSON.stringify(form))
         Update(formId, JSON.stringify(form)).then((response) => {
             dispatch('smartpay/forms').updateForm(form)
 

@@ -29,7 +29,9 @@ export const FormForm = ({
     }
 
     const saveForm = () => {
-        const requiredBlocks = checkRequiredBlocks(parse(form.body))
+        const blocks = parse(form.body)
+
+        const requiredBlocks = checkRequiredBlocks(blocks)
 
         if (requiredBlocks.name < 1) {
             Alert('You must have one name field', 'error')
