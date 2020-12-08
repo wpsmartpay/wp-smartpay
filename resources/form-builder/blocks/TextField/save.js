@@ -10,7 +10,7 @@ export const save = ({ attributes }) => {
                 type="text"
                 className="form-control"
                 id={attributes.attributes.name}
-                name={`smartpay_text[${attributes.attributes.name}]`}
+                name={`smartpay_form[${attributes.attributes.name}]`}
             />
         </div>
     )

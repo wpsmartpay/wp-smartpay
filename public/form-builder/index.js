@@ -49686,7 +49686,7 @@ var save = function save(_ref) {
     type: "number",
     className: "form-control",
     id: attributes.attributes.name,
-    name: attributes.attributes.name
+    name: "smartpay_form[".concat(attributes.attributes.name, "]")
   }));
 };
 
@@ -49907,7 +49907,7 @@ var save = function save(_ref) {
     type: "text",
     className: "form-control",
     id: attributes.attributes.name,
-    name: "smartpay_text[".concat(attributes.attributes.name, "]")
+    name: "smartpay_form[".concat(attributes.attributes.name, "]")
   }));
 };
 
