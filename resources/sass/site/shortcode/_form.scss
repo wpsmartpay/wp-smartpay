@@ -1,12 +1,15 @@
 .smartpay-form-shortcode {
     .form {
         .form-control {
-            height: 38px;
             font-size: 16px;
 
             &:focus {
                 color: #000000;
             }
+        }
+
+        textarea.form-control {
+            min-height: calc(1.5em + 0.75rem + 2px);
         }
     }
 
