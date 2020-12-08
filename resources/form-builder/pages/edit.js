@@ -34,7 +34,6 @@ export const EditForm = () => {
     }, [formId, formData])
 
     const updateForm = () => {
-        console.log(JSON.stringify(form))
         Update(formId, JSON.stringify(form)).then((response) => {
             dispatch('smartpay/forms').updateForm(form)
 

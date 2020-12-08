@@ -7,6 +7,7 @@ import { registerCoreBlocks } from '@wordpress/block-library'
 import { name } from './name'
 import { email } from './email'
 import { TextInput } from './TextInput'
+import { NumericField } from './NumericField'
 
 const unregisterBlocks = [
     'core/quote',
@@ -63,7 +64,7 @@ const unregisterBlocks = [
     'core/video',
 ]
 
-const smartPayBlocks = [name, email, TextInput]
+const smartPayBlocks = [name, email, TextInput, NumericField]
 
 export const registerBlocks = () => {
     registerCoreBlocks()
