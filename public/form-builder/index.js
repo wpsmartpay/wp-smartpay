@@ -49902,12 +49902,12 @@ var save = function save(_ref) {
   return /*#__PURE__*/React.createElement("div", {
     className: "form-element"
   }, /*#__PURE__*/React.createElement("label", {
-    "for": "smartpay_first_name"
-  }, attributes), /*#__PURE__*/React.createElement("input", {
+    "for": attributes.attributes.name
+  }, attributes.settings.label), /*#__PURE__*/React.createElement("input", {
     type: "text",
     className: "form-control",
-    id: "smartpay_first_name",
-    name: "smartpay_first_name"
+    id: attributes.attributes.name,
+    name: "smartpay_text[".concat(attributes.attributes.name, "]")
   }));
 };
 
