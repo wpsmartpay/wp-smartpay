@@ -8,6 +8,7 @@ import { name } from './name'
 import { email } from './email'
 import { TextField } from './TextField'
 import { NumericField } from './NumericField'
+import { EmailField } from './EmailField'
 
 const unregisterBlocks = [
     'core/quote',
@@ -64,7 +65,7 @@ const unregisterBlocks = [
     'core/video',
 ]
 
-const smartPayBlocks = [name, email, TextField, NumericField]
+const smartPayBlocks = [name, email, TextField, NumericField, EmailField]
 
 export const registerBlocks = () => {
     registerCoreBlocks()
