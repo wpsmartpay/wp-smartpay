@@ -52,6 +52,7 @@ class FormController extends RestController
         $form = new Form();
         $form->title  = $request->title ?? 'Untitled form';
         $form->body   = $request->body;
+        $form->fields = $request->fields;
         $form->status = Form::PUBLISH;
         $form->save();
 
@@ -93,6 +94,7 @@ class FormController extends RestController
 
         $form->title  = $request->title ?? __('Untitled form', 'smartpay');
         $form->body   = $request->body;
+        $form->fields = $request->fields;
         $form->status = Form::PUBLISH;
         $form->save();
 

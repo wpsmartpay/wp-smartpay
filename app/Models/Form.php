@@ -11,6 +11,7 @@ class Form extends Model
     protected $fillable = [
         'title',
         'body',
+        'fields',
         'status',
     ];
 
@@ -21,5 +22,15 @@ class Form extends Model
         static::creating(function ($form) {
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
+    }
+
+    public function getFieldsAttribute($fields)
+    {
+        return \json_decode($fields, true);
+    }
+
+    public function setFieldsAttribute($fields)
+    {
+        $this->attributes['fields'] = \json_encode($fields);
     }
 }

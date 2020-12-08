@@ -19,6 +19,7 @@ class CreateSmartpayFormsTable
                 `id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 `title` VARCHAR(255) NOT NULL,
                 `body` LONGTEXT DEFAULT NULL,
+                `fields` LONGTEXT DEFAULT NULL,
                 `status` VARCHAR(45) NOT NULL DEFAULT '$defaultStatus',
                 `extra` LONGTEXT DEFAULT NULL,
                 `created_by` BIGINT UNSIGNED DEFAULT 0,
