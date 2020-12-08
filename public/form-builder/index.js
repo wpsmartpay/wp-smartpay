@@ -49692,9 +49692,9 @@ var save = function save(_ref) {
 
 /***/ }),
 
-/***/ "./resources/form-builder/blocks/TextInput/edit.js":
+/***/ "./resources/form-builder/blocks/TextField/edit.js":
 /*!*********************************************************!*\
-  !*** ./resources/form-builder/blocks/TextInput/edit.js ***!
+  !*** ./resources/form-builder/blocks/TextField/edit.js ***!
   \*********************************************************/
 /*! exports provided: edit */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -49788,6 +49788,7 @@ var edit = function edit(_ref) {
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "form-element"
   }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
     label: attributes.settings.label,
     placeholder: attributes.attributes.placeholder
   })), /*#__PURE__*/React.createElement(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__["InspectorControls"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
@@ -49825,26 +49826,26 @@ var edit = function edit(_ref) {
 
 /***/ }),
 
-/***/ "./resources/form-builder/blocks/TextInput/index.js":
+/***/ "./resources/form-builder/blocks/TextField/index.js":
 /*!**********************************************************!*\
-  !*** ./resources/form-builder/blocks/TextInput/index.js ***!
+  !*** ./resources/form-builder/blocks/TextField/index.js ***!
   \**********************************************************/
-/*! exports provided: TextInput */
+/*! exports provided: TextField */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TextInput", function() { return TextInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TextField", function() { return TextField; });
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/index.js");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./resources/form-builder/blocks/TextInput/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./resources/form-builder/blocks/TextInput/save.js");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./resources/form-builder/blocks/TextField/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./resources/form-builder/blocks/TextField/save.js");
 
 
 
 
-var TextInput = {
+var TextField = {
   namespace: 'smartpay-form/text-input',
   settings: {
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Text Input Fields', 'smartpay'),
@@ -49867,7 +49868,6 @@ var TextInput = {
         "default": {
           visible: true,
           label: 'Text Input',
-          adminLabel: '',
           helpMessage: '',
           labelPosition: 'top'
         }
@@ -49884,9 +49884,9 @@ var TextInput = {
 
 /***/ }),
 
-/***/ "./resources/form-builder/blocks/TextInput/save.js":
+/***/ "./resources/form-builder/blocks/TextField/save.js":
 /*!*********************************************************!*\
-  !*** ./resources/form-builder/blocks/TextInput/save.js ***!
+  !*** ./resources/form-builder/blocks/TextField/save.js ***!
   \*********************************************************/
 /*! exports provided: save */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -50026,7 +50026,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_block_library__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _name__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./name */ "./resources/form-builder/blocks/name/index.js");
 /* harmony import */ var _email__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./email */ "./resources/form-builder/blocks/email/index.js");
-/* harmony import */ var _TextInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TextInput */ "./resources/form-builder/blocks/TextInput/index.js");
+/* harmony import */ var _TextField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TextField */ "./resources/form-builder/blocks/TextField/index.js");
 /* harmony import */ var _NumericField__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./NumericField */ "./resources/form-builder/blocks/NumericField/index.js");
 
 
@@ -50035,7 +50035,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var unregisterBlocks = ['core/quote', 'core/archives', 'core/audio', 'core/calendar', 'core/categories', 'core/latest-comments', 'core/latest-posts', 'core/missing', 'core/more', 'core/nextpage', 'core/preformatted', 'core/pullquote', 'core/rss', 'core/search', 'core/social-links', 'core/social-link', 'core-embed/twitter', 'core-embed/youtube', 'core-embed/facebook', 'core-embed/instagram', 'core-embed/wordpress', 'core-embed/soundcloud', 'core-embed/spotify', 'core-embed/flickr', 'core-embed/vimeo', 'core-embed/animoto', 'core-embed/cloudup', 'core-embed/collegehumor', 'core-embed/crowdsignal', 'core-embed/dailymotion', 'core-embed/imgur', 'core-embed/issuu', 'core-embed/kickstarter', 'core-embed/meetup-com', 'core-embed/mixcloud', 'core-embed/polldaddy', 'core-embed/reddit', 'core-embed/reverbnation', 'core-embed/screencast', 'core-embed/scribd', 'core-embed/slideshare', 'core-embed/smugmug', 'core-embed/speaker-deck', 'core-embed/tiktok', 'core-embed/ted', 'core-embed/tumblr', 'core-embed/videopress', 'core-embed/wordpress-tv', 'core-embed/amazon-kindle', 'core/tag-cloud', 'core/verse', 'core/video'];
-var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextInput__WEBPACK_IMPORTED_MODULE_4__["TextInput"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"]];
+var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextField__WEBPACK_IMPORTED_MODULE_4__["TextField"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"]];
 var registerBlocks = function registerBlocks() {
   Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__["registerCoreBlocks"])(); // Remove core blocks
 

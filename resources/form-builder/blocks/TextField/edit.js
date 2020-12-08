@@ -69,6 +69,7 @@ export const edit = ({ attributes, setAttributes }) => {
         <>
             <div className="form-element">
                 <InputControl
+                    type="text"
                     label={attributes.settings.label}
                     placeholder={attributes.attributes.placeholder}
                 />

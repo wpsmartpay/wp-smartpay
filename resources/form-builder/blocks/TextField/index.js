@@ -3,7 +3,7 @@ import { page } from '@wordpress/icons'
 import { edit } from './edit'
 import { save } from './save'
 
-export const TextInput = {
+export const TextField = {
     namespace: 'smartpay-form/text-input',
     settings: {
         title: __('Text Input Fields', 'smartpay'),
@@ -26,7 +26,6 @@ export const TextInput = {
                 default: {
                     visible: true,
                     label: 'Text Input',
-                    adminLabel: '',
                     helpMessage: '',
                     labelPosition: 'top',
                 },
