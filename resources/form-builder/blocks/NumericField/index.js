@@ -4,7 +4,7 @@ import { edit } from './edit'
 import { save } from './save'
 
 export const NumericField = {
-    namespace: 'smartpay-form/numeric-field',
+    namespace: 'smartpay-form/numeric-input',
     settings: {
         title: __('Numeric Field', 'smartpay'),
         description: __('Numeric Field', 'smartpay'),
