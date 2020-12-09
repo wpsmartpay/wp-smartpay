@@ -50355,7 +50355,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var TextAreaField = {
-  namespace: 'smartpay-form/textare-input',
+  namespace: 'smartpay-form/textarea-input',
   settings: {
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Text Area Fields', 'smartpay'),
     description: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Text Area fields', 'smartpay'),

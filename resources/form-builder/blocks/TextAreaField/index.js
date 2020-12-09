@@ -4,7 +4,7 @@ import { edit } from './edit'
 import { save } from './save'
 
 export const TextAreaField = {
-    namespace: 'smartpay-form/textare-input',
+    namespace: 'smartpay-form/textarea-input',
     settings: {
         title: __('Text Area Fields', 'smartpay'),
         description: __('Text Area fields', 'smartpay'),
