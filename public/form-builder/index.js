@@ -49470,6 +49470,421 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./resources/form-builder/blocks/AddressField/edit.js":
+/*!************************************************************!*\
+  !*** ./resources/form-builder/blocks/AddressField/edit.js ***!
+  \************************************************************/
+/*! exports provided: edit */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edit", function() { return edit; });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+var chunk = function chunk(arr, size) {
+  return Array.from({
+    length: Math.ceil(arr.length / size)
+  }, function (v, i) {
+    return arr.slice(i * size, i * size + size);
+  });
+};
+
+var edit = function edit(_ref) {
+  var attributes = _ref.attributes,
+      setAttributes = _ref.setAttributes;
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+    if (attributes.attributes.name) {
+      return;
+    }
+
+    setAttributesData({
+      name: Math.random().toString(36).substr(2, 11)
+    });
+  }, []);
+
+  var setSettingsData = function setSettingsData(data) {
+    setAttributes({
+      settings: _objectSpread(_objectSpread({}, attributes.settings), data)
+    });
+  };
+
+  var setAttributesData = function setAttributesData(data) {
+    setAttributes({
+      attributes: _objectSpread(_objectSpread({}, attributes.attributes), data)
+    });
+  };
+
+  var setFieldsItem = function setFieldsItem(field) {
+    setAttributes({
+      fields: _toConsumableArray(attributes.fields.map(function (f) {
+        return f.attributes.name === field.attributes.name ? field : f;
+      }))
+    });
+  };
+
+  var toggleFieldValidationRule = function toggleFieldValidationRule(field, isRequired) {
+    var validationRules = _toConsumableArray(field.validationRules);
+
+    if (isRequired) {
+      validationRules.push({
+        required: {
+          value: true,
+          message: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('This field is required', 'smartpay')
+        }
+      });
+    } else {
+      validationRules = field.validationRules.filter(function (rule) {
+        return 'required' !== Object.keys(rule)[0];
+      });
+    }
+
+    setFieldsItem(_objectSpread(_objectSpread({}, field), {}, {
+      attributes: _objectSpread(_objectSpread({}, field.attributes), {}, {
+        isRequired: isRequired
+      }),
+      validationRules: validationRules
+    }));
+  };
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "form-element"
+  }, chunk(attributes.fields, 2).map(function (items, index) {
+    return /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+      key: index
+    }, items.map(function (item, i) {
+      return !!item.settings.visible && /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexBlock"], {
+        key: i
+      }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["TextControl"], {
+        type: "text",
+        label: item.settings.label,
+        placeholder: item.attributes.placeholder,
+        value: "",
+        onChange: function onChange() {}
+      }));
+    }));
+  })), /*#__PURE__*/React.createElement(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__["InspectorControls"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Settings', 'smartpay'),
+    initialOpen: true
+  }, attributes.fields.map(function (field, index) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: index
+    }, /*#__PURE__*/React.createElement(Accordion, {
+      header: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["CheckboxControl"], {
+        label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])(field.settings.label, 'smartpay'),
+        checked: field.settings.visible,
+        onChange: function onChange(value) {
+          setFieldsItem(_objectSpread(_objectSpread({}, field), {}, {
+            settings: _objectSpread(_objectSpread({}, field.settings), {}, {
+              visible: value
+            })
+          }));
+        }
+      })),
+      body: /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FieldSettings, {
+        field: field,
+        setFieldsItem: setFieldsItem,
+        toggleFieldValidationRule: toggleFieldValidationRule
+      }))
+    }));
+  }))));
+};
+
+var Accordion = function Accordion(_ref2) {
+  var header = _ref2.header,
+      body = _ref2.body,
+      _ref2$opened = _ref2.opened,
+      opened = _ref2$opened === void 0 ? false : _ref2$opened;
+
+  var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])(opened),
+      _useState2 = _slicedToArray(_useState, 2),
+      isOpen = _useState2[0],
+      toggleOpen = _useState2[1];
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "mt-3 accordion"
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Flex"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, header), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    icon: isOpen ? 'arrow-up-alt2' : 'arrow-down-alt2',
+    label: "More",
+    isSmall: true,
+    onClick: function onClick() {
+      toggleOpen(!isOpen);
+    }
+  }))), isOpen && /*#__PURE__*/React.createElement("div", {
+    className: "bg-light p-3"
+  }, body));
+};
+
+var FieldSettings = function FieldSettings(_ref3) {
+  var field = _ref3.field,
+      setFieldsItem = _ref3.setFieldsItem,
+      toggleFieldValidationRule = _ref3.toggleFieldValidationRule;
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Label', 'smartpay'),
+    value: field.settings.label,
+    onChange: function onChange(value) {
+      setFieldsItem(_objectSpread(_objectSpread({}, field), {}, {
+        settings: _objectSpread(_objectSpread({}, field.settings), {}, {
+          label: value
+        })
+      }));
+    }
+  }), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Placeholder', 'smartpay'),
+    value: field.attributes.placeholder,
+    className: "mt-3",
+    onChange: function onChange(value) {
+      setFieldsItem(_objectSpread(_objectSpread({}, field), {}, {
+        attributes: _objectSpread(_objectSpread({}, field.attributes), {}, {
+          placeholder: value
+        })
+      }));
+    }
+  }), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["ToggleControl"], {
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__["__"])('Is required', 'smartpay'),
+    checked: field.attributes.isRequired,
+    value: true,
+    className: "mt-3",
+    onChange: function onChange(value) {
+      toggleFieldValidationRule(field, value);
+    }
+  }));
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/AddressField/index.js":
+/*!*************************************************************!*\
+  !*** ./resources/form-builder/blocks/AddressField/index.js ***!
+  \*************************************************************/
+/*! exports provided: AddressField */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddressField", function() { return AddressField; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/index.js");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./resources/form-builder/blocks/AddressField/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./resources/form-builder/blocks/AddressField/save.js");
+
+
+
+
+var AddressField = {
+  namespace: 'smartpay-form/address-input',
+  settings: {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address Fields', 'smartpay'),
+    description: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address fields', 'smartpay'),
+    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["page"],
+    keywords: ['input', 'address'],
+    attributes: {
+      attributes: {
+        type: Object,
+        "default": {
+          name: '',
+          "class": ''
+        }
+      },
+      settings: {
+        type: Object,
+        "default": {
+          visible: true,
+          labelPosition: 'top'
+        }
+      },
+      validationRules: {
+        type: Array,
+        "default": []
+      },
+      fields: {
+        type: Array,
+        "default": [{
+          attributes: {
+            name: 'line_1',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address Line 1', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address Line 1', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }, {
+          attributes: {
+            type: 'text',
+            name: 'line_2',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address Line 2', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Address Line 2', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }, {
+          attributes: {
+            type: 'text',
+            name: 'city',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('City', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('City', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }, {
+          attributes: {
+            type: 'text',
+            name: 'state',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('State', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('State', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }, {
+          attributes: {
+            type: 'text',
+            name: 'zip',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Zip Code', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Zip Code', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }, {
+          attributes: {
+            type: 'text',
+            name: 'country',
+            value: '',
+            "class": '',
+            placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Country', 'smartpay'),
+            isRequired: false
+          },
+          settings: {
+            visible: true,
+            label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Country', 'smartpay'),
+            helpMessage: ''
+          },
+          validationRules: []
+        }]
+      }
+    },
+    edit: _edit__WEBPACK_IMPORTED_MODULE_2__["edit"],
+    save: _save__WEBPACK_IMPORTED_MODULE_3__["save"]
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/AddressField/save.js":
+/*!************************************************************!*\
+  !*** ./resources/form-builder/blocks/AddressField/save.js ***!
+  \************************************************************/
+/*! exports provided: save */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "save", function() { return save; });
+var chunk = function chunk(arr, size) {
+  return Array.from({
+    length: Math.ceil(arr.length / size)
+  }, function (v, i) {
+    return arr.slice(i * size, i * size + size);
+  });
+};
+
+var save = function save(_ref) {
+  var attributes = _ref.attributes;
+  return /*#__PURE__*/React.createElement("div", null, chunk(attributes.fields, 2).map(function (items, index) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "row",
+      key: index
+    }, items.map(function (item, i) {
+      return !!item.settings.visible && /*#__PURE__*/React.createElement("div", {
+        className: "col",
+        key: i
+      }, /*#__PURE__*/React.createElement("div", {
+        className: "form-element"
+      }, /*#__PURE__*/React.createElement("label", {
+        "for": item.attributes.name
+      }, item.settings.label), /*#__PURE__*/React.createElement("input", {
+        type: "text",
+        id: item.attributes.name,
+        name: "smartpay_form[".concat(attributes.attributes.name, "][").concat(item.attributes.name, "]"),
+        className: "form-control",
+        placeholder: item.attributes.placeholder,
+        required: item.attributes.isRequired,
+        value: ""
+      })));
+    }));
+  }));
+};
+
+/***/ }),
+
 /***/ "./resources/form-builder/blocks/EmailField/edit.js":
 /*!**********************************************************!*\
   !*** ./resources/form-builder/blocks/EmailField/edit.js ***!
@@ -50766,6 +51181,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _EmailField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./EmailField */ "./resources/form-builder/blocks/EmailField/index.js");
 /* harmony import */ var _TextAreaField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./TextAreaField */ "./resources/form-builder/blocks/TextAreaField/index.js");
 /* harmony import */ var _RadioField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./RadioField */ "./resources/form-builder/blocks/RadioField/index.js");
+/* harmony import */ var _AddressField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./AddressField */ "./resources/form-builder/blocks/AddressField/index.js");
+
 
 
 
@@ -50776,7 +51193,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var unregisterBlocks = ['core/quote', 'core/archives', 'core/audio', 'core/calendar', 'core/categories', 'core/latest-comments', 'core/latest-posts', 'core/missing', 'core/more', 'core/nextpage', 'core/preformatted', 'core/pullquote', 'core/rss', 'core/search', 'core/social-links', 'core/social-link', 'core-embed/twitter', 'core-embed/youtube', 'core-embed/facebook', 'core-embed/instagram', 'core-embed/wordpress', 'core-embed/soundcloud', 'core-embed/spotify', 'core-embed/flickr', 'core-embed/vimeo', 'core-embed/animoto', 'core-embed/cloudup', 'core-embed/collegehumor', 'core-embed/crowdsignal', 'core-embed/dailymotion', 'core-embed/imgur', 'core-embed/issuu', 'core-embed/kickstarter', 'core-embed/meetup-com', 'core-embed/mixcloud', 'core-embed/polldaddy', 'core-embed/reddit', 'core-embed/reverbnation', 'core-embed/screencast', 'core-embed/scribd', 'core-embed/slideshare', 'core-embed/smugmug', 'core-embed/speaker-deck', 'core-embed/tiktok', 'core-embed/ted', 'core-embed/tumblr', 'core-embed/videopress', 'core-embed/wordpress-tv', 'core-embed/amazon-kindle', 'core/tag-cloud', 'core/verse', 'core/video'];
-var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextField__WEBPACK_IMPORTED_MODULE_4__["TextField"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"], _EmailField__WEBPACK_IMPORTED_MODULE_6__["EmailField"], _TextAreaField__WEBPACK_IMPORTED_MODULE_7__["TextAreaField"], _RadioField__WEBPACK_IMPORTED_MODULE_8__["RadioField"]];
+var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextField__WEBPACK_IMPORTED_MODULE_4__["TextField"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"], _EmailField__WEBPACK_IMPORTED_MODULE_6__["EmailField"], _TextAreaField__WEBPACK_IMPORTED_MODULE_7__["TextAreaField"], _RadioField__WEBPACK_IMPORTED_MODULE_8__["RadioField"], _AddressField__WEBPACK_IMPORTED_MODULE_9__["AddressField"]];
 var registerBlocks = function registerBlocks() {
   Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__["registerCoreBlocks"])(); // Remove core blocks
 
