@@ -50900,6 +50900,291 @@ var save = function save(_ref) {
 
 /***/ }),
 
+/***/ "./resources/form-builder/blocks/SelectField/edit.js":
+/*!***********************************************************!*\
+  !*** ./resources/form-builder/blocks/SelectField/edit.js ***!
+  \***********************************************************/
+/*! exports provided: edit */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edit", function() { return edit; });
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/index.js");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_4__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+
+
+var edit = function edit(_ref) {
+  var attributes = _ref.attributes,
+      setAttributes = _ref.setAttributes;
+  Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
+    if (attributes.attributes.name) {
+      return;
+    }
+
+    setAttributesData({
+      name: Math.random().toString(36).substr(2, 11)
+    });
+  }, []);
+
+  var setSettingsData = function setSettingsData(data) {
+    setAttributes({
+      settings: _objectSpread(_objectSpread({}, attributes.settings), data)
+    });
+  };
+
+  var setAttributesData = function setAttributesData(data) {
+    setAttributes({
+      attributes: _objectSpread(_objectSpread({}, attributes.attributes), data)
+    });
+  };
+
+  var changeOptionLabel = function changeOptionLabel(label, index) {
+    var options = _toConsumableArray(attributes.attributes.options);
+
+    options[index]['label'] = label;
+    setAttributesData({
+      options: options
+    });
+  };
+
+  var changeOptionValue = function changeOptionValue(label, index) {
+    var options = _toConsumableArray(attributes.attributes.options);
+
+    options[index]['value'] = label;
+    setAttributesData({
+      options: options
+    });
+  };
+
+  var removeOption = function removeOption(index) {
+    if (attributes.attributes.options.length <= 1) {
+      return;
+    }
+
+    var options = _toConsumableArray(attributes.attributes.options).filter(function (option, i) {
+      return index != i;
+    });
+
+    setAttributesData({
+      options: options
+    });
+  };
+
+  var addNewOption = function addNewOption() {
+    console.log('object');
+    setAttributesData({
+      options: [].concat(_toConsumableArray(attributes.attributes.options), [{
+        value: 0,
+        label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('New Option', 'smartpay')
+      }])
+    });
+  };
+
+  var setDefaultOption = function setDefaultOption(value) {
+    setAttributesData({
+      defaultValue: value
+    });
+  };
+
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "form-element"
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Flex"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], {
+    style: {
+      width: '50%'
+    }
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["SelectControl"], {
+    label: attributes.settings.label,
+    value: attributes.attributes.defaultValue,
+    options: attributes.attributes.options.map(function (option) {
+      return {
+        label: option.label,
+        value: option.value
+      };
+    }),
+    onChange: setDefaultOption
+  })))), /*#__PURE__*/React.createElement(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__["InspectorControls"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Settings', 'smartpay'),
+    initialOpen: true
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["__experimentalInputControl"], {
+    type: "text",
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Label', 'smartpay'),
+    value: attributes.settings.label,
+    onChange: function onChange(value) {
+      setSettingsData({
+        label: value
+      });
+    }
+  })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["PanelBody"], {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Radio Options', 'smartpay')
+  }, attributes.attributes.options.map(function (option, index) {
+    return /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Flex"], {
+      key: index
+    }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, /*#__PURE__*/React.createElement(_wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["handle"]
+    })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["TextControl"], {
+      type: "text",
+      placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Label', 'smartpay'),
+      value: option.label,
+      onChange: function onChange(label) {
+        return changeOptionLabel(label, index);
+      }
+    })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["TextControl"], {
+      placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Value', 'smartpay'),
+      value: option.value,
+      onChange: function onChange(value) {
+        return changeOptionValue(value, index);
+      }
+    })), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["FlexItem"], null, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["closeSmall"],
+      onClick: function onClick() {
+        return removeOption(index);
+      }
+    })));
+  }), /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["Button"], {
+    isSecondary: true,
+    className: "mt-2",
+    onClick: addNewOption
+  }, /*#__PURE__*/React.createElement(_wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["Icon"], {
+    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["plus"]
+  }), Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Add new', 'smartpay')), /*#__PURE__*/React.createElement("div", {
+    className: "mt-2"
+  }, /*#__PURE__*/React.createElement(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__["SelectControl"], {
+    label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Default option', 'smartpay'),
+    value: attributes.attributes.defaultValue,
+    onChange: setDefaultOption,
+    options: attributes.attributes.options.map(function (option) {
+      return {
+        value: option.value,
+        label: option.label
+      };
+    })
+  })))));
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/SelectField/index.js":
+/*!************************************************************!*\
+  !*** ./resources/form-builder/blocks/SelectField/index.js ***!
+  \************************************************************/
+/*! exports provided: SelectField */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectField", function() { return SelectField; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/index.js");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./edit */ "./resources/form-builder/blocks/SelectField/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./save */ "./resources/form-builder/blocks/SelectField/save.js");
+
+
+
+
+var SelectField = {
+  namespace: 'smartpay-form/select-input',
+  settings: {
+    title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Select Fields', 'smartpay'),
+    description: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Select fields', 'smartpay'),
+    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_1__["page"],
+    keywords: ['input', 'select'],
+    attributes: {
+      attributes: {
+        type: Object,
+        "default": {
+          name: '',
+          "class": '',
+          defaultValue: '',
+          options: [{
+            value: '',
+            label: 'Option 1'
+          }]
+        }
+      },
+      settings: {
+        type: Object,
+        "default": {
+          visible: true,
+          label: 'Select Field',
+          helpMessage: '',
+          labelPosition: 'top'
+        }
+      },
+      validationRules: {
+        type: Array,
+        "default": []
+      }
+    },
+    edit: _edit__WEBPACK_IMPORTED_MODULE_2__["edit"],
+    save: _save__WEBPACK_IMPORTED_MODULE_3__["save"]
+  }
+};
+
+/***/ }),
+
+/***/ "./resources/form-builder/blocks/SelectField/save.js":
+/*!***********************************************************!*\
+  !*** ./resources/form-builder/blocks/SelectField/save.js ***!
+  \***********************************************************/
+/*! exports provided: save */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "save", function() { return save; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+
+var save = function save(_ref) {
+  var attributes = _ref.attributes;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "form-element"
+  }, /*#__PURE__*/React.createElement("label", {
+    "for": attributes.attributes.name
+  }, attributes.settings.label), /*#__PURE__*/React.createElement("select", {
+    id: attributes.attributes.name,
+    name: "smartpay_form[".concat(attributes.attributes.name, "]"),
+    "class": "form-control"
+  }, attributes.attributes.options.map(function (option, index) {
+    return /*#__PURE__*/React.createElement("option", {
+      key: index,
+      value: option.value
+    }, option.label);
+  })));
+};
+
+/***/ }),
+
 /***/ "./resources/form-builder/blocks/TextAreaField/edit.js":
 /*!*************************************************************!*\
   !*** ./resources/form-builder/blocks/TextAreaField/edit.js ***!
@@ -51466,6 +51751,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _RadioField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./RadioField */ "./resources/form-builder/blocks/RadioField/index.js");
 /* harmony import */ var _AddressField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./AddressField */ "./resources/form-builder/blocks/AddressField/index.js");
 /* harmony import */ var _CheckboxField__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./CheckboxField */ "./resources/form-builder/blocks/CheckboxField/index.js");
+/* harmony import */ var _SelectField__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./SelectField */ "./resources/form-builder/blocks/SelectField/index.js");
+
 
 
 
@@ -51478,7 +51765,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var unregisterBlocks = ['core/quote', 'core/archives', 'core/audio', 'core/calendar', 'core/categories', 'core/latest-comments', 'core/latest-posts', 'core/missing', 'core/more', 'core/nextpage', 'core/preformatted', 'core/pullquote', 'core/rss', 'core/search', 'core/social-links', 'core/social-link', 'core-embed/twitter', 'core-embed/youtube', 'core-embed/facebook', 'core-embed/instagram', 'core-embed/wordpress', 'core-embed/soundcloud', 'core-embed/spotify', 'core-embed/flickr', 'core-embed/vimeo', 'core-embed/animoto', 'core-embed/cloudup', 'core-embed/collegehumor', 'core-embed/crowdsignal', 'core-embed/dailymotion', 'core-embed/imgur', 'core-embed/issuu', 'core-embed/kickstarter', 'core-embed/meetup-com', 'core-embed/mixcloud', 'core-embed/polldaddy', 'core-embed/reddit', 'core-embed/reverbnation', 'core-embed/screencast', 'core-embed/scribd', 'core-embed/slideshare', 'core-embed/smugmug', 'core-embed/speaker-deck', 'core-embed/tiktok', 'core-embed/ted', 'core-embed/tumblr', 'core-embed/videopress', 'core-embed/wordpress-tv', 'core-embed/amazon-kindle', 'core/tag-cloud', 'core/verse', 'core/video'];
-var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextField__WEBPACK_IMPORTED_MODULE_4__["TextField"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"], _EmailField__WEBPACK_IMPORTED_MODULE_6__["EmailField"], _TextAreaField__WEBPACK_IMPORTED_MODULE_7__["TextAreaField"], _RadioField__WEBPACK_IMPORTED_MODULE_8__["RadioField"], _AddressField__WEBPACK_IMPORTED_MODULE_9__["AddressField"], _CheckboxField__WEBPACK_IMPORTED_MODULE_10__["CheckboxField"]];
+var smartPayBlocks = [_name__WEBPACK_IMPORTED_MODULE_2__["name"], _email__WEBPACK_IMPORTED_MODULE_3__["email"], _TextField__WEBPACK_IMPORTED_MODULE_4__["TextField"], _NumericField__WEBPACK_IMPORTED_MODULE_5__["NumericField"], _EmailField__WEBPACK_IMPORTED_MODULE_6__["EmailField"], _TextAreaField__WEBPACK_IMPORTED_MODULE_7__["TextAreaField"], _RadioField__WEBPACK_IMPORTED_MODULE_8__["RadioField"], _AddressField__WEBPACK_IMPORTED_MODULE_9__["AddressField"], _CheckboxField__WEBPACK_IMPORTED_MODULE_10__["CheckboxField"], _SelectField__WEBPACK_IMPORTED_MODULE_11__["SelectField"]];
 var registerBlocks = function registerBlocks() {
   Object(_wordpress_block_library__WEBPACK_IMPORTED_MODULE_1__["registerCoreBlocks"])(); // Remove core blocks
 

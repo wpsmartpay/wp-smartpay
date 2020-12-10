@@ -13,6 +13,7 @@ import { TextAreaField } from './TextAreaField'
 import { RadioField } from './RadioField'
 import { AddressField } from './AddressField'
 import { CheckboxField } from './CheckboxField'
+import { SelectField } from './SelectField'
 
 const unregisterBlocks = [
     'core/quote',
@@ -79,6 +80,7 @@ const smartPayBlocks = [
     RadioField,
     AddressField,
     CheckboxField,
+    SelectField,
 ]
 
 export const registerBlocks = () => {
