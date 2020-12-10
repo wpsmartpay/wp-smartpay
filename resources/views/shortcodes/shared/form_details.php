@@ -4,7 +4,8 @@
             <div class="card-body smartpay_form_builder_wrapper p-5">
                 <?php $action = '' ?>
                 <form action="" method="POST">
-                    <?php echo $form->body; ?>
+                    <?php echo do_blocks($form->body);
+                    ?>
                 </form>
             </div>
         </div>
