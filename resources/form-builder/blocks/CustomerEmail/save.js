@@ -1,5 +1,3 @@
-import { __ } from '@wordpress/i18n'
-
 export const save = ({ attributes }) => {
     return (
         <div className="form-element">

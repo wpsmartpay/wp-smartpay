@@ -5,7 +5,7 @@ import {
 } from '@wordpress/blocks'
 import { registerCoreBlocks } from '@wordpress/block-library'
 import { NameField } from './NameField'
-import { email } from './email'
+import { CustomerEmail } from './CustomerEmail'
 import { TextField } from './TextField'
 import { NumericField } from './NumericField'
 import { EmailField } from './EmailField'
@@ -72,7 +72,7 @@ const unregisterBlocks = [
 
 const smartPayBlocks = [
     NameField,
-    email,
+    CustomerEmail,
     TextField,
     NumericField,
     EmailField,
