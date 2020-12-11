@@ -8,13 +8,13 @@ import { FormForm } from './components/Form'
 
 const defaultFormData = {
     title: 'Untitled Form',
-    body: `<!-- wp:smartpay-form/name -->
-        <div class="wp-block-smartpay-form-name form-element"><div class="form-row"><div class="col"><label for="smartpay_first_name">First Name</label><input type="text" class="form-control" id="smartpay_first_name" name="smartpay_first_name"/></div><div class="col"><label for="smartpay_last_name">Last Name</label><input type="text" class="form-control" id="smartpay_last_name" name="smartpay_last_name"/></div></div></div>
-        <!-- /wp:smartpay-form/name -->
+    body: `<!-- wp:smartpay-form/name {"fields":[{"attributes":{"name":"first_name","value":"","class":"","placeholder":"First Name","isRequired":true},"settings":{"visible":true,"label":"First Name","helpMessage":""},"validationRules":[{"required":{"value":true,"message":"This field is required"}}]},{"attributes":{"name":"middle_name","value":"","class":"","placeholder":"Middle Name","isRequired":false},"settings":{"visible":true,"label":"Middle Name","helpMessage":""},"validationRules":[]},{"attributes":{"name":"last_name","value":"","class":"","placeholder":"Last Name","isRequired":false},"settings":{"visible":true,"label":"Last Name","helpMessage":""},"validationRules":[]}],"className":"form-element"} -->
+<div class="wp-block-smartpay-form-name row form-element"><div class="col"><div class="form-element"><label for="first_name">First Name</label><input type="text" id="first_name" name="smartpay_form[name][first_name]" class="form-control" placeholder="First Name" required value=""/></div></div><div class="col"><div class="form-element"><label for="middle_name">Middle Name</label><input type="text" id="middle_name" name="smartpay_form[name][middle_name]" class="form-control" placeholder="Middle Name" value=""/></div></div><div class="col"><div class="form-element"><label for="last_name">Last Name</label><input type="text" id="last_name" name="smartpay_form[name][last_name]" class="form-control" placeholder="Last Name" value=""/></div></div></div>
+<!-- /wp:smartpay-form/name -->
 
-        <!-- wp:smartpay-form/email -->
-        <div class="wp-block-smartpay-form-email form-element"><div class="form-group"><label for="smartpay_email">Email</label><input type="email" class="form-control" id="smartpay_email" name="smartpay_email"/></div></div>
-        <!-- /wp:smartpay-form/email -->`,
+<!-- wp:smartpay-form/email -->
+<div class="wp-block-smartpay-form-email form-element"><div class="form-group"><label for="smartpay_email">Email</label><input type="email" class="form-control" id="smartpay_email" name="smartpay_email"/></div></div>
+<!-- /wp:smartpay-form/email -->`,
     fields: [],
 }
 
