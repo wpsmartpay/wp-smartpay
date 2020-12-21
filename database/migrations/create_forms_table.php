@@ -18,6 +18,7 @@ class CreateSmartpayFormsTable
             $sql = "CREATE TABLE $table (
                 `id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 `title` VARCHAR(255) NOT NULL,
+                `amounts` LONGTEXT DEFAULT NULL,
                 `body` LONGTEXT DEFAULT NULL,
                 `fields` LONGTEXT DEFAULT NULL,
                 `status` VARCHAR(45) NOT NULL DEFAULT '$defaultStatus',
