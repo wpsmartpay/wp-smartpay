@@ -11,6 +11,10 @@ const defaultFormData = {
     amounts: [],
     body: '',
     fields: [],
+    settings: {
+        allowCustomAmount: false,
+        customAmountLabel: __('Pay what you want', 'smartpay'),
+    },
 }
 
 const reducer = (state, data) => {

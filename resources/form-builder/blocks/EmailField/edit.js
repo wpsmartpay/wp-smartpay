@@ -1,5 +1,5 @@
 import {
-    __experimentalInputControl as InputControl,
+    TextControl,
     PanelBody,
     ToggleControl,
 } from '@wordpress/components'
@@ -68,7 +68,7 @@ export const edit = ({ attributes, setAttributes }) => {
     return (
         <>
             <div className="form-element">
-                <InputControl
+                <TextControl
                     type="text"
                     label={attributes.settings.label}
                     placeholder={attributes.attributes.placeholder}
@@ -80,7 +80,7 @@ export const edit = ({ attributes, setAttributes }) => {
                     title={__('Settings', 'smartpay')}
                     initialOpen={true}
                 >
-                    <InputControl
+                    <TextControl
                         type="text"
                         label={__('Label', 'smartpay')}
                         value={attributes.settings.label}
@@ -90,7 +90,7 @@ export const edit = ({ attributes, setAttributes }) => {
                             })
                         }}
                     />
-                    <InputControl
+                    <TextControl
                         type="text"
                         label={__('Placeholder', 'smartpay')}
                         value={attributes.attributes.placeholder}

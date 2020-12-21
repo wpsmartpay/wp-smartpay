@@ -20,25 +20,23 @@
                             </div>
                             <?php endforeach; ?>
 
+                            <?php if ($form->settings['allowCustomAmount']) : ?>
                             <!-- // Allow custom payment -->
                             <div class="form-group custom-amount-wrapper m-0 ">
-                                <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2">Pay custom amount</label>
+                                <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2">
+                                    <?php echo $form->settings['customAmountLabel']; ?></label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text px-3" id="default-currency"><?php echo smartpay_get_currency_symbol() ?></span>
                                     </div><input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="10" placeholder="">
                                 </div>
                             </div>
+                            <?php endif; ?>
                         </div>
 
                         <!-- <button type="button" class="btn btn-success btn-block btn-lg open-payment-form"> -->
                         <!-- Pay </button> -->
                     </div>
-
-                    <?php
-                    var_dump($form->amounts);
-                    ?>
-
                 </form>
             </div>
         </div>

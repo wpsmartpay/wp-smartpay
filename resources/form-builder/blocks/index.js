@@ -88,7 +88,7 @@ export const registerBlocks = () => {
 
     // Remove core blocks
     unregisterBlocks.forEach((name) => {
-        unregisterBlockType(name)
+        // unregisterBlockType(name)
     })
 
     // Register SmartPay blocks

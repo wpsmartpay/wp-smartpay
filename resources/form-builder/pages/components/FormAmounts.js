@@ -11,9 +11,11 @@ const defaultAmount = {
 
 const geneateKey = () => Math.random().toString(36).substr(2, 9)
 
-export const FormAmounts = ({ amounts, setAmounts }) => {
+export const FormAmounts = ({ form, setFormData }) => {
+    let { amounts, settings } = form
+
     const addNewAmountRow = () => {
-        setAmounts([...amounts, { ...defaultAmount, key: geneateKey() }])
+        setAmountsData([...amounts, { ...defaultAmount, key: geneateKey() }])
     }
 
     const removeAmountRow = (key) => {
@@ -22,22 +24,29 @@ export const FormAmounts = ({ amounts, setAmounts }) => {
             return
         }
 
-        setAmounts([...amounts.filter((amount) => key !== amount.key)])
+        setAmountsData([...amounts.filter((amount) => key !== amount.key)])
     }
 
     const setAmount = (amount) => {
-        setAmounts([
+        setAmountsData([
             ...amounts.map((a) => {
                 return amount.key === a.key ? amount : a
             }),
         ])
     }
 
+    const setAmountsData = (amounts) => {
+        setFormData({
+            ...form,
+            amounts,
+        })
+    }
+
     return (
         <Card>
             <Card.Body>
                 <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
-                <div className="col-md-6 mx-auto py-4">
+                <div className="col-md-8 mx-auto py-4">
                     {amounts.map((amount, index) => {
                         return (
                             <div key={index}>
@@ -60,6 +69,10 @@ export const FormAmounts = ({ amounts, setAmounts }) => {
                             <span>{__('Add New Amount', 'smartpay')}</span>
                         </Button>
                     </div>
+                </div>
+
+                <div className="col-md-8 mx-auto py-4">
+                    <CustomAmount form={form} setFormData={setFormData} />
                 </div>
             </Card.Body>
         </Card>
@@ -103,6 +116,68 @@ const AmountRow = ({ rowIndex, amount, setAmount, removeAmountRow }) => {
                         <CloseIcon size={18} style={{ marginBottom: '-4px' }} />
                     </Button>
                 </div>
+            </div>
+        </Card>
+    )
+}
+
+const CustomAmount = ({ form, setFormData }) => {
+    const setSettingsData = (settings) => {
+        setFormData({
+            ...form,
+            settings,
+        })
+    }
+
+    return (
+        <Card className="mb-2 bg-light">
+            <div className="p-3">
+                <div className="custom-control custom-checkbox py-1">
+                    <input
+                        type="checkbox"
+                        className="custom-control-input"
+                        id="allowCustomAmount"
+                        value="true"
+                        checked={form.settings.allowCustomAmount}
+                        onChange={(e) => {
+                            setSettingsData({
+                                ...form.settings,
+                                allowCustomAmount: e.target.checked,
+                            })
+                        }}
+                    />
+                    <label
+                        className="custom-control-label pt-1"
+                        htmlFor="allowCustomAmount"
+                    >
+                        {__('Allow custom amount', 'smartpay')}
+                    </label>
+                </div>
+                {form.settings.allowCustomAmount && (
+                    <div className="mt-3">
+                        <div className="form-group mb-0">
+                            <label>
+                                {__('Custom amount label', 'smartpay')}
+                            </label>
+                            <Form.Control
+                                className="mt-1"
+                                size="sm"
+                                type="text"
+                                value={form.settings.customAmountLabel}
+                                onChange={(e) => {
+                                    setSettingsData({
+                                        ...form.settings,
+                                        customAmountLabel: e.target.value,
+                                    })
+                                }}
+                                placeholder={__(
+                                    'Custom amount label',
+                                    'smartpay'
+                                )}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
         </Card>
     )

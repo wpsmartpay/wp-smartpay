@@ -28,13 +28,6 @@ export const FormForm = ({
         return requiredBlocks
     }
 
-    const setAmounts = (amounts) => {
-        setFormData({
-            ...form,
-            amounts,
-        })
-    }
-
     const saveForm = () => {
         const blocks = parse(form.body)
 
@@ -131,8 +124,8 @@ export const FormForm = ({
                             title={__('Options', 'smartpay')}
                         >
                             <FormAmounts
-                                amounts={form?.amounts || []}
-                                setAmounts={setAmounts}
+                                form={form}
+                                setFormData={setFormData}
                             />
                         </Tab>
                     </Tabs>
