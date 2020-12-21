@@ -1,5 +1,8 @@
 .smartpay-form-shortcode {
     .form {
+        .form-element {
+            margin-bottom: 16px;
+        }
         .form-control {
             font-size: 16px;
 
@@ -11,79 +14,55 @@
         textarea.form-control {
             min-height: calc(1.5em + 0.75rem + 2px);
         }
+
+        &--amount-section {
+            transition: all 0.3s ease;
+
+            .form--fixed-amount {
+                border-radius: 0.25rem;
+            }
+
+            .amount {
+                cursor: pointer;
+                transition: all 0.05s ease-in-out;
+                padding: 5px 12px;
+                display: inline-block;
+                font-size: 16px !important;
+                border: 1px solid #ced4da;
+                background: #fff;
+                overflow: hidden;
+                color: #252a2e;
+                font-weight: normal;
+                font-family: inherit !important;
+
+                &--title {
+                    font-size: 16px;
+                    font-family: inherit;
+                }
+
+                label {
+                    cursor: pointer;
+                }
+
+                &.selected {
+                    // box-shadow: 0 0 0 1px $success;
+                    border-color: $success;
+                }
+            }
+        }
+
+        .custom-amount-wrapper {
+            margin-top: 12px !important;
+
+            .input-group-text {
+                font-size: 16px;
+            }
+        }
+
+        // 	&--custom-amount {
+        // 		height: auto !important;
+        // 	}
     }
-
-    .form-element {
-        margin-bottom: 16px;
-    }
-
-    // .form {
-    // 	&--title {
-    // 		display: block;
-    // 		margin-bottom: 1rem;
-    // 		font-size: 26px;
-    // 		font-weight: bold;
-    // 		color: #252a2e;
-    // 		line-height: 1.2;
-    // 	}
-
-    // 	&--description {
-    // 		margin-bottom: 10px;
-    // 		color: #252a2e;
-    // 	}
-
-    // 	&--amount-section {
-    // 		transition: all 0.3s ease;
-
-    // 		.amount {
-    // 			cursor: pointer;
-    // 			transition: all 0.05s ease-in-out;
-    // 			padding: 12px !important;
-    // 			display: block;
-    // 			text-decoration: none;
-    // 			font-size: 20px !important;
-    // 			box-sizing: border-box;
-    // 			border: 1px solid #ddd;
-    // 			border-radius: 4px;
-    // 			background: #fff;
-    // 			overflow: hidden;
-    // 			color: #252a2e;
-    // 			margin-bottom: 12px;
-    // 			font-weight: 700;
-    // 			font-family: inherit !important;
-    // 			line-height: 1.25;
-
-    // 			&--title {
-    // 				font-size: 20px;
-    // 				font-family: inherit;
-    // 			}
-
-    // 			label {
-    // 				cursor: pointer;
-    // 			}
-
-    // 			&.selected {
-    // 				box-shadow: 0 0 0 1px $success;
-    // 			}
-
-    // 			.variation {
-    // 				&--description {
-    // 					margin-top: 10px;
-    // 					color: #797874;
-    // 					font-size: 17px;
-    // 				}
-    // 			}
-    // 		}
-    // 	}
-
-    // 	.custom-amount-wrapper {
-    // 		margin-top: 12px !important;
-    // 	}
-
-    // 	&--custom-amount {
-    // 		height: auto !important;
-    // 	}
-    // }
 
     .btn {
         font-size: 16px;

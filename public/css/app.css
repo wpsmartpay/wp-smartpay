@@ -6839,6 +6839,193 @@
   }
 }
 
+.smartpay .input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.smartpay .input-group > .form-control,
+.smartpay .input-group > .form-control-plaintext,
+.smartpay .input-group > .custom-select,
+.smartpay .input-group > .custom-file {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+.smartpay .input-group > .form-control + .form-control,
+.smartpay .input-group > .form-control + .custom-select,
+.smartpay .input-group > .form-control + .custom-file,
+.smartpay .input-group > .form-control-plaintext + .form-control,
+.smartpay .input-group > .form-control-plaintext + .custom-select,
+.smartpay .input-group > .form-control-plaintext + .custom-file,
+.smartpay .input-group > .custom-select + .form-control,
+.smartpay .input-group > .custom-select + .custom-select,
+.smartpay .input-group > .custom-select + .custom-file,
+.smartpay .input-group > .custom-file + .form-control,
+.smartpay .input-group > .custom-file + .custom-select,
+.smartpay .input-group > .custom-file + .custom-file {
+  margin-left: -1px;
+}
+
+.smartpay .input-group > .form-control:focus,
+.smartpay .input-group > .custom-select:focus,
+.smartpay .input-group > .custom-file .custom-file-input:focus ~ .custom-file-label {
+  z-index: 3;
+}
+
+.smartpay .input-group > .custom-file .custom-file-input:focus {
+  z-index: 4;
+}
+
+.smartpay .input-group > .form-control:not(:last-child),
+.smartpay .input-group > .custom-select:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.smartpay .input-group > .form-control:not(:first-child),
+.smartpay .input-group > .custom-select:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.smartpay .input-group > .custom-file {
+  display: flex;
+  align-items: center;
+}
+
+.smartpay .input-group > .custom-file:not(:last-child) .custom-file-label,
+.smartpay .input-group > .custom-file:not(:last-child) .custom-file-label::after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.smartpay .input-group > .custom-file:not(:first-child) .custom-file-label {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.smartpay .input-group-prepend,
+.smartpay .input-group-append {
+  display: flex;
+}
+
+.smartpay .input-group-prepend .btn,
+.smartpay .input-group-append .btn {
+  position: relative;
+  z-index: 2;
+}
+
+.smartpay .input-group-prepend .btn:focus,
+.smartpay .input-group-append .btn:focus {
+  z-index: 3;
+}
+
+.smartpay .input-group-prepend .btn + .btn,
+.smartpay .input-group-prepend .btn + .input-group-text,
+.smartpay .input-group-prepend .input-group-text + .input-group-text,
+.smartpay .input-group-prepend .input-group-text + .btn,
+.smartpay .input-group-append .btn + .btn,
+.smartpay .input-group-append .btn + .input-group-text,
+.smartpay .input-group-append .input-group-text + .input-group-text,
+.smartpay .input-group-append .input-group-text + .btn {
+  margin-left: -1px;
+}
+
+.smartpay .input-group-prepend {
+  margin-right: -1px;
+}
+
+.smartpay .input-group-append {
+  margin-left: -1px;
+}
+
+.smartpay .input-group-text {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  text-align: center;
+  white-space: nowrap;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+}
+
+.smartpay .input-group-text input[type="radio"],
+.smartpay .input-group-text input[type="checkbox"] {
+  margin-top: 0;
+}
+
+.smartpay .input-group-lg > .form-control:not(textarea),
+.smartpay .input-group-lg > .custom-select {
+  height: calc(1.5em + 1rem + 2px);
+}
+
+.smartpay .input-group-lg > .form-control,
+.smartpay .input-group-lg > .custom-select,
+.smartpay .input-group-lg > .input-group-prepend > .input-group-text,
+.smartpay .input-group-lg > .input-group-append > .input-group-text,
+.smartpay .input-group-lg > .input-group-prepend > .btn,
+.smartpay .input-group-lg > .input-group-append > .btn {
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  line-height: 1.5;
+  border-radius: 0.3rem;
+}
+
+.smartpay .input-group-sm > .form-control:not(textarea),
+.smartpay .input-group-sm > .custom-select {
+  height: calc(1.5em + 0.5rem + 2px);
+}
+
+.smartpay .input-group-sm > .form-control,
+.smartpay .input-group-sm > .custom-select,
+.smartpay .input-group-sm > .input-group-prepend > .input-group-text,
+.smartpay .input-group-sm > .input-group-append > .input-group-text,
+.smartpay .input-group-sm > .input-group-prepend > .btn,
+.smartpay .input-group-sm > .input-group-append > .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.smartpay .input-group-lg > .custom-select,
+.smartpay .input-group-sm > .custom-select {
+  padding-right: 1.75rem;
+}
+
+.smartpay .input-group > .input-group-prepend > .btn,
+.smartpay .input-group > .input-group-prepend > .input-group-text,
+.smartpay .input-group > .input-group-append:not(:last-child) > .btn,
+.smartpay .input-group > .input-group-append:not(:last-child) > .input-group-text,
+.smartpay .input-group > .input-group-append:last-child > .btn:not(:last-child):not(.dropdown-toggle),
+.smartpay .input-group > .input-group-append:last-child > .input-group-text:not(:last-child) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.smartpay .input-group > .input-group-append > .btn,
+.smartpay .input-group > .input-group-append > .input-group-text,
+.smartpay .input-group > .input-group-prepend:not(:first-child) > .btn,
+.smartpay .input-group > .input-group-prepend:not(:first-child) > .input-group-text,
+.smartpay .input-group > .input-group-prepend:first-child > .btn:not(:first-child),
+.smartpay .input-group > .input-group-prepend:first-child > .input-group-text:not(:first-child) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 .smartpay .align-baseline {
   vertical-align: baseline !important;
 }
@@ -11382,6 +11569,10 @@
   padding: 6px 10px;
 }
 
+.smartpay .smartpay-form-shortcode .form .form-element {
+  margin-bottom: 16px;
+}
+
 .smartpay .smartpay-form-shortcode .form .form-control {
   font-size: 16px;
 }
@@ -11394,8 +11585,47 @@
   min-height: calc(1.5em + 0.75rem + 2px);
 }
 
-.smartpay .smartpay-form-shortcode .form-element {
-  margin-bottom: 16px;
+.smartpay .smartpay-form-shortcode .form--amount-section {
+  transition: all 0.3s ease;
+}
+
+.smartpay .smartpay-form-shortcode .form--amount-section .form--fixed-amount {
+  border-radius: 0.25rem;
+}
+
+.smartpay .smartpay-form-shortcode .form--amount-section .amount {
+  cursor: pointer;
+  transition: all 0.05s ease-in-out;
+  padding: 5px 12px;
+  display: inline-block;
+  font-size: 16px !important;
+  border: 1px solid #ced4da;
+  background: #fff;
+  overflow: hidden;
+  color: #252a2e;
+  font-weight: normal;
+  font-family: inherit !important;
+}
+
+.smartpay .smartpay-form-shortcode .form--amount-section .amount--title {
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.smartpay .smartpay-form-shortcode .form--amount-section .amount label {
+  cursor: pointer;
+}
+
+.smartpay .smartpay-form-shortcode .form--amount-section .amount.selected {
+  border-color: #28a745;
+}
+
+.smartpay .smartpay-form-shortcode .form .custom-amount-wrapper {
+  margin-top: 12px !important;
+}
+
+.smartpay .smartpay-form-shortcode .form .custom-amount-wrapper .input-group-text {
+  font-size: 16px;
 }
 
 .smartpay .smartpay-form-shortcode .btn {

@@ -49,13 +49,13 @@ jQuery(($) => {
         'click',
         '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
         (e) => {
-            // e.preventDefault()
-            // $(e.currentTarget)
-            //     .parents('.form-amounts')
-            //     .find('.amount')
-            //     .removeClass('selected')
+            e.preventDefault()
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.amount')
+                .removeClass('selected')
 
-            // $(e.currentTarget).addClass('selected')
+            $(e.currentTarget).addClass('selected')
 
             // Change the custom amount value on selecting form amount
             var selectedAmount = $(e.currentTarget)
@@ -70,17 +70,17 @@ jQuery(($) => {
     )
 
     /** Select form custom amount **/
-    // $(document.body).on(
-    //     'focus',
-    //     '.smartpay-form-shortcode .form-amounts .form--custom-amount',
-    //     (e) => {
-    //         $(e.currentTarget)
-    //             .parents('.form-amounts')
-    //             .find('.amount')
-    //             .removeClass('selected')
-    //         $(e.currentTarget).addClass('selected')
-    //     }
-    // )
+    $(document.body).on(
+        'focus',
+        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+        (e) => {
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.amount')
+                .removeClass('selected')
+            $(e.currentTarget).addClass('selected')
+        }
+    )
 
     /** Open form modal */
     $(document.body).on(
