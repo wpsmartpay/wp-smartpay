@@ -20,6 +20,7 @@ class CreateSmartpayFormsTable
                 `title` VARCHAR(255) NOT NULL,
                 `amounts` LONGTEXT DEFAULT NULL,
                 `body` LONGTEXT DEFAULT NULL,
+                `settings` LONGTEXT DEFAULT NULL,
                 `fields` LONGTEXT DEFAULT NULL,
                 `status` VARCHAR(45) NOT NULL DEFAULT '$defaultStatus',
                 `extra` LONGTEXT DEFAULT NULL,

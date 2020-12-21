@@ -24,6 +24,7 @@ class Form extends Model
         static::creating(function ($form) {
             $form->amounts    = $form->amounts ?: [];
             $form->fields     = $form->fields ?: [];
+            $form->settings   = $form->settings ?: [];
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
     }
@@ -46,5 +47,15 @@ class Form extends Model
     public function setFieldsAttribute($fields)
     {
         $this->attributes['fields'] = \json_encode($fields);
+    }
+
+    public function getSettingsAttribute($settings)
+    {
+        return \json_decode($settings, true);
+    }
+
+    public function setSettingsAttribute($settings)
+    {
+        $this->attributes['settings'] = \json_encode($settings);
     }
 }

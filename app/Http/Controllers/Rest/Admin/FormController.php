@@ -50,11 +50,12 @@ class FormController extends RestController
         $request = json_decode($request->get_body());
 
         $form = new Form();
-        $form->title   = $request->title ?? 'Untitled form';
-        $form->amounts = $request->amounts;
-        $form->body    = $request->body;
-        $form->fields  = $request->fields;
-        $form->status  = Form::PUBLISH;
+        $form->title    = $request->title ?? 'Untitled form';
+        $form->amounts  = $request->amounts;
+        $form->body     = $request->body;
+        $form->fields   = $request->fields;
+        $form->settings = $request->settings;
+        $form->status   = Form::PUBLISH;
         $form->save();
 
         return new WP_REST_Response(['form' => $form, 'message' => __('Form created', 'smartpay')]);
@@ -93,11 +94,12 @@ class FormController extends RestController
 
         $request = json_decode($request->get_body());
 
-        $form->title   = $request->title ?? __('Untitled form', 'smartpay');
-        $form->amounts = $request->amounts;
-        $form->body    = $request->body;
-        $form->fields  = $request->fields;
-        $form->status  = Form::PUBLISH;
+        $form->title    = $request->title ?? __('Untitled form', 'smartpay');
+        $form->amounts  = $request->amounts;
+        $form->body     = $request->body;
+        $form->fields   = $request->fields;
+        $form->settings = $request->settings;
+        $form->status   = Form::PUBLISH;
         $form->save();
 
         return new WP_REST_Response(['form' => $form, 'message' => __('Form updated', 'smartpay')]);
