@@ -8,6 +8,7 @@ import { FormForm } from './components/Form'
 
 const defaultFormData = {
     title: '',
+    amounts: [],
     body: '',
     fields: [],
 }

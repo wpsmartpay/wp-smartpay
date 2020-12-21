@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Card, Form, Button } from 'react-bootstrap'
 import { X as CloseIcon, Plus as PlusIcon } from 'react-feather'
-import { useState } from '@wordpress/element'
+import { Alert } from '../../components/Alert'
 
 const defaultAmount = {
     key: '',
@@ -11,17 +11,14 @@ const defaultAmount = {
 
 const geneateKey = () => Math.random().toString(36).substr(2, 9)
 
-export const FormAmounts = () => {
-    const [amounts, setAmounts] = useState([
-        { ...defaultAmount, key: geneateKey() },
-    ])
-
+export const FormAmounts = ({ amounts, setAmounts }) => {
     const addNewAmountRow = () => {
         setAmounts([...amounts, { ...defaultAmount, key: geneateKey() }])
     }
 
     const removeAmountRow = (key) => {
         if (amounts.length <= 1) {
+            Alert('Form must contain at least one amount', 'error')
             return
         }
 
@@ -82,7 +79,7 @@ const AmountRow = ({ rowIndex, amount, setAmount, removeAmountRow }) => {
                             onChange={(e) => {
                                 setAmount({ ...amount, label: e.target.value })
                             }}
-                            placeholder="Label"
+                            placeholder={__('Label', 'smartpay')}
                         />
                     </div>
                     <div className="w-25 mr-2">
@@ -93,7 +90,7 @@ const AmountRow = ({ rowIndex, amount, setAmount, removeAmountRow }) => {
                             onChange={(e) => {
                                 setAmount({ ...amount, amount: e.target.value })
                             }}
-                            placeholder="Amount"
+                            placeholder={__('Amount', 'smartpay')}
                         />
                     </div>
                     <Button

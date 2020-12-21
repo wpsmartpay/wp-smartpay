@@ -52550,6 +52550,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Alert */ "./resources/form-builder/components/Alert.js");
 /* harmony import */ var _FormBuilder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FormBuilder */ "./resources/form-builder/pages/components/FormBuilder.js");
 /* harmony import */ var _FormAmounts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FormAmounts */ "./resources/form-builder/pages/components/FormAmounts.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -52582,6 +52586,12 @@ var FormForm = function FormForm(_ref) {
     }
 
     return requiredBlocks;
+  };
+
+  var setAmounts = function setAmounts(amounts) {
+    setFormData(_objectSpread(_objectSpread({}, form), {}, {
+      amounts: amounts
+    }));
   };
 
   var saveForm = function saveForm() {
@@ -52658,7 +52668,10 @@ var FormForm = function FormForm(_ref) {
     eventKey: "options",
     className: "text-decoration-none mt-3",
     title: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Options', 'smartpay')
-  }, /*#__PURE__*/React.createElement(_FormAmounts__WEBPACK_IMPORTED_MODULE_5__["FormAmounts"], null))))));
+  }, /*#__PURE__*/React.createElement(_FormAmounts__WEBPACK_IMPORTED_MODULE_5__["FormAmounts"], {
+    amounts: (form === null || form === void 0 ? void 0 : form.amounts) || [],
+    setAmounts: setAmounts
+  }))))));
 };
 
 /***/ }),
@@ -52677,33 +52690,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/index.js");
 /* harmony import */ var react_feather__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-feather */ "./node_modules/react-feather/dist/index.js");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__);
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
+/* harmony import */ var _components_Alert__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Alert */ "./resources/form-builder/components/Alert.js");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
@@ -52719,13 +52723,9 @@ var geneateKey = function geneateKey() {
   return Math.random().toString(36).substr(2, 9);
 };
 
-var FormAmounts = function FormAmounts() {
-  var _useState = Object(_wordpress_element__WEBPACK_IMPORTED_MODULE_3__["useState"])([_objectSpread(_objectSpread({}, defaultAmount), {}, {
-    key: geneateKey()
-  })]),
-      _useState2 = _slicedToArray(_useState, 2),
-      amounts = _useState2[0],
-      setAmounts = _useState2[1];
+var FormAmounts = function FormAmounts(_ref) {
+  var amounts = _ref.amounts,
+      setAmounts = _ref.setAmounts;
 
   var addNewAmountRow = function addNewAmountRow() {
     setAmounts([].concat(_toConsumableArray(amounts), [_objectSpread(_objectSpread({}, defaultAmount), {}, {
@@ -52735,6 +52735,7 @@ var FormAmounts = function FormAmounts() {
 
   var removeAmountRow = function removeAmountRow(key) {
     if (amounts.length <= 1) {
+      Object(_components_Alert__WEBPACK_IMPORTED_MODULE_3__["Alert"])('Form must contain at least one amount', 'error');
       return;
     }
 
@@ -52775,11 +52776,11 @@ var FormAmounts = function FormAmounts() {
   }), /*#__PURE__*/React.createElement("span", null, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Add New Amount', 'smartpay')))))));
 };
 
-var AmountRow = function AmountRow(_ref) {
-  var rowIndex = _ref.rowIndex,
-      amount = _ref.amount,
-      setAmount = _ref.setAmount,
-      removeAmountRow = _ref.removeAmountRow;
+var AmountRow = function AmountRow(_ref2) {
+  var rowIndex = _ref2.rowIndex,
+      amount = _ref2.amount,
+      setAmount = _ref2.setAmount,
+      removeAmountRow = _ref2.removeAmountRow;
   return /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Card"], {
     className: "mb-2 bg-light",
     key: rowIndex
@@ -52798,7 +52799,7 @@ var AmountRow = function AmountRow(_ref) {
         label: e.target.value
       }));
     },
-    placeholder: "Label"
+    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Label', 'smartpay')
   })), /*#__PURE__*/React.createElement("div", {
     className: "w-25 mr-2"
   }, /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Form"].Control, {
@@ -52810,7 +52811,7 @@ var AmountRow = function AmountRow(_ref) {
         amount: e.target.value
       }));
     },
-    placeholder: "Amount"
+    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Amount', 'smartpay')
   })), /*#__PURE__*/React.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__["Button"], {
     size: "sm",
     variant: "light",
@@ -52944,6 +52945,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var defaultFormData = {
   title: 'Untitled Form',
+  amounts: [{
+    key: '1234',
+    label: '',
+    amount: ''
+  }],
   body: "<!-- wp:smartpay-form/name {\"fields\":[{\"attributes\":{\"name\":\"first_name\",\"value\":\"\",\"class\":\"\",\"placeholder\":\"First Name\",\"isRequired\":true},\"settings\":{\"visible\":true,\"label\":\"First Name\",\"helpMessage\":\"\"},\"validationRules\":[{\"required\":{\"value\":true,\"message\":\"This field is required\"}}]},{\"attributes\":{\"name\":\"middle_name\",\"value\":\"\",\"class\":\"\",\"placeholder\":\"Middle Name\",\"isRequired\":false},\"settings\":{\"visible\":true,\"label\":\"Middle Name\",\"helpMessage\":\"\"},\"validationRules\":[]},{\"attributes\":{\"name\":\"last_name\",\"value\":\"\",\"class\":\"\",\"placeholder\":\"Last Name\",\"isRequired\":false},\"settings\":{\"visible\":true,\"label\":\"Last Name\",\"helpMessage\":\"\"},\"validationRules\":[]}],\"className\":\"form-element\"} --><div class=\"wp-block-smartpay-form-name row form-element\"><div class=\"col\"><div class=\"form-element\"><label for=\"first_name\">First Name</label><input type=\"text\" id=\"first_name\" name=\"smartpay_form[name][first_name]\" class=\"form-control\" placeholder=\"First Name\" required value=\"\"/></div></div><div class=\"col\"><div class=\"form-element\"><label for=\"middle_name\">Middle Name</label><input type=\"text\" id=\"middle_name\" name=\"smartpay_form[name][middle_name]\" class=\"form-control\" placeholder=\"Middle Name\" value=\"\"/></div></div><div class=\"col\"><div class=\"form-element\"><label for=\"last_name\">Last Name</label><input type=\"text\" id=\"last_name\" name=\"smartpay_form[name][last_name]\" class=\"form-control\" placeholder=\"Last Name\" value=\"\"/></div></div></div><!-- /wp:smartpay-form/name --><!-- wp:smartpay-form/email --><div class=\"wp-block-smartpay-form-email form-element\"><label for=\"email\">Email</label><input type=\"email\" class=\"form-control\" id=\"email\" name=\"smartpay_form[email]\" placeholder=\"Email\" required/></div><!-- /wp:smartpay-form/email -->",
   fields: []
 };
@@ -53046,6 +53052,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var defaultFormData = {
   title: '',
+  amounts: [],
   body: '',
   fields: []
 };

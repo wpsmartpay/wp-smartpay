@@ -13620,7 +13620,8 @@ body.swal2-toast-column .swal2-toast .swal2-validation-message {
 
 body.toplevel_page_smartpay.swal2-toast-shown .swal2-container.swal2-top-end,
 body.smartpay_page_smartpay-form.swal2-toast-shown .swal2-container.swal2-top-end {
-  position: absolute;
-  top: 80px;
+  position: fixed;
+  top: 82px;
+  right: 4px;
 }
 
