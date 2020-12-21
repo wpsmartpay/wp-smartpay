@@ -36,7 +36,9 @@ class Common
                 'restUrl'  => get_rest_url('', 'smartpay'),
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'ajax_url' => admin_url('admin-ajax.php'),
-                'apiNonce' => wp_create_nonce('wp_rest')
+                'apiNonce' => wp_create_nonce('wp_rest'),
+
+                'options' => $this->getOptionsScriptsData(),
             )
         );
     }
@@ -57,5 +59,21 @@ class Common
                 'permission_callback' => [$customerController, 'middleware'],
             ],
         ]);
+    }
+
+    /**
+     * Get options data for localize scripts
+     *
+     * @return array
+     */
+    protected function getOptionsScriptsData(): array
+    {
+        // global $smartpay_options;
+
+        return [
+            'currency'          => smartpay_get_currency(),
+            'currencySymbol'    => smartpay_get_currency_symbol(),
+            'isTestMode'        => smartpay_is_test_mode(),
+        ];
     }
 }
