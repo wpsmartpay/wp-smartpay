@@ -16,12 +16,26 @@ class Form extends Model
     ];
 
     const PUBLISH = 'publish';
+    const DRAFT   = 'draft';
+    const PENDING = 'pending';
 
     public static function boot()
     {
         static::creating(function ($form) {
+            $form->amounts    = $form->amounts ?: [];
+            $form->fields     = $form->fields ?: [];
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
+    }
+
+    public function getAmountsAttribute($amounts)
+    {
+        return \json_decode($amounts, true);
+    }
+
+    public function setAmountsAttribute($amounts)
+    {
+        $this->attributes['amounts'] = \json_encode($amounts);
     }
 
     public function getFieldsAttribute($fields)
