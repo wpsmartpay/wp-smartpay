@@ -135,7 +135,7 @@ class Payment
 
         $extra = [];
         if ('form_payment' === $_data['smartpay_payment_type']) {
-            $extra['form_data'] = $_data['smartpay_form_extra_data'] ?? [];
+            $extra['form_data'] = $_data['smartpay_form_data'] ?? [];
         }
 
         return apply_filters('smartpay_prepare_payment_data', array(

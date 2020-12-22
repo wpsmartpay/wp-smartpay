@@ -52,8 +52,6 @@ jQuery(($) => {
 
             let formData = getPaymentFormData($parentWrapper)
             let validation = checkPaymentFormValidation(formData)
-            // console.log(validation)
-            // return
 
             // Hide all errors
             $parentWrapper.find('input').removeClass('is-invalid')
@@ -156,7 +154,7 @@ jQuery(($) => {
                 smartpay_form_data[$(item).attr('name')] = $(item).val()
             })
 
-        data.form_response = smartpay_form_data || {}
+        data.smartpay_form_data = smartpay_form_data || {}
 
         return data
     }
