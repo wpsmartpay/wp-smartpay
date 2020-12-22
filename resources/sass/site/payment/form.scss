@@ -1,4 +1,6 @@
 .smartpay-form-shortcode {
+    position: relative;
+
     .form {
         .form-element {
             margin-bottom: 16px;
@@ -47,6 +49,11 @@
                 &.selected {
                     // box-shadow: 0 0 0 1px $success;
                     border-color: $success;
+
+                    input[type='radio']:checked {
+                        border-color: #28a745;
+                        background-color: #28a745;
+                    }
                 }
             }
         }
@@ -59,13 +66,33 @@
             }
         }
 
-        // 	&--custom-amount {
-        // 		height: auto !important;
-        // 	}
+        .gateways {
+            margin-bottom: 20px !important;
+            flex-wrap: wrap;
+
+            .gateway {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
     }
 
     .btn {
         font-size: 16px;
         padding: 6px 10px;
+    }
+
+    #payment-response {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
     }
 }

@@ -42,69 +42,6 @@ jQuery(($) => {
         }
     )
 
-    /** ============= Form ============= **/
-
-    /** Select form fixed amount **/
-    $(document.body).on(
-        'click',
-        '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
-        (e) => {
-            e.preventDefault()
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.amount')
-                .removeClass('selected')
-
-            $(e.currentTarget).addClass('selected')
-
-            // Change the custom amount value on selecting form amount
-            var selectedAmount = $(e.currentTarget)
-                .find('input[name="_form_amount"]')
-                .val()
-
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.form--custom-amount')
-                .val(selectedAmount)
-        }
-    )
-
-    /** Select form custom amount **/
-    $(document.body).on(
-        'focus',
-        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
-        (e) => {
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.amount')
-                .removeClass('selected')
-            $(e.currentTarget).addClass('selected')
-        }
-    )
-
-    /** Open form modal */
-    $(document.body).on(
-        'click',
-        '.smartpay-form-shortcode button.open-form-modal',
-        (e) => {
-            e.preventDefault()
-
-            let $formModal = $(e.currentTarget)
-                .parents('.smartpay-form-shortcode')
-                .find('.form-modal')
-
-            setTimeout(() => {
-                // Show form modal
-                $formModal.modal('show')
-
-                // Appending modal background inside the .smartpay div
-                $('.modal-backdrop')
-                    .last()
-                    .appendTo($(e.currentTarget).closest('.smartpay'))
-            }, 500)
-        }
-    )
-
     /** ============= Payment Modal ============= **/
 
     /** Open payment form **/
@@ -227,7 +164,7 @@ jQuery(($) => {
                     action: 'smartpay_process_payment',
                     data: formData,
                 }
-                jQuery.post(smartpay.ajax_url, data, (response) => {
+                jQuery.post(smartpay.ajaxUrl, data, (response) => {
                     // Show second step
                     $paymentSecondStep.css('display', 'flex')
 
@@ -302,7 +239,8 @@ jQuery(($) => {
             data.smartpay_form_id =
                 $wrapper.find('input[name="smartpay_form_id"]').val() || null
             data.smartpay_amount =
-                $wrapper.find('input[name="smartpay_amount"]').val() || null
+                $wrapper.find('input[name="smartpay_form_amount"]').val() ||
+                null
 
             let smartpay_form_extra_data = {}
             if (

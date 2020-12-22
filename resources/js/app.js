@@ -95,5 +95,6 @@ jQuery(($) => {
     }
 })
 
-import './frontend/payment/payment.js'
+import './frontend/payment/product'
+import './frontend/payment/form'
 import './frontend/shortcode.js'

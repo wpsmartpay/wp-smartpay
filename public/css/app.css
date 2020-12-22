@@ -11569,6 +11569,10 @@
   padding: 6px 10px;
 }
 
+.smartpay .smartpay-form-shortcode {
+  position: relative;
+}
+
 .smartpay .smartpay-form-shortcode .form .form-element {
   margin-bottom: 16px;
 }
@@ -11620,6 +11624,11 @@
   border-color: #28a745;
 }
 
+.smartpay .smartpay-form-shortcode .form--amount-section .amount.selected input[type='radio']:checked {
+  border-color: #28a745;
+  background-color: #28a745;
+}
+
 .smartpay .smartpay-form-shortcode .form .custom-amount-wrapper {
   margin-top: 12px !important;
 }
@@ -11628,9 +11637,33 @@
   font-size: 16px;
 }
 
+.smartpay .smartpay-form-shortcode .form .gateways {
+  margin-bottom: 20px !important;
+  flex-wrap: wrap;
+}
+
+.smartpay .smartpay-form-shortcode .form .gateways .gateway {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .smartpay .smartpay-form-shortcode .btn {
   font-size: 16px;
   padding: 6px 10px;
+}
+
+.smartpay .smartpay-form-shortcode #payment-response {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
 }
 
 .smartpay .smartpay-payment .payment-modal .modal-content {

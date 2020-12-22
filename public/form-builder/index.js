@@ -50654,13 +50654,11 @@ __webpack_require__.r(__webpack_exports__);
 var save = function save(_ref) {
   var attributes = _ref.attributes;
   return /*#__PURE__*/React.createElement("div", {
-    className: "row"
+    className: "form-element row"
   }, attributes.fields.map(function (field, index) {
     return !!field.settings.visible && /*#__PURE__*/React.createElement("div", {
       className: "col",
       key: index
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "form-element"
     }, /*#__PURE__*/React.createElement("label", {
       "for": field.attributes.name
     }, field.settings.label), /*#__PURE__*/React.createElement("input", {
@@ -50671,36 +50669,8 @@ var save = function save(_ref) {
       placeholder: field.attributes.placeholder,
       required: field.attributes.isRequired,
       value: ""
-    })));
-  })) // <div className="form-element">
-  //     <div className="form-row">
-  //         <div className="col">
-  //             <label for="smartpay_first_name">
-  //                 {__('First Name', 'smartpay')}
-  //             </label>
-  //             <input
-  //                 type="text"
-  //                 className="form-control"
-  //                 id="smartpay_first_name"
-  //                 name="smartpay_first_name"
-  //             />
-  //         </div>
-  //         {attributes.showLastName && (
-  //             <div className="col">
-  //                 <label for="smartpay_last_name">
-  //                     {__('Last Name', 'smartpay')}
-  //                 </label>
-  //                 <input
-  //                     type="text"
-  //                     className="form-control"
-  //                     id="smartpay_last_name"
-  //                     name="smartpay_last_name"
-  //                 />
-  //             </div>
-  //         )}
-  //     </div>
-  // </div>
-  ;
+    }));
+  }));
 };
 
 /***/ }),
