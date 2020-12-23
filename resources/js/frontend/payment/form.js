@@ -40,7 +40,7 @@ jQuery(($) => {
     /** Send ajax request to process form payment **/
     $(document.body).on(
         'click',
-        '.smartpay-form-shortcode button.smartpay-pay-now',
+        '.smartpay-form-shortcode button.smartpay-form-pay-now',
         (e) => {
             e.preventDefault()
 
@@ -87,7 +87,7 @@ jQuery(($) => {
             }
 
             setTimeout(() => {
-                $(e.currentTarget).text(buttonText).removeAttr('disabled')
+                $(e.currentTarget).text(buttonText).attr('disabled', false)
             }, 300)
         }
     )
@@ -146,15 +146,14 @@ jQuery(($) => {
                 null,
         }
 
-        let smartpay_form_data = {}
-
+        let formData = {}
         $wrapper
             .find('form input[name^="smartpay_form["]')
             .each(function (index, item) {
-                smartpay_form_data[$(item).attr('name')] = $(item).val()
+                formData[$(item).attr('name')] = $(item).val()
             })
 
-        data.smartpay_form_data = smartpay_form_data || {}
+        data['smartpay_form_data'] = JSON.stringify(formData)
 
         return data
     }

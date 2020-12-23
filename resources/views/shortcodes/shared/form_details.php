@@ -2,7 +2,7 @@
     <div class="smartpay-form-shortcode smartpay-payment">
         <div class="card form bg-transparent border-0">
             <div class="card-body smartpay_form_builder_wrapper p-5">
-                <form action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST">
+                <form id="smartpay-payment-form" action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST" enctype="multipart/form-data">
                     <div id="form-response" class="mb-3"></div>
                     <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                     <?php echo do_blocks($form->body);
@@ -66,7 +66,7 @@
                     <div class="alert alert-danger"><?php echo _e('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
                     <?php endif; ?>
 
-                    <button type="button" class="btn btn-success btn-block btn-lg smartpay-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>><?php _e('Pay Now', 'smartpay') ?></button>
+                    <button type="button" class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>><?php _e('Pay Now', 'smartpay') ?></button>
                 </form>
             </div>
         </div>
