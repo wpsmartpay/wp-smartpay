@@ -130,12 +130,12 @@ class Payment
     private function _prepare_payment_data($_data)
     {
         $payment_data = $this->_get_payment_data($_data);
-
         // TODO: Make another method to get extra
 
         $extra = [];
         if ('form_payment' === $_data['smartpay_payment_type']) {
             $extra['form_data'] = $_data['smartpay_form_data'] ?? [];
+            $extra['form_fields'] = Form::find($_data['smartpay_form_id'])->fields ?? [];
         }
 
         return apply_filters('smartpay_prepare_payment_data', array(
