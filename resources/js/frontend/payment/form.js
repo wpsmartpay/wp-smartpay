@@ -117,45 +117,20 @@ jQuery(($) => {
 
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
-        let data = {
+        const data = $wrapper.find('#smartpay-payment-form').serializeJSON()
+
+        return {
             smartpay_action: 'smartpay_process_payment',
-            smartpay_process_payment:
-                $wrapper.find('input[name="smartpay_process_payment"]').val() ||
-                null,
-            smartpay_gateway:
-                $wrapper.find('input[name="smartpay_gateway"]:checked').val() ||
-                null,
-            smartpay_first_name:
-                $wrapper
-                    .find('input[name="smartpay_form[name][first_name]"]')
-                    .val() || null,
-            smartpay_last_name:
-                $wrapper
-                    .find('input[name="smartpay_form[name][last_name]"]')
-                    .val() || null,
-            smartpay_email:
-                $wrapper.find('input[name="smartpay_form[email]"]').val() ||
-                null,
-            smartpay_payment_type:
-                $wrapper.find('input[name="smartpay_payment_type"]').val() ||
-                null,
-            smartpay_form_id:
-                $wrapper.find('input[name="smartpay_form_id"]').val() || null,
-            smartpay_amount:
-                $wrapper.find('input[name="smartpay_form_amount"]').val() ||
-                null,
+            smartpay_payment_type: 'form_payment',
+            smartpay_process_payment: data.smartpay_process_payment,
+            smartpay_gateway: data.smartpay_gateway,
+            smartpay_first_name: data.smartpay_form.name.first_name,
+            smartpay_last_name: data.smartpay_form.name.last_name,
+            smartpay_email: data.smartpay_form.email,
+            smartpay_form_id: data.smartpay_form_id,
+            smartpay_amount: data.smartpay_form_amount,
+            smartpay_form_data: data.smartpay_form,
         }
-
-        let formData = {}
-        $wrapper
-            .find('form input[name^="smartpay_form["]')
-            .each(function (index, item) {
-                formData[$(item).attr('name')] = $(item).val()
-            })
-
-        data['smartpay_form_data'] = JSON.stringify(formData)
-
-        return data
     }
 
     function checkPaymentFormValidation(data) {

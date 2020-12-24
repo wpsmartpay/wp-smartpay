@@ -36,12 +36,8 @@
                         </div>
                     </div>
 
-                    <!-- Form Data -->
-                    <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="form_payment">
                     <input type="hidden" name="smartpay_form_id" id="smartpay_form_id" value="<?php echo $form->id ?? 0; ?>">
-                    <!-- /Form Data -->
 
-                    <!-- Payment modal -->
                     <?php $gateways = smartpay_get_enabled_payment_gateways(true); ?>
                     <?php if (count($gateways) == 1) : ?>
                     <?php $gateways_index = array_keys($gateways); ?>

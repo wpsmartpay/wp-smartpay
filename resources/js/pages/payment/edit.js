@@ -1,12 +1,4 @@
-import {
-    Container,
-    Button,
-    Card,
-    Row,
-    Col,
-    InputGroup,
-    Form,
-} from 'react-bootstrap'
+import { Container, Button, Card, InputGroup, Form } from 'react-bootstrap'
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { Update } from '../../http/payment'
@@ -123,7 +115,7 @@ export const EditPayment = () => {
                         </Container>
                     </div>
                     <Container>
-                        <Card>
+                        <Card className="mt-3">
                             <Card.Body>
                                 <div className="d-flex pb-3 border-bottom justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
@@ -146,25 +138,25 @@ export const EditPayment = () => {
                                     </h3>
                                 </div>
                                 <p>
-                                    <strong>{__('Date', 'smartpay')}:</strong>
+                                    <strong>{__('Date', 'smartpay')}: </strong>
                                     <span>{payment.created_at}</span>
                                 </p>
                                 <p>
                                     <strong>
-                                        {__('Customer', 'smartpay')}:
+                                        {__('Customer', 'smartpay')}:{' '}
                                     </strong>
                                     <span>{payment.email}</span>
                                 </p>
                                 <p>
                                     <strong>
-                                        {__('Payment Method', 'smartpay')}:
+                                        {__('Payment Method', 'smartpay')}:{' '}
                                     </strong>
                                     <span>{payment.gateway}</span>
                                 </p>
                                 {payment?.transaction_id && (
                                     <p>
                                         <strong>
-                                            {__('Transaction ID', 'smartpay')}:
+                                            {__('Transaction ID', 'smartpay')}:{' '}
                                         </strong>
                                         <span>
                                             {payment?.transaction_id || '-'}
@@ -179,10 +171,10 @@ export const EditPayment = () => {
                                         </h3>
                                         <p>
                                             <strong>
-                                                {__('Product', 'smartpay')}
+                                                {__('Product', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                {`# ${payment?.data?.product_id}` ||
+                                                {`#${payment?.data?.product_id}` ||
                                                     '-'}
                                             </span>
                                         </p>
@@ -192,6 +184,7 @@ export const EditPayment = () => {
                                                     'Product Price',
                                                     'smartpay'
                                                 )}
+                                                :{' '}
                                             </strong>
                                             <span>
                                                 {`${payment?.currency} ${payment?.data?.product_price}` ||
@@ -220,15 +213,16 @@ export const EditPayment = () => {
                                         </h3>
                                         <p>
                                             <strong>
-                                                {__('Form', 'smartpay')}
+                                                {__('Form', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                # {payment.data?.form_id}
+                                                #{payment.data?.form_id}
                                             </span>
                                         </p>
                                         <p>
                                             <strong>
                                                 {__('Total Amount', 'smartpay')}
+                                                :{' '}
                                             </strong>
                                             <span>
                                                 {payment.data?.total_amount}
@@ -244,54 +238,93 @@ export const EditPayment = () => {
                                         </h3>
                                         <p>
                                             <strong>
-                                                {__('First Name', 'smartpay')}
+                                                {__('First Name', 'smartpay')}:{' '}
                                             </strong>
-                                            <span>
-                                                {payment?.customer?.first_name}
-                                            </span>
+                                            {payment?.customer?.first_name}
                                         </p>
                                         <p>
                                             <strong>
-                                                {__('Last Name', 'smartpay')}
+                                                {__('Last Name', 'smartpay')}:{' '}
                                             </strong>
-                                            <span>
-                                                {payment?.customer?.last_name}
-                                            </span>
+                                            {payment?.customer?.last_name}
                                         </p>
                                         <p>
                                             <strong>
-                                                {__('Email', 'smartpay')}
+                                                {__('Email', 'smartpay')}:{' '}
                                             </strong>
-                                            <span>
-                                                {payment?.customer?.email}
-                                            </span>
+                                            {payment?.customer?.email}
                                         </p>
                                     </>
                                 )}
                             </Card.Body>
                         </Card>
-                        {/* TODO */}
                         {payment.extra?.form_data && (
-                            <Card>
-                                <Card.Body>
-                                    <>
-                                        <h3 className="text-black">
-                                            {__('Form Data', 'smartpay')}
-                                        </h3>
-                                        {Object.keys(
-                                            payment.extra.form_data
-                                        ).map((key, index) => (
-                                            <p key={index}>
-                                                {`${key} : ${payment.extra.form_data[key]}`}
-                                            </p>
-                                        ))}
-                                    </>
-                                </Card.Body>
-                            </Card>
+                            <div className="mt-3">
+                                <DisplayFormData
+                                    formData={payment.extra?.form_data}
+                                    formFields={payment.extra?.form_fields}
+                                />
+                            </div>
                         )}
                     </Container>
                 </>
             )}
         </>
+    )
+}
+
+const DisplayFormData = ({ formData, formFields }) => {
+    const build = (fields) => {
+        if (!Array.isArray(fields)) {
+            return
+        }
+
+        let tempFields = {}
+
+        fields.forEach((item) => {
+            const data = item[Object.keys(item)[0]]
+            if (data.hasOwnProperty('attributes')) {
+                item = data
+            }
+
+            const key = item['attributes']['name']
+            if (item.hasOwnProperty('fields')) {
+                tempFields[key] = build(item['fields'])
+            } else {
+                tempFields[key] = item['settings']['label']
+            }
+        })
+
+        return tempFields
+    }
+
+    const renderFields = (labels, formData) => {
+        return (
+            <div key={Math.random().toString(36).substr(2, 11)}>
+                {Object.keys(labels).map(function (key) {
+                    if ('object' === typeof labels[key]) {
+                        return renderFields(labels[key], formData[key])
+                    } else {
+                        return (
+                            formData[key] && (
+                                <p key={key}>
+                                    <strong>{labels[key]}: </strong>
+                                    {formData[key]}
+                                </p>
+                            )
+                        )
+                    }
+                })}
+            </div>
+        )
+    }
+
+    return (
+        <Card>
+            <Card.Body>
+                <h3 className="text-black">{__('Form Data', 'smartpay')}</h3>
+                {renderFields(build(formFields), formData)}
+            </Card.Body>
+        </Card>
     )
 }
