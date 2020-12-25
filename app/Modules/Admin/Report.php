@@ -3,9 +3,12 @@
 namespace SmartPay\Modules\Admin;
 
 use SmartPay\Http\Controllers\Rest\Admin\ReportController;
+use WP_REST_Server;
 
 class Report
 {
+    protected $app;
+
     public function __construct($app)
     {
         $this->app = $app;
@@ -18,7 +21,7 @@ class Report
 
         register_rest_route('smartpay/v1', 'reports', [
             [
-                'methods'   => \WP_REST_Server::READABLE,
+                'methods'   => WP_REST_Server::READABLE,
                 'callback'  => [$reportController, 'index'],
                 'permission_callback' => [$reportController, 'middleware'],
             ],
