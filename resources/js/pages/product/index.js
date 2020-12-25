@@ -76,10 +76,10 @@ export const ProductList = () => {
                                 <th className="w-75 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
-                                <th className="w-20 text-left">
+                                <th className="text-left">
                                     {__('Date', 'smartpay')}
                                 </th>
-                                <th className="w-30 text-right">
+                                <th className="text-right">
                                     {__('Actions', 'smartpay')}
                                 </th>
                             </tr>
