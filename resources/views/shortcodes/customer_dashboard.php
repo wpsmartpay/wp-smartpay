@@ -33,104 +33,104 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="payments" role="tabpanel">
                                     <?php if (!count($customer->payments)) : ?>
-                                        <div class="card">
-                                            <div class="card-body py-5">
-                                                <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
-                                            </div>
+                                    <div class="card">
+                                        <div class="card-body py-5">
+                                            <p class="text-info  m-0 text-center"><?php _e('You don\'t have any payment yet.', 'smartpay'); ?></p>
                                         </div>
+                                    </div>
                                     <?php else : ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
-                                                        <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
-                                                        <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
-                                                        <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"><?php _e('Order ID', 'smartpay'); ?></th>
+                                                    <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
+                                                    <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
+                                                    <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
 
-                                                    <?php foreach ($customer->payments as $index => $payment) : ?>
-                                                        <tr>
-                                                            <th scope="row"><?php echo '#' . $payment->id; ?></th>
-                                                            <td><?php echo mysql2date('F j, Y', $payment->completed_at); ?></td>
-                                                            <td class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                                <?php echo $payment->status; ?></td>
-                                                            <td class="text-muted">
-                                                                <strong class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
-                                                                    <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
-                                                                </strong>
-                                                            </td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                <?php foreach ($customer->payments as $index => $payment) : ?>
+                                                <tr>
+                                                    <th scope="row"><?php echo '#' . $payment->id; ?></th>
+                                                    <td><?php echo mysql2date('F j, Y', $payment->completed_at); ?></td>
+                                                    <td class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                        <?php echo $payment->status; ?></td>
+                                                    <td class="text-muted">
+                                                        <strong class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
+                                                            <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
+                                                        </strong>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                     <?php endif ?>
                                 </div>
 
                                 <div class="tab-pane fade" id="downloads" role="tabpanel">
                                     <?php if (!count($activePayments)) : ?>
-                                        <div class="card">
-                                            <div class="card-body py-5">
-                                                <p class="text-info  m-0 text-center"><?php _e('You don\'t have downloadable item yet!', 'smartpay'); ?></p>
+                                    <div class="card">
+                                        <div class="card-body py-5">
+                                            <p class="text-info  m-0 text-center"><?php _e('You don\'t have downloadable item yet!', 'smartpay'); ?></p>
+                                        </div>
+                                    </div>
+                                    <?php else : ?>
+                                    <?php foreach ($activePayments as $index => $payment) : ?>
+
+                                    <!-- // FIXME: Add accessor -->
+                                    <?php if ('Product Purchase' !== $payment->type) continue; ?>
+
+                                    <?php $productId = $payment->data['product_id'] ?? 0; ?>
+                                    <?php $product = Product::with(['parent'])->find($productId); ?>
+
+                                    <?php if (!$productId || !$product) : ?>
+                                    <p>Product Not available</p>
+                                    <?php else : ?>
+                                    <div class="border mb-3 product">
+                                        <div class="p-3 product--header">
+                                            <div class="d-flex align-items-center" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
+                                                <?php $covers = $product->isParent() ? $product->covers : $product->parent->covers; ?>
+                                                <?php if (count($covers)) : ?>
+                                                <div class="product--image mr-3">
+                                                    <img src="<?php echo $covers[0]['icon']; ?>" class="border" alt="">
+                                                </div>
+                                                <?php endif; ?>
+                                                <div class="flex-grow-1">
+                                                    <h5 class="my-0"><?php echo $product->formatted_title; ?></h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    <?php else : ?>
-                                        <?php foreach ($activePayments as $index => $payment) : ?>
 
-                                            <!-- // FIXME: Add accessor -->
-                                            <?php if ('Product Purchase' !== $payment->type) continue; ?>
-
-                                            <?php $productId = $payment->data['product_id'] ?? 0; ?>
-                                            <?php $product = Product::with(['parent'])->find($productId); ?>
-
-                                            <?php if (!$productId || !$product) : ?>
-                                                <p>Product Not available</p>
-                                            <?php else : ?>
-                                                <div class="border mb-3 product">
-                                                    <div class="p-3 product--header">
-                                                        <div class="d-flex align-items-center" data-toggle="collapse" data-target="#collapse-payment-<?php echo $index; ?>">
-                                                            <?php $covers = $product->isParent() ? $product->covers : $product->parent->covers; ?>
-                                                            <?php if (count($covers)) : ?>
-                                                                <div class="product--image mr-3">
-                                                                    <img src="<?php echo $covers[0]['icon']; ?>" class="border" alt="">
-                                                                </div>
-                                                            <?php endif; ?>
-                                                            <div class="flex-grow-1">
-                                                                <h5 class="my-0"><?php echo $product->formatted_title; ?></h5>
+                                        <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
+                                            <?php $downloadFiles = $product->files; ?>
+                                            <?php if ($downloadFiles) : ?>
+                                            <p><?php _e('Files', 'smartpay'); ?></p>
+                                            <ul class="list-group">
+                                                <?php foreach ($downloadFiles as $file) : ?>
+                                                <li class="list-group-item p-2">
+                                                    <div class="d-flex align-items-center flex-wrap">
+                                                        <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
+                                                        <div class="d-flex flex-grow-1 flex-column ml-3">
+                                                            <p class="m-0"><?php echo $file['name'] ?? ''; ?></p>
+                                                            <div class="d-flex flex-row justify-content-between text-muted m-0">
+                                                                <small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small>
                                                             </div>
                                                         </div>
+                                                        <a href="<?php echo smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
                                                     </div>
-
-                                                    <div class="p-3 bg-light collapse show" id="collapse-payment-<?php echo $index; ?>">
-                                                        <?php $downloadFiles = $product->files; ?>
-                                                        <?php if ($downloadFiles) : ?>
-                                                            <p><?php _e('Files', 'smartpay'); ?></p>
-                                                            <ul class="list-group">
-                                                                <?php foreach ($downloadFiles as $file) : ?>
-                                                                    <li class="list-group-item p-2">
-                                                                        <div class="d-flex align-items-center flex-wrap">
-                                                                            <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
-                                                                            <div class="d-flex flex-grow-1 flex-column ml-3">
-                                                                                <p class="m-0"><?php echo $file['name'] ?? ''; ?></p>
-                                                                                <div class="d-flex flex-row justify-content-between text-muted m-0">
-                                                                                    <small><?php _e(sprintf('Size: ', 'smartpay') . $file['size'] ?? ''); ?></small>
-                                                                                </div>
-                                                                            </div>
-                                                                            <a href="<?php echo smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary btn--download"><?php _e('Download', 'smartpay'); ?></a>
-                                                                        </div>
-                                                                    </li>
-                                                                <?php endforeach; ?>
-                                                            </ul>
-                                                        <?php else : ?>
-                                                            <p class="mb-0 text-center"><?php _e('This item has no download file.', 'smartpay'); ?></p>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </div>
+                                                </li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                            <?php else : ?>
+                                            <p class="mb-0 text-center"><?php _e('This item has no download file.', 'smartpay'); ?></p>
                                             <?php endif; ?>
-                                        <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php endforeach; ?>
                                     <?php endif; ?>
                                 </div>
 

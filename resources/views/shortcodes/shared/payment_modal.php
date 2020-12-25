@@ -45,32 +45,32 @@ $has_payment_error = false;
                         <div class="payment-modal--gateway">
                             <!-- // If only one gateway activated -->
                             <?php if (count($gateways) == 1) : ?>
-                                <?php $gateways_index = array_keys($gateways); ?>
-                                <p class="payment-gateway--label text-muted single-gateway">
-                                    <?php echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label']));
+                            <?php $gateways_index = array_keys($gateways); ?>
+                            <p class="payment-gateway--label text-muted single-gateway">
+                                <?php echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label']));
                                     ?>
-                                </p>
-                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
+                            </p>
+                            <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
 
-                                <!-- // If it has multiple payment gateway -->
+                            <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
-                                <p class="payment-gateway--label text-muted"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
+                            <p class="payment-gateway--label text-muted"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
 
-                                <div class="gateways m-0 justify-content-center d-flex">
-                                    <?php foreach ($gateways as $gatewayId => $gateway) : ?>
-                                        <div class="gateway">
-                                            <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
-                                            <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
-                                                <!-- // FIXME: Make gateway image dynamic -->
-                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
-                                                <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
-                                            </label>
-                                        </div>
-                                    <?php endforeach; ?>
+                            <div class="gateways m-0 justify-content-center d-flex">
+                                <?php foreach ($gateways as $gatewayId => $gateway) : ?>
+                                <div class="gateway">
+                                    <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
+                                    <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
+                                        <!-- // FIXME: Make gateway image dynamic -->
+                                        <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
+                                        <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
+                                    </label>
                                 </div>
+                                <?php endforeach; ?>
+                            </div>
                             <?php else : ?>
-                                <?php $has_payment_error = true; ?>
-                                <div class="alert alert-danger"><?php echo 'You must enable a payment gateway to proceed a payment.'; ?></div>
+                            <?php $has_payment_error = true; ?>
+                            <div class="alert alert-danger"><?php echo 'You must enable a payment gateway to proceed a payment.'; ?></div>
                             <?php endif; ?>
                         </div>
 
@@ -122,7 +122,4 @@ $has_payment_error = false;
     </div>
 </div>
 
-<!-- // FIXME -->
-<!-- <div id="smartpay_currency_symbol" data-value="<?php //echo smartpay_get_currency_symbol(); 
-                                                    ?>"></div> -->
 <div id="smartpay_currency_symbol" data-value="$"></div>

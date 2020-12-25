@@ -33,7 +33,7 @@ class PaymentController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $payments = Payment::orderBy('id', 'DESC')->get();
+        $payments = Payment::with(['customer'])->orderBy('id', 'DESC')->get();
 
         return new WP_REST_Response(['payments' => $payments]);
     }

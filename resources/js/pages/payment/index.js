@@ -66,27 +66,25 @@ export const PaymentList = () => {
                         <thead>
                             <tr className="bg-light">
                                 <th className="w-5 text-left">
-                                    <strong>{__('ID', 'smartpay')}</strong>
+                                    {__('ID', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>
-                                        {__('Customer', 'smartpay')}
-                                    </strong>
+                                    {__('Customer', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>{__('Amount', 'smartpay')}</strong>
+                                    {__('Type', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>{__('Type', 'smartpay')}</strong>
+                                    {__('Amount', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>{__('Status', 'smartpay')}</strong>
+                                    {__('Date', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>{__('Date', 'smartpay')}</strong>
+                                    {__('Status', 'smartpay')}
                                 </th>
                                 <th className="w-30 text-left">
-                                    <strong>{__('Actions', 'smartpay')}</strong>
+                                    {__('Actions', 'smartpay')}
                                 </th>
                             </tr>
                         </thead>
@@ -103,14 +101,20 @@ export const PaymentList = () => {
                                 return (
                                     <tr key={index}>
                                         <td>{payment.id}</td>
-                                        <td>
-                                            {/* FIXME */}
-                                            {payment.customer_id}
-                                        </td>
-                                        <td>{`${payment.currency}${payment.amount} `}</td>
+                                        <td>{payment.email}</td>
                                         <td>{payment.type}</td>
+                                        <td>
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: `${smartpay.options.currencySymbol} ${payment.amount} `,
+                                                }}
+                                            ></span>
+                                        </td>
+                                        <td>
+                                            {payment.completed_at ||
+                                                payment.created_at}
+                                        </td>
                                         <td>{payment.status}</td>
-                                        <td>{payment.completed_at}</td>
                                         <td>
                                             <Link
                                                 className="btn-sm p-0 mr-2"

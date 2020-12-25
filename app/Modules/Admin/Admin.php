@@ -145,14 +145,14 @@ class Admin
                     'restUrl'  => get_rest_url('', 'smartpay'),
                     'adminUrl'  => admin_url('admin.php'),
                     'ajax_url' => admin_url('admin-ajax.php'),
-                    'apiNonce' => wp_create_nonce('wp_rest')
+                    'apiNonce' => wp_create_nonce('wp_rest'),
+                    'options' => $this->getOptionsScriptsData(),
                 )
             );
 
             // WARN: Enqueue to bottom
             wp_enqueue_editor();
             wp_enqueue_media();
-        } else {
         }
 
         $this->registerBlocks($hook);
@@ -184,5 +184,20 @@ class Admin
 
         $forms = \SmartPay\Models\Form::all();
         wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_forms', json_encode($forms));
+    }
+
+
+    /**
+     * Get options data for localize scripts
+     *
+     * @return array
+     */
+    protected function getOptionsScriptsData(): array
+    {
+        return [
+            'currency'          => smartpay_get_currency(),
+            'currencySymbol'    => smartpay_get_currency_symbol(),
+            'isTestMode'        => smartpay_is_test_mode(),
+        ];
     }
 }

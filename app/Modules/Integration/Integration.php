@@ -72,15 +72,6 @@ class Integration
         if ('smartpay_page_smartpay-integrations' === $hook) {
             wp_register_script('smartpay-admin-integration', SMARTPAY_PLUGIN_ASSETS . '/js/integration.js', ['jquery'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin-integration');
-
-            // TODO: Make it global
-            wp_localize_script(
-                'smartpay-admin-integration',
-                'smartpay',
-                array(
-                    'ajaxUrl' => admin_url('admin-ajax.php'),
-                )
-            );
         }
     }
 
