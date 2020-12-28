@@ -9,11 +9,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+            - name: Install dependencies
+              run: |
+                  apt install krb5-config
+
             - name: Build
               run: |
-                  yarn install
+                  npm install --only=production
                   composer install --no-dev
                   npm run release
+
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
               env:
