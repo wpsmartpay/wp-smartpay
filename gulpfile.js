@@ -9,8 +9,8 @@ const removeTemp = (cb) => {
     cb()
 }
 
-const copy = (cb) => {
-    src([
+const copy = () => {
+    return src([
         './**',
         './*/**',
         '!./resources/blocks/**',
@@ -31,8 +31,6 @@ const copy = (cb) => {
         '!*.log',
         '!*.gitignore',
     ]).pipe(dest('temp/smartpay'))
-
-    cb()
 }
 
 const getPluginVersion = () => {
@@ -49,7 +47,7 @@ const getPluginVersion = () => {
     return
 }
 
-const bundle = (cb) => {
+const bundle = () => {
     let version = getPluginVersion()
 
     if (!version) {
@@ -57,11 +55,9 @@ const bundle = (cb) => {
         return
     }
 
-    src(['./temp/**', './temp/*/**'])
+    return src(['./temp/**', './temp/*/**'])
         .pipe(zip(`smartpay-${version}.zip`))
         .pipe(dest('./temp'))
-
-    cb()
 }
 
 exports.release = series(removeTemp, copy, bundle)

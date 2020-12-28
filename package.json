@@ -64,12 +64,13 @@
         "prod": "npm run production",
         "watch": "npm run development -- --watch",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "build": "npm run production && npm run build:form && npm run build:blocks",
         "watch:blocks": "wp-scripts start resources/blocks/index.js --output-path=public/blocks",
         "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks",
         "watch:form": "wp-scripts start resources/form-builder/index.js --output-path=public/form-builder",
         "build:form": "wp-scripts build resources/form-builder/index.js --output-path=public/form-builder",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "build": "npm run production && npm run build:form && npm run build:blocks",
+        "release": "npm run build && gulp release",
         "commit": "git-cz"
     },
     "gitHooks": {
