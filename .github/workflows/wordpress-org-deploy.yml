@@ -11,7 +11,7 @@ jobs:
             - uses: actions/checkout@master
             - name: Install dependencies
               run: |
-                  apt-get install krb5-config
+                  sudo apt-get install krb5-config
 
             - name: Build
               run: |
