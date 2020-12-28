@@ -8,8 +8,9 @@ jobs:
         name: New tag
         runs-on: ubuntu-latest
         steps:
-            - name: Build
+            - name: Clone
               uses: actions/checkout@v2
+            - name: Build
               run: |
                   sudo apt-get install krb5-config
                   npm install
