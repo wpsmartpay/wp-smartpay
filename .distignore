@@ -3,19 +3,28 @@
 /.git
 /.github
 /node_modules
+
+/resources/blocks
+/resources/form-builder
+/resources/sass
+/resources/js
+/scripts
 /temp
 
 # Files
 .distignore
 .gitignore
 .editorconfig
+.prettierrc
 .eslintignore
 .eslintrc.js
 .prettierrc.js
 composer.json
 composer.lock
-gulpfile.babel.js
-package.json
+gulpfile.js
+mix-manifest.json
 package-lock.json
-wpgulp.config.js
-yarn.lock
+package.json
+webpack.mix.js
+*.lock
+*.log

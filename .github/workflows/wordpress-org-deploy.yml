@@ -19,10 +19,12 @@ jobs:
                   sudo apt-get install libkrb5-dev -y
                   npm install
                   composer install --no-dev
-                  npm run release
+                  npm run build
 
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
+              with:
+                  generate-zip: true
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
