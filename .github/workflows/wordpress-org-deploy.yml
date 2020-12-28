@@ -9,6 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Build
+              uses: actions/checkout@v2
               run: |
                   sudo apt-get install krb5-config
                   npm install
