@@ -8,13 +8,9 @@ jobs:
         name: New tag
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
-            - name: Install dependencies
-              run: |
-                  sudo apt-get install krb5-config
-
             - name: Build
               run: |
+                  sudo apt-get install krb5-config
                   npm install
                   composer install --no-dev
                   npm run release
