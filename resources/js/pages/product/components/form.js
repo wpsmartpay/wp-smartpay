@@ -1,4 +1,3 @@
-import './forms.css'
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
@@ -390,16 +389,16 @@ export const ProductForm = ({ product, setProductData }) => {
                         {product.variations.length > 0 && (
                             <div className="card p-0 mt-0 variations-secion">
                                 <div className="card-header bg-white p-0">
-                                    <div className="d-flex px-3 py-2">
+                                    <div className="d-flex px-3 py-2 align-items-center">
                                         <h3 className="m-0 pt-1 d-flex">
                                             {__('Variations', 'smartpay')}
                                         </h3>
-                                        <button
+                                        {/* <button
                                             type="button"
                                             className="btn btn-light border btn-sm my-1 ml-auto pb-0 shadow-sm remove-variation"
                                         >
                                             <Feather.Trash />
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                                 {product.variations.map((variation) => {
@@ -573,8 +572,8 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </strong>
                                                 </label>
 
-                                                {product.files.length && (
-                                                    <>
+                                                {product.files.length > 0 && (
+                                                    <div>
                                                         <ul className="list-group variation-files">
                                                             {product?.files?.map(
                                                                 (
@@ -657,7 +656,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                 )}
                                                             </Button>
                                                         </div>
-                                                    </>
+                                                    </div>
                                                 )}
 
                                                 {!product.files.length && (
