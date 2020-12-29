@@ -39,13 +39,17 @@ class Payment extends Model
 
     public static function boot()
     {
+        static::creating(function ($product) {
+            $product->status = $product->status ?: self::PENDING;
+        });
+
         static::saving(function ($payment) {
             if ($payment->isDirty('status')) {
                 do_action(
                     'smartpay_update_payment_status',
                     $payment,
                     $payment->attributes['status'],
-                    $payment->original['status']
+                    $payment->original['status'] ?: self::PENDING
                 );
             }
         });
