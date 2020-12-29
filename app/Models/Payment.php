@@ -138,11 +138,23 @@ class Payment extends Model
      * Update payment status
      *
      * @param string $status
-     * @return void
+     * @return boolean
      */
-    public function updateStatus($status)
+    public function updateStatus(string $status)
     {
         $this->status = $status;
+        return $this->save();
+    }
+
+    /**
+     * Set transaction id
+     *
+     * @param string $transactionId
+     * @return boolean
+     */
+    public function setTransactionId(string $transactionId)
+    {
+        $this->transaction_id = $transactionId;
         return $this->save();
     }
 }
