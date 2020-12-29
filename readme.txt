@@ -113,7 +113,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 
-= [1.1.0-beta] =
+= [1.1.0] =
 * New - Rewrite app with ReactJS(SPA)
 * New - Form Builder powered by Guttenburg Editor
 * New - Name, Input, Email, Address, Checkbox, Number, Radio, Select, Textarea fields
