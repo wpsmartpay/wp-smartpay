@@ -5,6 +5,10 @@ import { useState, useEffect } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Delete } from '../http/form'
+import { createHooks } from '@wordpress/hooks';
+
+export const smartPayHooks = createHooks();
+window.smartPayHooks = smartPayHooks;
 
 export const FormList = () => {
     const [forms, setForms] = useState([])

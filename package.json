@@ -72,5 +72,13 @@
         "build": "npm run production && npm run build:form && npm run build:blocks",
         "release": "npm run build && gulp release",
         "commit": "git-cz"
+    },
+    "gitHooks": {
+        "commit-msg": "node scripts/verify-commit-msg.js"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }

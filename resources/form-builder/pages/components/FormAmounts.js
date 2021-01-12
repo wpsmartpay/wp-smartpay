@@ -42,40 +42,52 @@ export const FormAmounts = ({ form, setFormData }) => {
         })
     }
 
-    return (
+    const Template = (
         <Card>
             <Card.Body>
-                <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
-                <div className="col-md-8 mx-auto py-4">
-                    {amounts.map((amount, index) => {
-                        return (
-                            <div key={index}>
-                                <AmountRow
-                                    amount={amount}
-                                    setAmount={setAmount}
-                                    removeAmountRow={removeAmountRow}
+                    <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
+                    <div className="col-md-8 mx-auto py-4">
+                        {amounts.map((amount, index) => {
+                            return (
+                                <>
+                                    {
+                                        'onetime' === amount.payment_type && 
+                                        <div key={index}>
+                                            <AmountRow
+                                                amount={amount}
+                                                setAmount={setAmount}
+                                                removeAmountRow={removeAmountRow}
+                                            />
+                                        </div>
+                                    }
+                                </>
+                            )
+                        })}
+
+                        <div className="mt-4">
+                            <Button onClick={addNewAmountRow} size="sm">
+                                <PlusIcon
+                                    size={18}
+                                    style={{ marginBottom: '-4px' }}
+                                    className="mr-2"
                                 />
-                            </div>
-                        )
-                    })}
-
-                    <div className="mt-4">
-                        <Button onClick={addNewAmountRow} size="sm">
-                            <PlusIcon
-                                size={18}
-                                style={{ marginBottom: '-4px' }}
-                                className="mr-2"
-                            />
-                            <span>{__('Add New Amount', 'smartpay')}</span>
-                        </Button>
+                                <span>{__('Add New Amount', 'smartpay')}</span>
+                            </Button>
+                        </div>
                     </div>
-                </div>
 
-                <div className="col-md-8 mx-auto py-4">
-                    <CustomAmount form={form} setFormData={setFormData} />
-                </div>
-            </Card.Body>
-        </Card>
+                    <div className="col-md-8 mx-auto py-4">
+                        <CustomAmount form={form} setFormData={setFormData} />
+                    </div>
+                </Card.Body>
+            </Card>
+    )
+    return (
+        <>
+            {
+                window.smartPayHooks.applyFilters( 'smartpay.form.price.tab', Template, form, setFormData )
+            }
+        </>
     )
 }
 
