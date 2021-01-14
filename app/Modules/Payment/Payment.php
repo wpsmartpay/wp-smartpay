@@ -149,7 +149,7 @@ class Payment
             'email'         => $_data['smartpay_email'],
             'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
             'extra'         => $extra
-        ));
+        ),$_data);
     }
 
     private function _get_payment_data($_data)

@@ -946,3 +946,29 @@ function smartpay_get_file_extension($str)
     $parts = explode('.', $str);
     return end($parts);
 }
+
+function smartpay_get_paypal_time_option( $time_option ) {
+    $options = array(
+        'daily'     => 'D',
+        'week'      => 'w',
+        'month'     => 'M',
+        'quarter'   => 'M',
+        'semiannual'=> 'M',
+        'yearly'    => 'Y',
+    );
+
+    return  $options[ $time_option ] ?? 'D';
+}
+
+function smartpay_get_paypal_time_duration_option( $time_option ) {
+    $options = array(
+        'daily'     => '1',
+        'week'      => '1',
+        'month'     => '1',
+        'quarter'   => '4',
+        'semiannual'=> '6',
+        'yearly'    => '1',
+    );
+
+    return  $options[ $time_option ] ?? '1';
+}

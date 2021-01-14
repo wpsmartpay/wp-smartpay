@@ -70,8 +70,7 @@ class PaypalStandard extends PaymentGateway
 
         $payment_price = number_format($paymentData['amount'], 2);
 
-        // TODO: Rearrange data
-        $paypal_args = array(
+        $default_args = [
             'charset'       => get_bloginfo('charset'),
             'lc'            => get_locale(),
             'cbt'           => get_bloginfo('name'),
@@ -93,20 +92,30 @@ class PaypalStandard extends PaymentGateway
             'rm'            => 2,
             'no_shipping'   => 1,
             'no_note'       => 1,
-
-            'item_name_1'   => 'Payment #' . $payment->id,
-            'item_number_1' => $payment->id,
-            'amount_1'      => $payment_price,
-
             'tax_rate'      => 0,
             'upload'        => 1,
 
             'return'        => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_success_page_uri()),
             'cancel_return' => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_failure_page_uri()),
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
-        );
+        ];
 
-        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $paymentData);
+        if( $payment->id && 'subscription' === $paymentData['price_type']) {
+            do_action('smartpay_paypal_subscription_process_payment',$payment,$paymentData);
+            $default_args['item_name']    = 'Payment #' . $payment->id;
+            $default_args['a3']           = $payment_price;
+            $default_args['p3']           = smartpay_get_paypal_time_duration_option( $paymentData['billing_period'] );
+            $default_args['t3']           = smartpay_get_paypal_time_option( $paymentData['billing_period'] );
+            $default_args['src']          = 1;
+            $default_args['cmd']          = '_xclick-subscriptions';
+        } else {
+            // TODO: Rearrange data
+            $default_args['item_name_1']    = 'Payment #' . $payment->id;
+            $default_args['item_number_1']  = $payment->id;
+            $default_args['amount_1']    = $payment_price;
+        }
+
+        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $default_args, $paymentData);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
