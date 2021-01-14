@@ -15,9 +15,23 @@
                             <div class="custom-control custom-radio amount form--fixed-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                 <input type="radio" name="_form_amount" id="_form_amount_<?php echo $amount['key']; ?>" id="_form_amount_<?php echo $amount['key']; ?>" class="custom-control-input" value="<?php echo $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?>>
                                 <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
+                                <input type="hidden" name="_form_price_type" id="_form_price_type_<?php echo $amount['key']; ?>" value="<?php echo $amount['price_type']; ?>">
+                                <?php 
+                                    if( 'subscription' === $amount['price_type'] ?? ''): ?>
+                                        <input type="hidden" name="_form_billing_period" id="_form_billing_period_<?php echo $amount['key']; ?>" value="<?php echo $amount['billing_period']; ?>">
+                                <?php 
+                                    endif;
+                                ?>
                             </div>
                             <?php endforeach; ?>
-
+                            
+                            <?php
+                                $formAmounts = $form->amounts;
+                                $defaultAmount = reset($formAmounts);
+                            ?>
+                            <input type="hidden" name="smartpay_form_price_type" value="<?php echo $defaultAmount['price_type'] ?>">
+                            <input type="hidden" name="smartpay_form_billing_period" value="<?php echo $defaultAmount['billing_period'] ?? 'week' ?>">
+                            
                             <?php if ($form->settings['allowCustomAmount']) : ?>
                             <!-- // Allow custom payment -->
                             <div class="form-group custom-amount-wrapper m-0 ">
@@ -31,7 +45,7 @@
                             </div>
                             <?php else : ?>
                             <?php $formAmounts = $form->amounts; ?>
-                            <input type="hidden" class="form-control form--custom-amount amount" name="smartpay_form_amount" value="<?php echo reset($formAmounts)['amount'] ?>">
+                            <input type="hidden" class="form-control form--custom-amount amount" name="smartpay_form_amount" value="<?php echo $defaultAmount['amount'] ?>">
                             <?php endif; ?>
                         </div>
                     </div>

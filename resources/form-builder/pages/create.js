@@ -14,7 +14,7 @@ const defaultFormData = {
             key: '1234',
             label: '',
             amount: '',
-            payment_type: 'onetime'
+            price_type: 'onetime'
         },
     ],
     body: `<!-- wp:smartpay-form/name -->

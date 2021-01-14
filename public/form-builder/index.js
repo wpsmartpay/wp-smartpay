@@ -53366,7 +53366,7 @@ var defaultFormData = {
     key: '1234',
     label: '',
     amount: '',
-    payment_type: 'onetime'
+    price_type: 'onetime'
   }],
   body: "<!-- wp:smartpay-form/name -->\n    <div class=\"wp-block-smartpay-form-name form-element row\"><div class=\"col\"><label for=\"first_name\">First Name</label><input type=\"text\" id=\"first_name\" name=\"smartpay_form[name][first_name]\" class=\"form-control\" placeholder=\"First Name\" required value=\"\"/></div><div class=\"col\"><label for=\"last_name\">Last Name</label><input type=\"text\" id=\"last_name\" name=\"smartpay_form[name][last_name]\" class=\"form-control\" placeholder=\"Last Name\" value=\"\"/></div></div>\n    <!-- /wp:smartpay-form/name -->\n\n    <!-- wp:smartpay-form/email -->\n    <div class=\"wp-block-smartpay-form-email form-element\"><label for=\"email\">Email</label><input type=\"email\" class=\"form-control\" id=\"email\" name=\"smartpay_form[email]\" placeholder=\"Email\" required/></div>\n    <!-- /wp:smartpay-form/email -->",
   fields: [],
