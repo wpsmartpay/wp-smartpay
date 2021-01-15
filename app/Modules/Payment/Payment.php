@@ -185,6 +185,7 @@ class Payment
                 return [
                     'form_id' => $form->id,
                     'total_amount' => $_data['smartpay_amount'] ?? 0,
+                    'price_type'   => $_data['smartpay_form_price_type'] 
                 ];
                 break;
 

@@ -17,7 +17,7 @@
                                 <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
                                 <input type="hidden" name="_form_price_type" id="_form_price_type_<?php echo $amount['key']; ?>" value="<?php echo $amount['price_type']; ?>">
                                 <?php 
-                                    if( 'subscription' === $amount['price_type'] ?? ''): ?>
+                                    if( 'subscription' === $amount['price_type']): ?>
                                         <input type="hidden" name="_form_billing_period" id="_form_billing_period_<?php echo $amount['key']; ?>" value="<?php echo $amount['billing_period']; ?>">
                                 <?php 
                                     endif;
