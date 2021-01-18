@@ -88,7 +88,7 @@ jQuery(($) => {
                         action: 'smartpay_process_payment',
                         data: formData,
                     },
-                    (response) => {;
+                    (response) => {
                         if (response) {
                             $parentWrapper
                                 .find('#payment-response')

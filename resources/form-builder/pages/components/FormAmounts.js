@@ -7,6 +7,7 @@ const defaultAmount = {
     key: '',
     label: '',
     amount: '',
+    price_type: 'onetime'
 }
 
 const geneateKey = () => Math.random().toString(36).substr(2, 9)
@@ -51,7 +52,7 @@ export const FormAmounts = ({ form, setFormData }) => {
                             return (
                                 <>
                                     {
-                                        'onetime' === amount.payment_type && 
+                                        'onetime' === amount.price_type && 
                                         <div key={index}>
                                             <AmountRow
                                                 amount={amount}

@@ -53069,7 +53069,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 var defaultAmount = {
   key: '',
   label: '',
-  amount: ''
+  amount: '',
+  price_type: 'onetime'
 };
 
 var geneateKey = function geneateKey() {
@@ -53116,7 +53117,7 @@ var FormAmounts = function FormAmounts(_ref) {
   }, Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Form Amounts', 'smartpay')), /*#__PURE__*/React.createElement("div", {
     className: "col-md-8 mx-auto py-4"
   }, amounts.map(function (amount, index) {
-    return /*#__PURE__*/React.createElement(React.Fragment, null, 'onetime' === amount.payment_type && /*#__PURE__*/React.createElement("div", {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, 'onetime' === amount.price_type && /*#__PURE__*/React.createElement("div", {
       key: index
     }, /*#__PURE__*/React.createElement(AmountRow, {
       amount: amount,
