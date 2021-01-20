@@ -972,3 +972,8 @@ function smartpay_get_paypal_time_duration_option( $time_option ) {
 
     return  $options[ $time_option ] ?? '1';
 }
+
+function smartpay_get_payment($payment_id) {
+    $payment = Payment::where('id',$payment_id)->first();
+    return $payment;
+}
