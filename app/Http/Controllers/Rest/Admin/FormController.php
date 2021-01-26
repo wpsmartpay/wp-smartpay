@@ -58,6 +58,8 @@ class FormController extends RestController
         $form->status   = Form::PUBLISH;
         $form->save();
 
+        do_action('smartpay_form_page_preview_save',$form);
+
         return new WP_REST_Response(['form' => $form, 'message' => __('Form created', 'smartpay')]);
     }
 

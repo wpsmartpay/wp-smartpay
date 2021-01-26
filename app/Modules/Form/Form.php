@@ -16,6 +16,7 @@ class Form
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
+        $this->app->addAction('smartpay_form_page_preview_save',[$this,'saveFormPagePreview']);
     }
 
     public function adminScripts($hook)
@@ -137,5 +138,21 @@ class Form
 
     public function registerBlocks()
     {
+    }
+
+    public function saveFormPagePreview($form) {
+        $postArr = [
+            'post_title'    => $form->title ?? 'Untitled form',
+            'post_status'   => 'publish',
+            'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="'.$form->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+            'post_type'     => 'page'
+        ];
+
+        $post_id = wp_insert_post( $postArr );
+        if( is_wp_error( $post_id ) ) {
+            return;
+        }
+        $form->extra = ['form_preview_page_id' => $post_id,'form_preview_page_permalink' => get_permalink($post_id)];
+        $form->save();
     }
 }

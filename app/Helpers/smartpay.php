@@ -965,7 +965,7 @@ function smartpay_get_paypal_time_duration_option( $time_option ) {
         'daily'     => '1',
         'week'      => '1',
         'month'     => '1',
-        'quarter'   => '4',
+        'quarter'   => '3',
         'semiannual'=> '6',
         'yearly'    => '1',
     );
