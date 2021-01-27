@@ -30,6 +30,7 @@ class Form extends Model
 
         static::updating(function ($form) {
             $form->extra  = $form->extra ?: null;
+            $form->updated_at  = date('Y-m-d H:i:s', time());
         });
     }
 

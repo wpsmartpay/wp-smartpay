@@ -67,6 +67,8 @@ class ProductController extends RestController
                 $this->createVariation($variationData, $product->id);
             });
 
+            do_action('smartpay_product_page_preview_save',$product);
+
             $wpdb->query('COMMIT');
 
             return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
@@ -165,6 +167,11 @@ class ProductController extends RestController
 
             foreach ($product->variations as $variation) {
                 $variation->delete();
+            }
+
+            $extraFields = $product->extra ?? null;
+            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
+                wp_delete_post( $extraFields['product_preview_page_id'] );
             }
 
             $product->delete();

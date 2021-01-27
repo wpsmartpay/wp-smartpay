@@ -26,6 +26,11 @@ class Product extends Model
         static::creating(function ($form) {
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
+
+        static::updating(function ($product) {
+            $product->extra  = $product->extra ?: null;
+            $product->updated_at  = date('Y-m-d H:i:s', time());
+        });
     }
 
     public function getFilesAttribute($files)
@@ -125,5 +130,15 @@ class Product extends Model
         }
 
         return (bool) apply_filters('smartpay_product_is_purchasable', $isPurchasable, $this);
+    }
+
+    public function getExtraAttribute($settings)
+    {
+        return \json_decode($settings, true);
+    }
+
+    public function setExtraAttribute($settings)
+    {
+        $this->attributes['extra'] = \json_encode($settings);
     }
 }
