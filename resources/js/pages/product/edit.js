@@ -84,6 +84,23 @@ export const EditProduct = () => {
                                             readOnly
                                             className="mr-2"
                                         />
+                                        {
+                                            product.id && product.extra?.product_preview_page_permalink && (
+                                                <>
+                                                    <Button
+                                                        variant="link"
+                                                        href={product.extra.product_preview_page_permalink}
+                                                        target="_blank"
+                                                        className="btn btn-sm text-decoration-none px-3 mr-2"
+                                                    >
+                                                        {__(
+                                                            'Preview',
+                                                            'smartpay'
+                                                        )}
+                                                    </Button>
+                                                </>
+                                            )
+                                        }
                                         <Button
                                             type="button"
                                             className="btn btn-sm btn-primary px-3"
