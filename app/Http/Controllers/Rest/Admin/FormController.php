@@ -121,6 +121,10 @@ class FormController extends RestController
             return new WP_REST_Response(['message' => __('Form not found', 'smartpay')], 404);
         }
 
+        $extraFields = $form->extra ?? null;
+        if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {
+            wp_delete_post( $extraFields['form_preview_page_id'] );
+        }
         $form->delete();
         return new WP_REST_Response(['message' => __('Form deleted', 'smartpay')]);
     }
