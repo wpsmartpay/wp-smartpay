@@ -43,6 +43,13 @@ class Form extends Model
             $form->extra = ['form_preview_page_id' => $pageId,'form_preview_page_permalink' => get_permalink($pageId)];
             $form->save();
         });
+
+        static::deleting(function($form) {
+            $extraFields = $form->extra ?? null;
+            if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {
+                wp_delete_post( $extraFields['form_preview_page_id'] );
+            }     
+        });
         
     }
 
