@@ -28,10 +28,22 @@ class Form extends Model
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
 
-        static::updating(function ($form) {
-            $form->extra  = $form->extra ?: null;
-            $form->updated_at  = date('Y-m-d H:i:s', time());
+        static::created(function ($form) {
+            $pageArr = [
+                'post_title'    => $form->title ?? 'Untitled form',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="'.$form->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
+    
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $form->extra = ['form_preview_page_id' => $pageId,'form_preview_page_permalink' => get_permalink($pageId)];
+            $form->save();
         });
+        
     }
 
     public function getAmountsAttribute($amounts)
