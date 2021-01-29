@@ -44,6 +44,27 @@ class Form extends Model
             $form->save();
         });
 
+        static::updated(function($form){
+            $extraFields = $form->extra ?? null;
+            if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {
+                return;
+            }
+
+            $pageArr = [
+                'post_title'    => $form->title ?? 'Untitled form',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="'.$form->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
+    
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $form->extra = ['form_preview_page_id' => $pageId,'form_preview_page_permalink' => get_permalink($pageId)];
+            $form->save();
+        });
+
         static::deleting(function($form) {
             $extraFields = $form->extra ?? null;
             if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {

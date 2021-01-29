@@ -27,9 +27,48 @@ class Product extends Model
             $form->created_by = $form->created_by ?: get_current_user_id();
         });
 
-        static::updating(function ($product) {
-            $product->extra  = $product->extra ?: null;
-            $product->updated_at  = date('Y-m-d H:i:s', time());
+        static::created(function ($product) {
+            $pageArr = [
+                'post_title'    => $product->title ?? 'Untitled product',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
+    
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $product->extra = ['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)];
+            $product->save();
+        });
+
+        static::updated(function($product){
+            $extraFields = $product->extra ?? null;
+            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
+                return;
+            }
+
+            $pageArr = [
+                'post_title'    => $product->title ?? 'Untitled Product',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
+    
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $product->extra = ['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)];
+            $product->save();
+        });
+
+        static::deleting(function($product) {
+            $extraFields = $product->extra ?? null;
+            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
+                wp_delete_post( $extraFields['product_preview_page_id'] );
+            }     
         });
     }
 

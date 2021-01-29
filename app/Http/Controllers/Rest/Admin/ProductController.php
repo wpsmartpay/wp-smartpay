@@ -67,8 +67,6 @@ class ProductController extends RestController
                 $this->createVariation($variationData, $product->id);
             });
 
-            do_action('smartpay_product_page_preview_save',$product);
-
             $wpdb->query('COMMIT');
 
             return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
