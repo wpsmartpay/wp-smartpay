@@ -227,6 +227,13 @@ class Setting
                     'main' => array(),
                 )
             ),
+            /** Extension Settings */
+            'extensions' => apply_filters(
+                'smartpay_settings_extensions',
+                array(
+                    'main' => array(),
+                )
+            ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -280,6 +287,9 @@ class Setting
             'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
                 'main'  => __('General', 'smartpay'),
             )),
+            'extensions'  => apply_filters('smartpay_settings_sections_extensions', array(
+                'main'  => __('General', 'smartpay'),
+            )),
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -291,6 +301,7 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
+        $tabs['extensions']   = __('Extension', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
