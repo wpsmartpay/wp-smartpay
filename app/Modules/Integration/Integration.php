@@ -43,6 +43,14 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
+            ],
+            'mailchimp' => [
+                'name'       => __('MailChimp','smartpay-pro'),
+                'excerpt'    => __('Mailchimp is an email marketing service.','smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mailchimp.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
             ]
         ];
     }
