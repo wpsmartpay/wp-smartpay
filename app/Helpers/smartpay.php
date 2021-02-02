@@ -841,8 +841,9 @@ function smartpay_get_settings()
         $gateway_settings = get_option('smartpay_settings_gateways') ? get_option('smartpay_settings_gateways') : [];
         $email_settings   = get_option('smartpay_settings_emails') ? get_option('smartpay_settings_emails') : [];
         $license_settings = get_option('smartpay_settings_licenses') ? get_option('smartpay_settings_licenses') : [];
+        $extension_settings = get_option('smartpay_settings_extensions') ? get_option('smartpay_settings_extensions') : [];
 
-        $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings);
+        $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings, $extension_settings);
         update_option('smartpay_settings', $settings);
     }
     return apply_filters('smartpay_get_settings', $settings);
