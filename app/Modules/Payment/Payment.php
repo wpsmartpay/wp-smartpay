@@ -208,7 +208,8 @@ class Payment
             $customer->last_name    = $_data['smartpay_last_name'];
             $customer->email        = $_data['smartpay_email'];
 
-            $customer_id = $customer->save();
+            $customer->save();
+            $customer_id = $customer->id;
         }
 
         return [
