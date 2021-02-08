@@ -26,50 +26,19 @@ class Form extends Model
             $form->fields     = $form->fields ?: [];
             $form->settings   = $form->settings ?: [];
             $form->created_by = $form->created_by ?: get_current_user_id();
+            $form->extra      = $form->extra ?: [];
         });
 
         static::created(function ($form) {
-            $pageArr = [
-                'post_title'    => $form->title ?? 'Untitled form',
-                'post_status'   => 'publish',
-                'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="'.$form->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-                'post_type'     => 'page'
-            ];
-    
-            $pageId = wp_insert_post( $pageArr );
-            if( is_wp_error( $pageId ) ) {
-                return;
-            }
-            $form->extra = ['form_preview_page_id' => $pageId,'form_preview_page_permalink' => get_permalink($pageId)];
-            $form->save();
+            do_action('smartpay_create_form_preview_page', $form);
         });
 
         static::updated(function($form){
-            $extraFields = $form->extra ?? null;
-            if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {
-                return;
-            }
-
-            $pageArr = [
-                'post_title'    => $form->title ?? 'Untitled form',
-                'post_status'   => 'publish',
-                'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="'.$form->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-                'post_type'     => 'page'
-            ];
-    
-            $pageId = wp_insert_post( $pageArr );
-            if( is_wp_error( $pageId ) ) {
-                return;
-            }
-            $form->extra = ['form_preview_page_id' => $pageId,'form_preview_page_permalink' => get_permalink($pageId)];
-            $form->save();
+            do_action('smartpay_update_form_preview_page', $form);
         });
 
         static::deleting(function($form) {
-            $extraFields = $form->extra ?? null;
-            if( is_array($extraFields) && array_key_exists('form_preview_page_id',$extraFields) ) {
-                wp_delete_post( $extraFields['form_preview_page_id'] );
-            }     
+            do_action('smartpay_delete_form_preview_page', $form);
         });
         
     }
