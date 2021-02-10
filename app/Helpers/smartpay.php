@@ -818,6 +818,16 @@ function smartpay_is_gateway_active($gateway)
     return $is_active;
 }
 
+function smartpay_is_extension_active($extension) {
+    $settings = get_option('smartpay_settings');
+    if( ! is_array($settings['integrations']) && ! count($settings['integrations']) ) {
+        return;
+    }
+
+    $is_active = array_key_exists($extension, $settings['integrations']);
+    return $is_active;
+}
+
 function smartpay_get_default_gateway()
 {
     $default = smartpay_get_option('default_gateway', 'paddle');

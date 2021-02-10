@@ -232,7 +232,7 @@ class Payment
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->extra          = $paymentData['extra'];
+        $payment->extra          = apply_filters('smartpay_payment_extra_data',$paymentData['extra']);
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
         $payment->parent_id      = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : 0;
         $payment->status         = $paymentData['status'] ?? 'pending';
