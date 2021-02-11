@@ -51,6 +51,14 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
+            ],
+            'fluentcrm' => [
+                'name'       => __('Fluent CRM','smartpay-pro'),
+                'excerpt'    => __('Fluent crm is an email marketing automation service.','smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/fluent-crm.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
             ]
         ];
     }
