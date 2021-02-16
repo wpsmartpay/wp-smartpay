@@ -23,52 +23,21 @@ class Product extends Model
 
     public static function boot()
     {
-        static::creating(function ($form) {
-            $form->created_by = $form->created_by ?: get_current_user_id();
+        static::creating(function ($product) {
+            $product->created_by = $product->created_by ?: get_current_user_id();
+            $product->extra      = $product->extra ?: [];
         });
 
         static::created(function ($product) {
-            $pageArr = [
-                'post_title'    => $product->title ?? 'Untitled product',
-                'post_status'   => 'publish',
-                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-                'post_type'     => 'page'
-            ];
-    
-            $pageId = wp_insert_post( $pageArr );
-            if( is_wp_error( $pageId ) ) {
-                return;
-            }
-            $product->extra = ['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)];
-            $product->save();
+            do_action('smartpay_create_product_preview_page', $product);
         });
 
         static::updated(function($product){
-            $extraFields = $product->extra ?? null;
-            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
-                return;
-            }
-
-            $pageArr = [
-                'post_title'    => $product->title ?? 'Untitled Product',
-                'post_status'   => 'publish',
-                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-                'post_type'     => 'page'
-            ];
-    
-            $pageId = wp_insert_post( $pageArr );
-            if( is_wp_error( $pageId ) ) {
-                return;
-            }
-            $product->extra = ['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)];
-            $product->save();
+            do_action('smartpay_update_product_preview_page', $product);
         });
 
         static::deleting(function($product) {
-            $extraFields = $product->extra ?? null;
-            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
-                wp_delete_post( $extraFields['product_preview_page_id'] );
-            }     
+            do_action('smartpay_delete_product_preview_page', $product);
         });
     }
 
