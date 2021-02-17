@@ -17,6 +17,7 @@ class Product extends Model
         'files',
         'parent_id',
         'status',
+        'extra'
     ];
 
     const PUBLISH = 'publish';
