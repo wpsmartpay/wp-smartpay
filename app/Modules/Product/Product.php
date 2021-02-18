@@ -65,40 +65,44 @@ class Product
     }
 
     public function createProductPreviewPage($product) {
-        $pageArr = [
-            'post_title'    => $product->title ?? 'Untitled Product',
-            'post_status'   => 'publish',
-            'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-            'post_type'     => 'page'
-        ];
-
-        $pageId = wp_insert_post( $pageArr );
-        if( is_wp_error( $pageId ) ) {
-            return;
+        if( ! $product->parent_id ) {
+            $pageArr = [
+                'post_title'    => $product->title ?? 'Untitled Product',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
+    
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $product->extra = array_merge($product->extra,['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)]);
+            $product->save();
         }
-        $product->extra = array_merge($product->extra,['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)]);
-        $product->save();
     }
 
     public function updateProductPreviewPage( $product ) {
-        $extraFields = $product->extra;
-        if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
-            return;
-        }
+        if(  ! $product->parent_id ) {
+            $extraFields = $product->extra;
+            if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
+                return;
+            }
 
-        $pageArr = [
-            'post_title'    => $product->title ?? 'Untitled Product',
-            'post_status'   => 'publish',
-            'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
-            'post_type'     => 'page'
-        ];
+            $pageArr = [
+                'post_title'    => $product->title ?? 'Untitled Product',
+                'post_status'   => 'publish',
+                'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+                'post_type'     => 'page'
+            ];
 
-        $pageId = wp_insert_post( $pageArr );
-        if( is_wp_error( $pageId ) ) {
-            return;
+            $pageId = wp_insert_post( $pageArr );
+            if( is_wp_error( $pageId ) ) {
+                return;
+            }
+            $product->extra = array_merge($product->extra,['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)]);
+            $product->save();
         }
-        $product->extra = ['product_preview_page_id' => $pageId,'product_preview_page_permalink' => get_permalink($pageId)];
-        $product->save();
     }
 
     public function deleteProductPreviewPage( $product ) {
