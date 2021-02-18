@@ -33,7 +33,7 @@
                                         foreach ($product->variations as $index => $variation) : ?>
                                     <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
-                                            <input class="d-none" type="radio" name="smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
+                                            <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
                                             <input type="hidden" name="_product_price_type" id="_product_price_type_<?php echo $variation->id; ?>" value="<?php echo $variation->extra['price_type']; ?>">
                                             <?php 
                                                 if( 'subscription' === $variation->extra['price_type']): ?>
@@ -63,7 +63,6 @@
                                     <?php else : ?>
                                     <li class="list-group-item price selected">
                                         <label class="d-block m-0">
-                                            <input class="d-none" type="radio" name="smartpay_product_id" value="<?php echo esc_attr($product->id); ?>" checked>
                                             <div class="price--amount">
                                                 <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
@@ -97,6 +96,7 @@
         ?>
         <!-- Form Data -->
         <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
+        <input type="hidden" name="smartpay_product_id" value="<?php echo esc_attr($defaultVariation->id); ?>">
         <input type="hidden" name="smartpay_product_price" value="<?php echo smartpay_amount_format($defaultVariation->sale_price ?? 0); ?>">
         <input type="hidden" name="smartpay_product_price_type" value="<?php echo $defaultVariation->extra['price_type'] ?? 'onetime'; ?>">
         <input type="hidden" name="smartpay_product_billing_period" value="<?php echo $defaultVariation->extra['billing_period'] ?? 'daily'; ?>">
