@@ -170,6 +170,7 @@ class Payment
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
                     'total_amount'  => $product->price,
+                    'price_type'   => $_data['smartpay_product_price_type'] 
                 ];
 
                 break;
