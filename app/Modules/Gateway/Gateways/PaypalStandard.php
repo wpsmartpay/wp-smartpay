@@ -100,7 +100,7 @@ class PaypalStandard extends PaymentGateway
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
         ];
 
-        if( $payment->id && 'form_payment' === $paymentData['payment_type'] && 'subscription' === $paymentData['price_type']) {
+        if( 'subscription' === $paymentData['price_type']) {
             do_action('smartpay_paypal_subscription_process_payment',$payment,$paymentData);
             $default_args['item_name']    = 'Payment #' . $payment->id;
             $default_args['a3']           = $payment_price;

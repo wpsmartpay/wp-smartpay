@@ -1,6 +1,8 @@
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { DeleteProduct } from '../../../http/product'
 const { useEffect, useState } = wp.element
 
 const defaultVariation = {
@@ -10,9 +12,11 @@ const defaultVariation = {
     sale_price: '',
     files: [],
     key: '',
+    extra: {'price_type': 'onetime'}
 }
 
 export const ProductForm = ({ product, setProductData }) => {
+    console.log(product);
     useEffect(() => {
         tinymce.execCommand('mceRemoveEditor', true, 'description')
         wp.oldEditor.initialize('description', {
@@ -128,10 +132,38 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const removeVariation = (variation) => {
-        setProductData({
-            variations: product.variations.filter((item) => {
-                return item.key !== variation.key
-            }),
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProductData({
+                    variations: product.variations.filter((item) => {
+                        return item.key !== variation.key
+                    }),
+                })
+                if( variation?.id ) {
+                    DeleteProduct(variation.id).then((response) => {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: __(response.message, 'smartpay'),
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                            },
+                            hideClass: {
+                                popup: '',
+                            },
+                        })
+                    })
+                }
+            }
         })
     }
 
@@ -317,6 +349,9 @@ export const ProductForm = ({ product, setProductData }) => {
                 >
                     {!product.variations.length && (
                         <div className="form-row">
+                            {
+                                window.smartPayProductHooks.applyFilters('smartpay.product.price.tab',[],product, setProductData)
+                            }
                             <div className="col-6">
                                 <div className="form-group">
                                     <label
@@ -457,6 +492,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
 
+                                                {
+                                                    window.smartPayProductHooks.applyFilters('smartpay.product.variation.price.tab',[],variation, setVariationData)
+                                                }
                                                 <div className="form-row mt-4">
                                                     <div className="col-6">
                                                         <div className="form-group">

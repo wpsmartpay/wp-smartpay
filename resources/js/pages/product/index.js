@@ -4,7 +4,10 @@ import { Container, Table, Button, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteProduct } from '../../http/product'
 import { useEffect, useState } from '@wordpress/element'
+import { createHooks } from '@wordpress/hooks';
 const { useSelect, dispatch } = wp.data
+export const smartPayProductHooks = createHooks();
+window.smartPayProductHooks = smartPayProductHooks;
 
 export const ProductList = () => {
     const [products, setProducts] = useState([])
