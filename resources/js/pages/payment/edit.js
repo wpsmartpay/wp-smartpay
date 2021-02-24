@@ -194,10 +194,24 @@ export const EditPayment = () => {
                                         <p>
                                             <strong>
                                                 {__('Total Amount', 'smartpay')}
+                                                :{' '}
                                             </strong>
                                             <span>
                                                 {`${payment?.currency} ${payment?.data?.total_amount}` ||
                                                     '-'}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Price Type', 'smartpay')}
+                                                :{' '}
+                                            </strong>
+                                            <span>
+                                                {
+                                                    payment.data && payment.data.price_type == 'onetime' ? 
+                                                    __('One Time', 'smartpay') 
+                                                    : __('Subscription', 'smartpay')
+                                                }
                                             </span>
                                         </p>
                                     </>

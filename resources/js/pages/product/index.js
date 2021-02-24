@@ -76,7 +76,7 @@ export const ProductList = () => {
                     <Table>
                         <thead>
                             <tr className="bg-light">
-                                <th className="w-75 text-left">
+                                <th className="w-50 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
                                 <th className="text-left">
@@ -102,8 +102,23 @@ export const ProductList = () => {
                                         <td>{product.title || ''}</td>
                                         <td>{product.updated_at || ''}</td>
                                         <td className="text-right">
+                                            {
+                                                product?.extra?.product_preview_page_permalink && (
+                                                    <Button
+                                                        variant="link"
+                                                        href={product.extra.product_preview_page_permalink}
+                                                        target="_blank"
+                                                        className="btn btn-sm text-decoration-none p-0 mr-2"
+                                                    >
+                                                        {__(
+                                                            'Preview',
+                                                            'smartpay'
+                                                        )}
+                                                    </Button>
+                                                )
+                                            }
                                             <Link
-                                                className="btn-sm p-0 mr-2"
+                                                className="btn btn-sm btn-link p-0 mr-2"
                                                 to={`/products/${product.id}/edit`}
                                             >
                                                 {__('Edit', 'smartpay')}
