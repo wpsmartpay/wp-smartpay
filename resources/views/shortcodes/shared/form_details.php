@@ -14,7 +14,12 @@
                             <?php foreach ($form->amounts as $index => $amount) : ?>
                             <div class="custom-control custom-radio amount form--fixed-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                 <input type="radio" name="_form_amount" id="_form_amount_<?php echo $amount['key']; ?>" id="_form_amount_<?php echo $amount['key']; ?>" class="custom-control-input" value="<?php echo $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?>>
-                                <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
+                                
+                                <?php if( 'subscription' === $amount['price_type']): ?>
+                                    <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo smartpayGetSubscriptionBillingCycleString($amount['billing_period']); ?></label>
+                                <?php else: ?>
+                                    <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
+                                <?php endif; ?>
                                 <input type="hidden" name="_form_price_type" id="_form_price_type_<?php echo $amount['key']; ?>" value="<?php echo $amount['price_type']; ?>">
                                 <?php 
                                     if( 'subscription' === $amount['price_type']): ?>

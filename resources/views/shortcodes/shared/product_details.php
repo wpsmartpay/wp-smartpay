@@ -46,6 +46,9 @@
                                                 <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
                                                 <?php endif; ?>
+                                                <?php if( 'subscription' === $variation->extra['price_type']): ?>
+                                                    <span>/ <?php echo smartpayGetSubscriptionBillingCycleString($variation->extra['billing_period']); ?></span>
+                                                <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
                                                 <?php echo esc_html($variation->title); ?>
@@ -67,6 +70,9 @@
                                                 <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
+                                                <?php endif; ?>
+                                                <?php if( 'subscription' === $product->extra['price_type']): ?>
+                                                    <span>/ <?php echo smartpayGetSubscriptionBillingCycleString($product->extra['billing_period']); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
