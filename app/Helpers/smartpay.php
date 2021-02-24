@@ -4,6 +4,7 @@ require_once __DIR__ . '/integration.php';
 
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Payment\Payment;
+use SmartPay\Models\Payment as PaymentModel;
 
 function smartpay_svg_icon()
 {
@@ -985,8 +986,17 @@ function smartpay_get_paypal_time_duration_option( $time_option ) {
 }
 
 function smartpay_get_payment($payment_id) {
-    $payment = Payment::where('id',$payment_id)->first();
+    $payment = PaymentModel::where('id',$payment_id)->first();
     return $payment;
+}
+
+function smartpay_set_payment_transaction_id($payment_id,$transaction_id) {
+    $payment = PaymentModel::where('id',$payment_id)->first();
+    if( !$payment ) {
+        return;
+    }
+    $payment->transaction_id = $transaction_id;
+    $payment->save();
 }
 
 function smartpayGetSubscriptionBillingCycleString( $value ) {

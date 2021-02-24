@@ -276,7 +276,7 @@ class PaypalStandard extends PaymentGateway
 
             if ('completed' == $payment_status || smartpay_is_test_mode()) {
                 $payment->updateStatus('completed');
-                smartpay_set_payment_transaction_id($payment->ID, $data['txn_id']);
+                $payment->setTransactionId($data['txn_id']);
             }
         }
     }
