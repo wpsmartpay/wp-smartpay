@@ -988,3 +988,31 @@ function smartpay_get_payment($payment_id) {
     $payment = Payment::where('id',$payment_id)->first();
     return $payment;
 }
+
+function smartpayGetSubscriptionBillingCycleString( $value ) {
+    $billingCycleBilling = '';
+        switch ($value) {
+            case 'daily':
+                $billingCycleBilling = 'Daily';
+                break;
+            case 'week':
+                $billingCycleBilling = 'Weekly';
+                break;
+            case 'month':
+                $billingCycleBilling = 'Monthly';
+                break;
+            case 'quarter':
+                $billingCycleBilling = 'Every 3 Months';
+                break;
+            case 'semiannual':
+                $billingCycleBilling = 'Every 6 Months';
+                break;
+            case 'yearly':
+                $billingCycleBilling = 'Yearly';
+                break;
+            default:
+                break;
+        }
+
+        return $billingCycleBilling;
+}
