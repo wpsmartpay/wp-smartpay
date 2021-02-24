@@ -16,7 +16,6 @@ const defaultVariation = {
 }
 
 export const ProductForm = ({ product, setProductData }) => {
-    console.log(product);
     useEffect(() => {
         tinymce.execCommand('mceRemoveEditor', true, 'description')
         wp.oldEditor.initialize('description', {

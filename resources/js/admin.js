@@ -1,6 +1,6 @@
 import domReady from '@wordpress/dom-ready'
 import { render } from '@wordpress/element'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Route, Switch, Link } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
@@ -29,6 +29,11 @@ import { NotFound } from './pages/not-found'
 import './store/index'
 
 import './admin/menu-fix'
+
+//Hooks
+import { createHooks } from '@wordpress/hooks';
+export const smartPayRouteHooks = createHooks();
+window.smartPayRouteHooks = smartPayRouteHooks;
 
 // const files = [
 //     { id: 1, name: 'A' },
@@ -109,6 +114,10 @@ domReady(function () {
                             path="/payments/:paymentId/edit"
                             component={EditPayment}
                         />
+
+                        {
+                            window.smartPayRouteHooks.applyFilters('smartPayAdminRoute',[] ,Route ,Link )
+                        }
 
                         {/* Not Found */}
                         <Route component={NotFound} />
