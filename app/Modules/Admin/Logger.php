@@ -8,8 +8,6 @@ class Logger {
     public $is_writable = true;
     
     public function __construct() {
-        //add_filter('smartpay_settings_sections_extensions',[$this,'debugLogSection']);
-        //add_filter('smartpay_settings_debug_log',[$this,'debugLogSettings']);
         $this->setup_log_file();
     }
 
