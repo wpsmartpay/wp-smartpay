@@ -5,6 +5,7 @@ require_once __DIR__ . '/integration.php';
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Payment\Payment;
 use SmartPay\Models\Payment as PaymentModel;
+use SmartPay\Modules\Admin\Logger;
 
 function smartpay_svg_icon()
 {
@@ -1025,4 +1026,14 @@ function smartpayGetSubscriptionBillingCycleString( $value ) {
         }
 
         return $billingCycleBilling;
+}
+
+function smartpay_debug_log( $message = '', $force = false ) {
+
+    $smartpay_logs = new Logger();
+    if( function_exists( 'mb_convert_encoding' ) ) {
+        $message = mb_convert_encoding( $message, 'UTF-8' );
+    }
+
+	$smartpay_logs->log_to_file( $message );
 }

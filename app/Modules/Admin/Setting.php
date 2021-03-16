@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+use SmartPay\Modules\Admin\Logger;
 
 class Setting
 {
@@ -85,6 +86,7 @@ class Setting
      */
     public static function registered_settings()
     {
+        $smartpay_logs = new Logger();
         $smartpay_settings = array(
             /** General Settings */
             'general' => apply_filters(
@@ -234,6 +236,20 @@ class Setting
                     'main' => array(),
                 )
             ),
+            /** Debug Log Settings */
+            'debug_log' => apply_filters(
+                'smartpay_settings_debug_log',
+                array(
+                    'main' => array(
+                        'smartpay_debug_log' => array(
+                            'id'          => 'smartpay_debug_log',
+                            'name'        => __('Debug Log', 'smartpay'),
+                            'std'       => $smartpay_logs->get_file_contents(),  
+                            'type'        => 'textarea',
+                        ),
+                    ),
+                )
+            ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -288,6 +304,9 @@ class Setting
                 'main'  => __('General', 'smartpay'),
             )),
             'extensions'  => apply_filters('smartpay_settings_sections_extensions', []),
+            'debug_log'  => apply_filters('smartpay_settings_sections_debug_log', [
+                'main'  => __('General', 'smartpay'),
+            ])
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -299,6 +318,7 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
+        $tabs['debug_log']   = __('Debug Log', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
