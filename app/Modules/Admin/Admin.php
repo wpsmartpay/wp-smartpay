@@ -166,7 +166,7 @@ class Admin
         }
 
         // Global
-        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor']);
+        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor','wp-data']);
 
         // Product
         register_block_type('smartpay/product', array(
@@ -178,12 +178,16 @@ class Admin
             'editor_script' => 'smartpay-editor-blocks',
         ));
 
-        // TODO: Get data from store
-        $products = \SmartPay\Models\Product::where('parent_id', 0)->get();
-        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_products', json_encode($products));
-
-        $forms = \SmartPay\Models\Form::all();
-        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_forms', json_encode($forms));
+        wp_localize_script(
+            'smartpay-editor-blocks', 
+            'smartpay',
+            array(
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'apiNonce' => wp_create_nonce('wp_rest'),
+            )
+        );
     }
 
 

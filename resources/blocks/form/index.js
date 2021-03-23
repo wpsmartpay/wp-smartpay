@@ -1,6 +1,6 @@
 const { __ } = wp.i18n
 const { registerBlockType } = wp.blocks
-const { Fragment } = wp.element
+const { Fragment, useEffect, useState  } = wp.element
 
 import Sidebar from './components/Sidebar'
 import SelectForm from './components/SelectForm'
@@ -39,17 +39,36 @@ export default registerBlockType('smartpay/form', {
             setAttributes({ label: label })
         }
 
+        const [forms, setForms] = useState([]);
+
+        useEffect( () => {
+            wp.apiFetch({
+                path: `smartpay/v1/forms`,
+                headers: {
+                    'X-WP-Nonce': smartpay.apiNonce,
+                },
+            })
+            .then( ( data ) => {
+                let formList = []
+                formList = data?.forms.map( form => {
+                    return {
+                        value: form.id,
+                        label: `(#${form.id}) ${form.title}`,
+                    }
+                })
+                setForms( formList );
+			} )
+            .catch( () => {
+				setForms( [] );
+			} );
+        }, [] );
+
         let formOptions = [
             {
                 value: null,
                 label: __('Select a form', 'smartpay'),
             },
-            ...JSON.parse(smartpay_block_editor_forms).map((form) => {
-                return {
-                    value: form.id,
-                    label: `(#${form.id}) ${form.title}`,
-                }
-            }),
+            ...forms
         ]
 
         return (
