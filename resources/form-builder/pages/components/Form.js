@@ -89,6 +89,23 @@ export const FormForm = ({
                                         className="mr-2"
                                     />
                                 )}
+                                {
+                                    form.id && form.extra?.form_preview_page_permalink && (
+                                        <>
+                                            <Button
+                                                variant="link"
+                                                href={form.extra.form_preview_page_permalink}
+                                                target="_blank"
+                                                className="btn btn-sm text-decoration-none px-3 mr-2"
+                                            >
+                                                {__(
+                                                    'Preview',
+                                                    'smartpay'
+                                                )}
+                                            </Button>
+                                        </>
+                                    )
+                                }
                                 <Button
                                     onClick={saveForm}
                                     className="btn btn-primary btn-sm text-decoration-none px-3"

@@ -4,6 +4,8 @@ require_once __DIR__ . '/integration.php';
 
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Payment\Payment;
+use SmartPay\Models\Payment as PaymentModel;
+use SmartPay\Modules\Admin\Logger;
 
 function smartpay_svg_icon()
 {
@@ -818,6 +820,16 @@ function smartpay_is_gateway_active($gateway)
     return $is_active;
 }
 
+function smartpay_is_extension_active($extension) {
+    $settings = get_option('smartpay_settings');
+    if( ! is_array($settings['integrations']) && ! count($settings['integrations']) ) {
+        return;
+    }
+
+    $is_active = array_key_exists($extension, $settings['integrations']);
+    return $is_active;
+}
+
 function smartpay_get_default_gateway()
 {
     $default = smartpay_get_option('default_gateway', 'paddle');
@@ -841,8 +853,9 @@ function smartpay_get_settings()
         $gateway_settings = get_option('smartpay_settings_gateways') ? get_option('smartpay_settings_gateways') : [];
         $email_settings   = get_option('smartpay_settings_emails') ? get_option('smartpay_settings_emails') : [];
         $license_settings = get_option('smartpay_settings_licenses') ? get_option('smartpay_settings_licenses') : [];
+        $extension_settings = get_option('smartpay_settings_extensions') ? get_option('smartpay_settings_extensions') : [];
 
-        $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings);
+        $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings, $extension_settings);
         update_option('smartpay_settings', $settings);
     }
     return apply_filters('smartpay_get_settings', $settings);
@@ -945,4 +958,82 @@ function smartpay_get_file_extension($str)
 {
     $parts = explode('.', $str);
     return end($parts);
+}
+
+function smartpay_get_paypal_time_option( $time_option ) {
+    $options = array(
+        'daily'     => 'D',
+        'week'      => 'w',
+        'month'     => 'M',
+        'quarter'   => 'M',
+        'semiannual'=> 'M',
+        'yearly'    => 'Y',
+    );
+
+    return  $options[ $time_option ] ?? 'D';
+}
+
+function smartpay_get_paypal_time_duration_option( $time_option ) {
+    $options = array(
+        'daily'     => '1',
+        'week'      => '1',
+        'month'     => '1',
+        'quarter'   => '3',
+        'semiannual'=> '6',
+        'yearly'    => '1',
+    );
+
+    return  $options[ $time_option ] ?? '1';
+}
+
+function smartpay_get_payment($payment_id) {
+    $payment = PaymentModel::where('id',$payment_id)->first();
+    return $payment;
+}
+
+function smartpay_set_payment_transaction_id($payment_id,$transaction_id) {
+    $payment = PaymentModel::where('id',$payment_id)->first();
+    if( !$payment ) {
+        return;
+    }
+    $payment->transaction_id = $transaction_id;
+    $payment->save();
+}
+
+function smartpayGetSubscriptionBillingCycleString( $value ) {
+    $billingCycleBilling = '';
+        switch ($value) {
+            case 'daily':
+                $billingCycleBilling = 'Daily';
+                break;
+            case 'week':
+                $billingCycleBilling = 'Weekly';
+                break;
+            case 'month':
+                $billingCycleBilling = 'Monthly';
+                break;
+            case 'quarter':
+                $billingCycleBilling = 'Every 3 Months';
+                break;
+            case 'semiannual':
+                $billingCycleBilling = 'Every 6 Months';
+                break;
+            case 'yearly':
+                $billingCycleBilling = 'Yearly';
+                break;
+            default:
+                break;
+        }
+
+        return $billingCycleBilling;
+}
+
+function smartpay_debug_log( $message = '', $force = false ) {
+
+    $smartpay_logs = new Logger();
+    if( function_exists( 'mb_convert_encoding' ) ) {
+        $message = mb_convert_encoding( $message, 'UTF-8' );
+    }
+
+	$smartpay_logs->log_to_file( $message );
 }

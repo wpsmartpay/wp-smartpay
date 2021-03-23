@@ -16,6 +16,7 @@ const defaultProduct = {
     base_price: '',
     sale_price: '',
     files: [],
+    extra: {'price_type': 'onetime'}
 }
 
 const reducer = (state, data) => {

@@ -43,6 +43,22 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
+            ],
+            'mailchimp' => [
+                'name'       => __('MailChimp','smartpay-pro'),
+                'excerpt'    => __('Mailchimp is an email marketing service.','smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mailchimp.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
+            ],
+            'fluentcrm' => [
+                'name'       => __('Fluent CRM','smartpay-pro'),
+                'excerpt'    => __('Fluent crm is an email marketing automation service.','smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/fluent-crm.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
             ]
         ];
     }
@@ -72,6 +88,17 @@ class Integration
         if ('smartpay_page_smartpay-integrations' === $hook) {
             wp_register_script('smartpay-admin-integration', SMARTPAY_PLUGIN_ASSETS . '/js/integration.js', ['jquery'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin-integration');
+
+            wp_localize_script(
+                'smartpay-admin-integration',
+                'smartpay',
+                array(
+                    'restUrl'  => get_rest_url('', 'smartpay'),
+                    'adminUrl'  => admin_url('admin.php'),
+                    'ajaxUrl' => admin_url('admin-ajax.php'),
+                    'apiNonce' => wp_create_nonce('wp_rest'),
+                )
+            );
         }
     }
 

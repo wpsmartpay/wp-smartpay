@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+use SmartPay\Modules\Admin\Logger;
 
 class Setting
 {
@@ -85,6 +86,7 @@ class Setting
      */
     public static function registered_settings()
     {
+        $smartpay_logs = new Logger();
         $smartpay_settings = array(
             /** General Settings */
             'general' => apply_filters(
@@ -227,6 +229,27 @@ class Setting
                     'main' => array(),
                 )
             ),
+            /** Extension Settings */
+            'extensions' => apply_filters(
+                'smartpay_settings_extensions',
+                array(
+                    'main' => array(),
+                )
+            ),
+            /** Debug Log Settings */
+            'debug_log' => apply_filters(
+                'smartpay_settings_debug_log',
+                array(
+                    'main' => array(
+                        'smartpay_debug_log' => array(
+                            'id'          => 'smartpay_debug_log',
+                            'name'        => __('Debug Log', 'smartpay'),
+                            'std'       => $smartpay_logs->get_file_contents(),  
+                            'type'        => 'textarea',
+                        ),
+                    ),
+                )
+            ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -280,6 +303,10 @@ class Setting
             'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
                 'main'  => __('General', 'smartpay'),
             )),
+            'extensions'  => apply_filters('smartpay_settings_sections_extensions', []),
+            'debug_log'  => apply_filters('smartpay_settings_sections_debug_log', [
+                'main'  => __('General', 'smartpay'),
+            ])
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -291,6 +318,7 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
+        $tabs['debug_log']   = __('Debug Log', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
@@ -521,7 +549,6 @@ class Setting
     public function settings_checkbox_callback($args)
     {
         $smartpay_option = smartpay_get_option($args['id']);
-
         if (isset($args['faux']) && true === $args['faux']) {
             $name = '';
         } else {
@@ -530,10 +557,18 @@ class Setting
 
         $class = sanitize_html_class($args['field_class']);
 
-        $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
         $html     = '<input type="hidden"' . $name . ' value="-1" />';
-        $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-        $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+        if( $args['multiple'] && $args['options'] ) {
+            foreach( $args['options'] as $name => $value ) {
+                $checked  = in_array($name,$smartpay_option) ? 'checked="checked"': '';
+                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="'.$name.'" ' . $checked . ' class="' . $class . '"/>';
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">'.$value.'</label><br />';
+            }
+        } else {
+            $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
+            $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
+            $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+        }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }

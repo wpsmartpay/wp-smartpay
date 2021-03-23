@@ -115,7 +115,7 @@ export const edit = ({ attributes, setAttributes }) => {
                     />
                 </PanelBody>
 
-                <PanelBody title={__('Radio Options', 'smartpay')}>
+                <PanelBody title={__('Options', 'smartpay')}>
                     {attributes.attributes.options.map((option, index) => {
                         return (
                             <Flex key={index}>

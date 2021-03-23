@@ -115,7 +115,9 @@ ob_start();
                         <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                         <?php endif; ?>
                     </table>
-                    <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                    <?php if( $active_tab !== 'debug_log' ) : ?>
+                        <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                    <?php endif; ?>
                 </form>
             </div>
         </div>

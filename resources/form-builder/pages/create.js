@@ -5,6 +5,7 @@ import { dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Save } from '../http/form'
 import { FormForm } from './components/Form'
+import { smartpayhooks } from './index'
 
 const defaultFormData = {
     title: 'Untitled Form',
@@ -13,6 +14,7 @@ const defaultFormData = {
             key: '1234',
             label: '',
             amount: '',
+            price_type: 'onetime'
         },
     ],
     body: `<!-- wp:smartpay-form/name -->
@@ -37,11 +39,15 @@ const reducer = (state, data) => {
 }
 
 export const CreateForm = () => {
+    window.smartPayHooks.applyFilters( 'smartpay.form.price.defaultValue', defaultFormData );
+
+
     const [form, setFormData] = useReducer(reducer, defaultFormData)
     const [shouldReset, setShouldReset] = useState(false)
     const history = useHistory()
 
     const saveForm = () => {
+        
         Save(JSON.stringify(form)).then((response) => {
             setFormData(defaultFormData)
             setShouldReset(true)

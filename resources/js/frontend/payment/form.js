@@ -17,10 +17,32 @@ jQuery(($) => {
                 'input[name="_form_amount"]'
             )
 
+            var selectedPriceType= $(e.currentTarget).find(
+                'input[name="_form_price_type"]'
+            )
+            
+            if( 'subscription' == selectedPriceType.val() ) {
+                var selectedBillingPeriod= $(e.currentTarget).find(
+                    'input[name="_form_billing_period"]'
+                )
+            }
+
             $(e.currentTarget)
                 .parents('.form-amounts')
                 .find('.form--custom-amount')
                 .val(selectedAmount.val())
+
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('input[name="smartpay_form_price_type"]')
+                .val(selectedPriceType.val())
+
+            if( 'subscription' == selectedPriceType.val() ) {
+                $(e.currentTarget)
+                    .parents('.form-amounts')
+                    .find('input[name="smartpay_form_billing_period"]')
+                    .val(selectedBillingPeriod.val())
+            }
         }
     )
 
@@ -130,6 +152,8 @@ jQuery(($) => {
             smartpay_form_id: data.smartpay_form_id,
             smartpay_amount: data.smartpay_form_amount,
             smartpay_form_data: data.smartpay_form,
+            smartpay_form_price_type: data.smartpay_form_price_type,
+            ...( "subscription" == data.smartpay_form_price_type && { smartpay_form_billing_period: data.smartpay_form_billing_period } )
         }
     }
 

@@ -1,0 +1,31 @@
+# Directories
+/.wordpress-org
+/.git
+/.github
+/node_modules
+
+/resources/blocks
+/resources/form-builder
+/resources/sass
+/resources/js
+/scripts
+/temp
+
+# Files
+.distignore
+.gitignore
+.editorconfig
+.prettierrc
+.eslintignore
+.eslintrc.js
+.prettierrc.js
+babel.config.json
+composer.json
+composer.lock
+gulpfile.js
+mix-manifest.json
+package-lock.json
+package.json
+webpack.mix.js
+*.lock
+*.log

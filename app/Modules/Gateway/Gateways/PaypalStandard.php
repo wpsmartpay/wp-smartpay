@@ -70,8 +70,7 @@ class PaypalStandard extends PaymentGateway
 
         $payment_price = number_format($paymentData['amount'], 2);
 
-        // TODO: Rearrange data
-        $paypal_args = array(
+        $default_args = [
             'charset'       => get_bloginfo('charset'),
             'lc'            => get_locale(),
             'cbt'           => get_bloginfo('name'),
@@ -93,20 +92,30 @@ class PaypalStandard extends PaymentGateway
             'rm'            => 2,
             'no_shipping'   => 1,
             'no_note'       => 1,
-
-            'item_name_1'   => 'Payment #' . $payment->id,
-            'item_number_1' => $payment->id,
-            'amount_1'      => $payment_price,
-
             'tax_rate'      => 0,
             'upload'        => 1,
 
             'return'        => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_success_page_uri()),
             'cancel_return' => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_failure_page_uri()),
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
-        );
+        ];
 
-        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $paymentData);
+        if( 'subscription' === $paymentData['price_type']) {
+            do_action('smartpay_paypal_subscription_process_payment',$payment,$paymentData);
+            $default_args['item_name']    = 'Payment #' . $payment->id;
+            $default_args['a3']           = $payment_price;
+            $default_args['p3']           = smartpay_get_paypal_time_duration_option( $paymentData['billing_period'] );
+            $default_args['t3']           = smartpay_get_paypal_time_option( $paymentData['billing_period'] );
+            $default_args['src']          = 1;
+            $default_args['cmd']          = '_xclick-subscriptions';
+        } else {
+            // TODO: Rearrange data
+            $default_args['item_name_1']    = 'Payment #' . $payment->id;
+            $default_args['item_number_1']  = $payment->id;
+            $default_args['amount_1']    = $payment_price;
+        }
+
+        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $default_args, $paymentData);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
@@ -267,7 +276,7 @@ class PaypalStandard extends PaymentGateway
 
             if ('completed' == $payment_status || smartpay_is_test_mode()) {
                 $payment->updateStatus('completed');
-                smartpay_set_payment_transaction_id($payment->ID, $data['txn_id']);
+                $payment->setTransactionId($data['txn_id']);
             }
         }
     }
@@ -443,7 +452,7 @@ class PaypalStandard extends PaymentGateway
 
     public function unsupported_currency_notice()
     {
-        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'edit.php?post_type=smartpay_product&page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay');
+        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'admin.php?page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay');
     }
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)

@@ -1,7 +1,8 @@
-import './forms.css'
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { DeleteProduct } from '../../../http/product'
 const { useEffect, useState } = wp.element
 
 const defaultVariation = {
@@ -11,6 +12,7 @@ const defaultVariation = {
     sale_price: '',
     files: [],
     key: '',
+    extra: {'price_type': 'onetime'}
 }
 
 export const ProductForm = ({ product, setProductData }) => {
@@ -129,10 +131,38 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const removeVariation = (variation) => {
-        setProductData({
-            variations: product.variations.filter((item) => {
-                return item.key !== variation.key
-            }),
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProductData({
+                    variations: product.variations.filter((item) => {
+                        return item.key !== variation.key
+                    }),
+                })
+                if( variation?.id ) {
+                    DeleteProduct(variation.id).then((response) => {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: __(response.message, 'smartpay'),
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                            },
+                            hideClass: {
+                                popup: '',
+                            },
+                        })
+                    })
+                }
+            }
         })
     }
 
@@ -318,6 +348,9 @@ export const ProductForm = ({ product, setProductData }) => {
                 >
                     {!product.variations.length && (
                         <div className="form-row">
+                            {
+                                window.smartPayProductHooks.applyFilters('smartpay.product.price.tab',[],product, setProductData)
+                            }
                             <div className="col-6">
                                 <div className="form-group">
                                     <label
@@ -390,16 +423,16 @@ export const ProductForm = ({ product, setProductData }) => {
                         {product.variations.length > 0 && (
                             <div className="card p-0 mt-0 variations-secion">
                                 <div className="card-header bg-white p-0">
-                                    <div className="d-flex px-3 py-2">
+                                    <div className="d-flex px-3 py-2 align-items-center">
                                         <h3 className="m-0 pt-1 d-flex">
                                             {__('Variations', 'smartpay')}
                                         </h3>
-                                        <button
+                                        {/* <button
                                             type="button"
                                             className="btn btn-light border btn-sm my-1 ml-auto pb-0 shadow-sm remove-variation"
                                         >
                                             <Feather.Trash />
-                                        </button>
+                                        </button> */}
                                     </div>
                                 </div>
                                 {product.variations.map((variation) => {
@@ -458,6 +491,9 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
 
+                                                {
+                                                    window.smartPayProductHooks.applyFilters('smartpay.product.variation.price.tab',[],variation, setVariationData)
+                                                }
                                                 <div className="form-row mt-4">
                                                     <div className="col-6">
                                                         <div className="form-group">
@@ -573,8 +609,8 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </strong>
                                                 </label>
 
-                                                {product.files.length && (
-                                                    <>
+                                                {product.files.length > 0 && (
+                                                    <div>
                                                         <ul className="list-group variation-files">
                                                             {product?.files?.map(
                                                                 (
@@ -657,7 +693,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                 )}
                                                             </Button>
                                                         </div>
-                                                    </>
+                                                    </div>
                                                 )}
 
                                                 {!product.files.length && (

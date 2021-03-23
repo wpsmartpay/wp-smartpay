@@ -1,11 +1,11 @@
 {
-    "name": "your-project",
-    "description": "A WPGulp based project.",
-    "version": "1.0.0",
-    "author": "Author Name (https://twitter.com/MrAhmadAwais/)",
+    "name": "wp-smartpay",
+    "description": "A simple plugin for receiving payment.",
+    "version": "1.1.0",
+    "author": "WPSmartPay (https://wpsmartpay.com/)",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ahmadawais/WPGulp"
+        "url": "https://github.com/wpsmartpay/wp-smartpay/"
     },
     "license": "MIT",
     "dependencies": {
@@ -26,15 +26,13 @@
         "@wordpress/interface": "^0.8.0",
         "@wordpress/media-utils": "^1.16.0",
         "@wordpress/plugins": "^2.23.0",
+        "jquery": "^3.2",
         "apexcharts": "^3.22.2",
-        "chalk": "^4.1.0",
         "dayjs": "^1.9.6",
-        "git-cz": "^4.7.6",
         "react-apexcharts": "^1.3.7",
         "react-feather": "^2.0.8",
         "react-router": "^5.2.0",
-        "react-router-dom": "^5.2.0",
-        "yorkie": "^2.0.0"
+        "react-router-dom": "^5.2.0"
     },
     "devDependencies": {
         "@babel/core": "^7.0.0",
@@ -45,8 +43,13 @@
         "@wordpress/scripts": "^12.5.0",
         "bootstrap": "^4.5.3",
         "cross-env": "^7.0",
+        "chalk": "^4.1.0",
+        "yorkie": "^2.0.0",
+        "git-cz": "^4.7.6",
         "cz-conventional-changelog": "^3.3.0",
-        "jquery": "^3.2",
+        "gulp": "^4.0.2",
+        "del": "^6.0.0",
+        "gulp-zip": "^5.0.2",
         "laravel-mix": "^5.0.9",
         "popper.js": "^1.12",
         "react-bootstrap": "^1.4.0",
@@ -61,12 +64,13 @@
         "prod": "npm run production",
         "watch": "npm run development -- --watch",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "build": "npm run production && npm run build:form && npm run build:blocks",
         "watch:blocks": "wp-scripts start resources/blocks/index.js --output-path=public/blocks",
         "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks",
         "watch:form": "wp-scripts start resources/form-builder/index.js --output-path=public/form-builder",
         "build:form": "wp-scripts build resources/form-builder/index.js --output-path=public/form-builder",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "build": "npm run production && npm run build:form && npm run build:blocks",
+        "release": "npm run build && gulp release",
         "commit": "git-cz"
     },
     "gitHooks": {
