@@ -179,11 +179,17 @@ class Admin
         ));
 
         // TODO: Get data from store
-        $products = \SmartPay\Models\Product::where('parent_id', 0)->get();
-        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_products', json_encode($products));
+        wp_localize_script(
+            'smartpay-editor-blocks',
+            'smartpay_block_editor_products',
+            \SmartPay\Models\Product::where('parent_id', 0)->get()->toArray()
+        );
 
-        $forms = \SmartPay\Models\Form::all();
-        wp_localize_script('smartpay-editor-blocks', 'smartpay_block_editor_forms', json_encode($forms));
+        wp_localize_script(
+            'smartpay-editor-blocks',
+            'smartpay_block_editor_forms',
+            \SmartPay\Models\Form::all()->toArray()
+        );
     }
 
 
