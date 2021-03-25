@@ -9,8 +9,6 @@ const { useSelect, dispatch } = wp.data
 
 window.SMARTPAY_PRODUCT_HOOKS = createHooks()
 
-console.log('object')
-
 export const ProductList = () => {
     const [products, setProducts] = useState([])
 

@@ -5,10 +5,10 @@ import { useState, useEffect } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Delete } from '../http/form'
-import { createHooks } from '@wordpress/hooks';
 
-export const smartPayHooks = createHooks();
-window.smartPayHooks = smartPayHooks;
+import { createHooks } from '@wordpress/hooks'
+
+window.SMARTPAY_FORM_HOOKS = createHooks()
 
 export const FormList = () => {
     const [forms, setForms] = useState([])
@@ -104,12 +104,15 @@ export const FormList = () => {
                                         <td>{form.title || ''}</td>
                                         <td>{form.updated_at || ''}</td>
                                         <td className="text-right">
-                                        {
-                                            form?.extra?.form_preview_page_permalink && (
+                                            {form?.extra
+                                                ?.form_preview_page_permalink && (
                                                 <>
                                                     <Button
                                                         variant="link"
-                                                        href={form.extra.form_preview_page_permalink}
+                                                        href={
+                                                            form.extra
+                                                                .form_preview_page_permalink
+                                                        }
                                                         target="_blank"
                                                         className="btn btn-sm text-decoration-none p-0 mr-2"
                                                     >
@@ -119,8 +122,7 @@ export const FormList = () => {
                                                         )}
                                                     </Button>
                                                 </>
-                                            )
-                                        }
+                                            )}
                                             <Link
                                                 className="btn btn-sm btn-link p-0 mr-2"
                                                 to={`/${form.id}/edit`}
