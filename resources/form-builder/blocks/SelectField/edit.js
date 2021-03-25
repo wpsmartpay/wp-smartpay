@@ -69,7 +69,6 @@ export const edit = ({ attributes, setAttributes }) => {
     }
 
     const addNewOption = () => {
-        console.log('object')
         setAttributesData({
             options: [
                 ...attributes.attributes.options,

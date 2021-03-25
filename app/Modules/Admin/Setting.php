@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+
 use SmartPay\Modules\Admin\Logger;
 
 class Setting
@@ -244,7 +245,7 @@ class Setting
                         'smartpay_debug_log' => array(
                             'id'          => 'smartpay_debug_log',
                             'name'        => __('Debug Log', 'smartpay'),
-                            'std'       => $smartpay_logs->get_file_contents(),  
+                            'std'       => $smartpay_logs->get_file_contents(),
                             'type'        => 'textarea',
                         ),
                     ),
@@ -548,7 +549,8 @@ class Setting
 
     public function settings_checkbox_callback($args)
     {
-        $smartpay_option = smartpay_get_option($args['id']);
+        $smartpay_option = smartpay_get_option($args['id'], []);
+
         if (isset($args['faux']) && true === $args['faux']) {
             $name = '';
         } else {
@@ -558,11 +560,11 @@ class Setting
         $class = sanitize_html_class($args['field_class']);
 
         $html     = '<input type="hidden"' . $name . ' value="-1" />';
-        if( $args['multiple'] && $args['options'] ) {
-            foreach( $args['options'] as $name => $value ) {
-                $checked  = in_array($name,$smartpay_option) ? 'checked="checked"': '';
-                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="'.$name.'" ' . $checked . ' class="' . $class . '"/>';
-                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">'.$value.'</label><br />';
+        if ($args['multiple'] && $args['options']) {
+            foreach ($args['options'] as $name => $value) {
+                $checked  = in_array($name, $smartpay_option) ? 'checked="checked"' : '';
+                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="' . $name . '" ' . $checked . ' class="' . $class . '"/>';
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">' . $value . '</label><br />';
             }
         } else {
             $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
