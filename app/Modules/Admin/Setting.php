@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+
 use SmartPay\Modules\Admin\Logger;
 
 class Setting
@@ -232,9 +233,7 @@ class Setting
             /** Extension Settings */
             'extensions' => apply_filters(
                 'smartpay_settings_extensions',
-                array(
-                    'main' => array(),
-                )
+                array()
             ),
             /** Debug Log Settings */
             'debug_log' => apply_filters(
@@ -244,7 +243,7 @@ class Setting
                         'smartpay_debug_log' => array(
                             'id'          => 'smartpay_debug_log',
                             'name'        => __('Debug Log', 'smartpay'),
-                            'std'       => $smartpay_logs->get_file_contents(),  
+                            'std'       => $smartpay_logs->get_file_contents(),
                             'type'        => 'textarea',
                         ),
                     ),
@@ -558,16 +557,18 @@ class Setting
         $class = sanitize_html_class($args['field_class']);
 
         $html     = '<input type="hidden"' . $name . ' value="-1" />';
-        if( $args['multiple'] && $args['options'] ) {
-            foreach( $args['options'] as $name => $value ) {
-                $checked  = in_array($name,$smartpay_option) ? 'checked="checked"': '';
-                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="'.$name.'" ' . $checked . ' class="' . $class . '"/>';
-                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">'.$value.'</label><br />';
+        if ($args['multiple'] && $args['options']) {
+            foreach ($args['options'] as $name => $value) {
+                $checked  = in_array($name, $smartpay_option) ? 'checked="checked"' : '';
+                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="' . $name . '" ' . $checked . ' class="' . $class . '"/>';
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">' . $value . '</label><br />';
             }
         } else {
             $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
             $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-            $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+            if (isset($args['label'])) {
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . $args['label'] . '</label>';
+            }
         }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
         echo apply_filters('smartpay_after_setting_output', $html, $args);
