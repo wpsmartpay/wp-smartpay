@@ -12,6 +12,7 @@ use SmartPay\Framework\Database\Eloquent\Relation\HasOne;
 use SmartPay\Framework\Database\Eloquent\Relation\HasMany;
 use SmartPay\Framework\Database\Eloquent\Relation\BelongsTo;
 use SmartPay\Framework\Database\Eloquent\Relation\BelongsToMany;
+use SmartPay\Framework\Database\Eloquent\Relation\HasManyThrough;
 
 abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializable
 {
@@ -753,6 +754,29 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
             $instance->getTable() . '.' . $foreignKey,
             $localKey
         );
+    }
+
+    /**
+     * Define a has-many-through relationship.
+     *
+     * @param  string  $related
+     * @param  string  $through
+     * @param  string|null  $firstKey
+     * @param  string|null  $secondKey
+     * @param  string|null  $localKey
+     * @return \SmartPay\Framework\Database\Eloquent\Relation\HasManyThrough
+     */
+    public function hasManyThrough($related, $through, $firstKey = null, $secondKey = null, $localKey = null)
+    {
+        $through = new $through;
+
+        $firstKey = $firstKey ?: $this->getForeignKey();
+
+        $secondKey = $secondKey ?: $through->getForeignKey();
+
+        $localKey = $localKey ?: $this->getKeyName();
+
+        return new HasManyThrough((new $related)->newQuery(), $this, $through, $firstKey, $secondKey, $localKey);
     }
 
     public function belongsToMany($related, $table, $foreignPivotKey, $relatedPivotKey)
