@@ -547,7 +547,8 @@ class Setting
 
     public function settings_checkbox_callback($args)
     {
-        $smartpay_option = smartpay_get_option($args['id']);
+        $smartpay_option = smartpay_get_option($args['id'], []);
+
         if (isset($args['faux']) && true === $args['faux']) {
             $name = '';
         } else {

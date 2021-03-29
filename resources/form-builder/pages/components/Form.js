@@ -4,7 +4,7 @@ import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
 import { Alert } from '../../components/Alert'
 
 import { FormBuilder } from './FormBuilder'
-import { FormAmounts } from './FormAmounts'
+import { FormOptionTab } from './FormOptionTab'
 
 export const FormForm = ({
     form,
@@ -89,23 +89,22 @@ export const FormForm = ({
                                         className="mr-2"
                                     />
                                 )}
-                                {
-                                    form.id && form.extra?.form_preview_page_permalink && (
+                                {form.id &&
+                                    form.extra?.form_preview_page_permalink && (
                                         <>
                                             <Button
                                                 variant="link"
-                                                href={form.extra.form_preview_page_permalink}
+                                                href={
+                                                    form.extra
+                                                        .form_preview_page_permalink
+                                                }
                                                 target="_blank"
                                                 className="btn btn-sm text-decoration-none px-3 mr-2"
                                             >
-                                                {__(
-                                                    'Preview',
-                                                    'smartpay'
-                                                )}
+                                                {__('Preview', 'smartpay')}
                                             </Button>
                                         </>
-                                    )
-                                }
+                                    )}
                                 <Button
                                     onClick={saveForm}
                                     className="btn btn-primary btn-sm text-decoration-none px-3"
@@ -140,7 +139,7 @@ export const FormForm = ({
                             className="text-decoration-none mt-3"
                             title={__('Options', 'smartpay')}
                         >
-                            <FormAmounts
+                            <FormOptionTab
                                 form={form}
                                 setFormData={setFormData}
                             />

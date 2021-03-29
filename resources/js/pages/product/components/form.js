@@ -12,7 +12,7 @@ const defaultVariation = {
     sale_price: '',
     files: [],
     key: '',
-    extra: {'price_type': 'onetime'}
+    extra: { price_type: 'onetime' },
 }
 
 export const ProductForm = ({ product, setProductData }) => {
@@ -144,7 +144,7 @@ export const ProductForm = ({ product, setProductData }) => {
                         return item.key !== variation.key
                     }),
                 })
-                if( variation?.id ) {
+                if (variation?.id) {
                     DeleteProduct(variation.id).then((response) => {
                         Swal.fire({
                             toast: true,
@@ -348,9 +348,12 @@ export const ProductForm = ({ product, setProductData }) => {
                 >
                     {!product.variations.length && (
                         <div className="form-row">
-                            {
-                                window.smartPayProductHooks.applyFilters('smartpay.product.price.tab',[],product, setProductData)
-                            }
+                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                'smartpay.product.price.tab',
+                                [],
+                                product,
+                                setProductData
+                            )}
                             <div className="col-6">
                                 <div className="form-group">
                                     <label
@@ -491,9 +494,12 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
 
-                                                {
-                                                    window.smartPayProductHooks.applyFilters('smartpay.product.variation.price.tab',[],variation, setVariationData)
-                                                }
+                                                {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                                    'smartpay.product.variation.price.tab',
+                                                    [],
+                                                    variation,
+                                                    setVariationData
+                                                )}
                                                 <div className="form-row mt-4">
                                                     <div className="col-6">
                                                         <div className="form-group">
