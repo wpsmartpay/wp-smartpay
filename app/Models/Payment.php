@@ -4,6 +4,8 @@ namespace SmartPay\Models;
 
 use SmartPay\Models\Customer;
 use SmartPay\Framework\Database\Eloquent\Model;
+use SmartPay\Framework\Database\Eloquent\Relation\HasMany;
+use SmartPay\Framework\Database\Eloquent\Relation\HasOne;
 
 class Payment extends Model
 {
@@ -58,6 +60,26 @@ class Payment extends Model
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
+    /**
+     * Get parent payment
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\Relation\HasOne
+     */
+    public function parent(): HasOne
+    {
+        return $this->hasOne(Payment::class, 'id', 'parent_id');
+    }
+
+    /**
+     * Get related payments
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\Relation\HasMany
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'parent_id', 'id');
     }
 
     public function getTypeAttribute($type)

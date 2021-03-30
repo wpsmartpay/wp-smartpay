@@ -9,7 +9,7 @@ class QueryBuilderHandler
 {
 
     /**
-     * @var \Viocon\Container
+     * @var \SmartPay\Framework\Database\Container
      */
     protected $container;
 
