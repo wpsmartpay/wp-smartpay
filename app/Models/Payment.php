@@ -62,7 +62,7 @@ class Payment extends Model
                     'smartpay_update_payment_status',
                     $payment,
                     $payment->attributes['status'],
-                    $payment->original['status'] ?: self::PENDING
+                    $payment->original['status'] ?? self::PENDING
                 );
             }
         });
