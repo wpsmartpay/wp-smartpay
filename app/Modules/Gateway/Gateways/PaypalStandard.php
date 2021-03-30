@@ -3,7 +3,7 @@
 namespace SmartPay\Modules\Gateway\Gateways;
 
 use SmartPay\Foundation\PaymentGateway;
-use SmartPay\Framework\Application;
+use SmartPay\Models\Payment;
 
 class PaypalStandard extends PaymentGateway
 {
@@ -100,12 +100,12 @@ class PaypalStandard extends PaymentGateway
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
         ];
 
-        if( 'subscription' === $paymentData['price_type']) {
-            do_action('smartpay_paypal_subscription_process_payment',$payment,$paymentData);
+        if (Payment::BILLING_TYPE_SUBSCRIPTION === $paymentData['billing_type']) {
+            do_action('smartpay_paypal_subscription_process_payment', $payment, $paymentData);
             $default_args['item_name']    = 'Payment #' . $payment->id;
             $default_args['a3']           = $payment_price;
-            $default_args['p3']           = smartpay_get_paypal_time_duration_option( $paymentData['billing_period'] );
-            $default_args['t3']           = smartpay_get_paypal_time_option( $paymentData['billing_period'] );
+            $default_args['p3']           = smartpay_get_paypal_time_duration_option($paymentData['billing_period']);
+            $default_args['t3']           = smartpay_get_paypal_time_option($paymentData['billing_period']);
             $default_args['src']          = 1;
             $default_args['cmd']          = '_xclick-subscriptions';
         } else {
