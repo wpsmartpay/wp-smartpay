@@ -820,14 +820,14 @@ function smartpay_is_gateway_active($gateway)
     return $is_active;
 }
 
-function smartpay_is_extension_active($extension) {
+function smartpay_is_extension_active($extension)
+{
     $settings = get_option('smartpay_settings');
-    if( ! is_array($settings['integrations']) && ! count($settings['integrations']) ) {
+    if (!is_array($settings['integrations']) && !count($settings['integrations'])) {
         return;
     }
 
-    $is_active = array_key_exists($extension, $settings['integrations']);
-    return $is_active;
+    return array_key_exists($extension, $settings['integrations']);
 }
 
 function smartpay_get_default_gateway()
@@ -960,80 +960,56 @@ function smartpay_get_file_extension($str)
     return end($parts);
 }
 
-function smartpay_get_paypal_time_option( $time_option ) {
+function smartpay_get_paypal_time_option($time_option)
+{
     $options = array(
         'daily'     => 'D',
         'week'      => 'w',
         'month'     => 'M',
         'quarter'   => 'M',
-        'semiannual'=> 'M',
+        'semiannual' => 'M',
         'yearly'    => 'Y',
     );
 
-    return  $options[ $time_option ] ?? 'D';
+    return  $options[$time_option] ?? 'D';
 }
 
-function smartpay_get_paypal_time_duration_option( $time_option ) {
+function smartpay_get_paypal_time_duration_option($time_option)
+{
     $options = array(
         'daily'     => '1',
         'week'      => '1',
         'month'     => '1',
         'quarter'   => '3',
-        'semiannual'=> '6',
+        'semiannual' => '6',
         'yearly'    => '1',
     );
 
-    return  $options[ $time_option ] ?? '1';
+    return  $options[$time_option] ?? '1';
 }
 
-function smartpay_get_payment($payment_id) {
-    $payment = PaymentModel::where('id',$payment_id)->first();
+function smartpay_get_payment($payment_id)
+{
+    $payment = PaymentModel::where('id', $payment_id)->first();
     return $payment;
 }
 
-function smartpay_set_payment_transaction_id($payment_id,$transaction_id) {
-    $payment = PaymentModel::where('id',$payment_id)->first();
-    if( !$payment ) {
+function smartpay_set_payment_transaction_id($payment_id, $transaction_id)
+{
+    $payment = PaymentModel::where('id', $payment_id)->first();
+    if (!$payment) {
         return;
     }
     $payment->transaction_id = $transaction_id;
     $payment->save();
 }
-
-function smartpayGetSubscriptionBillingCycleString( $value ) {
-    $billingCycleBilling = '';
-        switch ($value) {
-            case 'daily':
-                $billingCycleBilling = 'Daily';
-                break;
-            case 'week':
-                $billingCycleBilling = 'Weekly';
-                break;
-            case 'month':
-                $billingCycleBilling = 'Monthly';
-                break;
-            case 'quarter':
-                $billingCycleBilling = 'Every 3 Months';
-                break;
-            case 'semiannual':
-                $billingCycleBilling = 'Every 6 Months';
-                break;
-            case 'yearly':
-                $billingCycleBilling = 'Yearly';
-                break;
-            default:
-                break;
-        }
-
-        return $billingCycleBilling;
-}
-
-function smartpay_debug_log( $message = '', $force = false ) {
+function smartpay_debug_log($message = '', $force = false)
+{
 
     $smartpay_logs = new Logger();
-    if( function_exists( 'mb_convert_encoding' ) ) {
-        $message = mb_convert_encoding( $message, 'UTF-8' );
+    if (function_exists('mb_convert_encoding')) {
+        $message = mb_convert_encoding($message, 'UTF-8');
     }
 
-	$smartpay_logs->log_to_file( $message );
+    $smartpay_logs->log_to_file($message);
 }
