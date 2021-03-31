@@ -35,31 +35,30 @@ export const FormAmounts = ({ form, setFormData }) => {
         })
     }
 
-    const formAmounts = window.SMARTPAY_FORM_HOOKS.applyFilters(
-        'smartpay.form.amount.section',
-        () => {
-            amounts.map((amount, index) => {
-                return (
-                    <div key={index}>
-                        <AmountRow
-                            amount={amount}
-                            setAmount={setAmount}
-                            removeAmountRow={removeAmountRow}
-                        />
-                    </div>
-                )
-            })
-        },
-        form,
-        setFormData
-    )
-
     return (
         <Card>
             <Card.Body>
                 <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
                 <div className="col-md-8 mx-auto">
-                    {formAmounts}
+                    {/* Form amounts */}
+                    {window.SMARTPAY_FORM_HOOKS.applyFilters(
+                        'smartpay.form.amount.section',
+                        <>
+                            {amounts.map((amount, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AmountRow
+                                            amount={amount}
+                                            setAmount={setAmount}
+                                            removeAmountRow={removeAmountRow}
+                                        />
+                                    </div>
+                                )
+                            })}
+                        </>,
+                        form,
+                        setFormData
+                    )}
                     <div className="mt-4">
                         <Button onClick={addNewAmountRow} size="sm">
                             <PlusIcon
