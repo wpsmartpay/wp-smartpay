@@ -233,9 +233,7 @@ class Setting
             /** Extension Settings */
             'extensions' => apply_filters(
                 'smartpay_settings_extensions',
-                array(
-                    'main' => array(),
-                )
+                array()
             ),
             /** Debug Log Settings */
             'debug_log' => apply_filters(
@@ -569,7 +567,9 @@ class Setting
         } else {
             $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
             $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-            $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+            if (isset($args['label'])) {
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . $args['label'] . '</label>';
+            }
         }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
         echo apply_filters('smartpay_after_setting_output', $html, $args);
