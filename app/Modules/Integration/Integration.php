@@ -60,10 +60,10 @@ class Integration
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
             ],
-            'affiliatewp' => [
+            'affiliate_wp' => [
                 'name'       => __('AffiliateWP', 'smartpay-pro'),
                 'excerpt'    => __('AffiliateWP is an affiliate marketing tool for wordpress.', 'smartpay-pro'),
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/affiliatewp.png',
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/affiliate_wp.png',
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
