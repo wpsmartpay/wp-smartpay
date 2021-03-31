@@ -203,15 +203,17 @@ export const EditPayment = () => {
                                         </p>
                                         <p>
                                             <strong>
-                                                {__('Price Type', 'smartpay')}
-                                                :{' '}
+                                                {__('Price Type', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                {
-                                                    payment.data && payment.data.price_type == 'onetime' ? 
-                                                    __('One Time', 'smartpay') 
-                                                    : __('Subscription', 'smartpay')
-                                                }
+                                                {payment.data &&
+                                                payment.data.billing_type ==
+                                                    'onetime'
+                                                    ? __('One Time', 'smartpay')
+                                                    : __(
+                                                          'Subscription',
+                                                          'smartpay'
+                                                      )}
                                             </span>
                                         </p>
                                     </>
@@ -244,15 +246,17 @@ export const EditPayment = () => {
                                         </p>
                                         <p>
                                             <strong>
-                                                {__('Price Type', 'smartpay')}
-                                                :{' '}
+                                                {__('Price Type', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                {
-                                                    payment.data && payment.data.price_type == 'onetime' ? 
-                                                    __('One Time', 'smartpay') 
-                                                    : __('Subscription', 'smartpay')
-                                                }
+                                                {payment.data &&
+                                                payment.data.billing_type ==
+                                                    'onetime'
+                                                    ? __('One Time', 'smartpay')
+                                                    : __(
+                                                          'Subscription',
+                                                          'smartpay'
+                                                      )}
                                             </span>
                                         </p>
                                     </>

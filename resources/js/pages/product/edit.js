@@ -5,18 +5,9 @@ import { Container, Form, Button, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
+import { productDefaultData } from '../../utils/constant'
 
 const { useSelect, dispatch } = wp.data
-
-const defaultProduct = {
-    title: '',
-    covers: [],
-    description: '',
-    variations: [],
-    base_price: '',
-    sale_price: '',
-    files: [],
-}
 
 const reducer = (state, data) => {
     return {
@@ -27,7 +18,7 @@ const reducer = (state, data) => {
 
 export const EditProduct = () => {
     const { productId } = useParams()
-    const [product, setProductData] = useReducer(reducer, defaultProduct)
+    const [product, setProductData] = useReducer(reducer, productDefaultData)
 
     const productData = useSelect(
         (select) => select('smartpay/products').getProduct(productId),
