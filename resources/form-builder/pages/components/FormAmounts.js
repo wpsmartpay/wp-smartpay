@@ -2,15 +2,7 @@ import { __ } from '@wordpress/i18n'
 import { Card, Form, Button } from 'react-bootstrap'
 import { X as CloseIcon, Plus as PlusIcon } from 'react-feather'
 import { Alert } from '../../components/Alert'
-
-const defaultAmount = {
-    key: '',
-    label: '',
-    amount: '',
-    price_type: 'onetime',
-}
-
-const geneateKey = () => Math.random().toString(36).substr(2, 9)
+import { defaultAmount, geneateKey } from '../../utils/constant'
 
 export const FormAmounts = ({ form, setFormData }) => {
     let { amounts } = form
@@ -43,33 +35,30 @@ export const FormAmounts = ({ form, setFormData }) => {
         })
     }
 
-    const formAmounts = window.SMARTPAY_FORM_HOOKS.applyFilters(
-        'smartpay.form.amount.section',
-        () => {
-            amounts.map((amount, index) => {
-                return (
-                    <div key={index}>
-                        {'onetime' === amount.price_type && (
-                            <AmountRow
-                                amount={amount}
-                                setAmount={setAmount}
-                                removeAmountRow={removeAmountRow}
-                            />
-                        )}
-                    </div>
-                )
-            })
-        },
-        form,
-        setFormData
-    )
-
     return (
         <Card>
             <Card.Body>
                 <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
                 <div className="col-md-8 mx-auto">
-                    {formAmounts}
+                    {/* Form amounts */}
+                    {window.SMARTPAY_FORM_HOOKS.applyFilters(
+                        'smartpay.form.amount.section',
+                        <>
+                            {amounts.map((amount, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AmountRow
+                                            amount={amount}
+                                            setAmount={setAmount}
+                                            removeAmountRow={removeAmountRow}
+                                        />
+                                    </div>
+                                )
+                            })}
+                        </>,
+                        form,
+                        setFormData
+                    )}
                     <div className="mt-4">
                         <Button onClick={addNewAmountRow} size="sm">
                             <PlusIcon

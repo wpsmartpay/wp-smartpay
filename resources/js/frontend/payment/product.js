@@ -19,16 +19,16 @@ jQuery(($) => {
                 .val($(e.currentTarget).find('.sale-price').html())
 
             let selectedPriceType = $(e.currentTarget).find(
-                'input[name="_product_price_type"]'
+                'input[name="_product_billing_type"]'
             )
 
             $(e.currentTarget)
                 .parents('.smartpay-product-shortcode')
-                .find('input[name="smartpay_product_price_type"]')
+                .find('input[name="smartpay_product_billing_type"]')
                 .val(selectedPriceType.val())
 
-            if( 'subscription' == selectedPriceType.val() ) {
-                var selectedBillingPeriod= $(e.currentTarget).find(
+            if ('subscription' == selectedPriceType.val()) {
+                var selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_product_billing_period"]'
                 )
 
@@ -264,9 +264,14 @@ jQuery(($) => {
             data.smartpay_product_price =
                 $wrapper.find('input[name="smartpay_product_price"]').val() ||
                 null
-            data.smartpay_product_price_type = $wrapper.find('input[name="smartpay_product_price_type"]').val() || null
-            if( data.smartpay_product_price_type === 'subscription' ) {
-                data.smartpay_product_billing_period = $wrapper.find('input[name="smartpay_product_billing_period"]').val()
+            data.smartpay_product_billing_type =
+                $wrapper
+                    .find('input[name="smartpay_product_billing_type"]')
+                    .val() || null
+            if (data.smartpay_product_billing_type === 'subscription') {
+                data.smartpay_product_billing_period = $wrapper
+                    .find('input[name="smartpay_product_billing_period"]')
+                    .val()
             }
         } else {
             data.smartpay_form_id =

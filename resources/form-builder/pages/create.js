@@ -5,18 +5,11 @@ import { dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Save } from '../http/form'
 import { FormForm } from './components/Form'
-import { smartpayhooks } from './index'
+import { defaultAmount } from '../utils/constant'
 
 const defaultFormData = {
     title: 'Untitled Form',
-    amounts: [
-        {
-            key: '1234',
-            label: '',
-            amount: '',
-            price_type: 'onetime',
-        },
-    ],
+    amounts: [defaultAmount],
     body: `<!-- wp:smartpay-form/name -->
     <div class="wp-block-smartpay-form-name form-element row"><div class="col"><label for="first_name">First Name</label><input type="text" id="first_name" name="smartpay_form[name][first_name]" class="form-control" placeholder="First Name" required value=""/></div><div class="col"><label for="last_name">Last Name</label><input type="text" id="last_name" name="smartpay_form[name][last_name]" class="form-control" placeholder="Last Name" value=""/></div></div>
     <!-- /wp:smartpay-form/name -->
@@ -39,11 +32,6 @@ const reducer = (state, data) => {
 }
 
 export const CreateForm = () => {
-    window.SMARTPAY_FORM_HOOKS.applyFilters(
-        'smartpay.form.price.defaultValue',
-        defaultFormData
-    )
-
     const [form, setFormData] = useReducer(reducer, defaultFormData)
     const [shouldReset, setShouldReset] = useState(false)
     const history = useHistory()

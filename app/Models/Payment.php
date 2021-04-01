@@ -39,6 +39,17 @@ class Payment extends Model
     const PRODUCT_PURCHASE = 'product_purchase';
     const FORM_PAYMENT = 'form_payment';
 
+
+    const BILLING_TYPE_ONE_TIME = 'One Time';
+    const BILLING_TYPE_SUBSCRIPTION = 'Subscription';
+
+    const BILLING_PERIOD_DAILY = 'Daily';
+    const BILLING_PERIOD_WEEKLY = 'Weekly';
+    const BILLING_PERIOD_MONTHLY = 'Monthly';
+    const BILLING_PERIOD_QUARTERLY = 'Every 3 Months';
+    const BILLING_PERIOD_SEMIANNUAL = 'Every 6 Months';
+    const BILLING_PERIOD_YEARLY = 'Yearly';
+
     public static function boot()
     {
         static::creating(function ($product) {
@@ -51,7 +62,7 @@ class Payment extends Model
                     'smartpay_update_payment_status',
                     $payment,
                     $payment->attributes['status'],
-                    $payment->original['status'] ?: self::PENDING
+                    $payment->original['status'] ?? self::PENDING
                 );
             }
         });

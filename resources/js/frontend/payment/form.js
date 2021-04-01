@@ -1,3 +1,5 @@
+const { SUBSCRIPTION } = require('../../utils/constant')
+
 jQuery(($) => {
     /** Select form fixed amount **/
     $(document.body).on(
@@ -17,12 +19,12 @@ jQuery(($) => {
                 'input[name="_form_amount"]'
             )
 
-            var selectedPriceType= $(e.currentTarget).find(
-                'input[name="_form_price_type"]'
+            var selectedPriceType = $(e.currentTarget).find(
+                'input[name="_form_billing_type"]'
             )
-            
-            if( 'subscription' == selectedPriceType.val() ) {
-                var selectedBillingPeriod= $(e.currentTarget).find(
+
+            if (SUBSCRIPTION === selectedPriceType.val()) {
+                var selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_form_billing_period"]'
                 )
             }
@@ -34,10 +36,10 @@ jQuery(($) => {
 
             $(e.currentTarget)
                 .parents('.form-amounts')
-                .find('input[name="smartpay_form_price_type"]')
+                .find('input[name="smartpay_form_billing_type"]')
                 .val(selectedPriceType.val())
 
-            if( 'subscription' == selectedPriceType.val() ) {
+            if (SUBSCRIPTION === selectedPriceType.val()) {
                 $(e.currentTarget)
                     .parents('.form-amounts')
                     .find('input[name="smartpay_form_billing_period"]')
@@ -152,8 +154,10 @@ jQuery(($) => {
             smartpay_form_id: data.smartpay_form_id,
             smartpay_amount: data.smartpay_form_amount,
             smartpay_form_data: data.smartpay_form,
-            smartpay_form_price_type: data.smartpay_form_price_type,
-            ...( "subscription" == data.smartpay_form_price_type && { smartpay_form_billing_period: data.smartpay_form_billing_period } )
+            smartpay_form_billing_type: data.smartpay_form_billing_type,
+            ...(SUBSCRIPTION == data.smartpay_form_billing_type && {
+                smartpay_form_billing_period: data.smartpay_form_billing_period,
+            }),
         }
     }
 

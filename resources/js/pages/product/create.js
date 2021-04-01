@@ -5,19 +5,9 @@ import { useReducer } from '@wordpress/element'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { SaveProduct } from '../../http/product'
 import { ProductForm } from './components/form'
+import { productDefaultData } from '../../utils/constant'
 
 const { dispatch } = wp.data
-
-const defaultProduct = {
-    title: '',
-    covers: [],
-    description: '',
-    variations: [],
-    base_price: '',
-    sale_price: '',
-    files: [],
-    extra: {'price_type': 'onetime'}
-}
 
 const reducer = (state, data) => {
     return {
@@ -27,12 +17,12 @@ const reducer = (state, data) => {
 }
 
 export const CreateProduct = () => {
-    const [product, setProductData] = useReducer(reducer, defaultProduct)
+    const [product, setProductData] = useReducer(reducer, productDefaultData)
     const history = useHistory()
 
     const createProduct = () => {
         SaveProduct(JSON.stringify(product)).then((response) => {
-            setProductData(defaultProduct)
+            setProductData(productDefaultData)
             tinymce.get('description').setContent('')
 
             dispatch('smartpay/products').setProduct(response.product)

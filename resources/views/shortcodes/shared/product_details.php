@@ -29,25 +29,23 @@
                                     <?php
                                     if (count($product->variations)) : ?>
                                     <!-- Variations -->
-                                    <?php
-                                        foreach ($product->variations as $index => $variation) : ?>
+                                    <?php foreach ($product->variations as $index => $variation) : ?>
+                                    <?php $billingType = $variation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+                                    <?php $billingPeriod = $variation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
                                     <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
                                         <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
                                             <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
-                                            <input type="hidden" name="_product_price_type" id="_product_price_type_<?php echo $variation->id; ?>" value="<?php echo $variation->extra['price_type']; ?>">
-                                            <?php 
-                                                if( 'subscription' === $variation->extra['price_type']): ?>
-                                                    <input type="hidden" name="_product_billing_period" id="_product_billing_period_<?php echo $variation->id; ?>" value="<?php echo $variation->extra['billing_period']; ?>">
-                                            <?php 
-                                                endif;
-                                            ?>
+                                            <input type="hidden" name="_product_billing_type" id="_product_billing_type_<?php echo $variation->id; ?>" value="<?php echo $billingType; ?>">
+                                            <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                            <input type="hidden" name="_product_billing_period" id="_product_billing_period_<?php echo $variation->id; ?>" value="<?php echo $billingPeriod; ?>">
+                                            <?php endif; ?>
                                             <div class="price--amount">
                                                 <span class="sale-price"><?php echo smartpay_amount_format(($variation->price)); ?></span>
                                                 <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
                                                 <?php endif; ?>
-                                                <?php if( 'subscription' === $variation->extra['price_type']): ?>
-                                                    <span>/ <?php echo smartpayGetSubscriptionBillingCycleString($variation->extra['billing_period']); ?></span>
+                                                <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                                <span>/ <?php echo $billingPeriod; ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
@@ -64,6 +62,8 @@
 
                                     <!-- Product price -->
                                     <?php else : ?>
+                                    <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+                                    <?php $productBillingPeriod = $product->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
                                     <li class="list-group-item price selected">
                                         <label class="d-block m-0">
                                             <div class="price--amount">
@@ -71,8 +71,8 @@
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                 <?php endif; ?>
-                                                <?php if( 'subscription' === $product->extra['price_type']): ?>
-                                                    <span>/ <?php echo smartpayGetSubscriptionBillingCycleString($product->extra['billing_period']); ?></span>
+                                                <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $productBillingType) : ?>
+                                                <span>/ <?php echo $productBillingPeriod; ?></span>
                                                 <?php endif; ?>
                                             </div>
                                             <h5 class="m-0 price--title">
@@ -92,9 +92,9 @@
                 </div>
             </div>
         </div>
-        
+
         <?php
-        if( count( $product->variations ) ) {
+        if (count($product->variations)) {
             $defaultVariation = $product->variations->first();
         } else {
             $defaultVariation = $product;
@@ -104,8 +104,8 @@
         <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
         <input type="hidden" name="smartpay_product_id" value="<?php echo esc_attr($defaultVariation->id); ?>">
         <input type="hidden" name="smartpay_product_price" value="<?php echo smartpay_amount_format($defaultVariation->sale_price ?? 0); ?>">
-        <input type="hidden" name="smartpay_product_price_type" value="<?php echo $defaultVariation->extra['price_type'] ?? 'onetime'; ?>">
-        <input type="hidden" name="smartpay_product_billing_period" value="<?php echo $defaultVariation->extra['billing_period'] ?? 'daily'; ?>">
+        <input type="hidden" name="smartpay_product_billing_type" value="<?php echo $defaultVariation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>">
+        <input type="hidden" name="smartpay_product_billing_period" value="<?php echo $defaultVariation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>">
         <!-- /Form Data -->
 
         <!-- Payment modal -->

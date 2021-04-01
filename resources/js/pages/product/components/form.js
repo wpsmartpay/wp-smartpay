@@ -3,17 +3,8 @@ import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteProduct } from '../../../http/product'
+import { variationDefaultData } from '../../../utils/constant'
 const { useEffect, useState } = wp.element
-
-const defaultVariation = {
-    title: '',
-    description: '',
-    base_price: '',
-    sale_price: '',
-    files: [],
-    key: '',
-    extra: { price_type: 'onetime' },
-}
 
 export const ProductForm = ({ product, setProductData }) => {
     useEffect(() => {
@@ -125,7 +116,7 @@ export const ProductForm = ({ product, setProductData }) => {
         setProductData({
             variations: [
                 ...product.variations,
-                { ...defaultVariation, key: `new-${Date.now()}` },
+                { ...variationDefaultData, key: `new-${Date.now()}` },
             ],
         })
     }
@@ -349,7 +340,7 @@ export const ProductForm = ({ product, setProductData }) => {
                     {!product.variations.length && (
                         <div className="form-row">
                             {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                'smartpay.product.price.tab',
+                                'smartpay.product.price.section',
                                 [],
                                 product,
                                 setProductData
@@ -495,12 +486,12 @@ export const ProductForm = ({ product, setProductData }) => {
                                                 </div>
 
                                                 {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                                    'smartpay.product.variation.price.tab',
+                                                    'smartpay.product.variation.price.section',
                                                     [],
                                                     variation,
                                                     setVariationData
                                                 )}
-                                                <div className="form-row mt-4">
+                                                <div className="form-row">
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label
@@ -571,7 +562,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="variation-option-body bg-light p-3">
+                                            <div className="variation-option-body bg-light px-3">
                                                 <div className="form-group">
                                                     <label
                                                         htmlFor={`variation-${variation.key}-description`}
