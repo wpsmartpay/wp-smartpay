@@ -196,7 +196,7 @@ export const ShowCustomer = () => {
                                                         <td scope="col">
                                                             <Link
                                                                 className="text-primary text-sm text-decoration-none"
-                                                                to={`/customers/${customer.id}`}
+                                                                to={`/payments/${payment.id}/edit`}
                                                                 disabled
                                                             >
                                                                 {__(
