@@ -57,7 +57,7 @@ class CustomerController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $customer = Customer::find($request->get_param('id'));
+        $customer = Customer::with(['payments'])->find($request->get_param('id'));
 
         if (!$customer) {
             return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);

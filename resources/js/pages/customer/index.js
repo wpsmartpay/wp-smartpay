@@ -93,15 +93,15 @@ export const CustomerList = () => {
                                         </td>
                                         <td>{customer.email || ''}</td>
                                         <td className="text-right">
-                                            {/* <Link
-                                                className="btn-sm p-0 mr-2"
+                                            <Link
+                                                className="btn-sm p-0 mr-3 text-primary text-decoration-none"
                                                 to={`/customers/${customer.id}`}
                                                 disabled
                                             >
-                                                {__('Show', 'smartpay')}
-                                            </Link> */}
+                                                {__('View Details', 'smartpay')}
+                                            </Link>
                                             <Button
-                                                className="btn-sm p-0"
+                                                className="btn-sm p-0 text-danger"
                                                 onClick={() =>
                                                     deleteCustomer(customer.id)
                                                 }
