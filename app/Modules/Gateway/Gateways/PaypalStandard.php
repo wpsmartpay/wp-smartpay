@@ -49,6 +49,8 @@ class PaypalStandard extends PaymentGateway
         add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
 
         add_action('init', [$this, 'processWebhooks']);
+
+        add_action('smartpay_paypal_web_accept', [$this, 'process_smartpay_paypal_web_accept'], 10, 2);
     }
 
     public function ajaxProcessPayment($paymentData)
@@ -240,7 +242,13 @@ class PaypalStandard extends PaymentGateway
                 die('Error.');
             }
 
-            $this->process_smartpay_paypal_web_accept($encoded_data_array, $payment);
+            if (has_action('smartpay_paypal_' . $encoded_data_array['txn_type'])) {
+                // Allow PayPal IPN types to be processed separately
+                do_action('smartpay_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, $payment_id);
+            } else {
+                // Fallback to web accept just in case the txn_type isn't present
+                do_action('smartpay_paypal_web_accept', $encoded_data_array, $payment_id);
+            }
             return;
         }
     }
@@ -252,7 +260,7 @@ class PaypalStandard extends PaymentGateway
      * @param array $data IPN Data
      * @return void
      */
-    public function process_smartpay_paypal_web_accept($data, $payment)
+    public function process_smartpay_paypal_web_accept($data, $payment_id)
     {
         if ($data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded') {
             return;
@@ -261,6 +269,14 @@ class PaypalStandard extends PaymentGateway
         // Collect payment details
         $paypal_amount  = $data['mc_gross'] ?? 0;
         $payment_status = strtolower($data['payment_status'] ?? '');
+        $payment = Payment::find($payment_id);
+
+        if (!$payment) {
+            smartpay_debug_log(__(sprintf(
+                'SmartPay-Paddle: Payment #%s no found.',
+                $payment_id
+            ), 'smartpay-pro'));
+        }
 
         if ($payment_status == 'refunded' || $payment_status == 'reversed') {
             // TODO: Process a refund
@@ -274,9 +290,14 @@ class PaypalStandard extends PaymentGateway
                 return; // The prices don't match
             }
 
-            if ('completed' == $payment_status || smartpay_is_test_mode()) {
+            if ('Completed' == $payment_status || smartpay_is_test_mode()) {
                 $payment->updateStatus('completed');
                 $payment->setTransactionId($data['txn_id']);
+
+                smartpay_debug_log(__(sprintf(
+                    'SmartPay-Paddle: Payment #%s completed.',
+                    $payment->id
+                ), 'smartpay-pro'));
             }
         }
     }
