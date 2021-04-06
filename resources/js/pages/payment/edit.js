@@ -206,14 +206,7 @@ export const EditPayment = () => {
                                                 {__('Price Type', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                {payment.data &&
-                                                payment.data.billing_type ==
-                                                    'onetime'
-                                                    ? __('One Time', 'smartpay')
-                                                    : __(
-                                                          'Subscription',
-                                                          'smartpay'
-                                                      )}
+                                                {payment?.data?.billing_type}
                                             </span>
                                         </p>
                                     </>
@@ -232,7 +225,7 @@ export const EditPayment = () => {
                                                 {__('Form', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                #{payment.data?.form_id}
+                                                #{payment?.data?.form_id}
                                             </span>
                                         </p>
                                         <p>
@@ -241,7 +234,7 @@ export const EditPayment = () => {
                                                 :{' '}
                                             </strong>
                                             <span>
-                                                {payment.data?.total_amount}
+                                                {payment?.data?.total_amount}
                                             </span>
                                         </p>
                                         <p>
@@ -249,14 +242,7 @@ export const EditPayment = () => {
                                                 {__('Price Type', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                {payment.data &&
-                                                payment.data.billing_type ==
-                                                    'onetime'
-                                                    ? __('One Time', 'smartpay')
-                                                    : __(
-                                                          'Subscription',
-                                                          'smartpay'
-                                                      )}
+                                                {payment?.data?.billing_type}
                                             </span>
                                         </p>
                                     </>
