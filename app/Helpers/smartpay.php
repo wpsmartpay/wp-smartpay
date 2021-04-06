@@ -963,12 +963,12 @@ function smartpay_get_file_extension($str)
 function smartpay_get_paypal_time_option($time_option)
 {
     $options = array(
-        'daily'     => 'D',
-        'week'      => 'w',
-        'month'     => 'M',
-        'quarter'   => 'M',
-        'semiannual' => 'M',
-        'yearly'    => 'Y',
+        'Daily'             => 'D',
+        'Weekly'            => 'w',
+        'Monthly'           => 'M',
+        'Every 3 Months'    => 'M',
+        'Every 6 Months'    => 'M',
+        'Yearly'            => 'Y',
     );
 
     return  $options[$time_option] ?? 'D';
@@ -977,12 +977,12 @@ function smartpay_get_paypal_time_option($time_option)
 function smartpay_get_paypal_time_duration_option($time_option)
 {
     $options = array(
-        'daily'     => '1',
-        'week'      => '1',
-        'month'     => '1',
-        'quarter'   => '3',
-        'semiannual' => '6',
-        'yearly'    => '1',
+        'Daily'             => '1',
+        'Weekly'            => '1',
+        'Monthly'           => '1',
+        'Every 3 Months'    => '3',
+        'Every 6 Months'    => '6',
+        'Yearly'            => '1',
     );
 
     return  $options[$time_option] ?? '1';
