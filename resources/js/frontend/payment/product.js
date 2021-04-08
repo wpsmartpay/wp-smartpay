@@ -27,7 +27,7 @@ jQuery(($) => {
                 .find('input[name="smartpay_product_billing_type"]')
                 .val(selectedPriceType.val())
 
-            if ('subscription' == selectedPriceType.val()) {
+            if ('Subscription' == selectedPriceType.val()) {
                 var selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_product_billing_period"]'
                 )
@@ -268,7 +268,7 @@ jQuery(($) => {
                 $wrapper
                     .find('input[name="smartpay_product_billing_type"]')
                     .val() || null
-            if (data.smartpay_product_billing_type === 'subscription') {
+            if (data.smartpay_product_billing_type === 'Subscription') {
                 data.smartpay_product_billing_period = $wrapper
                     .find('input[name="smartpay_product_billing_period"]')
                     .val()
