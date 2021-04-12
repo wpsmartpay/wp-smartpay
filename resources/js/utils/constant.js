@@ -1,6 +1,14 @@
 const ONE_TIME = 'One Time'
 const SUBSCRIPTION = 'Subscription'
 
+const PAYMENT_STATUS_PENDING = 'Pending'
+const PAYMENT_STATUS_COMPLETED = 'Completed'
+const PAYMENT_STATUS_REFUNDED = 'Refunded'
+const PAYMENT_STATUS_FAILED = 'Failed'
+const PAYMENT_STATUS_ABANDONED = 'Abandoned'
+const PAYMENT_STATUS_REVOKED = 'Revoked'
+const PAYMENT_STATUS_PROCESSING = 'Processing'
+
 const productDefaultData = {
     title: '',
     covers: [],
@@ -22,4 +30,16 @@ const variationDefaultData = {
     extra: { billing_type: ONE_TIME },
 }
 
-export { ONE_TIME, SUBSCRIPTION, productDefaultData, variationDefaultData }
+export {
+    PAYMENT_STATUS_PENDING,
+    PAYMENT_STATUS_COMPLETED,
+    PAYMENT_STATUS_REFUNDED,
+    PAYMENT_STATUS_FAILED,
+    PAYMENT_STATUS_ABANDONED,
+    PAYMENT_STATUS_REVOKED,
+    PAYMENT_STATUS_PROCESSING,
+    ONE_TIME,
+    SUBSCRIPTION,
+    productDefaultData,
+    variationDefaultData,
+}
