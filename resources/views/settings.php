@@ -115,8 +115,11 @@ ob_start();
                         <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                         <?php endif; ?>
                     </table>
-                    <?php if( $active_tab !== 'debug_log' ) : ?>
-                        <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                    <?php if ($active_tab !== 'debug_log') : ?>
+                    <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                    <?php endif; ?>
+                    <?php if ($active_tab === 'debug_log') : ?>
+                    <button class="btn btn-primary smartpay-clear-debug-log"><?php echo __('Clear Log', 'smartpay') ?></button>
                     <?php endif; ?>
                 </form>
             </div>
@@ -125,4 +128,4 @@ ob_start();
     </div>
     <!-- container end -->
 </div>
-<?php echo ob_get_clean(); ?>
+<?php echo ob_get_clean();
