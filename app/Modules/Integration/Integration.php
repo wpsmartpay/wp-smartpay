@@ -67,6 +67,14 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
+            ],
+            'pabbly' => [
+                'name'       => __('Pabbly', 'smartpay-pro'),
+                'excerpt'    => __('Pabbly is an online marketing & sales software.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/pabbly.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing', 'Sales'],
             ]
         ];
     }
