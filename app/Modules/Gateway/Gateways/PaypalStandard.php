@@ -353,86 +353,6 @@ class PaypalStandard extends PaymentGateway
                 'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'smartpay'), '#'),
                 'type'  => 'checkbox',
             ),
-            // TODO: Add url for documentation
-            // array(
-            //     'id'    => 'paypal_api_keys_desc',
-            //     'name'  => '<h4 class="text-uppercase text-info my-1">' . __('API Credentials', 'smartpay') . '</h4>',
-            //     // 'desc'  => sprintf(__( '<p>API credentials are necessary to process PayPal refunds from inside WordPress.</p><p>These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.</p>', 'smartpay' ), '#'),
-            //     'type'  => 'descriptive_text',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_settings',
-            //     'name'  => '<strong>' . __('PayPal Live API Credentials', 'smartpay') . '</strong>',
-            //     'type'  => 'header'
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_username',
-            //     'name'  => __('Live API Username', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API username', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_password',
-            //     'name'  => __('Live API Password', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API Password', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_signature',
-            //     'name'  => __('Live API Signature', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API Signature', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-
-            // Test account
-            // array(
-            //     'id'    => 'paypal_test_api_settings',
-            //     'name'  => '<strong>' . __('PayPal Test API Credentials', 'smartpay') . '</strong>',
-            //     'type'  => 'header'
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_username',
-            //     'name'  => __('Test API Username', 'smartpay'),
-            //     'desc'  => __('Your PayPal test API username', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_password',
-            //     'name'  => __('Test API Password', 'smartpay'),
-            //     'desc'  => __('Your PayPal Test API Password', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_signature',
-            //     'name'  => __('Test API Signature', 'smartpay'),
-            //     'desc'  => __('Your PayPal Test API Signature', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-
-            // $paddle_webhook_description_text = __(
-            //     sprintf(
-            //         '<p>For PayPal to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
-            //         'https://paypal.com/businessmanage/preferences/website',
-            //         home_url("index.php?smartpay-listener=paypal")
-            //     ),
-            //     'smartpay'
-            // ),
-
-            // $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
-
-            // array(
-            //     'id'    => 'paddle_webhook_description',
-            //     'type'  => 'descriptive_text',
-            //     'name'  => __('Instant Notification System (INS)', 'smartpay'),
-            //     'desc'  => $paddle_webhook_description_text,
-
-            // ),
         );
 
         return array_merge($settings, ['paypal' => $gateway_settings]);
@@ -450,16 +370,6 @@ class PaypalStandard extends PaymentGateway
         global $smartpay_options;
 
         $paypal_email       = $smartpay_options['paypal_email'] ?? null;
-
-        // if (smartpay_is_test_mode()) {
-        //     $api_username   = $smartpay_options['paypal_test_api_username']  ?? null;
-        //     $api_password   = $smartpay_options['paypal_test_api_password']  ?? null;
-        //     $api_signature  = $smartpay_options['paypal_test_api_signature'] ?? null;
-        // } else {
-        //     $api_username   = $smartpay_options['paypal_live_api_username']  ?? null;
-        //     $api_password   = $smartpay_options['paypal_live_api_password']  ?? null;
-        //     $api_signature  = $smartpay_options['paypal_live_api_signature'] ?? null;
-        // }
 
         if (empty($paypal_email)) {
             // TODO: Add smartpay payment error notice

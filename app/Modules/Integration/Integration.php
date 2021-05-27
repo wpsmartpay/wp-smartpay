@@ -70,11 +70,19 @@ class Integration
             ],
             'pabbly' => [
                 'name'       => __('Pabbly', 'smartpay-pro'),
-                'excerpt'    => __('Pabbly is an online marketing & sales software.', 'smartpay-pro'),
+                'excerpt'    => __('Pabbly is a tool that takes care of sales & marketing needs..', 'smartpay-pro'),
                 'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/pabbly.png',
                 'manager'    => null,
                 'type'       => 'pro',
-                'categories' => ['Marketing', 'Sales'],
+                'categories' => ['Marketing', 'Sales', 'Automation'],
+            ],
+            'zapier' => [
+                'name'       => __('Zapier', 'smartpay-pro'),
+                'excerpt'    => __('Zapier is a tool of easy automation for busy people.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/zapier.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Automation'],
             ]
         ];
     }
