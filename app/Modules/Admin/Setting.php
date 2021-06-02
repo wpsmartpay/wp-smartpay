@@ -746,4 +746,132 @@ class Setting
 
         echo $html;
     }
+
+    function settings_license_key_callback($args)
+    {
+        $old_value = smartpay_get_option($args['id']);
+
+        $message = '';
+        $license  = get_option('smartpay_pro_license_data');
+
+        if ($old_value) {
+            $value = $old_value;
+        } else {
+            $value = isset($args['std']) ? $args['std'] : '';
+        }
+
+        if (!empty($license) && is_object($license)) {
+
+            // activate_license 'invalid' on anything other than valid, so if there was an error capture it
+            if (false === $license->success) {
+
+                switch ($license->error) {
+
+                    case 'expired':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key expired.', 'smartpay-pro');
+
+
+                        break;
+
+                    case 'revoked':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key has been disabled.', 'smartpay-pro');
+
+                        break;
+
+                    case 'missing':
+
+                        $warningclass = 'danger';
+                        $message = __('Invalid license.', 'smartpay-pro');
+
+                        break;
+
+                    case 'invalid':
+                    case 'site_inactive':
+
+                        $warningclass = 'danger';
+                        $message = __('Your %s is not active for this URL.', 'smartpay-pro');
+
+                        break;
+
+                    case 'item_name_mismatch':
+
+                        $warningclass = 'danger';
+                        $message = __('This appears to be an invalid license key.', 'smartpay-pro');
+
+                        break;
+
+                    case 'no_activations_left':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key has reached its activation limit.', 'smartpay-pro');
+
+                        break;
+
+                    case 'license_not_activable':
+
+                        $warningclass = 'danger';
+                        $message = __('The key you entered belongs to a bundle, please use the product specific license key.', 'smartpay-pro');
+
+                        break;
+
+                    default:
+
+                        $warningclass = 'danger';
+                        $message = __('There was an error with this license key.', 'smartpay-pro');
+                        break;
+                }
+            } else {
+
+                switch ($license->license) {
+
+                    case 'valid':
+                    default:
+
+                        $warningclass = 'success';
+
+                        $now        = current_time('timestamp');
+                        $expiration = strtotime($license->expires, current_time('timestamp'));
+
+                        if ('lifetime' === $license->expires) {
+                            $message = __('Valid License. License key never expires.', 'smartpay-pro');
+                        } elseif ($expiration > $now && $expiration - $now < (DAY_IN_SECONDS * 30)) {
+                            $message = __('Valid License. Your license key expires soon! ', 'smartpay-pro');
+                        } else {
+
+                            $message = sprintf(
+                                __('Valid License. Your license key expires on %s.', 'smartpay-pro'),
+                                date_i18n(get_option('date_format'), strtotime($license->expires, current_time('timestamp')))
+                            );
+                        }
+
+                        break;
+                }
+            }
+        } else {
+            $warningclass = 'warning';
+
+            $message = __('Please enter your valid license key.', 'smartpay-pro');
+        }
+
+        $class = ' ' . sanitize_html_class($args['field_class']);
+
+        $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
+        $html = '<input type="text" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="' . esc_attr($value) . '"/>';
+
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        $html .= '<div class="my-3"><label>' . __('License Status: ', 'smartpay-pro') . '</label><span class="ml-2 license-status alert-' . esc_attr($warningclass) . ' d-inline-block">' . __($message, 'smartpay-pro') . '</span></div>';
+
+        if ((is_object($license) && 'valid' == $license->license) || 'valid' == $license) {
+            $html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __('Deactivate License',  'smartpay-pro') . '"/>';
+        }
+
+        wp_nonce_field(smartpay_sanitize_key($args['id']) . '-nonce', smartpay_sanitize_key($args['id']) . '-nonce');
+
+        echo $html;
+    }
 }
