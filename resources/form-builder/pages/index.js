@@ -6,6 +6,10 @@ import { useSelect, dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Delete } from '../http/form'
 
+import { createHooks } from '@wordpress/hooks'
+
+window.SMARTPAY_FORM_HOOKS = createHooks()
+
 export const FormList = () => {
     const [forms, setForms] = useState([])
 
@@ -74,7 +78,7 @@ export const FormList = () => {
                     <Table className="table">
                         <thead>
                             <tr className="bg-light">
-                                <th className="w-75 text-left">
+                                <th className="w-50 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
                                 <th className="text-left">
@@ -100,8 +104,27 @@ export const FormList = () => {
                                         <td>{form.title || ''}</td>
                                         <td>{form.updated_at || ''}</td>
                                         <td className="text-right">
+                                            {form?.extra
+                                                ?.form_preview_page_permalink && (
+                                                <>
+                                                    <Button
+                                                        variant="link"
+                                                        href={
+                                                            form.extra
+                                                                .form_preview_page_permalink
+                                                        }
+                                                        target="_blank"
+                                                        className="btn btn-sm text-decoration-none p-0 mr-2"
+                                                    >
+                                                        {__(
+                                                            'Preview',
+                                                            'smartpay'
+                                                        )}
+                                                    </Button>
+                                                </>
+                                            )}
                                             <Link
-                                                className="btn-sm p-0 mr-2"
+                                                className="btn btn-sm btn-link p-0 mr-2"
                                                 to={`/${form.id}/edit`}
                                             >
                                                 {__('Edit', 'smartpay')}

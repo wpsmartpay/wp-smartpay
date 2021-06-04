@@ -1,16 +1,10 @@
 import * as Feather from 'react-feather'
 import { __ } from '@wordpress/i18n'
 import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { DeleteProduct } from '../../../http/product'
+import { variationDefaultData } from '../../../utils/constant'
 const { useEffect, useState } = wp.element
-
-const defaultVariation = {
-    title: '',
-    description: '',
-    base_price: '',
-    sale_price: '',
-    files: [],
-    key: '',
-}
 
 export const ProductForm = ({ product, setProductData }) => {
     useEffect(() => {
@@ -122,16 +116,44 @@ export const ProductForm = ({ product, setProductData }) => {
         setProductData({
             variations: [
                 ...product.variations,
-                { ...defaultVariation, key: `new-${Date.now()}` },
+                { ...variationDefaultData, key: `new-${Date.now()}` },
             ],
         })
     }
 
     const removeVariation = (variation) => {
-        setProductData({
-            variations: product.variations.filter((item) => {
-                return item.key !== variation.key
-            }),
+        Swal.fire({
+            title: __('Are you sure?', 'smartpay'),
+            text: __("You won't be able to revert this!", 'smartpay'),
+            icon: 'warning',
+            confirmButtonText: __('Yes', 'smartpay'),
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setProductData({
+                    variations: product.variations.filter((item) => {
+                        return item.key !== variation.key
+                    }),
+                })
+                if (variation?.id) {
+                    DeleteProduct(variation.id).then((response) => {
+                        Swal.fire({
+                            toast: true,
+                            icon: 'success',
+                            title: __(response.message, 'smartpay'),
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            showClass: {
+                                popup: 'swal2-noanimation',
+                            },
+                            hideClass: {
+                                popup: '',
+                            },
+                        })
+                    })
+                }
+            }
         })
     }
 
@@ -317,6 +339,12 @@ export const ProductForm = ({ product, setProductData }) => {
                 >
                     {!product.variations.length && (
                         <div className="form-row">
+                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                'smartpay.product.price.section',
+                                [],
+                                product,
+                                setProductData
+                            )}
                             <div className="col-6">
                                 <div className="form-group">
                                     <label
@@ -457,7 +485,13 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
 
-                                                <div className="form-row mt-4">
+                                                {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                                    'smartpay.product.variation.price.section',
+                                                    [],
+                                                    variation,
+                                                    setVariationData
+                                                )}
+                                                <div className="form-row">
                                                     <div className="col-6">
                                                         <div className="form-group">
                                                             <label
@@ -528,7 +562,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="variation-option-body bg-light p-3">
+                                            <div className="variation-option-body bg-light px-3">
                                                 <div className="form-group">
                                                     <label
                                                         htmlFor={`variation-${variation.key}-description`}

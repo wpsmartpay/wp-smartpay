@@ -43,6 +43,46 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
+            ],
+            'mailchimp' => [
+                'name'       => __('MailChimp', 'smartpay-pro'),
+                'excerpt'    => __('Mailchimp is an email marketing service.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mailchimp.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
+            ],
+            'fluentcrm' => [
+                'name'       => __('Fluent CRM', 'smartpay-pro'),
+                'excerpt'    => __('Fluent crm is an email marketing automation service.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/fluent-crm.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
+            ],
+            'affiliate_wp' => [
+                'name'       => __('AffiliateWP', 'smartpay-pro'),
+                'excerpt'    => __('AffiliateWP is an affiliate marketing tool for wordpress.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/affiliate_wp.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
+            ],
+            'pabbly' => [
+                'name'       => __('Pabbly', 'smartpay-pro'),
+                'excerpt'    => __('Pabbly is a tool that takes care of sales & marketing needs..', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/pabbly.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing', 'Sales', 'Automation'],
+            ],
+            'zapier' => [
+                'name'       => __('Zapier', 'smartpay-pro'),
+                'excerpt'    => __('Zapier is a tool of easy automation for busy people.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/zapier.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Automation'],
             ]
         ];
     }

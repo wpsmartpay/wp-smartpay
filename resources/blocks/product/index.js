@@ -1,6 +1,6 @@
 const { __ } = wp.i18n
 const { registerBlockType } = wp.blocks
-const { Fragment } = wp.element
+const { Fragment, useEffect, useState  } = wp.element
 
 import Sidebar from './components/Sidebar'
 import SelectProduct from './components/SelectProduct'
@@ -39,20 +39,40 @@ export default registerBlockType('smartpay/product', {
             setAttributes({ label: label })
         }
 
+        const [products, setProducts] = useState([]);
+
+        useEffect( () => {
+            wp.apiFetch({
+                path: `smartpay/v1/products`,
+                headers: {
+                    'X-WP-Nonce': smartpay.apiNonce,
+                },
+            })
+            .then( ( data ) => {
+                let productList = []
+                productList = data?.products.map( product => {
+                    return {
+                        value: product.id,
+                        label: `(#${product.id}) ${product.title}`,
+                    }
+                })
+                setProducts( productList );
+			} )
+            .catch( () => {
+				setProducts( [] );
+			} );
+        }, [] );
+        
         let productOptions = [
             {
                 value: null,
                 label: __('Select a product', 'smartpay'),
             },
-            ...JSON.parse(smartpay_block_editor_products).map((product) => {
-                return {
-                    value: product.id,
-                    label: `(#${product.id}) ${product.title}`,
-                }
-            }),
+            ...products
         ]
 
         return (
+            products ?
             <Fragment>
                 <div className="smartpay">
                     <div className="container block-editor product card py-4">
@@ -86,6 +106,7 @@ export default registerBlockType('smartpay/product', {
                     onSetLabel={setLabel}
                 ></Sidebar>
             </Fragment>
+            : <h2>Loading</h2>
         )
     },
 

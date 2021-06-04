@@ -26,7 +26,21 @@ class Form extends Model
             $form->fields     = $form->fields ?: [];
             $form->settings   = $form->settings ?: [];
             $form->created_by = $form->created_by ?: get_current_user_id();
+            $form->extra      = $form->extra ?: [];
         });
+
+        static::created(function ($form) {
+            do_action('smartpay_create_form_preview_page', $form);
+        });
+
+        static::updated(function($form){
+            do_action('smartpay_update_form_preview_page', $form);
+        });
+
+        static::deleting(function($form) {
+            do_action('smartpay_delete_form_preview_page', $form);
+        });
+        
     }
 
     public function getAmountsAttribute($amounts)
@@ -57,5 +71,15 @@ class Form extends Model
     public function setSettingsAttribute($settings)
     {
         $this->attributes['settings'] = \json_encode($settings);
+    }
+
+    public function getExtraAttribute($settings)
+    {
+        return \json_decode($settings, true);
+    }
+
+    public function setExtraAttribute($settings)
+    {
+        $this->attributes['extra'] = \json_encode($settings);
     }
 }

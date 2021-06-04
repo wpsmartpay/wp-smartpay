@@ -61,7 +61,7 @@ export const EditForm = () => {
 
     return (
         <>
-            {/* <div
+            <div
                 className="text-black bg-white border-bottom"
                 style={{
                     position: 'fixed',
@@ -70,32 +70,7 @@ export const EditForm = () => {
                     top: '32px',
                     zIndex: 99,
                 }}
-            >
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Edit Form', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
-                            <div className="d-flex flex-row">
-                                <BSForm.Control
-                                    size="sm"
-                                    type="text"
-                                    value={`[smartpay_form id="${form.id}"]`}
-                                    readOnly
-                                    className="mr-2"
-                                />
-                                <Button
-                                    onClick={updateForm}
-                                    className="btn btn-primary btn-sm text-decoration-none px-3"
-                                >
-                                    {__('Save', 'smartpay')}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </Container>
-            </div> */}
+            ></div>
 
             <FormForm
                 onSubmit={updateForm}

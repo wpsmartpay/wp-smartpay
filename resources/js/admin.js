@@ -1,6 +1,6 @@
 import domReady from '@wordpress/dom-ready'
 import { render } from '@wordpress/element'
-import { HashRouter, Route, Switch } from 'react-router-dom'
+import { HashRouter, Route, Switch, Link } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
@@ -30,25 +30,10 @@ import './store/index'
 
 import './admin/menu-fix'
 
-// const files = [
-//     { id: 1, name: 'A' },
-//     { id: 2, name: 'B' },
-//     { id: 3, name: 'C' },
-// ]
-
-// const varFiles = [
-//     { id: 1, name: 'A' },
-//     { id: 3, name: 'C' },
-// ]
-
-// files.map((file) => {
-//     const key = varFiles.findIndex((vFile) => {
-//         return file.id === vFile.id ? true : false
-//     })
-//     // console.log(file.name)
-//     console.log(key)
-//     console.log(key >= 0 ? 'checked' : 'unchecked')
-// })
+//Hooks
+import { createHooks } from '@wordpress/hooks'
+export const smartPayRouteHooks = createHooks()
+window.smartPayRouteHooks = smartPayRouteHooks
 
 domReady(function () {
     const SmartPay = () => {
@@ -109,6 +94,13 @@ domReady(function () {
                             path="/payments/:paymentId/edit"
                             component={EditPayment}
                         />
+
+                        {window.smartPayRouteHooks.applyFilters(
+                            'smartPayAdminRoute',
+                            [],
+                            Route,
+                            Link
+                        )}
 
                         {/* Not Found */}
                         <Route component={NotFound} />

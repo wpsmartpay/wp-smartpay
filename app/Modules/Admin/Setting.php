@@ -2,6 +2,8 @@
 
 namespace SmartPay\Modules\Admin;
 
+use SmartPay\Modules\Admin\Logger;
+
 class Setting
 {
     public function __construct()
@@ -85,6 +87,7 @@ class Setting
      */
     public static function registered_settings()
     {
+        $smartpay_logs = new Logger();
         $smartpay_settings = array(
             /** General Settings */
             'general' => apply_filters(
@@ -227,6 +230,26 @@ class Setting
                     'main' => array(),
                 )
             ),
+            /** Extension Settings */
+            'extensions' => apply_filters(
+                'smartpay_settings_extensions',
+                array()
+            ),
+            /** Debug Log Settings */
+            'debug_log' => apply_filters(
+                'smartpay_settings_debug_log',
+                array(
+                    'main' => array(
+                        'smartpay_debug_log' => array(
+                            'id'          => 'smartpay_debug_log',
+                            'name'        => __('Debug Log', 'smartpay'),
+                            'std'       => $smartpay_logs->get_file_contents(),
+                            'type'        => 'textarea',
+                            'rows'      => 15
+                        ),
+                    ),
+                )
+            ),
         );
 
         return apply_filters('smartpay_settings', $smartpay_settings);
@@ -280,6 +303,10 @@ class Setting
             'licenses'  => apply_filters('smartpay_settings_sections_licenses', array(
                 'main'  => __('General', 'smartpay'),
             )),
+            'extensions'  => apply_filters('smartpay_settings_sections_extensions', []),
+            'debug_log'  => apply_filters('smartpay_settings_sections_debug_log', [
+                'main'  => __('General', 'smartpay'),
+            ])
         );
 
         return apply_filters('smartpay_settings_sections', $sections);
@@ -291,6 +318,7 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
+        $tabs['debug_log']   = __('Debug Log', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
@@ -520,7 +548,7 @@ class Setting
 
     public function settings_checkbox_callback($args)
     {
-        $smartpay_option = smartpay_get_option($args['id']);
+        $smartpay_option = smartpay_get_option($args['id'], []);
 
         if (isset($args['faux']) && true === $args['faux']) {
             $name = '';
@@ -530,10 +558,20 @@ class Setting
 
         $class = sanitize_html_class($args['field_class']);
 
-        $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
         $html     = '<input type="hidden"' . $name . ' value="-1" />';
-        $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-        $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
+        if ($args['multiple'] && $args['options']) {
+            foreach ($args['options'] as $name => $value) {
+                $checked  = in_array($name, $smartpay_option) ? 'checked="checked"' : '';
+                $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="' . $name . '" ' . $checked . ' class="' . $class . '"/>';
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">' . $value . '</label><br />';
+            }
+        } else {
+            $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
+            $html    .= '<input type="checkbox" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
+            if (isset($args['label'])) {
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . $args['label'] . '</label>';
+            }
+        }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }
@@ -689,6 +727,12 @@ class Setting
     {
         $old_value = smartpay_get_option($args['id']);
 
+        if (isset($args['rows'])) {
+            $rows = $args['rows'];
+        } else {
+            $rows = '5';
+        }
+
         if ($old_value) {
             $value = $old_value;
         } else {
@@ -697,8 +741,136 @@ class Setting
 
         $class =  $this->smartpay_sanitize_html_class($args['field_class']);
 
-        $html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
+        $html = '<textarea class="' . $class . ' large-text" cols="50" rows="' . esc_attr($rows) . '" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        echo $html;
+    }
+
+    function settings_license_key_callback($args)
+    {
+        $old_value = smartpay_get_option($args['id']);
+
+        $message = '';
+        $license  = get_option('smartpay_pro_license_data');
+
+        if ($old_value) {
+            $value = $old_value;
+        } else {
+            $value = isset($args['std']) ? $args['std'] : '';
+        }
+
+        if (!empty($license) && is_object($license)) {
+
+            // activate_license 'invalid' on anything other than valid, so if there was an error capture it
+            if (false === $license->success) {
+
+                switch ($license->error) {
+
+                    case 'expired':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key expired.', 'smartpay-pro');
+
+
+                        break;
+
+                    case 'revoked':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key has been disabled.', 'smartpay-pro');
+
+                        break;
+
+                    case 'missing':
+
+                        $warningclass = 'danger';
+                        $message = __('Invalid license.', 'smartpay-pro');
+
+                        break;
+
+                    case 'invalid':
+                    case 'site_inactive':
+
+                        $warningclass = 'danger';
+                        $message = __('Your %s is not active for this URL.', 'smartpay-pro');
+
+                        break;
+
+                    case 'item_name_mismatch':
+
+                        $warningclass = 'danger';
+                        $message = __('This appears to be an invalid license key.', 'smartpay-pro');
+
+                        break;
+
+                    case 'no_activations_left':
+
+                        $warningclass = 'danger';
+                        $message = __('Your license key has reached its activation limit.', 'smartpay-pro');
+
+                        break;
+
+                    case 'license_not_activable':
+
+                        $warningclass = 'danger';
+                        $message = __('The key you entered belongs to a bundle, please use the product specific license key.', 'smartpay-pro');
+
+                        break;
+
+                    default:
+
+                        $warningclass = 'danger';
+                        $message = __('There was an error with this license key.', 'smartpay-pro');
+                        break;
+                }
+            } else {
+
+                switch ($license->license) {
+
+                    case 'valid':
+                    default:
+
+                        $warningclass = 'success';
+
+                        $now        = current_time('timestamp');
+                        $expiration = strtotime($license->expires, current_time('timestamp'));
+
+                        if ('lifetime' === $license->expires) {
+                            $message = __('Valid License. License key never expires.', 'smartpay-pro');
+                        } elseif ($expiration > $now && $expiration - $now < (DAY_IN_SECONDS * 30)) {
+                            $message = __('Valid License. Your license key expires soon! ', 'smartpay-pro');
+                        } else {
+
+                            $message = sprintf(
+                                __('Valid License. Your license key expires on %s.', 'smartpay-pro'),
+                                date_i18n(get_option('date_format'), strtotime($license->expires, current_time('timestamp')))
+                            );
+                        }
+
+                        break;
+                }
+            }
+        } else {
+            $warningclass = 'warning';
+
+            $message = __('Please enter your valid license key.', 'smartpay-pro');
+        }
+
+        $class = ' ' . sanitize_html_class($args['field_class']);
+
+        $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
+        $html = '<input type="text" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="' . esc_attr($value) . '"/>';
+
+        $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
+
+        $html .= '<div class="my-3"><label>' . __('License Status: ', 'smartpay-pro') . '</label><span class="ml-2 license-status alert-' . esc_attr($warningclass) . ' d-inline-block">' . __($message, 'smartpay-pro') . '</span></div>';
+
+        if ((is_object($license) && 'valid' == $license->license) || 'valid' == $license) {
+            $html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __('Deactivate License',  'smartpay-pro') . '"/>';
+        }
+
+        wp_nonce_field(smartpay_sanitize_key($args['id']) . '-nonce', smartpay_sanitize_key($args['id']) . '-nonce');
 
         echo $html;
     }

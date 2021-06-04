@@ -16,6 +16,9 @@ class Form
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
+        $this->app->addAction('smartpay_create_form_preview_page', [$this, 'createFormPreviewPage']);
+        $this->app->addAction('smartpay_update_form_preview_page', [$this, 'updateFormPreviewPage']);
+        $this->app->addAction('smartpay_delete_form_preview_page', [$this, 'deleteFormPreviewPage']);
     }
 
     public function adminScripts($hook)
@@ -137,5 +140,52 @@ class Form
 
     public function registerBlocks()
     {
+    }
+
+    public function createFormPreviewPage($form)
+    {
+        $pageArr = [
+            'post_title'    => $form->title ?? 'Untitled form',
+            'post_status'   => 'publish',
+            'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="' . $form->id . '" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+            'post_type'     => 'page'
+        ];
+
+        $pageId = wp_insert_post($pageArr);
+        if (is_wp_error($pageId)) {
+            return;
+        }
+        $form->extra = array_merge($form->extra, ['form_preview_page_id' => $pageId, 'form_preview_page_permalink' => get_permalink($pageId)]);
+        $form->save();
+    }
+
+    public function updateFormPreviewPage($form)
+    {
+        $extraFields = $form->extra;
+        if (is_array($extraFields) && array_key_exists('form_preview_page_id', $extraFields)) {
+            return;
+        }
+
+        $pageArr = [
+            'post_title'    => $form->title ?? 'Untitled form',
+            'post_status'   => 'publish',
+            'post_content'  => '<!-- wp:shortcode -->[smartpay_form id="' . $form->id . '" behavior="embedded" label=""]<!-- /wp:shortcode -->',
+            'post_type'     => 'page'
+        ];
+
+        $pageId = wp_insert_post($pageArr);
+        if (is_wp_error($pageId)) {
+            return;
+        }
+        $form->extra = ['form_preview_page_id' => $pageId, 'form_preview_page_permalink' => get_permalink($pageId)];
+        $form->save();
+    }
+
+    public function deleteFormPreviewPage($form)
+    {
+        $extraFields = $form->extra;
+        if (is_array($extraFields) && array_key_exists('form_preview_page_id', $extraFields)) {
+            wp_delete_post($extraFields['form_preview_page_id']);
+        }
     }
 }

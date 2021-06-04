@@ -3,7 +3,7 @@
 namespace SmartPay\Modules\Gateway\Gateways;
 
 use SmartPay\Foundation\PaymentGateway;
-use SmartPay\Framework\Application;
+use SmartPay\Models\Payment;
 
 class PaypalStandard extends PaymentGateway
 {
@@ -49,6 +49,8 @@ class PaypalStandard extends PaymentGateway
         add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
 
         add_action('init', [$this, 'processWebhooks']);
+
+        add_action('smartpay_paypal_web_accept', [$this, 'process_smartpay_paypal_web_accept'], 10, 2);
     }
 
     public function ajaxProcessPayment($paymentData)
@@ -70,8 +72,7 @@ class PaypalStandard extends PaymentGateway
 
         $payment_price = number_format($paymentData['amount'], 2);
 
-        // TODO: Rearrange data
-        $paypal_args = array(
+        $default_args = [
             'charset'       => get_bloginfo('charset'),
             'lc'            => get_locale(),
             'cbt'           => get_bloginfo('name'),
@@ -93,20 +94,30 @@ class PaypalStandard extends PaymentGateway
             'rm'            => 2,
             'no_shipping'   => 1,
             'no_note'       => 1,
-
-            'item_name_1'   => 'Payment #' . $payment->id,
-            'item_number_1' => $payment->id,
-            'amount_1'      => $payment_price,
-
             'tax_rate'      => 0,
             'upload'        => 1,
 
             'return'        => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_success_page_uri()),
             'cancel_return' => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_failure_page_uri()),
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
-        );
+        ];
 
-        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $paypal_args, $paymentData);
+        if (Payment::BILLING_TYPE_SUBSCRIPTION === $paymentData['billing_type']) {
+            do_action('smartpay_paypal_subscription_process_payment', $payment, $paymentData);
+            $default_args['item_name']    = 'Payment #' . $payment->id;
+            $default_args['a3']           = $payment_price;
+            $default_args['p3']           = smartpay_get_paypal_time_duration_option($paymentData['billing_period']);
+            $default_args['t3']           = smartpay_get_paypal_time_option($paymentData['billing_period']);
+            $default_args['src']          = 1;
+            $default_args['cmd']          = '_xclick-subscriptions';
+        } else {
+            // TODO: Rearrange data
+            $default_args['item_name_1']    = 'Payment #' . $payment->id;
+            $default_args['item_number_1']  = $payment->id;
+            $default_args['amount_1']    = $payment_price;
+        }
+
+        $paypal_args = apply_filters('smartpay_paypal_redirect_args', $default_args, $paymentData);
 
         $paypal_redirect = trailingslashit($this->get_paypal_redirect_url()) . '?' . http_build_query($paypal_args);
 
@@ -231,7 +242,13 @@ class PaypalStandard extends PaymentGateway
                 die('Error.');
             }
 
-            $this->process_smartpay_paypal_web_accept($encoded_data_array, $payment);
+            if (has_action('smartpay_paypal_' . $encoded_data_array['txn_type'])) {
+                // Allow PayPal IPN types to be processed separately
+                do_action('smartpay_paypal_' . $encoded_data_array['txn_type'], $encoded_data_array, $payment_id);
+            } else {
+                // Fallback to web accept just in case the txn_type isn't present
+                do_action('smartpay_paypal_web_accept', $encoded_data_array, $payment_id);
+            }
             return;
         }
     }
@@ -243,7 +260,7 @@ class PaypalStandard extends PaymentGateway
      * @param array $data IPN Data
      * @return void
      */
-    public function process_smartpay_paypal_web_accept($data, $payment)
+    public function process_smartpay_paypal_web_accept($data, $payment_id)
     {
         if ($data['txn_type'] != 'web_accept' && $data['txn_type'] != 'cart' && $data['payment_status'] != 'Refunded') {
             return;
@@ -252,6 +269,14 @@ class PaypalStandard extends PaymentGateway
         // Collect payment details
         $paypal_amount  = $data['mc_gross'] ?? 0;
         $payment_status = strtolower($data['payment_status'] ?? '');
+        $payment = Payment::find($payment_id);
+
+        if (!$payment) {
+            smartpay_debug_log(__(sprintf(
+                'SmartPay-Paddle: Payment #%s no found.',
+                $payment_id
+            ), 'smartpay-pro'));
+        }
 
         if ($payment_status == 'refunded' || $payment_status == 'reversed') {
             // TODO: Process a refund
@@ -265,9 +290,14 @@ class PaypalStandard extends PaymentGateway
                 return; // The prices don't match
             }
 
-            if ('completed' == $payment_status || smartpay_is_test_mode()) {
+            if ('Completed' == $payment_status || smartpay_is_test_mode()) {
                 $payment->updateStatus('completed');
-                smartpay_set_payment_transaction_id($payment->ID, $data['txn_id']);
+                $payment->setTransactionId($data['txn_id']);
+
+                smartpay_debug_log(__(sprintf(
+                    'SmartPay-Paddle: Payment #%s completed.',
+                    $payment->id
+                ), 'smartpay-pro'));
             }
         }
     }
@@ -323,86 +353,6 @@ class PaypalStandard extends PaymentGateway
                 'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'smartpay'), '#'),
                 'type'  => 'checkbox',
             ),
-            // TODO: Add url for documentation
-            // array(
-            //     'id'    => 'paypal_api_keys_desc',
-            //     'name'  => '<h4 class="text-uppercase text-info my-1">' . __('API Credentials', 'smartpay') . '</h4>',
-            //     // 'desc'  => sprintf(__( '<p>API credentials are necessary to process PayPal refunds from inside WordPress.</p><p>These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.</p>', 'smartpay' ), '#'),
-            //     'type'  => 'descriptive_text',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_settings',
-            //     'name'  => '<strong>' . __('PayPal Live API Credentials', 'smartpay') . '</strong>',
-            //     'type'  => 'header'
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_username',
-            //     'name'  => __('Live API Username', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API username', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_password',
-            //     'name'  => __('Live API Password', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API Password', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_live_api_signature',
-            //     'name'  => __('Live API Signature', 'smartpay'),
-            //     'desc'  => __('Your PayPal live API Signature', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-
-            // Test account
-            // array(
-            //     'id'    => 'paypal_test_api_settings',
-            //     'name'  => '<strong>' . __('PayPal Test API Credentials', 'smartpay') . '</strong>',
-            //     'type'  => 'header'
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_username',
-            //     'name'  => __('Test API Username', 'smartpay'),
-            //     'desc'  => __('Your PayPal test API username', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_password',
-            //     'name'  => __('Test API Password', 'smartpay'),
-            //     'desc'  => __('Your PayPal Test API Password', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-            // array(
-            //     'id'    => 'paypal_test_api_signature',
-            //     'name'  => __('Test API Signature', 'smartpay'),
-            //     'desc'  => __('Your PayPal Test API Signature', 'smartpay'),
-            //     'type'  => 'text',
-            //     'size'  => 'regular',
-            // ),
-
-            // $paddle_webhook_description_text = __(
-            //     sprintf(
-            //         '<p>For PayPal to function completely, you must configure your Instant Notification System. Visit your <a href="%s" target="_blank">account dashboard</a> to configure them. Please add the URL below to all notification types. It doesn\'t work for localhost or local IP.</p><p><b>INS URL:</b> <code>%s</code></p>.',
-            //         'https://paypal.com/businessmanage/preferences/website',
-            //         home_url("index.php?smartpay-listener=paypal")
-            //     ),
-            //     'smartpay'
-            // ),
-
-            // $_SERVER['REMOTE_ADDR'] == '127.0.0.0.1' ? $paddle_webhook_description_text .= __('<p><b>Warning!</b> It seems you are on the localhost.</p>', 'smartpay') : '',
-
-            // array(
-            //     'id'    => 'paddle_webhook_description',
-            //     'type'  => 'descriptive_text',
-            //     'name'  => __('Instant Notification System (INS)', 'smartpay'),
-            //     'desc'  => $paddle_webhook_description_text,
-
-            // ),
         );
 
         return array_merge($settings, ['paypal' => $gateway_settings]);
@@ -420,16 +370,6 @@ class PaypalStandard extends PaymentGateway
         global $smartpay_options;
 
         $paypal_email       = $smartpay_options['paypal_email'] ?? null;
-
-        // if (smartpay_is_test_mode()) {
-        //     $api_username   = $smartpay_options['paypal_test_api_username']  ?? null;
-        //     $api_password   = $smartpay_options['paypal_test_api_password']  ?? null;
-        //     $api_signature  = $smartpay_options['paypal_test_api_signature'] ?? null;
-        // } else {
-        //     $api_username   = $smartpay_options['paypal_live_api_username']  ?? null;
-        //     $api_password   = $smartpay_options['paypal_live_api_password']  ?? null;
-        //     $api_signature  = $smartpay_options['paypal_live_api_signature'] ?? null;
-        // }
 
         if (empty($paypal_email)) {
             // TODO: Add smartpay payment error notice

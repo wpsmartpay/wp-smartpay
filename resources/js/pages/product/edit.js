@@ -5,18 +5,9 @@ import { Container, Form, Button, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
+import { productDefaultData } from '../../utils/constant'
 
 const { useSelect, dispatch } = wp.data
-
-const defaultProduct = {
-    title: '',
-    covers: [],
-    description: '',
-    variations: [],
-    base_price: '',
-    sale_price: '',
-    files: [],
-}
 
 const reducer = (state, data) => {
     return {
@@ -27,7 +18,7 @@ const reducer = (state, data) => {
 
 export const EditProduct = () => {
     const { productId } = useParams()
-    const [product, setProductData] = useReducer(reducer, defaultProduct)
+    const [product, setProductData] = useReducer(reducer, productDefaultData)
 
     const productData = useSelect(
         (select) => select('smartpay/products').getProduct(productId),
@@ -84,6 +75,23 @@ export const EditProduct = () => {
                                             readOnly
                                             className="mr-2"
                                         />
+                                        {
+                                            product.id && product.extra?.product_preview_page_permalink && (
+                                                <>
+                                                    <Button
+                                                        variant="link"
+                                                        href={product.extra.product_preview_page_permalink}
+                                                        target="_blank"
+                                                        className="btn btn-sm text-decoration-none px-3 mr-2"
+                                                    >
+                                                        {__(
+                                                            'Preview',
+                                                            'smartpay'
+                                                        )}
+                                                    </Button>
+                                                </>
+                                            )
+                                        }
                                         <Button
                                             type="button"
                                             className="btn btn-sm btn-primary px-3"

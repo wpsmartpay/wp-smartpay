@@ -4,6 +4,8 @@ namespace SmartPay\Models;
 
 use SmartPay\Models\Customer;
 use SmartPay\Framework\Database\Eloquent\Model;
+use SmartPay\Framework\Database\Eloquent\Relation\HasMany;
+use SmartPay\Framework\Database\Eloquent\Relation\HasOne;
 
 class Payment extends Model
 {
@@ -37,6 +39,17 @@ class Payment extends Model
     const PRODUCT_PURCHASE = 'product_purchase';
     const FORM_PAYMENT = 'form_payment';
 
+
+    const BILLING_TYPE_ONE_TIME = 'One Time';
+    const BILLING_TYPE_SUBSCRIPTION = 'Subscription';
+
+    const BILLING_PERIOD_DAILY = 'Daily';
+    const BILLING_PERIOD_WEEKLY = 'Weekly';
+    const BILLING_PERIOD_MONTHLY = 'Monthly';
+    const BILLING_PERIOD_QUARTERLY = 'Every 3 Months';
+    const BILLING_PERIOD_SEMIANNUAL = 'Every 6 Months';
+    const BILLING_PERIOD_YEARLY = 'Yearly';
+
     public static function boot()
     {
         static::creating(function ($product) {
@@ -49,7 +62,7 @@ class Payment extends Model
                     'smartpay_update_payment_status',
                     $payment,
                     $payment->attributes['status'],
-                    $payment->original['status'] ?: self::PENDING
+                    $payment->original['status'] ?? self::PENDING
                 );
             }
         });
@@ -58,6 +71,26 @@ class Payment extends Model
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
+    /**
+     * Get parent payment
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\Relation\HasOne
+     */
+    public function parent(): HasOne
+    {
+        return $this->hasOne(Payment::class, 'id', 'parent_id');
+    }
+
+    /**
+     * Get related payments
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\Relation\HasMany
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'parent_id', 'id');
     }
 
     public function getTypeAttribute($type)

@@ -4,7 +4,7 @@ import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
 import { Alert } from '../../components/Alert'
 
 import { FormBuilder } from './FormBuilder'
-import { FormAmounts } from './FormAmounts'
+import { FormOptionTab } from './FormOptionTab'
 
 export const FormForm = ({
     form,
@@ -59,25 +59,12 @@ export const FormForm = ({
                 }}
             >
                 <Container>
-                    <div className="d-flex align-items-center justify-content-between py-2">
-                        <div className="w-50">
-                            <Form.Control
-                                className="mr-3 border-0"
-                                size="sm"
-                                type="text"
-                                name="title"
-                                value={form.title || ''}
-                                onChange={(e) => {
-                                    setFormData({
-                                        [e.target.name]: e.target.value,
-                                    })
-                                }}
-                                placeholder={__(
-                                    'Your awesome product title here',
-                                    'smartpay'
-                                )}
-                            />
-                        </div>
+                    <div className="d-flex align-items-center justify-content-between">
+                        <h2 className="text-black">
+                            {form.id
+                                ? __('Edit Form', 'smartpay')
+                                : __('Create Form', 'smartpay')}
+                        </h2>
                         <div className="ml-auto">
                             <div className="d-flex flex-row">
                                 {form.id && (
@@ -89,14 +76,29 @@ export const FormForm = ({
                                         className="mr-2"
                                     />
                                 )}
+                                {form.id &&
+                                    form.extra?.form_preview_page_permalink && (
+                                        <>
+                                            <Button
+                                                variant="link"
+                                                href={
+                                                    form.extra
+                                                        .form_preview_page_permalink
+                                                }
+                                                target="_blank"
+                                                className="btn btn-sm text-decoration-none px-3 mr-2"
+                                            >
+                                                {__('Preview', 'smartpay')}
+                                            </Button>
+                                        </>
+                                    )}
                                 <Button
                                     onClick={saveForm}
                                     className="btn btn-primary btn-sm text-decoration-none px-3"
                                 >
-                                    {__(
-                                        form.id ? 'Save' : 'Publish',
-                                        'smartpay'
-                                    )}
+                                    {form.id
+                                        ? __('Save', 'smartpay')
+                                        : __('Publish', 'smartpay')}
                                 </Button>
                             </div>
                         </div>
@@ -105,12 +107,32 @@ export const FormForm = ({
             </div>
 
             <Container style={{ marginTop: '80px' }}>
-                <div className="mt-5">
+                <div className="p-4 bg-white">
+                    <Form.Control
+                        type="text"
+                        className="mb-4"
+                        name="title"
+                        value={form.title || ''}
+                        onChange={(e) => {
+                            setFormData({
+                                [e.target.name]: e.target.value,
+                            })
+                        }}
+                        placeholder={__(
+                            'Your awesome form title here',
+                            'smartpay'
+                        )}
+                    />
+
                     <Tabs fill defaultActiveKey="builder">
                         <Tab
                             eventKey="builder"
-                            className="text-decoration-none mt-3"
-                            title={__('Builder', 'smartpay')}
+                            className="mt-3"
+                            title={
+                                <p className="font-weight-bold m-0">
+                                    {__('Builder', 'smartpay')}
+                                </p>
+                            }
                         >
                             <FormBuilder
                                 form={form}
@@ -120,10 +142,14 @@ export const FormForm = ({
                         </Tab>
                         <Tab
                             eventKey="options"
-                            className="text-decoration-none mt-3"
-                            title={__('Options', 'smartpay')}
+                            className="mt-3"
+                            title={
+                                <p className="font-weight-bold m-0">
+                                    {__('Options', 'smartpay')}
+                                </p>
+                            }
                         >
-                            <FormAmounts
+                            <FormOptionTab
                                 form={form}
                                 setFormData={setFormData}
                             />

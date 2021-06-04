@@ -149,7 +149,7 @@ class Payment
             'email'         => $_data['smartpay_email'],
             'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
             'extra'         => $extra
-        ));
+        ), $_data);
     }
 
     private function _get_payment_data($_data)
@@ -170,6 +170,7 @@ class Payment
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
                     'total_amount'  => $product->price,
+                    'billing_type'   => $_data['smartpay_product_billing_type']
                 ];
 
                 break;
@@ -185,6 +186,7 @@ class Payment
                 return [
                     'form_id' => $form->id,
                     'total_amount' => $_data['smartpay_amount'] ?? 0,
+                    'billing_type'   => $_data['smartpay_form_billing_type']
                 ];
                 break;
 
@@ -207,7 +209,8 @@ class Payment
             $customer->last_name    = $_data['smartpay_last_name'];
             $customer->email        = $_data['smartpay_email'];
 
-            $customer_id = $customer->save();
+            $customer->save();
+            $customer_id = $customer->id;
         }
 
         return [
@@ -230,7 +233,7 @@ class Payment
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->extra          = $paymentData['extra'];
+        $payment->extra          = apply_filters('smartpay_payment_extra_data', $paymentData['extra']);
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
         $payment->parent_id      = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : 0;
         $payment->status         = $paymentData['status'] ?? 'pending';

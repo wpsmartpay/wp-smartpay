@@ -6,6 +6,6 @@ class Deactivator
 {
     public static function boot()
     {
-        echo 'deactive';
+        //
     }
 }

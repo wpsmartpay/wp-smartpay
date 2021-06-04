@@ -194,10 +194,19 @@ export const EditPayment = () => {
                                         <p>
                                             <strong>
                                                 {__('Total Amount', 'smartpay')}
+                                                :{' '}
                                             </strong>
                                             <span>
                                                 {`${payment?.currency} ${payment?.data?.total_amount}` ||
                                                     '-'}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Price Type', 'smartpay')}:{' '}
+                                            </strong>
+                                            <span>
+                                                {payment?.data?.billing_type}
                                             </span>
                                         </p>
                                     </>
@@ -216,7 +225,7 @@ export const EditPayment = () => {
                                                 {__('Form', 'smartpay')}:{' '}
                                             </strong>
                                             <span>
-                                                #{payment.data?.form_id}
+                                                #{payment?.data?.form_id}
                                             </span>
                                         </p>
                                         <p>
@@ -225,7 +234,15 @@ export const EditPayment = () => {
                                                 :{' '}
                                             </strong>
                                             <span>
-                                                {payment.data?.total_amount}
+                                                {payment?.data?.total_amount}
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <strong>
+                                                {__('Price Type', 'smartpay')}:{' '}
+                                            </strong>
+                                            <span>
+                                                {payment?.data?.billing_type}
                                             </span>
                                         </p>
                                     </>

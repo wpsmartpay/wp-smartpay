@@ -56,8 +56,8 @@ class FormController extends RestController
         $form->fields   = $request->fields;
         $form->settings = $request->settings;
         $form->status   = Form::PUBLISH;
+        $form->extra    = $request->extra ?? [];
         $form->save();
-
         return new WP_REST_Response(['form' => $form, 'message' => __('Form created', 'smartpay')]);
     }
 
@@ -100,6 +100,7 @@ class FormController extends RestController
         $form->fields   = $request->fields;
         $form->settings = $request->settings;
         $form->status   = $request->status ?? Form::PUBLISH;
+        $form->extra   = $request->extra;
         $form->save();
 
         return new WP_REST_Response(['form' => $form, 'message' => __('Form updated', 'smartpay')]);

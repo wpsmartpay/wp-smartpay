@@ -17,14 +17,28 @@ class Product extends Model
         'files',
         'parent_id',
         'status',
+        'extra'
     ];
 
     const PUBLISH = 'publish';
 
     public static function boot()
     {
-        static::creating(function ($form) {
-            $form->created_by = $form->created_by ?: get_current_user_id();
+        static::creating(function ($product) {
+            $product->created_by = $product->created_by ?: get_current_user_id();
+            $product->extra      = $product->extra ?: [];
+        });
+
+        static::created(function ($product) {
+            do_action('smartpay_create_product_preview_page', $product);
+        });
+
+        static::updated(function($product){
+            do_action('smartpay_update_product_preview_page', $product);
+        });
+
+        static::deleting(function($product) {
+            do_action('smartpay_delete_product_preview_page', $product);
         });
     }
 
@@ -125,5 +139,15 @@ class Product extends Model
         }
 
         return (bool) apply_filters('smartpay_product_is_purchasable', $isPurchasable, $this);
+    }
+
+    public function getExtraAttribute($settings)
+    {
+        return \json_decode($settings, true);
+    }
+
+    public function setExtraAttribute($settings)
+    {
+        $this->attributes['extra'] = \json_encode($settings);
     }
 }

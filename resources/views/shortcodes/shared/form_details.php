@@ -12,11 +12,34 @@
                         <label class="form-amounts--label d-block m-0 mb-2"><?php _e('Select an amount', 'smartpay') ?></label>
                         <div class="form-amounts">
                             <?php foreach ($form->amounts as $index => $amount) : ?>
+                            <?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
                             <div class="custom-control custom-radio amount form--fixed-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                 <input type="radio" name="_form_amount" id="_form_amount_<?php echo $amount['key']; ?>" id="_form_amount_<?php echo $amount['key']; ?>" class="custom-control-input" value="<?php echo $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?>>
+
+                                <?php
+                                    // FIXME: Move to pro plugin 
+                                    ?>
+                                <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
+                                <?php else : ?>
                                 <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
+                                <?php endif; ?>
+                                <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
+                                <?php
+                                    if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                <input type="hidden" name="_form_billing_period" id="_form_billing_period_<?php echo $amount['key']; ?>" value="<?php echo $amount['billing_period']; ?>">
+                                <?php
+                                    endif;
+                                    ?>
                             </div>
                             <?php endforeach; ?>
+
+                            <?php
+                            $formAmounts = $form->amounts;
+                            $defaultAmount = reset($formAmounts);
+                            ?>
+                            <input type="hidden" name="smartpay_form_billing_type" value="<?php echo $defaultAmount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ?>">
+                            <input type="hidden" name="smartpay_form_billing_period" value="<?php echo $defaultAmount['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY ?>">
 
                             <?php if ($form->settings['allowCustomAmount']) : ?>
                             <!-- // Allow custom payment -->
@@ -31,7 +54,7 @@
                             </div>
                             <?php else : ?>
                             <?php $formAmounts = $form->amounts; ?>
-                            <input type="hidden" class="form-control form--custom-amount amount" name="smartpay_form_amount" value="<?php echo reset($formAmounts)['amount'] ?>">
+                            <input type="hidden" class="form-control form--custom-amount amount" name="smartpay_form_amount" value="<?php echo $defaultAmount['amount'] ?>">
                             <?php endif; ?>
                         </div>
                     </div>

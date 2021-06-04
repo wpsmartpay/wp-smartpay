@@ -2,17 +2,10 @@ import { __ } from '@wordpress/i18n'
 import { Card, Form, Button } from 'react-bootstrap'
 import { X as CloseIcon, Plus as PlusIcon } from 'react-feather'
 import { Alert } from '../../components/Alert'
-
-const defaultAmount = {
-    key: '',
-    label: '',
-    amount: '',
-}
-
-const geneateKey = () => Math.random().toString(36).substr(2, 9)
+import { defaultAmount, geneateKey } from '../../utils/constant'
 
 export const FormAmounts = ({ form, setFormData }) => {
-    let { amounts, settings } = form
+    let { amounts } = form
 
     const addNewAmountRow = () => {
         setAmountsData([...amounts, { ...defaultAmount, key: geneateKey() }])
@@ -46,19 +39,26 @@ export const FormAmounts = ({ form, setFormData }) => {
         <Card>
             <Card.Body>
                 <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
-                <div className="col-md-8 mx-auto py-4">
-                    {amounts.map((amount, index) => {
-                        return (
-                            <div key={index}>
-                                <AmountRow
-                                    amount={amount}
-                                    setAmount={setAmount}
-                                    removeAmountRow={removeAmountRow}
-                                />
-                            </div>
-                        )
-                    })}
-
+                <div className="col-md-8 mx-auto">
+                    {/* Form amounts */}
+                    {window.SMARTPAY_FORM_HOOKS.applyFilters(
+                        'smartpay.form.amount.section',
+                        <>
+                            {amounts.map((amount, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AmountRow
+                                            amount={amount}
+                                            setAmount={setAmount}
+                                            removeAmountRow={removeAmountRow}
+                                        />
+                                    </div>
+                                )
+                            })}
+                        </>,
+                        form,
+                        setFormData
+                    )}
                     <div className="mt-4">
                         <Button onClick={addNewAmountRow} size="sm">
                             <PlusIcon
@@ -71,7 +71,7 @@ export const FormAmounts = ({ form, setFormData }) => {
                     </div>
                 </div>
 
-                <div className="col-md-8 mx-auto py-4">
+                <div className="col-md-8 mx-auto">
                     <CustomAmount form={form} setFormData={setFormData} />
                 </div>
             </Card.Body>
@@ -130,7 +130,7 @@ const CustomAmount = ({ form, setFormData }) => {
     }
 
     return (
-        <Card className="mb-2 bg-light">
+        <Card className="my-3 bg-light">
             <div className="p-3">
                 <div className="custom-control custom-checkbox py-1">
                     <input
