@@ -49,7 +49,7 @@
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text px-3" id="default-currency"><?php echo smartpay_get_currency_symbol() ?></span>
-                                    </div><input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="10" placeholder="">
+                                    </div><input type="text" class="form-control form--custom-amount amount" id="smartpay_custom_amount" name="smartpay_form_amount" value="<?php echo $defaultAmount['amount'] ?>" placeholder="">
                                 </div>
                             </div>
                             <?php else : ?>
