@@ -83,6 +83,14 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Automation'],
+            ],
+            'mailerlite' => [
+                'name'       => __('MailerLite', 'smartpay-pro'),
+                'excerpt'    => __('MailerLite is an email marketing tool.', 'smartpay-pro'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mailerlite.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
             ]
         ];
     }
