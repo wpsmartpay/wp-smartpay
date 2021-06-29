@@ -108,31 +108,31 @@ class Shortcode
      */
     public function payment_receipt_shortcode($atts)
     {
-        // $payment_id = intval($_GET['payment-id'] ?? smartpay_get_session_payment_id());
+        $payment_id = isset($_GET['payment-id']) ? intval($_GET['payment-id']) : null;
 
-        // if (!$payment_id) {
-        //     return;
-        // }
+        if (!$payment_id) {
+            return;
+        }
 
-        // // Sometimes payment gateway need more time to complete a payment
-        // sleep(3);
+        // Sometimes payment gateway need more time to complete a payment
+        sleep(3);
 
-        // $payment = smartpay_get_payment($payment_id);
+        $payment = smartpay_get_payment($payment_id);
 
-        // if (!$payment->ID) {
-        //     return;
-        // }
+        if (!$payment->id) {
+            return;
+        }
 
-        // try {
+        try {
 
-        //     ob_start();
+            ob_start();
 
-        //     echo smartpay_view_render('shortcodes/payment_receipt', ['payment' => $payment]);
+            echo smartpay_view('shortcodes.payment_receipt', ['payment' => $payment]);
 
-        //     return ob_get_clean();
-        // } catch (\Exception $e) {
-        //     return $e->getMessage();
-        // }
+            return ob_get_clean();
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
     }
 
     /**
