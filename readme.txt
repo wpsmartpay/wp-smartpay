@@ -113,6 +113,10 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 
+= [2.3.0] =
+* New - Mailerlite integration in dashboard
+* Fix - Custom amount default value issue
+
 = [2.1.0] =
 * New - Added customer dashboard tab link and content hook
 
