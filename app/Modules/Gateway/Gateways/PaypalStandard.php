@@ -97,7 +97,7 @@ class PaypalStandard extends PaymentGateway
             'tax_rate'      => 0,
             'upload'        => 1,
 
-            'return'        => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_success_page_uri()),
+            'return'        => add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri()),
             'cancel_return' => add_query_arg(['payment-id' => $payment->id], smartpay_get_payment_failure_page_uri()),
             'notify_url'    => add_query_arg(['smartpay-listener' => 'paypal', 'payment-id' => $payment->id], get_bloginfo('url') . '/index.php'),
         ];
