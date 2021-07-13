@@ -67,16 +67,16 @@ class Admin
             }
         );
 
-        // add_submenu_page(
-        //     'smartpay',
-        //     __('SmartPay - Coupons', 'smartpay'),
-        //     __('Coupons', 'smartpay'),
-        //     'manage_options',
-        //     'smartpay#/coupons',
-        //     function () {
-        //         echo smartpay_view('admin');
-        //     }
-        // );
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Coupons', 'smartpay'),
+            __('Coupons', 'smartpay'),
+            'manage_options',
+            'smartpay#/coupons',
+            function () {
+                echo smartpay_view('admin');
+            }
+        );
 
         add_submenu_page(
             'smartpay',
@@ -132,11 +132,11 @@ class Admin
 
     public function adminScripts($hook)
     {
-
-        wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
-        wp_enqueue_style('smartpay-admin');
+        if ('toplevel_page_smartpay' === $hook || 'smartpay_page_smartpay-form' === $hook || 'smartpay_page_smartpay-setting' === $hook || 'smartpay_page_smartpay-integrations' === $hook) {
+            wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
+            wp_enqueue_style('smartpay-admin');
+        }
         if ('toplevel_page_smartpay' === $hook) {
-
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
             wp_localize_script(
