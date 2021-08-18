@@ -603,6 +603,21 @@ class Setting
     public function settings_gateways_callback($args)
     {
         $smartpay_option = smartpay_get_option($args['id']);
+        $availableGateways = [
+            'paypal' => [
+                'label' => 'PayPal Standard'
+            ],
+            'paddle' => [
+                'label' => 'Paddle'
+            ],
+            'stripe' => [
+                'label' => 'Stripe'
+            ],
+            'bkash' => [
+                'label' => 'bKash'
+            ]
+        ];
+        $enableGateways = [];
 
         $class = sanitize_html_class($args['field_class']);
 
@@ -615,9 +630,30 @@ class Setting
                 $enabled = null;
             }
 
-            $html .= '<input name="smartpay_settings[' . esc_attr($args['id']) . '][' . smartpay_sanitize_key($key) . ']" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-            $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" style="font-style: italic;">' . esc_html($option['admin_label']) . '</label><br/>';
+            if (array_key_exists($key, $availableGateways)) {
+                $enableGateways[] = $key;
+                $html .= '<div class="mb-2">';
+                $html .= '<input name="smartpay_settings[' . esc_attr($args['id']) . '][' . smartpay_sanitize_key($key) . ']" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
+                $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" style="font-style: italic;">' . esc_html($option['admin_label']) . '</label>';
+                $html .= '</div>';
+            }
+
         endforeach;
+
+        if (!defined('SMARTPAY_PRO_VERSION')) {
+            foreach ($availableGateways as $gatewayKey => $gatewayOption) {
+                if (!in_array($gatewayKey, $enableGateways)) {
+                    $html .= '<div class="mb-2">';
+                    $html .= '<div class="tooltip">';
+                    $html .= '<input type="checkbox" disabled />';
+                    $html .= '<label class="text-muted mr-2"><b>' . $gatewayOption['label'] . '</b></label>';
+                    $html .= '<span class="badge text-uppercase">' . __('pro', 'smartpay') . '</span>';
+                    $html .= '<span class="tooltiptext">' . __('available in Pro version', 'smartpay') . '</span>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                }
+            }
+        }
 
         $url   = esc_url('https://wpsmartpay.com');
         $html .= '<small class="form-text text-muted">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</small>';
