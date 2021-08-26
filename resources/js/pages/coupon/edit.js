@@ -99,11 +99,11 @@ export const EditCoupon = () => {
                         />
                     </Form.Group>
                     <div className="py-2">
-                        <Tabs className="mb-3" fill defaultActiveKey="home">
+                        <Tabs className="mb-3" fill defaultActiveKey="general">
                             <Tab
                                 tabClassName="text-decoration-none"
-                                eventKey="home"
-                                title="Home"
+                                eventKey="general"
+                                title="General"
                             >
                                 <Row>
                                     <Col>
@@ -129,7 +129,10 @@ export const EditCoupon = () => {
                                                     )}
                                                 </option>
                                                 <option value="percent">
-                                                    {__('Percent', 'smartpay')}
+                                                    {__(
+                                                        'Percentage Amount',
+                                                        'smartpay'
+                                                    )}
                                                 </option>
                                             </Form.Control>
                                         </Form.Group>

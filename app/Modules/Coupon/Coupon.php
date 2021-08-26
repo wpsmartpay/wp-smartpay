@@ -22,8 +22,12 @@ class Coupon
         $this->app->addAction('before_smartpay_payment_form', [$this, 'showAlert'], 10, 1);
         $this->app->addAction('before_smartpay_payment_form', [$this, 'smartpayCouponPaymentForm'], 20, 1);
         $this->app->addAction('before_smartpay_payment_form_button', [$this, 'showAppliedCouponData'], 20, 1);
+        $this->app->addAction('smartpay_before_product_payment_form_button', [$this, 'showAppliedCouponData']);
+        $this->app->addAction('smartpay_product_modal_popup_content', [$this, 'productPaymentModalContent'], 20, 1);
         $this->app->addAction('wp_ajax_smartpay_coupon', [$this, 'appliedCouponInForm']);
         $this->app->addAction('wp_ajax_nopriv_smartpay_coupon', [$this, 'appliedCouponInForm']);
+        $this->app->addAction('wp_ajax_smartpay_product_coupon', [$this, 'appliedCouponInProduct']);
+        $this->app->addAction('wp_ajax_nopriv_smartpay_product_coupon', [$this, 'appliedCouponInProduct']);
     }
 
     public function adminScripts()
@@ -104,14 +108,13 @@ class Coupon
         <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
     </div>
 </div>
-<form class="smartpaycouponform p-4 bg-light d-none">
-    <p><?php _e('If you have a coupon code, please apply it below.', 'smartpay'); ?></p>
+<form class="smartpay-coupon-form px-4 py-5 bg-light d-none">
+    <span class="p-4 d-inline-block">x</span>
     <div class="d-flex">
         <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
         <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
     </div>
 </form>
-<div></div>
 <?php
     }
 
@@ -184,15 +187,15 @@ class Coupon
 <div class="discount-amounts-container mb-3 d-none">
     <div class="py-2">
         <p class="d-flex justify-content-between m-0">
-            <span><?php _e('Subtotal', 'smartpay'); ?></span>
+            <span class="font-weight-bold"><?php _e('Subtotal', 'smartpay'); ?></span>
             <span class="subtotal-amount-value"></span>
         </p>
     </div>
 
 
-    <div class="py-2 border-top border-bottom border-dark">
+    <div class="py-2">
         <p class="d-flex justify-content-between m-0">
-            <span class="coupon-amount-name"></span>
+            <span class="coupon-amount-name font-weight-bold"></span>
             <span class="coupon-amount-value"></span>
         </p>
     </div>
@@ -200,12 +203,74 @@ class Coupon
 
     <div class="py-2">
         <p class="d-flex justify-content-between m-0">
-            <span><?php _e('Total due', 'smartpay'); ?></span>
+            <span class="font-weight-bold"><?php _e('Total due', 'smartpay'); ?></span>
             <span class="total-amount-value"></span>
         </p>
     </div>
 
 </div>
 <?php
+    }
+
+    public function productPaymentModalContent()
+    { ?>
+<div class="smartpay-product-coupon-form-toggle">
+    <div class="coupon-info mb-4 p-4 bg-light">
+        <?php _e('Have a coupon?', 'smartpay'); ?>
+        <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
+    </div>
+</div>
+<form class="smartpay-product-coupon-form p-4 bg-light d-none">
+    <div class="d-flex">
+        <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+        <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
+    </div>
+</form>
+<?php }
+
+    public function appliedCouponInProduct()
+    {
+        $couponCode = $_POST['couponCode'] ?? null;
+        $productPrice = $_POST['productPrice'] ?? null;
+        $productPrice =  str_replace('$', '', $productPrice);
+        $coupon = ModelsCoupon::where('title', $couponCode)->first();
+        if (!$coupon) {
+            wp_send_json_error(['message' => 'Coupon Not Found']);
+        }
+
+        // expiry date check
+        if ($this->validateDate($coupon->expiry_date)) {
+            $currentDate = date_create(date('Y-m-d'));
+            $expiryDate = date_create($coupon->expiry_date);
+            $diff = date_diff($currentDate,  $expiryDate);
+            if ($diff->format("%R%a") < 0) {
+                wp_send_json_error(['message' => 'Coupon expires']);
+            }
+        }
+
+        $couponDiscountAmount = $coupon->discount_amount;
+        $couponDiscountType = $coupon->discount_type;
+
+        if ($couponDiscountType == 'fixed') {
+            $discountAmount = $productPrice - $couponDiscountAmount;
+            $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
+            $couponAmount = $couponDiscountAmount;
+        } elseif ($couponDiscountType == 'percent') {
+            $discountAmount = $productPrice - ($productPrice * $couponDiscountAmount) / 100;
+            $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
+            $couponAmount = ($productPrice * $couponDiscountAmount) / 100;
+        }
+
+        $couponData = [
+            'mainAmount'        => $productPrice,
+            'discountAmount'    =>  $discountAmount,
+            'couponAmount'      =>  $couponAmount,
+        ];
+
+        $currency = smartpay_get_option('currency', 'USD');
+        $symbol = smartpay_get_currency_symbol($currency);
+
+        wp_send_json_success(['message' => 'Coupon Applied Successfully', 'couponCode' => $couponCode, 'couponData' => $couponData, 'currency' => $symbol]);
+        wp_die();
     }
 }

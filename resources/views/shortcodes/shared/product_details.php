@@ -103,7 +103,7 @@
         <!-- Form Data -->
         <input type="hidden" name="smartpay_payment_type" id="smartpay_payment_type" value="product_purchase">
         <input type="hidden" name="smartpay_product_id" value="<?php echo esc_attr($defaultVariation->id); ?>">
-        <input type="hidden" name="smartpay_product_price" value="<?php echo smartpay_amount_format($defaultVariation->sale_price ?? 0); ?>">
+        <input type="hidden" name="smartpay_product_price" value="<?php echo $defaultVariation->sale_price ?? 0; ?>">
         <input type="hidden" name="smartpay_product_billing_type" value="<?php echo $defaultVariation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>">
         <input type="hidden" name="smartpay_product_billing_period" value="<?php echo $defaultVariation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>">
         <!-- /Form Data -->

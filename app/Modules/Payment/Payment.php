@@ -169,7 +169,7 @@ class Payment
                 return [
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
-                    'total_amount'  => $product->price,
+                    'total_amount'  => $_data['smartpay_product_price'],
                     'billing_type'   => $_data['smartpay_product_billing_type']
                 ];
 

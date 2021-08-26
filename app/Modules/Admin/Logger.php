@@ -15,7 +15,7 @@ class Logger
 
     public function debugLogSection(array $sections): array
     {
-        $sections['debug_log'] = __('Debug Log', 'smartpay-pro');
+        $sections['debug_log'] = __('Debug Log', 'smartpay');
         return $sections;
     }
 

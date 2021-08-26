@@ -275,7 +275,7 @@ class PaypalStandard extends PaymentGateway
             smartpay_debug_log(__(sprintf(
                 'SmartPay-Paddle: Payment #%s no found.',
                 $payment_id
-            ), 'smartpay-pro'));
+            ), 'smartpay'));
         }
 
         if ($payment_status == 'refunded' || $payment_status == 'reversed') {
@@ -297,7 +297,7 @@ class PaypalStandard extends PaymentGateway
                 smartpay_debug_log(__(sprintf(
                     'SmartPay-Paddle: Payment #%s completed.',
                     $payment->id
-                ), 'smartpay-pro'));
+                ), 'smartpay'));
             }
         }
     }
