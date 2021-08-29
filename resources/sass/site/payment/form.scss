@@ -96,4 +96,13 @@
         right: 0;
         z-index: 1;
     }
+
+    .smartpay-coupon-form {
+        padding-top: 70px !important;
+        .smartpay-coupon-form-close {
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+    }
 }

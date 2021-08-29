@@ -108,8 +108,8 @@ class Coupon
         <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
     </div>
 </div>
-<form class="smartpay-coupon-form px-4 py-5 bg-light d-none">
-    <span class="p-4 d-inline-block">x</span>
+<form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
+    <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
     <div class="d-flex">
         <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
         <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>

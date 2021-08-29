@@ -143,13 +143,14 @@ jQuery(($) => {
     )
 
     /** Coupon Form */
-    $('.smartpay-coupon-form-toggle .smartpayshowcoupon').on(
-        'click',
-        function () {
-            $('.smartpay-coupon-form').toggleClass('d-none')
-            return false
-        }
-    )
+    $('.smartpay-coupon-form-toggle .smartpayshowcoupon').on('click', function (
+        event
+    ) {
+        // $('.smartpay-coupon-form').toggleClass('d-none')
+        $(this).parents('.smartpay-coupon-form-toggle').addClass('d-none')
+        $('.smartpay-coupon-form').removeClass('d-none')
+        event.preventDefault()
+    })
 
     let $couponData
     let $currency
@@ -264,6 +265,12 @@ jQuery(($) => {
             }
         }
     )
+
+    $('.smartpay-coupon-form-close').on('click', function (event) {
+        $('.smartpay-coupon-form').addClass('d-none')
+        $('.smartpay-coupon-form-toggle').removeClass('d-none')
+        event.preventDefault()
+    })
 
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
