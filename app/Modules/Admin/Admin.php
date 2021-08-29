@@ -18,8 +18,7 @@ class Admin
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
         $this->app->addAction('wp_ajax_smartpay_debug_log_clear', [$this, 'smartpayDebugLogClear']);
-        $this->app->addAction('admin_menu', [$this, 'registerDashboardPage']);
-        $this->app->addAction('admin_head', [$this, 'hideDashboardMenu']);
+        $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage']);
         $this->app->addAction('admin_init', [$this, 'redirectToWelcomePage']);
         $this->app->addAction('admin_notices', [$this, 'customerEmailSubscribe']);
         $this->app->addAction('wp_ajax_smartpay_contact_optin_notice_dismiss', [$this, 'customerOptinNoticeDismiss']);
@@ -28,7 +27,7 @@ class Admin
     public function adminMenu()
     {
         add_menu_page(
-            __('Dashboard', 'smartpay'),
+            __('SmartPay', 'smartpay'),
             __('SmartPay', 'smartpay'),
             'manage_options',
             'smartpay',
@@ -36,7 +35,18 @@ class Admin
                 echo smartpay_view('admin');
             },
             smartpay_svg_icon(),
-            25
+            30
+        );
+
+        add_submenu_page(
+            'smartpay',
+            __('Dashboard', 'smartpay'),
+            __('Dashboard', 'smartpay'),
+            'manage_options',
+            'smartpay',
+            function () {
+                echo smartpay_view('admin');
+            }
         );
 
         add_submenu_page(
@@ -172,7 +182,7 @@ class Admin
             );
         }
 
-        if ('dashboard_page_wpsmartpay-getting-started' === $hook) {
+        if ('smartpay_page_wpsmartpay-getting-started' === $hook) {
             $user = wp_get_current_user();
             $user_id = $user->ID;
             wp_enqueue_style('smartpay-dashboard', SMARTPAY_PLUGIN_ASSETS . '/css/dashboard.css', '', SMARTPAY_VERSION);
@@ -247,12 +257,13 @@ class Admin
 
     public function registerDashboardPage()
     {
-        add_dashboard_page(
-            esc_html__('Welcome to WPSmartPay', 'smartpay'),
-            esc_html__('Welcome to WPSmartPay', 'smartpay'),
+        add_submenu_page(
+            'smartpay',
+            __('Getting Started', 'smartpay'),
+            __('Getting Started', 'smartpay'),
             'manage_options',
             'wpsmartpay-getting-started',
-            array($this, 'outputDashboardMarkup')
+            [$this, 'outputDashboardMarkup']
         );
     }
 
@@ -274,18 +285,6 @@ class Admin
                 <iframe width="560" height="315" src="https://www.youtube.com/embed/pPT4NNrBnxw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
                 <p><?php _e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?></p>
-            </div>
-        </div>
-
-        <div style="display:none;" class="create-form-section">
-            <p><?php _e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?></p>
-            <div class="button-wrap">
-                <div class="left-side">
-                    <a class="dashboard-button main" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php _e('Create Your First Form', 'smartpay'); ?></a>
-                </div>
-                <div class="right-side">
-                    <a class="dashboard-button main" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php _e('Create Your First Product', 'smartpay'); ?></a>
-                </div>
             </div>
         </div>
 
@@ -315,11 +314,6 @@ class Admin
 <?php
     }
 
-    public function hideDashboardMenu()
-    {
-        remove_submenu_page('index.php', 'wpsmartpay-getting-started');
-    }
-
     public function redirectToWelcomePage()
     {
         if (!get_transient('wpsmartpay_activation_redirect')) {
@@ -332,7 +326,7 @@ class Admin
             return;
         }
 
-        wp_safe_redirect(admin_url('index.php?page=' . 'wpsmartpay-getting-started'));
+        wp_safe_redirect(admin_url('admin.php?page=' . 'wpsmartpay-getting-started'));
         exit;
     }
 
@@ -371,7 +365,7 @@ class Admin
             $dismiss_key = 'optin_first_time';
         }
 
-        if ('dashboard_page_wpsmartpay-getting-started' !==  $admin_page->base) :
+        if ('smartpay_page_wpsmartpay-getting-started' !==  $admin_page->base) :
         ?>
 <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
     <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
