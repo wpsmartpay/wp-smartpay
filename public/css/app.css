@@ -11667,6 +11667,16 @@
   z-index: 1;
 }
 
+.smartpay .smartpay-form-shortcode .smartpay-coupon-form {
+  padding-top: 70px !important;
+}
+
+.smartpay .smartpay-form-shortcode .smartpay-coupon-form .smartpay-coupon-form-close {
+  top: 20px;
+  right: 20px;
+  cursor: pointer;
+}
+
 .smartpay .smartpay-payment .payment-modal .modal-content {
   border: none;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);

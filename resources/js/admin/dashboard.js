@@ -17,7 +17,7 @@
                 success(response) {
                     if (response.success) {
                         form.after(
-                            '<div class="alert alert-success"><p>You have successfully subscribed.</p></div>'
+                            '<div class="alert alert-success"><p>Thank You, kindly check your email and allow subscription to receive the discount code. Cheers!!!</p></div>'
                         )
 
                         jQuery.ajax({
