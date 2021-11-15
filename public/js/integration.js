@@ -24,10 +24,11 @@ jQuery(function ($) {
                         .parents('.actions')
                         .find('.integration-status')
                         .html(response)
+                    window.location.reload();
                 } else {
                     console.error('Something wrong!')
                 }
-            })
+            });
         }
     )
 })
