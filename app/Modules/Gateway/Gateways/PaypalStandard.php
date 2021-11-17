@@ -344,7 +344,7 @@ class PaypalStandard extends PaymentGateway
             array(
                 'id'    => 'paypal_identity_token',
                 'name'  => __('PayPal Identity Token', 'smartpay'),
-                'desc'  => sprintf(__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'smartpay'), '#'),
+                'desc'  => sprintf(__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'smartpay'), 'https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/#get-started'),
                 'type'  => 'text'
             ),
             array(
