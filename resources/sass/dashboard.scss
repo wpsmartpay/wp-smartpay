@@ -1,0 +1,146 @@
+.wpsmartpay-welcome {
+    padding-top: 70px;
+    .container {
+        margin: 0 auto;
+        max-width: 720px;
+        padding: 0;
+    }
+
+    .alert {
+        position: relative;
+        padding: 1rem 1rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        p {
+            margin: 0 !important;
+        }
+        &.alert-success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+        }
+    }
+
+    .introduction-image {
+        width: 200px;
+        margin: 0 auto;
+        margin-bottom: 50px;
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+
+    .introduction {
+        position: relative;
+        padding: 40px;
+        background-color: #fff;
+
+        .introduction-text {
+            text-align: center;
+            h2 {
+                font-size: 24px;
+                margin-top: 0;
+                margin-bottom: 16px;
+            }
+            p {
+                font-size: 16px;
+            }
+            margin-bottom: 40px;
+        }
+
+        .introduction-video {
+            iframe {
+                width: 100%;
+            }
+            p {
+                text-align: center;
+                font-size: 16px;
+                margin-top: 20px;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .create-form-section {
+        padding: 40px;
+        border: 2px solid #e1e1e1;
+        border-top: none;
+        p {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .button-wrap {
+            display: flex;
+            > div {
+                flex-basis: 50%;
+            }
+
+            .left-side {
+                text-align: right;
+                padding-right: 20px;
+            }
+
+            .right-side {
+                padding-left: 20px;
+            }
+        }
+    }
+
+    .subscription-form {
+        margin-top: 20px;
+        padding: 40px;
+        background-color: #fff;
+        h3 {
+            margin-top: 0;
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        p {
+            margin-top: 0;
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 16px;
+        }
+
+        .inline-input-wrapper {
+            text-align: center;
+            position: relative;
+            width: 450px;
+            margin: 0 auto;
+            input[type='email'] {
+                width: 100%;
+                padding: 10px;
+                margin: 0;
+            }
+            button[type='submit'] {
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 10px;
+                background-color: #28a745;
+                border-color: #28a745;
+                font-weight: 500;
+            }
+        }
+    }
+
+    .dashboard-button {
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 600;
+        padding: 10px 15px;
+        border-radius: 3px;
+        text-decoration: none;
+        &.main {
+            background-color: #28a745;
+            color: #fff;
+        }
+    }
+}

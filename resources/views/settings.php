@@ -112,14 +112,14 @@ ob_start();
                         // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
                         if (true === $override) :
                         ?>
-                        <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
+                            <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
                         <?php endif; ?>
                     </table>
                     <?php if ($active_tab !== 'debug_log') : ?>
-                    <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                        <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
                     <?php endif; ?>
                     <?php if ($active_tab === 'debug_log') : ?>
-                    <button class="btn btn-primary smartpay-clear-debug-log"><?php echo __('Clear Log', 'smartpay') ?></button>
+                        <button class="btn btn-primary smartpay-clear-debug-log"><?php echo __('Clear Log', 'smartpay') ?></button>
                     <?php endif; ?>
                 </form>
             </div>

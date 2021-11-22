@@ -16,6 +16,7 @@ class Activator
         $this->_set_default_settings();
 
         smartpay()->make(Upload::class)->protectDirectory(true);
+        self::activatePlugin();
     }
 
     public static function boot()
@@ -135,5 +136,15 @@ class Activator
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));
+    }
+
+    public static function activatePlugin()
+    {
+        if (isset($_GET['activate-multi']) || is_network_admin()) {
+            return;
+        }
+
+        // Add transient to trigger redirect to the Welcome screen.
+        set_transient('wpsmartpay_activation_redirect', true, 30);
     }
 }

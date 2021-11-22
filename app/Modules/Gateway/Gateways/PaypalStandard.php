@@ -22,6 +22,8 @@ class PaypalStandard extends PaymentGateway
             return;
         }
 
+        $this->_checkApiKeys();
+
         if (!in_array(strtoupper(smartpay_get_currency()), self::$supported_currency)) {
             add_action('admin_notices', [$this, 'unsupported_currency_notice']);
             return;
@@ -29,6 +31,23 @@ class PaypalStandard extends PaymentGateway
 
         // Initialize actions.
         $this->initActions();
+    }
+
+    //check api keys set or not
+    private function _checkApiKeys()
+    {
+        $paypal_email = smartpay_get_option('paypal_email') ?? null;
+
+        if (empty($paypal_email)) {
+            add_action('admin_notices', function () {
+                echo __(sprintf(
+                    '<div class="error">
+                        <p><strong>Paypal credentials was not set yet!</strong> To get the Paypal service on smartpay, you must add your paypal business email.  <a href="%s"> Input your paypal credentials</a></p>
+                    </div>',
+                    admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal')
+                ), 'smartpay-pro');
+            });
+        }
     }
 
     /**
@@ -275,7 +294,7 @@ class PaypalStandard extends PaymentGateway
             smartpay_debug_log(__(sprintf(
                 'SmartPay-Paddle: Payment #%s no found.',
                 $payment_id
-            ), 'smartpay-pro'));
+            ), 'smartpay'));
         }
 
         if ($payment_status == 'refunded' || $payment_status == 'reversed') {
@@ -297,7 +316,7 @@ class PaypalStandard extends PaymentGateway
                 smartpay_debug_log(__(sprintf(
                     'SmartPay-Paddle: Payment #%s completed.',
                     $payment->id
-                ), 'smartpay-pro'));
+                ), 'smartpay'));
             }
         }
     }
@@ -344,7 +363,7 @@ class PaypalStandard extends PaymentGateway
             array(
                 'id'    => 'paypal_identity_token',
                 'name'  => __('PayPal Identity Token', 'smartpay'),
-                'desc'  => sprintf(__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'smartpay'), '#'),
+                'desc'  => sprintf(__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'smartpay'), 'https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/#get-started'),
                 'type'  => 'text'
             ),
             array(

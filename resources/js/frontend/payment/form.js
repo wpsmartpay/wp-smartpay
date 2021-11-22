@@ -82,7 +82,10 @@ jQuery(($) => {
             $parentWrapper.find('#form-response').hide()
 
             if (!validation.valid) {
-                showErrors($parentWrapper.find('#form-response'), validation)
+                showErrors(
+                    $parentWrapper.find('.smartpay-message-info'),
+                    validation
+                )
             } else {
                 jQuery.post(
                     smartpay.ajaxUrl,
@@ -138,6 +141,136 @@ jQuery(($) => {
             }, 500)
         }
     )
+
+    /** Coupon Form */
+    $('.smartpay-coupon-form-toggle .smartpayshowcoupon').on('click', function (
+        event
+    ) {
+        // $('.smartpay-coupon-form').toggleClass('d-none')
+        $(this).parents('.smartpay-coupon-form-toggle').addClass('d-none')
+        $('.smartpay-coupon-form').removeClass('d-none')
+        event.preventDefault()
+    })
+
+    let $couponData
+    let $currency
+    $('.smartpay-coupon-form').on('submit', function (e) {
+        let $couponCode = $(this).find('input[name=coupon_code]').val()
+        let $formID = $(this)
+            .parents('.smartpay_form_builder_wrapper')
+            .find('#smartpay-payment-form input[name=smartpay_form_id]')
+            .val()
+
+        $.ajax({
+            method: 'POST',
+            url: smartpay.ajaxUrl,
+            data: {
+                action: 'smartpay_coupon',
+                couponCode: $couponCode,
+                formId: $formID,
+            },
+        }).done(function (response) {
+            if (response.success) {
+                $('.smartpay-message-info').append(
+                    `<div class="alert alert-success">${response.data.message}</div>`
+                )
+
+                $couponData = response.data.couponData
+                $currency = response.data.currency
+
+                $('#smartpay-payment-form').addClass('coupon-applied')
+
+                $('#smartpay-payment-form')
+                    .find('.form--fixed-amount')
+                    .each(function () {
+                        let $inputId = $(this)
+                            .find('input[name=_form_amount]')
+                            .attr('id')
+                        $(this)
+                            .find('input[name=_form_amount]')
+                            .val($couponData[$inputId].discountAmount)
+                    })
+
+                let $selectedAmountInputId = $(
+                    '#smartpay-payment-form .form-amounts'
+                )
+                    .find(
+                        '.form--fixed-amount.selected input[name=_form_amount]'
+                    )
+                    .attr('id')
+
+                $(
+                    '#smartpay-payment-form input[name=smartpay_form_amount]'
+                ).val($couponData[$selectedAmountInputId].discountAmount)
+
+                $('.discount-amounts-container').removeClass('d-none')
+
+                $('.discount-amounts-container')
+                    .find('.subtotal-amount-value')
+                    .html(
+                        `${$currency}${$couponData[$selectedAmountInputId].mainAmount}`
+                    )
+
+                $('.discount-amounts-container')
+                    .find('.coupon-amount-name')
+                    .html(response.data.couponCode)
+
+                $('.discount-amounts-container')
+                    .find('.coupon-amount-value')
+                    .html(
+                        `-${$currency}${$couponData[$selectedAmountInputId].couponAmount}`
+                    )
+
+                $('.discount-amounts-container')
+                    .find('.total-amount-value')
+                    .html(
+                        `${$currency}${$couponData[$selectedAmountInputId].discountAmount}`
+                    )
+            }
+
+            if (!response.success) {
+                $('.smartpay-message-info').append(
+                    `<div class="alert alert-danger">${response.data.message}</div>`
+                )
+            }
+        })
+        e.preventDefault()
+    })
+
+    $('.smartpay-form-shortcode .form-amounts .form--fixed-amount').on(
+        'click',
+        function () {
+            if ($('#smartpay-payment-form').hasClass('coupon-applied')) {
+                let $selectAmountInputId = $(this)
+                    .find('input[name=_form_amount]')
+                    .attr('id')
+
+                $('.discount-amounts-container')
+                    .find('.subtotal-amount-value')
+                    .html(
+                        `${$currency}${$couponData[$selectAmountInputId].mainAmount}`
+                    )
+
+                $('.discount-amounts-container')
+                    .find('.coupon-amount-value')
+                    .html(
+                        `-${$currency}${$couponData[$selectAmountInputId].couponAmount}`
+                    )
+
+                $('.discount-amounts-container')
+                    .find('.total-amount-value')
+                    .html(
+                        `${$currency}${$couponData[$selectAmountInputId].discountAmount}`
+                    )
+            }
+        }
+    )
+
+    $('.smartpay-coupon-form-close').on('click', function (event) {
+        $('.smartpay-coupon-form').addClass('d-none')
+        $('.smartpay-coupon-form-toggle').removeClass('d-none')
+        event.preventDefault()
+    })
 
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {

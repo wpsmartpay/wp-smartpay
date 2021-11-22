@@ -88,7 +88,10 @@ export const CreateCoupon = () => {
                                     value={coupon.title}
                                     onChange={setCouponData}
                                     type="text"
-                                    placeholder="Enter coupon code here"
+                                    placeholder={__(
+                                        'Enter coupon code here',
+                                        'smartpay'
+                                    )}
                                 />
                             </Form.Group>
                             <Form.Group controlId="couponForm.description">
@@ -98,7 +101,10 @@ export const CreateCoupon = () => {
                                     onChange={setCouponData}
                                     as="textarea"
                                     rows={3}
-                                    placeholder="Coupon description"
+                                    placeholder={__(
+                                        'Coupon description',
+                                        'smartpay'
+                                    )}
                                 />
                             </Form.Group>
                             <div className="py-2">
@@ -133,7 +139,7 @@ export const CreateCoupon = () => {
                                                         </option>
                                                         <option value="percent">
                                                             {__(
-                                                                'Percent',
+                                                                'Percentage Amount',
                                                                 'smartpay'
                                                             )}
                                                         </option>

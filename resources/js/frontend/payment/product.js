@@ -13,10 +13,12 @@ jQuery(($) => {
 
             $(e.currentTarget).addClass('selected')
 
+            let $salePrice = $(e.currentTarget).find('.sale-price').html()
+            $salePrice = $salePrice.replace(/\$/, '')
             $(e.currentTarget)
                 .parents('.smartpay-product-shortcode')
                 .find('input[name="smartpay_product_price"]')
-                .val($(e.currentTarget).find('.sale-price').html())
+                .val($salePrice)
 
             let selectedPriceType = $(e.currentTarget).find(
                 'input[name="_product_billing_type"]'
@@ -394,4 +396,78 @@ jQuery(($) => {
 
         $wrapper.html(errorHTML)
     }
+
+    /** Coupon Form */
+    $('.smartpay-product-coupon-form-toggle .smartpayshowcoupon').on(
+        'click',
+        function () {
+            $('.smartpay-product-coupon-form').toggleClass('d-none')
+            return false
+        }
+    )
+
+    $('.smartpay-product-coupon-form').on('submit', function (e) {
+        let $couponCode = $(this).find('input[name=coupon_code]').val()
+        let $productID = $(this)
+            .parents('.smartpay-product-shortcode')
+            .find('input[name=smartpay_product_id]')
+            .val()
+        let $productPrice = $(this)
+            .parents('.smartpay-product-shortcode')
+            .find('input[name=smartpay_product_price]')
+            .val()
+        $.ajax({
+            method: 'POST',
+            url: smartpay.ajaxUrl,
+            data: {
+                action: 'smartpay_product_coupon',
+                couponCode: $couponCode,
+                productID: $productID,
+                productPrice: $productPrice,
+            },
+        }).done(function (response) {
+            if (response.success) {
+                $('.payment-modal--errors').append(
+                    `<div class="alert alert-success">${response.data.message}</div>`
+                )
+                $('.payment-modal--errors').show()
+
+                $couponData = response.data.couponData
+                $currency = response.data.currency
+
+                $('.discount-amounts-container')
+                    .find('.subtotal-amount-value')
+                    .html(`${$currency}${$couponData.mainAmount}`)
+
+                $('.discount-amounts-container')
+                    .find('.coupon-amount-name')
+                    .html(response.data.couponCode)
+
+                $('.discount-amounts-container')
+                    .find('.coupon-amount-value')
+                    .html(`-${$currency}${$couponData.couponAmount}`)
+
+                $('.discount-amounts-container')
+                    .find('.total-amount-value')
+                    .html(`${$currency}${$couponData.discountAmount}`)
+
+                $('.smartpay-product-shortcode')
+                    .find('input[name=smartpay_product_price]')
+                    .val(`${$couponData.discountAmount}`)
+
+                $('.smartpay-product-shortcode')
+                    .find('.payment-modal--title')
+                    .html(`${$couponData.discountAmount}`)
+
+                $('.discount-amounts-container').removeClass('d-none')
+            }
+            if (!response.success) {
+                $('.payment-modal--errors').append(
+                    `<div class="alert alert-danger">${response.data.message}</div>`
+                )
+                $('.payment-modal--errors').show()
+            }
+        })
+        e.preventDefault()
+    })
 })

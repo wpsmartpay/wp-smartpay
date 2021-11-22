@@ -22,8 +22,8 @@ class Payment
 
         $this->app->addAction('wp_ajax_smartpay_process_payment', [$this, 'ajax_process_payment']);
         $this->app->addAction('wp_ajax_nopriv_smartpay_process_payment', [$this, 'ajax_process_payment']);
-
         $this->app->addAction('smartpay_update_payment_status', [$this, 'onPaymentComplete'], 10, 3);
+        $this->app->addAction('smartpay_update_payment_status', [$this, 'onPaymentCancel'], 10, 3);
     }
 
     public function registerRestRoutes()
@@ -169,7 +169,7 @@ class Payment
                 return [
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
-                    'total_amount'  => $product->price,
+                    'total_amount'  => $_data['smartpay_product_price'],
                     'billing_type'   => $_data['smartpay_product_billing_type']
                 ];
 
@@ -267,5 +267,15 @@ class Payment
         $payment->save();
 
         do_action('smartpay_payment_completed', $payment);
+    }
+
+    //trigger when payment is being cancelled
+    public function onPaymentCancel($payment, $newStatus, $oldStatus)
+    {
+        if($newStatus == PaymentModel::PENDING && $oldStatus == PaymentModel::COMPLETED){
+            do_action('smartpay_payment_cancelled', $payment);
+        }elseif (in_array($newStatus, [PaymentModel::ABANDONED, PaymentModel::REVOKED, PaymentModel::REFUNDED])) {
+            do_action('smartpay_payment_cancelled', $payment);
+        }
     }
 }
