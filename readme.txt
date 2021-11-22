@@ -113,8 +113,13 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.4.0] =
-
-
+* new - Coupon
+* new - Payment form hook
+* new - Welcome on-boarding
+* new - Mailer Lite integration
+* Fix - Form builder bug, PHP Notice, Admin style, Over-lapp
+* Update - Integration quick settings
+* Update - Configuration alert if missing
 
 
 = [2.3.1] =
