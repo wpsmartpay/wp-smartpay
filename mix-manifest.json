@@ -1,4 +1,9 @@
 {
+    "/public/js/admin.js": "/public/js/admin.js",
+    "/public/js/app.js": "/public/js/app.js",
+    "/public/css/app.css": "/public/css/app.css",
+    "/public/css/admin.css": "/public/css/admin.css",
+    "/public/css/dashboard.css": "/public/css/dashboard.css",
     "/public/js/bootstrap.js": "/public/js/bootstrap.js",
     "/public/js/integration.js": "/public/js/integration.js",
     "/public/js/debuglog.js": "/public/js/debuglog.js",
