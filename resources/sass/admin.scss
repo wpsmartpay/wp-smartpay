@@ -120,10 +120,16 @@ body.smartpay_page_smartpay-form.swal2-toast-shown {
         position: absolute;
         top: -5px;
         left: 105%;
-        z-index: 1;
+        z-index: 1; 
     }
 
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+}
+
+.smartpay .d-flex {
+    display: flex!important;
+    justify-content: space-between;
+    width: 100%;
 }
