@@ -639,7 +639,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                 <input
                                                                                     type="checkbox"
                                                                                     className="custom-control-input variation-file"
-                                                                                    id={`variation-${variation.id}-file-${file.id}`}
+                                                                                    id={`variation-${variation.key}-file-${file.id}`}
                                                                                     name="file"
                                                                                     onChange={(
                                                                                         event
@@ -661,7 +661,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                 />
                                                                                 <label
                                                                                     className="custom-control-label"
-                                                                                    htmlFor={`variation-${variation.id}-file-${file.id}`}
+                                                                                    htmlFor={`variation-${variation.key}-file-${file.id}`}
                                                                                 >
                                                                                     {
                                                                                         file.name
