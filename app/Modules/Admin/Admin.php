@@ -126,7 +126,6 @@ class Admin
             }
         );
 
-
         $this->smartpayProMenu();
 
         do_action('smartpay_admin_add_menu_items');
@@ -134,7 +133,8 @@ class Admin
 
     private function smartpayProMenu()
     {
-        if (!array_key_exists('smartpay-pro/smartpay-pro.php', get_plugins())) {
+        // check if wp-smartpay-pro or smartpay-pro plugin is in activated plugin list
+        if (!in_array('wp-smartpay-pro/smartpay-pro.php' || 'smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
             global $submenu;
 
             $submenu['smartpay'][99] = [
@@ -271,47 +271,47 @@ class Admin
     {
         $user = wp_get_current_user();
 ?>
-<div class="wpsmartpay-welcome">
-    <div class="container">
-        <div class="introduction-image">
-            <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
-        </div>
-        <div class="introduction">
-            <div class="introduction-text">
-                <h2><?php _e('Welcome Aboard'); ?></h2>
-                <p><?php _e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
-            </div>
-            <div class="introduction-video">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/pPT4NNrBnxw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-                <p><?php _e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?></p>
-            </div>
-        </div>
-
-        <div class="subscription-form">
-            <h3><?php _e('Wanna get some discount?', 'smartpay'); ?></h3>
-            <p><?php _e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
-            <form>
-                <div class="inline-input-wrapper">
-                    <input type="email" placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" value="<?php echo esc_attr($user->user_email); ?>" />
-                    <button type="submit" class="button button-primary"><?php _e('Get Discount'); ?></button>
+        <div class="wpsmartpay-welcome">
+            <div class="container">
+                <div class="introduction-image">
+                    <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
                 </div>
-            </form>
-        </div>
+                <div class="introduction">
+                    <div class="introduction-text">
+                        <h2><?php _e('Welcome Aboard'); ?></h2>
+                        <p><?php _e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
+                    </div>
+                    <div class="introduction-video">
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/pPT4NNrBnxw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-        <div class="create-form-section">
-            <div class="button-wrap">
-                <div class="left-side">
-                    <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php _e('Create Your First Form', 'smartpay'); ?></a>
+                        <p><?php _e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?></p>
+                    </div>
                 </div>
-                <div class="right-side">
-                    <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php _e('Create Your First Product', 'smartpay'); ?></a>
+
+                <div class="subscription-form">
+                    <h3><?php _e('Wanna get some discount?', 'smartpay'); ?></h3>
+                    <p><?php _e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
+                    <form>
+                        <div class="inline-input-wrapper">
+                            <input type="email" placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" value="<?php echo esc_attr($user->user_email); ?>" />
+                            <button type="submit" class="button button-primary"><?php _e('Get Discount'); ?></button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="create-form-section">
+                    <div class="button-wrap">
+                        <div class="left-side">
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php _e('Create Your First Form', 'smartpay'); ?></a>
+                        </div>
+                        <div class="right-side">
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php _e('Create Your First Product', 'smartpay'); ?></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<?php
+        <?php
     }
 
     public function redirectToWelcomePage()
@@ -367,92 +367,92 @@ class Admin
 
         if ('smartpay_page_wpsmartpay-getting-started' !==  $admin_page->base) :
         ?>
-<div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
-    <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
-    <div class="smartpay-notice-content">
-        <h4><?php _e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
-        <form style="display:flex">
-            <div class="smartpay-notice-input-wrapper">
-                <input type="text" value="<?php echo esc_attr($user->first_name); ?>" placeholder="<?php esc_attr_e('Name', 'smartpay'); ?>" />
+            <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
+                <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
+                <div class="smartpay-notice-content">
+                    <h4><?php _e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
+                    <form style="display:flex">
+                        <div class="smartpay-notice-input-wrapper">
+                            <input type="text" value="<?php echo esc_attr($user->first_name); ?>" placeholder="<?php esc_attr_e('Name', 'smartpay'); ?>" />
+                        </div>
+                        <div class="smartpay-notice-input-wrapper">
+                            <input type="email" value="<?php echo esc_attr($user->user_email); ?>" required placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" />
+                        </div>
+                        <button type="submit" class="button button-primary subscribe-button"><?php _e('Get Discount'); ?></button>
+                    </form>
+                </div>
             </div>
-            <div class="smartpay-notice-input-wrapper">
-                <input type="email" value="<?php echo esc_attr($user->user_email); ?>" required placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" />
-            </div>
-            <button type="submit" class="button button-primary subscribe-button"><?php _e('Get Discount'); ?></button>
-        </form>
-    </div>
-</div>
 
-<style type="text/css">
-.smartpay-notice-wrapper {
-    padding: 15px;
-    display: flex;
-    align-items: center;
-}
+            <style type="text/css">
+                .smartpay-notice-wrapper {
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                }
 
-.smartpay-notice-wrapper img {
-    width: 50px;
-    max-width: 50px;
-    height: 50px;
-    margin-right: 15px;
-}
+                .smartpay-notice-wrapper img {
+                    width: 50px;
+                    max-width: 50px;
+                    height: 50px;
+                    margin-right: 15px;
+                }
 
-.smartpay-notice-wrapper h4 {
-    margin-top: 0;
-}
+                .smartpay-notice-wrapper h4 {
+                    margin-top: 0;
+                }
 
-.smartpay-notice-input-wrapper {
-    margin-right: 15px;
-}
-</style>
+                .smartpay-notice-input-wrapper {
+                    margin-right: 15px;
+                }
+            </style>
 
-<script type="text/javascript">
-jQuery(document).on('click', '.smartpay-notice-wrapper .notice-dismiss', function(event) {
-    event.preventDefault();
-    jQuery.ajax({
-        url: ajaxurl,
-        method: 'POST',
-        data: {
-            action: 'smartpay_contact_optin_notice_dismiss',
-            nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-            user_id: '<?php esc_attr_e($user_id); ?>',
-            meta_value: '<?php esc_attr_e($dismiss_key); ?>'
-        }
-    })
-});
+            <script type="text/javascript">
+                jQuery(document).on('click', '.smartpay-notice-wrapper .notice-dismiss', function(event) {
+                    event.preventDefault();
+                    jQuery.ajax({
+                        url: ajaxurl,
+                        method: 'POST',
+                        data: {
+                            action: 'smartpay_contact_optin_notice_dismiss',
+                            nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                            user_id: '<?php esc_attr_e($user_id); ?>',
+                            meta_value: '<?php esc_attr_e($dismiss_key); ?>'
+                        }
+                    })
+                });
 
-jQuery(document).on('submit', '.smartpay-notice-wrapper .smartpay-notice-content form', function(event) {
-    event.preventDefault();
-    let form = jQuery(this);
-    let name = form.find('input[type=text]').val();
-    let email = form.find('input[type=email]').val();
-    jQuery.ajax({
-        url: 'https://localhost/boss/wp-admin/admin-ajax.php',
-        method: 'POST',
-        crossDomain: true,
-        data: {
-            action: 'smartpay_customer_contact_optin',
-            name: name,
-            email: email,
-        },
-        success(response) {
-            form.parents('.smartpay-notice-wrapper').fadeOut();
-            if (response.success) {
-                jQuery.ajax({
-                    url: ajaxurl,
-                    method: 'POST',
-                    data: {
-                        action: 'smartpay_contact_optin_notice_dismiss',
-                        nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-                        user_id: '<?php esc_attr_e($user_id); ?>',
-                        meta_value: 'opted_in'
-                    }
-                })
-            }
-        }
-    })
-});
-</script>
+                jQuery(document).on('submit', '.smartpay-notice-wrapper .smartpay-notice-content form', function(event) {
+                    event.preventDefault();
+                    let form = jQuery(this);
+                    let name = form.find('input[type=text]').val();
+                    let email = form.find('input[type=email]').val();
+                    jQuery.ajax({
+                        url: 'https://localhost/boss/wp-admin/admin-ajax.php',
+                        method: 'POST',
+                        crossDomain: true,
+                        data: {
+                            action: 'smartpay_customer_contact_optin',
+                            name: name,
+                            email: email,
+                        },
+                        success(response) {
+                            form.parents('.smartpay-notice-wrapper').fadeOut();
+                            if (response.success) {
+                                jQuery.ajax({
+                                    url: ajaxurl,
+                                    method: 'POST',
+                                    data: {
+                                        action: 'smartpay_contact_optin_notice_dismiss',
+                                        nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                                        user_id: '<?php esc_attr_e($user_id); ?>',
+                                        meta_value: 'opted_in'
+                                    }
+                                })
+                            }
+                        }
+                    })
+                });
+            </script>
 
 <?php
         endif;
