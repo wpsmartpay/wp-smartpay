@@ -259,22 +259,22 @@ class Coupon
 
         //check if applied coupon once for this product
 
-        if ($productPrice < $originalProduct->sale_price) {
-            wp_send_json_error(['message' => 'You have already avail this coupon code']);
-            wp_die();
-        }
+        // if ($productPrice < $originalProduct->sale_price) {
+        //     wp_send_json_error(['message' => 'You have already availed this coupon code']);
+        //     wp_die();
+        // }
         if ($couponDiscountType == 'fixed') {
-            $discountAmount = $productPrice - $couponDiscountAmount;
+            $discountAmount = $originalProduct->sale_price - $couponDiscountAmount;
             $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
             $couponAmount = $couponDiscountAmount;
         } elseif ($couponDiscountType == 'percent') {
-            $discountAmount = $productPrice - ($productPrice * $couponDiscountAmount) / 100;
+            $discountAmount = $originalProduct->sale_price - ($originalProduct->sale_price * $couponDiscountAmount) / 100;
             $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
-            $couponAmount = ($productPrice * $couponDiscountAmount) / 100;
+            $couponAmount = ($originalProduct->sale_price * $couponDiscountAmount) / 100;
         }
 
         $couponData = [
-            'mainAmount'        => $productPrice,
+            'mainAmount'        => $originalProduct->sale_price,
             'discountAmount'    =>  $discountAmount,
             'couponAmount'      =>  $couponAmount,
         ];
