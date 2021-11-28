@@ -133,8 +133,8 @@ class Admin
 
     private function smartpayProMenu()
     {
-        // check if wp-smartpay-pro plugin is in activated plugin list
-        if (!in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
+        // check if wp-smartpay-pro or smartpay-pro plugin is in activated plugin list
+        if (!in_array('wp-smartpay-pro/smartpay-pro.php' || 'smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
             global $submenu;
 
             $submenu['smartpay'][99] = [
