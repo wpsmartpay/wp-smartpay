@@ -70,6 +70,8 @@ class ProductController extends RestController
 
             $wpdb->query('COMMIT');
 
+            // get the currently stored product
+            $product = Product::find($product->id);
             return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
@@ -138,7 +140,7 @@ class ProductController extends RestController
             });
 
             $wpdb->query('COMMIT');
-//            $product->refresh();
+            //            $product->refresh();
             $product->load('variations');
             return new WP_REST_Response(['product' => $product, 'message' => __('Product updated', 'smartpay')]);
         } catch (\Exception $e) {
