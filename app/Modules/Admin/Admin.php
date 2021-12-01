@@ -134,7 +134,9 @@ class Admin
     private function smartpayProMenu()
     {
         // check if wp-smartpay-pro or smartpay-pro plugin is in activated plugin list
-        if (!in_array('wp-smartpay-pro/smartpay-pro.php' || 'smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
+        if (!in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins'))
+            &&
+            !in_array('smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
             global $submenu;
 
             $submenu['smartpay'][99] = [
@@ -270,7 +272,7 @@ class Admin
     public function outputDashboardMarkup()
     {
         $user = wp_get_current_user();
-?>
+        ?>
         <div class="wpsmartpay-welcome">
             <div class="container">
                 <div class="introduction-image">
@@ -366,7 +368,7 @@ class Admin
         }
 
         if ('smartpay_page_wpsmartpay-getting-started' !==  $admin_page->base) :
-        ?>
+            ?>
             <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
                 <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
                 <div class="smartpay-notice-content">
@@ -454,7 +456,7 @@ class Admin
                 });
             </script>
 
-<?php
+        <?php
         endif;
     }
 
