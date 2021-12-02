@@ -12,9 +12,7 @@ window.SMARTPAY_PRODUCT_HOOKS = createHooks()
 export const ProductList = () => {
     const [products, setProducts] = useState([])
 
-    const productList = useSelect((select) =>
-        select('smartpay/products').getProducts()
-    )
+    const productList = useSelect((select) => select('smartpay/products').getProducts())
 
     useEffect(() => {
         setProducts(productList)
@@ -49,6 +47,8 @@ export const ProductList = () => {
             }
         })
     }
+
+    let uniqueProducts = products?.filter((v, i, a) => a.findIndex(t => (t.id == v.id)) === i)
 
     return (
         <>
@@ -88,7 +88,7 @@ export const ProductList = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {!products.length && (
+                            {!uniqueProducts.length && (
                                 <tr>
                                     <td className="text-center" colSpan="3">
                                         {__('No product found.', 'smartpay')}
@@ -96,26 +96,26 @@ export const ProductList = () => {
                                 </tr>
                             )}
 
-                            {products.map((product, index) => {
+                            {uniqueProducts.map((product, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{product.title || ''}</td>
-                                        <td>{product.updated_at || ''}</td>
+                                        <td>{product.created_at || ''}</td>
                                         <td className="text-right">
                                             {product?.extra
                                                 ?.product_preview_page_permalink && (
-                                                <Button
-                                                    variant="link"
-                                                    href={
-                                                        product.extra
-                                                            .product_preview_page_permalink
-                                                    }
-                                                    target="_blank"
-                                                    className="btn btn-sm text-decoration-none p-0 mr-2"
-                                                >
-                                                    {__('Preview', 'smartpay')}
-                                                </Button>
-                                            )}
+                                                    <Button
+                                                        variant="link"
+                                                        href={
+                                                            product.extra
+                                                                .product_preview_page_permalink
+                                                        }
+                                                        target="_blank"
+                                                        className="btn btn-sm text-decoration-none p-0 mr-2"
+                                                    >
+                                                        {__('Preview', 'smartpay')}
+                                                    </Button>
+                                                )}
                                             <Link
                                                 className="btn btn-sm btn-link p-0 mr-2"
                                                 to={`/products/${product.id}/edit`}
