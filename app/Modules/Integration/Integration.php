@@ -44,6 +44,14 @@ class Integration
                 'type'       => 'pro',
                 'categories' => ['Payment Gateway'],
             ],
+            'razorpay' => [
+                'name'       => 'RazorPay',
+                'excerpt'    => 'Razorpay provides financial services for SaaS and Digital services in India.',
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Payment Gateway'],
+            ],
             'mailchimp' => [
                 'name'       => __('MailChimp', 'smartpay'),
                 'excerpt'    => __('Mailchimp is an email marketing service.', 'smartpay'),
@@ -91,7 +99,7 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
-            ]
+            ],
         ];
     }
 
