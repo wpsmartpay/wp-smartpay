@@ -45,7 +45,7 @@ class Integration
                 'categories' => ['Payment Gateway'],
             ],
             'razorpay' => [
-                'name'       => 'RazorPay',
+                'name'       => 'Razorpay',
                 'excerpt'    => 'Razorpay provides financial services for SaaS and Digital services in India.',
                 'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png',
                 'manager'    => null,

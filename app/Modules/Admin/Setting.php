@@ -618,7 +618,7 @@ class Setting
                 'label' => 'bKash'
             ],
             'razorpay' => [
-                'label' => 'Razor Pay'
+                'label' => 'Razorpay'
             ]
         ];
         $enableGateways = [];
