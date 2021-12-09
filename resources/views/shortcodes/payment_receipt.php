@@ -1,24 +1,3 @@
-<?php
-$data = [
-    'user_id' => '1',
-    'payment_id' => $_POST['razorpay_payment_id'],
-    'amount' => $_POST['totalAmount'],
-    'product_id' => $_POST['product_id'],
-];
-
-if ($data['payment_id']) {
-    $pay = \SmartPay\Models\Payment::find($payment->id);
-    $pay->updateStatus(\SmartPay\Models\Payment::COMPLETED);
-}
-print_r($data);
-// you can write your database insertation code here
-// after successfully insert transaction in database, pass the response accordingly
-$arr = array('msg' => 'Payment successfully credited', 'status' => true);
-echo json_encode($arr);
-?>
-
-
-
 <?php if ($payment) : ?>
 
     <?php do_action('smartpay_before_payment_receipt', $payment); ?>
