@@ -41,7 +41,7 @@ export const CreateProduct = () => {
                 },
             })
 
-            // history.push(`/products/${response.product.id}/edit`)
+            history.push(`/products/${response.product.id}/edit`)
         })
     }
 
