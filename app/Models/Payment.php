@@ -156,6 +156,16 @@ class Payment extends Model
         $this->attributes['extra'] = \json_encode($extra);
     }
 
+    public function updatePaymentExtra(string $mainKey, string $childKey, string $value)
+    {
+        $extra = $this->extra ?? [];
+        $keyExtra = $extra[$mainKey] ?? [];
+        $keyExtra[$childKey] = $value;
+        $extra[$mainKey] = $keyExtra;
+        $this->extra = $extra;
+        $this->save();
+    }
+
     public function getExtraAttribute($extra)
     {
         return json_decode($extra, true);

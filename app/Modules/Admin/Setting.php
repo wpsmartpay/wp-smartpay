@@ -88,6 +88,7 @@ class Setting
     public static function registered_settings()
     {
         $smartpay_logs = new Logger();
+        // dd(smartpay_get_enabled_payment_gateways());
         $smartpay_settings = array(
             /** General Settings */
             'general' => apply_filters(
@@ -615,6 +616,9 @@ class Setting
             ],
             'bkash' => [
                 'label' => 'bKash'
+            ],
+            'razorpay' => [
+                'label' => 'Razorpay'
             ]
         ];
         $enableGateways = [];
