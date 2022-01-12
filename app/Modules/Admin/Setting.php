@@ -194,7 +194,7 @@ class Setting
                         ),
                         'from_name' => array(
                             'id'    => 'from_name',
-                            'name'  => __('Form Name', 'smartpay'),
+                            'name'  => __('From Name', 'smartpay'),
                             'desc'  => __('The name purchase receipts are said to come from. This should probably be your site or shop name.', 'smartpay'),
                             'type'  => 'text',
                         ),

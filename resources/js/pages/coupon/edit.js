@@ -170,11 +170,17 @@ export const EditCoupon = () => {
                                 </Form.Group>
                             </Tab>
                             <Tab
-                                tabClassName="text-decoration-none"
-                                eventKey="usage-restriction"
+                                eventKey="usageRestriction"
                                 title="Usage Restriction"
                             >
-                                <>Upgrade to pro</>
+                                <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
+                                    <h3 className="mt-1">
+                                        {__(
+                                            'Coming soon',
+                                            'smartpay'
+                                        )}
+                                    </h3>
+                                </div>
                             </Tab>
                         </Tabs>
                     </div>
