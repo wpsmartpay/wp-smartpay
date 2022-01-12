@@ -75,7 +75,7 @@ export const CouponList = () => {
                                 <th className="w-75 text-left">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
-                                <th className="w-25 text-left">
+                                <th className="w-25 text-right">
                                     {__('Actions', 'smartpay')}
                                 </th>
                             </tr>

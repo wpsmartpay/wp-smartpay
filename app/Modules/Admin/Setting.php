@@ -88,6 +88,7 @@ class Setting
     public static function registered_settings()
     {
         $smartpay_logs = new Logger();
+        // dd(smartpay_get_enabled_payment_gateways());
         $smartpay_settings = array(
             /** General Settings */
             'general' => apply_filters(
@@ -193,7 +194,7 @@ class Setting
                         ),
                         'from_name' => array(
                             'id'    => 'from_name',
-                            'name'  => __('Form Name', 'smartpay'),
+                            'name'  => __('From Name', 'smartpay'),
                             'desc'  => __('The name purchase receipts are said to come from. This should probably be your site or shop name.', 'smartpay'),
                             'type'  => 'text',
                         ),
@@ -615,6 +616,9 @@ class Setting
             ],
             'bkash' => [
                 'label' => 'bKash'
+            ],
+            'razorpay' => [
+                'label' => 'Razorpay'
             ]
         ];
         $enableGateways = [];

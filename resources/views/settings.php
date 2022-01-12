@@ -83,9 +83,9 @@ ob_start();
                 $number_of_sections = count($sections);
                 $number = 0;
                 if ($number_of_sections > 1) {
-                    echo '<ul class="nav nav-pills border-bottom px-3 pb-2 mt-n2 mx-n4">';
+                    echo '<ul class="d-flex bd-highlight nav nav-pills border-bottom px-3 pb-2 mt-n2 mx-n4">';
                     foreach ($sections as $section_id => $section_name) {
-                        echo '<li class="nav-item m-0">';
+                        echo '<li class="bd-highlight nav-item m-0">';
                         $number++;
                         $tab_url = add_query_arg(array(
                             'settings-updated' => false,
@@ -100,6 +100,15 @@ ob_start();
 
                         echo '</li>';
                     }
+
+                    $payment_mode = smartpay_is_test_mode() ? 'Test Mode' : 'Live Mode';
+
+                    $test_mode_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                                        </svg>';
+                    echo '<li class="ml-auto bd-highlight nav-item m-0">';
+                    echo '<span class="btn-sm btn-secondary disabled">' . $test_mode_svg . $payment_mode . '</span>';
+                    echo '</li>';
                     echo '</ul>';
                 }
                 ?>

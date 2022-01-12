@@ -188,7 +188,7 @@ export const CreateCoupon = () => {
                                         <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
                                             <h3 className="mt-1">
                                                 {__(
-                                                    'Upgrade to pro',
+                                                    'Coming soon',
                                                     'smartpay'
                                                 )}
                                             </h3>
