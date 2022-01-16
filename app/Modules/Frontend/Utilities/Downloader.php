@@ -59,7 +59,7 @@ class Downloader
 
         $fileIndex = array_search($file_id, array_column($product->files, 'id'));
 
-        if (0 < $fileIndex) {
+        if (0 > $fileIndex) {
             wp_die(__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
         }
 

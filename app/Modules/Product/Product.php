@@ -18,6 +18,7 @@ class Product
 
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
 
+        $this->app->addFilter('smartpay_settings_general', [$this, 'productSettings']);
         $this->app->addAction('smartpay_create_product_preview_page',[$this, 'createProductPreviewPage']);
         $this->app->addAction('smartpay_update_product_preview_page',[$this, 'updateProductPreviewPage']);
         $this->app->addAction('smartpay_delete_product_preview_page',[$this, 'deleteProductPreviewPage']);
@@ -110,5 +111,29 @@ class Product
         if( is_array($extraFields) && array_key_exists('product_preview_page_id',$extraFields) ) {
             wp_delete_post( $extraFields['product_preview_page_id'] );
         }
+    }
+
+    // add setting for product configuration
+    public function productSettings($settings): array
+    {
+        $settings['main']['product_heading_settings'] = [
+            'id'   => 'product_heading_settings',
+            'name' => '<h4 class="text-uppercase text-info my-1">' . __('Product Settings', 'smartpay') . '</h4>',
+            'desc' => '',
+            'type' => 'header',
+        ];
+        $settings['main']['product_download_files_settings_for_receipt'] = [
+            'id'   => 'product_download_files_settings_for_receipt',
+            'name' => __('Enable Download files', 'smartpay'),
+            'label' => __('Show associate download files on payment receipt', 'smartpay'),
+            'type' => 'checkbox',
+        ];
+//        $settings['main']['coupon_settings_for_product'] = [
+//            'id'   => 'coupon_settings_for_product',
+//            'name' => __('Enable coupons at product', 'smartpay'),
+//            'label' => __('Enable the use of coupon codes', 'smartpay'),
+//            'type' => 'checkbox',
+//        ];
+        return $settings;
     }
 }
