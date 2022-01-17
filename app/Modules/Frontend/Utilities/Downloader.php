@@ -1381,7 +1381,7 @@ class Downloader
         if (!$paymentId || !$payment) return '#';
 
         // TODO: Add option to set max hours
-        $hours = 12;
+        $hours = 168; // 7 days
 
         if (!($expire = strtotime('+' . $hours . 'hours', current_time('timestamp')))) {
             $expire = 2147472000; // Highest possible date, January 19, 2038
