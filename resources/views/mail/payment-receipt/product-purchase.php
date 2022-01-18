@@ -205,10 +205,11 @@ $product       = Product::with('parent')->find($productId);
                                                 </tr>
                                             </table>
                                             <div>
-                                                <p>
+                                                <p style="font-size: 14px;">
                                                     <strong>
-                                                        [N:B] - Download link will be validated for only 7 days.
-                                                        After expiring, you will need to download the files from the account login
+                                                        [N:B] - The download links will stay valid for 7 days.
+                                                        Once the link has expired you can still download your product/s from your
+                                                        <a href="<?php echo site_url() . '/smartpay-customer-dashboard'; ?>">account dashboard</a>.
                                                     </strong>
                                                 </p>
                                             </div>
