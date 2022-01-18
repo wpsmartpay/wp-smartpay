@@ -114,6 +114,15 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.5.1] =
+* Add - pProduct files on payment receipt page.
+* Add - Create wp user after payment creation for new customer
+* Add - View payment detail link on customer dashboard
+* Add - Link expiration notice on product purchase email
+* Add - Review video on description and onboarding page
+* Fix - Product alignment on customer dashboard
+* Fix - Download link on product purchase email
+
 = [2.5.0] =
 * Add - Razorpay payment gateway section on Integrations.
 * Add - Php 8.0 support
