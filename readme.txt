@@ -4,7 +4,7 @@ Tags: download manager, digital product, donation, ecommerce, stripe, paypal, pa
 Requires at least: 4.9
 Tested up to: 5.8.3
 Requires PHP: 7.4.0
-Stable Tag: 2.5.0
+Stable Tag: 2.5.1
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
@@ -13,6 +13,8 @@ The Simplest way to sell digital downloads and set up payment forms with Stripe,
 The Simplest way to sell digital downloads and accept payments to run your business online. Often, you don't need a sophisticated store, cart, or checkout process to sell your digital product or take payment. You need a simple payment form to do it all. Do it smartly with WP SmartPay.
 
 Sell your product or set up payment forms with Stripe, PayPal, and Paddle. You can accept donations, crowdfunding, take service payments, and manage downloads with ease.
+
+[youtube http://www.youtube.com/watch?v=PdqA7XNH60Q]
 
 ###🪁 Sell Digital Products Effortlessly
 Whether it is ebooks, documents, graphics, songs, videos, photos, or any other media file type, sell it effortlessly with WP SmartPay.
@@ -112,6 +114,15 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.5.1] =
+* Add - Downloadable Product files list added on payment receipt page.
+* Add - WordPress user creation after payment
+* Add - Dashboard to payment receipt page link
+* Add - Download Link expiration notice added after link expires
+* Add - Review video on description and Getting Started page
+* Fix - Product alignment on customer dashboard
+* Fix - Download link's expiration extended to 7 days on product purchase email
+
 = [2.5.0] =
 * Add - Razorpay payment gateway section on Integrations.
 * Add - Php 8.0 support
