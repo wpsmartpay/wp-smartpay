@@ -30,7 +30,6 @@ class CreateUser {
 
             try {
                 $user = wp_insert_user( $new_customer_data );
-                echo $user;
                 if ($user){
                     //send notification
                     wp_new_user_notification($user, null, 'both');
