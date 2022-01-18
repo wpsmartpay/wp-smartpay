@@ -8,6 +8,7 @@ use SmartPay\Models\Form;
 use SmartPay\Http\Controllers\Rest\Admin\PaymentController;
 use SmartPay\Models\Customer;
 use SmartPay\Models\Payment as PaymentModel;
+use SmartPay\Modules\Customer\CreateUser;
 use WP_REST_Server;
 
 class Payment
@@ -244,6 +245,8 @@ class Payment
         do_action('smartpay_after_insert_payment', $payment);
 
         if (!empty($payment->id)) {
+            $create_user = new CreateUser();
+            $create_user->create_user($payment);
             // Set session payment id
             //smartpay_set_session_payment_id($payment->ID);
 
