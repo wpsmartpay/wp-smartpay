@@ -120,7 +120,7 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                             <ul class="list-group">
                                                                 <?php foreach ($downloadFiles as $file) : ?>
                                                                     <li class="list-group-item p-2">
-                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                        <div class="d-flex align-items-center">
                                                                             <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
                                                                             <div class="d-flex flex-grow-1 flex-column ml-3">
                                                                                 <p class="m-0"><?php echo $file['name'] ?? ''; ?></p>
