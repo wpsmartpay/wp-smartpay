@@ -284,9 +284,9 @@ class Admin
                         <p><?php _e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
                     </div>
                     <div class="introduction-video">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/pPT4NNrBnxw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-                        <p><?php _e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?></p>
+<!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?><!--</p>-->
                     </div>
                 </div>
 

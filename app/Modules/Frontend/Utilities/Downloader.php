@@ -59,7 +59,7 @@ class Downloader
 
         $fileIndex = array_search($file_id, array_column($product->files, 'id'));
 
-        if (0 < $fileIndex) {
+        if (0 > $fileIndex) {
             wp_die(__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
         }
 
@@ -1381,7 +1381,7 @@ class Downloader
         if (!$paymentId || !$payment) return '#';
 
         // TODO: Add option to set max hours
-        $hours = 12;
+        $hours = 168; // 7 days
 
         if (!($expire = strtotime('+' . $hours . 'hours', current_time('timestamp')))) {
             $expire = 2147472000; // Highest possible date, January 19, 2038

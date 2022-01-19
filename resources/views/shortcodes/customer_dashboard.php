@@ -49,6 +49,7 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                         <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
                                                         <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
                                                         <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
+                                                        <th scope="col"><?php _e('Action', 'smartpay'); ?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -63,6 +64,12 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                                 <strong class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
                                                                     <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
                                                                 </strong>
+                                                            </td>
+                                                            <td>
+                                                                <?php
+                                                                $payment_detail_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
+                                                                ?>
+                                                                <a href="<?php echo $payment_detail_url; ?>" target="_blank">View</a>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
@@ -113,7 +120,7 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                             <ul class="list-group">
                                                                 <?php foreach ($downloadFiles as $file) : ?>
                                                                     <li class="list-group-item p-2">
-                                                                        <div class="d-flex align-items-center flex-wrap">
+                                                                        <div class="d-flex align-items-center">
                                                                             <img src="<?php echo $file['icon']; ?>" class="download-item-icon" alt="">
                                                                             <div class="d-flex flex-grow-1 flex-column ml-3">
                                                                                 <p class="m-0"><?php echo $file['name'] ?? ''; ?></p>
