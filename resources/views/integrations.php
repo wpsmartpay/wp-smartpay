@@ -18,7 +18,7 @@
                     <?php foreach (smartpay_integrations() as $namespace => $integration) : ?>
                         <div class="col-lg-3 col-md-4 integration">
                             <div class="card p-3 mb-3 d-flex">
-                                <div class="image m-0 mb-3 text-center">
+                                <div class="image m-0 mb-3 text-center" style="height: 90px;">
                                     <img src="<?php echo $integration['cover']; ?>" class="img-fluid" alt="">
                                 </div>
                                 <div class="info">
