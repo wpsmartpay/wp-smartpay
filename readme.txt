@@ -71,10 +71,11 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 [**Upgrade to WP SmartPay Pro Now**](https://wpsmartpay.com/)
 
 ####🧩 Payment Gateway Integrations
-- [PayPal](https://demo.wpsmartpay.com/paypal-checkout/?gateway=paypal) - The most used and widely available international payment gateway. WP SmartPay's core version comes with PayPal standard support.
-- [Stripe](https://demo.wpsmartpay.com/paypal-checkout/?gateway=stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
-- [Paddle](https://demo.wpsmartpay.com/paddle-checkout/?gateway=paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
-- [bKash](https://demo.wpsmartpay.com/bkash-checkout/?gateway=bkash) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
+- [PayPal](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal) - The most used and widely available international payment gateway. WP SmartPay's core version comes with PayPal standard support.
+- [Stripe](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
+- [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
+- [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
+- [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### LOCALE AND CURRENCY SETTINGS
 - Stripe currently supports [27 languages](https://support.stripe.com/questions/supported-languages-for-stripe-checkout), [39 countries](https://stripe.com/global), and [135+ currencies](https://stripe.com/docs/currencies).
