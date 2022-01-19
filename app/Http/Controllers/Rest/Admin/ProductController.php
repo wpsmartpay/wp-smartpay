@@ -62,17 +62,24 @@ class ProductController extends RestController
             $product->covers = $request->covers ?? [];
             $product->status = Product::PUBLISH;
             $product->extra = $request->extra ?: [];
-            $product->save();
+            $result = $product->save();
 
-            array_walk($request->variations, function ($variationData) use ($product) {
-                $this->createVariation($variationData, $product->id);
-            });
+            if($result && $product->id){
 
-            $wpdb->query('COMMIT');
+                array_walk($request->variations, function ($variationData) use ($product) {
+                    $this->createVariation($variationData, $product->id);
+                });
 
-            // get the currently stored product
-            $product = Product::find($product->id);
-            return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
+                $wpdb->query('COMMIT');
+
+                // get the currently stored product
+                $product = Product::find($product->id);
+                return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
+            }else{
+                $wpdb->query('ROLLBACK');
+                error_log('Product did not create.');
+                return new WP_REST_Response('Product did not create.', 500);
+            }
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
