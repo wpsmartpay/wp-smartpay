@@ -62,7 +62,7 @@ class ProductController extends RestController
             $product->covers = $request->covers ?? [];
             $product->status = Product::PUBLISH;
             $product->extra = $request->extra ?: [];
-            $result = $product->save();
+            $result = $product->save(); // response true
 
             if($result && $product->id){
 
@@ -73,17 +73,18 @@ class ProductController extends RestController
                 $wpdb->query('COMMIT');
 
                 // get the currently stored product
-                $product = Product::find($product->id);
+                $product = Product::find($product->id); // response product object
+
                 return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
             }else{
                 $wpdb->query('ROLLBACK');
-                error_log('Product did not create.');
-                return new WP_REST_Response('Product did not create.', 500);
+                error_log('Failed to create product.');
+                return new WP_REST_Response(['message' => __('Failed to create product.', 'smartpay')], 500);
             }
         } catch (\Exception $e) {
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
-            return new WP_REST_Response($e->getMessage(), 500);
+            return new WP_REST_Response(['message' => __($e->getMessage(), 'smartpay')], 500);
         }
     }
 
