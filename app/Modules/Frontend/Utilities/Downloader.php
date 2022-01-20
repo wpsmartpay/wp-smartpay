@@ -1423,10 +1423,10 @@ class Downloader
 
         $parts   = parse_url($url);
 
-        $args['ip'] = smartpay_get_ip();
+        // $args['ip'] = smartpay_get_ip(); // uncomment when you will need to ip validation
 
         $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-        $args['user_agent'] = rawurlencode($ua);
+        // $args['user_agent'] = rawurlencode($ua);
         $args['secret'] = $secret;
         $args['token']  = false; // Removes a token if present.
 
