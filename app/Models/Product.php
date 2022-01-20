@@ -30,7 +30,9 @@ class Product extends Model
         });
 
         static::created(function ($product) {
-            do_action('smartpay_create_product_preview_page', $product);
+            if($product->id){
+                do_action('smartpay_create_product_preview_page', $product);
+            }
         });
 
         static::updated(function($product){
