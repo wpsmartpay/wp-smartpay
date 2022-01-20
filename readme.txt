@@ -116,10 +116,11 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.5.2] =
-* Fix - Download link was not working for file downloads on product purchase mail
+* Add - Added Razorpay documentation link on the readme
+* Add - Product creation bug report message
+* Update - Update Razorpay logo on the integration page
+* Fix - File downloads on product purchase mail
 * Fix - Update documentation link for payment gateways
-* Add - Added Razorpay documentation link on readme
-* Add - Update Razorpay logo on integration page
 
 = [2.5.1] =
 * Add - Downloadable Product files list added on payment receipt page.
