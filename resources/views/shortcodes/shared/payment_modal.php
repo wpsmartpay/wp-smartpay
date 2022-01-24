@@ -11,10 +11,7 @@ $free_gateway = $manual_gateways['free'];
 $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
-
 $has_payment_error = false;
-
-//$success_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
 ?>
 
 <div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
@@ -50,11 +47,6 @@ $has_payment_error = false;
                         <div class="payment-modal--gateway">
                             <!-- // If Product has Zero sale amount -->
                             <?php if ($product->sale_price <= 0): ?>
-                                <p class="payment-gateway--label text-muted single-gateway">
-                                    <?php echo sprintf(__('This Product is- ', 'smartpay') . ' <strong>%s</strong>', esc_html($free_gateway['checkout_label']));
-                                    ?>
-                                </p>
-<!--                                <img src="--><?php //echo SMARTPAY_PLUGIN_ASSETS . '/img/' . 'free' . '.png'; ?><!--" alt="">-->
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
 <!--                            --><?php //endif; ?>
