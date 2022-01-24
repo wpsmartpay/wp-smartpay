@@ -104,7 +104,7 @@ class Payment
     {
         $gateway = sanitize_text_field($_POST['data']['smartpay_gateway']) ?? '';
 
-        if (!is_string($gateway) || !smartpay_is_gateway_active($gateway)) {
+        if ('free'!==$gateway && (!is_string($gateway) || !smartpay_is_gateway_active($gateway))) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';
             return;
         }

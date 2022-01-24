@@ -6,11 +6,15 @@ $customer = is_user_logged_in() ? Customer::where('user_id', get_current_user_id
 
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
+$manual_gateways = smartpay_payment_gateways();
+$free_gateway = $manual_gateways['free'];
 $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 
 $has_payment_error = false;
+
+//$success_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
 ?>
 
 <div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
@@ -23,7 +27,6 @@ $has_payment_error = false;
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
                 </button>
-
                 <div class="d-flex flex-column justify-content-center modal-title">
                     <p class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></p>
                     <h2 class="payment-modal--title amount m-0">--</h2>
@@ -45,8 +48,18 @@ $has_payment_error = false;
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
 
                         <div class="payment-modal--gateway">
+                            <!-- // If Product has Zero sale amount -->
+                            <?php if ($product->sale_price <= 0): ?>
+                                <p class="payment-gateway--label text-muted single-gateway">
+                                    <?php echo sprintf(__('This Product is- ', 'smartpay') . ' <strong>%s</strong>', esc_html($free_gateway['checkout_label']));
+                                    ?>
+                                </p>
+<!--                                <img src="--><?php //echo SMARTPAY_PLUGIN_ASSETS . '/img/' . 'free' . '.png'; ?><!--" alt="">-->
+                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
+
+<!--                            --><?php //endif; ?>
                             <!-- // If only one gateway activated -->
-                            <?php if (count($gateways) == 1) : ?>
+                            <?php elseif (count($gateways) == 1) : ?>
                                 <?php $gateways_index = array_keys($gateways); ?>
                                 <p class="payment-gateway--label text-muted single-gateway">
                                     <?php echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label']));

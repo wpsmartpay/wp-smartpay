@@ -67,7 +67,13 @@
                                     <li class="list-group-item price selected">
                                         <label class="d-block m-0">
                                             <div class="price--amount">
-                                                <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
+                                                <span class="sale-price"><?php
+                                                    if ($product->sale_price <= 0){
+                                                        echo 'Free';
+                                                    } else {
+                                                        echo smartpay_amount_format($product->sale_price);
+                                                    }
+                                                    ?></span>
                                                 <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
                                                 <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                 <?php endif; ?>
