@@ -3,22 +3,22 @@
         <!-- Product details -->
         <div class="card product">
             <?php if (count($product->covers)) : ?>
-            <div class="bg-light product--image border-bottom">
-                <img src="<?php echo $product->covers[0]['url']; ?>" class="card-img-top">
-            </div>
+                <div class="bg-light product--image border-bottom">
+                    <img src="<?php echo $product->covers[0]['url']; ?>" class="card-img-top">
+                </div>
             <?php endif; ?>
 
             <div class="card-body p-5">
                 <div class="row">
                     <div class="col-sm-12 col-md-7 mb-3">
                         <?php if ($product->title) : ?>
-                        <h2 class="card-title product--title mt-0 mb-2"><?php echo $product->title; ?></h2>
+                            <h2 class="card-title product--title mt-0 mb-2"><?php echo $product->title; ?></h2>
                         <?php endif; ?>
 
                         <?php if ($product->description) : ?>
-                        <div class="card-text product--description">
-                            <?php echo wpautop($product->description); ?>
-                        </div>
+                            <div class="card-text product--description">
+                                <?php echo wpautop($product->description); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
 
@@ -28,64 +28,66 @@
                                 <ul class="list-group">
                                     <?php
                                     if (count($product->variations)) : ?>
-                                    <!-- Variations -->
-                                    <?php foreach ($product->variations as $index => $variation) : ?>
-                                    <?php $billingType = $variation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
-                                    <?php $billingPeriod = $variation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
-                                    <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
-                                        <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
-                                            <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
-                                            <input type="hidden" name="_product_billing_type" id="_product_billing_type_<?php echo $variation->id; ?>" value="<?php echo $billingType; ?>">
-                                            <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                            <input type="hidden" name="_product_billing_period" id="_product_billing_period_<?php echo $variation->id; ?>" value="<?php echo $billingPeriod; ?>">
-                                            <?php endif; ?>
-                                            <div class="price--amount">
-                                                <span class="sale-price"><?php echo smartpay_amount_format(($variation->price)); ?></span>
-                                                <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
-                                                <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
-                                                <?php endif; ?>
-                                                <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                                <span>/ <?php echo $billingPeriod; ?></span>
-                                                <?php endif; ?>
-                                            </div>
-                                            <h5 class="m-0 price--title">
-                                                <?php echo esc_html($variation->title); ?>
-                                            </h5>
-                                            <?php if ($variation->description ?? false) : ?>
-                                            <p class="variation--description m-0">
-                                                <?php echo wpautop($variation->description); ?>
-                                            </p>
-                                            <?php endif; ?>
-                                        </label>
-                                    </li>
-                                    <?php endforeach; ?>
+                                        <!-- Variations -->
+                                        <?php foreach ($product->variations as $index => $variation) : ?>
+                                            <?php $billingType = $variation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+                                            <?php $billingPeriod = $variation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
+                                            <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
+                                                <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
+                                                    <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
+                                                    <input type="hidden" name="_product_billing_type" id="_product_billing_type_<?php echo $variation->id; ?>" value="<?php echo $billingType; ?>">
+                                                    <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                                        <input type="hidden" name="_product_billing_period" id="_product_billing_period_<?php echo $variation->id; ?>" value="<?php echo $billingPeriod; ?>">
+                                                    <?php endif; ?>
+                                                    <div class="price--amount">
+                                                        <span class="sale-price"><?php echo smartpay_amount_format(($variation->price)); ?></span>
+                                                        <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
+                                                            <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
+                                                        <?php endif; ?>
+                                                        <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                                            <span>/ <?php echo $billingPeriod; ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <h5 class="m-0 price--title">
+                                                        <?php echo esc_html($variation->title); ?>
+                                                    </h5>
+                                                    <?php if ($variation->description ?? false) : ?>
+                                                        <p class="variation--description m-0">
+                                                            <?php echo wpautop($variation->description); ?>
+                                                        </p>
+                                                    <?php endif; ?>
+                                                </label>
+                                            </li>
+                                        <?php endforeach; ?>
 
-                                    <!-- Product price -->
+                                        <!-- Product price -->
                                     <?php else : ?>
-                                    <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
-                                    <?php $productBillingPeriod = $product->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
-                                    <li class="list-group-item price selected">
-                                        <label class="d-block m-0">
-                                            <div class="price--amount">
-                                                <span class="sale-price"><?php
-                                                    if ($product->sale_price <= 0){
-                                                        echo 'Free';
-                                                    } else {
-                                                        echo smartpay_amount_format($product->sale_price);
-                                                    }
-                                                    ?></span>
-                                                <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
-                                                <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
-                                                <?php endif; ?>
-                                                <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $productBillingType) : ?>
-                                                <span>/ <?php echo $productBillingPeriod; ?></span>
-                                                <?php endif; ?>
-                                            </div>
-                                            <h5 class="m-0 price--title">
-                                                <?php echo _e('Product Price', 'smartpay'); ?>
-                                            </h5>
-                                        </label>
-                                    </li>
+                                        <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+                                        <?php $productBillingPeriod = $product->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
+                                        <li class="list-group-item price selected">
+                                            <label class="d-block m-0">
+                                                <div class="price--amount">
+
+                                                    <?php if ($product->sale_price <= 0): ?>
+                                                        <span class="sale-price"><?php echo 'Free'; ?></span>
+                                                        <?php if ($product->base_price > $product->sale_price) : ?>
+                                                            <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
+                                                        <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
+                                                            <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                    <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $productBillingType) : ?>
+                                                        <span>/ <?php echo $productBillingPeriod; ?></span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <h5 class="m-0 price--title">
+                                                    <?php echo _e('Product Price', 'smartpay'); ?>
+                                                </h5>
+                                            </label>
+                                        </li>
                                     <?php endif; ?>
                                 </ul>
                             </div>
