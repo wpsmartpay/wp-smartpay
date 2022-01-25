@@ -39,6 +39,7 @@ $has_payment_error = false;
             </div>
 
             <?php do_action('smartpay_product_modal_popup_content'); ?>
+            <div class="payment-modal--errors text-center" style="display: none"></div>
 
 
             <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
@@ -46,7 +47,7 @@ $has_payment_error = false;
             <?php if ($productBillingType === \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) : ?>
                 <div class="justify-content-center mb-2 mt-2">
                     <p class="text-center text-muted font-weight-light">
-                        Enter your info to begin your <strong><?php echo $product->extra['billing_period']; ?> </strong> subscription. You can cancel anytime.
+                        Enter your info to begin your <span class="product_billing_type"><strong>--</strong></span> subscription. You can cancel anytime.
                     </p>
                 </div>
 
@@ -93,8 +94,6 @@ $has_payment_error = false;
                                 <div class="alert alert-danger"><?php echo 'You must enable a payment gateway to proceed a payment.'; ?></div>
                             <?php endif; ?>
                         </div>
-
-                        <div class="payment-modal--errors" style="display: none"></div>
 
                         <div class="payment-modal--user-info">
                             <div class="form-row">

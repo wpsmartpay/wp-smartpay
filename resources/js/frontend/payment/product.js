@@ -88,16 +88,21 @@ jQuery(($) => {
 
             // Set payment amount
             let paymentAmount = 0
+            const currencySymbol = $('#smartpay_currency_symbol').data(
+                'value'
+            )
             if ('form_payment' === formData.smartpay_payment_type) {
-                const currencySymbol = $('#smartpay_currency_symbol').data(
-                    'value'
-                )
                 paymentAmount = currencySymbol + formData.smartpay_amount
             } else {
-                paymentAmount = formData.smartpay_product_price
+                paymentAmount = currencySymbol + formData.smartpay_product_price
             }
-            $paymentModal.find('.amount').html(paymentAmount)
 
+            // let selectedPriceType = $paymentModal.find('input[name="smartpay_product_billing_period"]').val()
+            const selectedPriceType = jQuery('input[name="smartpay_product_billing_period"]').val()
+
+            // show subscription type
+            $paymentModal.find('.amount').html(paymentAmount)
+            $paymentModal.find('.product_billing_type').html(`<strong>${selectedPriceType}</strong>`)
             // Reset payment modal
             resetPaymentModal($paymentModal)
 
