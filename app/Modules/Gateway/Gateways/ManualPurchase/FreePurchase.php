@@ -2,19 +2,15 @@
 
 namespace SmartPay\Modules\Gateway\Gateways\ManualPurchase;
 
-use Razorpay\Api\Api;
 use SmartPay\Foundation\PaymentGateway;
 use SmartPay\Models\Payment;
-use SmartPay\Models\Form;
 use SmartPay\Models\Product;
-use SmartPayPro\Models\Subscription;
 
 
 defined('ABSPATH') || exit;
 
 final class FreePurchase extends PaymentGateway
 {
-
     public function __construct()
     {
         $this->init_actions();
@@ -39,31 +35,39 @@ final class FreePurchase extends PaymentGateway
         return self::$instance;
     }
 
-
     public function init_actions()
     {
-        add_action('smartpay_razorpay_process_payment', [$this, 'process_payment']);
         add_action('smartpay_free_ajax_process_payment', [$this, 'ajax_process_payment']);
         add_action('smartpay_free_subscription_process_payment', [$this, 'subscriptionProcessPayment'], 10, 2);
 
-    }
-
-    public function process_payment($payment_data)
-    {
-        return;
     }
 
     public function ajax_process_payment($payment_data)
     {
         global $smartpay_options;
 
+        // check payment type is product purchase and should not provide for form payment
+        if (Payment::PRODUCT_PURCHASE !== $payment_data['payment_type']) {
+            die('Free Purchase only available for products only.');
+        }
+
         $product = Product::where('id', $payment_data['payment_data']['product_id'])->first();
         if ($product) {
             if ($product->sale_price == $payment_data['amount']) {
                 $payment = smartpay_insert_payment($payment_data);
+                if ($payment) {
+                    smartpay_debug_log(__(sprintf(
+                        'SmartPay-FreePurchase: Payment #%s status changed to Pending.',
+                        $payment->id
+                    ), 'smartpay'));
+                }
 
                 if (!$payment->id) {
                     wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
+                    smartpay_debug_log(__(sprintf(
+                        'SmartPay-FreePurchase: Payment #%s Can\'t insert payment.',
+                        $payment->id
+                    ), 'smartpay'));
                     die('Can\'t insert payment.');
                 }
                 // Process the subscription
@@ -72,6 +76,10 @@ final class FreePurchase extends PaymentGateway
                 }
                 if ($payment->updateStatus(Payment::COMPLETED)) {
                     $payment->setTransactionId('Manual-Payment');
+                    smartpay_debug_log(__(sprintf(
+                        'SmartPay-FreePurchase: Payment #%s status changed to Completed.',
+                        $payment->id
+                    ), 'smartpay'));
                 }
                 $return_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
                 echo 'Please be patient. Your payment is being processed';
@@ -81,6 +89,7 @@ final class FreePurchase extends PaymentGateway
                 $content .= '</script>';
                 echo $content;
             } else {
+                smartpay_debug_log(__('SmartPay-FreePurchase: Sale price could not matched', 'smartpay'));
                 die('Are you cheating?.');
             }
         }
@@ -96,32 +105,7 @@ final class FreePurchase extends PaymentGateway
      */
     public function subscriptionProcessPayment($payment, $paymentData)
     {
-
-        if ($paymentData['billing_period'] === Subscription::BILLING_PERIOD_MONTHLY) {
-            $interval = 1;
-        }
-
-        if ($paymentData['billing_period'] === Subscription::BILLING_PERIOD_QUARTERLY) {
-            $interval = 3;
-        }
-
-        if ($paymentData['billing_period'] === Subscription::BILLING_PERIOD_SEMIANNUAL) {
-            $interval = 6;
-        }
-
-        if ($paymentData['billing_period'] === Subscription::BILLING_PERIOD_YEARLY) {
-            $interval = 12;
-        }
-
-        $productAmount  = $paymentData['amount'] * 100;
-
-        // store the subscription data into subscription table
-        $subscription = new Subscription();
-        $subscription->period               = $paymentData['billing_period'];
-        $subscription->recurring_amount     = $paymentData['amount'];
-        $subscription->parent_payment_id    = $payment->id;
-        $subscription->status               = Subscription::STATUS_PENDING;
-        $subscription->save();
+        // should not provide for recurring payment it has no means
+        die('Recurring payment is not allowed for free purchase.');
     }
-
 }
