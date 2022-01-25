@@ -3,6 +3,7 @@
 namespace SmartPay\Modules\Gateway;
 
 use SmartPay\Modules\Gateway\Gateways\PaypalStandard;
+use SmartPay\Modules\Gateway\Gateways\ManualPurchase\FreePurchase;
 
 class Gateway
 {
@@ -13,6 +14,7 @@ class Gateway
         $this->app = $app;
 
         $this->app->make(PaypalStandard::class);
+        $this->app->make(FreePurchase::class);
     }
 
     public static function gateways()
@@ -21,6 +23,11 @@ class Gateway
             'paypal' => array(
                 'admin_label'       => 'PayPal Standard',
                 'checkout_label'    => 'PayPal'
+            ),
+
+            'free' => array(
+                'admin_label'       => 'Free Purchase',
+                'checkout_label'    => 'Free'
             ),
         );
     }

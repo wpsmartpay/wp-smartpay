@@ -20,11 +20,28 @@ if ($payment) : ?>
         </tr>
         <tr>
             <td><?php _e('Payment amount:', 'smartpay') ?></td>
-            <td><?php echo smartpay_amount_format($payment->amount) ?></td>
+            <td>
+                <?php
+                echo smartpay_amount_format($payment->amount);
+//                    if ($payment->amount <= 0){
+//                        //FIXME: remove constant with accessor or from gateway label
+//                        echo 'Free';
+//                    }else {
+//                        echo smartpay_amount_format($payment->amount);
+//                    }
+                ?>
+            </td>
         </tr>
         <tr>
             <td><?php _e('Payment gateway:', 'smartpay') ?></td>
-            <td><?php echo smartpay_payment_gateways()[$payment->gateway]['checkout_label'] ?? ucfirst($payment->gateway) ?>
+            <td>
+                <?php
+                if (smartpay_payment_gateways()[$payment->gateway]['checkout_label'] == 'Free'){
+                    echo 'Free Purchase';
+                }else{
+                    echo smartpay_payment_gateways()[$payment->gateway]['checkout_label'] ?? ucfirst($payment->gateway);
+                }
+                ?>
             </td>
         </tr>
         <tr>
