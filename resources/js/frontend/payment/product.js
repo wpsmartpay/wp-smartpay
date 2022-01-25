@@ -427,6 +427,8 @@ jQuery(($) => {
             },
         }).done(function (response) {
             if (response.success) {
+                // hide the previous alert
+                $('.payment-modal--errors .alert').hide()
                 $('.payment-modal--errors').append(
                     `<div class="alert alert-success">${response.data.message}</div>`
                 )
@@ -462,6 +464,8 @@ jQuery(($) => {
                 $('.discount-amounts-container').removeClass('d-none')
             }
             if (!response.success) {
+                // hide the previous alert
+                $('.payment-modal--errors .alert').hide()
                 $('.payment-modal--errors').append(
                     `<div class="alert alert-danger">${response.data.message}</div>`
                 )

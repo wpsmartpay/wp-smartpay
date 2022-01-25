@@ -6,10 +6,11 @@ $customer = is_user_logged_in() ? Customer::where('user_id', get_current_user_id
 
 $gateways = smartpay_get_enabled_payment_gateways(true);
 
+$manual_gateways = smartpay_payment_gateways();
+$free_gateway = $manual_gateways['free'];
 $_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
-
 $has_payment_error = false;
 ?>
 
@@ -23,11 +24,11 @@ $has_payment_error = false;
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
                 </button>
-
                 <div class="d-flex flex-column justify-content-center modal-title">
-                    <p class="payment-modal--small-title mb-2"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></p>
+                    <p class="payment-modal--small-title mb-2 text-capitalize"><?php echo $product->title ?? $form->title ?? 'Product/Form'; ?></p>
                     <h2 class="payment-modal--title amount m-0">--</h2>
                 </div>
+
 
                 <button class="btn modal-close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
@@ -37,16 +38,35 @@ $has_payment_error = false;
                 </button>
             </div>
 
+            <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+            <?php $productBillingPeriod = $product->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
+
+            <?php if ($productBillingType === \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) : ?>
+                <div class="justify-content-center mb-2">
+                    <p class="text-center text-muted font-weight-light">
+                        Enter your info to begin your <strong><?php echo $product->extra['billing_period']; ?> </strong> subscription. You can cancel anytime.
+                    </p>
+                </div>
+
+            <?php else: ?>
+                <div class="justify-content-center mb-2">
+                    <p class="text-center text-muted">Provide your information to complete your purchase</p>
+                </div>
+            <?php endif; ?>
+
             <?php do_action('smartpay_product_modal_popup_content'); ?>
 
             <div class="modal-body p-1 text-center step-1">
                 <div class="align-self-center w-100">
                     <form action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
-
                         <div class="payment-modal--gateway">
+                            <!-- // If Product has Zero sale amount -->
+                            <?php if ($product->sale_price <= 0): ?>
+                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
+
                             <!-- // If only one gateway activated -->
-                            <?php if (count($gateways) == 1) : ?>
+                            <?php elseif (count($gateways) == 1) : ?>
                                 <?php $gateways_index = array_keys($gateways); ?>
                                 <p class="payment-gateway--label text-muted single-gateway">
                                     <?php echo sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label']));
@@ -56,8 +76,6 @@ $has_payment_error = false;
 
                                 <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
-                                <p class="payment-gateway--label text-muted"><?php echo _e('Select a payment method', 'smartpay'); ?></p>
-
                                 <div class="gateways m-0 justify-content-center d-flex">
                                     <?php foreach ($gateways as $gatewayId => $gateway) : ?>
                                         <div class="gateway">
@@ -78,7 +96,7 @@ $has_payment_error = false;
 
                         <div class="payment-modal--errors" style="display: none"></div>
 
-                        <div class="payment-modal--user-info mt-3">
+                        <div class="payment-modal--user-info">
                             <div class="form-row">
                                 <div class="col-sm-6 form-group">
                                     <input type="text" placeholder="First name" class="form-control" name="smartpay_first_name" id="smartpay_first_name" value="<?php echo $customer->first_name ?? ''; ?>" autocomplete="first_name" required>
