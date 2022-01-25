@@ -38,8 +38,6 @@ $has_payment_error = false;
                 </button>
             </div>
 
-            <?php do_action('smartpay_product_modal_popup_content'); ?>
-
             <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
             <?php $productBillingPeriod = $product->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
 
@@ -55,6 +53,8 @@ $has_payment_error = false;
                     <p class="text-center text-muted">Provide your information to complete your purchase</p>
                 </div>
             <?php endif; ?>
+
+            <?php do_action('smartpay_product_modal_popup_content'); ?>
 
             <div class="modal-body p-1 text-center step-1">
                 <div class="align-self-center w-100">
