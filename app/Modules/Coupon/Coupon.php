@@ -214,7 +214,13 @@ class Coupon
     }
 
     public function productPaymentModalContent()
-    { ?>
+    {
+        $enable_coupon_settings = smartpay_get_option('coupon_settings_for_product');
+
+        if (!$enable_coupon_settings) {
+            return;
+        }
+        ?>
         <div class="smartpay-product-coupon-form-toggle">
             <div class="coupon-info mb-4 p-4 bg-light">
                 <?php _e('Have a coupon?', 'smartpay'); ?>
