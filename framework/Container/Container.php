@@ -166,7 +166,7 @@ class Container implements ArrayAccess, ContainerContract
     /**
      *  {@inheritdoc}
      */
-    public function has($id)
+    public function has($id): bool
     {
         return $this->bound($id);
     }
