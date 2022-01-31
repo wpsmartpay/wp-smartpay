@@ -1,8 +1,6 @@
 import domReady from '@wordpress/dom-ready'
-import { render, useEffect } from '@wordpress/element'
-import { HashRouter, Route, Switch } from 'react-router-dom'
-
-import { registerCoreBlocks } from '@wordpress/block-library'
+import { render } from '@wordpress/element'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { FormList } from './pages/index'
 import { CreateForm } from './pages/create'
@@ -24,19 +22,19 @@ domReady(function () {
         return (
             <div>
                 <HashRouter>
-                    <Switch>
+                    <Routes>
                         {/* Form */}
-                        <Route exact path="/" component={FormList} />
-                        <Route exact path="/create" component={CreateForm} />
+                        <Route exact path="/" element={<FormList />} />
+                        <Route exact path="/create" element={<CreateForm />} />
                         <Route
                             exact
                             path="/:formId/edit"
-                            component={EditForm}
+                            element={<EditForm />}
                         />
 
                         {/* Not Found */}
-                        <Route component={NotFound} />
-                    </Switch>
+                        <Route element={<NotFound />} />
+                    </Routes>
                 </HashRouter>
             </div>
         )
