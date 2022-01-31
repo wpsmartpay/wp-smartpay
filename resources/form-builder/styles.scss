@@ -32,14 +32,15 @@ body.block-editor-page {
     }
     // We need the styles scoped to "body" to be added to the
     // div.editor-styles wrapper
-    font-family: $editor-font;
+    font-family: $editor-html-font;
     font-size: $editor-font-size;
     line-height: $editor-line-height;
     color: $gray-900;
 
     // Important all other selectors scoped underneath
     // `div.editor-styles-wrapper`
-    @import '~@wordpress/editor/src/editor-styles.scss';
+    // @import '~@wordpress/editor/src/style.scss';
+    @import '~@wordpress/block-library/build-style/style.css';
 }
 
 .smartpay-block-editor,
