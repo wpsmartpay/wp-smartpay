@@ -2,7 +2,6 @@
     "name": "wp-smartpay",
     "version": "2.5.3",
     "description": "A simple plugin for receiving payment.",
-    "type": "module",
     "repository": {
         "type": "git",
         "url": "https://github.com/wpsmartpay/wp-smartpay/"
@@ -74,11 +73,12 @@
         "git-cz": "^4.8.0",
         "gulp": "^4.0.2",
         "gulp-zip": "^5.1.0",
+        "jiti": "^1.12.15",
         "laravel-mix": "^6.0.41",
         "vue-template-compiler": "^2.6.14",
         "yorkie": "^2.0.0"
     },
     "gitHooks": {
-        "commit-msg": "node scripts/verify-commit-msg.js"
+        "commit-msg": "jiti scripts/verify-commit-msg.js"
     }
 }
