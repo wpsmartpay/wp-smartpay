@@ -115,6 +115,14 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.6.0] =
+* Fix - Resolved compatibility issue with WordPress version 5.9
+* Fix - Form broken issue when clicked on Form after upgrading to WP 5.9
+* Fix - Routing issue with react router v6
+* Update - Update dependency packages
+* Update - Update build package
+
+
 = [2.5.3] =
 * Add - Add option to purchase free products
 * Add - Add billing information text on payment modal
