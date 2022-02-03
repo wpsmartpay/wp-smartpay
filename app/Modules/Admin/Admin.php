@@ -18,7 +18,7 @@ class Admin
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
         $this->app->addAction('wp_ajax_smartpay_debug_log_clear', [$this, 'smartpayDebugLogClear']);
-        $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage']);
+        $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage'], 99);
         $this->app->addAction('admin_init', [$this, 'redirectToWelcomePage']);
         $this->app->addAction('admin_notices', [$this, 'customerEmailSubscribe']);
         $this->app->addAction('wp_ajax_smartpay_contact_optin_notice_dismiss', [$this, 'customerOptinNoticeDismiss']);
@@ -134,9 +134,11 @@ class Admin
     private function smartpayProMenu()
     {
         // check if wp-smartpay-pro or smartpay-pro plugin is in activated plugin list
-        if (!in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins'))
+        if (
+            !in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins'))
             &&
-            !in_array('smartpay-pro/smartpay-pro.php', get_option('active_plugins'))) {
+            !in_array('smartpay-pro/smartpay-pro.php', get_option('active_plugins'))
+        ) {
             global $submenu;
 
             $submenu['smartpay'][99] = [
@@ -272,7 +274,7 @@ class Admin
     public function outputDashboardMarkup()
     {
         $user = wp_get_current_user();
-        ?>
+?>
         <div class="wpsmartpay-welcome">
             <div class="container">
                 <div class="introduction-image">
@@ -286,7 +288,9 @@ class Admin
                     <div class="introduction-video">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-<!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); ?><!--</p>-->
+                        <!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); 
+                                                            ?>
+                        <!--</p>-->
                     </div>
                 </div>
 
@@ -368,7 +372,7 @@ class Admin
         }
 
         if ('smartpay_page_wpsmartpay-getting-started' !==  $admin_page->base) :
-            ?>
+        ?>
             <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
                 <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
                 <div class="smartpay-notice-content">
@@ -456,7 +460,7 @@ class Admin
                 });
             </script>
 
-        <?php
+<?php
         endif;
     }
 
