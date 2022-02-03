@@ -103,17 +103,15 @@ domReady(function () {
                             element={<EditPayment />}
                         />
 
-                        {window.smartPayRouteHooks.applyFilters(
-                            'smartPayAdminRoute',
-                            [],
-                            Route,
-                            Link
-                        )}
-
-                        {/* Not Found */}
                         <Route element={<NotFound />} />
                     </Routes>
                 </HashRouter>
+
+                {/* load the smartpay-pro routes */}
+                {window.smartPayRouteHooks.applyFilters(
+                    'smartPayAdminRoute',
+                    [],
+                )}
             </div>
         )
     }
