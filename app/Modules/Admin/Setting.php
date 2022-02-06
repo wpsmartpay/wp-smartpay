@@ -621,6 +621,10 @@ class Setting
                 'label' => 'Razorpay'
             ]
         ];
+
+        // add filter to load up the all registered gateway label to show the available gateways on setting
+        $availableGateways = smartpay_get_available_payment_gateways($availableGateways);
+
         $enableGateways = [];
 
         $class = sanitize_html_class($args['field_class']);
