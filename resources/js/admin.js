@@ -1,6 +1,6 @@
 import domReady from '@wordpress/dom-ready'
 import { render } from '@wordpress/element'
-import { HashRouter, Route, Switch, Link } from 'react-router-dom'
+import { HashRouter, Route, Routes, Link } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
@@ -40,72 +40,78 @@ domReady(function () {
         return (
             <div>
                 <HashRouter>
-                    <Switch>
+                    <Routes>
                         {/* Dashboard */}
-                        <Route exact path="/" component={Dashboard} />
+                        <Route exact path="/" element={<Dashboard />} />
 
                         {/* Product */}
-                        <Route exact path="/products" component={ProductList} />
+                        <Route
+                            exact
+                            path="/products"
+                            element={<ProductList />}
+                        />
                         <Route
                             exact
                             path="/products/create"
-                            component={CreateProduct}
+                            element={<CreateProduct />}
                         />
                         <Route
                             exact
                             path="/products/:productId/edit"
-                            component={EditProduct}
+                            element={<EditProduct />}
                         />
 
                         {/* Customer */}
                         <Route
                             exact
                             path="/customers"
-                            component={CustomerList}
+                            element={<CustomerList />}
                         />
                         <Route
                             exact
                             path="/customers/:customerId/"
-                            component={ShowCustomer}
+                            element={<ShowCustomer />}
                         />
 
                         {/* Coupon */}
-                        <Route exact path="/coupons" component={CouponList} />
+                        <Route exact path="/coupons" element={<CouponList />} />
                         <Route
                             exact
                             path="/coupons/create"
-                            component={CreateCoupon}
+                            element={<CreateCoupon />}
                         />
                         <Route
                             exact
                             path="/coupons/:couponId/edit"
-                            component={EditCoupon}
+                            element={<EditCoupon />}
                         />
 
                         {/* Payment */}
-                        <Route exact path="/payments" component={PaymentList} />
+                        <Route
+                            exact
+                            path="/payments"
+                            element={<PaymentList />}
+                        />
                         <Route
                             exact
                             path="/payments/create"
-                            component={CreatePayment}
+                            element={<CreatePayment />}
                         />
                         <Route
                             exact
                             path="/payments/:paymentId/edit"
-                            component={EditPayment}
+                            element={<EditPayment />}
                         />
 
-                        {window.smartPayRouteHooks.applyFilters(
-                            'smartPayAdminRoute',
-                            [],
-                            Route,
-                            Link
-                        )}
-
-                        {/* Not Found */}
-                        <Route component={NotFound} />
-                    </Switch>
+                        <Route element={<NotFound />} />
+                    </Routes>
                 </HashRouter>
+
+                {/* load the smartpay-pro routes */}
+                {window.smartPayRouteHooks.applyFilters(
+                    'smartPayAdminRoute',
+                    [],
+                )}
             </div>
         )
     }

@@ -1,12 +1,12 @@
 /*!
-  Copyright (c) 2017 Jed Watson.
+  Copyright (c) 2018 Jed Watson.
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/classnames
 */
 
 /*!
- * ApexCharts v3.23.0
- * (c) 2018-2020 Juned Chhipa
+ * ApexCharts v3.33.0
+ * (c) 2018-2022 ApexCharts
  * Released under the MIT License.
  */
 
@@ -18,11 +18,24 @@
 * https://github.com/wout/svg.filter.js
 * Copyright (c) 2016 Wout Fierens; Licensed MIT */
 
-/** @license React v16.13.1
- * react-is.production.min.js
+/**
+ * React Router DOM v6.2.1
  *
- * Copyright (c) Facebook, Inc. and its affiliates.
+ * Copyright (c) Remix Software Inc.
  *
  * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+
+/**
+ * React Router v6.2.1
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
  */

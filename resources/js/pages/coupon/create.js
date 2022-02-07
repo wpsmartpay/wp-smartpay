@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Form, Tabs, Tab, Row, Col, Button } from 'react-bootstrap'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useReducer } from '@wordpress/element'
 const { dispatch } = wp.data
 import { Save } from '../../http/coupon'
@@ -26,7 +26,7 @@ const reducer = (coupon, action) => {
 
 export const CreateCoupon = () => {
     const [coupon, setCoupon] = useReducer(reducer, initialState)
-    const history = useHistory()
+    const navigate = useNavigate()
 
     const createCoupon = (event) => {
         event.preventDefault()
@@ -49,7 +49,7 @@ export const CreateCoupon = () => {
             })
 
             setCoupon({ type: 'reset' })
-            history.push(`/coupons/${response.coupon.id}/edit`)
+            navigate(`/coupons/${response.coupon.id}/edit`)
         })
     }
 
@@ -187,10 +187,7 @@ export const CreateCoupon = () => {
                                     >
                                         <div className="border rounded bg-light text-center p-5 d-flex flex-column align-items-center">
                                             <h3 className="mt-1">
-                                                {__(
-                                                    'Coming soon',
-                                                    'smartpay'
-                                                )}
+                                                {__('Coming soon', 'smartpay')}
                                             </h3>
                                         </div>
                                     </Tab>

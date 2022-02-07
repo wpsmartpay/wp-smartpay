@@ -1,6 +1,7 @@
-const chalk = require('chalk')
-const msgPath = process.env.GIT_PARAMS
-const msg = require('fs').readFileSync(msgPath, 'utf-8').trim()
+import chalk from 'chalk'
+import fs from 'fs'
+
+const msg = fs.readFileSync(process.env.GIT_PARAMS, 'utf-8').trim()
 
 const commitRE = /^(revert: )?(merge|feat|fix|polish|docs|style|refactor|perf|test|workflow|ci|chore|types|build)(\(.+\))?: .{1,50}/
 
