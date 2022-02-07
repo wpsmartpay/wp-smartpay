@@ -117,6 +117,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 == Changelog ==
 = [2.6.0] =
 * New - WordPress version 5.9 support
+* Add - Add warning notice for compatibility issue
 * Fix - Form broken issue when clicked on Form after upgrading to WP 5.9
 * Fix - Routing issue with react router v6
 * Update - Update dependency packages

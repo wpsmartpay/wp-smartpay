@@ -18,4 +18,18 @@ register_activation_hook(SMARTPAY_PLUGIN_FILE, [Activator::class, 'boot']);
 
 register_deactivation_hook(SMARTPAY_PLUGIN_FILE, [Deactivator::class, 'boot']);
 
+add_action('plugins_loaded', function () {
+    require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+    if (defined('SMARTPAY_PRO_VERSION')) {
+        if (floatval(SMARTPAY_PRO_VERSION) < 2.6){
+            add_action('admin_notices', 'smartpay_pro_deactivate_notice');
+            deactivate_plugins(SMARTPAY_PRO_PLUGIN_FILE);
+        }
+    }
+}, 20);
+
+function smartpay_pro_deactivate_notice(){
+    echo __('<div class="error notice-warning"><p><code>WP SmartPay Pro '.SMARTPAY_PRO_VERSION. '</code> is not compatible with <code>WP SmartPay version 2.6.0</code> or higher. Please update the <code>WP SmartPay Pro</code> or downgrade the <code>WP SmartPay bellow 2.6.0</code>.</p></div>', 'smartpay');
+}
+
 return $app;
