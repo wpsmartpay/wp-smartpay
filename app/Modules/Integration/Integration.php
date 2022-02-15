@@ -100,6 +100,15 @@ class Integration
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
             ],
+
+            'mollie' => [
+                'name'       => __('Mollie', 'smartpay'),
+                'excerpt'    => __('Mollie is a payments platform that offers an easy-to-implement process for integrating payments.', 'smartpay'),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png',
+                'manager'    => null,
+                'type'       => 'pro',
+                'categories' => ['Marketing'],
+            ],
         ];
     }
 
