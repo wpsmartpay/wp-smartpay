@@ -8,7 +8,13 @@ class Customer extends Model
 {
     protected $table = 'smartpay_customers';
 
-    protected $fillable = [];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'email_name',
+        'notes',
+        'extra',
+    ];
 
     public function getFullNameAttribute()
     {
@@ -17,6 +23,13 @@ class Customer extends Model
         }
 
         return "$this->first_name";
+    }
+
+    public function updateCustomerNotes(array $arr)
+    {
+        $notes = $arr;
+        $this->notes = json_encode($notes);
+        $this->save();
     }
 
     public function payments()

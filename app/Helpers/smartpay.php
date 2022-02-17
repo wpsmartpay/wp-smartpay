@@ -1013,3 +1013,11 @@ function smartpay_debug_log($message = '', $force = false)
 
     $smartpay_logs->log_to_file($message);
 }
+
+/*
+ * @return available gateways including third party integrations
+ */
+function smartpay_get_available_payment_gateways($availableGateways) {
+    return apply_filters('smartpay_get_available_payment_gateways', $availableGateways);
+}
+
