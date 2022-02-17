@@ -60,7 +60,7 @@ if ($payment) : ?>
     <?php $productId = $payment->data['product_id'] ?? 0; ?>
     <?php $product = \SmartPay\Models\Product::with(['parent'])->find($productId); ?>
     <?php if (strtolower($payment->status) == \SmartPay\Models\Payment::COMPLETED): ?>
-        <?php if (count($product->files) > 0): ?>
+        <?php if ($product && count($product->files) > 0): ?>
             <!--    Do staff for download files-->
             <h3><?php echo __( 'Files', 'smartpay' ); ?></h3>
             <table>
