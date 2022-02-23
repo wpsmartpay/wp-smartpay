@@ -116,8 +116,8 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.6.2] =
-* New - Hide the License key from SmartPay settings
-* Fix - Fix conflict issue with WooCommerce
+* New - License key privacy added
+* Fix - Fix conflict issue with WooCommerce installation
 
 = [2.6.1] =
 * New - Added mollie payment gateway integration
