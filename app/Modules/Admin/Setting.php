@@ -904,7 +904,7 @@ class Setting
         $class = ' ' . sanitize_html_class($args['field_class']);
 
         $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
-        $html = '<input type="text" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="' . esc_attr($value) . '"/>';
+        $html = '<input type="password" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="' . esc_attr($value) . '"/>';
 
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
 
