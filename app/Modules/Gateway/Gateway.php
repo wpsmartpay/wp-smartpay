@@ -22,7 +22,8 @@ class Gateway
         return array(
             'paypal' => array(
                 'admin_label'       => 'PayPal Standard',
-                'checkout_label'    => 'PayPal'
+                'checkout_label'    => 'PayPal',
+                'gateway_icon'      => SMARTPAY_PLUGIN_ASSETS . '/img/paypal.png',
             ),
 
             'free' => array(
