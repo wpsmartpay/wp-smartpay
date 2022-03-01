@@ -53,7 +53,7 @@ $has_payment_error = false;
 
             <?php else: ?>
                 <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted">Provide your information to complete your purchase</p>
+                    <p class="text-center text-muted"><?php _e('Provide your information to complete your purchase', 'smartpay'); ?></p>
                 </div>
             <?php endif; ?>
 
@@ -66,7 +66,7 @@ $has_payment_error = false;
                             <?php if ($product->sale_price <= 0): ?>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
-                            <!-- // If only one gateway activated -->
+                                <!-- // If only one gateway activated -->
                             <?php elseif (count($gateways) == 1) : ?>
                                 <?php $gateways_index = array_keys($gateways); ?>
                                 <p class="payment-gateway--label text-muted single-gateway">
@@ -82,8 +82,8 @@ $has_payment_error = false;
                                         <div class="gateway">
                                             <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
                                             <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
-                                                <!-- // FIXME: Make gateway image dynamic -->
-                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
+                                                <!-- dynamically load the gateway image -->
+                                                <img src="<?php echo esc_html($gateway['gateway_icon']); ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
                                                 <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
                                             </label>
                                         </div>
