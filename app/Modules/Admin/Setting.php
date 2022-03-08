@@ -619,10 +619,7 @@ class Setting
             ],
             'razorpay' => [
                 'label' => 'Razorpay'
-            ],
-            'mollie' => [
-                'label' => 'Mollie'
-            ],
+            ]
         ];
 
         // add filter to load up the all registered gateway label to show the available gateways on setting
