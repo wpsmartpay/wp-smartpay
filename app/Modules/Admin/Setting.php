@@ -619,6 +619,9 @@ class Setting
             ],
             'razorpay' => [
                 'label' => 'Razorpay'
+            ],
+            'mollie' => [
+                'label' => 'Mollie'
             ]
         ];
 
