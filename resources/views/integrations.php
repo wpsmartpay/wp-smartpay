@@ -5,7 +5,7 @@
     <div class="container smartpay-integrations">
         <div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-dark rounded-top">
             <div class="lh-100">
-                <h2 class="text-white"><?php _e('SmartPay - Integrations', 'smartpay'); ?></h2>
+                <h2 class="text-white"><?php echo __('SmartPay - Integrations', 'smartpay'); ?></h2>
             </div>
             <div>
                 <a class="btn btn-dark btn-sm" href="https://wpsmartpay.com/changelog/" target="_blank">v<?php echo SMARTPAY_VERSION; ?></a>
@@ -36,7 +36,7 @@
                                         </div>
                                         <div class="d-flex bd-highlight">
                                             <span class="ml-2 integration-status p-2 bd-highlight">
-                                                <?php echo $activated ? 'Activated' : 'Disabled'; ?>
+                                                <?php echo $activated ? __('Activated', 'smartpay') : __('Disabled', 'smartpay'); ?>
                                             </span>
                                             <?php if (!empty($integration['setting_link']) && $activated == true) : ?>
                                                 <span class="ml-auto p-2 bd-highlight">

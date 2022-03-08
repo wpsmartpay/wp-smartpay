@@ -45,7 +45,7 @@
                                                             <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
                                                         <?php endif; ?>
                                                         <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                                            <span>/ <?php echo $billingPeriod; ?></span>
+                                                            <span>/ <?php echo __($billingPeriod); ?></span>
                                                         <?php endif; ?>
                                                     </div>
                                                     <h5 class="m-0 price--title">
@@ -67,24 +67,23 @@
                                         <li class="list-group-item price selected">
                                             <label class="d-block m-0">
                                                 <div class="price--amount">
-
-                                                    <?php if ($product->sale_price <= 0): ?>
-                                                        <span class="sale-price"><?php echo 'Free'; ?></span>
+                                                    <?php if ($product->sale_price <= 0) : ?>
+                                                        <span class="sale-price"><?php echo __('Free', 'smartpay'); ?></span>
                                                         <?php if ($product->base_price > $product->sale_price) : ?>
                                                             <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                         <?php endif; ?>
-                                                    <?php else: ?>
+                                                    <?php else : ?>
                                                         <span class="sale-price"><?php echo smartpay_amount_format($product->sale_price); ?></span>
                                                         <?php if ($product->sale_price && ($product->base_price > $product->sale_price)) : ?>
                                                             <del class="base-price"><?php echo smartpay_amount_format($product->base_price); ?></del>
                                                         <?php endif; ?>
                                                     <?php endif; ?>
                                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $productBillingType) : ?>
-                                                        <span>/ <?php echo $productBillingPeriod; ?></span>
+                                                        <span>/ <?php echo __($productBillingPeriod, 'smartpay'); ?></span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <h5 class="m-0 price--title">
-                                                    <?php echo _e('Product Price', 'smartpay'); ?>
+                                                    <?php echo __('Product Price', 'smartpay'); ?>
                                                 </h5>
                                             </label>
                                         </li>
@@ -93,7 +92,7 @@
                             </div>
 
                             <button type="button" class="btn btn-success btn-block btn-lg open-payment-form">
-                                <?php echo _e('Get it now', 'smartpay'); ?>
+                                <?php echo __('Get it now', 'smartpay'); ?>
                             </button>
                         </div>
                     </div>
