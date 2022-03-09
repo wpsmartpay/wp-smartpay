@@ -33,7 +33,7 @@ class CreateUser {
                 if ($user){
                     //send notification to only new user
                     // check the new user notification
-                    $enable_user_notification = (bool)smartpay_get_settings()['new_user_notification'];
+                    $enable_user_notification = (bool) smartpay_get_settings()['new_user_notification'] ?? false;
                     if ($enable_user_notification){
                         wp_new_user_notification($user, null, 'user');
                     }

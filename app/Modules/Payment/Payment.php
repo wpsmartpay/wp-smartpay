@@ -246,7 +246,7 @@ class Payment
 
         if (!empty($payment->id)) {
             // check create WP user is enabled
-            $enable_user_creation = (bool) smartpay_get_settings()['create_wp_user'];
+            $enable_user_creation = (bool) smartpay_get_settings()['create_wp_user'] ?? false;
             if ($enable_user_creation){
                 CreateUser::create_user($payment);
             }
