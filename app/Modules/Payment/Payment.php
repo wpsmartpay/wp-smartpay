@@ -245,8 +245,11 @@ class Payment
         do_action('smartpay_after_insert_payment', $payment);
 
         if (!empty($payment->id)) {
-            $create_user = new CreateUser();
-            $create_user->create_user($payment);
+            // check create WP user is enabled
+            $enable_user_creation = (bool) smartpay_get_settings()['create_wp_user'];
+            if ($enable_user_creation){
+                CreateUser::create_user($payment);
+            }
             // Set session payment id
             //smartpay_set_session_payment_id($payment->ID);
 

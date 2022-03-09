@@ -5,7 +5,7 @@ use SmartPay\Models\Payment;
 
 class CreateUser {
 
-    public function create_user(Payment $payment)
+    public static function create_user(Payment $payment)
     {
         if (empty($username))
         {
@@ -31,8 +31,12 @@ class CreateUser {
             try {
                 $user = wp_insert_user( $new_customer_data );
                 if ($user){
-                    //send notification
-                    wp_new_user_notification($user, null, 'both');
+                    //send notification to only new user
+                    // check the new user notification
+                    $enable_user_notification = (bool)smartpay_get_settings()['new_user_notification'];
+                    if ($enable_user_notification){
+                        wp_new_user_notification($user, null, 'user');
+                    }
                 }
             }catch (\Exception $e){
                 smartpay_debug_log(sprintf(__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage()));
