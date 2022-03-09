@@ -47,13 +47,14 @@ $has_payment_error = false;
             <?php if ($productBillingType === \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) : ?>
                 <div class="justify-content-center mb-2 mt-2">
                     <p class="text-center text-muted font-weight-light">
-                        Enter your info to begin your <span class="product_billing_type"><strong>--</strong></span> subscription. You can cancel anytime.
+                        <?php echo __('Enter your info to begin your', 'smartpay'); ?>
+                        <strong><span class="product_billing_type">--</span></strong> <?php echo __('subscription. You can cancel anytime', 'smartpay') ?>.
                     </p>
                 </div>
 
-            <?php else: ?>
+            <?php else : ?>
                 <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted">Provide your information to complete your purchase</p>
+                    <p class="text-center text-muted"><?php echo __('Provide your information to complete your purchase', 'smartpay'); ?></p>
                 </div>
             <?php endif; ?>
 
@@ -63,10 +64,10 @@ $has_payment_error = false;
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                         <div class="payment-modal--gateway">
                             <!-- // If Product has Zero sale amount -->
-                            <?php if ($product->sale_price <= 0): ?>
+                            <?php if ($product->sale_price <= 0) : ?>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
-                            <!-- // If only one gateway activated -->
+                                <!-- // If only one gateway activated -->
                             <?php elseif (count($gateways) == 1) : ?>
                                 <?php $gateways_index = array_keys($gateways); ?>
                                 <p class="payment-gateway--label text-muted single-gateway">
@@ -82,8 +83,8 @@ $has_payment_error = false;
                                         <div class="gateway">
                                             <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
                                             <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
-                                                <!-- // FIXME: Make gateway image dynamic -->
-                                                <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
+                                                <!-- dynamically load the gateway image -->
+                                                <img src="<?php echo esc_html($gateway['gateway_icon']); ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
                                                 <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
                                             </label>
                                         </div>
@@ -91,7 +92,7 @@ $has_payment_error = false;
                                 </div>
                             <?php else : ?>
                                 <?php $has_payment_error = true; ?>
-                                <div class="alert alert-danger"><?php echo 'You must enable a payment gateway to proceed a payment.'; ?></div>
+                                <div class="alert alert-danger"><?php echo __('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
                             <?php endif; ?>
                         </div>
 
@@ -111,7 +112,7 @@ $has_payment_error = false;
                             <?php do_action('smartpay_before_product_payment_form_button', $product); ?>
 
                             <button type="button" class="btn btn-success btn-block btn-lg smartpay-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>>
-                                <?php echo _e('Pay Now', 'smartpay'); ?>
+                                <?php echo __('Pay Now', 'smartpay'); ?>
                             </button>
 
                             <?php do_action('smartpay_after_product_payment_form_button', $product); ?>
@@ -125,12 +126,12 @@ $has_payment_error = false;
                 <div class="align-self-center">
                     <div class="mb-5">
                         <div class="alert alert-warning py-3">
-                            <p class="m-0"><?php _e('Don\'t close this window before completing payment!', 'smartpay'); ?></p>
+                            <p class="m-0"><?php echo __('Don\'t close this window before completing payment!', 'smartpay'); ?></p>
                         </div>
                     </div>
                     <div class="dynamic-content">
                         <div class="spinner-border" style="width: 40px; height: 40px;">
-                            <span class="sr-only">Loading...</span>
+                            <span class="sr-only"><?php echo __('Loading'); ?>...</span>
                         </div>
                     </div>
                 </div>
@@ -138,7 +139,7 @@ $has_payment_error = false;
 
             <div class="modal-loading justify-content-center align-items-center">
                 <div class="spinner-border text-secondary" style="width: 40px; height: 40px;">
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only"><?php echo __('Loading'); ?>...</span>
                 </div>
             </div>
         </div>

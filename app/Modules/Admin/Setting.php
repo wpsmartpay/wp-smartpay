@@ -95,6 +95,18 @@ class Setting
                 'smartpay_settings_general',
                 array(
                     'main' => array(
+                        'general_settings' => array(
+                            'id'   => 'general_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('General Settings', 'smartpay') . '</h4>',
+                            'desc' => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'type' => 'header',
+                        ),
+                        'user_creation' => array(
+                            'id'   => 'create_wp_user',
+                            'name' => __('Create WP user', 'smartpay'),
+                            'label' => __('Create WP user on first payment', 'smartpay'),
+                            'type' => 'checkbox',
+                        ),
                         'page_settings' => array(
                             'id'   => 'page_settings',
                             'name' => '<h4 class="text-uppercase text-info my-1">' . __('Pages Settings', 'smartpay') . '</h4>',
@@ -203,6 +215,12 @@ class Setting
                             'name'  => __('From Email', 'smartpay'),
                             'desc'  => __('Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'smartpay'),
                             'type'  => 'text'
+                        ),
+                        'new_user_notification' => array(
+                            'id'    => 'new_user_notification',
+                            'name'  => __('New user notification', 'smartpay'),
+                            'desc'  => __('Send notification to their account details. [You must enable the <a href="'. admin_url('admin.php?page=smartpay-setting&tab=general') .'"><strong> Create WP user</strong></a> to notify the user]', 'smartpay'),
+                            'type'  => 'checkbox'
                         ),
                         'purchase_email_settings' => array(
                             'id'   => 'purchase_email_settings',

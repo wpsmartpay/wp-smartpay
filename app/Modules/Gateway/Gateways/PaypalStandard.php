@@ -78,9 +78,7 @@ class PaypalStandard extends PaymentGateway
 
         if (!$this->_check_credentials()) {
             // TODO: Implement smartpay_set_error
-
             die('Credentials error.');
-            wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
         }
 
         $payment = smartpay_insert_payment($paymentData);
@@ -394,7 +392,6 @@ class PaypalStandard extends PaymentGateway
             // TODO: Add smartpay payment error notice
 
             die('SmartPay-PayPal: Set credentials; You must enter your business email for PayPal in gateway settings.');
-            return false;
         }
 
         return true;
