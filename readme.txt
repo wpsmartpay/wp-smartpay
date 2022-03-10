@@ -75,6 +75,7 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 - [Stripe](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
 - [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
 - [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
+- [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
 - [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### LOCALE AND CURRENCY SETTINGS
