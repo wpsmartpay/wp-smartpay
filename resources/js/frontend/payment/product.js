@@ -29,10 +29,10 @@ jQuery(($) => {
                 .find('input[name="smartpay_product_billing_type"]')
                 .val(selectedPriceType.val())
 
-            if ('Subscription' == selectedPriceType.val()) {
-                var selectedBillingPeriod = $(e.currentTarget).find(
+            if ('Subscription' === selectedPriceType.val()) {
+                const selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_product_billing_period"]'
-                )
+                );
 
                 $(e.currentTarget)
                     .parents('.smartpay-product-shortcode')
@@ -85,6 +85,10 @@ jQuery(($) => {
 
             let $paymentModal = $parentWrapper.find('.payment-modal')
             let formData = getPaymentFormData($parentWrapper)
+
+            // show the billing type on Payment modal
+            let billing_period = jQuery('input[name="smartpay_product_billing_period"]').val()
+            $paymentModal.find('.product_billing_type').html(billing_period)
 
             // Set payment amount
             let paymentAmount = 0

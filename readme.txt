@@ -4,7 +4,7 @@ Tags: download manager, digital product, donation, ecommerce, stripe, paypal, pa
 Requires at least: 4.9
 Tested up to: 5.9.1
 Requires PHP: 7.4.0
-Stable Tag: 2.6.2
+Stable Tag: 2.6.3
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
@@ -75,6 +75,7 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 - [Stripe](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
 - [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
 - [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
+- [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
 - [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### LOCALE AND CURRENCY SETTINGS
@@ -115,6 +116,13 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.6.3] =
+* New - WP user creation option on settings
+* New - New user notification option on Email settings
+* Add - Custom payment gateway support
+* Fix - Text did not appear on translator
+* Fix - Billing period did not show on payment modal
+
 = [2.6.2] =
 * New - License key privacy added
 * Fix - Fix conflict issue with WooCommerce installation

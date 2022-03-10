@@ -69,21 +69,22 @@
 
                         <!-- // If it has multiple payment gateway -->
                     <?php elseif (count($gateways) > 1) : ?>
-                        <label class="payment-gateway--label"><?php echo _e('Select a payment method', 'smartpay'); ?></label>
+                        <label class="payment-gateway--label"><?php _e('Select a payment method', 'smartpay'); ?></label>
                         <div class="mb-4">
 
                             <div class="gateways m-0 justify-content-left d-flex">
                                 <?php foreach ($gateways as $gatewayId => $gateway) : ?>
                                     <div class="gateway custom-control custom-radio">
                                         <input type="radio" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?> class="custom-control-input">
-                                        <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label custom-control-label"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>"></label>
+                                        <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label custom-control-label">
+                                            <img src="<?php echo esc_html($gateway['gateway_icon']); ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>"></label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
                     <?php else : ?>
                         <?php $has_payment_error = true; ?>
-                        <div class="alert alert-danger"><?php echo _e('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
+                        <div class="alert alert-danger"><?php _e('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
                     <?php endif; ?>
 
                     <?php do_action('before_smartpay_payment_form_button', $form); ?>
