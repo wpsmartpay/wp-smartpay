@@ -69,7 +69,7 @@
 
                         <!-- // If it has multiple payment gateway -->
                     <?php elseif (count($gateways) > 1) : ?>
-                        <label class="payment-gateway--label"><?php echo _e('Select a payment method', 'smartpay'); ?></label>
+                        <label class="payment-gateway--label"><?php _e('Select a payment method', 'smartpay'); ?></label>
                         <div class="mb-4">
 
                             <div class="gateways m-0 justify-content-left d-flex">
@@ -84,7 +84,7 @@
                         </div>
                     <?php else : ?>
                         <?php $has_payment_error = true; ?>
-                        <div class="alert alert-danger"><?php echo _e('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
+                        <div class="alert alert-danger"><?php _e('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
                     <?php endif; ?>
 
                     <?php do_action('before_smartpay_payment_form_button', $form); ?>
