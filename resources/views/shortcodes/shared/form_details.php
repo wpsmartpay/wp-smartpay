@@ -76,7 +76,8 @@
                                 <?php foreach ($gateways as $gatewayId => $gateway) : ?>
                                     <div class="gateway custom-control custom-radio">
                                         <input type="radio" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?> class="custom-control-input">
-                                        <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label custom-control-label"><img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/' . $gatewayId . '.png'; ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>"></label>
+                                        <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label custom-control-label">
+                                            <img src="<?php echo esc_html($gateway['gateway_icon']); ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>"></label>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
