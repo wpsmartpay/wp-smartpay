@@ -20,6 +20,7 @@ const defaultFormData = {
     fields: [],
     settings: {
         allowCustomAmount: false,
+        payButtonLabel: __('Pay Now', 'smartpay'),
         customAmountLabel: __('Pay what you want', 'smartpay'),
     },
 }
