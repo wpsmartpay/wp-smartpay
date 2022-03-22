@@ -21,7 +21,7 @@
                                     // FIXME: Move to pro plugin 
                                     ?>
                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
+                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].'-' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
                                     <?php else : ?>
                                         <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].'-' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?></label>
                                     <?php endif; ?>
