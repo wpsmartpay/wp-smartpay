@@ -23,12 +23,12 @@ if ($payment) : ?>
             <td>
                 <?php
                 echo smartpay_amount_format($payment->amount);
-//                    if ($payment->amount <= 0){
-//                        //FIXME: remove constant with accessor or from gateway label
-//                        echo 'Free';
-//                    }else {
-//                        echo smartpay_amount_format($payment->amount);
-//                    }
+                //                    if ($payment->amount <= 0){
+                //                        //FIXME: remove constant with accessor or from gateway label
+                //                        echo 'Free';
+                //                    }else {
+                //                        echo smartpay_amount_format($payment->amount);
+                //                    }
                 ?>
             </td>
         </tr>
@@ -48,6 +48,21 @@ if ($payment) : ?>
             <td><?php _e('Payment status:', 'smartpay') ?></td>
             <td><?php echo esc_html(ucfirst($payment->status)); ?></td>
         </tr>
+
+        <?php if (strtolower($payment->status) == \SmartPay\Models\Payment::COMPLETED): ?>
+            <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null; ?>
+            <?php if ($form && $form['settings']['externalLink']): ?>
+                <tr>
+                    <td><?php _e('External Link:', 'smartpay') ?></td>
+                    <td>
+                        <a href="<?php echo $form['settings']['externalLink']['link']; ?>" target="_blank">
+                            <?php echo $form['settings']['externalLink']['label'] ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        <?php endif; ?>
+
 
         <?php do_action('smartpay_before_payment_receipt_data', $payment); ?>
 
@@ -82,7 +97,6 @@ if ($payment) : ?>
                 </tbody>
             </table>
         <?php endif; ?>
-
     <?php endif; ?>
 <?php
 
