@@ -50,8 +50,10 @@ if ($payment) : ?>
         </tr>
 
         <?php if (strtolower($payment->status) == \SmartPay\Models\Payment::COMPLETED): ?>
-            <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null; ?>
-            <?php if ($form && $form['settings']['externalLink']): ?>
+            <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null;
+            $external_link = $form['settings']['externalLink'];
+            ?>
+            <?php if ($form && $external_link && $external_link['allowExternalLink']): ?>
                 <tr>
                     <td><?php _e('External Link:', 'smartpay') ?></td>
                     <td>
