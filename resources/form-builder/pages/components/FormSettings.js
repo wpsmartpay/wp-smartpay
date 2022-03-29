@@ -3,7 +3,6 @@ import { Card, Form, Button } from 'react-bootstrap'
 
 export const FormSettings = ({ form, setFormData }) => {
     const setSettingsData = (settings) => {
-        console.log(settings)
         setFormData({
             ...form,
             settings,
@@ -57,7 +56,7 @@ export const FormSettings = ({ form, setFormData }) => {
                             className="custom-control-label pt-1"
                             htmlFor="allowExternalLinkOnPaymentSuccessPage"
                         >
-                            {__('Add External Link on Payment Success Page', 'smartpay')}
+                            {__('Add External Link on Success Page', 'smartpay')}
                         </label>
                     </div>
                     {form.settings.externalLink?.allowExternalLink &&
@@ -104,7 +103,7 @@ export const FormSettings = ({ form, setFormData }) => {
                         />
                         </div>
                         </div>
-                        <p className="text-muted">* {__('It will show on payment receipt page.', 'smartpay')}</p>
+                        {/*<p className="text-muted">* {__('It will show on payment receipt page.', 'smartpay')}</p>*/}
                         </div>
                     }
                 </div>

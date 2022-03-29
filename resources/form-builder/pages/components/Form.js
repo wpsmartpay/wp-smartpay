@@ -5,6 +5,7 @@ import { Alert } from '../../components/Alert'
 
 import { FormBuilder } from './FormBuilder'
 import { FormOptionTab } from './FormOptionTab'
+import {FormPricingTab} from "./FormPricingTab";
 
 export const FormForm = ({
     form,
@@ -140,6 +141,21 @@ export const FormForm = ({
                                 shouldReset={shouldReset}
                             />
                         </Tab>
+                        <Tab
+                            eventKey="pricing"
+                            className="mt-3"
+                            title={
+                                <p className="font-weight-bold m-0">
+                                    {__('Pricing', 'smartpay')}
+                                </p>
+                            }
+                        >
+                            <FormPricingTab
+                                form={form}
+                                setFormData={setFormData}
+                            />
+                        </Tab>
+
                         <Tab
                             eventKey="options"
                             className="mt-3"

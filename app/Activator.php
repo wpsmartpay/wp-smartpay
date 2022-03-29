@@ -31,6 +31,7 @@ class Activator
         \CreateSmartpayCouponsTable::up();
         \CreateSmartpayCustomersTable::up();
         \CreateSmartpayPaymentsTable::up();
+        \AddSettingsColumnOnProductTable::up();
     }
 
     /**

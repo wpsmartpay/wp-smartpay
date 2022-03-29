@@ -17,10 +17,12 @@ const reducer = (state, data) => {
 }
 
 export const CreateProduct = () => {
+    console.log(productDefaultData)
     const [product, setProductData] = useReducer(reducer, productDefaultData)
     const navigate = useNavigate()
 
     const createProduct = () => {
+        // console.log(product)
         SaveProduct(JSON.stringify(product))
             .then((response) => {
                 setProductData(productDefaultData)

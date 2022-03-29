@@ -35,6 +35,7 @@ export const EditProduct = () => {
             })
         }
     }, [productData])
+    console.log(product)
 
     const Save = () => {
         UpdateProduct(productId, JSON.stringify(product)).then((response) => {
