@@ -50,18 +50,35 @@ if ($payment) : ?>
         </tr>
 
         <?php if (strtolower($payment->status) == \SmartPay\Models\Payment::COMPLETED): ?>
-            <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null;
-            $external_link = $form['settings']['externalLink'];
-            ?>
-            <?php if ($form && $external_link && $external_link['allowExternalLink']): ?>
-                <tr>
-                    <td><?php _e('External Link:', 'smartpay') ?></td>
-                    <td>
-                        <a href="<?php echo $form['settings']['externalLink']['link']; ?>" target="_blank">
-                            <?php echo $form['settings']['externalLink']['label'] ?>
-                        </a>
-                    </td>
-                </tr>
+            <?php if ($payment->type == 'Product Purchase'): ?>
+                <?php $product = \SmartPay\Models\Product::find(intval($payment['data']['product_id'])) ?? null;
+                $external_link = $product['settings']['externalLink'];
+                ?>
+                <?php if ($product && $external_link && $external_link['allowExternalLink']): ?>
+                    <tr>
+                        <td><?php _e('Resource', 'smartpay') ?></td>
+                        <td>
+                            <a href="<?php echo $product['settings']['externalLink']['link']; ?>" target="_blank">
+                                <?php echo $product['settings']['externalLink']['label'] ?>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+            <?php else: ?>
+                <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null;
+                $external_link = $form['settings']['externalLink'];
+                ?>
+                <?php if ($form && $external_link && $external_link['allowExternalLink']): ?>
+                    <tr>
+                        <td><?php _e('Resource', 'smartpay') ?></td>
+                        <td>
+                            <a href="<?php echo $form['settings']['externalLink']['link']; ?>" target="_blank">
+                                <?php echo $form['settings']['externalLink']['label'] ?>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
 
