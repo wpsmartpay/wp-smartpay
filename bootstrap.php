@@ -18,6 +18,8 @@ register_activation_hook(SMARTPAY_PLUGIN_FILE, [Activator::class, 'boot']);
 
 register_deactivation_hook(SMARTPAY_PLUGIN_FILE, [Deactivator::class, 'boot']);
 
+\SmartPay\Updater::boot();
+
 add_action('plugins_loaded', function () {
     require_once(ABSPATH . '/wp-admin/includes/plugin.php');
     if (defined('SMARTPAY_PRO_VERSION')) {
