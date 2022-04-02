@@ -17,7 +17,8 @@ class Product extends Model
         'files',
         'parent_id',
         'status',
-        'extra'
+        'extra',
+        'settings'
     ];
 
     const PUBLISH = 'publish';
@@ -151,5 +152,15 @@ class Product extends Model
     public function setExtraAttribute($settings)
     {
         $this->attributes['extra'] = \json_encode($settings);
+    }
+
+    public function getSettingsAttribute($settings)
+    {
+        return \json_decode($settings, true);
+    }
+
+    public function setSettingsAttribute($settings)
+    {
+        $this->attributes['settings'] = \json_encode($settings);
     }
 }
