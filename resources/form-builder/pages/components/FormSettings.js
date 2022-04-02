@@ -19,7 +19,7 @@ export const FormSettings = ({ form, setFormData }) => {
                             {__('Pay button label', 'smartpay')}
                         </label>
                         <Form.Control
-                            className="mt-1"
+                            className="mt-2"
                             size="sm"
                             type="text"
                             defaultValue={form.settings.payButtonLabel}
@@ -61,49 +61,51 @@ export const FormSettings = ({ form, setFormData }) => {
                     </div>
                     {form.settings.externalLink?.allowExternalLink &&
                         <div className="form-group mt-4 mb-0">
-                        <div className="d-flex">
-                        <div className="w-75 mr-4">
-                        <label>
-                    {__('External Link', 'smartpay')}
-                        </label>
-                        <Form.Control
-                        size="sm"
-                        type="text"
-                        defaultValue={form.settings.externalLink?.link}
-                        onChange={(e) => {
-                        setSettingsData({
-                        ...form.settings,
-                        externalLink:{
-                        ...form.settings.externalLink,
-                        link: e.target.value,
-                    }
-                    })
-                    }}
-                        placeholder={__('https://example.com', 'smartpay')}
-                        />
-                        </div>
-                        <div className="w-25">
-                        <label>
-                    {__('Label', 'smartpay')}
-                        </label>
-                        <Form.Control
-                        size="sm"
-                        type="text"
-                        defaultValue={form.settings.externalLink?.label}
-                        onChange={(e) => {
-                        setSettingsData({
-                        ...form.settings,
-                        externalLink:{
-                        ...form.settings.externalLink,
-                        label: e.target.value,
-                    }
-                    })
-                    }}
-                        placeholder={__('Link Label', 'smartpay')}
-                        />
-                        </div>
-                        </div>
-                        {/*<p className="text-muted">* {__('It will show on payment receipt page.', 'smartpay')}</p>*/}
+                            <div className="d-flex">
+                                <div className="w-75 mr-4">
+                                    <label>
+                                        {__('External Link', 'smartpay')}
+                                    </label>
+                                    <Form.Control
+                                        size="sm"
+                                        type="text"
+                                        className="mt-2"
+                                        defaultValue={form.settings.externalLink?.link}
+                                        onChange={(e) => {
+                                            setSettingsData({
+                                                ...form.settings,
+                                                externalLink:{
+                                                    ...form.settings.externalLink,
+                                                    link: e.target.value,
+                                                }
+                                            })
+                                        }}
+                                        placeholder={__('https://example.com', 'smartpay')}
+                                    />
+                                </div>
+                                <div className="w-25">
+                                    <label>
+                                        {__('Label', 'smartpay')}
+                                    </label>
+                                    <Form.Control
+                                        size="sm"
+                                        type="text"
+                                        className="mt-2"
+                                        defaultValue={form.settings.externalLink?.label}
+                                        onChange={(e) => {
+                                            setSettingsData({
+                                                ...form.settings,
+                                                externalLink:{
+                                                    ...form.settings.externalLink,
+                                                    label: e.target.value,
+                                                }
+                                            })
+                                        }}
+                                        placeholder={__('Link Label', 'smartpay')}
+                                    />
+                                </div>
+                            </div>
+                            {/*<p className="text-muted">* {__('It will show on payment receipt page.', 'smartpay')}</p>*/}
                         </div>
                     }
                 </div>

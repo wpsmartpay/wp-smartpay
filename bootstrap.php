@@ -2,6 +2,7 @@
 
 use SmartPay\Activator;
 use SmartPay\Deactivator;
+use SmartPay\Updater;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -18,7 +19,7 @@ register_activation_hook(SMARTPAY_PLUGIN_FILE, [Activator::class, 'boot']);
 
 register_deactivation_hook(SMARTPAY_PLUGIN_FILE, [Deactivator::class, 'boot']);
 
-\SmartPay\Updater::boot();
+Updater::boot();
 
 add_action('plugins_loaded', function () {
     require_once(ABSPATH . '/wp-admin/includes/plugin.php');
