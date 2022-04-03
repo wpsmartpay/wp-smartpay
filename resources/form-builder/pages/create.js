@@ -20,7 +20,13 @@ const defaultFormData = {
     fields: [],
     settings: {
         allowCustomAmount: false,
+        payButtonLabel: __('Pay Now', 'smartpay'),
         customAmountLabel: __('Pay what you want', 'smartpay'),
+        externalLink: {
+            allowExternalLink: false,
+            label: __('Link Label', 'smartpay'),
+            link: ''
+        }
     },
 }
 

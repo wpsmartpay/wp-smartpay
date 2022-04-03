@@ -22,7 +22,13 @@ function smartpay_amount_format($amount, $currency = '')
 
     $position = smartpay_get_option('currency_position', 'before');
 
-    $amount = abs($amount);
+    /**
+     * should check the amount is string or not
+     * when updating the form amount with empty value, then it saves the empty string
+     * handle the null value also
+     */
+    $amount = abs((float) $amount) ?? 0;
+
 
     if ($position == 'before') {
         switch ($currency) {
