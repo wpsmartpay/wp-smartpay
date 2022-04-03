@@ -39,14 +39,17 @@ export const FormAmounts = ({ form, setFormData }) => {
         <Card>
             <Card.Body>
                 <h2 className="m-0">{__('Form Amounts', 'smartpay')}</h2>
-                <div className="col-md-8 mx-auto">
+                <hr/>
+                <div className="col-md-10 mt-4 mx-auto">
                     {/* Form amounts */}
                     {window.SMARTPAY_FORM_HOOKS.applyFilters(
                         'smartpay.form.amount.section',
                         <>
                             {amounts.map((amount, index) => {
                                 return (
-                                    <div key={index}>
+                                    <div key={index}
+                                    className="mt-3"
+                                    >
                                         <AmountRow
                                             amount={amount}
                                             setAmount={setAmount}
@@ -71,7 +74,7 @@ export const FormAmounts = ({ form, setFormData }) => {
                     </div>
                 </div>
 
-                <div className="col-md-8 mx-auto">
+                <div className="col-md-10 mx-auto">
                     <CustomAmount form={form} setFormData={setFormData} />
                 </div>
             </Card.Body>
@@ -82,7 +85,7 @@ export const FormAmounts = ({ form, setFormData }) => {
 const AmountRow = ({ rowIndex, amount, setAmount, removeAmountRow }) => {
     return (
         <Card className="mb-2 bg-light" key={rowIndex}>
-            <div className="p-2">
+            <div className="p-3">
                 <div className="d-flex">
                     <div className="w-75 mr-2">
                         <Form.Control
