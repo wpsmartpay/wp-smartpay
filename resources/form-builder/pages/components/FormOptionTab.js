@@ -1,12 +1,12 @@
-import { FormSettings } from "./FormSettings";
+import { FormAmounts } from './FormAmounts'
 
 export const FormOptionTab = ({ form, setFormData }) => {
     const formOptionSections = window.SMARTPAY_FORM_HOOKS.applyFilters(
         'smartpay.form.option.sections',
         [
             {
-                namespace: 'settings',
-                body: <FormSettings form={form} setFormData={setFormData} />,
+                namespace: 'amounts',
+                body: <FormAmounts form={form} setFormData={setFormData} />,
             },
         ],
         form,

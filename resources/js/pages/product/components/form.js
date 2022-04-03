@@ -4,7 +4,6 @@ import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteProduct } from '../../../http/product'
 import { variationDefaultData } from '../../../utils/constant'
-import {OptionComponent} from "./option";
 const { useEffect, useState } = wp.element
 
 export const ProductForm = ({ product, setProductData }) => {
@@ -248,7 +247,7 @@ export const ProductForm = ({ product, setProductData }) => {
                     className="text-decoration-none"
                     title={__('Files', 'smartpay')}
                 >
-                    <div className="product-files-section">
+                    <div className="product-files-secion">
                         {product?.files?.length ? (
                             <>
                                 <ul
@@ -336,7 +335,7 @@ export const ProductForm = ({ product, setProductData }) => {
                 <Tab
                     eventKey="pricing"
                     className="text-decoration-none"
-                    title={__('Pricing & Variation', 'smartpay')}
+                    title={__('Pricing', 'smartpay')}
                 >
                     {!product.variations.length && (
                         <div className="form-row">
@@ -621,7 +620,7 @@ export const ProductForm = ({ product, setProductData }) => {
                                                                                 vFile
                                                                             ) => {
                                                                                 return file.id ===
-                                                                                vFile.id
+                                                                                    vFile.id
                                                                                     ? true
                                                                                     : false
                                                                             }
@@ -739,16 +738,6 @@ export const ProductForm = ({ product, setProductData }) => {
                             </div>
                         )}
                     </div>
-                </Tab>
-                <Tab
-                    eventKey="options"
-                    className="text-decoration-none"
-                    title={__('Options', 'smartpay')}
-                >
-                    <OptionComponent
-                        product={product}
-                        setProductData={setProductData}
-                    />
                 </Tab>
             </Tabs>
         </Form>

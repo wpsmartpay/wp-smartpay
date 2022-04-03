@@ -92,7 +92,7 @@
                             </div>
 
                             <button type="button" class="btn btn-success btn-block btn-lg open-payment-form">
-                                <?php echo __($product['settings']['payButtonLabel'] ?: 'Get it now', 'smartpay'); ?>
+                                <?php echo __('Get it now', 'smartpay'); ?>
                             </button>
                         </div>
                     </div>
