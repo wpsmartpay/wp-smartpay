@@ -1,5 +1,3 @@
-import {__} from "@wordpress/i18n";
-
 const ONE_TIME = 'One Time'
 const SUBSCRIPTION = 'Subscription'
 
@@ -19,15 +17,6 @@ const productDefaultData = {
     base_price: '',
     sale_price: '',
     files: [],
-    settings: {
-        payButtonLabel: __('Pay Now', 'smartpay'),
-        label: __('Just Label checking', 'smartpay'),
-        externalLink: {
-            allowExternalLink: false,
-            label: __('Link Label', 'smartpay'),
-            link: ''
-        }
-    },
     extra: {},
 }
 
