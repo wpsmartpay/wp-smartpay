@@ -116,6 +116,11 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.6.4] =
+* New - Pay Now/Get it Now button text change option on form and product
+* Add - External Resource link on payment success page
+* Fix - Dash/Hyphen(-) symbol when amount has no label
+
 = [2.6.3] =
 * New - WP user creation option on settings
 * New - New user notification option on Email settings
