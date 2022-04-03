@@ -61,9 +61,9 @@ class ProductController extends RestController
             $product->files = $request->files ?? [];
             $product->covers = $request->covers ?? [];
             $product->status = Product::PUBLISH;
-            $product->extra = $request->extra ?? [];
-            $product->settings = $request->settings ?? [];
+            $product->extra = $request->extra ?: [];
             $result = $product->save(); // response true
+
             if($result && $product->id){
 
                 array_walk($request->variations, function ($variationData) use ($product) {
@@ -127,7 +127,6 @@ class ProductController extends RestController
             $product->files = $request->files ?? [];
             $product->covers = $request->covers ?? [];
             $product->extra = $request->extra;
-            $product->settings = $request->settings;
             $product->status = Product::PUBLISH;
             $product->save();
 
@@ -209,7 +208,7 @@ class ProductController extends RestController
             'files' => $data->files ?? [],
             'parent_id' => $parentId,
             'status' => Product::PUBLISH,
-            'extra' => $data->extra ?? [],
+            'extra' => $data->extra ?? []
         ]);
     }
 }

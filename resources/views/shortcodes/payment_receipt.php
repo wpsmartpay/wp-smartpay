@@ -23,12 +23,12 @@ if ($payment) : ?>
             <td>
                 <?php
                 echo smartpay_amount_format($payment->amount);
-                //                    if ($payment->amount <= 0){
-                //                        //FIXME: remove constant with accessor or from gateway label
-                //                        echo 'Free';
-                //                    }else {
-                //                        echo smartpay_amount_format($payment->amount);
-                //                    }
+//                    if ($payment->amount <= 0){
+//                        //FIXME: remove constant with accessor or from gateway label
+//                        echo 'Free';
+//                    }else {
+//                        echo smartpay_amount_format($payment->amount);
+//                    }
                 ?>
             </td>
         </tr>
@@ -48,40 +48,6 @@ if ($payment) : ?>
             <td><?php _e('Payment status:', 'smartpay') ?></td>
             <td><?php echo esc_html(ucfirst($payment->status)); ?></td>
         </tr>
-
-        <?php if (strtolower($payment->status) == \SmartPay\Models\Payment::COMPLETED): ?>
-            <?php if ($payment->type == 'Product Purchase'): ?>
-                <?php $product = \SmartPay\Models\Product::find(intval($payment['data']['product_id'])) ?? null;
-                $external_link = $product['settings']['externalLink'];
-                ?>
-                <?php if ($product && $external_link && $external_link['allowExternalLink']): ?>
-                    <tr>
-                        <td><?php _e('Resource', 'smartpay') ?></td>
-                        <td>
-                            <a href="<?php echo $product['settings']['externalLink']['link']; ?>" target="_blank">
-                                <?php echo $product['settings']['externalLink']['label'] ?>
-                            </a>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
-            <?php else: ?>
-                <?php $form = \SmartPay\Models\Form::find(intval($payment['data']['form_id'])) ?? null;
-                $external_link = $form['settings']['externalLink'];
-                ?>
-                <?php if ($form && $external_link && $external_link['allowExternalLink']): ?>
-                    <tr>
-                        <td><?php _e('Resource', 'smartpay') ?></td>
-                        <td>
-                            <a href="<?php echo $form['settings']['externalLink']['link']; ?>" target="_blank">
-                                <?php echo $form['settings']['externalLink']['label'] ?>
-                            </a>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            <?php endif; ?>
-        <?php endif; ?>
-
 
         <?php do_action('smartpay_before_payment_receipt_data', $payment); ?>
 
@@ -116,6 +82,7 @@ if ($payment) : ?>
                 </tbody>
             </table>
         <?php endif; ?>
+
     <?php endif; ?>
 <?php
 

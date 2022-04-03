@@ -21,9 +21,9 @@
                                     // FIXME: Move to pro plugin 
                                     ?>
                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].' -' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
+                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
                                     <?php else : ?>
-                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].' -' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?></label>
+                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label']; ?> - <?php echo smartpay_amount_format($amount['amount']); ?></label>
                                     <?php endif; ?>
                                     <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
                                     <?php
@@ -89,7 +89,7 @@
 
                     <?php do_action('before_smartpay_payment_form_button', $form); ?>
 
-                    <button type="button" class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>><?php _e($form['settings']['payButtonLabel'] ?: 'Pay Now', 'smartpay') ?></button>
+                    <button type="button" class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>><?php _e('Pay Now', 'smartpay') ?></button>
 
                     <?php do_action('after_smartpay_payment_form_button', $form); ?>
                 </form>

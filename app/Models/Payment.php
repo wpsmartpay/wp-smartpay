@@ -43,7 +43,6 @@ class Payment extends Model
     const BILLING_TYPE_ONE_TIME = 'One Time';
     const BILLING_TYPE_SUBSCRIPTION = 'Subscription';
 
-
     const BILLING_PERIOD_DAILY = 'Daily';
     const BILLING_PERIOD_WEEKLY = 'Weekly';
     const BILLING_PERIOD_MONTHLY = 'Monthly';
