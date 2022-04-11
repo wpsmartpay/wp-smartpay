@@ -234,7 +234,7 @@ $product       = Product::with('parent')->find($productId);
                                         <div style="line-height: 64px">&zwnj;</div>
                                         <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
                                         <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
-                                        <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo __('You get this email because you sign up or purchase someting at ', 'smartpay') . get_bloginfo('name'); ?></p>
+                                        <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo __('You have received this email because you signed up, donated or made a transaction at ', 'smartpay') . get_bloginfo('name'); ?></p>
                                         <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
                                     </td>
                                 </tr>
