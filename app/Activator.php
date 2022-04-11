@@ -9,6 +9,13 @@ require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 class Activator
 {
     public $upload;
+    /**
+     * if any changes/updates on database
+     * update the database version
+     * @var $db_version
+     */
+    private const SMARTPAY_DB_VERSION = '2.0';
+
     public function __construct()
     {
         $this->migrate();
@@ -136,6 +143,14 @@ class Activator
         );
 
         update_option('smartpay_settings', array_merge($smartpay_settings, $options));
+
+        // set the db version to option table
+        if (is_null(get_option( 'smartpay_db_version'))){
+            add_option('smartpay_db_version', self::SMARTPAY_DB_VERSION);
+        } else {
+            update_option('smartpay_db_version', self::SMARTPAY_DB_VERSION);
+        }
+
     }
 
     public static function activatePlugin()
