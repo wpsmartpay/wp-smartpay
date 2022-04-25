@@ -45,7 +45,7 @@
                                                             <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
                                                         <?php endif; ?>
                                                         <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                                            <span>/ <?php echo __($billingPeriod); ?></span>
+                                                            <span>/ <?php echo __($billingPeriod, 'smartpay'); ?></span>
                                                         <?php endif; ?>
                                                     </div>
                                                     <h5 class="m-0 price--title">

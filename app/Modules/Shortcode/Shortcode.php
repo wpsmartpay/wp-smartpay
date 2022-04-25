@@ -2,6 +2,7 @@
 
 namespace SmartPay\Modules\Shortcode;
 
+use SmartPay\Models\Payment;
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
 use SmartPay\Models\Customer;
@@ -100,33 +101,33 @@ class Shortcode
         }
     }
 
-    /**
-     * Payment receipt shortcode.
-     *
-     * @since 0.0.1
-     * @return void
-     */
+	/**
+	 * Payment receipt shortcode.
+	 * @param $atts
+	 *
+	 * @return false|string|void
+	 */
     public function payment_receipt_shortcode($atts)
     {
-        $payment_id = isset($_GET['payment-id']) ? intval($_GET['payment-id']) : null;
+        $payment_uuid = isset($_GET['smartpay-payment']) ? ($_GET['smartpay-payment']) : null;
 
-        if (!$payment_id) {
+        if (!$payment_uuid) {
             return;
         }
 
         // Sometimes payment gateway need more time to complete a payment
         sleep(3);
 
-        $payment = smartpay_get_payment($payment_id);
+//        $payment = smartpay_get_payment($payment_id);
+	    // fetch the payment regrading to payment uuid
+	    $payment = Payment::where('uuid', $payment_uuid)->first();
 
-        if (!$payment->id) {
+        if (!$payment) {
             return;
         }
 
         try {
-
             ob_start();
-
             echo smartpay_view('shortcodes.payment_receipt', ['payment' => $payment]);
 
             return ob_get_clean();
