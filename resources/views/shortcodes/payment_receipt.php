@@ -10,6 +10,17 @@ if ($payment) : ?>
             <td><?php _e('Payment ID:', 'smartpay') ?></td>
             <td><?php echo esc_html($payment->id); ?></td>
         </tr>
+
+        <tr>
+            <td><?php _e( $payment->type == 'Product Purchase' ? 'Product Name' : 'Form Name:', 'smartpay') ?></td>
+            <td>
+                <a href="<?php echo smartpay_get_payment_product_or_form_name($payment->id)['preview'];?>" target="_blank">
+	                <?php echo esc_html(smartpay_get_payment_product_or_form_name($payment->id)['name']); ?>
+                </a>
+            </td>
+<!--            <td>--><?php //echo esc_html(smartpay_get_payment_product_or_form_name($payment->id)); ?><!--</td>-->
+        </tr>
+
         <tr>
             <td><?php _e('Name:', 'smartpay') ?></td>
             <td><?php echo esc_html($payment->customer->first_name . ' ' . $payment->customer->last_name); ?></td>
