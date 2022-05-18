@@ -56,20 +56,27 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
 
                                                     <?php foreach ($customer->payments as $index => $payment) : ?>
                                                         <tr>
-                                                            <th scope="row"><?php echo '#' . $payment->id; ?></th>
-                                                            <td><?php echo mysql2date('F j, Y', $payment->completed_at); ?></td>
+	                                                        <?php
+	                                                        $payment_detail_url = add_query_arg('smartpay-payment', $payment->uuid, smartpay_get_payment_success_page_uri());
+	                                                        ?>
+                                                            <th scope="row">
+                                                                <a href="<?php echo $payment_detail_url; ?>" target="_blank">
+                                                                    <?php echo '#' . $payment->id; ?>
+                                                                </a>
+                                                            </th>
+                                                            <td>
+                                                                <!-- show completed date else order created date-->
+                                                                <?php
+                                                                    $date = $payment->completed_at ?? $payment->created_at;
+                                                                ?>
+                                                                <?php echo mysql2date('F j, Y', $date) ; ?>
+                                                            </td>
                                                             <td class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
                                                                 <?php echo $payment->status; ?></td>
                                                             <td class="text-muted">
                                                                 <strong class="<?php echo 'completed' == $payment->status ? 'text-success' : 'text-danger'; ?>">
                                                                     <?php echo smartpay_amount_format($payment->amount, $payment->currency); ?>
                                                                 </strong>
-                                                            </td>
-                                                            <td>
-                                                                <?php
-                                                                $payment_detail_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
-                                                                ?>
-                                                                <a href="<?php echo $payment_detail_url; ?>" target="_blank">View</a>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
