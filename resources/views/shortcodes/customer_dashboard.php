@@ -49,7 +49,6 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                         <th scope="col"><?php _e('Date', 'smartpay'); ?></th>
                                                         <th scope="col"><?php _e('Status', 'smartpay'); ?></th>
                                                         <th scope="col"><?php _e('Amount', 'smartpay'); ?></th>
-                                                        <th scope="col"><?php _e('Action', 'smartpay'); ?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
