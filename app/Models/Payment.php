@@ -22,6 +22,7 @@ class Payment extends Model
         'email',
         'key',
         'parent_id',
+        'uuid',
         'mode',
         'status',
         'extra',

@@ -81,7 +81,7 @@ final class FreePurchase extends PaymentGateway
                         $payment->id
                     ), 'smartpay'));
                 }
-                $return_url = add_query_arg('payment-id', $payment->id, smartpay_get_payment_success_page_uri());
+                $return_url = add_query_arg('smartpay-payment', $payment->uuid, smartpay_get_payment_success_page_uri());
                 echo 'Please be patient. Your payment is being processed';
                 $content = '<script type="text/javascript">';
 //                $content .= 'window.location.replace("'.$return_url.'");';
