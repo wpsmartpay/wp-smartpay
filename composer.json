@@ -7,7 +7,7 @@
         "symfony/http-foundation": "^5.4.3",
         "symfony/polyfill-mbstring": "1.20.0",
         "symfony/deprecation-contracts": "v2.5.0",
-        "ramsey/uuid": "^4.3"
+        "ramsey/uuid": "^4.2.3"
     },
     "autoload": {
         "psr-4": {
