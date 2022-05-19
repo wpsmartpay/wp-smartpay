@@ -1205,3 +1205,19 @@ msgstr ""
 #: app/Helpers/smartpay.php:758
 msgid "Zambian kwacha"
 msgstr ""
+
+#: billing periods
+msgid "Daily"
+msgstr ""
+
+msgid "Weekly"
+msgstr ""
+
+msgid "Every 3 Months"
+msgstr ""
+
+msgid "Every 6 Months"
+msgstr ""
+
+msgid "Yearly"
+msgstr ""

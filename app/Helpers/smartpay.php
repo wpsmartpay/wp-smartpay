@@ -1026,3 +1026,26 @@ function smartpay_debug_log($message = '', $force = false)
 function smartpay_get_available_payment_gateways($availableGateways) {
     return apply_filters('smartpay_get_available_payment_gateways', $availableGateways);
 }
+
+// get the form or product title from payment id
+function smartpay_get_payment_product_or_form_name($payment_id): array {
+	$payment = PaymentModel::find($payment_id);
+	if ($payment->type == 'Product Purchase') {
+		$product = \SmartPay\Models\Product::find($payment->data['product_id']);
+		if ($product) {
+			$name = $product->title;
+			$prev_link = $product->extra['product_preview_page_permalink'];
+		}
+	} else {
+		$form = \SmartPay\Models\Form::find($payment->data['form_id']);
+		if ($form) {
+			$name = $form->title;
+			$prev_link = $form->extra['form_preview_page_permalink'];
+		}
+	}
+
+	return [
+		'name' => $name ?? 'No Name',
+		'preview'   =>$prev_link ?? '#'
+	];
+}

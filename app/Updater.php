@@ -27,5 +27,6 @@ class Updater
     public function _update_database_if_available()
     {
         \AddSettingsColumnOnProductTable::up();
+		\AddUuidColumnOnPaymentTable::up();
     }
 }

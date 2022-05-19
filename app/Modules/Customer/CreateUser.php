@@ -22,6 +22,8 @@ class CreateUser {
             }
 
             $new_customer_data = array(
+				'first_name' => $payment->customer->first_name ?? '',
+				'last_name' => $payment->customer->last_name ?? '',
                 'user_login' => $username,
                 'user_pass'  => $password,
                 'user_email' => $email,
