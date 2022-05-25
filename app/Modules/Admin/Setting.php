@@ -798,6 +798,18 @@ class Setting
             $rows = '5';
         }
 
+	    if (isset($args['cols'])) {
+		    $cols = $args['cols'];
+	    } else {
+		    $cols = '50';
+	    }
+
+	    if (isset($args['style'])) {
+		    $style = $args['style'];
+	    } else {
+		    $style = '';
+	    }
+
         if ($old_value) {
             $value = $old_value;
         } else {
@@ -806,7 +818,7 @@ class Setting
 
         $class =  $this->smartpay_sanitize_html_class($args['field_class']);
 
-        $html = '<textarea class="' . $class . ' large-text" cols="50" rows="' . esc_attr($rows) . '" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
+        $html = '<textarea class="' . $class . ' large-text" cols="' . esc_attr($cols) . '" rows="' . esc_attr($rows) . '" style="'.$style.'" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
 
         echo $html;
