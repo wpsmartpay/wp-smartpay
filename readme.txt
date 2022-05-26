@@ -2,9 +2,9 @@
 Contributors: themesgrove
 Tags: download manager, digital product, donation, ecommerce, stripe, paypal, paddle, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
 Requires at least: 4.9
-Tested up to: 5.9.3
+Tested up to: 6.0
 Requires PHP: 7.4.0
-Stable Tag: 2.6.6
+Stable Tag: 2.6.7
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
@@ -76,12 +76,16 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 - [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
 - [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
 - [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
+- [toyyibPay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-toyyibpay) - is an online payment platform for businesses & individuals with the least expensive and free charge rates for certain deals.
 - [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### LOCALE AND CURRENCY SETTINGS
 - Stripe currently supports [27 languages](https://support.stripe.com/questions/supported-languages-for-stripe-checkout), [39 countries](https://stripe.com/global), and [135+ currencies](https://stripe.com/docs/currencies).
 - Paypal currently supports [200 countries/regions](https://www.paypal.com/en/webapps/mpp/country-worldwide) and support 25 currencies
 - Paddle currently supports worldwide except few [sanctioned and restricted counties](https://paddle.com/support/countries-supported/).
+- Mollie currently available the European Economic Area (EEA) [More info at ](https://help.mollie.com/hc/en-us/articles/115002116105-Can-I-use-Mollie-s-services-in-my-country).
+- RazorPay support near 100 of currencies [check your currency ](https://razorpay.com/accept-international-payments).
+- toyyibPay is only available in Malaysia .
 
 WP SmartPay lets you set the locale (language) for your payment forms as well as the preferred currency and date formats for your site's region.
 
@@ -116,6 +120,9 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.6.7] =
+* Add - Add additional input field for toyyibPay
+
 = [2.6.6] =
 * Add - Add name property on new user creation
 * Add - Add product or form name on payment receipt page
