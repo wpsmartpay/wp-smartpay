@@ -233,8 +233,6 @@ jQuery(($) => {
                                 .html(
                                     `<p class="text-danger">Something wrong!</p>`
                                 )
-
-                            console.error('Something wrong!')
                         }
 
                         $parentWrapper
@@ -385,7 +383,6 @@ jQuery(($) => {
         const validator = new SmartPayFormValidator(data, rules)
 
         const errors = validator.validate()
-        // console.log({errors})
         return {
             valid: Object.values(errors).every(
                 (messages) => messages.length === 0
