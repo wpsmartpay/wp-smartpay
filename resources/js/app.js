@@ -71,6 +71,13 @@ jQuery(($) => {
                         )
                         if (errorMessage) itemErrors.push(errorMessage)
                     }
+                    // Check required when validation
+                    if (requirements.requiredWhen) {
+                        const errorMessage = this.validateRequiredWhenMessage(
+                            this.data[property], requirements.requiredWhen
+                        )
+                        if (errorMessage) itemErrors.push(errorMessage)
+                    }
 
                     // Check email validation
                     if (requirements.email) {
@@ -126,6 +133,11 @@ jQuery(($) => {
             if (value) return
 
             return 'is required'
+        }
+        self.validateRequiredWhenMessage = (value, [key, checkValue]) => {
+            if(key && self.data[key] === checkValue){
+                return self.validateRequiredMessage(value)
+            }
         }
 
         self.validateEmailMessage = (value) => {

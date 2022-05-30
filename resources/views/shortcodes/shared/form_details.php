@@ -8,6 +8,7 @@
                     <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                     <?php echo do_blocks($form->body);
                     ?>
+                    <div id="mobile-field"></div>
 
                     <div class="form--amount-section mb-3">
                         <label class="form-amounts--label d-block m-0 mb-2"><?php _e('Select an amount', 'smartpay') ?></label>

@@ -108,6 +108,7 @@ $has_payment_error = false;
                             <div class="form-group">
                                 <input type="email" placeholder="Email address" class="form-control" name="smartpay_email" id="smartpay_email" value="<?php echo $customer->email ?? ''; ?>" autocomplete="email" required>
                             </div>
+                            <div id="mobile-field"></div>
 
                             <?php do_action('smartpay_before_product_payment_form_button', $product); ?>
 
