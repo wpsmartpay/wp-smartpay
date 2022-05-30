@@ -121,7 +121,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.6.7] =
-* Add - Add additional input field for toyyibPay
+* Add - toyyibPay payment gateway support
 
 = [2.6.6] =
 * Add - Add name property on new user creation
