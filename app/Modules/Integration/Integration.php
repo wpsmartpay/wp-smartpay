@@ -107,7 +107,16 @@ class Integration
                 'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png',
                 'manager'    => null,
                 'type'       => 'pro',
-                'categories' => ['Marketing'],
+                'categories' => ['Payment Gateway'],
+            ],
+
+            'toyyibpay' => [
+	            'name'       => __('toyyibPay', 'smartpay'),
+	            'excerpt'    => __('Quickest & easiest Malaysian online payment solution.', 'smartpay'),
+	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/toyyibpay.png',
+	            'manager'    => null,
+	            'type'       => 'pro',
+	            'categories' => ['Payment Gateway'],
             ],
         ];
     }

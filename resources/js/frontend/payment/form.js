@@ -284,6 +284,7 @@ jQuery(($) => {
             smartpay_first_name: data.smartpay_form.name.first_name,
             smartpay_last_name: data.smartpay_form.name.last_name,
             smartpay_email: data.smartpay_form.email,
+            smartpay_payment_mobile: data.smartpay_payment_mobile,
             smartpay_form_id: data.smartpay_form_id,
             smartpay_amount: data.smartpay_form_amount,
             smartpay_form_data: data.smartpay_form,
@@ -316,6 +317,10 @@ jQuery(($) => {
                 required: true,
                 email: true,
             },
+            smartpay_payment_mobile: {
+                requiredWhen: ['smartpay_gateway', 'toyyibpay'],
+            },
+
             smartpay_payment_type: {
                 required: true,
             },

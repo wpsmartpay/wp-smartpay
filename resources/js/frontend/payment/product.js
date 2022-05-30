@@ -51,6 +51,21 @@ jQuery(($) => {
         }
     )
 
+    $(document).ready(() => {
+        const container = document.querySelector('#mobile-field');
+        if (!container) return;
+        const input = jQuery('input[name="smartpay_gateway"]').toArray()
+        input.forEach((item) => {
+            item.addEventListener('change', ()=>{
+                if( item.value==='toyyibpay' ){
+                    container.innerHTML = `<div class="form-group"><input type="number" placeholder="Mobile No" class="form-control" name="smartpay_payment_mobile"  id="smartpay_payment_mobile" required /></div>`;
+                }else{
+                    container.innerHTML = ''
+                }
+            })
+        })
+    })
+
     /** Open product modal */
     $(document.body).on(
         'click',
@@ -164,7 +179,6 @@ jQuery(($) => {
         '.smartpay-payment button.smartpay-pay-now',
         (e) => {
             e.preventDefault()
-
             $parentWrapper = $(e.currentTarget).parents('.smartpay-payment')
 
             let buttonText = $(e.currentTarget).text()
@@ -219,8 +233,6 @@ jQuery(($) => {
                                 .html(
                                     `<p class="text-danger">Something wrong!</p>`
                                 )
-
-                            console.error('Something wrong!')
                         }
 
                         $parentWrapper
@@ -262,6 +274,8 @@ jQuery(($) => {
             smartpay_payment_type:
                 $wrapper.find('input[name="smartpay_payment_type"]').val() ||
                 null,
+            smartpay_payment_mobile:
+                $wrapper.find('input[name="smartpay_payment_mobile"]').val() || null,
         }
 
         if ('product_purchase' === data.smartpay_payment_type) {
@@ -354,6 +368,9 @@ jQuery(($) => {
             smartpay_last_name: {
                 required: true,
             },
+            smartpay_payment_mobile: {
+                requiredWhen: ['smartpay_gateway', 'toyyibpay'],
+            },
             smartpay_email: {
                 required: true,
                 email: true,
@@ -366,7 +383,6 @@ jQuery(($) => {
         const validator = new SmartPayFormValidator(data, rules)
 
         const errors = validator.validate()
-
         return {
             valid: Object.values(errors).every(
                 (messages) => messages.length === 0
