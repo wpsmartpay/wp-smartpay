@@ -52,14 +52,28 @@ jQuery(($) => {
     )
 
     $(document).ready(() => {
+
         const container = document.querySelector('#mobile-field');
         if (!container) return;
+
+        const checkedValue = $("input[name='smartpay_gateway']:checked").val();
+
+        const mobile_field_html = '<div class="form-group">' +
+            '<input type="number" ' +
+            'placeholder="Mobile No" class="form-control" ' +
+            'name="smartpay_payment_mobile"  ' +
+            'id="smartpay_payment_mobile" required />' +
+            '</div>';
+
+        if (checkedValue === "toyyibpay") {
+            container.innerHTML = mobile_field_html
+        }
         const input = jQuery('input[name="smartpay_gateway"]').toArray()
         input.forEach((item) => {
-            item.addEventListener('change', ()=>{
-                if( item.value==='toyyibpay' ){
-                    container.innerHTML = `<div class="form-group"><input type="number" placeholder="Mobile No" class="form-control" name="smartpay_payment_mobile"  id="smartpay_payment_mobile" required /></div>`;
-                }else{
+            item.addEventListener('change', () => {
+                if (item.value === 'toyyibpay') {
+                    container.innerHTML = mobile_field_html
+                } else {
                     container.innerHTML = ''
                 }
             })
