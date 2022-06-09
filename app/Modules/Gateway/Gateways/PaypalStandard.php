@@ -370,6 +370,14 @@ class PaypalStandard extends PaymentGateway
                 'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'smartpay'), '#'),
                 'type'  => 'checkbox',
             ),
+
+            array(
+                'id'    => 'paypal_smartpay_doc_link',
+                'name'  => __('WPSmartPay Documentation Link', 'smartpay'),
+                'desc'  => sprintf(__('Please see our <a href="%s" target="_blank">documentation</a> to set up PayPal properly.
+                .', 'smartpay'), 'https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal'),
+                'type'  => 'descriptive_text'
+            ),
         );
 
         return array_merge($settings, ['paypal' => $gateway_settings]);
