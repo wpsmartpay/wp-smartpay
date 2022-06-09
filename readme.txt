@@ -120,7 +120,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
-= [2.6.7] =
+= [2.6.8] =
 * Fix - Mobile field does not appear when toyyibPay is a default payment gateway
 
 = [2.6.7] =
