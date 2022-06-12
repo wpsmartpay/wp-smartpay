@@ -1,6 +1,6 @@
 {
     "name": "wp-smartpay",
-    "version": "2.6.8",
+    "version": "2.6.9",
     "description": "A simple plugin for receiving payment.",
     "repository": {
         "type": "git",
