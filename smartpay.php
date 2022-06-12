@@ -27,7 +27,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '2.6.8');
+define('SMARTPAY_VERSION', '2.6.9');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
