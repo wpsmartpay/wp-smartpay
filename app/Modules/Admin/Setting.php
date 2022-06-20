@@ -526,7 +526,10 @@ class Setting
         $name_attr = 'smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']';
         $name_attr = ($args['multiple']) ? $name_attr . '[]' : $name_attr;
 
-        $html = '<select ' . $nonce . ' id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html($placeholder) . '" ' . (($args['multiple']) ? 'multiple="true"' : '') . '>';
+        $html = '<select ' . $nonce . ' id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="' .
+            $name_attr . '" class="' . $class . '" style="' . $args['style'] .'" data-placeholder="' . esc_html
+            ($placeholder) .
+            '" ' . (($args['multiple']) ? 'multiple="true"' : '') . '>';
 
         foreach ($args['options'] as $option => $name) {
             if (!$args['multiple']) {
