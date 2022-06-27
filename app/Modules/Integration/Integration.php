@@ -118,6 +118,15 @@ class Integration
 	            'type'       => 'pro',
 	            'categories' => ['Payment Gateway'],
             ],
+
+            'paytm' => [
+	            'name'       => __('Paytm', 'smartpay'),
+	            'excerpt'    => __('Indian digital payments and financial services company.', 'smartpay'),
+	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paytm.png',
+	            'manager'    => null,
+	            'type'       => 'pro',
+	            'categories' => ['Payment Gateway'],
+            ],
         ];
     }
 
