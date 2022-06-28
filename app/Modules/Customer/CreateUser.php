@@ -27,7 +27,7 @@ class CreateUser {
                 'user_login' => $username,
                 'user_pass'  => $password,
                 'user_email' => $email,
-                'role'       => 'Customer',
+                'role'       => 'subscriber'
             );
 
             try {
