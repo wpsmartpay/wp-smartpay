@@ -125,6 +125,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 = [2.7.0] =
 * Add - Paytm payment gateway support
 * Fix - Warning message while creating a user and customer
+* Fix - User role was not creating on the first payment
 
 = [2.6.9] =
 * Fix - Mobile field does not appear when toyyibPay is a default payment gateway
