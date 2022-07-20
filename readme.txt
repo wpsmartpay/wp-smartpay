@@ -4,7 +4,7 @@ Tags: download manager, digital product, donation, ecommerce, stripe, paypal, pa
 Requires at least: 4.9
 Tested up to: 6.0
 Requires PHP: 7.4.0
-Stable Tag: 2.6.9
+Stable Tag: 2.7.0
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
@@ -77,6 +77,7 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 - [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
 - [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
 - [toyyibPay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-toyyibpay) - is an online payment platform for businesses & individuals with the least expensive and free charge rates for certain deals.
+- [Paytm](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paytm) - More popular Indian digital payments and financial services provider that allow to get the payments with various banks.
 - [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
 
 #### LOCALE AND CURRENCY SETTINGS
@@ -86,6 +87,7 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 - Mollie currently available the European Economic Area (EEA) [More info at ](https://help.mollie.com/hc/en-us/articles/115002116105-Can-I-use-Mollie-s-services-in-my-country).
 - RazorPay support near 100 of currencies [check your currency ](https://razorpay.com/accept-international-payments).
 - toyyibPay is only available in Malaysia .
+- WPSmartPay currently provide for Indian rupee through Paytm.
 
 WP SmartPay lets you set the locale (language) for your payment forms as well as the preferred currency and date formats for your site's region.
 
@@ -120,6 +122,11 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.7.0] =
+* Add - Paytm payment gateway support
+* Fix - Warning message while creating a user and customer
+* Fix - User role was not creating on the first payment
+
 = [2.6.9] =
 * Fix - Mobile field does not appear when toyyibPay is a default payment gateway
 

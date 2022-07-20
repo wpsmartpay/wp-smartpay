@@ -203,7 +203,7 @@ class Payment
     {
         $customer = Customer::where('email', $_data['smartpay_email'])->first();
 
-        if ($customer->id) {
+        if ($customer && $customer->id) {
             $customer_id = $customer->id;
         } else {
             $customer = new Customer();
@@ -249,7 +249,8 @@ class Payment
 
         if (!empty($payment->id)) {
             // check create WP user is enabled
-            $enable_user_creation = (bool) smartpay_get_settings()['create_wp_user'] ?? false;
+            $enable_user_creation = isset(smartpay_get_settings()['create_wp_user']) && smartpay_get_settings()
+                ['create_wp_user'];
             if ($enable_user_creation){
                 CreateUser::create_user($payment);
             }
