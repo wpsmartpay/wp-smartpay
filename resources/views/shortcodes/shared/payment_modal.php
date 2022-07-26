@@ -38,25 +38,9 @@ $has_payment_error = false;
                 </button>
             </div>
 
-            <?php do_action('smartpay_product_modal_popup_content'); ?>
             <div class="payment-modal--errors text-center" style="display: none"></div>
 
-
-            <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
-
-            <?php if ($productBillingType === \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) : ?>
-                <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted font-weight-light">
-                        <?php echo __('Enter your info to begin your', 'smartpay'); ?>
-                        <strong><span class="product_billing_type">--</span></strong> <?php echo __('subscription. You can cancel anytime', 'smartpay') ?>.
-                    </p>
-                </div>
-
-            <?php else : ?>
-                <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted"><?php echo __('Provide your information to complete your purchase', 'smartpay'); ?></p>
-                </div>
-            <?php endif; ?>
+            <?php do_action('smartpay_product_modal_popup_content', $product); ?>
 
             <div class="modal-body p-1 text-center step-1">
                 <div class="align-self-center w-100">
