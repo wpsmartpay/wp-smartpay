@@ -15,14 +15,40 @@
                         <div class="form-amounts">
                             <?php foreach ($form->amounts as $index => $amount) : ?>
                                 <?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
-                                <div class="custom-control custom-radio amount form--fixed-amount <?php echo 0 === $index ? 'selected' : '' ?>">
-                                    <input type="radio" name="_form_amount" id="_form_amount_<?php echo $amount['key']; ?>" id="_form_amount_<?php echo $amount['key']; ?>" class="custom-control-input" value="<?php echo $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?>>
+                                <div class="amount form--fixed-amount mr-2 <?php echo 0 ===
+                                $index ? 'selected' : '' ?>">
+                                    <?php if ($billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME)
+                                        : ?>
+                                        <label class="custom-control-label">
+                                            <input type="radio" name="_form_amount" id="_form_amount_<?php echo
+                                            $amount['key']; ?>"  class="" value="<?php echo
+                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+                                        </label>
+                                    <?php endif; ?>
 
                                     <?php
-                                    // FIXME: Move to pro plugin 
+                                    // FIXME: Move to pro plugin
                                     ?>
                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                        <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].' -' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?></label>
+                                        <label class="smartpay-custom-control-label">
+                                            <input type="radio" name="_form_amount" id="_form_amount_<?php echo
+                                            $amount['key']; ?>"  class="" value="<?php echo
+                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+                                        </label>
+
+                                        <label
+                                                class="smartpay-custom-control-label m-0 amount--title"
+                                                for="_form_amount_<?php echo $amount['key']; ?>">
+                                            <p><?php echo $amount['label'] ? $amount['label'] : ''; ?></p>
+                                            <strong class="mt-2">
+                                                <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?>
+                                            </strong>
+                                            <p class=""><?php echo
+                                                $amount['total_count']; ?> times</p>
+                                            <p class="mt-2">Sign Up fee - <?php echo
+                                                $amount['additional_charge'] .smartpay_get_currency_symbol() ; ?></p>
+                                        </label>
+
                                     <?php else : ?>
                                         <label class="custom-control-label m-0 ml-1 amount--title" for="_form_amount_<?php echo $amount['key']; ?>"><?php echo $amount['label'] ? $amount['label'].' -' : ''; ?> <?php echo smartpay_amount_format($amount['amount']); ?></label>
                                     <?php endif; ?>

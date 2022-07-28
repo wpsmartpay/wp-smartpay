@@ -106,3 +106,27 @@
         }
     }
 }
+
+.smartpay-custom-control-label {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    padding: 2px 0 5px 0;
+}
+.smartpay-custom-control-label * {
+    margin: 2px 0;
+}
+.smartpay-custom-control-label p {
+    font-size: 80%;
+}
+
+.smartpay-custom-control-label strong {
+    font-size: 85%;
+}
+
+.amount {
+    border: 1px solid grey;
+    min-width: 170px;
+    max-width: 300px;
+}
