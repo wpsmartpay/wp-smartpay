@@ -27,6 +27,10 @@ jQuery(($) => {
                 var selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_form_billing_period"]'
                 )
+
+                var selectedAmountKey = $(e.currentTarget).find(
+                    'input[name="_form_amount_key"]'
+                )
             }
 
             $(e.currentTarget)
@@ -44,6 +48,10 @@ jQuery(($) => {
                     .parents('.form-amounts')
                     .find('input[name="smartpay_form_billing_period"]')
                     .val(selectedBillingPeriod.val())
+
+                $('#smartpay-payment-form')
+                    .find('input[name="smartpay_selected_amount_key"]')
+                    .val(selectedAmountKey.val())
             }
         }
     )
@@ -287,9 +295,10 @@ jQuery(($) => {
             smartpay_payment_mobile: data.smartpay_payment_mobile,
             smartpay_form_id: data.smartpay_form_id,
             smartpay_amount: data.smartpay_form_amount,
+            smartpay_amount_key: data.smartpay_selected_amount_key,
             smartpay_form_data: data.smartpay_form,
             smartpay_form_billing_type: data.smartpay_form_billing_type,
-            ...(SUBSCRIPTION == data.smartpay_form_billing_type && {
+            ...(SUBSCRIPTION === data.smartpay_form_billing_type && {
                 smartpay_form_billing_period: data.smartpay_form_billing_period,
             }),
         }
