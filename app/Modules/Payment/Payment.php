@@ -159,6 +159,10 @@ class Payment
     {
         $payment_type = $_data['smartpay_payment_type'] ?? '';
 
+        // declare variables
+        $additional_amount = 0;
+        $total_billing_cycle = 0;
+
         switch ($payment_type) {
 
             case 'product_purchase':
@@ -169,6 +173,9 @@ class Payment
 
                 if (empty($productId) || empty($product)) return [];
 
+                $additional_amount = $product->extra['additional_charge'] ?? 0;
+                $total_billing_cycle = $product->extra['total_billing_cycle'] ?? 0;
+
                 return [
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
@@ -176,26 +183,32 @@ class Payment
                     'billing_type'   => $_data['smartpay_product_billing_type']
                 ];
 
-                break;
-
             case 'form_payment':
 
                 $formId = $_data['smartpay_form_id'] ?? 0;
 
                 $form = Form::where('id', $formId)->first();
 
+                foreach ($form->amounts as $amount) {
+                    if ($amount['key'] === $_data['smartpay_amount_key']) {
+                        $additional_amount = $amount['additional_charge'];
+                        $total_billing_cycle = $amount['total_billing_cycle'];
+                        break;
+                    }
+                }
+
                 if (empty($formId) || empty($form)) return [];
 
                 return [
-                    'form_id' => $form->id,
-                    'total_amount' => $_data['smartpay_amount'] ?? 0,
-                    'billing_type'   => $_data['smartpay_form_billing_type']
+                    'form_id'           => $form->id,
+                    'total_amount'      => $_data['smartpay_amount'] ?? 0,
+                    'billing_type'      => $_data['smartpay_form_billing_type'],
+                    'additional_charge' => $additional_amount,
+                    'billing_cycle'     => $total_billing_cycle
                 ];
-                break;
 
             default:
                 return [];
-                break;
         }
     }
 

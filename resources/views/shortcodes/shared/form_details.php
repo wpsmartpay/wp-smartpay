@@ -30,6 +30,7 @@
                                     // FIXME: Move to pro plugin
                                     ?>
                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
+                                        <input type="hidden" name="_form_amount_key" value="<?php echo $amount['key'] ?? ''; ?>">
                                         <label class="smartpay-custom-control-label">
                                             <input type="radio" name="_form_amount" id="_form_amount_<?php echo
                                             $amount['key']; ?>"  class="" value="<?php echo
@@ -43,8 +44,7 @@
                                             <strong class="mt-2">
                                                 <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?>
                                             </strong>
-                                            <p class=""><?php echo
-                                                $amount['total_count']; ?> times</p>
+                                            <p class=""><?php echo $amount['total_billing_cycle']; ?> times</p>
                                             <p class="mt-2">Sign Up fee - <?php echo
                                                 $amount['additional_charge'] .smartpay_get_currency_symbol() ; ?></p>
                                         </label>
@@ -86,6 +86,8 @@
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <input type="hidden" name="smartpay_selected_amount_key" value="<?php echo $form->amounts[0]['key'] ?? '' ?>">
 
                     <input type="hidden" name="smartpay_form_id" id="smartpay_form_id" value="<?php echo $form->id ?? 0; ?>">
 
