@@ -48,6 +48,9 @@ $has_payment_error = false;
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                         <div class="payment-modal--gateway">
                             <!-- // If Product has Zero sale amount -->
+                            <?php
+                                //FIXME: gateways are not visible if the main product is free or sale amount is zero
+                            ?>
                             <?php if ($product->sale_price <= 0) : ?>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
@@ -131,4 +134,5 @@ $has_payment_error = false;
     </div>
 </div>
 
-<div id="smartpay_currency_symbol" data-value="$"></div>
+<!--<div id="smartpay_currency_symbol" data-value="$"></div>-->
+
