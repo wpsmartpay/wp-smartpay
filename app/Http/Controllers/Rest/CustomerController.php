@@ -16,9 +16,9 @@ class CustomerController extends RestController
      */
     public function middleware(WP_REST_Request $request)
     {
-        if (!current_user_can('manage_options')) {
+        if (!is_user_logged_in()) {
             return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
-                'status' => is_user_logged_in() ? 403 : 401,
+                'status' => 401,
             ]);
         }
 
