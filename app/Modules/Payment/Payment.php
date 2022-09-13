@@ -183,7 +183,7 @@ class Payment
                     'billing_type'   => $_data['smartpay_product_billing_type'],
                     'additional_info' => [
                         'additional_charge' => $additional_amount,
-                        'billing_cycle' => $total_billing_cycle,
+                        'total_billing_cycle' => $total_billing_cycle,
                     ]
                 ];
 
@@ -211,7 +211,7 @@ class Payment
                     'billing_type'      => $_data['smartpay_form_billing_type'],
                     'additional_info' => [
                         'additional_charge' => $additional_amount,
-                        'billing_cycle' => $total_billing_cycle,
+                        'total_billing_cycle' => $total_billing_cycle,
                     ]
                 ];
 
