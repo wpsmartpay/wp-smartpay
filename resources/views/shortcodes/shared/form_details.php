@@ -44,9 +44,13 @@
                                             <strong class="mt-2">
                                                 <?php echo smartpay_amount_format($amount['amount']); ?> / <?php echo  $amount['billing_period']; ?>
                                             </strong>
-                                            <p class=""><?php echo $amount['total_billing_cycle']; ?> times</p>
-                                            <p class="mt-2">Sign Up fee - <?php echo
-                                                $amount['additional_charge'] .smartpay_get_currency_symbol() ; ?></p>
+                                            <?php if (isset($amount['total_billing_cycle']) && $amount['total_billing_cycle'] > 0): ?>
+                                                <p class=""><?php echo $amount['total_billing_cycle']; ?> times</p>
+                                            <?php endif; ?>
+                                            <?php if (isset($amount['additional_charge']) && $amount['additional_charge'] > 0): ?>
+                                                <p class="mt-2">Sign Up fee - <?php echo $amount['additional_charge'] .smartpay_get_currency_symbol() ; ?></p>
+                                            <?php endif; ?>
+
                                         </label>
 
                                     <?php else : ?>
