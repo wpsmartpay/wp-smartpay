@@ -181,6 +181,10 @@ class Payment
                     'product_price' => $product->price,
                     'total_amount'  => $_data['smartpay_product_price'],
                     'billing_type'   => $_data['smartpay_product_billing_type'],
+                    'additional_info' => [
+                        'additional_charge' => $additional_amount,
+                        'billing_cycle' => $total_billing_cycle,
+                    ]
                 ];
 
                 return smartpay_get_additional_payment_data($payment_default_data);
@@ -205,8 +209,10 @@ class Payment
                     'form_id'           => $form->id,
                     'total_amount'      => $_data['smartpay_amount'] ?? 0,
                     'billing_type'      => $_data['smartpay_form_billing_type'],
-                    'additional_charge' => $additional_amount,
-                    'billing_cycle'     => $total_billing_cycle
+                    'additional_info' => [
+                        'additional_charge' => $additional_amount,
+                        'billing_cycle' => $total_billing_cycle,
+                    ]
                 ];
 
             default:
