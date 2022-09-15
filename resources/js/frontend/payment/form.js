@@ -4,12 +4,12 @@ jQuery(($) => {
     /** Select form fixed amount **/
     $(document.body).on(
         'click',
-        '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
+        '.smartpay-form-shortcode .form-amounts .form-plan-card',
         (e) => {
             // e.preventDefault()
             $(e.currentTarget)
                 .parents('.form-amounts')
-                .find('.amount')
+                .find('.plan-amount')
                 .removeClass('selected')
 
             $(e.currentTarget).addClass('selected')
