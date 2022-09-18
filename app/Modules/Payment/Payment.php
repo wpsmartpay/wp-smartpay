@@ -205,15 +205,20 @@ class Payment
 
                 if (empty($formId) || empty($form)) return [];
 
-                return [
+                $payment_data = [
                     'form_id'           => $form->id,
                     'total_amount'      => $_data['smartpay_amount'] ?? 0,
                     'billing_type'      => $_data['smartpay_form_billing_type'],
-                    'additional_info' => [
+                    'is_custom_amount'  => $_data['smartpay_is_custom_amount'] ?? false,
+                    ];
+
+                if ( !filter_var($_data['smartpay_is_custom_amount'], FILTER_VALIDATE_BOOLEAN) ) {
+                    $payment_data['additional_info']  = [
                         'additional_charge' => $additional_amount,
                         'total_billing_cycle' => $total_billing_cycle,
-                    ]
-                ];
+                    ];
+                }
+                return $payment_data;
 
             default:
                 return [];
