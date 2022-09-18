@@ -53,6 +53,8 @@ jQuery(($) => {
                     .find('input[name="smartpay_selected_amount_key"]')
                     .val(selectedAmountKey.val())
             }
+            // set the is_custom_payment flag to false
+            $('#smartpay_is_custom_payment').val('false');
         }
     )
 
@@ -63,9 +65,18 @@ jQuery(($) => {
         (e) => {
             $(e.currentTarget)
                 .parents('.form-amounts')
-                .find('.amount')
+                .find('.plan-amount')
                 .removeClass('selected')
             $(e.currentTarget).addClass('selected')
+
+            // remove checked attribute from all radio button
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.plan-amount input[type="radio"]:checked')
+                .prop('checked', false)
+
+            // set the is_custom_payment flag to true
+            $('#smartpay_is_custom_payment').val('true');
         }
     )
 
@@ -80,8 +91,6 @@ jQuery(($) => {
 
             let buttonText = $(e.currentTarget).text()
 
-            $(e.currentTarget).text('Processing...').attr('disabled', true)
-
             let formData = getPaymentFormData($parentWrapper)
             let validation = checkPaymentFormValidation(formData)
 
@@ -94,7 +103,9 @@ jQuery(($) => {
                     $parentWrapper.find('.smartpay-message-info'),
                     validation
                 )
+                $parentWrapper.find('#first_name').focus();
             } else {
+                $(e.currentTarget).text('Processing...').attr('disabled', true)
                 jQuery.post(
                     smartpay.ajaxUrl,
                     {
@@ -117,13 +128,14 @@ jQuery(($) => {
 
                             console.error('Something wrong!')
                         }
+                        setTimeout(() => {
+                            $(e.currentTarget).text(buttonText).attr('disabled', false)
+                        }, 500)
                     }
                 )
             }
 
-            setTimeout(() => {
-                $(e.currentTarget).text(buttonText).attr('disabled', false)
-            }, 300)
+
         }
     )
 
@@ -297,6 +309,7 @@ jQuery(($) => {
             smartpay_amount: data.smartpay_form_amount,
             smartpay_amount_key: data.smartpay_selected_amount_key,
             smartpay_form_data: data.smartpay_form,
+            smartpay_is_custom_amount: data.smartpay_is_custom_payment,
             smartpay_form_billing_type: data.smartpay_form_billing_type,
             ...(SUBSCRIPTION === data.smartpay_form_billing_type && {
                 smartpay_form_billing_period: data.smartpay_form_billing_period,
