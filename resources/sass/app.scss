@@ -135,10 +135,10 @@
     display: grid;
     grid-gap: var(--card-padding);
     margin: 0 auto;
-    max-width: 60em;
+    max-width: 80em;
     padding: 0;
 
-    @media (min-width: 42em) {
+    @media (min-width: 52em) {
         grid-template-columns: repeat(3, 1fr);
     }
 }
@@ -147,7 +147,6 @@
     background-color: #fff;
     border-radius: var(--card-radius);
     position: relative;
-
     &:hover {
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
         background-color: aliceblue;
@@ -172,6 +171,7 @@
         cursor: pointer;
         height: var(--radio-size);
         outline: none;
+        opacity: 0;
         transition:
                 background 0.2s ease-out,
                 border-color 0.2s ease-out;
@@ -196,6 +196,7 @@
         &:checked {
             background: var(--color-green);
             border-color: var(--color-green);
+            opacity: 1;
         }
     }
 
@@ -213,6 +214,8 @@
     border-radius: var(--card-radius);
     cursor: pointer;
     display: flex;
+    min-width: 200px;
+    max-width: 280px;
     flex-direction: column;
     padding: var(--card-padding);
     transition: border-color 0.2s ease-out;
