@@ -13,35 +13,36 @@
 
                     <div class="form--amount-section mb-3">
                         <label class="form-amounts--label d-block m-0 mb-2"><?php _e( 'Select an amount', 'smartpay' ) ?></label>
-                        <div class="form-plan-grid form-amounts">
-							<?php foreach ( $form->amounts as $index => $amount ) : ?>
-								<?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+                        <div class="form-amounts">
+                            <div class="form-plan-grid ">
+                                <?php foreach ( $form->amounts as $index => $amount ) : ?>
+                                    <?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
 
-								<?php if ( $billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ): ?>
-                                    <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
-                                        <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-										$amount['key']; ?>" class="radio" value="<?php echo
-										$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
-                                        <span class="plan-details" aria-hidden="true">
+                                    <?php if ( $billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ): ?>
+                                        <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
+                                            <input type="radio" name="_form_amount" id="_form_amount_<?php echo
+                                            $amount['key']; ?>" class="radio" value="<?php echo
+                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+                                            <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
                                             <?php echo $amount['label'] ? $amount['label'] : ''; ?>
                                         </span>
                                         <span class="plan-cost">
                                             <?php echo smartpay_amount_format( $amount['amount'] ); ?>
                                         </span>
-                                    </label>
-								<?php endif; ?>
+                                        </label>
+                                    <?php endif; ?>
 
-	                        <?php if ( \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType ) : ?>
+                                    <?php if ( \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType ) : ?>
 
-                                    <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
-                                        <input type="hidden" name="_form_amount_key"
-                                               value="<?php echo $amount['key'] ?? ''; ?>">
-                                        <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-                                        $amount['key']; ?><?php echo
-										$amount['key']; ?>" class="radio" value="<?php echo
-										$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
-                                        <span class="plan-details" aria-hidden="true">
+                                        <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
+                                            <input type="hidden" name="_form_amount_key"
+                                                   value="<?php echo $amount['key'] ?? ''; ?>">
+                                            <input type="radio" name="_form_amount" id="_form_amount_<?php echo
+                                            $amount['key']; ?><?php echo
+                                            $amount['key']; ?>" class="radio" value="<?php echo
+                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+                                            <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
                                             <?php echo $amount['label'] ? $amount['label'] : ''; ?>
                                         </span>
@@ -53,20 +54,19 @@
                                                 <span class="plan-additional-info">Billed <?php echo $amount['total_billing_cycle']; ?> times</span>
                                             <?php endif; ?>
 
-	                                        <?php if ( isset( $amount['additional_charge'] ) && $amount['additional_charge'] > 0 ): ?>
-                                                <span class="plan-additional-info"> Additional Charge <?php echo $amount['additional_charge'] . smartpay_get_currency_symbol(); ?></span>
-                                            <?php endif; ?>
+                                                <?php if ( isset( $amount['additional_charge'] ) && $amount['additional_charge'] > 0 ): ?>
+                                                    <span class="plan-additional-info"> Additional Charge <?php echo $amount['additional_charge'] . smartpay_get_currency_symbol(); ?></span>
+                                                <?php endif; ?>
                                         </span>
-                                        <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
+                                            <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
 
-                                        <input type="hidden" name="_form_billing_period"
-                                               id="_form_billing_period_<?php echo $amount['key']; ?>"
-                                               value="<?php echo $amount['billing_period']; ?>">
-                                    </label>
-                            <?php endif; ?>
-
-
-							<?php endforeach; ?>
+                                            <input type="hidden" name="_form_billing_period"
+                                                   id="_form_billing_period_<?php echo $amount['key']; ?>"
+                                                   value="<?php echo $amount['billing_period']; ?>">
+                                        </label>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </div>
 
 							<?php
 							$formAmounts   = $form->amounts;
@@ -106,6 +106,8 @@
                     <input type="hidden" name="smartpay_form_id" id="smartpay_form_id"
                            value="<?php echo $form->id ?? 0; ?>">
 
+                    <input type="hidden" name="smartpay_is_custom_payment" id="smartpay_is_custom_payment" value="false">
+
 					<?php $gateways = smartpay_get_enabled_payment_gateways( true ); ?>
 					<?php if ( count( $gateways ) == 1 ) : ?>
 						<?php $gateways_index = array_keys( $gateways ); ?>
@@ -123,11 +125,12 @@
                                         <input type="radio" name="smartpay_gateway"
                                                id="<?php echo 'smartpay_gateway_' . esc_attr( $gatewayId ); ?>"
                                                value="<?php echo esc_attr( $gatewayId ) ?>" <?php echo checked( $gatewayId, $chosen_gateway, false ); ?>
-                                               class="custom-control-input">
+                                               class="radio">
                                         <label for="<?php echo 'smartpay_gateway_' . esc_attr( $gatewayId ); ?>"
                                                class="gateway--label custom-control-label">
                                             <img src="<?php echo esc_html( $gateway['gateway_icon'] ); ?>"
-                                                 alt="<?php echo esc_html( $gateway['checkout_label'] ); ?>"></label>
+                                                 alt="<?php echo esc_html( $gateway['checkout_label'] ); ?>">
+                                        </label>
                                     </div>
 								<?php endforeach; ?>
                             </div>
