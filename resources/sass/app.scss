@@ -132,24 +132,37 @@
 }
 
 .form-plan-grid {
-    display: grid;
-    grid-gap: var(--card-padding);
+    display: flex;
+    flex-wrap: wrap;
     margin: 0 auto;
-    max-width: 80em;
     padding: 0;
-
-    @media (min-width: 52em) {
-        grid-template-columns: repeat(3, 1fr);
-    }
 }
 
 .form-plan-card {
-    background-color: #fff;
+    border: var(--radio-border-width) solid var(--color-gray);
     border-radius: var(--card-radius);
+    background-color: #fff;
+    align-items: start;
     position: relative;
+    margin: var(--card-padding);
+    &:first-child {
+        margin-left: 0;
+    }
+    &:last-child {
+        margin-left: 0;
+        margin-right: 0;
+    }
     &:hover {
         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
         background-color: aliceblue;
+    }
+    &.selected {
+        border-color: var(--color-green);
+        background-color: var(--color-gray);
+        &:hover {
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+            background-color: var(--color-gray);
+        }
     }
 }
 
@@ -200,18 +213,9 @@
         }
     }
 
-    .card:hover .radio {
-        border-color: var(--color-dark-gray);
-
-        &:checked {
-            border-color: var(--color-green);
-        }
-    }
 }
 
 .plan-details {
-    border: var(--radio-border-width) solid var(--color-gray);
-    border-radius: var(--card-radius);
     cursor: pointer;
     display: flex;
     min-width: 200px;
@@ -223,15 +227,6 @@
 
 .form-plan-card:hover .plan-details {
     border-color: var(--color-dark-gray);
-}
-
-.radio:checked ~ .plan-details {
-    border-color: var(--color-green);
-    background-color: aliceblue;
-}
-
-.radio:focus ~ .plan-details {
-    box-shadow: 0 0 0 2px var(--color-dark-gray);
 }
 
 .radio:disabled ~ .plan-details {
