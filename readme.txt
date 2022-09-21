@@ -123,8 +123,8 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.7.1] =
-* Add - Additional charge for recurring payments
-* Add - Billing cycle for recurring payments
+* New - Additional charge for recurring payments
+* New - Billing cycle for recurring payments
 * Add - Additional charge info on product payment modal
 * Add - Filter to add addition payment info to payment data (for custom payment gateway)
 * Update - Update form plan layout design
