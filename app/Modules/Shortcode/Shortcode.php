@@ -27,8 +27,8 @@ class Shortcode
     /**
      * Form shortcode.
      *
+     * @return bool|string
      * @since 0.0.1
-     * @return void
      */
     public function form_shortcode($atts)
     {
@@ -68,8 +68,8 @@ class Shortcode
     /**
      * Product shortcode.
      *
+     * @return bool|string
      * @since 0.0.1
-     * @return void
      */
     public function product_shortcode($atts)
     {
@@ -105,7 +105,7 @@ class Shortcode
 	 * Payment receipt shortcode.
 	 * @param $atts
 	 *
-	 * @return false|string|void
+	 * @return bool|string|void
 	 */
     public function payment_receipt_shortcode($atts)
     {
@@ -150,10 +150,11 @@ class Shortcode
             return;
         }
 
-        $customer = Customer::with('payments')->where('user_id', get_current_user_id())->orWhere('email', wp_get_current_user()->user_email)->first();
+        $customer = Customer::with('payments')->where('user_id', get_current_user_id())
+                                              ->orWhere('email', wp_get_current_user()->user_email)->first();
 
         if (!$customer) {
-            echo '<p>We don\'t find any account, please register or contact to admin!</p>';
+            echo '<p>We don\'t find any account, please register or contact to admin, or you did not make any order yet!</p>';
             return;
         }
 
