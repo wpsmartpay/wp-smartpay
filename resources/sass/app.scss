@@ -1,5 +1,16 @@
 @import './variables';
 
+:root {
+    --card-line-height: 1.2em;
+    --card-padding: 1em;
+    --card-radius: 0.5em;
+    --color-green: rgb(40, 167, 69);
+    --color-gray: #e2ebf6;
+    --color-dark-gray: #c4d1e1;
+    --radio-border-width: 2px;
+    --radio-size: 1.5em;
+}
+
 .smartpay {
     font-family: inherit;
     font-size: 16px;
@@ -85,7 +96,6 @@
 }
 
 
-
 .StripeElement {
     box-sizing: border-box;
 
@@ -118,17 +128,6 @@
     .smartpay .modal-xl {
         max-width: 950px;
     }
-}
-
-:root {
-    --card-line-height: 1.2em;
-    --card-padding: 1em;
-    --card-radius: 0.5em;
-    --color-green: rgb(40, 167, 69);
-    --color-gray: #e2ebf6;
-    --color-dark-gray: #c4d1e1;
-    --radio-border-width: 2px;
-    --radio-size: 1.5em;
 }
 
 .form-plan-grid {
