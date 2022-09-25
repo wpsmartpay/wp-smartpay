@@ -131,7 +131,7 @@ jQuery(($) => {
             const billing_type = jQuery('input[name="smartpay_product_billing_type"]').val();
 
             // get currency symbol
-            let currency_symbol = jQuery('input[name="smartpay_selected_currency_symbol"]').val();
+            let currencySymbol = jQuery('input[name="smartpay_selected_currency_symbol"]').val();
 
             // if billing type is subscription then show the billing period & additional charge
             const additionalChargeContainer = $('#smartpay_additional_amount_id');
@@ -150,7 +150,7 @@ jQuery(($) => {
                 // show additional charge on Payment modal
                 const additionalCharge = $("input[name='smartpay_product_additional_charge']").val();
                 let html = `<div class="text-primary font-weight-bold text-center"><p>
-                        Additional charge ${currency_symbol+additionalCharge}  will be applied to the subscription.
+                        Additional charge ${currencySymbol+additionalCharge}  will be applied to the subscription.
                     </p>
                 </div>`
                 if (additionalChargeContainer) {
@@ -178,7 +178,7 @@ jQuery(($) => {
             } else {
                 paymentAmount = formData.smartpay_product_price
             }
-            $paymentModal.find('.amount').html(currency_symbol+paymentAmount)
+            $paymentModal.find('.amount').html(currencySymbol+paymentAmount)
 
             // Reset payment modal
             resetPaymentModal($paymentModal)
