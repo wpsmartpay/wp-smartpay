@@ -121,7 +121,7 @@
 
                             <div class="gateways m-0 justify-content-left d-flex">
 								<?php foreach ( $gateways as $gatewayId => $gateway ) : ?>
-                                    <div class="gateway custom-control custom-radio">
+                                    <div class="gateway custom-control custom-radio <?php echo $gatewayId == $chosen_gateway ? 'selected' : '' ?>">
                                         <input type="radio" name="smartpay_gateway"
                                                id="<?php echo 'smartpay_gateway_' . esc_attr( $gatewayId ); ?>"
                                                value="<?php echo esc_attr( $gatewayId ) ?>" <?php echo checked( $gatewayId, $chosen_gateway, false ); ?>

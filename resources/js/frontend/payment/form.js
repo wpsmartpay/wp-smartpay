@@ -58,6 +58,15 @@ jQuery(($) => {
         }
     )
 
+    /** select gateway **/
+    $(document.body).on('click', '.smartpay-form-shortcode .gateways .gateway', (e) => {
+        $(e.currentTarget)
+            .parents('.gateways')
+            .find('.gateway')
+            .removeClass('selected')
+        $(e.currentTarget).addClass('selected')
+    })
+
     /** Select form custom amount **/
     $(document.body).on(
         'focus',

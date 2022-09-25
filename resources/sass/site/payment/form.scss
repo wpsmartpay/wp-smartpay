@@ -75,8 +75,8 @@
                 justify-content: center;
                 align-items: center;
                 position: relative;
-                border-radius: 12px;
-                border: 1px solid rgb(40, 167, 69);
+                border-radius: 7px;
+                border: 1px solid var(--color-gray);
                 padding: 2px 4px 0 4px;
                 margin: 0 10px 4px 0;
 
@@ -84,6 +84,14 @@
                     position: relative;
                     left: 0;
                     top: 0;
+                }
+                &.selected {
+                    border-color: var(--color-green);
+                    background-color: var(--color-gray);
+                    &:hover {
+                        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+                        background-color: var(--color-gray);
+                    }
                 }
                 label {
                     margin: 0;
