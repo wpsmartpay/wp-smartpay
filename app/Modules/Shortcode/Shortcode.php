@@ -27,8 +27,8 @@ class Shortcode
     /**
      * Form shortcode.
      *
-     * @return false|string
-     *@since 0.0.1
+     * @return bool|string
+     * @since 0.0.1
      */
     public function form_shortcode($atts)
     {
@@ -68,8 +68,8 @@ class Shortcode
     /**
      * Product shortcode.
      *
-     * @return false|string
-     *@since 0.0.1
+     * @return bool|string
+     * @since 0.0.1
      */
     public function product_shortcode($atts)
     {
@@ -105,7 +105,7 @@ class Shortcode
 	 * Payment receipt shortcode.
 	 * @param $atts
 	 *
-	 * @return false|string|void
+	 * @return bool|string|void
 	 */
     public function payment_receipt_shortcode($atts)
     {
