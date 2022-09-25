@@ -13,8 +13,9 @@ jQuery(($) => {
 
             $(e.currentTarget).addClass('selected')
 
-            let $salePrice = $(e.currentTarget).find('.sale-price').html()
-            $salePrice = $salePrice.replace(/\$/, '')
+            // get the price from the data attribute not from html element
+            //  it includes the currency symbol also
+            let $salePrice = $(e.currentTarget).find('.sale-price').data('price')
             $(e.currentTarget)
                 .parents('.smartpay-product-shortcode')
                 .find('input[name="smartpay_product_price"]')
@@ -38,12 +39,20 @@ jQuery(($) => {
                     .parents('.smartpay-product-shortcode')
                     .find('input[name="smartpay_product_billing_period"]')
                     .val(selectedBillingPeriod.val())
+
+                const additionalCharge = $(e.currentTarget).find(
+                    'input[name="_product_additional_charge"]'
+                );
+
+                $(e.currentTarget)
+                    .parents('.smartpay-product-shortcode')
+                    .find('input[name="smartpay_product_additional_charge"]')
+                    .val(additionalCharge.val())
             }
 
             let selectedProductId = $(e.currentTarget).find(
                 'input[name="_smartpay_product_id"]'
             )
-
             $(e.currentTarget)
                 .parents('.smartpay-product-shortcode')
                 .find('input[name="smartpay_product_id"]')
@@ -52,6 +61,7 @@ jQuery(($) => {
     )
 
     $(document).ready(() => {
+        // mobile field option for toyyibpay
         const container = document.querySelector('#mobile-field');
         if (!container) return;
 
@@ -117,9 +127,46 @@ jQuery(($) => {
             let $paymentModal = $parentWrapper.find('.payment-modal')
             let formData = getPaymentFormData($parentWrapper)
 
-            // show the billing type on Payment modal
-            let billing_period = jQuery('input[name="smartpay_product_billing_period"]').val()
-            $paymentModal.find('.product_billing_type').html(billing_period)
+            // get billing type
+            const billing_type = jQuery('input[name="smartpay_product_billing_type"]').val();
+
+            // get currency symbol
+            let currencySymbol = jQuery('input[name="smartpay_selected_currency_symbol"]').val();
+
+            // if billing type is subscription then show the billing period & additional charge
+            const additionalChargeContainer = $('#smartpay_additional_amount_id');
+            const billingPeriodContainer =  $('#smartpay_product_billing_type_id');
+            if (billing_type === 'Subscription') {
+                // show billing period
+                let billing_period = jQuery('input[name="smartpay_product_billing_period"]').val();
+
+                let billingHTML = `<div class="justify-content-center mb-2 mt-2">
+                    <p class="text-center text-muted font-weight-light">
+                        Enter your info to begin your
+                        <strong><span class="product_billing_type">${billing_period}</span></strong> subscription. You can cancel anytime.
+                    </p>
+                </div>`;
+                billingPeriodContainer.html(billingHTML);
+                // show additional charge on Payment modal
+                const additionalCharge = $("input[name='smartpay_product_additional_charge']").val();
+                let html = `<div class="text-primary font-weight-bold text-center"><p>
+                        Additional charge ${currencySymbol+additionalCharge}  will be applied to the subscription.
+                    </p>
+                </div>`
+                if (additionalChargeContainer) {
+                    additionalChargeContainer.html(html);
+                }
+            } else  {
+                // hide billing period
+                let billingHTML = `<div class="justify-content-center mb-2 mt-2">
+                <p class="text-center text-muted">Provide your information to complete your purchase.</p></div>`;
+                billingPeriodContainer.html(billingHTML);
+
+                // hide additional charge on Payment modal
+                if (additionalChargeContainer) {
+                    additionalChargeContainer.html('');
+                }
+            }
 
             // Set payment amount
             let paymentAmount = 0
@@ -131,7 +178,7 @@ jQuery(($) => {
             } else {
                 paymentAmount = formData.smartpay_product_price
             }
-            $paymentModal.find('.amount').html(paymentAmount)
+            $paymentModal.find('.amount').html(currencySymbol+paymentAmount)
 
             // Reset payment modal
             resetPaymentModal($paymentModal)
@@ -463,49 +510,53 @@ jQuery(($) => {
             },
         }).done(function (response) {
             if (response.success) {
+                //define vars
+                let discountAmountContainer = $('.discount-amounts-container');
+                let ModalErrorContainer =  $('.payment-modal--errors');
                 // hide the previous alert
                 $('.payment-modal--errors .alert').hide()
-                $('.payment-modal--errors').append(
+                ModalErrorContainer.append(
                     `<div class="alert alert-success">${response.data.message}</div>`
                 )
-                $('.payment-modal--errors').show()
+                ModalErrorContainer.show()
 
                 $couponData = response.data.couponData
                 $currency = response.data.currency
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.subtotal-amount-value')
                     .html(`${$currency}${$couponData.mainAmount}`)
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.coupon-amount-name')
                     .html(response.data.couponCode)
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.coupon-amount-value')
                     .html(`-${$currency}${$couponData.couponAmount}`)
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.total-amount-value')
                     .html(`${$currency}${$couponData.discountAmount}`)
 
-                $('.smartpay-product-shortcode')
+                discountAmountContainer
                     .find('input[name=smartpay_product_price]')
                     .val(`${$couponData.discountAmount}`)
 
-                $('.smartpay-product-shortcode')
+                discountAmountContainer
                     .find('.payment-modal--title')
                     .html(`${$couponData.discountAmount}`)
 
-                $('.discount-amounts-container').removeClass('d-none')
+                discountAmountContainer.removeClass('d-none')
             }
             if (!response.success) {
+                let ModalErrorContainer =  $('.payment-modal--errors');
                 // hide the previous alert
                 $('.payment-modal--errors .alert').hide()
-                $('.payment-modal--errors').append(
+                ModalErrorContainer.append(
                     `<div class="alert alert-danger">${response.data.message}</div>`
                 )
-                $('.payment-modal--errors').show()
+                ModalErrorContainer.show()
             }
         })
         e.preventDefault()

@@ -1049,3 +1049,10 @@ function smartpay_get_payment_product_or_form_name($payment_id): array {
 		'preview'   =>$prev_link ?? '#'
 	];
 }
+
+/*
+ * @return updated payment data
+ */
+function smartpay_get_additional_payment_data($paymentData) {
+    return apply_filters('smartpay_get_additional_payment_data', $paymentData);
+}

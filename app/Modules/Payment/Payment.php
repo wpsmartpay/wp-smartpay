@@ -159,6 +159,10 @@ class Payment
     {
         $payment_type = $_data['smartpay_payment_type'] ?? '';
 
+        // declare variables
+        $additional_amount = 0;
+        $total_billing_cycle = 0;
+
         switch ($payment_type) {
 
             case 'product_purchase':
@@ -169,14 +173,21 @@ class Payment
 
                 if (empty($productId) || empty($product)) return [];
 
-                return [
+                $additional_amount = $product->extra['additional_charge'] ?? 0;
+                $total_billing_cycle = $product->extra['total_billing_cycle'] ?? 0;
+
+                $payment_default_data = [
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
                     'total_amount'  => $_data['smartpay_product_price'],
-                    'billing_type'   => $_data['smartpay_product_billing_type']
+                    'billing_type'   => $_data['smartpay_product_billing_type'],
+                    'additional_info' => [
+                        'additional_charge' => $additional_amount,
+                        'total_billing_cycle' => $total_billing_cycle,
+                    ]
                 ];
 
-                break;
+                return smartpay_get_additional_payment_data($payment_default_data);
 
             case 'form_payment':
 
@@ -184,18 +195,33 @@ class Payment
 
                 $form = Form::where('id', $formId)->first();
 
+                foreach ($form->amounts as $amount) {
+                    if ($amount['key'] === $_data['smartpay_amount_key']) {
+                        $additional_amount = $amount['additional_charge'];
+                        $total_billing_cycle = $amount['total_billing_cycle'];
+                        break;
+                    }
+                }
+
                 if (empty($formId) || empty($form)) return [];
 
-                return [
-                    'form_id' => $form->id,
-                    'total_amount' => $_data['smartpay_amount'] ?? 0,
-                    'billing_type'   => $_data['smartpay_form_billing_type']
-                ];
-                break;
+                $payment_data = [
+                    'form_id'           => $form->id,
+                    'total_amount'      => $_data['smartpay_amount'] ?? 0,
+                    'billing_type'      => $_data['smartpay_form_billing_type'],
+                    'is_custom_amount'  => $_data['smartpay_is_custom_amount'] ?? false,
+                    ];
+
+                if ( !filter_var($_data['smartpay_is_custom_amount'], FILTER_VALIDATE_BOOLEAN) ) {
+                    $payment_data['additional_info']  = [
+                        'additional_charge' => $additional_amount,
+                        'total_billing_cycle' => $total_billing_cycle,
+                    ];
+                }
+                return $payment_data;
 
             default:
                 return [];
-                break;
         }
     }
 

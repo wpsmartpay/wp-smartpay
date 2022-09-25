@@ -4,12 +4,12 @@ jQuery(($) => {
     /** Select form fixed amount **/
     $(document.body).on(
         'click',
-        '.smartpay-form-shortcode .form-amounts .form--fixed-amount',
+        '.smartpay-form-shortcode .form-amounts .form-plan-card',
         (e) => {
             // e.preventDefault()
             $(e.currentTarget)
                 .parents('.form-amounts')
-                .find('.amount')
+                .find('.plan-amount')
                 .removeClass('selected')
 
             $(e.currentTarget).addClass('selected')
@@ -26,6 +26,10 @@ jQuery(($) => {
             if (SUBSCRIPTION === selectedPriceType.val()) {
                 var selectedBillingPeriod = $(e.currentTarget).find(
                     'input[name="_form_billing_period"]'
+                )
+
+                var selectedAmountKey = $(e.currentTarget).find(
+                    'input[name="_form_amount_key"]'
                 )
             }
 
@@ -44,9 +48,24 @@ jQuery(($) => {
                     .parents('.form-amounts')
                     .find('input[name="smartpay_form_billing_period"]')
                     .val(selectedBillingPeriod.val())
+
+                $('#smartpay-payment-form')
+                    .find('input[name="smartpay_selected_amount_key"]')
+                    .val(selectedAmountKey.val())
             }
+            // set the is_custom_payment flag to false
+            $('#smartpay_is_custom_payment').val('false');
         }
     )
+
+    /** select gateway **/
+    $(document.body).on('click', '.smartpay-form-shortcode .gateways .gateway', (e) => {
+        $(e.currentTarget)
+            .parents('.gateways')
+            .find('.gateway')
+            .removeClass('selected')
+        $(e.currentTarget).addClass('selected')
+    })
 
     /** Select form custom amount **/
     $(document.body).on(
@@ -55,9 +74,18 @@ jQuery(($) => {
         (e) => {
             $(e.currentTarget)
                 .parents('.form-amounts')
-                .find('.amount')
+                .find('.plan-amount')
                 .removeClass('selected')
             $(e.currentTarget).addClass('selected')
+
+            // remove checked attribute from all radio button
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.plan-amount input[type="radio"]:checked')
+                .prop('checked', false)
+
+            // set the is_custom_payment flag to true
+            $('#smartpay_is_custom_payment').val('true');
         }
     )
 
@@ -72,8 +100,6 @@ jQuery(($) => {
 
             let buttonText = $(e.currentTarget).text()
 
-            $(e.currentTarget).text('Processing...').attr('disabled', true)
-
             let formData = getPaymentFormData($parentWrapper)
             let validation = checkPaymentFormValidation(formData)
 
@@ -86,7 +112,9 @@ jQuery(($) => {
                     $parentWrapper.find('.smartpay-message-info'),
                     validation
                 )
+                $parentWrapper.find('#first_name').focus();
             } else {
+                $(e.currentTarget).text('Processing...').attr('disabled', true)
                 jQuery.post(
                     smartpay.ajaxUrl,
                     {
@@ -109,13 +137,14 @@ jQuery(($) => {
 
                             console.error('Something wrong!')
                         }
+                        setTimeout(() => {
+                            $(e.currentTarget).text(buttonText).attr('disabled', false)
+                        }, 500)
                     }
                 )
             }
 
-            setTimeout(() => {
-                $(e.currentTarget).text(buttonText).attr('disabled', false)
-            }, 300)
+
         }
     )
 
@@ -287,9 +316,11 @@ jQuery(($) => {
             smartpay_payment_mobile: data.smartpay_payment_mobile,
             smartpay_form_id: data.smartpay_form_id,
             smartpay_amount: data.smartpay_form_amount,
+            smartpay_amount_key: data.smartpay_selected_amount_key,
             smartpay_form_data: data.smartpay_form,
+            smartpay_is_custom_amount: data.smartpay_is_custom_payment,
             smartpay_form_billing_type: data.smartpay_form_billing_type,
-            ...(SUBSCRIPTION == data.smartpay_form_billing_type && {
+            ...(SUBSCRIPTION === data.smartpay_form_billing_type && {
                 smartpay_form_billing_period: data.smartpay_form_billing_period,
             }),
         }

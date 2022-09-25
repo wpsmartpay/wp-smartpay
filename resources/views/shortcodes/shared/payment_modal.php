@@ -38,25 +38,9 @@ $has_payment_error = false;
                 </button>
             </div>
 
-            <?php do_action('smartpay_product_modal_popup_content'); ?>
             <div class="payment-modal--errors text-center" style="display: none"></div>
 
-
-            <?php $productBillingType = $product->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
-
-            <?php if ($productBillingType === \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) : ?>
-                <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted font-weight-light">
-                        <?php echo __('Enter your info to begin your', 'smartpay'); ?>
-                        <strong><span class="product_billing_type">--</span></strong> <?php echo __('subscription. You can cancel anytime', 'smartpay') ?>.
-                    </p>
-                </div>
-
-            <?php else : ?>
-                <div class="justify-content-center mb-2 mt-2">
-                    <p class="text-center text-muted"><?php echo __('Provide your information to complete your purchase', 'smartpay'); ?></p>
-                </div>
-            <?php endif; ?>
+            <?php do_action('smartpay_product_modal_popup_content', $product); ?>
 
             <div class="modal-body p-1 text-center step-1">
                 <div class="align-self-center w-100">
@@ -64,6 +48,9 @@ $has_payment_error = false;
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                         <div class="payment-modal--gateway">
                             <!-- // If Product has Zero sale amount -->
+                            <?php
+                                //FIXME: gateways are not visible if the main product is free or sale amount is zero
+                            ?>
                             <?php if ($product->sale_price <= 0) : ?>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
@@ -147,4 +134,5 @@ $has_payment_error = false;
     </div>
 </div>
 
-<div id="smartpay_currency_symbol" data-value="$"></div>
+<!--<div id="smartpay_currency_symbol" data-value="$"></div>-->
+

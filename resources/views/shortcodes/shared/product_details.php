@@ -30,9 +30,12 @@
                                     if (count($product->variations)) : ?>
                                         <!-- Variations -->
                                         <?php foreach ($product->variations as $index => $variation) : ?>
+
                                             <?php $billingType = $variation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
                                             <?php $billingPeriod = $variation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
                                             <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
+                                                <input type="hidden" name="_product_additional_charge"
+                                                       value="<?php echo $variation->extra['additional_charge'] ?? '' ?>">
                                                 <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
                                                     <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
                                                     <input type="hidden" name="_product_billing_type" id="_product_billing_type_<?php echo $variation->id; ?>" value="<?php echo $billingType; ?>">
@@ -40,7 +43,8 @@
                                                         <input type="hidden" name="_product_billing_period" id="_product_billing_period_<?php echo $variation->id; ?>" value="<?php echo $billingPeriod; ?>">
                                                     <?php endif; ?>
                                                     <div class="price--amount">
-                                                        <span class="sale-price"><?php echo smartpay_amount_format(($variation->price)); ?></span>
+                                                        <span class="sale-price" data-price="<?php echo $variation->sale_price; ?>"><?php echo
+                                                            smartpay_amount_format(($variation->price)); ?></span>
                                                         <?php if ($variation->sale_price && ($variation->base_price > $variation->sale_price)) : ?>
                                                             <del class="base-price"><?php echo smartpay_amount_format($variation->base_price); ?></del>
                                                         <?php endif; ?>
@@ -113,6 +117,9 @@
         <input type="hidden" name="smartpay_product_price" value="<?php echo $defaultVariation->sale_price ?? 0; ?>">
         <input type="hidden" name="smartpay_product_billing_type" value="<?php echo $defaultVariation->extra['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>">
         <input type="hidden" name="smartpay_product_billing_period" value="<?php echo $defaultVariation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>">
+
+        <input type="hidden" name="smartpay_product_additional_charge" value="<?php echo $defaultVariation->extra['additional_charge'] ?? 0; ?>">
+        <input type="hidden" name="smartpay_selected_currency_symbol" value="<?php echo smartpay_get_currency_symbol(); ?>">
         <!-- /Form Data -->
 
         <!-- Payment modal -->
