@@ -35,7 +35,7 @@
                                             <?php $billingPeriod = $variation->extra['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY; ?>
                                             <li class="list-group-item variation price <?php echo 0 == $index ? 'selected' : ''; ?>">
                                                 <input type="hidden" name="_product_additional_charge"
-                                                       value="<?php echo $variation->extra['additional_charge'] ?? '' ?>">
+                                                       value="<?php echo $variation->extra['additional_charge'] ?? 0 ?>">
                                                 <label for="<?php echo "product_variation_{$variation->id}"; ?>" class="d-block m-0">
                                                     <input type="hidden" name="_smartpay_product_id" id="<?php echo "product_variation_{$variation->id}"; ?>" value="<?php echo esc_attr($variation->id); ?>" <?php echo 0 == $index ? 'checked' : ''; ?>>
                                                     <input type="hidden" name="_product_billing_type" id="_product_billing_type_<?php echo $variation->id; ?>" value="<?php echo $billingType; ?>">
