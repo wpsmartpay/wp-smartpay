@@ -123,9 +123,9 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.7.2] =
-* New - Add subscription info at payment receipt page
-* Fix - Billing type was not updated for one time on form page
-* Fix - Additional charge info was shown if no charges added
+* New - Add subscription info on the payment receipt page
+* Fix - Billing type was not updated for one time on the form page
+* Fix - Additional charge info was shown if no charges were added
 
 
 = [2.7.1] =
