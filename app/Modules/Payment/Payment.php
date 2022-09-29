@@ -174,7 +174,13 @@ class Payment
                 if (empty($productId) || empty($product)) return [];
 
                 $additional_amount = $product->extra['additional_charge'] ?? 0;
+				if (empty($product->extra['additional_charge'])) {
+					$additional_amount = 0;
+				}
                 $total_billing_cycle = $product->extra['total_billing_cycle'] ?? 0;
+	            if (empty($product->extra['total_billing_cycle'])) {
+		            $total_billing_cycle = 0;
+	            }
 
                 $payment_default_data = [
                     'product_id'    => $product->id,
