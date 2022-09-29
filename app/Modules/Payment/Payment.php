@@ -174,18 +174,27 @@ class Payment
                 if (empty($productId) || empty($product)) return [];
 
                 $additional_amount = $product->extra['additional_charge'] ?? 0;
+				if (empty($product->extra['additional_charge'])) {
+					$additional_amount = 0;
+				}
                 $total_billing_cycle = $product->extra['total_billing_cycle'] ?? 0;
+	            if (empty($product->extra['total_billing_cycle'])) {
+		            $total_billing_cycle = 0;
+	            }
 
                 $payment_default_data = [
                     'product_id'    => $product->id,
                     'product_price' => $product->price,
                     'total_amount'  => $_data['smartpay_product_price'],
                     'billing_type'   => $_data['smartpay_product_billing_type'],
-                    'additional_info' => [
-                        'additional_charge' => $additional_amount,
-                        'total_billing_cycle' => $total_billing_cycle,
-                    ]
                 ];
+
+	            if ($_data['smartpay_product_billing_type'] == \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) {
+		            $payment_default_data['additional_info'] =  [
+			            'additional_charge' => $additional_amount,
+			            'total_billing_cycle' => $total_billing_cycle,
+		            ];
+	            }
 
                 return smartpay_get_additional_payment_data($payment_default_data);
 
@@ -212,12 +221,15 @@ class Payment
                     'is_custom_amount'  => $_data['smartpay_is_custom_amount'] ?? false,
                     ];
 
-                if ( !filter_var($_data['smartpay_is_custom_amount'], FILTER_VALIDATE_BOOLEAN) ) {
-                    $payment_data['additional_info']  = [
-                        'additional_charge' => $additional_amount,
-                        'total_billing_cycle' => $total_billing_cycle,
-                    ];
-                }
+				if ($_data['smartpay_form_billing_type'] == \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION) {
+					if ( !filter_var($_data['smartpay_is_custom_amount'], FILTER_VALIDATE_BOOLEAN) ) {
+						$payment_data['additional_info']  = [
+							'additional_charge' => $additional_amount,
+							'total_billing_cycle' => $total_billing_cycle,
+						];
+					}
+				}
+
                 return $payment_data;
 
             default:
