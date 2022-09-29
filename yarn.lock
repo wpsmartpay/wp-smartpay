@@ -2894,10 +2894,10 @@
     react "^17.0.2"
     react-dom "^17.0.2"
 
-"@wordpress/env@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@wordpress/env/-/env-4.2.0.tgz#97722b0f81983a861203253881b6238a8f98bce2"
-  integrity sha512-F+qXA+w4t8XlJaokxyAeBqLtUHwvwikHdHCb3KTSk83e3kenr/xF4KfplGPROIBqpCvEP92FscS2ClZfaZzQeg==
+"@wordpress/env@^4.9.0":
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/@wordpress/env/-/env-4.9.0.tgz#b53f54de62bd65d5935394a36a9d9c2e843d28d4"
+  integrity sha512-C2g5aOYxl1Bd9lypvEMjXZ1s1Gx/JHpFWuPlCAI8gAzwzB9jCIZkqpU85GsGScpZLAANS/N7wF3LMY68UkN9fQ==
   dependencies:
     chalk "^4.0.0"
     copy-dir "^1.3.0"
@@ -2908,7 +2908,7 @@
     js-yaml "^3.13.1"
     ora "^4.0.2"
     rimraf "^3.0.2"
-    simple-git "^2.35.0"
+    simple-git "^3.5.0"
     terminal-link "^2.0.0"
     yargs "^17.3.0"
 
@@ -5481,6 +5481,13 @@ debug@^3.1.1, debug@^3.2.7:
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
   dependencies:
     ms "^2.1.1"
+
+debug@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
+  integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
+  dependencies:
+    ms "2.1.2"
 
 decamelize-keys@^1.1.0:
   version "1.1.0"
@@ -12598,14 +12605,14 @@ signal-exit@^3.0.0, signal-exit@^3.0.2, signal-exit@^3.0.3, signal-exit@^3.0.6:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.6.tgz#24e630c4b0f03fea446a2bd299e62b4a6ca8d0af"
   integrity sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==
 
-simple-git@^2.35.0:
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-2.48.0.tgz#87c262dba8f84d7b96bb3a713e9e34701c1f6e3b"
-  integrity sha512-z4qtrRuaAFJS4PUd0g+xy7aN4y+RvEt/QTJpR184lhJguBA1S/LsVlvE/CM95RsYMOFJG3NGGDjqFCzKU19S/A==
+simple-git@^3.5.0:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-3.14.1.tgz#68018a5f168f8a568862e30b692004b37c3b5ced"
+  integrity sha512-1ThF4PamK9wBORVGMK9HK5si4zoGS2GpRO7tkAFObA4FZv6dKaCVHLQT+8zlgiBm6K2h+wEU9yOaFCu/SR3OyA==
   dependencies:
     "@kwsites/file-exists" "^1.1.1"
     "@kwsites/promise-deferred" "^1.1.1"
-    debug "^4.3.2"
+    debug "^4.3.4"
 
 simple-html-tokenizer@^0.5.7:
   version "0.5.11"
