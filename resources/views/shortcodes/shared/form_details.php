@@ -15,14 +15,14 @@
                         <label class="form-amounts--label d-block m-0 mb-2"><?php _e( 'Select an amount', 'smartpay' ) ?></label>
                         <div class="form-amounts">
                             <div class="form-plan-grid ">
-                                <?php foreach ( $form->amounts as $index => $amount ) : ?>
-                                    <?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
+								<?php foreach ( $form->amounts as $index => $amount ) : ?>
+									<?php $billingType = $amount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME; ?>
 
-                                    <?php if ( $billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ): ?>
+									<?php if ( $billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ): ?>
                                         <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                             <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-                                            $amount['key']; ?>" class="radio" value="<?php echo
-                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+											$amount['key']; ?>" class="radio" value="<?php echo
+											$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
                                             <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
                                             <?php echo $amount['label'] ? $amount['label'] : ''; ?>
@@ -30,18 +30,19 @@
                                         <span class="plan-cost">
                                             <?php echo smartpay_amount_format( $amount['amount'] ); ?>
                                         </span>
+                                                <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
                                         </label>
-                                    <?php endif; ?>
+									<?php endif; ?>
 
-                                    <?php if ( \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType ) : ?>
+									<?php if ( \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType ) : ?>
 
                                         <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                             <input type="hidden" name="_form_amount_key"
                                                    value="<?php echo $amount['key'] ?? ''; ?>">
                                             <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-                                            $amount['key']; ?><?php echo
-                                            $amount['key']; ?>" class="radio" value="<?php echo
-                                            $amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+											$amount['key']; ?><?php echo
+											$amount['key']; ?>" class="radio" value="<?php echo
+											$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
                                             <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
                                             <?php echo $amount['label'] ? $amount['label'] : ''; ?>
@@ -54,9 +55,9 @@
                                                 <span class="plan-additional-info">Billed <?php echo $amount['total_billing_cycle']; ?> times</span>
                                             <?php endif; ?>
 
-                                                <?php if ( isset( $amount['additional_charge'] ) && $amount['additional_charge'] > 0 ): ?>
+												<?php if ( isset( $amount['additional_charge'] ) && $amount['additional_charge'] > 0 ): ?>
                                                     <span class="plan-additional-info"> Additional Charge <?php echo $amount['additional_charge'] . smartpay_get_currency_symbol(); ?></span>
-                                                <?php endif; ?>
+												<?php endif; ?>
                                         </span>
                                             <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
 
@@ -64,8 +65,8 @@
                                                    id="_form_billing_period_<?php echo $amount['key']; ?>"
                                                    value="<?php echo $amount['billing_period']; ?>">
                                         </label>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
+									<?php endif; ?>
+								<?php endforeach; ?>
                             </div>
 
 							<?php

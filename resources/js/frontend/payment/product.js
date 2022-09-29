@@ -153,7 +153,7 @@ jQuery(($) => {
                         Additional charge ${currencySymbol+additionalCharge}  will be applied to the subscription.
                     </p>
                 </div>`
-                if (additionalChargeContainer) {
+                if (additionalChargeContainer && additionalCharge > 0) {
                     additionalChargeContainer.html(html);
                 }
             } else  {
