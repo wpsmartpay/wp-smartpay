@@ -1,11 +1,11 @@
-import { __ } from '@wordpress/i18n'
-import { parse } from '@wordpress/blocks'
-import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
-import { Alert } from '../../components/Alert'
+import { Button, Container, Form, Tab, Tabs } from 'react-bootstrap'
 
+import { Alert } from '../../components/Alert'
 import { FormBuilder } from './FormBuilder'
 import { FormOptionTab } from './FormOptionTab'
-import {FormPricingTab} from "./FormPricingTab";
+import { FormPricingTab } from './FormPricingTab'
+import { __ } from '@wordpress/i18n'
+import { parse } from '@wordpress/blocks'
 
 export const FormForm = ({
     form,

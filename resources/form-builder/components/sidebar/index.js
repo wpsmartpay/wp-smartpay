@@ -1,5 +1,6 @@
+import { Panel, createSlotFill } from '@wordpress/components'
+
 import { __ } from '@wordpress/i18n'
-import { createSlotFill, Panel } from '@wordpress/components'
 
 const { Slot: InspectorSlot, Fill: InspectorFill } = createSlotFill(
     'SmartPayFormEditorSidebarInspector'

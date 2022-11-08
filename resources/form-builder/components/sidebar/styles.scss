@@ -10,7 +10,7 @@
     // right: 0;
     // top: 84px;
     // width: $sidebar-width;
-    z-index: z-index('.edit-site-sidebar {greater than small}');
+    // z-index: z-index('.edit-widgets-sidebar {greater than small}');
 
     @include break-small() {
         -webkit-overflow-scrolling: touch;
@@ -27,7 +27,7 @@
         display: block;
     }
 
-    > .components-panel {
+    >.components-panel {
         // border-left: 0;
         // border-right: 0;
         // margin-bottom: -1px;
@@ -35,7 +35,7 @@
 
         border-color: #ced4da;
 
-        > .components-panel__header {
+        >.components-panel__header {
             background: $gray-200;
         }
     }
