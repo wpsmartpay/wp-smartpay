@@ -1,18 +1,20 @@
 import '@wordpress/format-library'
-import { useSelect } from '@wordpress/data'
-import { useEffect, useState, useMemo } from '@wordpress/element'
-import { uploadMedia } from '@wordpress/media-utils'
 
 import {
     BlockEditorKeyboardShortcuts,
     BlockEditorProvider,
-    BlockList,
     BlockInspector,
-    WritingFlow,
+    BlockList,
+    BlockTools,
     ObserveTyping,
+    WritingFlow,
 } from '@wordpress/block-editor'
+import { useEffect, useMemo, useState } from '@wordpress/element'
 
+import { Popover } from '@wordpress/components'
 import { Sidebar } from '../sidebar'
+import { uploadMedia } from '@wordpress/media-utils'
+import { useSelect } from '@wordpress/data'
 
 export const BlockEditor = ({
     settings: _settings,
@@ -84,13 +86,17 @@ export const BlockEditor = ({
                 <Sidebar.InspectorFill>
                     <BlockInspector />
                 </Sidebar.InspectorFill>
+
                 <div className="editor-styles-wrapper">
                     <BlockEditorKeyboardShortcuts />
-                    <WritingFlow>
-                        <ObserveTyping>
-                            <BlockList className="smartpay-block-editor__block-list" />
-                        </ObserveTyping>
-                    </WritingFlow>
+                    <BlockTools>
+                        <WritingFlow>
+                            <ObserveTyping>
+                                <BlockList />
+                            </ObserveTyping>
+                        </WritingFlow>
+                    </BlockTools>
+                    <Popover.Slot />
                 </div>
             </BlockEditorProvider>
         </div>
