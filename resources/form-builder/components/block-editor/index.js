@@ -1,25 +1,23 @@
 import '@wordpress/format-library'
-import { useSelect } from '@wordpress/data'
-import { useEffect, useState, useMemo } from '@wordpress/element'
-import { uploadMedia } from '@wordpress/media-utils'
 
 import {
     BlockEditorKeyboardShortcuts,
     BlockEditorProvider,
-    BlockList,
     BlockInspector,
-    WritingFlow,
+    BlockList,
+    BlockTools,
     ObserveTyping,
+    WritingFlow,
 } from '@wordpress/block-editor'
 
-import { Sidebar } from '../sidebar'
+import {useEffect, useMemo, useState} from '@wordpress/element'
 
-export const BlockEditor = ({
-    settings: _settings,
-    storedBlocks = [],
-    resetBlocks,
-    onBlockUpdate,
-}) => {
+import {Popover} from '@wordpress/components'
+import {Sidebar} from '../sidebar'
+import {uploadMedia} from '@wordpress/media-utils'
+import {useSelect} from '@wordpress/data'
+
+export const BlockEditor = ({settings: _settings, storedBlocks = [], resetBlocks, onBlockUpdate,}) => {
     const [blocks, updateBlocks] = useState([])
 
     const canUserCreateMedia = useSelect((select) => {
@@ -33,12 +31,12 @@ export const BlockEditor = ({
         }
         return {
             ..._settings,
-            mediaUpload({ onError, ...rest }) {
+            mediaUpload({onError, ...rest}) {
                 uploadMedia({
                     wpAllowedMimeTypes: _settings.allowedMimeTypes,
-                    onError: ({ message }) => onError(message),
+                    onError: ({message}) => onError(message),
                     ...rest,
-                })
+                }).then(r => {})
             },
         }
     }, [canUserCreateMedia, _settings])
@@ -82,15 +80,19 @@ export const BlockEditor = ({
                 settings={settings}
             >
                 <Sidebar.InspectorFill>
-                    <BlockInspector />
+                    <BlockInspector/>
                 </Sidebar.InspectorFill>
+
                 <div className="editor-styles-wrapper">
-                    <BlockEditorKeyboardShortcuts />
-                    <WritingFlow>
-                        <ObserveTyping>
-                            <BlockList className="smartpay-block-editor__block-list" />
-                        </ObserveTyping>
-                    </WritingFlow>
+                    <BlockEditorKeyboardShortcuts/>
+                    <BlockTools>
+                        <WritingFlow>
+                            <ObserveTyping>
+                                <BlockList/>
+                            </ObserveTyping>
+                        </WritingFlow>
+                    </BlockTools>
+                    <Popover.Slot/>
                 </div>
             </BlockEditorProvider>
         </div>

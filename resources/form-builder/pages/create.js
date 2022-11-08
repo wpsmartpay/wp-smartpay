@@ -26,7 +26,7 @@ const defaultFormData = {
             allowExternalLink: false,
             label: __('Link Label', 'smartpay'),
             link: ''
-        }
+        },
     },
 }
 

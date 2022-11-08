@@ -1,20 +1,15 @@
-import { __ } from '@wordpress/i18n'
-import { parse } from '@wordpress/blocks'
-import { Container, Tabs, Tab, Form, Button } from 'react-bootstrap'
-import { Alert } from '../../components/Alert'
+import {Button, Container, Form, Tab, Tabs} from 'react-bootstrap'
 
-import { FormBuilder } from './FormBuilder'
-import { FormOptionTab } from './FormOptionTab'
-import {FormPricingTab} from "./FormPricingTab";
+import {Alert} from '../../components/Alert'
+import {FormBuilder} from './FormBuilder'
+import {FormOptionTab} from './FormOptionTab'
+import {FormPricingTab} from './FormPricingTab'
+import {__} from '@wordpress/i18n'
+import {parse} from '@wordpress/blocks'
 
-export const FormForm = ({
-    form,
-    onSubmit,
-    setFormData,
-    shouldReset = false,
-}) => {
+export const FormForm = ({form, onSubmit, setFormData, shouldReset = false,}) => {
     const checkRequiredBlocks = (blocks) => {
-        const requiredBlocks = { name: 0, email: 0 }
+        const requiredBlocks = {name: 0, email: 0}
 
         if (blocks.length) {
             blocks.map((block) => {
@@ -107,7 +102,7 @@ export const FormForm = ({
                 </Container>
             </div>
 
-            <Container style={{ marginTop: '80px' }}>
+            <Container style={{marginTop: '80px'}}>
                 <div className="p-4 bg-white">
                     <Form.Control
                         type="text"
