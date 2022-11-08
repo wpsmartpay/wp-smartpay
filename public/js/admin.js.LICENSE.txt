@@ -1,14 +1,16 @@
 /*!
-  Copyright (c) 2018 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
 */
 
 /*!
- * ApexCharts v3.33.0
+ * ApexCharts v3.36.2
  * (c) 2018-2022 ApexCharts
  * Released under the MIT License.
  */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 /*! svg.draggable.js - v2.2.2 - 2019-01-08
 * https://github.com/svgdotjs/svg.draggable.js
@@ -19,7 +21,7 @@
 * Copyright (c) 2016 Wout Fierens; Licensed MIT */
 
 /**
- * React Router DOM v6.2.1
+ * @remix-run/router v1.0.3
  *
  * Copyright (c) Remix Software Inc.
  *
@@ -30,7 +32,18 @@
  */
 
 /**
- * React Router v6.2.1
+ * React Router DOM v6.4.3
+ *
+ * Copyright (c) Remix Software Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.md file in the root directory of this source tree.
+ *
+ * @license MIT
+ */
+
+/**
+ * React Router v6.4.3
  *
  * Copyright (c) Remix Software Inc.
  *
