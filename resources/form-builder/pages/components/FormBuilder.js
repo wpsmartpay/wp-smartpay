@@ -1,17 +1,12 @@
-import { __ } from '@wordpress/i18n'
-import { serialize, parse } from '@wordpress/blocks'
-import {
-    Popover,
-    SlotFillProvider,
-    DropZoneProvider,
-    FocusReturnProvider,
-} from '@wordpress/components'
-import { ShortcutProvider } from '@wordpress/keyboard-shortcuts'
-import { InterfaceSkeleton } from '@wordpress/interface'
-import { BlockEditor } from '../../components/block-editor'
-import { Sidebar } from '../../components/sidebar'
+import {parse, serialize} from '@wordpress/blocks'
 
-export const FormBuilder = ({ form, setFormData, shouldReset }) => {
+import {BlockEditor} from '../../components/block-editor'
+import {InterfaceSkeleton} from '@wordpress/interface'
+import {ShortcutProvider} from '@wordpress/keyboard-shortcuts'
+import {Sidebar} from '../../components/sidebar'
+import {SlotFillProvider} from '@wordpress/components'
+
+export const FormBuilder = ({form, setFormData, shouldReset}) => {
     const makeFormFields = (blocks) => {
         let fields = []
 
@@ -19,7 +14,7 @@ export const FormBuilder = ({ form, setFormData, shouldReset }) => {
             const fieldName = block?.attributes?.attributes?.name
 
             if (fieldName) {
-                fields.push({ [fieldName]: block.attributes })
+                fields.push({[fieldName]: block.attributes})
             }
         })
 
@@ -29,38 +24,32 @@ export const FormBuilder = ({ form, setFormData, shouldReset }) => {
     return (
         <div
             className="smartpay-form-block-editor block-editor"
-            style={{ minHeight: '70vh' }}
+            style={{minHeight: '70vh'}}
         >
             <ShortcutProvider>
                 <SlotFillProvider>
-                    <DropZoneProvider>
-                        <FocusReturnProvider>
-                            <InterfaceSkeleton
-                                content={
-                                    <BlockEditor
-                                        resetBlocks={shouldReset}
-                                        onBlockUpdate={(blocks) => {
-                                            setFormData({
-                                                body: serialize(blocks),
-                                                fields: makeFormFields(blocks),
-                                            })
-                                        }}
-                                        settings={
-                                            window.smartPayBlockEditorSettings ||
-                                            {}
-                                        }
-                                        storedBlocks={parse(form.body || [])}
-                                    />
+                    <InterfaceSkeleton
+                        content={
+                            <BlockEditor
+                                resetBlocks={shouldReset}
+                                onBlockUpdate={(blocks) => {
+                                    setFormData({
+                                        body: serialize(blocks),
+                                        fields: makeFormFields(blocks),
+                                    })
+                                }}
+                                settings={
+                                    window.smartPayBlockEditorSettings || {}
                                 }
-                                sidebar={
-                                    <div>
-                                        <Sidebar />
-                                    </div>
-                                }
+                                storedBlocks={parse(form.body || [])}
                             />
-                            <Popover.Slot />
-                        </FocusReturnProvider>
-                    </DropZoneProvider>
+                        }
+                        sidebar={
+                            <div>
+                                <Sidebar/>
+                            </div>
+                        }
+                    />
                 </SlotFillProvider>
             </ShortcutProvider>
         </div>
