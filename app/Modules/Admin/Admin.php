@@ -193,6 +193,7 @@ class Admin
             wp_enqueue_script('smartpay-dashboard', SMARTPAY_PLUGIN_ASSETS . '/js/dashboard.js', ['jquery'], SMARTPAY_VERSION, true);
 
             wp_localize_script('smartpay-dashboard', 'dashboardObj', [
+	            'wp_json_url' => site_url('wp-json'),
                 'user_id'   => $user_id,
                 'nonce'     => wp_create_nonce('smartpay_contact_optin_notice_dismiss')
             ]);
