@@ -1,6 +1,6 @@
 {
     "name": "wp-smartpay",
-    "version": "2.7.2",
+    "version": "2.7.3",
     "description": "A simple plugin for receiving payment.",
     "repository": {
         "type": "git",
@@ -17,6 +17,7 @@
         "build:form": "wp-scripts build resources/form-builder/index.js --output-path=public/form-builder",
         "watch:blocks": "wp-scripts start resources/blocks/index.js --output-path=public/blocks",
         "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks",
+        "dev:watch": "npm run watch & npm run watch:form & npm run watch:blocks",
         "release": "npm run build && gulp release",
         "commit": "git-cz"
     },
@@ -43,6 +44,7 @@
         "@wordpress/hooks": "^3.3.0",
         "@wordpress/i18n": "^4.3.0",
         "@wordpress/interface": "^4.2.0",
+        "@wordpress/keyboard-shortcuts": "^3.19.0",
         "@wordpress/media-utils": "^3.1.0",
         "@wordpress/plugins": "^4.1.0",
         "@wordpress/scripts": "^20.0.1",
