@@ -204,17 +204,22 @@ jQuery(($) => {
                     `<div class="alert alert-success">${response.data.message}</div>`
                 )
 
+                // discountAmount = response.data.discountAmount
+                console.log(response.data)
                 $couponData = response.data.couponData
                 $currency = response.data.currency
 
-                $('#smartpay-payment-form').addClass('coupon-applied')
+                let payment_form =  $('#smartpay-payment-form');
 
-                $('#smartpay-payment-form')
+                payment_form.addClass('coupon-applied')
+
+                payment_form
                     .find('.form--fixed-amount')
                     .each(function () {
                         let $inputId = $(this)
                             .find('input[name=_form_amount]')
                             .attr('id')
+                        console.log($inputId)
                         $(this)
                             .find('input[name=_form_amount]')
                             .val($couponData[$inputId].discountAmount)
@@ -274,19 +279,21 @@ jQuery(($) => {
                     .find('input[name=_form_amount]')
                     .attr('id')
 
-                $('.discount-amounts-container')
+                let discountAmountContainer = $('.discount-amounts-container');
+
+                discountAmountContainer
                     .find('.subtotal-amount-value')
                     .html(
                         `${$currency}${$couponData[$selectAmountInputId].mainAmount}`
                     )
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.coupon-amount-value')
                     .html(
                         `-${$currency}${$couponData[$selectAmountInputId].couponAmount}`
                     )
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.total-amount-value')
                     .html(
                         `${$currency}${$couponData[$selectAmountInputId].discountAmount}`

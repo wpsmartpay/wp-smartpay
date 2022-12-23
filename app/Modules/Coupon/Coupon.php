@@ -204,7 +204,7 @@ class Coupon
 
             <div class="py-2">
                 <p class="d-flex justify-content-between m-0">
-                    <span class="font-weight-bold"><?php _e('Total due', 'smartpay'); ?></span>
+                    <span class="font-weight-bold"><?php _e('Total Amount', 'smartpay'); ?></span>
                     <span class="total-amount-value"></span>
                 </p>
             </div>
