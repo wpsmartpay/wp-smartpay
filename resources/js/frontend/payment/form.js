@@ -204,12 +204,12 @@ jQuery(($) => {
                     `<div class="alert alert-success">${response.data.message}</div>`
                 )
 
-                // discountAmount = response.data.discountAmount
-                console.log(response.data)
+                let discountAmount = response.data.discountAmount
                 $couponData = response.data.couponData
                 $currency = response.data.currency
 
-                let payment_form =  $('#smartpay-payment-form');
+                let payment_form = $('#smartpay-payment-form');
+                let discountAmountContainer = $('.discount-amounts-container');
 
                 payment_form.addClass('coupon-applied')
 
@@ -219,43 +219,37 @@ jQuery(($) => {
                         let $inputId = $(this)
                             .find('input[name=_form_amount]')
                             .attr('id')
-                        console.log($inputId)
                         $(this)
                             .find('input[name=_form_amount]')
                             .val($couponData[$inputId].discountAmount)
                     })
 
-                let $selectedAmountInputId = $(
-                    '#smartpay-payment-form .form-amounts'
-                )
-                    .find(
-                        '.form--fixed-amount.selected input[name=_form_amount]'
-                    )
+                let $selectedAmountInputId = $('#smartpay-payment-form .form-amounts')
+                    .find('.plan-amount.selected input[name=_form_amount]')
                     .attr('id')
 
-                $(
-                    '#smartpay-payment-form input[name=smartpay_form_amount]'
-                ).val($couponData[$selectedAmountInputId].discountAmount)
+                $('#smartpay-payment-form input[name=smartpay_form_amount]')
+                    .val($couponData[$selectedAmountInputId].discountAmount)
 
-                $('.discount-amounts-container').removeClass('d-none')
+                discountAmountContainer.removeClass('d-none')
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.subtotal-amount-value')
                     .html(
                         `${$currency}${$couponData[$selectedAmountInputId].mainAmount}`
                     )
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.coupon-amount-name')
-                    .html(response.data.couponCode)
+                    .html(`Discount - ${response.data.couponCode}`)
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.coupon-amount-value')
                     .html(
                         `-${$currency}${$couponData[$selectedAmountInputId].couponAmount}`
                     )
 
-                $('.discount-amounts-container')
+                discountAmountContainer
                     .find('.total-amount-value')
                     .html(
                         `${$currency}${$couponData[$selectedAmountInputId].discountAmount}`
