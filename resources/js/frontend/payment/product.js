@@ -529,7 +529,7 @@ jQuery(($) => {
 
                 discountAmountContainer
                     .find('.coupon-amount-name')
-                    .html(response.data.couponCode)
+                    .html(`Discount - ${response.data.couponCode}`)
 
                 discountAmountContainer
                     .find('.coupon-amount-value')
@@ -539,7 +539,7 @@ jQuery(($) => {
                     .find('.total-amount-value')
                     .html(`${$currency}${$couponData.discountAmount}`)
 
-                discountAmountContainer
+                $('.smartpay-product-shortcode')
                     .find('input[name=smartpay_product_price]')
                     .val(`${$couponData.discountAmount}`)
 
