@@ -6,6 +6,7 @@
     --card-radius: 0.5em;
     --color-green: rgb(40, 167, 69);
     --color-gray: #e2ebf6;
+    --color-teal: #f0f8ff;
     --color-dark-gray: #c4d1e1;
     --radio-border-width: 2px;
     --radio-size: 1.5em;
@@ -138,7 +139,7 @@
 }
 
 .form-plan-card {
-    border: var(--radio-border-width) solid var(--color-gray);
+    border: var(--radio-border-width) solid rgb(233 236 233);
     border-radius: var(--card-radius);
     background-color: #fff;
     align-items: start;
@@ -152,15 +153,15 @@
         margin-right: 0;
     }
     &:hover {
-        box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
         background-color: aliceblue;
     }
     &.selected {
         border-color: var(--color-green);
-        background-color: var(--color-gray);
+        background-color: var(--color-teal);
         &:hover {
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
-            background-color: var(--color-gray);
+            background-color: var(--color-teal);
         }
     }
 }
@@ -206,8 +207,8 @@
         }
 
         &:checked {
-            background: var(--color-green);
-            border-color: var(--color-green);
+            background: var(--color-green) !important;
+            border-color: var(--color-green) !important;
             opacity: 1;
         }
     }
