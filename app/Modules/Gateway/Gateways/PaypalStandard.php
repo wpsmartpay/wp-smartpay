@@ -87,7 +87,7 @@ class PaypalStandard extends PaymentGateway
             die('Can\'t insert payment.');
         }
 
-        $payment_price = number_format($paymentData['amount'], 2);
+        $payment_price = number_format($paymentData['amount'], 2, '.', '');
 
         $default_args = [
             'charset'       => get_bloginfo('charset'),
