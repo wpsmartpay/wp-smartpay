@@ -1,7 +1,7 @@
-<div class="smartpay" style="margin: 0 auto; background: transparent">
+<div class="smartpay" style="margin: 0 auto;">
     <div class="smartpay-form-shortcode smartpay-payment">
         <div class="card form bg-transparent border-0">
-            <div class="card-body smartpay_form_builder_wrapper p-5">
+            <div class="card-body smartpay_form_builder_wrapper">
 				<?php do_action( 'before_smartpay_payment_form', $form ); ?>
                 <form id="smartpay-payment-form" action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST"
                       enctype="multipart/form-data">

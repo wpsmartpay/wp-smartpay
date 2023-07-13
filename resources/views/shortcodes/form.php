@@ -16,7 +16,7 @@ $has_payment_error = false;
     <div class="smartpay-product-shortcode">
         <div class="modal fade product-modal">
             <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl py-5">
-                <div class="modal-content align-content-between" style="background: transparent; border: 0;">
+                <div class="modal-content align-content-between" style="border: 0;">
                     <div class="d-flex justify-content-end">
                         <div class="modal-button py-3">
                             <button type="button" class="btn modal-close close" data-dismiss="modal">
