@@ -290,7 +290,7 @@ class PaypalStandard extends PaymentGateway
 
         if (!$payment) {
             smartpay_debug_log(__(sprintf(
-                'SmartPay-Paddle: Payment #%s no found.',
+                'SmartPay-PayPal: Payment #%s no found.',
                 $payment_id
             ), 'smartpay'));
         }
@@ -312,7 +312,7 @@ class PaypalStandard extends PaymentGateway
                 $payment->setTransactionId($data['txn_id']);
 
                 smartpay_debug_log(__(sprintf(
-                    'SmartPay-Paddle: Payment #%s completed.',
+                    'SmartPay-PayPal: Payment #%s completed.',
                     $payment->id
                 ), 'smartpay'));
             }
