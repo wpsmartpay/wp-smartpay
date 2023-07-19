@@ -125,6 +125,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 = [2.7.7] =
 * Feat - Add message to the receipt page if webhook delayed.
 * Fix - Debug log message for PayPal was not shown properly.
+* Fix - Form layout override by template.
 
 = [2.7.6] =
 * Fix - Form modal was not visible properly.
