@@ -61,6 +61,8 @@ class PaypalStandard extends PaymentGateway
     {
         add_action('smartpay_paypal_process_payment', [$this, 'processPayment']);
 
+        add_action('smartpay_before_payment_receipt', [$this, 'addWarningMessage']);
+
         add_action('smartpay_paypal_ajax_process_payment', [$this, 'ajaxProcessPayment']);
 
         add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
@@ -71,6 +73,19 @@ class PaypalStandard extends PaymentGateway
 
         add_action('smartpay_paypal_web_accept', [$this, 'process_smartpay_paypal_web_accept'], 10, 2);
     }
+
+	public function addWarningMessage( Payment $payment ): void {
+		if ( isset( $_GET['PayerID'] ) && $payment->status === 'Pending' && $payment->gateway === 'paypal' ) {
+			$message = __( 'Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>.',
+				'wp-smartpay-edd' );
+			echo '<div class="smartpay">';
+			echo '<div class="receipt-alert receipt-alert-success">';
+			echo '<p>' . $message . '</p>';
+			echo '<a class="receipt-alert-close">&times;</a>';
+			echo '</div>';
+			echo '</div>';
+		}
+	}
 
     public function ajaxProcessPayment($paymentData)
     {

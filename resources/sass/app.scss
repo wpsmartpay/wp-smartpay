@@ -33,6 +33,8 @@
 
     @import 'site/shortcode/payment_modal';
 
+    @import 'site/shortcode/receipt_alert';
+
     .modal-backdrop.show {
         display: block;
         background: #8e8e8e;
