@@ -76,7 +76,7 @@
                 align-items: center;
                 position: relative;
                 border-radius: 7px;
-                border: 1px solid var(--color-gray);
+                border: 1px solid rgb(233 236 233);
                 padding: 2px 4px 0 4px;
                 margin: 0 10px 4px 0;
 
@@ -87,10 +87,10 @@
                 }
                 &.selected {
                     border-color: var(--color-green);
-                    background-color: var(--color-gray);
+                    background-color: var(--color-teal);
                     &:hover {
                         box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.15);
-                        background-color: var(--color-gray);
+                        background-color: var(--color-teal);
                     }
                 }
                 label {
