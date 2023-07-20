@@ -49,3 +49,11 @@ jQuery(document.body).on(
             })
     }
 )
+
+jQuery(document).ready(function($) {
+    $(".receipt-alert-close").click(function() {
+        $(this)
+            .parent(".receipt-alert")
+            .fadeOut();
+    });
+});
