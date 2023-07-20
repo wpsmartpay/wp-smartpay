@@ -1,0 +1,38 @@
+
+.receipt-alert{
+	width:100%;
+	margin:20px auto;
+	padding:10px 6px 2px 6px;
+	position:relative;
+	border-radius:5px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.receipt-alert >p {
+	font-family: Quicksand, serif;
+	flex: 1 1 0;
+}
+
+.receipt-alert-success {
+	background-color: #a8f0c6;
+	border-left: 2px solid #6c7f73
+}
+
+.receipt-alert-danger {
+	background-color: #f0c6c6;
+	border-left: 2px solid #6c7f73
+}
+.receipt-alert-close{
+	width:30px;
+	height:30px;
+	opacity:0.5;
+	border-width:1px;
+	border-style:solid;
+	border-radius:50%;
+	text-align:center;
+	font-size:1.2em;
+	cursor:pointer;
+	border-color:#6c7f73;
+	color:#6c7f73;
+}
