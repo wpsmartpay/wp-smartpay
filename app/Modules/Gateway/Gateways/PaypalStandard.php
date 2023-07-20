@@ -75,7 +75,7 @@ class PaypalStandard extends PaymentGateway
     }
 
 	public function addWarningMessage( Payment $payment ): void {
-		if ( isset( $_GET['PayerID'] ) && $payment->status === 'Pending' && $payment->gateway === 'paypal' ) {
+		if ( isset( $_GET['PayerID'] ) && strtolower($payment->status) === Payment::PENDING && $payment->gateway === 'paypal' ) {
 			$message = __( 'Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>.',
 				'wp-smartpay-edd' );
 			echo '<div class="smartpay">';
