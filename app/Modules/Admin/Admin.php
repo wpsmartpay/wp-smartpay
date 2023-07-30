@@ -126,6 +126,17 @@ class Admin
             }
         );
 
+	    add_submenu_page(
+		    'smartpay',
+		    __('SmartPay - Invoices', 'smartpay'),
+		    __('Invoices', 'smartpay'),
+		    'manage_options',
+		    'smartpay#/invoices',
+		    function () {
+			    echo smartpay_view('admin');
+		    }
+	    );
+
         $this->smartpayProMenu();
 
         do_action('smartpay_admin_add_menu_items');

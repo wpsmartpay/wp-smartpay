@@ -48,7 +48,7 @@ export const ProductList = () => {
         })
     }
 
-    let uniqueProducts = products?.filter((v, i, a) => a.findIndex(t => (t.id == v.id)) === i)
+    let uniqueProducts = products?.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
 
     return (
         <>

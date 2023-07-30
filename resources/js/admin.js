@@ -17,6 +17,8 @@ import { ShowCustomer } from './pages/customer/show'
 import { CouponList } from './pages/coupon/index'
 import { CreateCoupon } from './pages/coupon/create'
 import { EditCoupon } from './pages/coupon/edit'
+import { Invoices } from "./pages/invoice";
+import {CreateInvoice} from "./pages/invoice/create";
 
 // Payment
 import { PaymentList } from './pages/payment/index'
@@ -32,6 +34,7 @@ import './admin/menu-fix'
 
 //Hooks
 import { createHooks } from '@wordpress/hooks'
+import {EditInvoice} from "./pages/invoice/edit";
 export const smartPayRouteHooks = createHooks()
 window.smartPayRouteHooks = smartPayRouteHooks
 
@@ -67,6 +70,26 @@ domReady(function () {
                             path="/customers"
                             element={<CustomerList />}
                         />
+
+                        {/* Invoices */}
+                        <Route
+                            exact
+                            path="/invoices"
+                            element={<Invoices />}
+                        />
+
+                        <Route
+                            exact
+                            path="/invoices/create"
+                            element={<CreateInvoice />}
+                        />
+
+                        <Route
+                            exact
+                            path="/invoices/:invoiceId/edit"
+                            element={<EditInvoice />}
+                        />
+
                         <Route
                             exact
                             path="/customers/:customerId/"
