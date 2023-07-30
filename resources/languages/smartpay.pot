@@ -1221,3 +1221,171 @@ msgstr ""
 
 msgid "Yearly"
 msgstr ""
+
+msgid "Monthly Report"
+msgstr ""
+
+msgid "Recent Payments"
+msgstr ""
+
+msgid "Title"
+msgstr ""
+
+msgid "Actions"
+msgstr ""
+
+msgid "Preview"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Add New"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Edit Product"
+msgstr ""
+
+msgid "Cover Image"
+msgstr ""
+
+msgid "Select a featured image for this product"
+msgstr ""
+
+msgid "Choose File"
+msgstr ""
+
+msgid "Pricing & Variation"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Billing Type"
+msgstr ""
+
+msgid "Base Price"
+msgstr ""
+
+msgid "Sales price"
+msgstr ""
+
+msgid "Offer variations of this product"
+msgstr ""
+
+msgid "Add Variations"
+msgstr ""
+
+msgid "Sweeten the deal for your customers with different options for format"
+msgstr ""
+
+msgid "version"
+msgstr ""
+
+msgid "Upload or select files for this product"
+msgstr ""
+
+msgid "Upload files"
+msgstr ""
+
+msgid "Checkout Options"
+msgstr ""
+
+msgid "Add resource link on Payment Success Page"
+msgstr ""
+
+msgid "Pricing"
+msgstr ""
+
+msgid "Builder"
+msgstr ""
+
+msgid "Form Amounts"
+msgstr ""
+
+msgid "Add New Amount"
+msgstr ""
+
+msgid "Allow custom amount"
+msgstr ""
+
+msgid "Edit Form"
+msgstr ""
+
+msgid "Delete Amount"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "View Details"
+msgstr ""
+
+msgid "No coupon found"
+msgstr ""
+
+msgid "Enter coupon code here"
+msgstr ""
+
+msgid "Coupon description"
+msgstr ""
+
+msgid "Usage Restriction"
+msgstr ""
+
+msgid "Discount type"
+msgstr ""
+
+msgid "Fixed Amount"
+msgstr ""
+
+msgid "Percentage Amount"
+msgstr ""
+
+msgid "Coupon amount"
+msgstr ""
+
+msgid "Coupon expiry date"
+msgstr ""
+
+msgid "Customer Details"
+msgstr ""
+
+msgid "Form Payment Details"
+msgstr ""
+
+msgid "Payment Details"
+msgstr ""
+
+msgid "Form Data"
+msgstr ""
+
+msgid "Create WP user on first payment"
+msgstr ""
+
+msgid "GENERAL SETTINGS"
+msgstr ""
+
+msgid "Create WP user"
+msgstr ""
+
+msgid "License Status"
+msgstr ""
+
+msgid "No subscription found"
+msgstr ""
+
+msgid "Billing Cycle"
+msgstr ""
+
+msgid "Payment ID"
+msgstr ""
