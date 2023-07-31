@@ -31,6 +31,27 @@ const productDefaultData = {
     extra: {},
 }
 
+
+const invoiceDefaultData = {
+    invoiceId: '',
+    customerId: '',
+    qty: '',
+    items: [{
+        key: '',
+        id: '',
+        qty: '',
+        unitPrice: '',
+        amount: '',
+    }],
+    customData: [{
+        key: '',
+        value: '',
+    }],
+    totalAmount: '',
+    amount: '',
+    additional_info: '',
+}
+
 const variationDefaultData = {
     title: '',
     description: '',
@@ -53,4 +74,5 @@ export {
     SUBSCRIPTION,
     productDefaultData,
     variationDefaultData,
+    invoiceDefaultData
 }
