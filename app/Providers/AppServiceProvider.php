@@ -3,6 +3,7 @@
 namespace SmartPay\Providers;
 
 use SmartPay\Framework\Support\ServiceProvider;
+use SmartPay\Modules\Invoice\Invoice;
 use SmartPay\Modules\Product\Product;
 use SmartPay\Modules\Form\Form;
 use SmartPay\Modules\Coupon\Coupon;
@@ -67,6 +68,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Downloader::class, function ($app) {
             return new Downloader($app);
         });
+
+	    $this->app->singleton(Invoice::class, function ($app) {
+		    return new Invoice($app);
+	    });
     }
 
     public function boot()
@@ -81,5 +86,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(Common::class);
         $this->app->make(Shortcode::class);
         $this->app->make(Integration::class);
+		$this->app->make(Invoice::class);
     }
 }

@@ -6,6 +6,15 @@ const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
 export const Invoices = () => {
+    const [invoices, setInvoices] = useState([])
+
+    const invoiceList = useSelect((select) =>
+        select('smartpay/invoices').getInvoices()
+    )
+
+    useEffect(() => {
+        setInvoices(invoiceList)
+    }, [invoiceList])
 
     return (
         <>
