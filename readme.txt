@@ -102,7 +102,7 @@ If WP SmartPay doesn’t quite fit your needs, take a look at some of our other 
 #### Paddle for WordPress
 WP SmartPay is the best Paddle integration for WordPress. Since it's not an add-on, no other plugins are required.
 
-== Installation
+== Installation ==
 The easiest way to install WP SmartPay is to search for it via your site’s Dashboard.
 
 #### Step-By-Step Instructions
@@ -161,7 +161,6 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 * Fix - Recurring payment data is added when custom payment amount is selected
 * Fix - Currency icon is not shown in the product payment modal
 
-
 = [2.7.0] =
 * Add - Paytm payment gateway support
 * Fix - Warning message while creating a user and customer
@@ -214,7 +213,6 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 * Update - Update dependency packages
 * Update - Update build package
 
-
 = [2.5.3] =
 * Add - Add option to purchase free products
 * Add - Add billing information text on payment modal
@@ -264,7 +262,6 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 * Fix - Form builder bug, PHP Notice, Admin style, Over-lapp
 * Update - Integration quick settings
 * Update - Configuration alert if missing
-
 
 = [2.3.1] =
 * Fix - readme.txt stable tag
