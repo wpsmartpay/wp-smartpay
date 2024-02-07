@@ -70,16 +70,6 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 
 [**Upgrade to WP SmartPay Pro Now**](https://wpsmartpay.com/)
 
-####🧩 Payment Gateway Integrations
-- [PayPal](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal) - The most used and widely available international payment gateway. WP SmartPay's core version comes with PayPal standard support.
-- [Stripe](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
-- [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
-- [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
-- [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
-- [toyyibPay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-toyyibpay) - is an online payment platform for businesses & individuals with the least expensive and free charge rates for certain deals.
-- [Paytm](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paytm) - More popular Indian digital payments and financial services provider that allow to get the payments with various banks.
-- [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
-
 #### LOCALE AND CURRENCY SETTINGS
 - Stripe currently supports [27 languages](https://support.stripe.com/questions/supported-languages-for-stripe-checkout), [39 countries](https://stripe.com/global), and [135+ currencies](https://stripe.com/docs/currencies).
 - Paypal currently supports [200 countries/regions](https://www.paypal.com/en/webapps/mpp/country-worldwide) and support 25 currencies
