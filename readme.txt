@@ -114,6 +114,7 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 == Changelog ==
 = [2.7.9] =
 * Fix - Form builder unaccessible due to overlapping styles.
+* Add - Block picker at the bottom of the form editor.
 
 = [2.7.8] =
 * Add - Missing strings for translation.
