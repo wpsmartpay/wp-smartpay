@@ -51,21 +51,18 @@ body.block-editor-page {
 
 // New
 .interface-interface-skeleton {
-    &__body {
-        position: relative;
-    }
-
-    &__content,
-    &__sidebar {
-        position: absolute;
-    }
+    position: absolute;
+    top: 8px;
+    bottom: 0;
+    left: 0 !important;
+    right: 0;
 
     &__content {
         width: 70%;
-        left: 0px;
     }
     &__sidebar {
         width: 30%;
-        right: 0px;
+        box-shadow: none;
+        border: none;
     }
 }
