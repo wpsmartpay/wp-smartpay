@@ -204,12 +204,11 @@ class Application extends Container
      * @param  array  $parameters
      * @return mixed
      */
-    public function make($abstract, array $parameters = [])
+    public function make($abstract, array $parameters = []) : mixed
     {
         $abstract = $this->getAlias($abstract);
 
-        if (
-            !$this->bound($abstract) &&
+        if (!$this->bound($abstract) &&
             array_key_exists($abstract, $this->availableBindings) &&
             !array_key_exists($this->availableBindings[$abstract], $this->ranServiceBinders)
         ) {
@@ -287,7 +286,7 @@ class Application extends Container
      *
      * @return void
      */
-    public function flush()
+    public function flush() : void
     {
         parent::flush();
 
