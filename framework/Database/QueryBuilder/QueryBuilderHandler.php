@@ -49,6 +49,8 @@ class QueryBuilderHandler
      * @var array
      */
     protected $fetchParameters = array(\PDO::FETCH_OBJ);
+    protected string $adapter;
+    protected array $adapterConfig;
 
     /**
      * @param null|\SmartPay\Framework\Database\Connection $connection

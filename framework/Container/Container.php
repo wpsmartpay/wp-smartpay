@@ -38,7 +38,7 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * The container's method bindings.
      *
-     * @var \Closure[]
+     * @var Closure[]
      */
     protected $methodBindings = [];
 
@@ -108,14 +108,14 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * All of the global resolving callbacks.
      *
-     * @var \Closure[]
+     * @var Closure[]
      */
     protected $globalResolvingCallbacks = [];
 
     /**
      * All of the global after resolving callbacks.
      *
-     * @var \Closure[]
+     * @var Closure[]
      */
     protected $globalAfterResolvingCallbacks = [];
 
@@ -215,8 +215,9 @@ class Container implements ArrayAccess, ContainerContract
      * Register a binding with the container.
      *
      * @param  string  $abstract
-     * @param  \Closure|string|null  $concrete
+     * @param Closure|string|null  $concrete
      * @param  bool  $shared
+     *
      * @return void
      */
     public function bind($abstract, $concrete = null, $shared = false) : void
@@ -256,7 +257,8 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @param  string  $abstract
      * @param  string  $concrete
-     * @return \Closure
+     *
+     * @return Closure
      */
     protected function getClosure($abstract, $concrete)
     {
@@ -277,7 +279,6 @@ class Container implements ArrayAccess, ContainerContract
      * Determine if the container has a method binding.
      *
      * @param  string  $method
-     * @return bool
      */
     public function hasMethodBinding($method) : bool
     {
@@ -288,7 +289,8 @@ class Container implements ArrayAccess, ContainerContract
      * Bind a callback to resolve with Container::call.
      *
      * @param  array|string  $method
-     * @param  \Closure  $callback
+     * @param Closure  $callback
+     *
      * @return void
      */
     public function bindMethod($method, $callback) : void
@@ -328,7 +330,8 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @param  string  $concrete
      * @param  string  $abstract
-     * @param  \Closure|string  $implementation
+     * @param  Closure|string  $implementation
+     *
      * @return void
      */
     public function addContextualBinding($concrete, $abstract, $implementation) : void
@@ -339,9 +342,10 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Register a binding if it hasn't already been registered.
      *
-     * @param  string  $abstract
-     * @param  \Closure|string|null  $concrete
+     * @param  string $abstract
+     * @param  Closure|string|null  $concrete
      * @param  bool  $shared
+     *
      * @return void
      */
     public function bindIf($abstract, $concrete = null, $shared = false) : void
@@ -354,8 +358,9 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Register a shared binding in the container.
      *
-     * @param  string  $abstract
-     * @param  \Closure|string|null  $concrete
+     * @param string $abstract
+     * @param  Closure|string|null  $concrete
+     *
      * @return void
      */
     public function singleton($abstract, $concrete = null) : void
@@ -366,8 +371,9 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Register a shared binding if it hasn't already been registered.
      *
-     * @param  string  $abstract
-     * @param  \Closure|string|null  $concrete
+     * @param string  $abstract
+     * @param  Closure|string|null  $concrete
+     *
      * @return void
      */
     public function singletonIf($abstract, $concrete = null) : void
@@ -380,8 +386,9 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * "Extend" an abstract type in the container.
      *
-     * @param  string  $abstract
-     * @param  \Closure  $closure
+     * @param string  $abstract
+     * @param  Closure  $closure
+     *
      * @return void
      *
      * @throws \InvalidArgumentException
@@ -516,7 +523,8 @@ class Container implements ArrayAccess, ContainerContract
      * Bind a new callback to an abstract's rebind event.
      *
      * @param  string  $abstract
-     * @param  \Closure  $callback
+     * @param  Closure  $callback
+     *
      * @return mixed
      */
     public function rebinding($abstract, Closure $callback) : mixed
@@ -572,9 +580,10 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Wrap the given closure such that its dependencies will be injected when executed.
      *
-     * @param  \Closure  $callback
+     * @param  Closure $callback
      * @param  array  $parameters
-     * @return \Closure
+     *
+     * @return Closure
      */
     public function wrap(Closure $callback, array $parameters = [])
     {
@@ -602,7 +611,8 @@ class Container implements ArrayAccess, ContainerContract
      * Get a closure to resolve the given type from the container.
      *
      * @param  string  $abstract
-     * @return \Closure
+     *
+     * @return Closure
      */
     public function factory($abstract)
     {
@@ -745,7 +755,8 @@ class Container implements ArrayAccess, ContainerContract
      * Get the contextual concrete binding for the given abstract.
      *
      * @param  string  $abstract
-     * @return \Closure|string|array|null
+     *
+     * @return Closure|string|array|null
      */
     protected function getContextualConcrete($abstract)
     {
@@ -771,7 +782,8 @@ class Container implements ArrayAccess, ContainerContract
      * Find the concrete binding for the given abstract in the contextual binding array.
      *
      * @param  string  $abstract
-     * @return \Closure|string|null
+     *
+     * @return Closure|string|null
      */
     protected function findInContextualBindings($abstract)
     {
@@ -793,7 +805,8 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Instantiate a concrete instance of the given type.
      *
-     * @param  \Closure|string  $concrete
+     * @param  Closure|string  $concrete
+     *
      * @return mixed
      *
      * @throws \SmartPay\Framework\Contracts\Container\BindingResolutionException
@@ -1038,8 +1051,9 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Register a new resolving callback.
      *
-     * @param  \Closure|string  $abstract
-     * @param  \Closure|null  $callback
+     * @param  Closure|string  $abstract
+     * @param  Closure|null  $callback
+     *
      * @return void
      */
     public function resolving($abstract, Closure $callback = null) : void
@@ -1058,8 +1072,9 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Register a new after resolving callback for all types.
      *
-     * @param  \Closure|string  $abstract
-     * @param  \Closure|null  $callback
+     * @param  Closure|string  $abstract
+     * @param  Closure|null  $callback
+     *
      * @return void
      */
     public function afterResolving($abstract, Closure $callback = null) : void

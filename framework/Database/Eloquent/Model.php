@@ -388,12 +388,12 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $attributes = $this->getAttributes();
 
@@ -508,12 +508,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function push()
     {
-        if (!$this->save()) return false;
+        if (!$this->save()) {
+            return false;
+        }
 
         foreach ($this->relations as $models) {
             $relations = ModelCollection::make($models);
             foreach ($relations as $relation) {
-                if (!$relation->push()) return false;
+                if (!$relation->push()) {
+                    return false;
+                }
             }
         }
 
@@ -685,8 +689,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         foreach ($this->attributes as $key => $value) {
             if (!array_key_exists($key, $this->original)) {
                 $dirty[$key] = $value;
-            } elseif (
-                $value !== $this->original[$key] &&
+            } elseif ($value !== $this->original[$key] &&
                 !$this->originalIsNumericallyEquivalent($key)
             ) {
                 $dirty[$key] = $value;
@@ -829,7 +832,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return !is_null($this->getAttribute($offset));
     }
@@ -840,7 +843,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->getAttribute($offset);
     }
@@ -852,7 +855,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->setAttribute($offset, $value);
     }
@@ -863,7 +866,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset], $this->relations[$offset]);
     }
