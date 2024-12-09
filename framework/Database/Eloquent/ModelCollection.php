@@ -19,9 +19,13 @@ class ModelCollection implements Countable, ArrayAccess, IteratorAggregate, Json
 
     public static function make($items)
     {
-        if (is_null($items)) return new static;
+        if (is_null($items)) {
+            return new static;
+        }
 
-        if ($items instanceof self) return $items;
+        if ($items instanceof self) {
+            return $items;
+        }
 
         return new static(is_array($items) ? $items : [$items]);
     }
@@ -31,7 +35,7 @@ class ModelCollection implements Countable, ArrayAccess, IteratorAggregate, Json
         $this->models[] = $item;
     }
 
-    public function count()
+    public function count(): int
     {
         return count($this->models);
     }
@@ -288,34 +292,34 @@ class ModelCollection implements Countable, ArrayAccess, IteratorAggregate, Json
         }, $this->models);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->models);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->models[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if ($this->offsetExists($offset)) {
             return $this->models[$offset];
         }
     }
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->models[$offset] = $value;
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->models[$offset]);
     }

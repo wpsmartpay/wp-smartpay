@@ -42,12 +42,13 @@ $smartpay_options = smartpay_get_settings();
 add_action('plugins_loaded', function () use ($app) {
     do_action('smartpay_loaded');
 
-    load_plugin_textdomain('smartpay', false, dirname(plugin_basename(__FILE__)) . '/resources/languages');
-
     // Run The Application
     $app->boot();
 });
 
 add_action('init', function () {
     do_action('smartpay_init');
+
+    // Load translations
+    load_plugin_textdomain('smartpay', false, dirname(plugin_basename(__FILE__)) . '/resources/languages');
 });
