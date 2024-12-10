@@ -1,5 +1,8 @@
 name: Deploy to WordPress.org
 on:
+    # Manual workflow trigger
+    workflow_dispatch:
+    
     push:
         tags:
             - '*'
