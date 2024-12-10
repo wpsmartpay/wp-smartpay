@@ -693,6 +693,8 @@ class Setting
                     $html .= '</div>';
                 }
             }
+        } else {
+            $html .= '<small class="form-text text-muted">' . __( 'Add more payment gateways from the Integrations panel.', 'smartpay' ) . '</small>';
         }
 
         $url   = esc_url('https://wpsmartpay.com');
