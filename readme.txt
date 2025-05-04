@@ -4,7 +4,7 @@ Tags: download manager, digital product, donation, ecommerce, stripe, paypal, pa
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.1
-Stable Tag: 2.7.12
+Stable Tag: 2.7.13
 License: GNU Version 2 or later
 
 The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
@@ -112,6 +112,10 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.7.13] =
+* Fix - Input sanitization for form submission.
+* Fix - Text domain warning.
+
 = [2.7.12] =
 * Fix - Add instructions to enable payment gateways in pro version.
 

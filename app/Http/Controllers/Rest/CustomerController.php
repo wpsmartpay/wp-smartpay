@@ -58,7 +58,12 @@ class CustomerController extends RestController
 
         $requestData = \json_decode($request->get_body(), true);
 
-        if (empty($requestData['first_name']) || empty($requestData['last_name']) || empty($requestData['email'])) {
+        // Sanitize input data.
+        $firstName = sanitize_text_field( $request->get_param( 'first_name' ) ?? '' );
+        $lastName  = sanitize_text_field( $request->get_param( 'last_name' ) ?? '' );
+        $email     = sanitize_email( sanitize_text_field( $request->get_param( 'email' ) ?? '' ) );
+
+        if (empty($firstName) || empty($lastName) || empty($email)) {
             return new WP_REST_Response(['message' => __('You must input first name, last name and email', 'smartpay')], 404);
         }
 
@@ -69,16 +74,16 @@ class CustomerController extends RestController
         global $wpdb;
         $wpdb->query('START TRANSACTION');
 
-        $customer->first_name = $requestData['first_name'];
-        $customer->last_name = $requestData['last_name'];
-        $customer->email = $requestData['email'];
+        $customer->first_name = $firstName;
+        $customer->last_name = $lastName;
+        $customer->email = $email;
         $customer->save();
 
         //TODO: user Database table
         $userdata = wp_update_user([
             'ID' => $request->get_param('id'),
-            'display_name' => $requestData['first_name']  . ' ' . $requestData['last_name'],
-            'user_email' => $requestData['email'],
+            'display_name' => $firstName  . ' ' . $lastName,
+            'user_email' => $email,
         ]);
 
         if (is_wp_error($userdata)) {
