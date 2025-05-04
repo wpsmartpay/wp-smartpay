@@ -239,16 +239,21 @@ class Payment
 
     private function _get_payment_customer($_data)
     {
-        $customer = Customer::where('email', $_data['smartpay_email'])->first();
+        // Sanitize Data.
+        $first_name = sanitize_text_field( $_data['smartpay_first_name'] ?? '' );
+        $last_name  = sanitize_text_field( $_data['smartpay_last_name'] ?? '' );
+        $email      = sanitize_email( sanitize_text_field( $_data['smartpay_email'] ?? '' ) );
+
+        $customer = Customer::where('email', $email)->first();
 
         if ($customer && $customer->id) {
             $customer_id = $customer->id;
         } else {
             $customer = new Customer();
             $customer->user_id      = is_user_logged_in() ? get_current_user_id() : 0;
-            $customer->first_name   = $_data['smartpay_first_name'];
-            $customer->last_name    = $_data['smartpay_last_name'];
-            $customer->email        = $_data['smartpay_email'];
+            $customer->first_name   = $first_name;
+            $customer->last_name    = $last_name;
+            $customer->email        = $email;
 
             $customer->save();
             $customer_id = $customer->id;
@@ -256,9 +261,9 @@ class Payment
 
         return [
             'customer_id' => $customer_id ?? 0,
-            'first_name'  => $_data['smartpay_first_name'] ?? '',
-            'last_name'   => $_data['smartpay_last_name'] ?? '',
-            'email'       => $_data['smartpay_email'] ?? '',
+            'first_name'  => $first_name,
+            'last_name'   => $last_name,
+            'email'       => $email,
         ];
     }
 
