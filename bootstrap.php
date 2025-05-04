@@ -24,7 +24,7 @@ Updater::boot();
 add_action('plugins_loaded', function () {
     require_once(ABSPATH . '/wp-admin/includes/plugin.php');
     if (defined('SMARTPAY_PRO_VERSION')) {
-        if (floatval(SMARTPAY_PRO_VERSION) < 2.6){
+        if (floatval(SMARTPAY_PRO_VERSION) < 2.6 && "##SMARTPAY_PRO_VERSION##" !== SMARTPAY_PRO_VERSION){
             add_action('admin_notices', 'smartpay_pro_deactivate_notice');
             deactivate_plugins(SMARTPAY_PRO_PLUGIN_FILE);
         }

@@ -47,11 +47,14 @@ add_action('plugins_loaded', function () use ($app) {
     do_action('smartpay_loaded');
 
     // Run The Application
-    $app->boot();
+    // $app->boot();
 });
 
-add_action('init', function () {
+add_action('init', function () use ($app) {
     do_action('smartpay_init');
+
+    // Run The Application
+    $app->boot();
 
     // Load translations
     load_plugin_textdomain('smartpay', false, dirname(plugin_basename(__FILE__)) . '/resources/languages');
