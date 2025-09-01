@@ -287,7 +287,10 @@ class QueryBuilderHandler
         );
 
         if (!in_array(strtolower($type), $allowedTypes)) {
-            throw new Exception($type . ' is not a known type.', 2);
+            throw new Exception(
+				sprintf("%s is not a known type.", esc_html($type)),
+				2
+            );
         }
 
         $queryArr = $this->adapterInstance->$type($this->statements, $dataToBePassed);

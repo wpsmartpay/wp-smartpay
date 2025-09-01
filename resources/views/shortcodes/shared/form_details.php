@@ -3,7 +3,7 @@
         <div class="card form bg-transparent border-0">
             <div class="card-body smartpay_form_builder_wrapper">
 				<?php do_action( 'before_smartpay_payment_form', $form ); ?>
-                <form id="smartpay-payment-form" action="<?php echo smartpay_get_payment_page_uri(); ?>" method="POST"
+                <form id="smartpay-payment-form" action="<?php echo esc_url(smartpay_get_payment_page_uri()); ?>" method="POST"
                       enctype="multipart/form-data">
                     <div id="form-response" class="mb-3"></div>
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>
@@ -12,7 +12,7 @@
                     <div id="mobile-field"></div>
 
                     <div class="form--amount-section mb-3">
-                        <label class="form-amounts--label d-block m-0 mb-2"><?php _e( 'Select an amount', 'smartpay' ) ?></label>
+                        <label class="form-amounts--label d-block m-0 mb-2"><?php esc_html_e( 'Select an amount', 'smartpay' ) ?></label>
                         <div class="form-amounts">
                             <div class="form-plan-grid ">
 								<?php foreach ( $form->amounts as $index => $amount ) : ?>
@@ -21,16 +21,16 @@
 									<?php if ( $billingType == \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ): ?>
                                         <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                             <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-											$amount['key']; ?>" class="radio" value="<?php echo
-											$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+											esc_attr($amount['key']); ?>" class="radio" value="<?php echo
+											esc_attr($amount['amount']); ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
                                             <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
-                                            <?php echo $amount['label'] ? $amount['label'] : ''; ?>
+                                            <?php echo esc_html($amount['label'] ? $amount['label'] : ''); ?>
                                         </span>
                                         <span class="plan-cost">
-                                            <?php echo smartpay_amount_format( $amount['amount'] ); ?>
+                                            <?php echo esc_html(smartpay_amount_format( $amount['amount'] )); ?>
                                         </span>
-                                                <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
+                                                <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo esc_attr($amount['key']); ?>" value="<?php echo esc_attr($billingType); ?>">
                                         </label>
 									<?php endif; ?>
 
@@ -38,32 +38,32 @@
 
                                         <label class="form-plan-card plan-amount <?php echo 0 === $index ? 'selected' : '' ?>">
                                             <input type="hidden" name="_form_amount_key"
-                                                   value="<?php echo $amount['key'] ?? ''; ?>">
+                                                   value="<?php echo esc_attr($amount['key'] ?? ''); ?>">
                                             <input type="radio" name="_form_amount" id="_form_amount_<?php echo
-											$amount['key']; ?><?php echo
-											$amount['key']; ?>" class="radio" value="<?php echo
-											$amount['amount']; ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
+											esc_attr($amount['key']); ?><?php echo
+											esc_attr($amount['key']); ?>" class="radio" value="<?php echo
+											esc_attr($amount['amount']); ?>" <?php echo 0 === $index ? 'checked' : '' ?> />
                                             <span class="plan-details" aria-hidden="true">
                                         <span class="plan-type">
-                                            <?php echo $amount['label'] ? $amount['label'] : ''; ?>
+                                            <?php echo esc_html($amount['label'] ? $amount['label'] : ''); ?>
                                         </span>
                                         <span class="plan-cost">
-                                            <?php echo smartpay_amount_format( $amount['amount'] ); ?>
+                                            <?php echo esc_html(smartpay_amount_format( $amount['amount'] )); ?>
                                             <span class="slash">/</span>
-                                            <span class="plan-cycle"><?php echo $amount['billing_period']; ?></span></span>
+                                            <span class="plan-cycle"><?php echo esc_html($amount['billing_period']); ?></span></span>
                                             <?php if ( isset( $amount['total_billing_cycle'] ) && $amount['total_billing_cycle'] > 0 ): ?>
-                                                <span class="plan-additional-info">Billed <?php echo $amount['total_billing_cycle']; ?> times</span>
+                                                <span class="plan-additional-info">Billed <?php echo esc_html($amount['total_billing_cycle']); ?> times</span>
                                             <?php endif; ?>
 
 												<?php if ( isset( $amount['additional_charge'] ) && $amount['additional_charge'] > 0 ): ?>
-                                                    <span class="plan-additional-info"> Additional Charge <?php echo $amount['additional_charge'] . smartpay_get_currency_symbol(); ?></span>
+                                                    <span class="plan-additional-info"> Additional Charge <?php echo esc_html($amount['additional_charge'] . smartpay_get_currency_symbol()); ?></span>
 												<?php endif; ?>
                                         </span>
-                                            <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo $amount['key']; ?>" value="<?php echo $billingType; ?>">
+                                            <input type="hidden" name="_form_billing_type" id="_form_billing_type_<?php echo esc_attr($amount['key']); ?>" value="<?php echo esc_attr($billingType); ?>">
 
                                             <input type="hidden" name="_form_billing_period"
-                                                   id="_form_billing_period_<?php echo $amount['key']; ?>"
-                                                   value="<?php echo $amount['billing_period']; ?>">
+                                                   id="_form_billing_period_<?php echo esc_attr($amount['key']); ?>"
+                                                   value="<?php echo esc_attr($amount['billing_period']); ?>">
                                         </label>
 									<?php endif; ?>
 								<?php endforeach; ?>
@@ -74,38 +74,38 @@
 							$defaultAmount = reset( $formAmounts );
 							?>
                             <input type="hidden" name="smartpay_form_billing_type"
-                                   value="<?php echo $defaultAmount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME ?>">
+                                   value="<?php echo esc_attr($defaultAmount['billing_type'] ?? \SmartPay\Models\Payment::BILLING_TYPE_ONE_TIME) ?>">
                             <input type="hidden" name="smartpay_form_billing_period"
-                                   value="<?php echo $defaultAmount['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY ?>">
+                                   value="<?php echo esc_attr($defaultAmount['billing_period'] ?? \SmartPay\Models\Payment::BILLING_PERIOD_MONTHLY) ?>">
 
 							<?php if ( $form->settings['allowCustomAmount'] ) : ?>
                                 <!-- // Allow custom payment -->
                                 <div class="form-group custom-amount-wrapper m-0 ">
                                     <label for="smartpay_custom_amount" class="form-amounts--label d-block m-0 mb-2">
-										<?php echo $form->settings['customAmountLabel']; ?></label>
+										<?php echo esc_html($form->settings['customAmountLabel']); ?></label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text px-3"
-                                                  id="default-currency"><?php echo smartpay_get_currency_symbol() ?></span>
+                                                  id="default-currency"><?php echo esc_html(smartpay_get_currency_symbol()) ?></span>
                                         </div>
                                         <input type="text" class="form-control form--custom-amount amount"
                                                id="smartpay_custom_amount" name="smartpay_form_amount"
-                                               value="<?php echo $defaultAmount['amount'] ?>" placeholder="">
+                                               value="<?php echo esc_attr($defaultAmount['amount']) ?>" placeholder="">
                                     </div>
                                 </div>
 							<?php else : ?>
 								<?php $formAmounts = $form->amounts; ?>
                                 <input type="hidden" class="form-control form--custom-amount amount"
-                                       name="smartpay_form_amount" value="<?php echo $defaultAmount['amount'] ?>">
+                                       name="smartpay_form_amount" value="<?php echo esc_attr($defaultAmount['amount']) ?>">
 							<?php endif; ?>
                         </div>
                     </div>
 
                     <input type="hidden" name="smartpay_selected_amount_key"
-                           value="<?php echo $form->amounts[0]['key'] ?? '' ?>">
+                           value="<?php echo esc_attr($form->amounts[0]['key'] ?? '') ?>">
 
                     <input type="hidden" name="smartpay_form_id" id="smartpay_form_id"
-                           value="<?php echo $form->id ?? 0; ?>">
+                           value="<?php echo esc_attr($form->id ?? 0); ?>">
 
                     <input type="hidden" name="smartpay_is_custom_payment" id="smartpay_is_custom_payment" value="false">
 
@@ -117,7 +117,7 @@
 
                         <!-- // If it has multiple payment gateway -->
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
-                        <label class="payment-gateway--label"><?php _e( 'Select a payment method', 'smartpay' ); ?></label>
+                        <label class="payment-gateway--label"><?php esc_html_e( 'Select a payment method', 'smartpay' ); ?></label>
                         <div class="mb-4">
 
                             <div class="gateways m-0 justify-content-left d-flex">
@@ -138,7 +138,7 @@
                         </div>
 					<?php else : ?>
 						<?php $has_payment_error = true; ?>
-                        <div class="alert alert-danger"><?php _e( 'You must enable a payment gateway to proceed a payment.', 'smartpay' ); ?></div>
+                        <div class="alert alert-danger"><?php esc_html_e( 'You must enable a payment gateway to proceed a payment.', 'smartpay' ); ?></div>
 					<?php endif; ?>
 
 					<?php do_action( 'before_smartpay_payment_form_button', $form ); ?>
@@ -146,7 +146,7 @@
                     <button type="button"
                             class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ( $has_payment_error ) {
 						echo 'disabled';
-					} ?>><?php _e( $form['settings']['payButtonLabel'] ?: 'Pay Now', 'smartpay' ) ?></button>
+					} ?>><?php esc_html_e( $form['settings']['payButtonLabel'] ?: 'Pay Now', 'smartpay' ) ?></button>
 
 					<?php do_action( 'after_smartpay_payment_form_button', $form ); ?>
                 </form>

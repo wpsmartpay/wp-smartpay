@@ -26,7 +26,7 @@
             </div>
         </div>
         <button type="button" class="btn btn-success open-product-modal m-1">
-            <?php _e($label ? : 'Buy now', 'smartpay'); ?>
+            <?php esc_html_e($label ? : 'Buy now', 'smartpay'); ?>
         </button>
     </div>
 </div>

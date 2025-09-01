@@ -26,7 +26,7 @@ $product       = Product::with('parent')->find($productId);
         td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
     </style>
     <![endif]-->
-    <title><?php _e('Thank you for your payment', 'smartpay'); ?></title>
+    <title><?php esc_html_e('Thank you for your payment', 'smartpay'); ?></title>
     <style>
         .hover-no-underline:hover {
             text-decoration: none !important;
@@ -109,7 +109,7 @@ $product       = Product::with('parent')->find($productId);
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f2f2f7">
-<div role="article" aria-roledescription="email" aria-label="<?php _e('Thank you for your payment', 'smartpay'); ?>" lang="en">
+<div role="article" aria-roledescription="email" aria-label="<?php esc_html_e('Thank you for your payment', 'smartpay'); ?>" lang="en">
     <table style="font-family: Arial, sans-serif; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center" style="background-color: #f2f2f7" bgcolor="#f2f2f7">
@@ -120,8 +120,8 @@ $product       = Product::with('parent')->find($productId);
                                 <tr>
                                     <td>
                                         <div style="text-align: center">
-                                            <a href="<?php echo site_url(); ?>" style="text-decoration: none">
-                                                <?php echo get_bloginfo('name'); ?>
+                                            <a href="<?php echo esc_url(site_url()); ?>" style="text-decoration: none">
+                                                <?php echo esc_html(get_bloginfo('name')); ?>
                                             </a>
                                         </div>
                                         <div class="sm-leading-64" style="line-height: 70px">&zwnj;</div>
@@ -129,14 +129,14 @@ $product       = Product::with('parent')->find($productId);
                                             <tr>
                                                 <td class="sm-p-0" style="padding-left: 64px; padding-right: 64px">
                                                     <h1 class="sm-text-40px sm-leading-44" style="font-size: 28px; line-height: 56px; margin: 0; text-align: center; color: #5744cb">
-                                                        <?php _e('Thank you for your payment', 'smartpay'); ?>
+                                                        <?php esc_html_e('Thank you for your payment', 'smartpay'); ?>
                                                     </h1>
                                                 </td>
                                             </tr>
                                         </table>
                                         <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
                                         <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
-                                            <?php echo __('Payment ', 'smartpay') . ' #' . $payment->id; ?>
+                                            <?php echo esc_html__('Payment ', 'smartpay') . ' #' . esc_html($payment->id); ?>
                                         </p>
                                         <div class="sm-leading-40" style="line-height: 48px">&zwnj;</div>
                                         <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
@@ -145,13 +145,13 @@ $product       = Product::with('parent')->find($productId);
                                             <tr>
                                                 <th class="sm-w-full sm-block sm-pb-16" style="font-weight: 400; text-align: left; width: 50%" align="left">
                                                     <p class="sm-text-32px sm-leading-36" style="font-weight: 700; font-size: 28px; line-height: 44px; margin: 0px; color: #4f5a68">
-                                                        <?php echo smartpay_amount_format($payment->amount); ?>
+                                                        <?php echo esc_html(smartpay_amount_format($payment->amount)); ?>
                                                     </p>
                                                 </th>
                                                 <th class="sm-w-full sm-block" style="font-weight: 400; vertical-align: center; width: 50%" valign="center">
                                                     <div class="sm-text-left" style="text-align: right">
                                                         <!-- FIXME: Set dynamic URL -->
-                                                        <a href="<?php echo site_url() . '/smartpay-customer-dashboard'; ?>" class="hover-no-underline" style="font-size: 16px; color: #986dff; text-decoration: underline"><?php _e('My Account', 'smartpay'); ?></a>
+                                                        <a href="<?php echo esc_url(site_url() . '/smartpay-customer-dashboard'); ?>" class="hover-no-underline" style="font-size: 16px; color: #986dff; text-decoration: underline"><?php esc_html_e('My Account', 'smartpay'); ?></a>
                                                     </div>
                                                 </th>
                                             </tr>
@@ -160,12 +160,12 @@ $product       = Product::with('parent')->find($productId);
                                         <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                             <tr>
                                                 <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
-                                                    <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Order details', 'smartpay'); ?></h3>
+                                                    <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php esc_html_e('Order details', 'smartpay'); ?></h3>
                                                     <div style="line-height: 24px">&zwnj;</div>
                                                     <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                         <tr>
-                                                            <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $product->formatted_title; ?></td>
-                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo smartpay_amount_format($payment->data['product_price']); ?></td>
+                                                            <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($product->formatted_title); ?></td>
+                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($payment->data['product_price'])); ?></td>
                                                         </tr>
                                                         <tr>
                                                             <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
@@ -173,8 +173,8 @@ $product       = Product::with('parent')->find($productId);
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; vertical-align: top; width: 50%" valign="top"><?php _e('Total', 'smartpay'); ?></td>
-                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo smartpay_amount_format($payment->data['total_amount']); ?></td>
+                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; vertical-align: top; width: 50%" valign="top"><?php esc_html_e('Total', 'smartpay'); ?></td>
+                                                            <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($payment->data['total_amount'])); ?></td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -186,13 +186,13 @@ $product       = Product::with('parent')->find($productId);
                                             <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                 <tr>
                                                     <td style="background-color: #ffffff; border-radius: 4px; padding: 32px 24px" bgcolor="#ffffff">
-                                                        <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php _e('Downloads', 'smartpay'); ?></h3>
+                                                        <h3 style="font-weight: 400; font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68"><?php esc_html_e('Downloads', 'smartpay'); ?></h3>
                                                         <div style="line-height: 24px">&zwnj;</div>
                                                         <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                             <?php foreach ($product->files as $file) : ?>
                                                                 <tr>
-                                                                    <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo $file['name'] ?? 'Download Item'; ?></td>
-                                                                    <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id); ?>" class="btn btn-sm btn-primary mr-1"><?php _e('Download', 'smartpay'); ?></a></td>
+                                                                    <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($file['name'] ?? 'Download Item'); ?></td>
+                                                                    <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><a href="<?php echo esc_url(smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id)); ?>" class="btn btn-sm btn-primary mr-1"><?php esc_html_e('Download', 'smartpay'); ?></a></td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
@@ -209,7 +209,7 @@ $product       = Product::with('parent')->find($productId);
                                                     <strong>
                                                         [N:B] - The download links will stay valid for 7 days.
                                                         Once the link has expired you can still download your product/s from your
-                                                        <a href="<?php echo site_url() . '/smartpay-customer-dashboard'; ?>">account dashboard</a>.
+                                                        <a href="<?php echo esc_url(site_url() . '/smartpay-customer-dashboard'); ?>">account dashboard</a>.
                                                     </strong>
                                                 </p>
                                             </div>
@@ -223,9 +223,9 @@ $product       = Product::with('parent')->find($productId);
                                                 <td class="sm-w-full sm-block sm-pb-32" style="font-weight: 400; text-align: left; vertical-align: top; width: 50%" align="left" valign="top">
                                                     <h4 style="font-size: 16px; line-height: 24px; margin: 0 0 8px; color: #4f5a68">Customer details</h4>
                                                     <p style="font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68">
-                                                        <?php echo __('Name:', 'smartpay') . ' ' . $payment->customer->full_name; ?>
+                                                        <?php echo esc_html__('Name:', 'smartpay') . ' ' . esc_html($payment->customer->full_name); ?>
                                                         <br>
-                                                        <?php echo __('Email:', 'smartpay') . ' ' . $payment->customer->email; ?>
+                                                        <?php echo esc_html__('Email:', 'smartpay') . ' ' . esc_html($payment->customer->email); ?>
                                                         <br>
                                                     </p>
                                                 </td>
@@ -234,7 +234,7 @@ $product       = Product::with('parent')->find($productId);
                                         <div style="line-height: 64px">&zwnj;</div>
                                         <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
                                         <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
-                                        <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo __('You have received this email because you signed up, donated or made a transaction at ', 'smartpay') . get_bloginfo('name'); ?></p>
+                                        <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo esc_html__('You have received this email because you signed up, donated or made a transaction at ', 'smartpay') . esc_html(get_bloginfo('name')); ?></p>
                                         <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
                                     </td>
                                 </tr>

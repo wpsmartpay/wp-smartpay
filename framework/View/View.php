@@ -68,7 +68,9 @@ class View
             return $this;
         }
 
-        throw new InvalidArgumentException("The view file [{$this->path}] doesn't exists!");
+        throw new InvalidArgumentException(
+			sprintf("The view file [%s] doesn't exists!", esc_html( $this->path ))
+        );
     }
 
     /**

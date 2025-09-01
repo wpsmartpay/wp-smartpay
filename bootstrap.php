@@ -32,7 +32,17 @@ add_action('plugins_loaded', function () {
 }, 20);
 
 function smartpay_pro_deactivate_notice(){
-    echo __('<div class="error notice-warning"><p><code>WP SmartPay Pro '.SMARTPAY_PRO_VERSION. '</code> is not compatible with <code>WP SmartPay version 2.6.0</code> or higher. Please update the <code>WP SmartPay Pro</code> or downgrade the <code>WP SmartPay bellow 2.6.0</code>.</p></div>', 'smartpay');
+	echo '<div class="error notice-warning"><p>'
+	     . '<code>WP SmartPay Pro ' . esc_html( SMARTPAY_PRO_VERSION ) . '</code> '
+	     . esc_html__( ' is not compatible with ', 'smartpay' ) . ' '
+	     . '<code> WP SmartPay version 2.6.0 </code> '
+	     . esc_html__( ' or higher. Please update ', 'smartpay' ) . ' '
+	     . '<code> WP SmartPay Pro </code> '
+	     . esc_html__( ' or downgrade ', 'smartpay' ) . ' '
+	     . '<code> WP SmartPay </code>.'
+	     . esc_html__( ' below ', 'smartpay' ) . ' '
+	     . '<code> 2.6.0 </code>.'
+	     . '</p></div>';
 }
 
 return $app;

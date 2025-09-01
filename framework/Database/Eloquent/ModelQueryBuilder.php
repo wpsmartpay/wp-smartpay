@@ -140,7 +140,10 @@ class ModelQueryBuilder
 
         $class = get_class($this->model);
 
-        throw new ModelNotFoundException("$class($id) not found.", 404);
+        throw new ModelNotFoundException(
+			sprintf("%s(%s) not found.", esc_html($class), esc_html($id)),
+			404
+        );
     }
 
     public function fresh()
@@ -165,7 +168,10 @@ class ModelQueryBuilder
 
         $class = get_class($this->model);
 
-        throw new ModelNotFoundException("There is no $class available.", 404);
+        throw new ModelNotFoundException(
+			sprintf("There is no %s available.", esc_html($class)),
+			404
+        );
     }
 
     public function firstOrNew(array $attributes, array $values = [])
