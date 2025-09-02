@@ -40,12 +40,12 @@ class PaypalStandard extends PaymentGateway
 
         if (empty($paypal_email)) {
             add_action('admin_notices', function () {
-                echo __(sprintf(
+                echo wp_kses_post( __(sprintf(
                     '<div class="error">
                         <p><strong>Paypal credentials was not set yet!</strong> To get the Paypal service on smartpay, you must add your paypal business email.  <a href="%s"> Input your paypal credentials</a></p>
                     </div>',
                     admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal')
-                ), 'smartpay-pro');
+                ), 'smartpay-pro'));
             });
         }
     }
@@ -80,7 +80,7 @@ class PaypalStandard extends PaymentGateway
 				'wp-smartpay-edd' );
 			echo '<div class="smartpay">';
 			echo '<div class="receipt-alert receipt-alert-success">';
-			echo '<p>' . $message . '</p>';
+			echo '<p>' . wp_kses_post($message) . '</p>';
 			echo '<a class="receipt-alert-close">&times;</a>';
 			echo '</div>';
 			echo '</div>';
@@ -266,7 +266,7 @@ class PaypalStandard extends PaymentGateway
 
             // If payment not found
             if (!$payment) {
-                echo __(sprintf(
+                echo esc_html__(sprintf(
                     'SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.',
                     $payment_id
                 ), 'smartpay');
@@ -422,7 +422,7 @@ class PaypalStandard extends PaymentGateway
 
     public function unsupported_currency_notice()
     {
-        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'admin.php?page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay');
+        echo wp_kses_post(__('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'admin.php?page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay'));
     }
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)

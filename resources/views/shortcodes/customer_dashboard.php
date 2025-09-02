@@ -160,33 +160,33 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                         <div class="form-row mb-2">
                                             <div class="form-group col">
                                                 <label for="first_name"><?php esc_html_e('First Name', 'smartpay'); ?></label>
-                                                <input type="text" name="first_name" id="first_name" class="form-control" value="<?php echo esc_attr($customer->first_name ?? '') ?>" placeholder="<?php esc_html_e('First Name', 'smartpay'); ?>">
+                                                <input type="text" name="first_name" id="first_name" class="form-control" value="<?php echo esc_attr($customer->first_name ?? '') ?>" placeholder="<?php esc_attr_e('First Name', 'smartpay'); ?>">
                                             </div>
                                             <div class="form-group col">
                                                 <label for="last_name"><?php esc_html_e('Last Name', 'smartpay'); ?></label>
-                                                <input type="text" name="last_name" id="last_name" class="form-control" value="<?php echo esc_attr($customer->last_name ?? '') ?>" placeholder="<?php esc_html_e('Last Name', 'smartpay'); ?>">
+                                                <input type="text" name="last_name" id="last_name" class="form-control" value="<?php echo esc_attr($customer->last_name ?? '') ?>" placeholder="<?php esc_attr_e('Last Name', 'smartpay'); ?>">
                                             </div>
                                         </div>
 
                                         <div class="form-group mb-4">
                                             <label for="email"><?php esc_html_e('Email', 'smartpay'); ?></label>
-                                            <input type="email" name="email" id="email" class="form-control" value="<?php echo esc_attr($customer->email ?? '') ?>" placeholder=" <?php esc_html_e('Email', 'smartpay'); ?>">
+                                            <input type="email" name="email" id="email" class="form-control" value="<?php echo esc_attr($customer->email ?? '') ?>" placeholder=" <?php esc_attr_e('Email', 'smartpay'); ?>">
                                         </div>
                                         <?php $userinfo = get_userdata($customer->id); ?>
                                         <div class="form-group mb-4">
                                             <label><?php esc_html_e('Username', 'smartpay'); ?></label>
-                                            <input type="text" class="form-control" placeholder="<?php esc_html_e('Username', 'smartpay'); ?>" value="<?php echo esc_attr($userinfo->user_login ?? '') ?>" disabled>
+                                            <input type="text" class="form-control" placeholder="<?php esc_attr_e('Username', 'smartpay'); ?>" value="<?php echo esc_attr($userinfo->user_login ?? '') ?>" disabled>
                                         </div>
 
                                         <div class="form-row mb-2">
                                             <div class="form-group col-6">
                                                 <label><?php esc_html_e('Password', 'smartpay'); ?></label>
-                                                <input type="password" name="password" id="password" class="form-control" placeholder="<?php esc_html_e('Password', 'smartpay'); ?>">
+                                                <input type="password" name="password" id="password" class="form-control" placeholder="<?php esc_attr_e('Password', 'smartpay'); ?>">
                                                 <small class="form-text text-muted"><?php esc_html_e('If you don\'t want to change password, then ignore this fields.', 'smartpay'); ?></small>
                                             </div>
                                             <div class="form-group col-6">
                                                 <label><?php esc_html_e('Confirm Password', 'smartpay'); ?></label>
-                                                <input type="password" name="password_confirm" id="password_confirm" class="form-control" placeholder="<?php esc_html_e('Confirm Password', 'smartpay'); ?>">
+                                                <input type="password" name="password_confirm" id="password_confirm" class="form-control" placeholder="<?php esc_attr_e('Confirm Password', 'smartpay'); ?>">
                                             </div>
                                         </div>
                                         <div class="d-flex justify-content-center mt-4">

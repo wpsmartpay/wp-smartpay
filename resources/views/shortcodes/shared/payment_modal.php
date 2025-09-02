@@ -61,7 +61,7 @@ $has_payment_error = false;
                                     <?php echo wp_kses_post(sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($gateways)['checkout_label'])));
                                     ?>
                                 </p>
-                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_html(reset($gateways_index)); ?>" checked>
+                                <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_attr(reset($gateways_index)); ?>" checked>
 
                                 <!-- // If it has multiple payment gateway -->
                             <?php elseif (count($gateways) > 1) : ?>
@@ -71,7 +71,7 @@ $has_payment_error = false;
                                             <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" value="<?php echo esc_attr($gatewayId) ?>" <?php echo checked($gatewayId, $chosen_gateway, false); ?>>
                                             <label for="<?php echo 'smartpay_gateway_' . esc_attr($gatewayId); ?>" class="gateway--label">
                                                 <!-- dynamically load the gateway image -->
-                                                <img src="<?php echo esc_html($gateway['gateway_icon']); ?>" alt="<?php echo esc_html($gateway['checkout_label']); ?>">
+                                                <img src="<?php echo esc_url($gateway['gateway_icon']); ?>" alt="<?php echo esc_attr($gateway['checkout_label']); ?>">
                                                 <!-- <?php echo esc_html($gateway['checkout_label']); ?> -->
                                             </label>
                                         </div>
@@ -79,7 +79,7 @@ $has_payment_error = false;
                                 </div>
                             <?php else : ?>
                                 <?php $has_payment_error = true; ?>
-                                <div class="alert alert-danger"><?php echo esc_html( __('You must enable a payment gateway to proceed a payment.', 'smartpay')); ?></div>
+                                <div class="alert alert-danger"><?php echo esc_html__('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
                             <?php endif; ?>
                         </div>
 
@@ -135,4 +135,3 @@ $has_payment_error = false;
 </div>
 
 <!--<div id="smartpay_currency_symbol" data-value="$"></div>-->
-

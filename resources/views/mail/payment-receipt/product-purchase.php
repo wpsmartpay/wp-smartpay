@@ -109,7 +109,7 @@ $product       = Product::with('parent')->find($productId);
 </head>
 
 <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f2f2f7">
-<div role="article" aria-roledescription="email" aria-label="<?php esc_html_e('Thank you for your payment', 'smartpay'); ?>" lang="en">
+<div role="article" aria-roledescription="email" aria-label="<?php esc_attr_e('Thank you for your payment', 'smartpay'); ?>" lang="en">
     <table style="font-family: Arial, sans-serif; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
         <tr>
             <td align="center" style="background-color: #f2f2f7" bgcolor="#f2f2f7">
