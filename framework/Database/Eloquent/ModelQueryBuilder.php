@@ -320,6 +320,8 @@ class ModelQueryBuilder
 
         $tableName = $this->model->getTable();
 
+		// Custom Query, caching not applicable.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return $wpdb->get_col("DESC " . $wpdb->prefix . $tableName, 0);
     }
 

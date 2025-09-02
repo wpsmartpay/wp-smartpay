@@ -72,6 +72,7 @@ class CustomerController extends RestController
         };
 
         global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         $customer->first_name = $firstName;
@@ -87,10 +88,12 @@ class CustomerController extends RestController
         ]);
 
         if (is_wp_error($userdata)) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
             return new WP_REST_Response(['message' => __('Customer info not updated', 'smartpay')], 404);
         }
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('COMMIT');
         return new WP_REST_Response(['customer' => $customer, 'message' => __('Customer updated', 'smartpay')]);
     }

@@ -407,6 +407,8 @@ trait ValidatesAttributes
             }
         }
 
+		// This is a custom table query with safe prepare, caching not applicable.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return is_null($wpdb->get_row($wpdb->prepare($query, $bindings)));
     }
 }
