@@ -105,15 +105,15 @@ class Coupon
         ?>
         <div class="smartpay-coupon-form-toggle">
             <div class="coupon-info mb-4 p-4 bg-light">
-                <?php _e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
+                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
+                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
             </div>
         </div>
         <form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
             <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
         <?php
@@ -188,7 +188,7 @@ class Coupon
         <div class="discount-amounts-container mb-3 d-none">
             <div class="py-2">
                 <p class="d-flex justify-content-between m-0">
-                    <span class="font-weight-bold"><?php _e('Subtotal', 'smartpay'); ?></span>
+                    <span class="font-weight-bold"><?php esc_html_e('Subtotal', 'smartpay'); ?></span>
                     <span class="subtotal-amount-value"></span>
                 </p>
             </div>
@@ -204,7 +204,7 @@ class Coupon
 
             <div class="py-2">
                 <p class="d-flex justify-content-between m-0">
-                    <span class="font-weight-bold"><?php _e('Total Amount', 'smartpay'); ?></span>
+                    <span class="font-weight-bold"><?php esc_html_e('Total Amount', 'smartpay'); ?></span>
                     <span class="total-amount-value"></span>
                 </p>
             </div>
@@ -223,14 +223,14 @@ class Coupon
         ?>
         <div class="smartpay-product-coupon-form-toggle">
             <div class="coupon-info mb-4 p-4 bg-light">
-                <?php _e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
+                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
+                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
             </div>
         </div>
         <form class="smartpay-product-coupon-form p-4 bg-light d-none">
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
     <?php }

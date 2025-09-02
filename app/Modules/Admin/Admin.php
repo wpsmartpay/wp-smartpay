@@ -279,12 +279,12 @@ class Admin
         <div class="wpsmartpay-welcome">
             <div class="container">
                 <div class="introduction-image">
-                    <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
+                    <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/logo.png') ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
                 </div>
                 <div class="introduction">
                     <div class="introduction-text">
-                        <h2><?php _e('Welcome Aboard'); ?></h2>
-                        <p><?php _e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
+                        <h2><?php esc_html_e('Welcome Aboard'); ?></h2>
+                        <p><?php esc_html_e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
                     </div>
                     <div class="introduction-video">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -296,12 +296,12 @@ class Admin
                 </div>
 
                 <div class="subscription-form">
-                    <h3><?php _e('Wanna get some discount?', 'smartpay'); ?></h3>
-                    <p><?php _e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
+                    <h3><?php esc_html_e('Wanna get some discount?', 'smartpay'); ?></h3>
+                    <p><?php esc_html_e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
                     <form>
                         <div class="inline-input-wrapper">
                             <input type="email" placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" value="<?php echo esc_attr($user->user_email); ?>" />
-                            <button type="submit" class="button button-primary"><?php _e('Get Discount'); ?></button>
+                            <button type="submit" class="button button-primary"><?php esc_html_e('Get Discount'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -309,10 +309,10 @@ class Admin
                 <div class="create-form-section">
                     <div class="button-wrap">
                         <div class="left-side">
-                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php _e('Create Your First Form', 'smartpay'); ?></a>
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php esc_html_e('Create Your First Form', 'smartpay'); ?></a>
                         </div>
                         <div class="right-side">
-                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php _e('Create Your First Product', 'smartpay'); ?></a>
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php esc_html_e('Create Your First Product', 'smartpay'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -377,7 +377,7 @@ class Admin
             <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
                 <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
                 <div class="smartpay-notice-content">
-                    <h4><?php _e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
+                    <h4><?php esc_html_e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
                     <form style="display:flex">
                         <div class="smartpay-notice-input-wrapper">
                             <input type="text" value="<?php echo esc_attr($user->first_name); ?>" placeholder="<?php esc_attr_e('Name', 'smartpay'); ?>" />
@@ -385,7 +385,7 @@ class Admin
                         <div class="smartpay-notice-input-wrapper">
                             <input type="email" value="<?php echo esc_attr($user->user_email); ?>" required placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" />
                         </div>
-                        <button type="submit" class="button button-primary subscribe-button"><?php _e('Get Discount'); ?></button>
+                        <button type="submit" class="button button-primary subscribe-button"><?php esc_html_e('Get Discount'); ?></button>
                     </form>
                 </div>
             </div>

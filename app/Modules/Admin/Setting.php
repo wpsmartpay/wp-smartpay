@@ -718,10 +718,10 @@ class Setting
 
     public function settings_missing_callback($args)
     {
-        printf(
+        wp_kses_post(sprintf(
             __('The callback function used for the %s setting is missing.', 'smartpay'),
             '<strong>' . $args['id'] . '</strong>'
-        );
+        ));
     }
 
     public function settings_page_select_callback($args)

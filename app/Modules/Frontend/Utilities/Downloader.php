@@ -39,7 +39,7 @@ class Downloader
         $validation = $this->checkDownloadUrl();
 
         if (!$validation['is_valid']) {
-            wp_die(__('Sorry! Maybe your token is invalid or you don\'t have the access.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! Maybe your token is invalid or you don\'t have the access.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         extract($validation);
@@ -48,19 +48,19 @@ class Downloader
 
         // FIXME
         if (!$payment_id || !$payment || 'Completed' !== $payment->status) {
-            wp_die(__('Sorry! Payment invalid or not completed yet.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! Payment invalid or not completed yet.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $product = Product::find($product_id);
 
         if (!$product_id || !$product || !$product->isPurchasable()) {
-            wp_die(__('Sorry! This product is invalid or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! This product is invalid or don\'t have right permission.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $fileIndex = array_search($file_id, array_column($product->files, 'id'));
 
         if (0 > $fileIndex) {
-            wp_die(__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $requestedFile  = $product->files[$fileIndex];
@@ -88,7 +88,7 @@ class Downloader
 
         $supportedStreams = stream_get_wrappers();
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' && isset($fileDetails['scheme']) && !in_array($fileDetails['scheme'], $supportedStreams)) {
-            wp_die(__('Error downloading file. Please contact support.', 'smartpay'), __('File download error', 'smartpay'), 501);
+            wp_die(esc_html__('Error downloading file. Please contact support.', 'smartpay'), esc_html__('File download error', 'smartpay'), 501);
         }
 
         if ((!isset($fileDetails['scheme']) || !in_array($fileDetails['scheme'], $schemes)) && isset($fileDetails['path']) && file_exists($requestedFileUrl)) {
@@ -109,7 +109,7 @@ class Downloader
 
         // If we're using an attachment ID to get the file, even by path, we can ignore this check.
         if (false === $isAttachmentFile || !$this->isLocalFileLocationAllowed($fileDetails, $schemes, $requestedFileUrl)) {
-            wp_die(__('Sorry, this file could not be downloaded.', 'smartpay'), __('Error Downloading File', 'smartpay'), 403);
+            wp_die(esc_html__('Sorry, this file could not be downloaded.', 'smartpay'), esc_html__('Error Downloading File', 'smartpay'), 403);
         }
 
         // Write session data and end session
@@ -1490,7 +1490,7 @@ class Downloader
         wp_parse_str($parts['query'], $query_args);
 
         if (isset($query_args['ttl']) && current_time('timestamp') > $query_args['ttl']) {
-            wp_die(__('Sorry but your download link has expired.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry but your download link has expired.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         if (!isset($query_args['token']) || !hash_equals($query_args['token'], $this->generateToken($url))) return false;

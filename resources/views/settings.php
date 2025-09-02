@@ -107,7 +107,7 @@ ob_start();
                                         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
                                         </svg>';
                     echo '<li class="ml-auto bd-highlight nav-item m-0">';
-                    echo '<span class="btn-sm btn-secondary disabled">' . esc_html($test_mode_svg) . esc_html($payment_mode) . '</span>';
+                    echo '<span class="btn-sm btn-secondary disabled">' . wp_kses_post($test_mode_svg) . wp_kses_post($payment_mode) . '</span>';
                     echo '</li>';
                     echo '</ul>';
                 }
@@ -137,4 +137,4 @@ ob_start();
     </div>
     <!-- container end -->
 </div>
-<?php echo wp_kses_post(ob_get_clean());
+<?php echo ob_get_clean();
