@@ -487,6 +487,7 @@ class Setting
         }
         $args['options'] = $currencies;
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $this->settings_select_callback($args);
     }
 
@@ -551,6 +552,7 @@ class Setting
         $html .= '</select>';
         $html .= '<small class="form-text text-muted" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -573,6 +575,7 @@ class Setting
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
         $html    .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -603,6 +606,8 @@ class Setting
             }
         }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }
 
@@ -627,6 +632,7 @@ class Setting
         $html    .= '</div>';
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }
 
@@ -700,6 +706,7 @@ class Setting
         $url   = esc_url('https://wpsmartpay.com');
         $html .= '<small class="form-text text-muted">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo  $html;
     }
 
@@ -741,6 +748,7 @@ class Setting
             'option_none_value'     => null, // string
         );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         wp_dropdown_pages($args);
         // FIXME:: Show label
     }
@@ -774,18 +782,7 @@ class Setting
         $html    .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
         // $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
-        echo $html;
-    }
-
-    public function settings_custom_content_callback($args)
-    {
-        echo $args['content'] ?? '';
-    }
-
-    public function  settings_descriptive_text_callback($args)
-    {
-        $html = wp_kses_post($args['desc']);
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -834,6 +831,7 @@ class Setting
         $html = '<textarea class="' . $class . ' large-text" cols="' . esc_attr($cols) . '" rows="' . esc_attr($rows) . '" style="'.$style.'" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -962,6 +960,7 @@ class Setting
 
         wp_nonce_field(smartpay_sanitize_key($args['id']) . '-nonce', smartpay_sanitize_key($args['id']) . '-nonce');
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 }

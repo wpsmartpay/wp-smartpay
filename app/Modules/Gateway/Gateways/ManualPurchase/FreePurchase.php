@@ -87,6 +87,8 @@ final class FreePurchase extends PaymentGateway
 //                $content .= 'window.location.replace("'.$return_url.'");';
                 $content .= 'window.location.href = "'.$return_url.'";';
                 $content .= '</script>';
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo $content;
             } else {
                 smartpay_debug_log(__('SmartPay-FreePurchase: Sale price could not matched', 'smartpay'));

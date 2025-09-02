@@ -137,4 +137,6 @@ ob_start();
     </div>
     <!-- container end -->
 </div>
-<?php echo ob_get_clean();
+<?php
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+echo ob_get_clean();

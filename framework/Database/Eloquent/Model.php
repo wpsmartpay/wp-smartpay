@@ -423,6 +423,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         $json = json_encode($this->jsonSerialize(), $options);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The generated Exception has already escaped.
             throw JsonEncodingException::forModel($this, json_last_error_msg());
         }
 

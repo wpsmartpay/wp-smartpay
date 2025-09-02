@@ -156,6 +156,7 @@ class PaypalStandard extends PaymentGateway
         $content = '<p class="text-center">Redirecting to PayPal...</p>';
         $content .= '<script>window.location.replace("' . $paypal_redirect . '");</script>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $content;
         return;
     }

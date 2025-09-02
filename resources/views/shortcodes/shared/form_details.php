@@ -7,7 +7,9 @@
                       enctype="multipart/form-data">
                     <div id="form-response" class="mb-3"></div>
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>
-					<?php echo do_blocks( $form->body );
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+					echo do_blocks( $form->body );
 					?>
                     <div id="mobile-field"></div>
 

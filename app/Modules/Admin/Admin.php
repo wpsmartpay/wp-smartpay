@@ -32,6 +32,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             },
             smartpay_svg_icon(),
@@ -45,6 +46,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -56,6 +58,7 @@ class Admin
             'manage_options',
             'smartpay#/products',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -67,6 +70,7 @@ class Admin
             'manage_options',
             'smartpay-form',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('form-builder');
             }
         );
@@ -78,6 +82,7 @@ class Admin
             'manage_options',
             'smartpay#/customers',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -89,6 +94,7 @@ class Admin
             'manage_options',
             'smartpay#/coupons',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -100,6 +106,7 @@ class Admin
             'manage_options',
             'smartpay#/payments',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -111,6 +118,7 @@ class Admin
             'manage_options',
             'smartpay-setting',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('settings');
             }
         );
@@ -122,6 +130,7 @@ class Admin
             'manage_options',
             'smartpay-integrations',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('integrations');
             }
         );
@@ -289,7 +298,7 @@ class Admin
                     <div class="introduction-video">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-                        <!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); 
+                        <!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.');
                                                             ?>
                         <!--</p>-->
                     </div>

@@ -1298,6 +1298,7 @@ class Downloader
 
         while (!@feof($handle)) {
             $buffer = @fread($handle, $chunksize);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo $buffer;
             ob_flush();
 

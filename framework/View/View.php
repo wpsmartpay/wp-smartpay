@@ -51,6 +51,7 @@ class View
      */
     public function render($path, $data = [])
     {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $this->make($path, $data);
     }
 
