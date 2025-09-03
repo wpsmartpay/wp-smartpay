@@ -14,7 +14,7 @@ class CustomerController extends RestController
      *
      * @param WP_REST_Request $request.
      */
-    public function middleware(WP_REST_Request $request)
+	public function middleware(WP_REST_Request $request)
     {
         if (!is_user_logged_in()) {
             return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
@@ -56,6 +56,11 @@ class CustomerController extends RestController
             return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
         }
 
+		$current_user = wp_get_current_user();
+		if($current_user->user_email !== $customer->email) {
+			return new WP_REST_Response(['message' => __('You are not allowed to do this', 'smartpay')], 403);
+		}
+
         $requestData = \json_decode($request->get_body(), true);
 
         // Sanitize input data.
@@ -80,9 +85,9 @@ class CustomerController extends RestController
         $customer->email = $email;
         $customer->save();
 
-        //TODO: user Database table
+        // Update User table
         $userdata = wp_update_user([
-            'ID' => $request->get_param('id'),
+            'ID' => $current_user->ID,
             'display_name' => $firstName  . ' ' . $lastName,
             'user_email' => $email,
         ]);
