@@ -334,10 +334,6 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function relationshipExists($key)
     {
-        if (method_exists(get_class(), $key)) {
-            return;
-        }
-
         return method_exists($this, $key);
     }
 
