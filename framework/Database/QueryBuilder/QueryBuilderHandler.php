@@ -57,7 +57,7 @@ class QueryBuilderHandler
      *
      * @throws \SmartPay\Framework\Database\Exception
      */
-    public function __construct(Connection $connection = null)
+    public function __construct(?Connection $connection = null)
     {
         if (is_null($connection)) {
             if (!$connection = Connection::getStoredConnection()) {
@@ -115,7 +115,7 @@ class QueryBuilderHandler
      *
      * @return static
      */
-    public function newQuery(Connection $connection = null)
+    public function newQuery(?Connection $connection = null)
     {
         if (is_null($connection)) {
             $connection = $this->connection;

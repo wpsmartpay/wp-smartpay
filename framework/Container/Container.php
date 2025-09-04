@@ -1058,7 +1058,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @return void
      */
-    public function resolving($abstract, Closure $callback = null) : void
+    public function resolving($abstract, ?Closure $callback = null) : void
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1079,7 +1079,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @return void
      */
-    public function afterResolving($abstract, Closure $callback = null) : void
+    public function afterResolving($abstract, ?Closure $callback = null) : void
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1275,7 +1275,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \SmartPay\Framework\Contracts\Container\Container|null  $container
      * @return \SmartPay\Framework\Contracts\Container\Container|static
      */
-    public static function setInstance(ContainerContract $container = null)
+    public static function setInstance(?ContainerContract $container = null)
     {
         return static::$instance = $container;
     }
