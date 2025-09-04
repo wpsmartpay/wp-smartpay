@@ -16,11 +16,27 @@ class CustomerController extends RestController
      */
 	public function middleware(WP_REST_Request $request)
     {
+		$nonce = $request->get_header('x_wp_nonce');
+		if (! wp_verify_nonce($nonce, 'wp_rest')) {
+			return new \WP_Error('rest_forbidden', __('Invalid nonce.', 'smartpay'), [
+				'status' => 403,
+			]);
+		}
+
         if (!is_user_logged_in()) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', __('You cannot view the resource.', 'smartpay'), [
                 'status' => 401,
             ]);
         }
+
+		$current_user = wp_get_current_user();
+		$customer = Customer::find($request->get_param('id'));
+
+		if (empty($customer) || ($current_user->user_email !== $customer->email)) {
+			return new \WP_Error('rest_not_found', __('Customer not found', 'smartpay'), [
+				'status' => 404,
+			]);
+		}
 
         return true;
     }
@@ -35,10 +51,6 @@ class CustomerController extends RestController
     {
         $customer = Customer::find($request->get_param('id'));
 
-        if (!$customer) {
-            return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
-        }
-
         return new WP_REST_Response(['customer' => $customer]);
     }
 
@@ -51,15 +63,7 @@ class CustomerController extends RestController
     public function update(WP_REST_Request $request): WP_REST_Response
     {
         $customer = Customer::find($request->get_param('id'));
-
-        if (!$customer) {
-            return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
-        }
-
 		$current_user = wp_get_current_user();
-		if($current_user->user_email !== $customer->email) {
-			return new WP_REST_Response(['message' => __('You are not allowed to do this', 'smartpay')], 403);
-		}
 
         $requestData = \json_decode($request->get_body(), true);
 
