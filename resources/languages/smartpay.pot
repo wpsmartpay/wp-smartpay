@@ -1,231 +1,737 @@
-#, fuzzy
+# Copyright (C) 2025 WPSmartPay
+# This file is distributed under the same license as the SmartPay plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: SmartPay\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-25 12:26+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: SmartPay 2.7.13\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-smartpay\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.4.6; wp-5.5.3"
+"POT-Creation-Date: 2025-09-07T04:53:15+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: smartpay\n"
+
+#. Plugin Name of the plugin
+#: smartpay.php
+#: app/Modules/Admin/Admin.php:30
+#: app/Modules/Admin/Admin.php:31
+#: resources/blocks/form/index.js:80
+#: resources/blocks/product/index.js:81
+#: resources/js/pages/coupon/create.js:66
+#: resources/js/pages/dashboard.js:37
+msgid "SmartPay"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: smartpay.php
+msgid "https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash"
+msgstr ""
+
+#. Description of the plugin
+#: smartpay.php
+msgid "Simplest way to sell digital downloads and fundraise with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads."
+msgstr ""
+
+#. Author of the plugin
+#: smartpay.php
+msgid "WPSmartPay"
+msgstr ""
+
+#. Author URI of the plugin
+#: smartpay.php
+msgid "https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash"
+msgstr ""
+
+#: app/Activator.php:55
+msgid "Payment Confirmation"
+msgstr ""
 
 #: app/Activator.php:72
-msgid ""
-"<!-- wp:paragraph --><p>We're sorry, but your transaction failed to process. "
-"Please try again or contact site support.</p><!-- /wp:paragraph -->"
+msgid "Payment Failed"
 msgstr ""
 
-#: app/Helpers/smartpay.php:110
-msgid "Afghan afghani"
+#: app/Activator.php:74
+msgid "<!-- wp:paragraph --><p>We're sorry, but your transaction failed to process. Please try again or contact site support.</p><!-- /wp:paragraph -->"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:146
-msgid "After - 10$"
+#: app/Activator.php:89
+#: app/Modules/Admin/Admin.php:44
+#: app/Modules/Admin/Admin.php:45
+msgid "Dashboard"
 msgstr ""
 
 #: app/Helpers/smartpay.php:114
-msgid "Albanian lek"
-msgstr ""
-
-#: app/Helpers/smartpay.php:270
-msgid "Algerian dinar"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:53
-msgid "Amount"
-msgstr ""
-
-#: app/Helpers/smartpay.php:126
-msgid "Angolan kwanza"
-msgstr ""
-
-#: app/Helpers/smartpay.php:130
-msgid "Argentine peso"
+msgid "United Arab Emirates dirham"
 msgstr ""
 
 #: app/Helpers/smartpay.php:118
+msgid "Afghan afghani"
+msgstr ""
+
+#: app/Helpers/smartpay.php:122
+msgid "Albanian lek"
+msgstr ""
+
+#: app/Helpers/smartpay.php:126
 msgid "Armenian dram"
 msgstr ""
 
-#: app/Helpers/smartpay.php:138
-msgid "Aruban florin"
+#: app/Helpers/smartpay.php:130
+msgid "Netherlands Antillean guilder"
 msgstr ""
 
 #: app/Helpers/smartpay.php:134
-msgid "Australian dollar"
+msgid "Angolan kwanza"
+msgstr ""
+
+#: app/Helpers/smartpay.php:138
+msgid "Argentine peso"
 msgstr ""
 
 #: app/Helpers/smartpay.php:142
-msgid "Azerbaijani manat"
-msgstr ""
-
-#: app/Helpers/smartpay.php:186
-msgid "Bahamian dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:162
-msgid "Bahraini dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:154
-msgid "Bangladeshi taka"
-msgstr ""
-
-#: app/Helpers/smartpay.php:150
-msgid "Barbadian dollar"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:145
-msgid "Before - $10"
-msgstr ""
-
-#: app/Helpers/smartpay.php:206
-msgid "Belarusian ruble"
-msgstr ""
-
-#: app/Helpers/smartpay.php:202
-msgid "Belarusian ruble (old)"
-msgstr ""
-
-#: app/Helpers/smartpay.php:210
-msgid "Belize dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:170
-msgid "Bermudian dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:194
-msgid "Bhutanese ngultrum"
-msgstr ""
-
-#: app/Helpers/smartpay.php:190
-msgid "Bitcoin"
-msgstr ""
-
-#: app/Helpers/smartpay.php:718
-msgid "Bol&iacute;var soberano"
-msgstr ""
-
-#: app/Helpers/smartpay.php:178
-msgid "Bolivian boliviano"
+msgid "Australian dollar"
 msgstr ""
 
 #: app/Helpers/smartpay.php:146
+msgid "Aruban florin"
+msgstr ""
+
+#: app/Helpers/smartpay.php:150
+msgid "Azerbaijani manat"
+msgstr ""
+
+#: app/Helpers/smartpay.php:154
 msgid "Bosnia and Herzegovina convertible mark"
 msgstr ""
 
-#: app/Helpers/smartpay.php:198
-msgid "Botswana pula"
-msgstr ""
-
-#: app/Helpers/smartpay.php:182
-msgid "Brazilian real"
-msgstr ""
-
-#: app/Helpers/smartpay.php:174
-msgid "Brunei dollar"
-msgstr ""
-
 #: app/Helpers/smartpay.php:158
-msgid "Bulgarian lev"
+msgid "Barbadian dollar"
 msgstr ""
 
-#: app/Helpers/smartpay.php:478
-msgid "Burmese kyat"
+#: app/Helpers/smartpay.php:162
+msgid "Bangladeshi taka"
 msgstr ""
 
 #: app/Helpers/smartpay.php:166
+msgid "Bulgarian lev"
+msgstr ""
+
+#: app/Helpers/smartpay.php:170
+msgid "Bahraini dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:174
 msgid "Burundian franc"
 msgstr ""
 
-#: resources/views/shortcodes/product.php:19
-msgid "Buy now"
+#: app/Helpers/smartpay.php:178
+msgid "Bermudian dollar"
 msgstr ""
 
-#: app/Helpers/smartpay.php:410
-msgid "Cambodian riel"
+#: app/Helpers/smartpay.php:182
+msgid "Brunei dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:186
+msgid "Bolivian boliviano"
+msgstr ""
+
+#: app/Helpers/smartpay.php:190
+msgid "Brazilian real"
+msgstr ""
+
+#: app/Helpers/smartpay.php:194
+msgid "Bahamian dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:198
+msgid "Bitcoin"
+msgstr ""
+
+#: app/Helpers/smartpay.php:202
+msgid "Bhutanese ngultrum"
+msgstr ""
+
+#: app/Helpers/smartpay.php:206
+msgid "Botswana pula"
+msgstr ""
+
+#: app/Helpers/smartpay.php:210
+msgid "Belarusian ruble (old)"
 msgstr ""
 
 #: app/Helpers/smartpay.php:214
+msgid "Belarusian ruble"
+msgstr ""
+
+#: app/Helpers/smartpay.php:218
+msgid "Belize dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:222
 msgid "Canadian dollar"
 msgstr ""
 
+#: app/Helpers/smartpay.php:226
+msgid "Congolese franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:230
+msgid "Swiss franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:234
+msgid "Chilean peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:238
+msgid "Chinese yuan"
+msgstr ""
+
+#: app/Helpers/smartpay.php:242
+msgid "Colombian peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:246
+msgid "Costa Rican col&oacute;n"
+msgstr ""
+
 #: app/Helpers/smartpay.php:250
+msgid "Cuban convertible peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:254
+msgid "Cuban peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:258
 msgid "Cape Verdean escudo"
 msgstr ""
 
+#: app/Helpers/smartpay.php:262
+msgid "Czech koruna"
+msgstr ""
+
+#: app/Helpers/smartpay.php:266
+msgid "Djiboutian franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:270
+msgid "Danish krone"
+msgstr ""
+
+#: app/Helpers/smartpay.php:274
+msgid "Dominican peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:278
+msgid "Algerian dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:282
+msgid "Egyptian pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:286
+msgid "Eritrean nakfa"
+msgstr ""
+
+#: app/Helpers/smartpay.php:290
+msgid "Ethiopian birr"
+msgstr ""
+
+#: app/Helpers/smartpay.php:294
+msgid "Euro"
+msgstr ""
+
+#: app/Helpers/smartpay.php:298
+msgid "Fijian dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:302
+msgid "Falkland Islands pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:306
+msgid "Pound sterling"
+msgstr ""
+
+#: app/Helpers/smartpay.php:310
+msgid "Georgian lari"
+msgstr ""
+
+#: app/Helpers/smartpay.php:314
+msgid "Guernsey pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:318
+msgid "Ghana cedi"
+msgstr ""
+
+#: app/Helpers/smartpay.php:322
+msgid "Gibraltar pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:326
+msgid "Gambian dalasi"
+msgstr ""
+
+#: app/Helpers/smartpay.php:330
+msgid "Guinean franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:334
+msgid "Guatemalan quetzal"
+msgstr ""
+
+#: app/Helpers/smartpay.php:338
+msgid "Guyanese dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:342
+msgid "Hong Kong dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:346
+msgid "Honduran lempira"
+msgstr ""
+
+#: app/Helpers/smartpay.php:350
+msgid "Croatian kuna"
+msgstr ""
+
+#: app/Helpers/smartpay.php:354
+msgid "Haitian gourde"
+msgstr ""
+
+#: app/Helpers/smartpay.php:358
+msgid "Hungarian forint"
+msgstr ""
+
+#: app/Helpers/smartpay.php:362
+msgid "Indonesian rupiah"
+msgstr ""
+
+#: app/Helpers/smartpay.php:366
+msgid "Israeli new shekel"
+msgstr ""
+
+#: app/Helpers/smartpay.php:370
+msgid "Manx pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:374
+msgid "Indian rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:378
+msgid "Iraqi dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:382
+msgid "Iranian rial"
+msgstr ""
+
+#: app/Helpers/smartpay.php:386
+msgid "Iranian toman"
+msgstr ""
+
+#: app/Helpers/smartpay.php:390
+msgid "Icelandic kr&oacute;na"
+msgstr ""
+
+#: app/Helpers/smartpay.php:394
+msgid "Jersey pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:398
+msgid "Jamaican dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:402
+msgid "Jordanian dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:406
+msgid "Japanese yen"
+msgstr ""
+
+#: app/Helpers/smartpay.php:410
+msgid "Kenyan shilling"
+msgstr ""
+
+#: app/Helpers/smartpay.php:414
+msgid "Kyrgyzstani som"
+msgstr ""
+
+#: app/Helpers/smartpay.php:418
+msgid "Cambodian riel"
+msgstr ""
+
+#: app/Helpers/smartpay.php:422
+msgid "Comorian franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:426
+msgid "North Korean won"
+msgstr ""
+
 #: app/Helpers/smartpay.php:430
+msgid "South Korean won"
+msgstr ""
+
+#: app/Helpers/smartpay.php:434
+msgid "Kuwaiti dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:438
 msgid "Cayman Islands dollar"
 msgstr ""
 
+#: app/Helpers/smartpay.php:442
+msgid "Kazakhstani tenge"
+msgstr ""
+
+#: app/Helpers/smartpay.php:446
+msgid "Lao kip"
+msgstr ""
+
+#: app/Helpers/smartpay.php:450
+msgid "Lebanese pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:454
+msgid "Sri Lankan rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:458
+msgid "Liberian dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:462
+msgid "Lesotho loti"
+msgstr ""
+
+#: app/Helpers/smartpay.php:466
+msgid "Libyan dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:470
+msgid "Moroccan dirham"
+msgstr ""
+
+#: app/Helpers/smartpay.php:474
+msgid "Moldovan leu"
+msgstr ""
+
+#: app/Helpers/smartpay.php:478
+msgid "Malagasy ariary"
+msgstr ""
+
+#: app/Helpers/smartpay.php:482
+msgid "Macedonian denar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:486
+msgid "Burmese kyat"
+msgstr ""
+
+#: app/Helpers/smartpay.php:490
+msgid "Mongolian t&ouml;gr&ouml;g"
+msgstr ""
+
+#: app/Helpers/smartpay.php:494
+msgid "Macanese pataca"
+msgstr ""
+
+#: app/Helpers/smartpay.php:498
+msgid "Mauritanian ouguiya"
+msgstr ""
+
+#: app/Helpers/smartpay.php:502
+msgid "Mauritian rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:506
+msgid "Maldivian rufiyaa"
+msgstr ""
+
+#: app/Helpers/smartpay.php:510
+msgid "Malawian kwacha"
+msgstr ""
+
+#: app/Helpers/smartpay.php:514
+msgid "Mexican peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:518
+msgid "Malaysian ringgit"
+msgstr ""
+
+#: app/Helpers/smartpay.php:522
+msgid "Mozambican metical"
+msgstr ""
+
+#: app/Helpers/smartpay.php:526
+msgid "Namibian dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:530
+msgid "Nigerian naira"
+msgstr ""
+
+#: app/Helpers/smartpay.php:534
+msgid "Nicaraguan c&oacute;rdoba"
+msgstr ""
+
+#: app/Helpers/smartpay.php:538
+msgid "Norwegian krone"
+msgstr ""
+
+#: app/Helpers/smartpay.php:542
+msgid "Nepalese rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:546
+msgid "New Zealand dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:550
+msgid "Omani rial"
+msgstr ""
+
+#: app/Helpers/smartpay.php:554
+msgid "Panamanian balboa"
+msgstr ""
+
+#: app/Helpers/smartpay.php:558
+msgid "Sol"
+msgstr ""
+
+#: app/Helpers/smartpay.php:562
+msgid "Papua New Guinean kina"
+msgstr ""
+
+#: app/Helpers/smartpay.php:566
+msgid "Philippine peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:570
+msgid "Pakistani rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:574
+msgid "Polish z&#x142;oty"
+msgstr ""
+
+#: app/Helpers/smartpay.php:578
+msgid "Transnistrian ruble"
+msgstr ""
+
+#: app/Helpers/smartpay.php:582
+msgid "Paraguayan guaran&iacute;"
+msgstr ""
+
+#: app/Helpers/smartpay.php:586
+msgid "Qatari riyal"
+msgstr ""
+
+#: app/Helpers/smartpay.php:590
+msgid "Renminbi"
+msgstr ""
+
+#: app/Helpers/smartpay.php:594
+msgid "Romanian leu"
+msgstr ""
+
+#: app/Helpers/smartpay.php:598
+msgid "Serbian dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:602
+msgid "Russian ruble"
+msgstr ""
+
+#: app/Helpers/smartpay.php:606
+msgid "Rwandan franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:610
+msgid "Saudi riyal"
+msgstr ""
+
+#: app/Helpers/smartpay.php:614
+msgid "Solomon Islands dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:618
+msgid "Seychellois rupee"
+msgstr ""
+
+#: app/Helpers/smartpay.php:622
+msgid "Sudanese pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:626
+msgid "Swedish krona"
+msgstr ""
+
+#: app/Helpers/smartpay.php:630
+msgid "Singapore dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:634
+msgid "Saint Helena pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:638
+msgid "Sierra Leonean leone"
+msgstr ""
+
+#: app/Helpers/smartpay.php:642
+msgid "Somali shilling"
+msgstr ""
+
+#: app/Helpers/smartpay.php:646
+msgid "Surinamese dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:650
+msgid "South Sudanese pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:654
+msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra"
+msgstr ""
+
+#: app/Helpers/smartpay.php:658
+msgid "Syrian pound"
+msgstr ""
+
+#: app/Helpers/smartpay.php:662
+msgid "Swazi lilangeni"
+msgstr ""
+
+#: app/Helpers/smartpay.php:666
+msgid "Thai baht"
+msgstr ""
+
+#: app/Helpers/smartpay.php:670
+msgid "Tajikistani somoni"
+msgstr ""
+
+#: app/Helpers/smartpay.php:674
+msgid "Turkmenistan manat"
+msgstr ""
+
+#: app/Helpers/smartpay.php:678
+msgid "Tunisian dinar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:682
+msgid "Tongan pa&#x2bb;anga"
+msgstr ""
+
+#: app/Helpers/smartpay.php:686
+msgid "Turkish lira"
+msgstr ""
+
+#: app/Helpers/smartpay.php:690
+msgid "Trinidad and Tobago dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:694
+msgid "New Taiwan dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:698
+msgid "Tanzanian shilling"
+msgstr ""
+
+#: app/Helpers/smartpay.php:702
+msgid "Ukrainian hryvnia"
+msgstr ""
+
+#: app/Helpers/smartpay.php:706
+msgid "Ugandan shilling"
+msgstr ""
+
+#: app/Helpers/smartpay.php:710
+msgid "United States (US) dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:714
+msgid "Uruguayan peso"
+msgstr ""
+
+#: app/Helpers/smartpay.php:718
+msgid "Uzbekistani som"
+msgstr ""
+
+#: app/Helpers/smartpay.php:722
+msgid "Venezuelan bol&iacute;var"
+msgstr ""
+
+#: app/Helpers/smartpay.php:726
+msgid "Bol&iacute;var soberano"
+msgstr ""
+
+#: app/Helpers/smartpay.php:730
+msgid "Vietnamese &#x111;&#x1ed3;ng"
+msgstr ""
+
 #: app/Helpers/smartpay.php:734
+msgid "Vanuatu vatu"
+msgstr ""
+
+#: app/Helpers/smartpay.php:738
+msgid "Samoan t&#x101;l&#x101;"
+msgstr ""
+
+#: app/Helpers/smartpay.php:742
 msgid "Central African CFA franc"
 msgstr ""
 
 #: app/Helpers/smartpay.php:746
+msgid "East Caribbean dollar"
+msgstr ""
+
+#: app/Helpers/smartpay.php:750
+msgid "West African CFA franc"
+msgstr ""
+
+#: app/Helpers/smartpay.php:754
 msgid "CFP franc"
 msgstr ""
 
-#: app/Helpers/smartpay.php:226
-msgid "Chilean peso"
+#: app/Helpers/smartpay.php:758
+msgid "Yemeni rial"
 msgstr ""
 
-#: app/Helpers/smartpay.php:230
-msgid "Chinese yuan"
+#: app/Helpers/smartpay.php:762
+msgid "South African rand"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:142
-msgid "Choose the location of the currency sign."
+#: app/Helpers/smartpay.php:766
+msgid "Zambian kwacha"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:166
-msgid "Choose the payment gateways you want to enable."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:135
-msgid ""
-"Choose your currency. Note that some payment gateways have currency "
-"restrictions."
-msgstr ""
-
-#: app/Helpers/smartpay.php:234
-msgid "Colombian peso"
-msgstr ""
-
-#: app/Helpers/smartpay.php:414
-msgid "Comorian franc"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:304
-msgid "Configure your PayPal Standard Gateway Settings"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:182
-#: resources/views/shortcodes/customer_dashboard.php:183
-msgid "Confirm Password"
-msgstr ""
-
-#: app/Helpers/smartpay.php:218
-msgid "Congolese franc"
-msgstr ""
-
-#: app/Helpers/smartpay.php:238
-msgid "Costa Rican col&oacute;n"
+#: app/Http/Controllers/Rest/Admin/CouponController.php:20
+#: app/Http/Controllers/Rest/Admin/CustomerController.php:20
+#: app/Http/Controllers/Rest/Admin/DashboardController.php:20
+#: app/Http/Controllers/Rest/Admin/FormController.php:21
+#: app/Http/Controllers/Rest/Admin/PaymentController.php:20
+#: app/Http/Controllers/Rest/Admin/ProductController.php:21
+#: app/Http/Controllers/Rest/Admin/ReportController.php:20
+#: app/Http/Controllers/Rest/CustomerController.php:27
+msgid "You cannot view the resource."
 msgstr ""
 
 #: app/Http/Controllers/Rest/Admin/CouponController.php:59
 msgid "Coupon created"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/CouponController.php:121
-msgid "Coupon deleted"
 msgstr ""
 
 #: app/Http/Controllers/Rest/Admin/CouponController.php:73
@@ -234,560 +740,50 @@ msgstr ""
 msgid "Coupon not found"
 msgstr ""
 
-#: app/Modules/Admin/Admin.php:72
-msgid "Coupons"
+#: app/Http/Controllers/Rest/Admin/CouponController.php:121
+msgid "Coupon deleted"
 msgstr ""
 
-#: app/Helpers/smartpay.php:342
-msgid "Croatian kuna"
+#: app/Http/Controllers/Rest/Admin/CustomerController.php:63
+#: app/Http/Controllers/Rest/Admin/CustomerController.php:80
+#: app/Http/Controllers/Rest/Admin/CustomerController.php:100
+#: app/Http/Controllers/Rest/CustomerController.php:36
+msgid "Customer not found"
 msgstr ""
 
-#: app/Helpers/smartpay.php:242
-msgid "Cuban convertible peso"
-msgstr ""
-
-#: app/Helpers/smartpay.php:246
-msgid "Cuban peso"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:134
-msgid "Currency"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:141
-msgid "Currency Position"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:126
-msgid "Currency Settings"
+#: app/Http/Controllers/Rest/Admin/CustomerController.php:86
+#: app/Http/Controllers/Rest/CustomerController.php:107
+msgid "Customer updated"
 msgstr ""
 
 #: app/Http/Controllers/Rest/Admin/CustomerController.php:104
 msgid "Customer deleted"
 msgstr ""
 
-#: app/Http/Controllers/Rest/CustomerController.php:62
-#: app/Http/Controllers/Rest/CustomerController.php:81
-msgid "Customer info not updated"
-msgstr ""
-
-#: app/Http/Controllers/Rest/CustomerController.php:39
-#: app/Http/Controllers/Rest/CustomerController.php:56
-#: app/Http/Controllers/Rest/Admin/CustomerController.php:63
-#: app/Http/Controllers/Rest/Admin/CustomerController.php:80
-#: app/Http/Controllers/Rest/Admin/CustomerController.php:100
-msgid "Customer not found"
-msgstr ""
-
-#: app/Http/Controllers/Rest/CustomerController.php:84
-#: app/Http/Controllers/Rest/Admin/CustomerController.php:86
-msgid "Customer updated"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:61
-msgid "Customers"
-msgstr ""
-
-#: app/Helpers/smartpay.php:254
-msgid "Czech koruna"
-msgstr ""
-
-#: app/Helpers/smartpay.php:262
-msgid "Danish krone"
-msgstr ""
-
-#: app/Activator.php:87 app/Modules/Admin/Admin.php:25
-msgid "Dashboard"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:51
-msgid "Date"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:172
-msgid "Default Gateway"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:322
-msgid "Disable PayPal IPN Verification"
-msgstr ""
-
-#: app/Helpers/smartpay.php:258
-msgid "Djiboutian franc"
-msgstr ""
-
-#: app/Helpers/smartpay.php:266
-msgid "Dominican peso"
-msgstr ""
-
-#: resources/views/shortcodes/shared/payment_modal.php:105
-msgid "Don't close this window before completing payment!"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:585
-#, php-format
-msgid ""
-"Don't see what you need? More Payment Gateway options are available <a "
-"href=\"%s\">here</a>."
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:133
-msgid "Download"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:31
-msgid "Downloads"
-msgstr ""
-
-#: app/Helpers/smartpay.php:738
-msgid "East Caribbean dollar"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:446
-msgid ""
-"edit.php?post_type=smartpay_product&page=smartpay-setting&tab=general\">"
-"currency setting</a>.</p></div>"
-msgstr ""
-
-#: app/Helpers/smartpay.php:274
-msgid "Egyptian pound"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:166
-#: resources/views/shortcodes/customer_dashboard.php:167
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:309
-msgid "Email"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:200
-msgid ""
-"Email to send purchase receipts from. This will act as the \"from\" and "
-"\"reply-to\" address."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:293
-msgid "Emails"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:217
-msgid "Enter the heading for the purchase receipt email."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:211
-msgid "Enter the subject line for the purchase receipt email."
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:310
-msgid "Enter your PayPal account's email"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:317
-#, php-format
-msgid ""
-"Enter your PayPal Identity Token in order to enable Payment Data Transfer "
-"(PDT). This allows payments to be verified without relying on the PayPal IPN."
-" See our <a href=\"%s\" target=\"_blank\">documentation</a> for further "
-"information."
-msgstr ""
-
-#: app/Helpers/smartpay.php:278
-msgid "Eritrean nakfa"
-msgstr ""
-
-#: app/Helpers/smartpay.php:282
-msgid "Ethiopian birr"
-msgstr ""
-
-#: app/Helpers/smartpay.php:286
-msgid "Euro"
-msgstr ""
-
-#: app/Helpers/smartpay.php:294
-msgid "Falkland Islands pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:290
-msgid "Fijian dollar"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:119
-msgid "Files"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:156
-#: resources/views/shortcodes/customer_dashboard.php:157
-msgid "First Name"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/FormController.php:58
+#: app/Http/Controllers/Rest/Admin/FormController.php:61
 msgid "Form created"
 msgstr ""
 
-#: app/Http/Controllers/Rest/Admin/FormController.php:117
-msgid "Form deleted"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:193
-msgid "Form Name"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/FormController.php:72
-#: app/Http/Controllers/Rest/Admin/FormController.php:89
-#: app/Http/Controllers/Rest/Admin/FormController.php:113
+#: app/Http/Controllers/Rest/Admin/FormController.php:75
+#: app/Http/Controllers/Rest/Admin/FormController.php:92
+#: app/Http/Controllers/Rest/Admin/FormController.php:120
 msgid "Form not found"
 msgstr ""
 
-#: app/Http/Controllers/Rest/Admin/FormController.php:99
+#: app/Http/Controllers/Rest/Admin/FormController.php:97
+msgid "Untitled form"
+msgstr ""
+
+#: app/Http/Controllers/Rest/Admin/FormController.php:106
 msgid "Form updated"
 msgstr ""
 
-#: resources/views/integrations.php:21 app/Modules/Admin/Admin.php:50
-msgid "Forms"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:199
-msgid "From Email"
-msgstr ""
-
-#: app/Helpers/smartpay.php:318
-msgid "Gambian dalasi"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:188 app/Modules/Admin/Setting.php:272
-#: app/Modules/Admin/Setting.php:275 app/Modules/Admin/Setting.php:278
-#: app/Modules/Admin/Setting.php:281 app/Modules/Admin/Setting.php:291
-msgid "General"
-msgstr ""
-
-#: app/Helpers/smartpay.php:302
-msgid "Georgian lari"
-msgstr ""
-
-#: resources/views/shortcodes/shared/product_details.php:74
-msgid "Get it now"
-msgstr ""
-
-#: app/Helpers/smartpay.php:310
-msgid "Ghana cedi"
-msgstr ""
-
-#: app/Helpers/smartpay.php:314
-msgid "Gibraltar pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:326
-msgid "Guatemalan quetzal"
-msgstr ""
-
-#: app/Helpers/smartpay.php:306
-msgid "Guernsey pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:322
-msgid "Guinean franc"
-msgstr ""
-
-#: app/Helpers/smartpay.php:330
-msgid "Guyanese dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:346
-msgid "Haitian gourde"
-msgstr ""
-
-#: app/Helpers/smartpay.php:338
-msgid "Honduran lempira"
-msgstr ""
-
-#: app/Helpers/smartpay.php:334
-msgid "Hong Kong dollar"
-msgstr ""
-
-#. Author URI of the plugin
-msgid ""
-"https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-"
-"uri&utm_medium=wp-dash"
-msgstr ""
-
-#. URI of the plugin
-msgid ""
-"https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-"
-"uri&utm_medium=wp-dash"
-msgstr ""
-
-#: app/Helpers/smartpay.php:350
-msgid "Hungarian forint"
-msgstr ""
-
-#: app/Helpers/smartpay.php:382
-msgid "Icelandic kr&oacute;na"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:323
-#, php-format
-msgid ""
-"If you are unable to use Payment Data Transfer and payments are not getting "
-"marked as complete, then check this box. This forces the site to use a "
-"slightly less secure method of verifying purchases. See our <a href=\"%s\" "
-"target=\"_blank\">FAQ</a> for further information."
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:179
-msgid "If you don't want to change password, then ignore this fields."
-msgstr ""
-
-#: app/Helpers/smartpay.php:366
-msgid "Indian rupee"
-msgstr ""
-
-#: app/Helpers/smartpay.php:354
-msgid "Indonesian rupiah"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:105
-msgid "Integrations"
-msgstr ""
-
-#: app/Helpers/smartpay.php:374
-msgid "Iranian rial"
-msgstr ""
-
-#: app/Helpers/smartpay.php:378
-msgid "Iranian toman"
-msgstr ""
-
-#: app/Helpers/smartpay.php:370
-msgid "Iraqi dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:358
-msgid "Israeli new shekel"
-msgstr ""
-
-#: app/Helpers/smartpay.php:390
-msgid "Jamaican dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:398
-msgid "Japanese yen"
-msgstr ""
-
-#: app/Helpers/smartpay.php:386
-msgid "Jersey pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:394
-msgid "Jordanian dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:434
-msgid "Kazakhstani tenge"
-msgstr ""
-
-#: app/Helpers/smartpay.php:402
-msgid "Kenyan shilling"
-msgstr ""
-
-#: app/Helpers/smartpay.php:426
-msgid "Kuwaiti dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:406
-msgid "Kyrgyzstani som"
-msgstr ""
-
-#: app/Helpers/smartpay.php:438
-msgid "Lao kip"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:160
-#: resources/views/shortcodes/customer_dashboard.php:161
-msgid "Last Name"
-msgstr ""
-
-#: app/Helpers/smartpay.php:442
-msgid "Lebanese pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:454
-msgid "Lesotho loti"
-msgstr ""
-
-#: app/Helpers/smartpay.php:450
-msgid "Liberian dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:458
-msgid "Libyan dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:486
-msgid "Macanese pataca"
-msgstr ""
-
-#: app/Helpers/smartpay.php:474
-msgid "Macedonian denar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:470
-msgid "Malagasy ariary"
-msgstr ""
-
-#: app/Helpers/smartpay.php:502
-msgid "Malawian kwacha"
-msgstr ""
-
-#: app/Helpers/smartpay.php:510
-msgid "Malaysian ringgit"
-msgstr ""
-
-#: app/Helpers/smartpay.php:498
-msgid "Maldivian rufiyaa"
-msgstr ""
-
-#: app/Helpers/smartpay.php:362
-msgid "Manx pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:490
-msgid "Mauritanian ouguiya"
-msgstr ""
-
-#: app/Helpers/smartpay.php:494
-msgid "Mauritian rupee"
-msgstr ""
-
-#: app/Helpers/smartpay.php:506
-msgid "Mexican peso"
-msgstr ""
-
-#: app/Helpers/smartpay.php:466
-msgid "Moldovan leu"
-msgstr ""
-
-#: app/Helpers/smartpay.php:482
-msgid "Mongolian t&ouml;gr&ouml;g"
-msgstr ""
-
-#: app/Helpers/smartpay.php:462
-msgid "Moroccan dirham"
-msgstr ""
-
-#: app/Helpers/smartpay.php:514
-msgid "Mozambican metical"
-msgstr ""
-
-#: app/Helpers/smartpay.php:518
-msgid "Namibian dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:534
-msgid "Nepalese rupee"
-msgstr ""
-
-#: app/Helpers/smartpay.php:122
-msgid "Netherlands Antillean guilder"
-msgstr ""
-
-#: app/Helpers/smartpay.php:686
-msgid "New Taiwan dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:538
-msgid "New Zealand dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:526
-msgid "Nicaraguan c&oacute;rdoba"
-msgstr ""
-
-#: app/Helpers/smartpay.php:522
-msgid "Nigerian naira"
-msgstr ""
-
-#: app/Helpers/smartpay.php:418
-msgid "North Korean won"
-msgstr ""
-
-#: app/Helpers/smartpay.php:530
-msgid "Norwegian krone"
-msgstr ""
-
-#: app/Helpers/smartpay.php:542
-msgid "Omani rial"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:50
-msgid "Order ID"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:129
-msgid "Page Settings"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:96
-msgid "Pages Settings"
-msgstr ""
-
-#: app/Helpers/smartpay.php:562
-msgid "Pakistani rupee"
-msgstr ""
-
-#: app/Helpers/smartpay.php:546
-msgid "Panamanian balboa"
-msgstr ""
-
-#: app/Helpers/smartpay.php:554
-msgid "Papua New Guinean kina"
-msgstr ""
-
-#: app/Helpers/smartpay.php:574
-msgid "Paraguayan guaran&iacute;"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:177
-#: resources/views/shortcodes/customer_dashboard.php:178
-msgid "Password"
-msgstr ""
-
-#: app/Http/Controllers/Rest/CustomerController.php:66
-msgid "Password not matched"
-msgstr ""
-
-#: resources/views/shortcodes/shared/payment_modal.php:93
-msgid "Pay Now"
-msgstr ""
-
-#: resources/views/shortcodes/form.php:32
-msgid "Pay now"
-msgstr ""
-
-#: app/Activator.php:53
-msgid "Payment Confirmation"
+#: app/Http/Controllers/Rest/Admin/FormController.php:124
+msgid "Form deleted"
 msgstr ""
 
 #: app/Http/Controllers/Rest/Admin/PaymentController.php:55
 msgid "Payment created"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/PaymentController.php:112
-msgid "Payment deleted"
-msgstr ""
-
-#: app/Activator.php:70
-msgid "Payment Failed"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:118
-msgid "Payment Failure Page"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:165 app/Modules/Admin/Setting.php:292
-msgid "Payment Gateways"
-msgstr ""
-
-#: resources/views/shortcodes/shared/payment_modal.php:50
-msgid "Payment method - "
 msgstr ""
 
 #: app/Http/Controllers/Rest/Admin/PaymentController.php:69
@@ -796,596 +792,1769 @@ msgstr ""
 msgid "Payment not found"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:110
-msgid "Payment Success Page"
-msgstr ""
-
 #: app/Http/Controllers/Rest/Admin/PaymentController.php:94
 msgid "Payment updated"
 msgstr ""
 
-#: app/Modules/Admin/Admin.php:83
-#: resources/views/shortcodes/customer_dashboard.php:29
-msgid "Payments"
+#: app/Http/Controllers/Rest/Admin/PaymentController.php:112
+msgid "Payment deleted"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:316
-msgid "PayPal Identity Token"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:303
-msgid "PayPal Settings"
-msgstr ""
-
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:285
-msgid "PayPal Standard"
-msgstr ""
-
-#: app/Helpers/smartpay.php:558
-msgid "Philippine peso"
-msgstr ""
-
-#: app/Helpers/smartpay.php:566
-msgid "Polish z&#x142;oty"
-msgstr ""
-
-#: app/Helpers/smartpay.php:298
-msgid "Pound sterling"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/ProductController.php:72
+#: app/Http/Controllers/Rest/Admin/ProductController.php:80
 msgid "Product created"
 msgstr ""
 
-#: app/Http/Controllers/Rest/Admin/ProductController.php:170
-msgid "Product deleted"
+#: app/Http/Controllers/Rest/Admin/ProductController.php:85
+msgid "Failed to create product."
 msgstr ""
 
-#: app/Http/Controllers/Rest/Admin/ProductController.php:91
 #: app/Http/Controllers/Rest/Admin/ProductController.php:106
-#: app/Http/Controllers/Rest/Admin/ProductController.php:161
+#: app/Http/Controllers/Rest/Admin/ProductController.php:122
+#: app/Http/Controllers/Rest/Admin/ProductController.php:185
 msgid "Product not found"
 msgstr ""
 
-#: resources/views/shortcodes/shared/product_details.php:65
-msgid "Product Price"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/ProductController.php:138
+#: app/Http/Controllers/Rest/Admin/ProductController.php:160
 msgid "Product updated"
 msgstr ""
 
-#: app/Modules/Admin/Admin.php:39
-msgid "Products"
+#: app/Http/Controllers/Rest/Admin/ProductController.php:195
+msgid "Product deleted"
 msgstr ""
 
-#: resources/views/shortcodes/customer_dashboard.php:33
-msgid "Profile"
+#: app/Http/Controllers/Rest/CustomerController.php:21
+msgid "Invalid nonce."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:205
-msgid "Purchase Email"
+#: app/Http/Controllers/Rest/CustomerController.php:76
+msgid "You must input first name, last name and email"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:216
-msgid "Purchase Email Heading"
+#: app/Http/Controllers/Rest/CustomerController.php:80
+msgid "Password not matched"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:210
-msgid "Purchase Email Subject"
+#: app/Http/Controllers/Rest/CustomerController.php:102
+msgid "Customer info not updated"
 msgstr ""
 
-#: app/Helpers/smartpay.php:578
-msgid "Qatari riyal"
-msgstr ""
-
-#: app/Helpers/smartpay.php:582
-msgid "Renminbi"
-msgstr ""
-
-#: app/Helpers/smartpay.php:586
-msgid "Romanian leu"
-msgstr ""
-
-#: app/Helpers/smartpay.php:594
-msgid "Russian ruble"
-msgstr ""
-
-#: app/Helpers/smartpay.php:598
-msgid "Rwandan franc"
-msgstr ""
-
-#: app/Helpers/smartpay.php:646
-msgid "S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra"
-msgstr ""
-
-#: app/Helpers/smartpay.php:626
-msgid "Saint Helena pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:730
-msgid "Samoan t&#x101;l&#x101;"
-msgstr ""
-
-#: app/Helpers/smartpay.php:602
-msgid "Saudi riyal"
-msgstr ""
-
-#: resources/views/settings.php:118
-msgid "Save Changes"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:114 app/Modules/Admin/Setting.php:122
-msgid "Select a page"
-msgstr ""
-
-#: resources/views/shortcodes/shared/payment_modal.php:57
-msgid "Select a payment method"
-msgstr ""
-
-#: app/Helpers/smartpay.php:590
-msgid "Serbian dinar"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:94
-msgid "Settings"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:390
-msgid "Settings updated."
-msgstr ""
-
-#: app/Helpers/smartpay.php:610
-msgid "Seychellois rupee"
-msgstr ""
-
-#: app/Helpers/smartpay.php:630
-msgid "Sierra Leonean leone"
-msgstr ""
-
-#. Description of the plugin
-msgid ""
-"Simplest way to sell digital downloads and fundraise with WordPress. Easily "
-"connect Paddle, Stripe, Paypal to accept donations and manage downloads."
-msgstr ""
-
-#: app/Helpers/smartpay.php:622
-msgid "Singapore dollar"
-msgstr ""
-
-#. Name of the plugin
-#: app/Modules/Admin/Admin.php:26
-msgid "SmartPay"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:71
-msgid "SmartPay - Coupons"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:60
-msgid "SmartPay - Customers"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:49
-msgid "SmartPay - Forms"
-msgstr ""
-
-#: resources/views/integrations.php:17 app/Modules/Admin/Admin.php:104
-msgid "SmartPay - Integrations"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:82
-msgid "SmartPay - Payments"
-msgstr ""
-
-#: app/Modules/Admin/Admin.php:38
+#: app/Modules/Admin/Admin.php:56
 msgid "SmartPay - Products"
 msgstr ""
 
+#: app/Modules/Admin/Admin.php:57
+#: resources/js/pages/product/index.js:59
+msgid "Products"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:68
+msgid "SmartPay - Forms"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:69
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:61
+msgid "Forms"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:80
+msgid "SmartPay - Customers"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:81
+#: resources/js/pages/customer/index.js:56
+msgid "Customers"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:92
+msgid "SmartPay - Coupons"
+msgstr ""
+
 #: app/Modules/Admin/Admin.php:93
+#: resources/js/pages/coupon/index.js:56
+msgid "Coupons"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:104
+msgid "SmartPay - Payments"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:105
+#: resources/views/shortcodes/customer_dashboard.php:25
+#: resources/js/pages/payment/index.js:57
+msgid "Payments"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:116
 msgid "SmartPay - Settings"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:97 app/Modules/Admin/Setting.php:130
+#: app/Modules/Admin/Admin.php:117
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/edit.js:120
+#: resources/form-builder/blocks/CheckboxField/edit.js:103
+#: resources/form-builder/blocks/CustomerEmail/edit.js:37
+#: resources/form-builder/blocks/EmailField/edit.js:80
+#: resources/form-builder/blocks/NameField/edit.js:99
+#: resources/form-builder/blocks/NumericField/edit.js:81
+#: resources/form-builder/blocks/RadioField/edit.js:98
+#: resources/form-builder/blocks/SelectField/edit.js:108
+#: resources/form-builder/blocks/TextAreaField/edit.js:80
+#: resources/form-builder/blocks/TextField/edit.js:80
+#: resources/form-builder/blocks/TextInputField/edit.js:87
+msgid "Settings"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:128
+#: resources/views/integrations.php:8
+msgid "SmartPay - Integrations"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:129
+msgid "Integrations"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:276
+#: app/Modules/Admin/Admin.php:277
+msgid "Getting Started"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:291
+msgid "SmartPay Logo"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:295
+msgid "Welcome Aboard"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:296
+msgid "Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution."
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:308
+msgid "Wanna get some discount?"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:309
+msgid "No Worries!! We got you!! give us your email we will send you the discount code."
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:312
+#: app/Modules/Admin/Admin.php:395
+msgid "Email Address"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:313
+#: app/Modules/Admin/Admin.php:397
+msgid "Get Discount"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:321
+msgid "Create Your First Form"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:324
+msgid "Create Your First Product"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:387
+msgid "Logo"
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:389
+msgid "Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code."
+msgstr ""
+
+#: app/Modules/Admin/Admin.php:392
+#: resources/views/shortcodes/payment_receipt.php:130
+#: resources/js/pages/customer/index.js:68
+msgid "Name"
+msgstr ""
+
+#: app/Modules/Admin/Logger.php:18
+#: app/Modules/Admin/Logger.php:27
+#: app/Modules/Admin/Setting.php:264
+#: app/Modules/Admin/Setting.php:340
+msgid "Debug Log"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:100
+msgid "General Settings"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:101
+#: app/Modules/Admin/Setting.php:113
+#: app/Modules/Admin/Setting.php:146
+msgid "SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:106
+msgid "Create WP user"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:107
+msgid "Create WP user on first payment"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:112
+msgid "Pages Settings"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:126
+msgid "Payment Success Page"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:127
+msgid "The page customers are sent to after completing a payment. The shortcode [smartpay_payment_receipt] needs to be on this page. Output configured in the Payment Confirmation settings. This page should be excluded from any site caching."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:130
+#: app/Modules/Admin/Setting.php:138
+msgid "Select a page"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:134
+msgid "Payment Failure Page"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:135
+msgid "The page customers are sent to after a failed payment."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:142
+msgid "Currency Settings"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:145
+msgid "Page Settings"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:150
+msgid "Currency"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:151
+msgid "Choose your currency. Note that some payment gateways have currency restrictions."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:157
+msgid "Currency Position"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:158
+msgid "Choose the location of the currency sign."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:161
+msgid "Before - $10"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:162
+msgid "After - 10$"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:175
+#: resources/views/settings.php:104
+msgid "Test Mode"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:176
+msgid "While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:181
+#: app/Modules/Admin/Setting.php:338
+msgid "Payment Gateways"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:182
+msgid "Choose the payment gateways you want to enable."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:188
+msgid "Default Gateway"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:189
+msgid "This gateway will be loaded automatically with the checkout page."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:204
+#: app/Modules/Admin/Setting.php:314
+#: app/Modules/Admin/Setting.php:317
+#: app/Modules/Admin/Setting.php:320
+#: app/Modules/Admin/Setting.php:323
+#: app/Modules/Admin/Setting.php:327
+#: app/Modules/Admin/Setting.php:337
+msgid "General"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:209
+msgid "From Name"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:210
+msgid "The name purchase receipts are said to come from. This should probably be your site or shop name."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:215
+msgid "From Email"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:216
+msgid "Email to send purchase receipts from. This will act as the \"from\" and \"reply-to\" address."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:221
+msgid "New user notification"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:222
+msgid "Send notification to their account details. [You must enable the <a href=\""
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:227
+msgid "Purchase Email"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:232
+msgid "Purchase Email Subject"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:233
+msgid "Enter the subject line for the purchase receipt email."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:238
+msgid "Purchase Email Heading"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:239
+msgid "Enter the heading for the purchase receipt email."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:339
+msgid "Emails"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:437
+msgid "Settings updated."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:696
+msgid "pro"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:697
+msgid "available in Pro version"
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:703
+msgid "Add more payment gateways from the Integrations panel."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:707
+#, php-format
+msgid "Don't see what you need? More Payment Gateway options are available <a href=\"%s\">here</a>."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:729
+#, php-format
+msgid "The callback function used for the %s setting is missing."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:861
+msgid "Your license key expired."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:869
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:876
+msgid "Invalid license."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:884
+#, php-format
+msgid "Your %s is not active for this URL."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:891
+msgid "This appears to be an invalid license key."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:898
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:905
+msgid "The key you entered belongs to a bundle, please use the product specific license key."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:912
+msgid "There was an error with this license key."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:928
+msgid "Valid License. License key never expires."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:930
+msgid "Valid License. Your license key expires soon! "
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:934
+#, php-format
+msgid "Valid License. Your license key expires on %s."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:945
+msgid "Please enter your valid license key."
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:955
+msgid "License Status: "
+msgstr ""
+
+#: app/Modules/Admin/Setting.php:958
+msgid "Deactivate License"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:79
+msgid "Coupons Settings"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:85
+msgid "Enable coupons at form"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:86
+#: app/Modules/Coupon/Coupon.php:92
+msgid "Enable the use of coupon codes"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:91
+msgid "Enable coupons at product"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:108
+#: app/Modules/Coupon/Coupon.php:226
+msgid "Have a coupon?"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:109
+#: app/Modules/Coupon/Coupon.php:227
+msgid "Click here to enter your code"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:115
+#: app/Modules/Coupon/Coupon.php:232
+msgid "Coupon code"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:116
+#: app/Modules/Coupon/Coupon.php:233
+msgid "Apply coupon"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:191
+msgid "Subtotal"
+msgstr ""
+
+#: app/Modules/Coupon/Coupon.php:207
+#: resources/js/pages/payment/edit.js:196
+#: resources/js/pages/payment/edit.js:233
+msgid "Total Amount"
+msgstr ""
+
+#: app/Modules/Customer/CreateUser.php:44
+#, php-format
+msgid "SmartPay: User could not create, due to %s"
+msgstr ""
+
+#: app/Modules/Email/Email.php:31
+msgid "Payment Receipt"
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:42
+msgid "Sorry! Maybe your token is invalid or you don't have the access."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:42
+#: app/Modules/Frontend/Utilities/Downloader.php:51
+#: app/Modules/Frontend/Utilities/Downloader.php:57
+#: app/Modules/Frontend/Utilities/Downloader.php:63
+#: app/Modules/Frontend/Utilities/Downloader.php:1494
+msgid "Error"
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:51
+msgid "Sorry! Payment invalid or not completed yet."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:57
+msgid "Sorry! This product is invalid or don't have right permission."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:63
+msgid "Sorry! This file doesn't exist or don't have right permission."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:91
+msgid "Error downloading file. Please contact support."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:91
+msgid "File download error"
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:112
+msgid "Sorry, this file could not be downloaded."
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:112
+msgid "Error Downloading File"
+msgstr ""
+
+#: app/Modules/Frontend/Utilities/Downloader.php:1494
+msgid "Sorry but your download link has expired."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:94
+msgid "SmartPay-FreePurchase: Sale price could not matched"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:79
+msgid "Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:348
+msgid "PayPal Standard"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:366
+msgid "PayPal Settings"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:367
+msgid "Configure your PayPal Standard Gateway Settings"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:372
+#: resources/views/shortcodes/customer_dashboard.php:172
+#: resources/views/shortcodes/customer_dashboard.php:173
+#: resources/js/pages/customer/index.js:71
+#: resources/js/pages/payment/edit.js:270
+msgid "Email"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:373
+msgid "Enter your PayPal account's email"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:379
+msgid "PayPal Identity Token"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:380
+#, php-format
+msgid "Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href=\"%s\" target=\"_blank\">documentation</a> for further information."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:385
+msgid "Disable PayPal IPN Verification"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:386
+#, php-format
+msgid "If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href=\"%s\" target=\"_blank\">FAQ</a> for further information."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:392
+msgid "WPSmartPay Documentation Link"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:393
+#, php-format
 msgid ""
-"SmartPay products uses the pages below for handling the display of checkout, "
-"payment confirmation, payment history, and payment failures. If pages are "
-"deleted or removed in some way, they can be recreated manually from the "
-"Pages menu. When re-creating the pages, enter the shortcode shown in the "
-"page content area."
+"Please see our <a href=\"%s\" target=\"_blank\">documentation</a> to set up PayPal properly.\n"
+"                ."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:426
+msgid "<div class=\"error\"><p>Unsupported currency! Your currency <code>"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:56
+msgid "MailChimp"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:57
+msgid "Mailchimp is an email marketing service."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:64
+msgid "Fluent CRM"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:65
+msgid "Fluent crm is an email marketing automation service."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:72
+msgid "AffiliateWP"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:73
+msgid "AffiliateWP is an affiliate marketing tool for wordpress."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:80
+msgid "Pabbly"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:81
+msgid "Pabbly is a tool that takes care of sales & marketing needs.."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:88
+msgid "Zapier"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:89
+msgid "Zapier is a tool of easy automation for busy people."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:96
+msgid "MailerLite"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:97
+msgid "MailerLite is an email marketing tool."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:105
+msgid "Mollie"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:106
+msgid "Mollie is a payments platform that offers an easy-to-implement process for integrating payments."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:114
+msgid "toyyibPay"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:115
+msgid "Quickest & easiest Malaysian online payment solution."
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:123
+msgid "Paytm"
+msgstr ""
+
+#: app/Modules/Integration/Integration.php:124
+msgid "Indian digital payments and financial services company."
+msgstr ""
+
+#: app/Services/EmailNotification.php:32
+#, php-format
+msgid ""
+"Email from SmartPay failed to send.\n"
+"Send time: %s\n"
+"To: %s\n"
+"Subject: %s\n"
+"Error: %s\n"
+"\n"
+""
+msgstr ""
+
+#: bootstrap.php:37
+msgid " is not compatible with "
+msgstr ""
+
+#: bootstrap.php:39
+msgid " or higher. Please update "
+msgstr ""
+
+#: bootstrap.php:41
+msgid " or downgrade "
+msgstr ""
+
+#: bootstrap.php:43
+msgid " below "
+msgstr ""
+
+#: resources/views/integrations.php:39
+msgid "Activated"
+msgstr ""
+
+#: resources/views/integrations.php:39
+msgid "Disabled"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:29
+#: resources/views/mail/payment-receipt/form-payment.php:112
+#: resources/views/mail/payment-receipt/form-payment.php:132
+#: resources/views/mail/payment-receipt/product-purchase.php:29
+#: resources/views/mail/payment-receipt/product-purchase.php:112
+#: resources/views/mail/payment-receipt/product-purchase.php:132
+msgid "Thank you for your payment"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:139
+#: resources/views/mail/payment-receipt/product-purchase.php:139
+msgid "Payment "
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:154
+#: resources/views/mail/payment-receipt/product-purchase.php:154
+msgid "My Account"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:163
+msgid "Payment details"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:176
+#: resources/views/mail/payment-receipt/product-purchase.php:176
+msgid "Total"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:192
+#: resources/views/mail/payment-receipt/product-purchase.php:226
+#: resources/views/shortcodes/payment_receipt.php:31
+msgid "Name:"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:194
+#: resources/views/mail/payment-receipt/product-purchase.php:228
+#: resources/views/shortcodes/payment_receipt.php:35
+msgid "Email:"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/form-payment.php:203
+msgid "You get this email because you sign up or purchase someting at "
+msgstr ""
+
+#: resources/views/mail/payment-receipt/product-purchase.php:163
+msgid "Order details"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/product-purchase.php:189
+#: resources/views/shortcodes/customer_dashboard.php:27
+msgid "Downloads"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/product-purchase.php:195
+#: resources/views/shortcodes/customer_dashboard.php:137
+#: resources/views/shortcodes/payment_receipt.php:140
+msgid "Download"
+msgstr ""
+
+#: resources/views/mail/payment-receipt/product-purchase.php:237
+msgid "You have received this email because you signed up, donated or made a transaction at "
 msgstr ""
 
 #: resources/views/settings.php:50
 msgid "SmartPay Settings"
 msgstr ""
 
-#: app/Helpers/smartpay.php:550
-msgid "Sol"
+#: resources/views/settings.php:104
+msgid "Live Mode"
 msgstr ""
 
-#: app/Helpers/smartpay.php:606
-msgid "Solomon Islands dollar"
+#: resources/views/settings.php:128
+msgid "Save Changes"
 msgstr ""
 
-#: app/Helpers/smartpay.php:634
-msgid "Somali shilling"
+#: resources/views/settings.php:131
+msgid "Clear Log"
 msgstr ""
 
-#: app/Helpers/smartpay.php:754
-msgid "South African rand"
+#: resources/views/shortcodes/customer_dashboard.php:29
+msgid "Profile"
 msgstr ""
 
-#: app/Helpers/smartpay.php:422
-msgid "South Korean won"
-msgstr ""
-
-#: app/Helpers/smartpay.php:642
-msgid "South Sudanese pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:446
-msgid "Sri Lankan rupee"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:52
-msgid "Status"
-msgstr ""
-
-#: app/Helpers/smartpay.php:614
-msgid "Sudanese pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:638
-msgid "Surinamese dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:654
-msgid "Swazi lilangeni"
-msgstr ""
-
-#: app/Helpers/smartpay.php:618
-msgid "Swedish krona"
-msgstr ""
-
-#: app/Helpers/smartpay.php:222
-msgid "Swiss franc"
-msgstr ""
-
-#: app/Helpers/smartpay.php:650
-msgid "Syrian pound"
-msgstr ""
-
-#: app/Helpers/smartpay.php:662
-msgid "Tajikistani somoni"
-msgstr ""
-
-#: app/Helpers/smartpay.php:690
-msgid "Tanzanian shilling"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:159
-msgid "Test Mode"
-msgstr ""
-
-#: app/Helpers/smartpay.php:658
-msgid "Thai baht"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:606
-#, php-format
-msgid "The callback function used for the %s setting is missing."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:194
-msgid ""
-"The name purchase receipts are said to come from. This should probably be "
-"your site or shop name."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:119
-msgid "The page customers are sent to after a failed payment."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:111
-msgid ""
-"The page customers are sent to after completing a payment. The shortcode "
-"[smartpay_payment_receipt] needs to be on this page. Output configured in "
-"the Payment Confirmation settings. This page should be excluded from any "
-"site caching."
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:173
-msgid "This gateway will be loaded automatically with the checkout page."
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:139
-msgid "This item has no download file."
-msgstr ""
-
-#: app/Helpers/smartpay.php:674
-msgid "Tongan pa&#x2bb;anga"
-msgstr ""
-
-#: app/Helpers/smartpay.php:570
-msgid "Transnistrian ruble"
-msgstr ""
-
-#: app/Helpers/smartpay.php:682
-msgid "Trinidad and Tobago dollar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:670
-msgid "Tunisian dinar"
-msgstr ""
-
-#: app/Helpers/smartpay.php:678
-msgid "Turkish lira"
-msgstr ""
-
-#: app/Helpers/smartpay.php:666
-msgid "Turkmenistan manat"
-msgstr ""
-
-#: app/Helpers/smartpay.php:698
-msgid "Ugandan shilling"
-msgstr ""
-
-#: app/Helpers/smartpay.php:694
-msgid "Ukrainian hryvnia"
-msgstr ""
-
-#: app/Helpers/smartpay.php:106
-msgid "United Arab Emirates dirham"
-msgstr ""
-
-#: app/Helpers/smartpay.php:702
-msgid "United States (US) dollar"
-msgstr ""
-
-#: app/Http/Controllers/Rest/Admin/FormController.php:94
-msgid "Untitled form"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:187
-msgid "Update"
-msgstr ""
-
-#: app/Helpers/smartpay.php:706
-msgid "Uruguayan peso"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:171
-#: resources/views/shortcodes/customer_dashboard.php:172
-msgid "Username"
-msgstr ""
-
-#: app/Helpers/smartpay.php:710
-msgid "Uzbekistani som"
-msgstr ""
-
-#: app/Helpers/smartpay.php:726
-msgid "Vanuatu vatu"
-msgstr ""
-
-#: app/Helpers/smartpay.php:714
-msgid "Venezuelan bol&iacute;var"
-msgstr ""
-
-#: app/Helpers/smartpay.php:722
-msgid "Vietnamese &#x111;&#x1ed3;ng"
-msgstr ""
-
-#: app/Helpers/smartpay.php:742
-msgid "West African CFA franc"
-msgstr ""
-
-#: app/Modules/Admin/Setting.php:160
-msgid ""
-"While in test mode no live transactions are processed. To fully use test "
-"mode, you must have a sandbox (test) account for the payment gateway you are "
-"testing."
-msgstr ""
-
-#. Author of the plugin
-msgid "WPSmartPay"
-msgstr ""
-
-#: app/Helpers/smartpay.php:750
-msgid "Yemeni rial"
-msgstr ""
-
-#: resources/views/shortcodes/customer_dashboard.php:42
+#: resources/views/shortcodes/customer_dashboard.php:40
 msgid "You don't have any payment yet."
 msgstr ""
 
-#: resources/views/shortcodes/customer_dashboard.php:81
+#: resources/views/shortcodes/customer_dashboard.php:48
+msgid "Order ID"
+msgstr ""
+
+#: resources/views/shortcodes/customer_dashboard.php:49
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:85
+#: resources/js/pages/customer/show.js:168
+#: resources/js/pages/payment/edit.js:141
+#: resources/js/pages/payment/index.js:81
+#: resources/js/pages/product/index.js:83
+msgid "Date"
+msgstr ""
+
+#: resources/views/shortcodes/customer_dashboard.php:50
+#: resources/js/pages/customer/show.js:165
+#: resources/js/pages/payment/index.js:84
+msgid "Status"
+msgstr ""
+
+#: resources/views/shortcodes/customer_dashboard.php:51
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormAmounts.js:109
+#: resources/js/pages/customer/show.js:162
+#: resources/js/pages/payment/index.js:78
+msgid "Amount"
+msgstr ""
+
+#: resources/views/shortcodes/customer_dashboard.php:92
 msgid "You don't have downloadable item yet!"
 msgstr ""
 
-#: app/Helpers/smartpay.php:758
-msgid "Zambian kwacha"
+#: resources/views/shortcodes/customer_dashboard.php:125
+#: resources/views/shortcodes/payment_receipt.php:127
+#: resources/js/pages/product/components/form.js:249
+#: resources/js/pages/product/components/form.js:603
+msgid "Files"
 msgstr ""
 
-#: billing periods
-msgid "Daily"
+#: resources/views/shortcodes/customer_dashboard.php:143
+msgid "This item has no download file."
 msgstr ""
 
-msgid "Weekly"
+#: resources/views/shortcodes/customer_dashboard.php:162
+#: resources/views/shortcodes/customer_dashboard.php:163
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/NameField/index.js:40
+#: resources/form-builder/blocks/NameField/index.js:45
+#: resources/js/pages/payment/edit.js:258
+msgid "First Name"
 msgstr ""
 
-msgid "Every 3 Months"
+#: resources/views/shortcodes/customer_dashboard.php:166
+#: resources/views/shortcodes/customer_dashboard.php:167
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/NameField/index.js:80
+#: resources/form-builder/blocks/NameField/index.js:85
+#: resources/js/pages/payment/edit.js:264
+msgid "Last Name"
 msgstr ""
 
-msgid "Every 6 Months"
+#: resources/views/shortcodes/customer_dashboard.php:177
+#: resources/views/shortcodes/customer_dashboard.php:178
+msgid "Username"
 msgstr ""
 
-msgid "Yearly"
+#: resources/views/shortcodes/customer_dashboard.php:183
+#: resources/views/shortcodes/customer_dashboard.php:184
+msgid "Password"
 msgstr ""
 
-msgid "Monthly Report"
+#: resources/views/shortcodes/customer_dashboard.php:185
+msgid "If you don't want to change password, then ignore this fields."
 msgstr ""
 
-msgid "Recent Payments"
+#: resources/views/shortcodes/customer_dashboard.php:188
+#: resources/views/shortcodes/customer_dashboard.php:189
+msgid "Confirm Password"
 msgstr ""
 
+#: resources/views/shortcodes/customer_dashboard.php:193
+#: resources/js/pages/payment/edit.js:109
+msgid "Update"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:16
+msgid "Payment ID:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:39
+msgid "Payment amount:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:49
+msgid "Subscription Info:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:64
+msgid "Payment gateway:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:76
+msgid "Payment status:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:87
+#: resources/views/shortcodes/payment_receipt.php:102
+msgid "Resource"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:131
+#: resources/js/pages/customer/show.js:171
+msgid "Action"
+msgstr ""
+
+#: resources/views/shortcodes/shared/form_details.php:17
+msgid "Select an amount"
+msgstr ""
+
+#: resources/views/shortcodes/shared/form_details.php:122
+msgid "Select a payment method"
+msgstr ""
+
+#: resources/views/shortcodes/shared/form_details.php:143
+#: resources/views/shortcodes/shared/payment_modal.php:82
+msgid "You must enable a payment gateway to proceed a payment."
+msgstr ""
+
+#: resources/views/shortcodes/shared/payment_modal.php:61
+msgid "Payment method - "
+msgstr ""
+
+#: resources/views/shortcodes/shared/payment_modal.php:103
+#: public/form-builder/index.js:15
+#: public/js/app.js:1
+#: resources/form-builder/pages/components/FormSettings.js:35
+#: resources/form-builder/pages/create.js:28
+#: resources/js/utils/constant.js:23
+msgid "Pay Now"
+msgstr ""
+
+#: resources/views/shortcodes/shared/payment_modal.php:117
+msgid "Don't close this window before completing payment!"
+msgstr ""
+
+#: resources/views/shortcodes/shared/payment_modal.php:122
+#: resources/views/shortcodes/shared/payment_modal.php:130
+msgid "Loading"
+msgstr ""
+
+#: resources/views/shortcodes/shared/product_details.php:75
+msgid "Free"
+msgstr ""
+
+#: resources/views/shortcodes/shared/product_details.php:90
+#: resources/js/pages/payment/edit.js:183
+msgid "Product Price"
+msgstr ""
+
+#: public/blocks/index.js:1
+#: resources/blocks/form/components/Sidebar.js:17
+#: resources/blocks/product/components/Sidebar.js:17
+msgid "Shortcode behavior"
+msgstr ""
+
+#: public/blocks/index.js:1
+#: resources/blocks/form/components/Sidebar.js:23
+#: resources/blocks/product/components/Sidebar.js:23
+msgid "Select a behavior"
+msgstr ""
+
+#: public/blocks/index.js:1
+#: resources/blocks/form/components/Sidebar.js:26
+#: resources/blocks/product/components/Sidebar.js:26
+msgid "Popup"
+msgstr ""
+
+#: public/blocks/index.js:1
+#: resources/blocks/form/components/Sidebar.js:29
+#: resources/blocks/product/components/Sidebar.js:29
+msgid "Embedded"
+msgstr ""
+
+#: public/blocks/index.js:1
+#: resources/blocks/form/components/Sidebar.js:36
+#: resources/blocks/product/components/Sidebar.js:36
+msgid "Button label"
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/edit.js:155
+#: resources/form-builder/blocks/RadioField/edit.js:150
+#: resources/form-builder/blocks/SelectField/edit.js:160
+#: resources/form-builder/pages/index.js:69
+#: resources/js/pages/product/index.js:67
+msgid "Add new"
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:82
+#: resources/js/pages/coupon/index.js:76
+#: resources/js/pages/product/index.js:80
 msgid "Title"
 msgstr ""
 
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:88
+#: resources/js/pages/coupon/index.js:79
+#: resources/js/pages/customer/index.js:74
+#: resources/js/pages/payment/index.js:87
+#: resources/js/pages/product/index.js:86
 msgid "Actions"
 msgstr ""
 
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:96
+msgid "No form found."
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:87
+#: resources/form-builder/pages/index.js:119
+#: resources/js/pages/product/edit.js:87
+#: resources/js/pages/product/index.js:116
 msgid "Preview"
 msgstr ""
 
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:130
+#: resources/js/pages/coupon/index.js:101
+#: resources/js/pages/product/index.js:123
 msgid "Edit"
 msgstr ""
 
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:27
+#: resources/js/pages/coupon/index.js:22
+#: resources/js/pages/customer/index.js:22
+#: resources/js/pages/payment/index.js:23
+#: resources/js/pages/product/components/form.js:127
+#: resources/js/pages/product/index.js:23
+msgid "Are you sure?"
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:28
+#: resources/js/pages/coupon/index.js:23
+#: resources/js/pages/customer/index.js:23
+#: resources/js/pages/payment/index.js:24
+#: resources/js/pages/product/components/form.js:128
+#: resources/js/pages/product/index.js:24
+msgid "You won't be able to revert this!"
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:30
+#: resources/js/pages/coupon/index.js:25
+#: resources/js/pages/customer/index.js:25
+#: resources/js/pages/payment/index.js:26
+#: resources/js/pages/product/components/form.js:130
+#: resources/js/pages/product/index.js:26
+msgid "Yes"
+msgstr ""
+
+#: public/form-builder/index.js:1
+#: resources/form-builder/pages/index.js:139
+#: resources/js/pages/coupon/index.js:110
+#: resources/js/pages/customer/index.js:110
+#: resources/js/pages/payment/index.js:132
+#: resources/js/pages/product/index.js:132
 msgid "Delete"
 msgstr ""
 
-msgid "Add New"
+#: public/form-builder/index.js:1
+#: resources/form-builder/components/sidebar/index.js:15
+msgid "Block Option"
 msgstr ""
 
-msgid "Save"
-msgstr ""
-
-msgid "Edit Product"
-msgstr ""
-
-msgid "Cover Image"
-msgstr ""
-
-msgid "Select a featured image for this product"
-msgstr ""
-
-msgid "Choose File"
-msgstr ""
-
-msgid "Pricing & Variation"
-msgstr ""
-
-msgid "Options"
-msgstr ""
-
-msgid "Billing Type"
-msgstr ""
-
-msgid "Base Price"
-msgstr ""
-
-msgid "Sales price"
-msgstr ""
-
-msgid "Offer variations of this product"
-msgstr ""
-
-msgid "Add Variations"
-msgstr ""
-
-msgid "Sweeten the deal for your customers with different options for format"
-msgstr ""
-
-msgid "version"
-msgstr ""
-
-msgid "Upload or select files for this product"
-msgstr ""
-
-msgid "Upload files"
-msgstr ""
-
+#. translators: accessibility text for the footer landmark region.
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormSettings.js:15
+#: resources/js/pages/product/components/option.js:14
 msgid "Checkout Options"
 msgstr ""
 
-msgid "Add resource link on Payment Success Page"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormSettings.js:22
+msgid "Checkout label"
 msgstr ""
 
-msgid "Pricing"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormSettings.js:66
+msgid "Add External Resource Link on Payment Success Page"
 msgstr ""
 
-msgid "Builder"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormSettings.js:74
+msgid "External Link"
 msgstr ""
 
-msgid "Form Amounts"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormSettings.js:90
+msgid "https://resourcelink.com"
 msgstr ""
 
-msgid "Add New Amount"
-msgstr ""
-
-msgid "Allow custom amount"
-msgstr ""
-
-msgid "Edit Form"
-msgstr ""
-
-msgid "Delete Amount"
-msgstr ""
-
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/edit.js:196
+#: resources/form-builder/blocks/CheckboxField/edit.js:108
+#: resources/form-builder/blocks/CheckboxField/edit.js:128
+#: resources/form-builder/blocks/CustomerEmail/edit.js:42
+#: resources/form-builder/blocks/EmailField/edit.js:85
+#: resources/form-builder/blocks/NameField/edit.js:179
+#: resources/form-builder/blocks/NumericField/edit.js:86
+#: resources/form-builder/blocks/RadioField/edit.js:103
+#: resources/form-builder/blocks/RadioField/edit.js:123
+#: resources/form-builder/blocks/SelectField/edit.js:113
+#: resources/form-builder/blocks/SelectField/edit.js:133
+#: resources/form-builder/blocks/TextAreaField/edit.js:85
+#: resources/form-builder/blocks/TextField/edit.js:85
+#: resources/form-builder/blocks/TextInputField/edit.js:101
+#: resources/form-builder/pages/components/FormAmounts.js:98
+#: resources/form-builder/pages/components/FormSettings.js:95
 msgid "Label"
 msgstr ""
 
-msgid "Name"
+#: public/form-builder/index.js:15
+#: public/js/app.js:1
+#: resources/form-builder/pages/components/FormSettings.js:111
+#: resources/form-builder/pages/create.js:32
+#: resources/js/pages/product/components/option.js:95
+#: resources/js/utils/constant.js:27
+msgid "Link Label"
 msgstr ""
 
-msgid "View Details"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormAmounts.js:41
+msgid "Form Amounts"
 msgstr ""
 
-msgid "No coupon found"
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormAmounts.js:72
+msgid "Add New Amount"
 msgstr ""
 
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormAmounts.js:156
+msgid "Allow custom amount"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/FormAmounts.js:163
+#: resources/form-builder/pages/components/FormAmounts.js:176
+msgid "Custom amount label"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:61
+msgid "Edit Form"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:62
+msgid "Create Form"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:96
+#: resources/js/pages/coupon/edit.js:73
+#: resources/js/pages/product/edit.js:100
+msgid "Save"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:97
+#: resources/js/pages/coupon/create.js:74
+#: resources/js/pages/product/create.js:79
+msgid "Publish"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:117
+msgid "Your awesome form title here"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:129
+msgid "Builder"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/components/Form.js:144
+msgid "Pricing"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/edit.js:118
+#: resources/form-builder/pages/components/Form.js:159
+#: resources/js/pages/product/components/form.js:746
+msgid "Options"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/pages/create.js:29
+#: resources/form-builder/pages/edit.js:16
+msgid "Pay what you want"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/edit.js:207
+#: resources/form-builder/blocks/CustomerEmail/edit.js:52
+#: resources/form-builder/blocks/EmailField/edit.js:95
+#: resources/form-builder/blocks/NameField/edit.js:190
+#: resources/form-builder/blocks/NumericField/edit.js:96
+#: resources/form-builder/blocks/TextAreaField/edit.js:95
+#: resources/form-builder/blocks/TextField/edit.js:95
+#: resources/form-builder/blocks/TextInputField/edit.js:111
+msgid "Placeholder"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/edit.js:219
+#: resources/form-builder/blocks/EmailField/edit.js:106
+#: resources/form-builder/blocks/NameField/edit.js:202
+#: resources/form-builder/blocks/NumericField/edit.js:107
+#: resources/form-builder/blocks/TextAreaField/edit.js:106
+#: resources/form-builder/blocks/TextField/edit.js:106
+#: resources/form-builder/blocks/TextInputField/edit.js:122
+msgid "Is required"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/NameField/index.js:9
+msgid "Name Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/NameField/index.js:10
+msgid "Name fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/edit.js:71
+#: resources/form-builder/blocks/CustomerEmail/index.js:39
+#: resources/form-builder/blocks/EmailField/edit.js:55
+#: resources/form-builder/blocks/NameField/edit.js:54
+#: resources/form-builder/blocks/NameField/index.js:52
+#: resources/form-builder/blocks/NumericField/edit.js:55
+#: resources/form-builder/blocks/TextAreaField/edit.js:56
+#: resources/form-builder/blocks/TextField/edit.js:55
+#: resources/form-builder/blocks/TextInputField/edit.js:62
+msgid "This field is required"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/NameField/index.js:65
+#: resources/form-builder/blocks/NameField/index.js:70
+msgid "Middle Name"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CustomerEmail/index.js:9
+msgid "Email Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CustomerEmail/index.js:10
+msgid "Email fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/TextField/index.js:9
+#: resources/form-builder/blocks/TextInputField/index.js:9
+msgid "Text Input Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/TextField/index.js:10
+#: resources/form-builder/blocks/TextInputField/index.js:10
+msgid "Text Input fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/TextAreaField/index.js:9
+msgid "Text Area Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/TextAreaField/index.js:10
+msgid "Text Area fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/RadioField/index.js:9
+msgid "Radio Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/RadioField/index.js:10
+msgid "Radio fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/RadioField/edit.js:113
+#: resources/form-builder/blocks/SelectField/edit.js:123
+msgid "Radio Options"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/edit.js:137
+#: resources/form-builder/blocks/RadioField/edit.js:132
+#: resources/form-builder/blocks/SelectField/edit.js:142
+msgid "Value"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/edit.js:74
+#: resources/form-builder/blocks/RadioField/edit.js:74
+#: resources/form-builder/blocks/SelectField/edit.js:75
+msgid "New Option"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/edit.js:160
+#: resources/form-builder/blocks/RadioField/edit.js:155
+#: resources/form-builder/blocks/SelectField/edit.js:165
+msgid "Default option"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:9
+msgid "Address Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:10
+msgid "Address fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:40
+#: resources/form-builder/blocks/AddressField/index.js:45
+msgid "Address Line 1"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:56
+#: resources/form-builder/blocks/AddressField/index.js:61
+msgid "Address Line 2"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:72
+#: resources/form-builder/blocks/AddressField/index.js:77
+msgid "City"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:88
+#: resources/form-builder/blocks/AddressField/index.js:93
+msgid "State"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:104
+#: resources/form-builder/blocks/AddressField/index.js:109
+msgid "Zip Code"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/AddressField/index.js:120
+#: resources/form-builder/blocks/AddressField/index.js:125
+msgid "Country"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/index.js:9
+msgid "Checkbox Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/CheckboxField/index.js:10
+msgid "Checkbox fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/SelectField/index.js:9
+msgid "Select Fields"
+msgstr ""
+
+#: public/form-builder/index.js:15
+#: resources/form-builder/blocks/SelectField/index.js:10
+msgid "Select fields"
+msgstr ""
+
+#: public/js/app.js:1
+#: resources/js/utils/constant.js:24
+msgid "Just Label checking"
+msgstr ""
+
+#: resources/blocks/form/index.js:9
+msgid "SmartPay Form"
+msgstr ""
+
+#: resources/blocks/form/index.js:10
+msgid "Simple block to show a form"
+msgstr ""
+
+#: resources/blocks/form/index.js:69
+msgid "Select a form"
+msgstr ""
+
+#: resources/blocks/form/index.js:87
+msgid "Select a Form"
+msgstr ""
+
+#: resources/blocks/product/index.js:9
+msgid "SmartPay Product"
+msgstr ""
+
+#: resources/blocks/product/index.js:10
+msgid "Simple block to show a product"
+msgstr ""
+
+#: resources/blocks/product/index.js:69
+msgid "Select a product"
+msgstr ""
+
+#: resources/blocks/product/index.js:88
+msgid "Select a Product"
+msgstr ""
+
+#: resources/form-builder/blocks/EmailField/index.js:9
+msgid "Email Input Field"
+msgstr ""
+
+#: resources/form-builder/blocks/EmailField/index.js:10
+msgid "Email Input field"
+msgstr ""
+
+#: resources/form-builder/blocks/NumericField/index.js:9
+#: resources/form-builder/blocks/NumericField/index.js:10
+msgid "Numeric Field"
+msgstr ""
+
+#: resources/js/pages/coupon/create.js:91
 msgid "Enter coupon code here"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:104
 msgid "Coupon description"
 msgstr ""
 
-msgid "Usage Restriction"
-msgstr ""
-
+#: resources/js/pages/coupon/create.js:121
+#: resources/js/pages/coupon/edit.js:112
 msgid "Discount type"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:135
+#: resources/js/pages/coupon/edit.js:126
 msgid "Fixed Amount"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:141
+#: resources/js/pages/coupon/edit.js:132
 msgid "Percentage Amount"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:152
+#: resources/js/pages/coupon/edit.js:143
 msgid "Coupon amount"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:171
+#: resources/js/pages/coupon/edit.js:162
 msgid "Coupon expiry date"
 msgstr ""
 
+#: resources/js/pages/coupon/create.js:190
+#: resources/js/pages/coupon/edit.js:178
+msgid "Coming soon"
+msgstr ""
+
+#: resources/js/pages/coupon/edit.js:65
+msgid "Edit Coupon"
+msgstr ""
+
+#: resources/js/pages/coupon/index.js:64
+msgid "Create"
+msgstr ""
+
+#: resources/js/pages/coupon/index.js:87
+msgid "No coupon found."
+msgstr ""
+
+#: resources/js/pages/customer/index.js:82
+msgid "No customer found."
+msgstr ""
+
+#: resources/js/pages/customer/index.js:101
+msgid "View Details"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:45
+#: resources/js/pages/payment/edit.js:254
 msgid "Customer Details"
 msgstr ""
 
-msgid "Form Payment Details"
+#: resources/js/pages/customer/show.js:76
+msgid "Customer since"
 msgstr ""
 
+#: resources/js/pages/customer/show.js:94
+msgid "Total Payments"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:108
+msgid "Completed Payments"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:125
+msgid "Pending Payments"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:139
+msgid "Refunded Payments"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:150
+msgid "Recent Payments"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:156
+#: resources/js/pages/payment/index.js:69
+msgid "ID"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:159
+#: resources/js/pages/payment/index.js:75
+msgid "Type"
+msgstr ""
+
+#: resources/js/pages/customer/show.js:202
+msgid "Details"
+msgstr ""
+
+#: resources/js/pages/dashboard.js:48
+msgid "Monthly Report"
+msgstr ""
+
+#: resources/js/pages/dashboard.js:55
+msgid "Product Purchase"
+msgstr ""
+
+#: resources/js/pages/dashboard.js:64
+msgid "Form Payment"
+msgstr ""
+
+#: resources/js/pages/dashboard.js:140
+msgid "No payment found"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:61
 msgid "Payment Details"
 msgstr ""
 
+#: resources/js/pages/payment/edit.js:76
+msgid "Select Status"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:82
+msgid "Pending"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:85
+msgid "Completed"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:88
+msgid "Refunded"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:91
+msgid "Failed"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:94
+msgid "Abandoned"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:97
+msgid "Revoked"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:100
+msgid "Processing"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:146
+#: resources/js/pages/payment/index.js:72
+msgid "Customer"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:152
+msgid "Payment Method"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:159
+msgid "Transaction ID"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:170
+msgid "Product Details"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:174
+msgid "Product"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:206
+#: resources/js/pages/payment/edit.js:242
+msgid "Price Type"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:218
+msgid "Form Payment Details"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:225
+msgid "Form"
+msgstr ""
+
+#: resources/js/pages/payment/edit.js:342
 msgid "Form Data"
 msgstr ""
 
-msgid "Create WP user on first payment"
+#: resources/js/pages/payment/index.js:95
+msgid "No payment found."
 msgstr ""
 
-msgid "GENERAL SETTINGS"
+#: resources/js/pages/payment/index.js:123
+msgid "View"
 msgstr ""
 
-msgid "Create WP user"
+#: resources/js/pages/product/components/form.js:184
+msgid "Your awesome product title here"
 msgstr ""
 
-msgid "License Status"
+#: resources/js/pages/product/components/form.js:214
+#: resources/js/pages/product/components/form.js:235
+msgid "Choose File"
 msgstr ""
 
-msgid "No subscription found"
+#: resources/js/pages/product/components/form.js:222
+msgid "Cover Image"
 msgstr ""
 
-msgid "Billing Cycle"
+#: resources/js/pages/product/components/form.js:225
+msgid "Select a featured image for this product"
 msgstr ""
 
-msgid "Payment ID"
+#: resources/js/pages/product/components/form.js:312
+msgid "Upload your files"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:320
+msgid "Upload or select files for this product"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:330
+msgid "Upload files"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:339
+msgid "Pricing & Variation"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:355
+#: resources/js/pages/product/components/form.js:502
+msgid "Base price"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:363
+#: resources/js/pages/product/components/form.js:515
+msgid "eg. 100"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:374
+#: resources/js/pages/product/components/form.js:536
+msgid "Sales price"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:382
+#: resources/js/pages/product/components/form.js:549
+msgid "eg. 90"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:396
+msgid "Offer variations of this product"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:402
+msgid "Sweeten the deal for your customers with different options for format, version, etc"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:412
+msgid "Add Variations"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:423
+msgid "Variations"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:447
+msgid "Option name"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:572
+msgid "Description"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:593
+msgid "Do not write HTML code here."
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:688
+msgid "Upload more file"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:704
+msgid "Associate files with this variant"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:718
+msgid "Select files"
+msgstr ""
+
+#: resources/js/pages/product/components/form.js:736
+msgid "Add Option"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:21
+msgid "Checkout Label"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:28
+msgid "ex. Get it now"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:66
+msgid "Add resource link on Payment Success Page"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:74
+msgid "External Resource Link"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:90
+msgid "ex. https://resourcelink.com"
+msgstr ""
+
+#: resources/js/pages/product/components/option.js:110
+msgid "ex. Show link"
+msgstr ""
+
+#: resources/js/pages/product/create.js:71
+msgid "Create Product"
+msgstr ""
+
+#: resources/js/pages/product/edit.js:67
+msgid "Edit Product"
+msgstr ""
+
+#: resources/js/pages/product/index.js:94
+msgid "No product found."
 msgstr ""
