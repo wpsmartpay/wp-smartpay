@@ -17,7 +17,7 @@ class PaymentController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }

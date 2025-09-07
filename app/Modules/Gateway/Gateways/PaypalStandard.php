@@ -45,7 +45,7 @@ class PaypalStandard extends PaymentGateway
                         <p><strong>Paypal credentials was not set yet!</strong> To get the Paypal service on smartpay, you must add your paypal business email.  <a href="%s"> Input your paypal credentials</a></p>
                     </div>',
                     admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal')
-                ), 'smartpay-pro'));
+                ), 'smartpay'));
             });
         }
     }
@@ -77,7 +77,7 @@ class PaypalStandard extends PaymentGateway
 	public function addWarningMessage( Payment $payment ): void {
 		if ( isset( $_GET['PayerID'] ) && strtolower($payment->status) === Payment::PENDING && $payment->gateway === 'paypal' ) {
 			$message = __( 'Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>.',
-				'wp-smartpay-edd' );
+				'smartpay' );
 			echo '<div class="smartpay">';
 			echo '<div class="receipt-alert receipt-alert-success">';
 			echo '<p>' . wp_kses_post($message) . '</p>';

@@ -292,8 +292,8 @@ class Admin
                 </div>
                 <div class="introduction">
                     <div class="introduction-text">
-                        <h2><?php esc_html_e('Welcome Aboard'); ?></h2>
-                        <p><?php esc_html_e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
+                        <h2><?php esc_html_e('Welcome Aboard', 'smartpay'); ?></h2>
+                        <p><?php esc_html_e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.', 'smartpay'); ?></p>
                     </div>
                     <div class="introduction-video">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -310,7 +310,7 @@ class Admin
                     <form>
                         <div class="inline-input-wrapper">
                             <input type="email" placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" value="<?php echo esc_attr($user->user_email); ?>" />
-                            <button type="submit" class="button button-primary"><?php esc_html_e('Get Discount'); ?></button>
+                            <button type="submit" class="button button-primary"><?php esc_html_e('Get Discount', 'smartpay'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -386,7 +386,7 @@ class Admin
             <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
                 <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
                 <div class="smartpay-notice-content">
-                    <h4><?php esc_html_e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
+                    <h4><?php esc_html_e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay') ?></h4>
                     <form style="display:flex">
                         <div class="smartpay-notice-input-wrapper">
                             <input type="text" value="<?php echo esc_attr($user->first_name); ?>" placeholder="<?php esc_attr_e('Name', 'smartpay'); ?>" />
@@ -394,7 +394,7 @@ class Admin
                         <div class="smartpay-notice-input-wrapper">
                             <input type="email" value="<?php echo esc_attr($user->user_email); ?>" required placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" />
                         </div>
-                        <button type="submit" class="button button-primary subscribe-button"><?php esc_html_e('Get Discount'); ?></button>
+                        <button type="submit" class="button button-primary subscribe-button"><?php esc_html_e('Get Discount', 'smartpay'); ?></button>
                     </form>
                 </div>
             </div>
@@ -430,9 +430,9 @@ class Admin
                         method: 'POST',
                         data: {
                             action: 'smartpay_contact_optin_notice_dismiss',
-                            nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-                            user_id: '<?php esc_attr_e($user_id); ?>',
-                            meta_value: '<?php esc_attr_e($dismiss_key); ?>'
+                            nonce: '<?php echo esc_attr(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                            user_id: '<?php echo esc_attr($user_id); ?>',
+                            meta_value: '<?php echo esc_attr($dismiss_key); ?>'
                         }
                     })
                 });
@@ -459,8 +459,8 @@ class Admin
                                     method: 'POST',
                                     data: {
                                         action: 'smartpay_contact_optin_notice_dismiss',
-                                        nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-                                        user_id: '<?php esc_attr_e($user_id); ?>',
+                                        nonce: '<?php echo esc_attr(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                                        user_id: '<?php echo esc_attr($user_id); ?>',
                                         meta_value: 'opted_in'
                                     }
                                 })

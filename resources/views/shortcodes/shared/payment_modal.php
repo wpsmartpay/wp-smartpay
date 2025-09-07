@@ -119,7 +119,7 @@ $has_payment_error = false;
                     </div>
                     <div class="dynamic-content">
                         <div class="spinner-border" style="width: 40px; height: 40px;">
-                            <span class="sr-only"><?php echo esc_html__('Loading'); ?>...</span>
+                            <span class="sr-only"><?php echo esc_html__('Loading', 'smartpay'); ?>...</span>
                         </div>
                     </div>
                 </div>
