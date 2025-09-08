@@ -25,7 +25,7 @@ class Common
         wp_register_style('smartpay-app', SMARTPAY_PLUGIN_ASSETS . '/css/app.css', '', SMARTPAY_VERSION);
         wp_enqueue_style('smartpay-app');
 
-        wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/bootstrap.js', ['jquery'], SMARTPAY_VERSION, true);
+        wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/bootstrap.js', ['jquery'], SMARTPAY_VERSION, false);
         wp_enqueue_script('smartpay-bootstrap');
         wp_register_script('smartpay-app', SMARTPAY_PLUGIN_ASSETS . '/js/app.js', ['jquery'], SMARTPAY_VERSION, true);
         wp_enqueue_script('smartpay-app');
