@@ -49,7 +49,7 @@
                                                             <del class="base-price"><?php echo esc_html(smartpay_amount_format($variation->base_price)); ?></del>
                                                         <?php endif; ?>
                                                         <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $billingType) : ?>
-                                                            <span>/ <?php echo esc_html__($billingPeriod, 'smartpay'); ?></span>
+                                                            <span>/ <?php echo esc_html($billingPeriod); ?></span>
                                                         <?php endif; ?>
                                                     </div>
                                                     <h5 class="m-0 price--title">
@@ -83,7 +83,7 @@
                                                         <?php endif; ?>
                                                     <?php endif; ?>
                                                     <?php if (\SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === $productBillingType) : ?>
-                                                        <span>/ <?php echo esc_html__($productBillingPeriod, 'smartpay'); ?></span>
+                                                        <span>/ <?php echo esc_html($productBillingPeriod); ?></span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <h5 class="m-0 price--title">
@@ -96,7 +96,7 @@
                             </div>
 
                             <button type="button" class="btn btn-success btn-block btn-lg open-payment-form">
-                                <?php echo esc_html__($product['settings']['payButtonLabel'] ?: 'Get it now', 'smartpay'); ?>
+                                <?php echo esc_html($product['settings']['payButtonLabel'] ?: __('Get it now', 'smartpay')); ?>
                             </button>
                         </div>
                     </div>

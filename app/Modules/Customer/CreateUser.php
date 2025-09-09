@@ -41,7 +41,10 @@ class CreateUser {
                     }
                 }
             }catch (\Exception $e){
-                smartpay_debug_log(sprintf(__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage()));
+                smartpay_debug_log(sprintf(
+					/* translators: 1: Error Message */
+					__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage())
+                );
             }
             return true;
         }

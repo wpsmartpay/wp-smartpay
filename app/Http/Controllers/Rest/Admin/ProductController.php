@@ -88,7 +88,7 @@ class ProductController extends RestController
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
             error_log($e->getMessage());
-            return new WP_REST_Response(['message' => __($e->getMessage(), 'smartpay')], 500);
+            return new WP_REST_Response(['message' => $e->getMessage()], 500);
         }
     }
 

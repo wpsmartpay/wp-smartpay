@@ -34,7 +34,7 @@ $has_payment_error = false;
             </div>
         </div>
         <button type="button" class="btn btn-success open-product-modal m-1">
-            <?php esc_html_e($label ? : 'Pay now', 'smartpay'); ?>
+            <?php echo esc_html($label ?: __('Pay now', 'smartpay')); ?>
         </button>
     </div>
 </div>

@@ -148,7 +148,7 @@
                     <button type="button"
                             class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ( $has_payment_error ) {
 						echo 'disabled';
-					} ?>><?php esc_html_e( $form['settings']['payButtonLabel'] ?: 'Pay Now', 'smartpay' ) ?></button>
+					} ?>><?php echo esc_html( $form['settings']['payButtonLabel'] ?: __('Pay Now', 'smartpay' )) ?></button>
 
 					<?php do_action( 'after_smartpay_payment_form_button', $form ); ?>
                 </form>
