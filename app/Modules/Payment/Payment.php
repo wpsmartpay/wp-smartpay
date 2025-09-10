@@ -143,14 +143,14 @@ class Payment
         return apply_filters('smartpay_prepare_payment_data', array(
             'payment_type'  => $_data['smartpay_payment_type'],
             'payment_data'  => $payment_data,
-            'date'          => date('Y-m-d H:i:s', time()),
+            'date'          => gmdate('Y-m-d H:i:s', time()),
             'amount'        => $payment_data['total_amount'] ?? '',
             'currency'      => smartpay_get_currency() ?? 'USD',
             'gateway'       => $_data['smartpay_gateway'],
             'customer'      => $this->_get_payment_customer($_data),
             'email'         => $_data['smartpay_email'],
 			'mobile'        => $_data['smartpay_payment_mobile'] ?? '',
-            'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+            'key'           => strtolower(md5($_data['smartpay_email'] . gmdate('Y-m-d H:i:s') . rand(1, 10))),
             'extra'         => $extra
         ), $_data);
     }

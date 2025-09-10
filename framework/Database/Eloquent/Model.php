@@ -607,11 +607,11 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         $time = $this->freshTimestamp();
 
         if (!$this->isDirty(static::UPDATED_AT)) {
-            $this->{static::UPDATED_AT} = date('Y-m-d H-i-s', $time);
+            $this->{static::UPDATED_AT} = gmdate('Y-m-d H-i-s', $time);
         }
 
         if (!$this->exists && !$this->isDirty(static::CREATED_AT)) {
-            $this->{static::CREATED_AT} = date('Y-m-d H-i-s', $time);
+            $this->{static::CREATED_AT} = gmdate('Y-m-d H-i-s', $time);
         }
     }
 

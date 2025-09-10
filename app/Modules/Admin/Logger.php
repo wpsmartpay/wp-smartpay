@@ -50,7 +50,7 @@ class Logger
 
     public function log_to_file($message = '')
     {
-        $message = date('Y-n-d H:i:s') . ' - ' . $message . "\r\n";
+        $message = gmdate('Y-n-d H:i:s') . ' - ' . $message . "\r\n";
         $this->write_to_log($message);
     }
 

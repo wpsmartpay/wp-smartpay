@@ -130,7 +130,7 @@ class Coupon
 
         // expiry date check
         if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(date('Y-m-d'));
+            $currentDate = date_create(gmdate('Y-m-d'));
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {
@@ -252,7 +252,7 @@ class Coupon
 
         // expiry date check
         if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(date('Y-m-d'));
+            $currentDate = date_create(gmdate('Y-m-d'));
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {
