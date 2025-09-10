@@ -73,6 +73,7 @@ class PaypalStandard extends PaymentGateway
     }
 
 	public function addWarningMessage( Payment $payment ): void {
+		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
 		if ( isset( $_GET['PayerID'] ) && strtolower($payment->status) === Payment::PENDING && $payment->gateway === 'paypal' ) {
 			$message = __( 'Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>.',
 				'smartpay' );
@@ -169,7 +170,7 @@ class PaypalStandard extends PaymentGateway
     public function processWebhooks()
     {
         global $smartpay_options;
-
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
         if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'paypal') {
 
             // Fallback just in case post_max_size is lower than needed
@@ -258,7 +259,7 @@ class PaypalStandard extends PaymentGateway
             );
 
             $encoded_data_array = wp_parse_args($encoded_data_array, $defaults);
-
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             $payment_id = absint($encoded_data_array['custom'] ?? sanitize_text_field($_GET['payment-id']) ?? 0);
 
             $payment = smartpay_get_payment($payment_id);

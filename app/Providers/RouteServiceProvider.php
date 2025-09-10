@@ -33,7 +33,9 @@ class RouteServiceProvider extends ServiceProvider
     // TODO: Rewrite and Moved to route, It's just for test
     public function productRoute()
     {
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
         $page = $_GET['page'] ?? '';
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
         $action = $_GET['action'] ?? 'index';
 
 
@@ -49,6 +51,7 @@ class RouteServiceProvider extends ServiceProvider
         }
 
         if ('update' === $action) {
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             $productId = $_GET['id'] ?? 0;
 
             if (!!$productId) {

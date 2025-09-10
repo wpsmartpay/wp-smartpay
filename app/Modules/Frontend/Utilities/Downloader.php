@@ -29,8 +29,11 @@ class Downloader
     public function processDownload()
     {
         $args = [
+			// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             'smartpay_file' => (isset($_GET['smartpay_file'])) ? $_GET['smartpay_file'] : '',
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             'ttl'           => (isset($_GET['ttl'])) ? rawurldecode($_GET['ttl']) : '',
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             'token'         => (isset($_GET['token'])) ? $_GET['token'] : ''
         ];
 
@@ -1462,7 +1465,7 @@ class Downloader
         $valid_token = $this->vaildateToken($url);
 
         if (!$valid_token) return $response;
-
+		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
         $file_parts = explode(':', rawurldecode($_GET['smartpay_file']));
 
         // TODO: Implement download limit

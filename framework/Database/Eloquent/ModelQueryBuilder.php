@@ -182,7 +182,8 @@ class ModelQueryBuilder
     public function paginate($perPage = null)
     {
         $result = $this->getQuery()->paginate(
-            $perPage ?: (isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10)
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+            $perPage ?: (isset($_GET['per_page']) ? max(1, absint($_GET['per_page'])) : 10)
         );
 
         $result['data'] = $this->hydrate($result['data']);

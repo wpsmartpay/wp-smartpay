@@ -1144,7 +1144,8 @@ class QueryBuilderHandler
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
-        $req = $_REQUEST;
+	    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+        $req = $_GET;
 
         $currentPage = isset($req['page']) && intval($req['page']) ? intval($req['page']) : 1;
 

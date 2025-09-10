@@ -110,6 +110,7 @@ class Shortcode
 	 */
     public function payment_receipt_shortcode($atts)
     {
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
         $payment_uuid = isset($_GET['smartpay-payment']) ? ($_GET['smartpay-payment']) : null;
 
         if (!$payment_uuid) {
