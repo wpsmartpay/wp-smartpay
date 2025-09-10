@@ -1,8 +1,8 @@
 <?php
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
-
-$_gateway = \sanitize_text_field($_REQUEST['gateway'] ?? '');
+// phpcs:ignore: WordPress.Security.NonceVerification.Recommended
+$_gateway = \sanitize_text_field(wp_unslash($_REQUEST['gateway']) ?? '');
 
 $chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
 $has_payment_error = false;

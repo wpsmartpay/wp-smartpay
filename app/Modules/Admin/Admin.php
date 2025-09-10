@@ -338,7 +338,7 @@ class Admin
 
         delete_transient('wpsmartpay_activation_redirect');
 
-	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
         if (isset($_GET['activate-multi']) || is_network_admin()) {
             return;
         }
