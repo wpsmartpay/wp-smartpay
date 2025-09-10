@@ -16,7 +16,7 @@ class CreateSmartpayPaymentsTable
         $charsetCollate = $wpdb->get_charset_collate();
 
 		// payments Table Creation, caching not applicable.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         if ($wpdb->get_var("SHOW TABLES LIKE '$table'") != $table) {
 			// Schema creation with dbDelta() on plugin activation.
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange

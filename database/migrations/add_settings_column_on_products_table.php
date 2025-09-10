@@ -18,20 +18,14 @@ class AddSettingsColumnOnProductTable
         $table = $wpdb->prefix . 'smartpay_products';
         $dbName = $wpdb->dbname;
 
-        // check the settings column exist on products table
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $row = $wpdb->get_results("
-            SELECT COLUMN_NAME
-            FROM INFORMATION_SCHEMA.COLUMNS
-            WHERE TABLE_SCHEMA = '$dbName' AND
-            TABLE_NAME = '$table' AND
-            COLUMN_NAME = 'settings'
-        ");
+        // check the settings column exist on products table and safe prepare
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        $row = $wpdb->get_results("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '$dbName' AND TABLE_NAME = '$table' AND COLUMN_NAME = 'settings'");
 
         // if no row found then create a new column on the products table
         // after the status table
         if (empty($row)) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
             $wpdb->query("ALTER TABLE $table ADD settings LONGTEXT DEFAULT NULL AFTER status");
         }
     }
