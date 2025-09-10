@@ -13,7 +13,8 @@
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Text Domain: smartpay
- * Domain Path: resources/languages
+ * Domain Path: /languages
+ * License: GPLv3+
  *
  * @package WP SmartPay
  * @category Core
@@ -55,7 +56,4 @@ add_action('init', function () use ($app) {
 
     // Run The Application
     $app->boot();
-
-    // Load translations
-    load_plugin_textdomain('smartpay', false, dirname(plugin_basename(__FILE__)) . '/resources/languages');
 });

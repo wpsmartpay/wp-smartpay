@@ -1,15 +1,15 @@
 # Copyright (C) 2025 WPSmartPay
-# This file is distributed under the same license as the SmartPay plugin.
+# This file is distributed under the GPLv2.
 msgid ""
 msgstr ""
 "Project-Id-Version: SmartPay 2.7.13\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-smartpay\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/smartpay\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-07T04:53:15+00:00\n"
+"POT-Creation-Date: 2025-09-10T07:16:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: smartpay\n"
@@ -973,8 +973,8 @@ msgstr ""
 
 #: app/Modules/Admin/Logger.php:18
 #: app/Modules/Admin/Logger.php:27
-#: app/Modules/Admin/Setting.php:264
-#: app/Modules/Admin/Setting.php:340
+#: app/Modules/Admin/Setting.php:268
+#: app/Modules/Admin/Setting.php:344
 msgid "Debug Log"
 msgstr ""
 
@@ -989,6 +989,7 @@ msgid "SmartPay products uses the pages below for handling the display of checko
 msgstr ""
 
 #: app/Modules/Admin/Setting.php:106
+#: app/Modules/Admin/Setting.php:225
 msgid "Create WP user"
 msgstr ""
 
@@ -1063,7 +1064,7 @@ msgid "While in test mode no live transactions are processed. To fully use test 
 msgstr ""
 
 #: app/Modules/Admin/Setting.php:181
-#: app/Modules/Admin/Setting.php:338
+#: app/Modules/Admin/Setting.php:342
 msgid "Payment Gateways"
 msgstr ""
 
@@ -1080,12 +1081,12 @@ msgid "This gateway will be loaded automatically with the checkout page."
 msgstr ""
 
 #: app/Modules/Admin/Setting.php:204
-#: app/Modules/Admin/Setting.php:314
-#: app/Modules/Admin/Setting.php:317
-#: app/Modules/Admin/Setting.php:320
-#: app/Modules/Admin/Setting.php:323
+#: app/Modules/Admin/Setting.php:318
+#: app/Modules/Admin/Setting.php:321
+#: app/Modules/Admin/Setting.php:324
 #: app/Modules/Admin/Setting.php:327
-#: app/Modules/Admin/Setting.php:337
+#: app/Modules/Admin/Setting.php:331
+#: app/Modules/Admin/Setting.php:341
 msgid "General"
 msgstr ""
 
@@ -1109,115 +1110,119 @@ msgstr ""
 msgid "New user notification"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:222
-msgid "Send notification to their account details. [You must enable the <a href=\""
+#. translators: 1: settings page.
+#: app/Modules/Admin/Setting.php:224
+#, php-format
+msgid "Send notification to their account details. You must enable the %s to notify the user."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:227
+#: app/Modules/Admin/Setting.php:231
 msgid "Purchase Email"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:232
+#: app/Modules/Admin/Setting.php:236
 msgid "Purchase Email Subject"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:233
+#: app/Modules/Admin/Setting.php:237
 msgid "Enter the subject line for the purchase receipt email."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:238
+#: app/Modules/Admin/Setting.php:242
 msgid "Purchase Email Heading"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:239
+#: app/Modules/Admin/Setting.php:243
 msgid "Enter the heading for the purchase receipt email."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:339
+#: app/Modules/Admin/Setting.php:343
 msgid "Emails"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:437
+#: app/Modules/Admin/Setting.php:441
 msgid "Settings updated."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:696
+#: app/Modules/Admin/Setting.php:700
 msgid "pro"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:697
+#: app/Modules/Admin/Setting.php:701
 msgid "available in Pro version"
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:703
+#: app/Modules/Admin/Setting.php:707
 msgid "Add more payment gateways from the Integrations panel."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:707
+#. translators: 1: Url
+#: app/Modules/Admin/Setting.php:714
 #, php-format
 msgid "Don't see what you need? More Payment Gateway options are available <a href=\"%s\">here</a>."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:729
+#. translators: id
+#: app/Modules/Admin/Setting.php:739
 #, php-format
 msgid "The callback function used for the %s setting is missing."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:861
+#: app/Modules/Admin/Setting.php:871
 msgid "Your license key expired."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:869
+#: app/Modules/Admin/Setting.php:879
 msgid "Your license key has been disabled."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:876
+#: app/Modules/Admin/Setting.php:886
 msgid "Invalid license."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:884
-#, php-format
-msgid "Your %s is not active for this URL."
+#: app/Modules/Admin/Setting.php:894
+msgid "Your license is not active for this URL."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:891
+#: app/Modules/Admin/Setting.php:901
 msgid "This appears to be an invalid license key."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:898
+#: app/Modules/Admin/Setting.php:908
 msgid "Your license key has reached its activation limit."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:905
+#: app/Modules/Admin/Setting.php:915
 msgid "The key you entered belongs to a bundle, please use the product specific license key."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:912
+#: app/Modules/Admin/Setting.php:922
 msgid "There was an error with this license key."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:928
+#: app/Modules/Admin/Setting.php:938
 msgid "Valid License. License key never expires."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:930
+#: app/Modules/Admin/Setting.php:940
 msgid "Valid License. Your license key expires soon! "
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:934
+#. translators: 1: time
+#: app/Modules/Admin/Setting.php:945
 #, php-format
 msgid "Valid License. Your license key expires on %s."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:945
+#: app/Modules/Admin/Setting.php:956
 msgid "Please enter your valid license key."
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:955
+#: app/Modules/Admin/Setting.php:966
 msgid "License Status: "
 msgstr ""
 
-#: app/Modules/Admin/Setting.php:958
+#: app/Modules/Admin/Setting.php:969
 msgid "Deactivate License"
 msgstr ""
 
@@ -1268,7 +1273,8 @@ msgstr ""
 msgid "Total Amount"
 msgstr ""
 
-#: app/Modules/Customer/CreateUser.php:44
+#. translators: 1: Error Message
+#: app/Modules/Customer/CreateUser.php:46
 #, php-format
 msgid "SmartPay: User could not create, due to %s"
 msgstr ""
@@ -1321,27 +1327,75 @@ msgstr ""
 msgid "Sorry but your download link has expired."
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:94
+#. translators: 1: Payment id
+#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:62
+#, php-format
+msgid "SmartPay-FreePurchase: Payment #%s status changed to Pending."
+msgstr ""
+
+#. translators: 1: Payment id
+#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:73
+#, php-format
+msgid "SmartPay-FreePurchase: Payment #%s Can't insert payment."
+msgstr ""
+
+#. translators: 1: payment id
+#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:88
+#, php-format
+msgid "SmartPay-FreePurchase: Payment #%s status changed to Completed."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/ManualPurchase/FreePurchase.php:103
 msgid "SmartPay-FreePurchase: Sale price could not matched"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:79
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:44
+msgid "Paypal credentials was not set yet!"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:44
+msgid "To get the Paypal service on smartpay, you must add your paypal business email."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:44
+msgid " Input your paypal credentials"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:77
 msgid "Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>."
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:348
+#. translators: 1: payment id
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:270
+#, php-format
+msgid "SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s."
+msgstr ""
+
+#. translators: 1: payment id
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:306
+#, php-format
+msgid "SmartPay-PayPal: Payment #%s no found."
+msgstr ""
+
+#. translators: 1: payment id
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:328
+#, php-format
+msgid "SmartPay-PayPal: Payment #%s completed."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:344
 msgid "PayPal Standard"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:366
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:362
 msgid "PayPal Settings"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:367
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:363
 msgid "Configure your PayPal Standard Gateway Settings"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:372
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:368
 #: resources/views/shortcodes/customer_dashboard.php:172
 #: resources/views/shortcodes/customer_dashboard.php:173
 #: resources/js/pages/customer/index.js:71
@@ -1349,41 +1403,65 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:373
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:369
 msgid "Enter your PayPal account's email"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:379
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:375
 msgid "PayPal Identity Token"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:380
-#, php-format
-msgid "Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href=\"%s\" target=\"_blank\">documentation</a> for further information."
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:377
+msgid "Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:385
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:377
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:392
+msgid "documentation"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:377
+msgid " for further information."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:384
 msgid "Disable PayPal IPN Verification"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:386
-#, php-format
-msgid "If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href=\"%s\" target=\"_blank\">FAQ</a> for further information."
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:385
+msgid "If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:392
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:385
+msgid "FAQ"
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:385
+msgid "for further information."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:391
 msgid "WPSmartPay Documentation Link"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:393
-#, php-format
-msgid ""
-"Please see our <a href=\"%s\" target=\"_blank\">documentation</a> to set up PayPal properly.\n"
-"                ."
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:392
+msgid "Please see our"
 msgstr ""
 
-#: app/Modules/Gateway/Gateways/PaypalStandard.php:426
-msgid "<div class=\"error\"><p>Unsupported currency! Your currency <code>"
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:392
+msgid "to set up PayPal properly."
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:428
+msgid "Unsupported currency! Your currency "
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:430
+msgid " does not supported by PayPal. Please change your currency from "
+msgstr ""
+
+#: app/Modules/Gateway/Gateways/PaypalStandard.php:432
+msgid "currency setting"
 msgstr ""
 
 #: app/Modules/Integration/Integration.php:56
@@ -1458,16 +1536,10 @@ msgstr ""
 msgid "Indian digital payments and financial services company."
 msgstr ""
 
-#: app/Services/EmailNotification.php:32
+#. translators: 1: time 2: mail to 3: subject 4: error message
+#: app/Services/EmailNotification.php:33
 #, php-format
-msgid ""
-"Email from SmartPay failed to send.\n"
-"Send time: %s\n"
-"To: %s\n"
-"Subject: %s\n"
-"Error: %s\n"
-"\n"
-""
+msgid "Email from SmartPay failed to send.\\nSend time: %1$s\\nTo: %2$s\\nSubject: %3$s\\nError: %4$s\\n\\n"
 msgstr ""
 
 #: bootstrap.php:37
@@ -1620,6 +1692,10 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
+#: resources/views/shortcodes/customer_dashboard.php:134
+msgid "Size: "
+msgstr ""
+
 #: resources/views/shortcodes/customer_dashboard.php:143
 msgid "This item has no download file."
 msgstr ""
@@ -1666,8 +1742,20 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
+#: resources/views/shortcodes/form.php:37
+msgid "Pay now"
+msgstr ""
+
 #: resources/views/shortcodes/payment_receipt.php:16
 msgid "Payment ID:"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:21
+msgid "Product Name"
+msgstr ""
+
+#: resources/views/shortcodes/payment_receipt.php:21
+msgid "Form Name:"
 msgstr ""
 
 #: resources/views/shortcodes/payment_receipt.php:39
@@ -1696,6 +1784,10 @@ msgstr ""
 msgid "Action"
 msgstr ""
 
+#: resources/views/shortcodes/product.php:29
+msgid "Buy now"
+msgstr ""
+
 #: resources/views/shortcodes/shared/form_details.php:17
 msgid "Select an amount"
 msgstr ""
@@ -1709,10 +1801,7 @@ msgstr ""
 msgid "You must enable a payment gateway to proceed a payment."
 msgstr ""
 
-#: resources/views/shortcodes/shared/payment_modal.php:61
-msgid "Payment method - "
-msgstr ""
-
+#: resources/views/shortcodes/shared/form_details.php:151
 #: resources/views/shortcodes/shared/payment_modal.php:103
 #: public/form-builder/index.js:15
 #: public/js/app.js:1
@@ -1720,6 +1809,10 @@ msgstr ""
 #: resources/form-builder/pages/create.js:28
 #: resources/js/utils/constant.js:23
 msgid "Pay Now"
+msgstr ""
+
+#: resources/views/shortcodes/shared/payment_modal.php:61
+msgid "Payment method - "
 msgstr ""
 
 #: resources/views/shortcodes/shared/payment_modal.php:117
@@ -1738,6 +1831,10 @@ msgstr ""
 #: resources/views/shortcodes/shared/product_details.php:90
 #: resources/js/pages/payment/edit.js:183
 msgid "Product Price"
+msgstr ""
+
+#: resources/views/shortcodes/shared/product_details.php:99
+msgid "Get it now"
 msgstr ""
 
 #: public/blocks/index.js:1
