@@ -5,12 +5,12 @@ use SmartPay\Modules\Admin\Setting;
 $settings_tabs  = Setting::settings_tabs();
 $all_settings   = Setting::get_registered_settings_sections();
 // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-$active_tab     = sanitize_text_field(wp_unslash($_GET['tab']) ?? null);
+$active_tab     = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : null;
 $active_tab     = array_key_exists($active_tab, $settings_tabs) ? $active_tab : 'general';
 $sections       = Setting::settings_tab_sections($active_tab);
 $key            = !empty($sections) ? key($sections) : 'main';
 // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-$section        = isset($_GET['section']) && !empty($sections) && array_key_exists(wp_unslash($_GET['section']), $sections) ? sanitize_text_field(wp_unslash($_GET['section'])) : $key;
+$section        = isset($_GET['section']) && !empty($sections) && array_key_exists(sanitize_text_field(wp_unslash($_GET['section'])), $sections) ? sanitize_text_field(wp_unslash($_GET['section'])) : $key;
 
 $has_main_settings = (bool) $all_settings[$active_tab]['main']; // true if not empty, else false
 

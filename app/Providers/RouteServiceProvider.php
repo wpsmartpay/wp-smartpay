@@ -34,9 +34,9 @@ class RouteServiceProvider extends ServiceProvider
     public function productRoute()
     {
 	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-        $page = isset($_GET['page']) && (sanitize_text_field(wp_unslash($_GET['page'])) ?? '');
+        $page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
 	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-        $action = isset($_GET['action']) && (sanitize_text_field(wp_unslash($_GET['action'])) ?? 'index');
+        $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : 'index';
 
 
         if ('smartpay-products' !== $page || !in_array($action, ['store', 'update'])) {
@@ -52,7 +52,7 @@ class RouteServiceProvider extends ServiceProvider
 
         if ('update' === $action) {
 	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-            $productId = isset($_GET['id']) && (sanitize_text_field(wp_unslash($_GET['id'])) ?? 0);
+            $productId = isset($_GET['id']) ? sanitize_text_field(wp_unslash($_GET['id'])) : 0;
 
             if (!!$productId) {
                 $request = Request::createFromGlobals();
