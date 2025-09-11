@@ -12,9 +12,8 @@ class Downloader
 
     public function __construct(Application $app)
     {
-        $this->app = $app;
-
-        $this->app->addAction('init', [$this, 'processDownload']);
+	    $this->app = $app;
+		$this->app->addAction('template_redirect', [$this, 'processDownload']);
     }
 
     /**
@@ -28,7 +27,18 @@ class Downloader
      */
     public function processDownload()
     {
-        $args = [
+	    // Clean any output buffer before setting headers
+	    if (ob_get_level()) {
+		    ob_end_clean();
+	    }
+
+	    // Check if headers already sent
+	    if (headers_sent()) {
+		    error_log('SmartPay: Headers already sent, cannot download');
+		    return;
+	    }
+
+		$args = [
 			// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
             'smartpay_file' => (isset($_GET['smartpay_file'])) ? $_GET['smartpay_file'] : '',
 	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
@@ -208,7 +218,7 @@ class Downloader
                 break;
         }
 
-        smartpay_die();
+        wp_die();
     }
 
     /**
@@ -1425,8 +1435,6 @@ class Downloader
         $hash_algo = 'SHA256';
         $secret    = hash($hash_algo, wp_salt());
 
-        $parts   = parse_url($url);
-
         // $args['ip'] = smartpay_get_ip(); // uncomment when you will need to ip validation
 
         $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -1435,7 +1443,7 @@ class Downloader
         $args['token']  = false; // Removes a token if present.
 
         $url   = add_query_arg($args, $url);
-        $parts = parse_url($url);
+        $parts = wp_parse_url($url);
 
         // In the event there isn't a path, set an empty one so we can MD5 the token
         if (!isset($parts['path'])) {
@@ -1458,7 +1466,7 @@ class Downloader
             'is_valid' => false
         ];
 
-        $parts = parse_url(add_query_arg(array()));
+        $parts = wp_parse_url(add_query_arg(array()));
         wp_parse_str($parts['query'], $query_args);
         $url = add_query_arg($query_args, site_url());
 
@@ -1487,7 +1495,7 @@ class Downloader
      */
     private function vaildateToken($url): bool
     {
-        $parts = parse_url($url);
+        $parts = wp_parse_url($url);
 
         if (!isset($parts['query'])) return false;
 

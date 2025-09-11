@@ -393,9 +393,11 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     {
         $attributes = $this->getAttributes();
 
+		$parent_class = get_parent_class($this);
+
         // Check if any accessor is available and call it
         foreach (get_class_methods($this) as $method) {
-            if (method_exists(get_class(), $method)) {
+            if ($parent_class && method_exists($parent_class, $method)) {
                 continue;
             }
 
