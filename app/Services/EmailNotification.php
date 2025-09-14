@@ -36,6 +36,7 @@ class EmailNotification
                 $subject,
                 $e->getMessage()
             );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($log_message);
         }
 

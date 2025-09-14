@@ -737,6 +737,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function belongsTo($related, $foreignKey = null, $otherKey = null)
     {
+	    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- used for relation resolution
         list(, $caller) = debug_backtrace(false, 2);
 
         $relation = $caller['function'];
@@ -805,7 +806,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
         $methods = ['belongsToMany'];
 
-        foreach (debug_backtrace(false) as $key => $trace) {
+	    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- used for relation resolution
+	    foreach (debug_backtrace(false) as $key => $trace) {
             if (!in_array($trace['function'], $methods) && $trace['function'] != $self) {
                 $caller = $trace['function'];
                 break;

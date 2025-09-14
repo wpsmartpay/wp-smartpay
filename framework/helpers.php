@@ -79,11 +79,14 @@ if (!function_exists('validator')) {
 if (!function_exists('dd')) {
     function dd($data)
     {
-        foreach (func_get_args() as $arg) {
-            echo "<pre>";
-            print_r($arg);
-            echo "</pre>";
-        }
+		if (defined('WP_DEBUG') && WP_DEBUG) {
+	        foreach (func_get_args() as $arg) {
+	            echo "<pre>";
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+	            print_r($arg);
+	            echo "</pre>";
+	        }
+		}
         die;
     }
 }

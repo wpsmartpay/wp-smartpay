@@ -444,7 +444,7 @@ class Admin
                     let name = form.find('input[type=text]').val();
                     let email = form.find('input[type=email]').val();
                     jQuery.ajax({
-                        url: 'https://localhost/boss/wp-admin/admin-ajax.php',
+                        url: ajaxurl,
                         method: 'POST',
                         crossDomain: true,
                         data: {

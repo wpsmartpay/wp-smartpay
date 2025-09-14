@@ -81,12 +81,14 @@ class ProductController extends RestController
             }else{
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->query('ROLLBACK');
+	            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
                 error_log('Failed to create product.');
                 return new WP_REST_Response(['message' => __('Failed to create product.', 'smartpay')], 500);
             }
         } catch (\Exception $e) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
             return new WP_REST_Response(['message' => $e->getMessage()], 500);
         }
@@ -161,6 +163,7 @@ class ProductController extends RestController
         } catch (\Exception $e) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }
@@ -196,6 +199,7 @@ class ProductController extends RestController
         } catch (\Exception $e) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }

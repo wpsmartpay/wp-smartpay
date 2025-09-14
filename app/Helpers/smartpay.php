@@ -936,7 +936,7 @@ function smartpay_get_ip()
         // To check ip is pass from proxy.
         // Can include more than 1 ip, first is the public one.
 
-        $ips = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        $ips = explode(',', sanitize_text_field(wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR'])));
         if (is_array($ips)) {
             $ip = filter_var($ips[0], FILTER_VALIDATE_IP);
         }
