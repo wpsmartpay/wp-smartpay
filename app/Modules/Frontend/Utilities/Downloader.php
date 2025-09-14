@@ -34,17 +34,20 @@ class Downloader
 
 	    // Check if headers already sent
 	    if (headers_sent()) {
-		    error_log('SmartPay: Headers already sent, cannot download');
+		    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		        error_log('SmartPay: Headers already sent, cannot download');
+		    }
 		    return;
 	    }
 
 		$args = [
 			// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-            'smartpay_file' => (isset($_GET['smartpay_file'])) ? $_GET['smartpay_file'] : '',
+            'smartpay_file' => (isset($_GET['smartpay_file'])) ? sanitize_text_field(wp_unslash($_GET['smartpay_file'])) : '',
 	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-            'ttl'           => (isset($_GET['ttl'])) ? rawurldecode($_GET['ttl']) : '',
+            'ttl'           => (isset($_GET['ttl'])) ? rawurldecode(sanitize_text_field(wp_unslash($_GET['ttl']))) : '',
 	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-            'token'         => (isset($_GET['token'])) ? $_GET['token'] : ''
+            'token'         => (isset($_GET['token'])) ? sanitize_text_field(wp_unslash($_GET['token'])) : ''
         ];
 
         if (empty($args['smartpay_file']) || empty($args['ttl']) || empty($args['token'])) return;
@@ -96,7 +99,7 @@ class Downloader
             }
         }
 
-        $fileDetails = parse_url($requestedFileUrl);
+        $fileDetails = wp_parse_url($requestedFileUrl);
         $schemes     = array('http', 'https'); // Direct URL schemes
 
         $supportedStreams = stream_get_wrappers();
@@ -117,6 +120,7 @@ class Downloader
 
         // Disable time limit
         if (!in_array('set_time_limit', explode(',',  ini_get('disable_functions')))) {
+			// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
             @set_time_limit(0);
         }
 
@@ -130,6 +134,7 @@ class Downloader
         if (function_exists('apache_setenv')) {
             @apache_setenv('no-gzip', 1);
         }
+	    // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
         @ini_set('zlib.output_compression', 'Off');
 
         nocache_headers();
@@ -201,6 +206,7 @@ class Downloader
 
                     if (!$ignore_x_accel_redirect_header) {
                         // We need a path relative to the domain
+	                    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                         $filePath = str_ireplace(realpath($_SERVER['DOCUMENT_ROOT']), '', $filePath);
                         header("X-Accel-Redirect: /$filePath");
                     }
@@ -1256,6 +1262,7 @@ class Downloader
         $chunksize = 1024 * 1024;
         $buffer    = '';
         $cnt       = 0;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         $handle    = @fopen($file, 'rb');
 
         if ($size = @filesize($file)) {
@@ -1267,6 +1274,7 @@ class Downloader
         }
 
         if (isset($_SERVER['HTTP_RANGE'])) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             list($size_unit, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
             if ('bytes' === $size_unit) {
                 if (strpos(',', $range)) {
@@ -1304,12 +1312,14 @@ class Downloader
 
         // Disable time limit
         if (!in_array('set_time_limit', explode(',',  ini_get('disable_functions')))) {
+			// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
             @set_time_limit(0);
         }
 
         fseek($handle, $seek_start);
 
         while (!@feof($handle)) {
+	        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
             $buffer = @fread($handle, $chunksize);
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo $buffer;
@@ -1320,6 +1330,7 @@ class Downloader
             }
 
             if (connection_status() != 0) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
                 @fclose($handle);
                 exit;
             }
@@ -1327,6 +1338,7 @@ class Downloader
 
         ob_flush();
 
+	    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         $status = @fclose($handle);
 
         if ($retbytes && $status) {
@@ -1437,7 +1449,7 @@ class Downloader
 
         // $args['ip'] = smartpay_get_ip(); // uncomment when you will need to ip validation
 
-        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+//        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         // $args['user_agent'] = rawurlencode($ua);
         $args['secret'] = $secret;
         $args['token']  = false; // Removes a token if present.
@@ -1474,7 +1486,8 @@ class Downloader
 
         if (!$valid_token) return $response;
 		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-        $file_parts = explode(':', rawurldecode($_GET['smartpay_file']));
+	    $_smartpay_file = isset($_GET['smartpay_file']) ? sanitize_text_field(wp_unslash($_GET['smartpay_file'])) : '';
+        $file_parts = explode(':', rawurldecode($_smartpay_file));
 
         // TODO: Implement download limit
 
