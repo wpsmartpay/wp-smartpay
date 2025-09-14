@@ -189,7 +189,7 @@ jQuery(($) => {
             .parents('.smartpay_form_builder_wrapper')
             .find('#smartpay-payment-form input[name=smartpay_form_id]')
             .val()
-
+        let $nonce = $(this).find('input[name=_wpnonce]').val()
         $.ajax({
             method: 'POST',
             url: smartpay.ajaxUrl,
@@ -197,6 +197,7 @@ jQuery(($) => {
                 action: 'smartpay_coupon',
                 couponCode: $couponCode,
                 formId: $formID,
+                _wpnonce: $nonce,
             },
         }).done(function (response) {
             if (response.success) {

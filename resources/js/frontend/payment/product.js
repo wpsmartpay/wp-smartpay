@@ -499,6 +499,7 @@ jQuery(($) => {
             .parents('.smartpay-product-shortcode')
             .find('input[name=smartpay_product_price]')
             .val()
+        let $nonce = $(this).find('input[name=_wpnonce]').val()
         $.ajax({
             method: 'POST',
             url: smartpay.ajaxUrl,
@@ -507,6 +508,7 @@ jQuery(($) => {
                 couponCode: $couponCode,
                 productID: $productID,
                 productPrice: $productPrice,
+                _wpnonce: $nonce,
             },
         }).done(function (response) {
             if (response.success) {

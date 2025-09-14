@@ -110,6 +110,7 @@ class Coupon
             </div>
         </div>
         <form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
+	        <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
             <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
             <div class="d-flex">
                 <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
@@ -121,8 +122,13 @@ class Coupon
 
     public function appliedCouponInForm()
     {
-        $couponCode = $_POST['couponCode'] ?? null;
-        $formId = $_POST['formId'] ?? null;
+        $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'smartpay_form_coupon_action')) {
+            wp_send_json_error(['message' => 'Invalid request']);
+        }
+
+        $couponCode = isset($_POST['couponCode']) ? sanitize_text_field(wp_unslash($_POST['couponCode'])) : null;
+        $formId = isset($_POST['formId']) ? sanitize_text_field(wp_unslash($_POST['formId'])) : null;
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
             wp_send_json_error(['message' => 'Coupon Not Found']);
@@ -228,8 +234,9 @@ class Coupon
             </div>
         </div>
         <form class="smartpay-product-coupon-form p-4 bg-light d-none">
+            <?php wp_nonce_field('smartpay_product_coupon_action'); ?>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id="coupon_code" style="flex: 1;" />
                 <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
@@ -237,13 +244,18 @@ class Coupon
 
     public function appliedCouponInProduct()
     {
-        $productId = $_POST['productID'] ?? null;
+        $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'smartpay_product_coupon_action')) {
+	        wp_send_json_error(['message' => 'Invalid request']);
+        }
+
+        $productId = isset($_POST['productID']) ? sanitize_text_field(wp_unslash($_POST['productID'])) : null;
 
         //get the product details from the database
         $originalProduct = ProductModel::where('id', $productId)->first();
 
-        $couponCode = $_POST['couponCode'] ?? null;
-        $productPrice = $_POST['productPrice'] ?? null;
+        $couponCode = isset($_POST['couponCode']) ? sanitize_text_field(wp_unslash($_POST['couponCode'])) : null;
+        $productPrice = isset($_POST['productPrice']) ? sanitize_text_field(wp_unslash($_POST['productPrice'])) : null;
         $productPrice =  str_replace('$', '', $productPrice);
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
