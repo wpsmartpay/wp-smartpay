@@ -171,13 +171,14 @@ class PaypalStandard extends PaymentGateway
     {
         global $smartpay_options;
 	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'paypal') {
+        if (isset($_GET['smartpay-listener']) && sanitize_text_field(wp_unslash($_GET['smartpay-listener'])) == 'paypal') {
 
             // Fallback just in case post_max_size is lower than needed
             if (ini_get('allow_url_fopen')) {
                 $post_data = file_get_contents('php://input');
             } else {
                 // If allow_url_fopen is not enabled, then make sure that post_max_size is large enough
+	            // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
                 ini_set('post_max_size', '12M');
             }
 
@@ -193,11 +194,13 @@ class PaypalStandard extends PaymentGateway
                 $encoded_data .= $arg_separator . $post_data;
             } else {
                 // Check if POST is empty
+	            // phpcs:ignore WordPress.Security.NonceVerification.Missing
                 if (empty($_POST)) {
                     // Nothing to do
                     return;
                 } else {
                     // Loop through each POST
+	                // phpcs:ignore WordPress.Security.NonceVerification.Missing
                     foreach ($_POST as $key => $value) {
                         // Encode the value and append the data
                         $encoded_data .= $arg_separator . "$key=" . urlencode($value);
@@ -260,7 +263,7 @@ class PaypalStandard extends PaymentGateway
 
             $encoded_data_array = wp_parse_args($encoded_data_array, $defaults);
 	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-            $payment_id = absint($encoded_data_array['custom'] ?? sanitize_text_field($_GET['payment-id']) ?? 0);
+            $payment_id = absint($encoded_data_array['custom'] ?? (isset($_GET['payment-id']) ? sanitize_text_field(wp_unslash($_GET['payment-id'])) : 0));
 
             $payment = smartpay_get_payment($payment_id);
 
