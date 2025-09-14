@@ -477,7 +477,8 @@ class Admin
 
     public function customerOptinNoticeDismiss()
     {
-        if (empty($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'smartpay_contact_optin_notice_dismiss')) {
+        $nonce = isset($_REQUEST['nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['nonce'])): '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'smartpay_contact_optin_notice_dismiss')) {
             return;
         }
 
@@ -485,8 +486,8 @@ class Admin
             return;
         }
 
-        $meta_value = 'smartpay_' . sanitize_text_field($_REQUEST['meta_value']) . '_dismissed_at';
-        $userId = sanitize_text_field($_REQUEST['user_id']);
+        $meta_value = 'smartpay_' . sanitize_text_field(wp_unslash($_REQUEST['meta_value'])) . '_dismissed_at';
+        $userId = sanitize_text_field(wp_unslash($_REQUEST['user_id']));
         update_user_meta($userId, $meta_value, time());
         wp_die();
     }

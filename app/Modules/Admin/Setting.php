@@ -365,6 +365,7 @@ class Setting
         global $smartpay_options;
 
         $doing_section = false;
+	    // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (!empty($_POST['_wp_http_referer'])) {
             $doing_section = true;
         }
@@ -373,12 +374,15 @@ class Setting
         $input         = $input ? $input : array();
 
         if ($doing_section) {
-            parse_str($_POST['_wp_http_referer'], $referrer); // Pull out the tab and section
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+            parse_str(sanitize_text_field(wp_unslash($_POST['_wp_http_referer'])), $referrer); // Pull out the tab and section
             $tab      = isset($referrer['tab']) ? $referrer['tab'] : 'general';
             $section  = isset($referrer['section']) ? $referrer['section'] : 'main';
 
+	        // phpcs:ignore WordPress.Security.NonceVerification.Missing
             if (!empty($_POST['smartpay_section_override'])) {
-                $section = sanitize_text_field($_POST['smartpay_section_override']);
+	            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $section = sanitize_text_field(wp_unslash($_POST['smartpay_section_override']));
             }
 
             $setting_types = $this->_registered_settings_types($tab, $section);
