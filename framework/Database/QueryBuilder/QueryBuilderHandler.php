@@ -43,12 +43,6 @@ class QueryBuilderHandler
      */
     protected $adapterInstance;
 
-    /**
-     * The PDO fetch parameters to use
-     *
-     * @var array
-     */
-    protected $fetchParameters = array(\PDO::FETCH_OBJ);
     protected string $adapter;
     protected array $adapterConfig;
 
@@ -80,34 +74,6 @@ class QueryBuilderHandler
             '\\SmartPay\Framework\Database\\QueryBuilder\\Adapters\\' . ucfirst($this->adapter),
             array($this->connection)
         );
-    }
-
-    /**
-     * Set the fetch mode
-     *
-     * @param $mode
-     * @return $this
-     */
-    public function setFetchMode($mode)
-    {
-        $this->fetchParameters = func_get_args();
-
-        return $this;
-    }
-
-    /**
-     * Fetch query results as object of specified type
-     *
-     * @param $className
-     * @param array $constructorArgs
-     * @return QueryBuilderHandler
-     */
-    public function asObject($className, $constructorArgs = array())
-    {
-        var_dump('need to implement this');
-        die();
-
-        return $this->setFetchMode(\PDO::FETCH_CLASS, $className, $constructorArgs);
     }
 
     /**
