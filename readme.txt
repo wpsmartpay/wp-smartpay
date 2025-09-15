@@ -1,13 +1,13 @@
-=== Download Manager and Payment Form WordPress Plugin - WP SmartPay ===
+=== SmartPay ===
 Contributors: themesgrove
-Tags: download manager, digital product, donation, ecommerce, stripe, paypal, paddle, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
+Tags: download manager, ecommerce, digital product, multiple payment gateways, donations,
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 8.1
 Stable Tag: 2.7.13
-License: GNU Version 2 or later
+License: GPL-3.0-or-later
 
-The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
+Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
 
 == Description ==
 The Simplest way to sell digital downloads and accept payments to run your business online. Often, you don't need a sophisticated store, cart, or checkout process to sell your digital product or take payment. You need a simple payment form to do it all. Do it smartly with WP SmartPay.
