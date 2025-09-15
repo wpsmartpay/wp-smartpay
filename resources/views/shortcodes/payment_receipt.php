@@ -44,7 +44,7 @@ if ($payment) : ?>
             </td>
         </tr>
 
-		<?php if ($payment->data['additional_info'] &&  ($additional_charge > 0 || $total_count > 0)): ?>
+		<?php if ( isset($payment->data['additional_info']) && $payment->data['additional_info'] &&  ($additional_charge > 0 || $total_count > 0)): ?>
             <tr>
                 <td><?php esc_html_e('Subscription Info:', 'smartpay') ?></td>
                 <td>
