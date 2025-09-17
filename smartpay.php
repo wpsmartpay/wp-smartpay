@@ -3,12 +3,12 @@
  * Plugin Name: SmartPay
  * Description: Simplest way to sell digital downloads and fundraise with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
- * Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
+ * Tags: download manager, ecommerce, digital product, multiple payment gateways, donations,
  *
- * Version: 2.7.13
+ * Version: 2.7.14
  * Requires PHP: 8.1
  * Requires at least: 6.0
- * Tested up to: 6.7
+ * Tested up to: 6.8
  *
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
@@ -32,7 +32,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '2.7.12');
+define('SMARTPAY_VERSION', '2.7.14');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');

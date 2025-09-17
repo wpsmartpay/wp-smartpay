@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv3+.
 msgid ""
 msgstr ""
-"Project-Id-Version: SmartPay 2.7.13\n"
+"Project-Id-Version: SmartPay 2.7.14\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/smartpay\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
