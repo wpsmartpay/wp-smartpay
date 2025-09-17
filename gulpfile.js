@@ -30,6 +30,7 @@ const copy = () => {
         '!*.lock',
         '!*.log',
         '!*.gitignore',
+		'composer.json',
     ]).pipe(dest('temp/smartpay'))
 }
 
