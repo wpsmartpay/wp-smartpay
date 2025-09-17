@@ -54,5 +54,6 @@ function smartpay_integration_get_not_installed_message(string $type): void
             break;
     }
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
     echo apply_filters('smartpay_integration_get_not_installed_message', $message, $type);
 }

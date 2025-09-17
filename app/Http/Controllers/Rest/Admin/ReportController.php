@@ -17,7 +17,7 @@ class ReportController extends RestController
     public function middleware($request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -42,15 +42,15 @@ class ReportController extends RestController
 
     public function monthlyReport()
     {
-        $total_days = cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'));
+        $total_days = cal_days_in_month(CAL_GREGORIAN, gmdate('m'), gmdate('Y'));
 
         $report = [];
         foreach (range(1, $total_days) as $i) {
-            $index = $i . '-' . date('m-y');
+            $index = $i . '-' . gmdate('m-y');
             $report[] = ['date' => $index, 'product_purchase' => 0, 'form_payment' => 0];
         }
 
-        $startDate = date('Y-m-01') . ' 00:00:00';
+        $startDate = gmdate('Y-m-01') . ' 00:00:00';
         $endDate = current_time('mysql');
 
         $report_data = Payment::whereBetween('completed_at', $startDate, $endDate)->where('status', Payment::COMPLETED)->orderBy('completed_at', 'DESC')->get();
@@ -58,7 +58,7 @@ class ReportController extends RestController
         foreach ($report_data as $index => $data) {
             if (!$data->completed_at) continue;
 
-            $date = date('j', strtotime($data->completed_at)) - 1;
+            $date = gmdate('j', strtotime($data->completed_at)) - 1;
             // FIXME
             $report[$date][$data->getType()] += $data->amount ?? 0;
         }

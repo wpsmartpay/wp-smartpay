@@ -29,7 +29,7 @@ class WPHooks
         if (!isset($_SERVER['HTTP_REFERER'])) {
             return $upload;
         }
-        preg_match("/^.+?\?page=(.+)$/is", $_SERVER['HTTP_REFERER'], $match);
+        preg_match("/^.+?\?page=(.+)$/is", sanitize_text_field(wp_unslash($_SERVER['HTTP_REFERER'])), $match);
 
         if (isset($match[1]) && $match[1] == 'smartpay') {
 

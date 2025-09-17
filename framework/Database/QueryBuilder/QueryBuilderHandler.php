@@ -43,12 +43,6 @@ class QueryBuilderHandler
      */
     protected $adapterInstance;
 
-    /**
-     * The PDO fetch parameters to use
-     *
-     * @var array
-     */
-    protected $fetchParameters = array(\PDO::FETCH_OBJ);
     protected string $adapter;
     protected array $adapterConfig;
 
@@ -57,7 +51,7 @@ class QueryBuilderHandler
      *
      * @throws \SmartPay\Framework\Database\Exception
      */
-    public function __construct(Connection $connection = null)
+    public function __construct(?Connection $connection = null)
     {
         if (is_null($connection)) {
             if (!$connection = Connection::getStoredConnection()) {
@@ -83,39 +77,11 @@ class QueryBuilderHandler
     }
 
     /**
-     * Set the fetch mode
-     *
-     * @param $mode
-     * @return $this
-     */
-    public function setFetchMode($mode)
-    {
-        $this->fetchParameters = func_get_args();
-
-        return $this;
-    }
-
-    /**
-     * Fetch query results as object of specified type
-     *
-     * @param $className
-     * @param array $constructorArgs
-     * @return QueryBuilderHandler
-     */
-    public function asObject($className, $constructorArgs = array())
-    {
-        var_dump('need to implement this');
-        die();
-
-        return $this->setFetchMode(\PDO::FETCH_CLASS, $className, $constructorArgs);
-    }
-
-    /**
      * @param null|\SmartPay\Framework\Database\Connection $connection
      *
      * @return static
      */
-    public function newQuery(Connection $connection = null)
+    public function newQuery(?Connection $connection = null)
     {
         if (is_null($connection)) {
             $connection = $this->connection;
@@ -287,7 +253,10 @@ class QueryBuilderHandler
         );
 
         if (!in_array(strtolower($type), $allowedTypes)) {
-            throw new Exception($type . ' is not a known type.', 2);
+            throw new Exception(
+				sprintf("%s is not a known type.", esc_html($type)),
+				2
+            );
         }
 
         $queryArr = $this->adapterInstance->$type($this->statements, $dataToBePassed);
@@ -1141,7 +1110,8 @@ class QueryBuilderHandler
      */
     public function paginate($perPage = null, $columns = array('*'))
     {
-        $req = $_REQUEST;
+	    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+        $req = $_GET;
 
         $currentPage = isset($req['page']) && intval($req['page']) ? intval($req['page']) : 1;
 

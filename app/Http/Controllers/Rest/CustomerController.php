@@ -14,13 +14,29 @@ class CustomerController extends RestController
      *
      * @param WP_REST_Request $request.
      */
-    public function middleware(WP_REST_Request $request)
+	public function middleware(WP_REST_Request $request)
     {
+		$nonce = $request->get_header('x_wp_nonce');
+		if (! wp_verify_nonce($nonce, 'wp_rest')) {
+			return new \WP_Error('rest_forbidden', __('Invalid nonce.', 'smartpay'), [
+				'status' => 403,
+			]);
+		}
+
         if (!is_user_logged_in()) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', __('You cannot view the resource.', 'smartpay'), [
                 'status' => 401,
             ]);
         }
+
+		$current_user = wp_get_current_user();
+		$customer = Customer::find($request->get_param('id'));
+
+		if (empty($customer) || ($current_user->user_email !== $customer->email)) {
+			return new \WP_Error('rest_not_found', __('Customer not found', 'smartpay'), [
+				'status' => 404,
+			]);
+		}
 
         return true;
     }
@@ -35,10 +51,6 @@ class CustomerController extends RestController
     {
         $customer = Customer::find($request->get_param('id'));
 
-        if (!$customer) {
-            return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
-        }
-
         return new WP_REST_Response(['customer' => $customer]);
     }
 
@@ -51,10 +63,7 @@ class CustomerController extends RestController
     public function update(WP_REST_Request $request): WP_REST_Response
     {
         $customer = Customer::find($request->get_param('id'));
-
-        if (!$customer) {
-            return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
-        }
+		$current_user = wp_get_current_user();
 
         $requestData = \json_decode($request->get_body(), true);
 
@@ -72,6 +81,7 @@ class CustomerController extends RestController
         };
 
         global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         $customer->first_name = $firstName;
@@ -79,18 +89,20 @@ class CustomerController extends RestController
         $customer->email = $email;
         $customer->save();
 
-        //TODO: user Database table
+        // Update User table
         $userdata = wp_update_user([
-            'ID' => $request->get_param('id'),
+            'ID' => $current_user->ID,
             'display_name' => $firstName  . ' ' . $lastName,
             'user_email' => $email,
         ]);
 
         if (is_wp_error($userdata)) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
             return new WP_REST_Response(['message' => __('Customer info not updated', 'smartpay')], 404);
         }
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('COMMIT');
         return new WP_REST_Response(['customer' => $customer, 'message' => __('Customer updated', 'smartpay')]);
     }

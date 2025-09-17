@@ -67,16 +67,18 @@ class Payment
     function ajax_process_payment()
     {
         // TODO: Convert response to JSON
-        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field($_POST['data']['smartpay_action'])) {
+	    // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field(wp_unslash($_POST['data']['smartpay_action']))) {
             echo '<p class="text-danger">Payment process action not acceptable!</p>';
             die();
         }
 
-        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
+        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['data']['smartpay_process_payment'])), 'smartpay_process_payment')) {
             echo '<p class="text-danger">Payment process nonce verification failed!</p>';
             die();
         }
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $validate = $this->_checkValidation(sanitize_post($_POST['data']) ?? []);
 
         if (!$validate) {
@@ -84,6 +86,7 @@ class Payment
             die();
         }
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $payment_data = $this->_prepare_payment_data(sanitize_post($_POST['data']) ?? []);
 
         if (!$payment_data || !is_array($payment_data)) {
@@ -103,7 +106,8 @@ class Payment
 
     private function _process_gateway_payment($paymentData, $ajax = true)
     {
-        $gateway = sanitize_text_field($_POST['data']['smartpay_gateway']) ?? '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $gateway = isset($_POST['data']['smartpay_gateway']) ? sanitize_text_field(wp_unslash($_POST['data']['smartpay_gateway'])) : '';
 
         if ('free'!==$gateway && (!is_string($gateway) || !smartpay_is_gateway_active($gateway))) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';
@@ -143,14 +147,14 @@ class Payment
         return apply_filters('smartpay_prepare_payment_data', array(
             'payment_type'  => $_data['smartpay_payment_type'],
             'payment_data'  => $payment_data,
-            'date'          => date('Y-m-d H:i:s', time()),
+            'date'          => gmdate('Y-m-d H:i:s', time()),
             'amount'        => $payment_data['total_amount'] ?? '',
             'currency'      => smartpay_get_currency() ?? 'USD',
             'gateway'       => $_data['smartpay_gateway'],
             'customer'      => $this->_get_payment_customer($_data),
             'email'         => $_data['smartpay_email'],
 			'mobile'        => $_data['smartpay_payment_mobile'] ?? '',
-            'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+            'key'           => strtolower(md5($_data['smartpay_email'] . gmdate('Y-m-d H:i:s') . wp_rand(1, 10))),
             'extra'         => $extra
         ), $_data);
     }

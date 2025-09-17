@@ -56,18 +56,24 @@ final class FreePurchase extends PaymentGateway
             if ($product->sale_price == $payment_data['amount']) {
                 $payment = smartpay_insert_payment($payment_data);
                 if ($payment) {
-                    smartpay_debug_log(__(sprintf(
-                        'SmartPay-FreePurchase: Payment #%s status changed to Pending.',
-                        $payment->id
-                    ), 'smartpay'));
+                    smartpay_debug_log(
+	                    sprintf(
+							/* translators: 1: Payment id */
+							__('SmartPay-FreePurchase: Payment #%s status changed to Pending.', 'smartpay' ),
+							$payment->id
+	                    )
+                    );
                 }
 
                 if (!$payment->id) {
                     wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
-                    smartpay_debug_log(__(sprintf(
-                        'SmartPay-FreePurchase: Payment #%s Can\'t insert payment.',
-                        $payment->id
-                    ), 'smartpay'));
+                    smartpay_debug_log(
+						sprintf(
+							/* translators: 1: Payment id */
+							__( 'SmartPay-FreePurchase: Payment #%s Can\'t insert payment.', 'smartpay' ),
+							$payment->id
+						)
+                    );
                     die('Can\'t insert payment.');
                 }
                 // Process the subscription
@@ -76,10 +82,13 @@ final class FreePurchase extends PaymentGateway
                 }
                 if ($payment->updateStatus(Payment::COMPLETED)) {
                     $payment->setTransactionId('Manual-Payment');
-                    smartpay_debug_log(__(sprintf(
-                        'SmartPay-FreePurchase: Payment #%s status changed to Completed.',
-                        $payment->id
-                    ), 'smartpay'));
+                    smartpay_debug_log(
+						sprintf(
+							/* translators: 1: payment id */
+							__( 'SmartPay-FreePurchase: Payment #%s status changed to Completed.', 'smartpay' ),
+							$payment->id
+						)
+                    );
                 }
                 $return_url = add_query_arg('smartpay-payment', $payment->uuid, smartpay_get_payment_success_page_uri());
                 echo 'Please be patient. Your payment is being processed';
@@ -87,6 +96,8 @@ final class FreePurchase extends PaymentGateway
 //                $content .= 'window.location.replace("'.$return_url.'");';
                 $content .= 'window.location.href = "'.$return_url.'";';
                 $content .= '</script>';
+
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo $content;
             } else {
                 smartpay_debug_log(__('SmartPay-FreePurchase: Sale price could not matched', 'smartpay'));

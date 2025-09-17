@@ -171,13 +171,14 @@ class Integration
 
     public function toggleIntegrationActivation()
     {
-        if (!isset($_POST['payload']['nonce']) || !wp_verify_nonce($_POST['payload']['nonce'], 'smartpay_integrations_toggle_activation')) {
+		$nonce = isset($_POST['payload']['nonce']) ? sanitize_text_field(wp_unslash($_POST['payload']['nonce'])): '';
+        if (!$nonce || !wp_verify_nonce($nonce, 'smartpay_integrations_toggle_activation')) {
             echo 'Invlid request';
             die();
         }
 
-        $action    = sanitize_text_field($_POST['payload']['action'] ?? '');
-        $namespace = sanitize_text_field($_POST['payload']['namespace'] ?? '');
+        $action    = isset($_POST['payload']['action']) ? sanitize_text_field(wp_unslash($_POST['payload']['action'])) : '';
+        $namespace = isset($_POST['payload']['namespace']) ? sanitize_text_field(wp_unslash($_POST['payload']['namespace'])) : '';
 
         if (!in_array($namespace, array_keys(smartpay_integrations()))) {
             echo 'Requested for invalid integration';

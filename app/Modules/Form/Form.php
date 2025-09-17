@@ -102,7 +102,8 @@ class Form
             'smartpay-form',
             SMARTPAY_PLUGIN_ASSETS . '/form-builder/index.js',
             ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
-            SMARTPAY_VERSION
+            SMARTPAY_VERSION,
+	        false
         );
 
         wp_localize_script(

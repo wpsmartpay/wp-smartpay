@@ -29,12 +29,14 @@ class EmailNotification
         } catch (\Exception $e) {
 
             $log_message = sprintf(
-                __("Email from SmartPay failed to send.\nSend time: %s\nTo: %s\nSubject: %s\nError: %s\n\n", 'smartpay'),
+				/* translators: 1: time 2: mail to 3: subject 4: error message */
+                __('Email from SmartPay failed to send.\nSend time: %1$s\nTo: %2$s\nSubject: %3$s\nError: %4$s\n\n', 'smartpay'),
                 date_i18n('F j Y H:i:s', current_time('timestamp')),
                 $mailTo,
                 $subject,
                 $e->getMessage()
             );
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($log_message);
         }
 

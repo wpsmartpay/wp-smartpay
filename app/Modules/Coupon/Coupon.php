@@ -105,15 +105,16 @@ class Coupon
         ?>
         <div class="smartpay-coupon-form-toggle">
             <div class="coupon-info mb-4 p-4 bg-light">
-                <?php _e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
+                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
+                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
             </div>
         </div>
         <form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
+	        <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
             <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
         <?php
@@ -121,8 +122,13 @@ class Coupon
 
     public function appliedCouponInForm()
     {
-        $couponCode = $_POST['couponCode'] ?? null;
-        $formId = $_POST['formId'] ?? null;
+        $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'smartpay_form_coupon_action')) {
+            wp_send_json_error(['message' => 'Invalid request']);
+        }
+
+        $couponCode = isset($_POST['couponCode']) ? sanitize_text_field(wp_unslash($_POST['couponCode'])) : null;
+        $formId = isset($_POST['formId']) ? sanitize_text_field(wp_unslash($_POST['formId'])) : null;
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
             wp_send_json_error(['message' => 'Coupon Not Found']);
@@ -130,7 +136,7 @@ class Coupon
 
         // expiry date check
         if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(date('Y-m-d'));
+            $currentDate = date_create(gmdate('Y-m-d'));
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {
@@ -188,7 +194,7 @@ class Coupon
         <div class="discount-amounts-container mb-3 d-none">
             <div class="py-2">
                 <p class="d-flex justify-content-between m-0">
-                    <span class="font-weight-bold"><?php _e('Subtotal', 'smartpay'); ?></span>
+                    <span class="font-weight-bold"><?php esc_html_e('Subtotal', 'smartpay'); ?></span>
                     <span class="subtotal-amount-value"></span>
                 </p>
             </div>
@@ -204,7 +210,7 @@ class Coupon
 
             <div class="py-2">
                 <p class="d-flex justify-content-between m-0">
-                    <span class="font-weight-bold"><?php _e('Total Amount', 'smartpay'); ?></span>
+                    <span class="font-weight-bold"><?php esc_html_e('Total Amount', 'smartpay'); ?></span>
                     <span class="total-amount-value"></span>
                 </p>
             </div>
@@ -223,27 +229,33 @@ class Coupon
         ?>
         <div class="smartpay-product-coupon-form-toggle">
             <div class="coupon-info mb-4 p-4 bg-light">
-                <?php _e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php _e('Click here to enter your code', 'smartpay'); ?></a>
+                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
+                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
             </div>
         </div>
         <form class="smartpay-product-coupon-form p-4 bg-light d-none">
+            <?php wp_nonce_field('smartpay_product_coupon_action'); ?>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php _e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php _e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id="coupon_code" style="flex: 1;" />
+                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
     <?php }
 
     public function appliedCouponInProduct()
     {
-        $productId = $_POST['productID'] ?? null;
+        $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'smartpay_product_coupon_action')) {
+	        wp_send_json_error(['message' => 'Invalid request']);
+        }
+
+        $productId = isset($_POST['productID']) ? sanitize_text_field(wp_unslash($_POST['productID'])) : null;
 
         //get the product details from the database
         $originalProduct = ProductModel::where('id', $productId)->first();
 
-        $couponCode = $_POST['couponCode'] ?? null;
-        $productPrice = $_POST['productPrice'] ?? null;
+        $couponCode = isset($_POST['couponCode']) ? sanitize_text_field(wp_unslash($_POST['couponCode'])) : null;
+        $productPrice = isset($_POST['productPrice']) ? sanitize_text_field(wp_unslash($_POST['productPrice'])) : null;
         $productPrice =  str_replace('$', '', $productPrice);
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
@@ -252,7 +264,7 @@ class Coupon
 
         // expiry date check
         if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(date('Y-m-d'));
+            $currentDate = date_create(gmdate('Y-m-d'));
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {

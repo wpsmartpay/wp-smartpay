@@ -11,6 +11,9 @@
 .smartpay {
     @import '~bootstrap/scss/bootstrap-grid';
     @import 'admin/admin';
+    .wrap {
+        margin: 0 auto;
+    }
 }
 
 .dashicons-smartpay::before {

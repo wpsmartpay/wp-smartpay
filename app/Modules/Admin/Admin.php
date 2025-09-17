@@ -32,6 +32,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             },
             smartpay_svg_icon(),
@@ -45,6 +46,7 @@ class Admin
             'manage_options',
             'smartpay',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -56,6 +58,7 @@ class Admin
             'manage_options',
             'smartpay#/products',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -67,6 +70,7 @@ class Admin
             'manage_options',
             'smartpay-form',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('form-builder');
             }
         );
@@ -78,6 +82,7 @@ class Admin
             'manage_options',
             'smartpay#/customers',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -89,6 +94,7 @@ class Admin
             'manage_options',
             'smartpay#/coupons',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -100,6 +106,7 @@ class Admin
             'manage_options',
             'smartpay#/payments',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
@@ -111,6 +118,7 @@ class Admin
             'manage_options',
             'smartpay-setting',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('settings');
             }
         );
@@ -122,6 +130,7 @@ class Admin
             'manage_options',
             'smartpay-integrations',
             function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('integrations');
             }
         );
@@ -210,7 +219,7 @@ class Admin
         }
 
         // Global
-        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data']);
+        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
 
         // Product
         register_block_type('smartpay/product', array(
@@ -279,29 +288,29 @@ class Admin
         <div class="wpsmartpay-welcome">
             <div class="container">
                 <div class="introduction-image">
-                    <img src="<?php echo SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
+                    <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/logo.png') ?>" alt="<?php esc_attr_e('SmartPay Logo', 'smartpay'); ?>">
                 </div>
                 <div class="introduction">
                     <div class="introduction-text">
-                        <h2><?php _e('Welcome Aboard'); ?></h2>
-                        <p><?php _e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.'); ?></p>
+                        <h2><?php esc_html_e('Welcome Aboard', 'smartpay'); ?></h2>
+                        <p><?php esc_html_e('Congratulations you are just few minutes away form displaying your digital products to selling it and receiving payments, all-in-one Simplest solution.', 'smartpay'); ?></p>
                     </div>
                     <div class="introduction-video">
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/PdqA7XNH60Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-                        <!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.'); 
+                        <!--                        <p>--><?php //_e('Spend 3 minutes ( literally 3 minutes ) watching the video to get an overview how it works.');
                                                             ?>
                         <!--</p>-->
                     </div>
                 </div>
 
                 <div class="subscription-form">
-                    <h3><?php _e('Wanna get some discount?', 'smartpay'); ?></h3>
-                    <p><?php _e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
+                    <h3><?php esc_html_e('Wanna get some discount?', 'smartpay'); ?></h3>
+                    <p><?php esc_html_e('No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay'); ?></p>
                     <form>
                         <div class="inline-input-wrapper">
                             <input type="email" placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" value="<?php echo esc_attr($user->user_email); ?>" />
-                            <button type="submit" class="button button-primary"><?php _e('Get Discount'); ?></button>
+                            <button type="submit" class="button button-primary"><?php esc_html_e('Get Discount', 'smartpay'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -309,10 +318,10 @@ class Admin
                 <div class="create-form-section">
                     <div class="button-wrap">
                         <div class="left-side">
-                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php _e('Create Your First Form', 'smartpay'); ?></a>
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay-form#/create"')); ?>"><?php esc_html_e('Create Your First Form', 'smartpay'); ?></a>
                         </div>
                         <div class="right-side">
-                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php _e('Create Your First Product', 'smartpay'); ?></a>
+                            <a class="dashboard-button button" href="<?php echo esc_url(admin_url('admin.php?page="smartpay#/products/create"')); ?>"><?php esc_html_e('Create Your First Product', 'smartpay'); ?></a>
                         </div>
                     </div>
                 </div>
@@ -329,6 +338,7 @@ class Admin
 
         delete_transient('wpsmartpay_activation_redirect');
 
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
         if (isset($_GET['activate-multi']) || is_network_admin()) {
             return;
         }
@@ -377,7 +387,7 @@ class Admin
             <div class="notice notice-warning is-dismissible smartpay-notice-wrapper">
                 <img src="<?php echo esc_url(SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png'); ?>" alt="<?php esc_attr_e('Logo', 'smartpay') ?>">
                 <div class="smartpay-notice-content">
-                    <h4><?php _e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.') ?></h4>
+                    <h4><?php esc_html_e('Wanna get some discount for WP SmartPay Pro? No Worries!! We got you!! give us your email we will send you the discount code.', 'smartpay') ?></h4>
                     <form style="display:flex">
                         <div class="smartpay-notice-input-wrapper">
                             <input type="text" value="<?php echo esc_attr($user->first_name); ?>" placeholder="<?php esc_attr_e('Name', 'smartpay'); ?>" />
@@ -385,7 +395,7 @@ class Admin
                         <div class="smartpay-notice-input-wrapper">
                             <input type="email" value="<?php echo esc_attr($user->user_email); ?>" required placeholder="<?php esc_attr_e('Email Address', 'smartpay'); ?>" />
                         </div>
-                        <button type="submit" class="button button-primary subscribe-button"><?php _e('Get Discount'); ?></button>
+                        <button type="submit" class="button button-primary subscribe-button"><?php esc_html_e('Get Discount', 'smartpay'); ?></button>
                     </form>
                 </div>
             </div>
@@ -421,9 +431,9 @@ class Admin
                         method: 'POST',
                         data: {
                             action: 'smartpay_contact_optin_notice_dismiss',
-                            nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-                            user_id: '<?php esc_attr_e($user_id); ?>',
-                            meta_value: '<?php esc_attr_e($dismiss_key); ?>'
+                            nonce: '<?php echo esc_attr(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                            user_id: '<?php echo esc_attr($user_id); ?>',
+                            meta_value: '<?php echo esc_attr($dismiss_key); ?>'
                         }
                     })
                 });
@@ -434,7 +444,7 @@ class Admin
                     let name = form.find('input[type=text]').val();
                     let email = form.find('input[type=email]').val();
                     jQuery.ajax({
-                        url: 'https://localhost/boss/wp-admin/admin-ajax.php',
+                        url: ajaxurl,
                         method: 'POST',
                         crossDomain: true,
                         data: {
@@ -450,8 +460,8 @@ class Admin
                                     method: 'POST',
                                     data: {
                                         action: 'smartpay_contact_optin_notice_dismiss',
-                                        nonce: '<?php esc_attr_e(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
-                                        user_id: '<?php esc_attr_e($user_id); ?>',
+                                        nonce: '<?php echo esc_attr(wp_create_nonce('smartpay_contact_optin_notice_dismiss')); ?>',
+                                        user_id: '<?php echo esc_attr($user_id); ?>',
                                         meta_value: 'opted_in'
                                     }
                                 })
@@ -467,7 +477,8 @@ class Admin
 
     public function customerOptinNoticeDismiss()
     {
-        if (empty($_REQUEST['nonce']) || !wp_verify_nonce($_REQUEST['nonce'], 'smartpay_contact_optin_notice_dismiss')) {
+        $nonce = isset($_REQUEST['nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['nonce'])): '';
+        if (empty($nonce) || !wp_verify_nonce($nonce, 'smartpay_contact_optin_notice_dismiss')) {
             return;
         }
 
@@ -475,8 +486,8 @@ class Admin
             return;
         }
 
-        $meta_value = 'smartpay_' . sanitize_text_field($_REQUEST['meta_value']) . '_dismissed_at';
-        $userId = sanitize_text_field($_REQUEST['user_id']);
+        $meta_value = 'smartpay_' . sanitize_text_field(wp_unslash($_REQUEST['meta_value'])) . '_dismissed_at';
+        $userId = sanitize_text_field(wp_unslash($_REQUEST['user_id']));
         update_user_meta($userId, $meta_value, time());
         wp_die();
     }

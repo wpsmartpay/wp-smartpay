@@ -14,7 +14,11 @@ class CreateSmartpayFormsTable
 
         $charsetCollate = $wpdb->get_charset_collate();
 
+		// forms Table Creation, caching not applicable.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         if ($wpdb->get_var("SHOW TABLES LIKE '$table'") != $table) {
+			// Schema creation with dbDelta() on plugin activation.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange
             $sql = "CREATE TABLE $table (
                 `id` BIGINT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
                 `title` VARCHAR(255) NOT NULL,

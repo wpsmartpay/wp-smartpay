@@ -511,7 +511,9 @@ class Container implements ArrayAccess, ContainerContract
     public function alias($abstract, $alias) : void
     {
         if ($alias === $abstract) {
-            throw new LogicException("[{$abstract}] is aliased to itself.");
+            throw new LogicException(
+				sprintf("[%s] is aliased to itself.", esc_html($abstract))
+            );
         }
 
         $this->aliases[$alias] = $abstract;
@@ -661,7 +663,7 @@ class Container implements ArrayAccess, ContainerContract
                 throw $e;
             }
 
-            throw new EntryNotFoundException($id, $e->getCode(), $e);
+            throw new EntryNotFoundException(esc_html($id), (int) $e->getCode(), esc_html($e));
         }
     }
 
@@ -823,7 +825,7 @@ class Container implements ArrayAccess, ContainerContract
         try {
             $reflector = new ReflectionClass($concrete);
         } catch (ReflectionException $e) {
-            throw new BindingResolutionException("Target class [$concrete] does not exist.", 0, $e);
+            throw new BindingResolutionException(sprintf("Target class [%s] does not exist.", esc_html($concrete)), 0, esc_html($e));
         }
 
         // If the type is not instantiable, the developer is attempting to resolve
@@ -1030,7 +1032,7 @@ class Container implements ArrayAccess, ContainerContract
             $message = "Target [$concrete] is not instantiable.";
         }
 
-        throw new BindingResolutionException($message);
+        throw new BindingResolutionException(esc_html($message));
     }
 
     /**
@@ -1045,7 +1047,7 @@ class Container implements ArrayAccess, ContainerContract
     {
         $message = "Unresolvable dependency resolving [$parameter] in class {$parameter->getDeclaringClass()->getName()}";
 
-        throw new BindingResolutionException($message);
+        throw new BindingResolutionException(esc_html($message));
     }
 
     /**
@@ -1056,7 +1058,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @return void
      */
-    public function resolving($abstract, Closure $callback = null) : void
+    public function resolving($abstract, ?Closure $callback = null) : void
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1077,7 +1079,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @return void
      */
-    public function afterResolving($abstract, Closure $callback = null) : void
+    public function afterResolving($abstract, ?Closure $callback = null) : void
     {
         if (is_string($abstract)) {
             $abstract = $this->getAlias($abstract);
@@ -1273,7 +1275,7 @@ class Container implements ArrayAccess, ContainerContract
      * @param  \SmartPay\Framework\Contracts\Container\Container|null  $container
      * @return \SmartPay\Framework\Contracts\Container\Container|static
      */
-    public static function setInstance(ContainerContract $container = null)
+    public static function setInstance(?ContainerContract $container = null)
     {
         return static::$instance = $container;
     }

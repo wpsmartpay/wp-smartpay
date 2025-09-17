@@ -1,3 +1,4 @@
+<?php ?>
 <div class="smartpay">
     <div class="wrap d-none">
         <h2></h2>

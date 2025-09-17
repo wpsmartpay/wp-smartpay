@@ -30,6 +30,6 @@ class Coupon extends Model
 
     public function getExpiryDateAttribute($value)
     {
-        return date('Y-m-d', strtotime($value));
+        return gmdate('Y-m-d', strtotime($value));
     }
 }

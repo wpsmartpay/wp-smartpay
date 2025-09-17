@@ -12,9 +12,8 @@ class Downloader
 
     public function __construct(Application $app)
     {
-        $this->app = $app;
-
-        $this->app->addAction('init', [$this, 'processDownload']);
+	    $this->app = $app;
+		$this->app->addAction('template_redirect', [$this, 'processDownload']);
     }
 
     /**
@@ -28,10 +27,27 @@ class Downloader
      */
     public function processDownload()
     {
-        $args = [
-            'smartpay_file' => (isset($_GET['smartpay_file'])) ? $_GET['smartpay_file'] : '',
-            'ttl'           => (isset($_GET['ttl'])) ? rawurldecode($_GET['ttl']) : '',
-            'token'         => (isset($_GET['token'])) ? $_GET['token'] : ''
+	    // Clean any output buffer before setting headers
+	    if (ob_get_level()) {
+		    ob_end_clean();
+	    }
+
+	    // Check if headers already sent
+	    if (headers_sent()) {
+		    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		        error_log('SmartPay: Headers already sent, cannot download');
+		    }
+		    return;
+	    }
+
+		$args = [
+			// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+            'smartpay_file' => (isset($_GET['smartpay_file'])) ? sanitize_text_field(wp_unslash($_GET['smartpay_file'])) : '',
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+            'ttl'           => (isset($_GET['ttl'])) ? rawurldecode(sanitize_text_field(wp_unslash($_GET['ttl']))) : '',
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+            'token'         => (isset($_GET['token'])) ? sanitize_text_field(wp_unslash($_GET['token'])) : ''
         ];
 
         if (empty($args['smartpay_file']) || empty($args['ttl']) || empty($args['token'])) return;
@@ -39,7 +55,7 @@ class Downloader
         $validation = $this->checkDownloadUrl();
 
         if (!$validation['is_valid']) {
-            wp_die(__('Sorry! Maybe your token is invalid or you don\'t have the access.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! Maybe your token is invalid or you don\'t have the access.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         extract($validation);
@@ -48,19 +64,19 @@ class Downloader
 
         // FIXME
         if (!$payment_id || !$payment || 'Completed' !== $payment->status) {
-            wp_die(__('Sorry! Payment invalid or not completed yet.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! Payment invalid or not completed yet.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $product = Product::find($product_id);
 
         if (!$product_id || !$product || !$product->isPurchasable()) {
-            wp_die(__('Sorry! This product is invalid or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! This product is invalid or don\'t have right permission.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $fileIndex = array_search($file_id, array_column($product->files, 'id'));
 
         if (0 > $fileIndex) {
-            wp_die(__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry! This file doesn\'t exist or don\'t have right permission.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $requestedFile  = $product->files[$fileIndex];
@@ -83,12 +99,12 @@ class Downloader
             }
         }
 
-        $fileDetails = parse_url($requestedFileUrl);
+        $fileDetails = wp_parse_url($requestedFileUrl);
         $schemes     = array('http', 'https'); // Direct URL schemes
 
         $supportedStreams = stream_get_wrappers();
         if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN' && isset($fileDetails['scheme']) && !in_array($fileDetails['scheme'], $supportedStreams)) {
-            wp_die(__('Error downloading file. Please contact support.', 'smartpay'), __('File download error', 'smartpay'), 501);
+            wp_die(esc_html__('Error downloading file. Please contact support.', 'smartpay'), esc_html__('File download error', 'smartpay'), 501);
         }
 
         if ((!isset($fileDetails['scheme']) || !in_array($fileDetails['scheme'], $schemes)) && isset($fileDetails['path']) && file_exists($requestedFileUrl)) {
@@ -104,12 +120,13 @@ class Downloader
 
         // Disable time limit
         if (!in_array('set_time_limit', explode(',',  ini_get('disable_functions')))) {
+			// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
             @set_time_limit(0);
         }
 
         // If we're using an attachment ID to get the file, even by path, we can ignore this check.
         if (false === $isAttachmentFile || !$this->isLocalFileLocationAllowed($fileDetails, $schemes, $requestedFileUrl)) {
-            wp_die(__('Sorry, this file could not be downloaded.', 'smartpay'), __('Error Downloading File', 'smartpay'), 403);
+            wp_die(esc_html__('Sorry, this file could not be downloaded.', 'smartpay'), esc_html__('Error Downloading File', 'smartpay'), 403);
         }
 
         // Write session data and end session
@@ -117,6 +134,7 @@ class Downloader
         if (function_exists('apache_setenv')) {
             @apache_setenv('no-gzip', 1);
         }
+	    // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
         @ini_set('zlib.output_compression', 'Off');
 
         nocache_headers();
@@ -188,6 +206,7 @@ class Downloader
 
                     if (!$ignore_x_accel_redirect_header) {
                         // We need a path relative to the domain
+	                    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
                         $filePath = str_ireplace(realpath($_SERVER['DOCUMENT_ROOT']), '', $filePath);
                         header("X-Accel-Redirect: /$filePath");
                     }
@@ -205,7 +224,7 @@ class Downloader
                 break;
         }
 
-        smartpay_die();
+        wp_die();
     }
 
     /**
@@ -1243,6 +1262,7 @@ class Downloader
         $chunksize = 1024 * 1024;
         $buffer    = '';
         $cnt       = 0;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         $handle    = @fopen($file, 'rb');
 
         if ($size = @filesize($file)) {
@@ -1254,6 +1274,7 @@ class Downloader
         }
 
         if (isset($_SERVER['HTTP_RANGE'])) {
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             list($size_unit, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
             if ('bytes' === $size_unit) {
                 if (strpos(',', $range)) {
@@ -1291,13 +1312,16 @@ class Downloader
 
         // Disable time limit
         if (!in_array('set_time_limit', explode(',',  ini_get('disable_functions')))) {
+			// phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
             @set_time_limit(0);
         }
 
         fseek($handle, $seek_start);
 
         while (!@feof($handle)) {
+	        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
             $buffer = @fread($handle, $chunksize);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo $buffer;
             ob_flush();
 
@@ -1306,6 +1330,7 @@ class Downloader
             }
 
             if (connection_status() != 0) {
+				// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
                 @fclose($handle);
                 exit;
             }
@@ -1313,6 +1338,7 @@ class Downloader
 
         ob_flush();
 
+	    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         $status = @fclose($handle);
 
         if ($retbytes && $status) {
@@ -1421,17 +1447,15 @@ class Downloader
         $hash_algo = 'SHA256';
         $secret    = hash($hash_algo, wp_salt());
 
-        $parts   = parse_url($url);
-
         // $args['ip'] = smartpay_get_ip(); // uncomment when you will need to ip validation
 
-        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+//        $ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
         // $args['user_agent'] = rawurlencode($ua);
         $args['secret'] = $secret;
         $args['token']  = false; // Removes a token if present.
 
         $url   = add_query_arg($args, $url);
-        $parts = parse_url($url);
+        $parts = wp_parse_url($url);
 
         // In the event there isn't a path, set an empty one so we can MD5 the token
         if (!isset($parts['path'])) {
@@ -1454,15 +1478,16 @@ class Downloader
             'is_valid' => false
         ];
 
-        $parts = parse_url(add_query_arg(array()));
+        $parts = wp_parse_url(add_query_arg(array()));
         wp_parse_str($parts['query'], $query_args);
         $url = add_query_arg($query_args, site_url());
 
         $valid_token = $this->vaildateToken($url);
 
         if (!$valid_token) return $response;
-
-        $file_parts = explode(':', rawurldecode($_GET['smartpay_file']));
+		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+	    $_smartpay_file = isset($_GET['smartpay_file']) ? sanitize_text_field(wp_unslash($_GET['smartpay_file'])) : '';
+        $file_parts = explode(':', rawurldecode($_smartpay_file));
 
         // TODO: Implement download limit
 
@@ -1483,14 +1508,14 @@ class Downloader
      */
     private function vaildateToken($url): bool
     {
-        $parts = parse_url($url);
+        $parts = wp_parse_url($url);
 
         if (!isset($parts['query'])) return false;
 
         wp_parse_str($parts['query'], $query_args);
 
         if (isset($query_args['ttl']) && current_time('timestamp') > $query_args['ttl']) {
-            wp_die(__('Sorry but your download link has expired.', 'smartpay'), __('Error', 'smartpay'), array('response' => 403));
+            wp_die(esc_html__('Sorry but your download link has expired.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         if (!isset($query_args['token']) || !hash_equals($query_args['token'], $this->generateToken($url))) return false;

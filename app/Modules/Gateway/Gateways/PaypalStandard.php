@@ -40,12 +40,10 @@ class PaypalStandard extends PaymentGateway
 
         if (empty($paypal_email)) {
             add_action('admin_notices', function () {
-                echo __(sprintf(
-                    '<div class="error">
-                        <p><strong>Paypal credentials was not set yet!</strong> To get the Paypal service on smartpay, you must add your paypal business email.  <a href="%s"> Input your paypal credentials</a></p>
-                    </div>',
-                    admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal')
-                ), 'smartpay-pro');
+				echo sprintf('<div class="error"><p><strong>'.
+				     esc_html__('Paypal credentials was not set yet!', 'smartpay').'</strong> '. esc_html__('To get the Paypal service on smartpay, you must add your paypal business email.', 'smartpay'). ' <a href="%s"> '. esc_html__(' Input your paypal credentials', 'smartpay'). '</a></p></div>',
+					esc_url(admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal'))
+				);
             });
         }
     }
@@ -75,12 +73,13 @@ class PaypalStandard extends PaymentGateway
     }
 
 	public function addWarningMessage( Payment $payment ): void {
+		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
 		if ( isset( $_GET['PayerID'] ) && strtolower($payment->status) === Payment::PENDING && $payment->gateway === 'paypal' ) {
 			$message = __( 'Thank you for your payment.Your payment is processing and will be completed within few seconds. <strong>Do not pay again</strong>.',
-				'wp-smartpay-edd' );
+				'smartpay' );
 			echo '<div class="smartpay">';
 			echo '<div class="receipt-alert receipt-alert-success">';
-			echo '<p>' . $message . '</p>';
+			echo '<p>' . wp_kses_post($message) . '</p>';
 			echo '<a class="receipt-alert-close">&times;</a>';
 			echo '</div>';
 			echo '</div>';
@@ -156,6 +155,7 @@ class PaypalStandard extends PaymentGateway
         $content = '<p class="text-center">Redirecting to PayPal...</p>';
         $content .= '<script>window.location.replace("' . $paypal_redirect . '");</script>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $content;
         return;
     }
@@ -170,14 +170,15 @@ class PaypalStandard extends PaymentGateway
     public function processWebhooks()
     {
         global $smartpay_options;
-
-        if (isset($_GET['smartpay-listener']) && sanitize_text_field($_GET['smartpay-listener']) == 'paypal') {
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+        if (isset($_GET['smartpay-listener']) && sanitize_text_field(wp_unslash($_GET['smartpay-listener'])) == 'paypal') {
 
             // Fallback just in case post_max_size is lower than needed
             if (ini_get('allow_url_fopen')) {
                 $post_data = file_get_contents('php://input');
             } else {
                 // If allow_url_fopen is not enabled, then make sure that post_max_size is large enough
+	            // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged
                 ini_set('post_max_size', '12M');
             }
 
@@ -193,11 +194,13 @@ class PaypalStandard extends PaymentGateway
                 $encoded_data .= $arg_separator . $post_data;
             } else {
                 // Check if POST is empty
+	            // phpcs:ignore WordPress.Security.NonceVerification.Missing
                 if (empty($_POST)) {
                     // Nothing to do
                     return;
                 } else {
                     // Loop through each POST
+	                // phpcs:ignore WordPress.Security.NonceVerification.Missing
                     foreach ($_POST as $key => $value) {
                         // Encode the value and append the data
                         $encoded_data .= $arg_separator . "$key=" . urlencode($value);
@@ -259,18 +262,16 @@ class PaypalStandard extends PaymentGateway
             );
 
             $encoded_data_array = wp_parse_args($encoded_data_array, $defaults);
-
-            $payment_id = absint($encoded_data_array['custom'] ?? sanitize_text_field($_GET['payment-id']) ?? 0);
+	        // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+            $payment_id = absint($encoded_data_array['custom'] ?? (isset($_GET['payment-id']) ? sanitize_text_field(wp_unslash($_GET['payment-id'])) : 0));
 
             $payment = smartpay_get_payment($payment_id);
 
             // If payment not found
             if (!$payment) {
-                echo __(sprintf(
-                    'SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.',
-                    $payment_id
-                ), 'smartpay');
-
+                echo sprintf(
+					/* translators: 1: payment id */
+					esc_html__( 'SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.','smartpay' ), esc_html($payment_id));
                 die('Error.');
             }
 
@@ -304,10 +305,10 @@ class PaypalStandard extends PaymentGateway
         $payment = Payment::find($payment_id);
 
         if (!$payment) {
-            smartpay_debug_log(__(sprintf(
-                'SmartPay-PayPal: Payment #%s no found.',
-                $payment_id
-            ), 'smartpay'));
+            smartpay_debug_log(sprintf(
+				/* translators: 1: payment id */
+				__( 'SmartPay-PayPal: Payment #%s no found.', 'smartpay' ), $payment_id)
+            );
         }
 
         if ($payment_status == 'refunded' || $payment_status == 'reversed') {
@@ -326,10 +327,10 @@ class PaypalStandard extends PaymentGateway
                 $payment->updateStatus('completed');
                 $payment->setTransactionId($data['txn_id']);
 
-                smartpay_debug_log(__(sprintf(
-                    'SmartPay-PayPal: Payment #%s completed.',
-                    $payment->id
-                ), 'smartpay'));
+                smartpay_debug_log(sprintf(
+					/* translators: 1: payment id */
+					__( 'SmartPay-PayPal: Payment #%s completed.', 'smartpay' ), $payment->id
+	                ) );
             }
         }
     }
@@ -376,21 +377,25 @@ class PaypalStandard extends PaymentGateway
             array(
                 'id'    => 'paypal_identity_token',
                 'name'  => __('PayPal Identity Token', 'smartpay'),
-                'desc'  => sprintf(__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'smartpay'), 'https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/#get-started'),
+                'desc'  => sprintf(
+					__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our', 'smartpay') . '<a href="%s" target="_blank">'. __('documentation', 'smartpay') .'</a>' . __(' for further information.', 'smartpay'),
+	                esc_url('https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/#get-started')
+                ),
                 'type'  => 'text'
             ),
             array(
                 'id'    => 'disable_paypal_verification',
                 'name'  => __('Disable PayPal IPN Verification', 'smartpay'),
-                'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'smartpay'), '#'),
+                'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our', 'smartpay').' <a href="%s" target="_blank">'. __('FAQ', 'smartpay') .'</a>'. __('for further information.', 'smartpay'), '#'),
                 'type'  => 'checkbox',
             ),
 
             array(
                 'id'    => 'paypal_smartpay_doc_link',
                 'name'  => __('WPSmartPay Documentation Link', 'smartpay'),
-                'desc'  => sprintf(__('Please see our <a href="%s" target="_blank">documentation</a> to set up PayPal properly.
-                .', 'smartpay'), 'https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal'),
+                'desc'  => sprintf(__('Please see our', 'smartpay').' <a href="%s" target="_blank">'.__('documentation', 'smartpay').'</a>'. __('to set up PayPal properly.', 'smartpay'),
+                 esc_url('https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal')
+                ),
                 'type'  => 'descriptive_text'
             ),
         );
@@ -422,7 +427,17 @@ class PaypalStandard extends PaymentGateway
 
     public function unsupported_currency_notice()
     {
-        echo __('<div class="error"><p>Unsupported currency! Your currency <code>' . strtoupper(smartpay_get_currency()) . '</code> does not supported by PayPal. Please change your currency from <a href="' . get_admin_url() . 'admin.php?page=smartpay-setting&tab=general">currency setting</a>.</p></div>', 'smartpay');
+	    echo sprintf(
+		    '<div class="error"><p>'.
+		    esc_html__('Unsupported currency! Your currency ', 'smartpay') .
+		    '<code>%1$s</code>'.
+		    esc_html__(' does not supported by PayPal. Please change your currency from ', 'smartpay') .
+		    '<a href="%2$s">'.
+		    esc_html__('currency setting', 'smartpay').
+		    '</a>.</p></div>',
+		    esc_html(strtoupper(smartpay_get_currency())),
+		    esc_url(admin_url('admin.php?page=smartpay-setting&tab=general'))
+	    );
     }
 
     function get_paypal_redirect_url($ssl_check = false, $ipn = false)
