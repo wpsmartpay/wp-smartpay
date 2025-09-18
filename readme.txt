@@ -1,6 +1,6 @@
 === SmartPay ===
-Contributors: themesgrove
-Tags: download manager, ecommerce, digital product, multiple payment gateways, donations,
+Contributors: ConversLab
+Tags: download manager, ecommerce, digital product, payment gateways, donations,
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 8.1

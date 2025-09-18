@@ -12,7 +12,7 @@ $key            = !empty($sections) ? key($sections) : 'main';
 // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
 $section        = isset($_GET['section']) && !empty($sections) && array_key_exists(sanitize_text_field(wp_unslash($_GET['section'])), $sections) ? sanitize_text_field(wp_unslash($_GET['section'])) : $key;
 
-$has_main_settings = (bool) $all_settings[$active_tab]['main']; // true if not empty, else false
+$has_main_settings = isset($all_settings[$active_tab]) && !empty($all_settings[$active_tab]['main']); // true if not empty, else false
 
 if (!$has_main_settings) {
     foreach ($all_settings[$active_tab] as $s_id => $s_title) {

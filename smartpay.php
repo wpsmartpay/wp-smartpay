@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: SmartPay
- * Description: Simplest way to sell digital downloads and fundraise with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
+ * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
- * Tags: download manager, ecommerce, digital product, multiple payment gateways, donations,
+ * Tags: download manager, ecommerce, digital product, payment gateways, donations,
  *
  * Version: 2.8.0
  * Requires PHP: 8.1
@@ -48,12 +48,9 @@ add_action('plugins_loaded', function () use ($app) {
     do_action('smartpay_loaded');
 
     // Run The Application
-    // $app->boot();
+     $app->boot();
 });
 
 add_action('init', function () use ($app) {
     do_action('smartpay_init');
-
-    // Run The Application
-    $app->boot();
 });
