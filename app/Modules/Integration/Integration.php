@@ -138,7 +138,7 @@ class Integration
     public function bootIntegrations()
     {
         foreach (smartpay_active_integrations() as $namespace => $integration) {
-            if (!class_exists($integration['manager'])) {
+            if (is_null($integration['manager']) || !class_exists($integration['manager'])) {
                 continue;
             }
 
