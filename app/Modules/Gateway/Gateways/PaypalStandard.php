@@ -373,12 +373,11 @@ class PaypalStandard extends PaymentGateway
                 'desc'  => __('Enter your PayPal account\'s email', 'smartpay'),
                 'type'  => 'text'
             ),
-            // TODO: Add url for documentation
             array(
                 'id'    => 'paypal_identity_token',
                 'name'  => __('PayPal Identity Token', 'smartpay'),
                 'desc'  => sprintf(
-					__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our', 'smartpay') . '<a href="%s" target="_blank">'. __('documentation', 'smartpay') .'</a>' . __(' for further information.', 'smartpay'),
+					__('Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our ', 'smartpay') . '<a href="%s" target="_blank">'. __('documentation', 'smartpay') .'</a>' . __(' for further information.', 'smartpay'),
 	                esc_url('https://developer.paypal.com/docs/api-basics/notifications/payment-data-transfer/#get-started')
                 ),
                 'type'  => 'text'
@@ -386,17 +385,19 @@ class PaypalStandard extends PaymentGateway
             array(
                 'id'    => 'disable_paypal_verification',
                 'name'  => __('Disable PayPal IPN Verification', 'smartpay'),
-                'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our', 'smartpay').' <a href="%s" target="_blank">'. __('FAQ', 'smartpay') .'</a>'. __('for further information.', 'smartpay'), '#'),
+                'desc'  => sprintf(__('If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our', 'smartpay').' <a href="%s" target="_blank">'. __('FAQ', 'smartpay') .'</a>'. __(' for further information.', 'smartpay'), '#'),
                 'type'  => 'checkbox',
             ),
 
             array(
                 'id'    => 'paypal_smartpay_doc_link',
-                'name'  => __('WPSmartPay Documentation Link', 'smartpay'),
-                'desc'  => sprintf(__('Please see our', 'smartpay').' <a href="%s" target="_blank">'.__('documentation', 'smartpay').'</a>'. __('to set up PayPal properly.', 'smartpay'),
-                 esc_url('https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal')
+                'name'  => __('SmartPay Documentation', 'smartpay'),
+                'desc'  => sprintf(__('Please see our', 'smartpay').' <a href="%s" target="_blank">'.__('documentation', 'smartpay').'</a>'. __(' to set up PayPal properly.', 'smartpay'),
+                 esc_url('https://docs.wpsmartpay.com/en/how-to-setup-paypal')
                 ),
-                'type'  => 'descriptive_text'
+                'type'  => 'text',
+                'field_class' => 'hidden',
+                'readonly' => true,
             ),
         );
 

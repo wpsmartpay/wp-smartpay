@@ -49,7 +49,7 @@ function smartpay_integration_get_not_installed_message(string $type): void
     switch ($type) {
         case 'pro':
         default:
-            $message = '<a href="#" class="btn btn-sm flex-grow-1 text-decoration-none btn-primary">Upgrade to pro</a>';
+            $message = '<a href="https://wpsmartpay.com" class="btn btn-sm flex-grow-1 text-decoration-none btn-primary">Upgrade to pro</a>';
 
             break;
     }

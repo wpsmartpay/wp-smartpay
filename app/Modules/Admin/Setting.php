@@ -665,7 +665,13 @@ class Setting
             ],
             'mollie' => [
                 'label' => 'Mollie'
-            ]
+            ],
+	        'toyyibpay' => [
+				'label' => 'Toyyibpay'
+	        ],
+	        'paytm' => [
+				'label' => 'PayTM'
+	        ]
         ];
 
         // add filter to load up the all registered gateway label to show the available gateways on setting
@@ -702,7 +708,7 @@ class Setting
                     $html .= '<input type="checkbox" disabled />';
                     $html .= '<label class="text-muted mr-2"><b>' . $gatewayOption['label'] . '</b></label>';
                     $html .= '<span class="badge text-uppercase">' . __('pro', 'smartpay') . '</span>';
-                    $html .= '<span class="tooltiptext">' . __('available in Pro version', 'smartpay') . '</span>';
+                    $html .= '<span class="tooltiptext">' . __('Available in Pro Version', 'smartpay') . '</span>';
                     $html .= '</div>';
                     $html .= '</div>';
                 }
