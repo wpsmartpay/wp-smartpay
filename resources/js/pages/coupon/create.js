@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Container, Form, Tabs, Tab, Row, Col, Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import { useReducer } from '@wordpress/element'
+import { useReducer, useState } from '@wordpress/element'
 const { dispatch } = wp.data
 import { Save } from '../../http/coupon'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -26,20 +26,46 @@ const reducer = (coupon, action) => {
 
 export const CreateCoupon = () => {
     const [coupon, setCoupon] = useReducer(reducer, initialState)
+    const [errors, setErrors] = useState({})
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
+
+    const validateForm = () => {
+        const newErrors = {}
+
+        // Title validation
+        if (!coupon.title || coupon.title.trim() === '') {
+            newErrors.title = __('Coupon code is required', 'smartpay')
+        } else if (coupon.title.length < 3) {
+            newErrors.title = __('Coupon code must be at least 3 characters', 'smartpay')
+        }
+
+        // Discount amount validation
+        if (!coupon.discount_amount || coupon.discount_amount.trim() === '') {
+            newErrors.discount_amount = __('Discount amount is required', 'smartpay')
+        } else if (isNaN(coupon.discount_amount) || parseFloat(coupon.discount_amount) <= 0) {
+            newErrors.discount_amount = __('Discount amount must be a positive number', 'smartpay')
+        } else if (coupon.discount_type === 'percent' && parseFloat(coupon.discount_amount) > 100) {
+            newErrors.discount_amount = __('Percentage discount cannot exceed 100%', 'smartpay')
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0
+    }
 
     const createCoupon = (event) => {
         event.preventDefault()
-        Save(JSON.stringify(coupon)).then((response) => {
-            dispatch('smartpay/coupons').setCoupon(response.coupon)
 
+        setErrors({})
+
+        if (!validateForm()) {
             Swal.fire({
                 toast: true,
-                icon: 'success',
-                title: __(response.message, 'smartpay'),
+                icon: 'error',
+                title: __('Please fix the errors below', 'smartpay'),
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 3000,
                 showClass: {
                     popup: 'swal2-noanimation',
                 },
@@ -47,14 +73,64 @@ export const CreateCoupon = () => {
                     popup: '',
                 },
             })
+            return
+        }
 
-            setCoupon({ type: 'reset' })
-            navigate(`/coupons/${response.coupon.id}/edit`)
-        })
+        setIsSubmitting(true)
+
+        Save(JSON.stringify(coupon))
+            .then((response) => {
+                dispatch('smartpay/coupons').setCoupon(response.coupon)
+
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    title: __(response.message, 'smartpay'),
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    showClass: {
+                        popup: 'swal2-noanimation',
+                    },
+                    hideClass: {
+                        popup: '',
+                    },
+                })
+
+                setCoupon({ type: 'reset' })
+                navigate(`/coupons/${response.coupon.id}/edit`)
+            })
+            .catch((error) => {
+                console.log(error)
+                Swal.fire({
+                    toast: true,
+                    icon: 'error',
+                    title: error.message,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                })
+            })
+            .finally(() => {
+                setIsSubmitting(false)
+            })
     }
 
     const setCouponData = (event) => {
-        setCoupon({ type: event.target.name, value: event.target.value })
+        const { name, value } = event.target
+        setCoupon({ type: name, value })
+
+        // Clear error for this field when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: undefined
+            }))
+        }
+    }
+
+    const getFormControlClass = (fieldName) => {
+        return errors[fieldName] ? 'form-control is-invalid' : 'form-control'
     }
 
     return (
@@ -70,8 +146,12 @@ export const CreateCoupon = () => {
                                 type="button"
                                 className="btn btn-primary btn-sm text-decoration-none"
                                 onClick={createCoupon}
+                                disabled={isSubmitting}
                             >
-                                {__('Publish', 'smartpay')}
+                                {isSubmitting
+                                    ? __('Publishing...', 'smartpay')
+                                    : __('Publish', 'smartpay')
+                                }
                             </Button>
                         </div>
                     </div>
@@ -92,7 +172,13 @@ export const CreateCoupon = () => {
                                         'Enter coupon code here',
                                         'smartpay'
                                     )}
+                                    className={getFormControlClass('title')}
                                 />
+                                {errors.title && (
+                                    <div className="invalid-feedback d-block">
+                                        {errors.title}
+                                    </div>
+                                )}
                             </Form.Group>
                             <Form.Group controlId="couponForm.description">
                                 <Form.Control
@@ -162,7 +248,13 @@ export const CreateCoupon = () => {
                                                         onChange={setCouponData}
                                                         type="text"
                                                         placeholder="0"
+                                                        className={getFormControlClass('discount_amount')}
                                                     />
+                                                    {errors.discount_amount && (
+                                                        <div className="invalid-feedback d-block">
+                                                            {errors.discount_amount}
+                                                        </div>
+                                                    )}
                                                 </Form.Group>
                                             </Col>
                                         </Row>

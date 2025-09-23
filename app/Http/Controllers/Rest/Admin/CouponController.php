@@ -46,6 +46,27 @@ class CouponController extends RestController
     public function store(WP_REST_Request $request): WP_REST_Response
     {
         $request = \json_decode($request->get_body(), true);
+	    $errors = [];
+
+	    if (!$request['title']) {
+		    $errors['title'] = 'Title is required.';
+	    }
+
+	    if (!$request['discount_amount'] || $request['discount_amount'] <= 0) {
+		    $errors['discount_amount'] = 'Discount amount must be greater than 0.';
+	    }
+
+	    if ($request['discount_type'] === 'percent' && $request['discount_amount'] >= 100) {
+		    $errors['discount_amount'] = 'Percentage discount cannot exceed 100%.';
+	    }
+
+	    // Return field-specific errors
+	    if (!empty($errors)) {
+		    return new WP_REST_Response([
+			    'error' => 'Validation failed.',
+			    'errors' => $errors
+		    ], 400);
+	    }
 
         $coupon = new Coupon();
         $coupon->title           = $request['title'];

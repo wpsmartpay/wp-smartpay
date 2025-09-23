@@ -71,48 +71,60 @@ export const CouponList = () => {
                 <div className="bg-white">
                     <Table className="table">
                         <thead>
-                            <tr className="bg-light">
-                                <th className="w-75 text-left">
-                                    <strong>{__('Title', 'smartpay')}</strong>
-                                </th>
-                                <th className="w-25 text-right">
-                                    {__('Actions', 'smartpay')}
-                                </th>
-                            </tr>
+                        <tr className="bg-light">
+                            <th className="w-25 text-center">
+                                <strong>{__('Title', 'smartpay')}</strong>
+                            </th>
+                            <th className="text-center">
+                                <strong>{__('Type', 'smartpay')}</strong>
+                            </th>
+                            <th className="text-center">
+                                <strong>{__('Amount', 'smartpay')}</strong>
+                            </th>
+                            <th className="text-center">
+                                <strong>{__('Expire At', 'smartpay')}</strong>
+                            </th>
+                            <th className="w-25 text-center">
+                                {__('Actions', 'smartpay')}
+                            </th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {!coupons.length && (
-                                <tr>
-                                    <td className="text-center" colSpan="2">
-                                        {__('No coupon found.', 'smartpay')}
+                        {!coupons.length && (
+                            <tr>
+                                <td className="text-center" colSpan="5">
+                                    {__('No coupon found.', 'smartpay')}
+                                </td>
+                            </tr>
+                        )}
+
+                        {coupons.map((coupons) => {
+                            return (
+                                <tr key={coupons.id}>
+                                    <td className='text-center'>{coupons.title || ''}</td>
+                                    <td className='text-center'>{coupons.discount_type.toUpperCase() || ''}</td>
+                                    <td className='text-center'>{coupons.discount_type === 'percent' ? `${coupons.discount_amount}%` : coupons.discount_amount}</td>
+                                    <td className='text-center'>{coupons.expiry_date && coupons.expiry_date.startsWith('-') ? 'Never' : coupons.expiry_date}</td>
+                                    <td className="text-center justify-content-center" style={{display: 'flex'}}>
+                                        <Link
+                                            className="btn-sm p-0 mr-2 text-decoration-none"
+                                            to={`/coupons/${coupons.id}/edit`}
+                                        >
+                                            {__('Edit', 'smartpay')}
+                                        </Link>
+                                        <Button
+                                            className="btn-sm p-0"
+                                            onClick={() =>
+                                                deleteCoupon(coupons.id)
+                                            }
+                                            variant="link"
+                                        >
+                                            {__('Delete', 'smartpay')}
+                                        </Button>
                                     </td>
                                 </tr>
-                            )}
-
-                            {coupons.map((coupons) => {
-                                return (
-                                    <tr key={coupons.id}>
-                                        <td>{coupons.title || ''}</td>
-                                        <td className="text-right">
-                                            <Link
-                                                className="btn-sm p-0 mr-2"
-                                                to={`/coupons/${coupons.id}/edit`}
-                                            >
-                                                {__('Edit', 'smartpay')}
-                                            </Link>
-                                            <Button
-                                                className="btn-sm p-0"
-                                                onClick={() =>
-                                                    deleteCoupon(coupons.id)
-                                                }
-                                                variant="link"
-                                            >
-                                                {__('Delete', 'smartpay')}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
+                            )
+                        })}
                         </tbody>
                     </Table>
                 </div>
