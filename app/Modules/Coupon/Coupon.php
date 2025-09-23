@@ -113,8 +113,8 @@ class Coupon
 	        <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
             <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0 form-control" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
+                <button class="rounded btn btn-outline-success" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
         <?php
@@ -236,8 +236,8 @@ class Coupon
         <form class="smartpay-product-coupon-form p-4 bg-light d-none">
             <?php wp_nonce_field('smartpay_product_coupon_action'); ?>
             <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id="coupon_code" style="flex: 1;" />
-                <button class="rounded" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
+                <input type="text" name="coupon_code" class="m-0 form-control" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id="coupon_code" style="flex: 1;" />
+                <button class="rounded btn btn-outline-success" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
             </div>
         </form>
     <?php }
