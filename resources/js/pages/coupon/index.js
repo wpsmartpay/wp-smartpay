@@ -104,7 +104,7 @@ export const CouponList = () => {
                                     <td className='text-center'>{coupons.title || ''}</td>
                                     <td className='text-center'>{coupons.discount_type.toUpperCase() || ''}</td>
                                     <td className='text-center'>{coupons.discount_type === 'percent' ? `${coupons.discount_amount}%` : coupons.discount_amount}</td>
-                                    <td className='text-center'>{coupons.expiry_date && coupons.expiry_date.startsWith('-') ? 'Never' : coupons.expiry_date}</td>
+                                    <td className='text-center'>{coupons.expiry_date && coupons.expiry_date.startsWith('-') || coupons.expiry_date.startsWith('1970') ? 'Never' : coupons.expiry_date}</td>
                                     <td className="text-center justify-content-center" style={{display: 'flex'}}>
                                         <Link
                                             className="btn-sm p-0 mr-2 text-decoration-none"

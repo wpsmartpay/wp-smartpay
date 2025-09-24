@@ -97,11 +97,9 @@ export const CreateCoupon = () => {
                     },
                 })
 
-                setCoupon({ type: 'reset' })
-                navigate(`/coupons/${response.coupon.id}/edit`)
+                navigate(`/coupons`)
             })
             .catch((error) => {
-                console.log(error)
                 Swal.fire({
                     toast: true,
                     icon: 'error',
