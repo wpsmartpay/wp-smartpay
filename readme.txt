@@ -113,8 +113,12 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 
 == Changelog ==
 = [2.8.1] =
+* Feature - Added Coupon Validation, both frontend & backend
 * Fix - Fix Compatibility Issue with Pro Version
+* Fix - Deprecation Issues
 * Fix - Improve Performance
+* Update - Coupon List UI & UX
+* Update - Documentation link
 
 = [2.8.0] =
 * Fix - Major Security Issues
