@@ -50,12 +50,67 @@ body.block-editor-page {
 }
 
 // New
-.interface-interface-skeleton {
+.smartpay-block-editor {
+    .components-popover.block-editor-block-popover.block-editor-block-list__block-popover {
+        width: auto;
+        .components-popover__content {
+            width: 100%;
+        }
+    }
+    .components-popover {
+        background-color: #ffffff;
+
+        .block-editor-block-popover.block-editor-block-list__block-popover {
+            width: 100%;
+            .components-popover__content {
+                width: 100%;
+            }
+        }
+
+        .block-editor-block-list__empty-block-inserter {
+            background-color: #f9f9f9; // aliceblue
+        }
+    }
+    .block-editor-block-list__insertion-point {
+        background-color: #f9f9f9;
+        margin-top: 16px;
+    }
+
+    .block-editor-block-toolbar {
+        display: flex;
+        justify-content: center;
+        padding: 4px 0;
+        div {
+            display: flex;
+        }
+    }
+    .components-toolbar-group {
+        border-right: none;
+    }
+
+    &-sidebar {
+        .block-editor-block-inspector__no-blocks {
+            padding: 16px;
+            display: block;
+        }
+        .block-editor-block-card {
+            padding: 16px;
+        }
+        .block-editor-skip-to-selected-block {
+            margin: 16px;
+        }
+    }
+}
+.smartpay .interface-interface-skeleton {
     position: absolute;
     top: 8px;
     bottom: 0;
     left: 0 !important;
     right: 0;
+
+	&__body {
+		display: flex;
+	}
 
     &__content {
         width: 70%;

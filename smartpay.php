@@ -5,7 +5,7 @@
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, ecommerce, digital product, payment gateways, donations,
  *
- * Version: 2.8.1
+ * Version: 2.8.2
  * Requires PHP: 8.1
  * Requires at least: 6.0
  * Tested up to: 6.8
@@ -32,7 +32,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '2.8.1');
+define('SMARTPAY_VERSION', '2.8.2');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
