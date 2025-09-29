@@ -129,6 +129,9 @@ body.smartpay_page_smartpay-form.swal2-toast-shown {
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+    .nav-tabs .nav-link:focus {
+        box-shadow: none;
+    }
 }
 
 .smartpay .d-flex {

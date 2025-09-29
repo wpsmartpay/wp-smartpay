@@ -1,5 +1,5 @@
 === SmartPay ===
-Contributors: ConversLab
+Contributors: converswp
 Tags: download manager, ecommerce, digital product, payment gateways, donations,
 Requires at least: 6.0
 Tested up to: 6.8
