@@ -16,9 +16,9 @@ class Form
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
-        $this->app->addAction('smartpay_create_form_preview_page', [$this, 'createFormPreviewPage']);
-        $this->app->addAction('smartpay_update_form_preview_page', [$this, 'updateFormPreviewPage']);
-        $this->app->addAction('smartpay_delete_form_preview_page', [$this, 'deleteFormPreviewPage']);
+        $this->app->addAction('smartpay_form_created', [$this, 'createFormPreviewPage']);
+        $this->app->addAction('smartpay_form_updated', [$this, 'updateFormPreviewPage']);
+        $this->app->addAction('smartpay_form_deleted', [$this, 'deleteFormPreviewPage']);
     }
 
     public function adminScripts($hook)
