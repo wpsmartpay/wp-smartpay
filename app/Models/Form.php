@@ -30,17 +30,17 @@ class Form extends Model
         });
 
         static::created(function ($form) {
-            do_action('smartpay_create_form_preview_page', $form);
+            do_action('smartpay_form_created', $form);
         });
 
         static::updated(function($form){
-            do_action('smartpay_update_form_preview_page', $form);
+            do_action('smartpay_form_updated', $form);
         });
 
         static::deleting(function($form) {
-            do_action('smartpay_delete_form_preview_page', $form);
+            do_action('smartpay_form_deleted', $form);
         });
-        
+
     }
 
     public function getAmountsAttribute($amounts)

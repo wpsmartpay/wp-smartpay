@@ -55,6 +55,7 @@ class Downloader
         $validation = $this->checkDownloadUrl();
 
         if (!$validation['is_valid']) {
+            do_action('smartpay_download_access_denied', $args, $validation);
             wp_die(esc_html__('Sorry! Maybe your token is invalid or you don\'t have the access.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
@@ -64,12 +65,14 @@ class Downloader
 
         // FIXME
         if (!$payment_id || !$payment || 'Completed' !== $payment->status) {
+            do_action('smartpay_download_payment_invalid', $args, $validation, $payment);
             wp_die(esc_html__('Sorry! Payment invalid or not completed yet.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
         $product = Product::find($product_id);
 
         if (!$product_id || !$product || !$product->isPurchasable()) {
+            do_action('smartpay_download_product_invalid', $args, $validation, $payment, $product);
             wp_die(esc_html__('Sorry! This product is invalid or don\'t have right permission.', 'smartpay'), esc_html__('Error', 'smartpay'), array('response' => 403));
         }
 
@@ -143,6 +146,9 @@ class Downloader
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename=\"" . $requestedFile['name'] ?? 'file' . "\"");
         header("Content-Transfer-Encoding: binary");
+
+        // Fire action before download delivery
+        do_action('smartpay_before_download_delivery', $args, $validation, $payment, $product, $requestedFile);
 
         // If the file isn't locally hosted, process the redirect
         if (filter_var($requestedFileUrl, FILTER_VALIDATE_URL) && !$this->isLocalFile($requestedFileUrl)) {
