@@ -156,3 +156,87 @@ add_filter('smartpay_payment_extra_data', function( $extra ) {
     return $extra;
 });
 ```
+
+## smartpay_currencies
+
+- Type: Filter
+- Fires: When building the currency list.
+- File: `app/Helpers/smartpay.php:110`
+
+Parameters:
+
+- `$currencies` (array)
+
+```php
+add_filter('smartpay_currencies', function( $currencies ) {
+    $currencies['XYZ'] = ['name' => 'Example', 'symbol' => '¤'];
+    return $currencies;
+});
+```
+
+## smartpay_gateways
+
+- Type: Filter
+- Fires: To register available payment gateways.
+- File: `app/Helpers/smartpay.php:785`
+
+Parameters:
+
+- `$gateways` (array)
+
+```php
+add_filter('smartpay_gateways', function( $gateways ) {
+    $gateways['mygateway'] = [ 'admin_label' => 'My Gateway', 'checkout_label' => 'My Gateway', 'gateway_icon' => 'https://...' ];
+    return $gateways;
+});
+```
+
+## smartpay_get_ip
+
+- Type: Filter
+- Fires: When resolving the client IP address.
+- File: `app/Helpers/smartpay.php:953`
+
+Parameters:
+
+- `$ip` (string)
+
+```php
+add_filter('smartpay_get_ip', function( $ip ) {
+    return $ip === '127.0.0.1' ? ($_SERVER['HTTP_X_REAL_IP'] ?? $ip) : $ip;
+});
+```
+
+## smartpay_get_available_payment_gateways
+
+- Type: Filter
+- Fires: To alter the list of available gateways shown in settings UI.
+- File: `app/Helpers/smartpay.php:1027`
+
+Parameters:
+
+- `$availableGateways` (array)
+
+```php
+add_filter('smartpay_get_available_payment_gateways', function( $available ) {
+    $available['newpay'] = ['label' => 'NewPay'];
+    return $available;
+});
+```
+
+## smartpay_get_additional_payment_data
+
+- Type: Filter
+- Fires: To add/alter calculated payment data (totals, billing info, etc.).
+- File: `app/Helpers/smartpay.php:1057`
+
+Parameters:
+
+- `$paymentData` (array)
+
+```php
+add_filter('smartpay_get_additional_payment_data', function( $paymentData ) {
+    $paymentData['note'] = 'VIP order';
+    return $paymentData;
+});
+```
