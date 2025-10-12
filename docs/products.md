@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: On product created, updated and deleted
+- File: `app/Models/Product.php:36,41,46`
 
 Parameters:
 
@@ -20,6 +21,7 @@ add_action('smartpay_product_created', function( $product ) {
 
 - Type: Filter
 - Fires: When checking if a product can be purchased.
+- File: `app/Models/Product.php:147`
 
 Parameters:
 

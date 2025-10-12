@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: After a WP user is programmatically created for a payer (if enabled).
+- File: `app/Modules/Customer/CreateUser.php:36`
 
 Parameters:
 
@@ -19,6 +20,7 @@ add_action('smartpay_customer_user_created', function( $user, $payment ) {
 
 - Type: Action
 - Fires: After a customer profile is updated via REST.
+- File: `app/Http/Controllers/Rest/CustomerController.php:92`
 
 Parameters:
 

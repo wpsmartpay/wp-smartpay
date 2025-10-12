@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: Right before processing a payment request, after request validation and data preparation.
+- File: `app/Modules/Payment/Payment.php:102`
 
 Parameters:
 
@@ -18,6 +19,7 @@ add_action('smartpay_before_payment_processing', function( $payment_data ) {
 
 - Type: Action (dynamic)
 - Fires: When initiating an AJAX-based gateway charge for a selected gateway.
+- File: `app/Modules/Payment/Payment.php:124`
 
 Parameters:
 
@@ -33,6 +35,7 @@ add_action('smartpay_stripe_ajax_process_payment', function( $paymentData ) {
 
 - Type: Action (dynamic)
 - Fires: When initiating a non-AJAX gateway charge for a selected gateway.
+- File: `app/Modules/Payment/Payment.php:126`
 
 Parameters:
 
@@ -48,6 +51,7 @@ add_action('smartpay_free_process_payment', function( $paymentData ) {
 
 - Type: Action
 - Fires: After a payment record is created and saved.
+- File: `app/Modules/Payment/Payment.php:298`
 
 Parameters:
 
@@ -63,6 +67,7 @@ add_action('smartpay_payment_created', function( $payment ) {
 
 - Type: Action
 - Fires: When a payment status becomes completed.
+- File: `app/Modules/Payment/Payment.php:329`
 
 Parameters:
 
@@ -78,6 +83,7 @@ add_action('smartpay_payment_completed', function( $payment ) {
 
 - Type: Action
 - Fires: When a payment transitions to cancelled states.
+- File: `app/Modules/Payment/Payment.php:336,338`
 
 Parameters:
 
@@ -89,10 +95,11 @@ add_action('smartpay_payment_cancelled', function( $payment ) {
 });
 ```
 
-## martpay_payment_failed / smartpay_payment_refunded / smartpay_payment_abandoned
+## smartpay_payment_failed / smartpay_payment_refunded / smartpay_payment_abandoned
 
 - Type: Action
 - Fires: On specific failure/refund/abandoned status changes.
+- `app/Modules/Payment/Payment.php:343,345,347`
 
 Parameters:
 
@@ -108,6 +115,7 @@ add_action('smartpay_payment_failed', function( $payment ) {
 
 - Type: Action
 - Fires: Around the payment receipt rendering and for gateway-specific (dynamic) receipt sections.
+- File: `resources/views/shortcodes/payment_receipt.php:10,13,114,118,120`
 
 Parameters:
 
@@ -145,6 +153,7 @@ add_filter('smartpay_prepare_payment_data', function( $prepared, $_data ) {
 
 - Type: Filter
 - Fires: Before saving the `extra` payload on the payment model.
+- File: `app/Modules/Payment/Payment.php:290`
 
 Parameters:
 

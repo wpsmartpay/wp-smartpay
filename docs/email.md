@@ -3,6 +3,7 @@
 
 - Type: Filter
 - Fires: When building email headers for SmartPay notifications.
+- File: `app/Services/EmailNotification.php:64`
 
 Parameters:
 

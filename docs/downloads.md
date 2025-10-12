@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: When a download link validation fails (invalid token/permission).
+- File: `app/Modules/Frontend/Utilities/Downloader.php:58`
 
 Parameters:
 
@@ -19,6 +20,7 @@ add_action('smartpay_download_access_denied', function( $args, $validation ) {
 
 - Type: Action
 - Fires: When the associated payment is invalid or not completed.
+- File: `app/Modules/Frontend/Utilities/Downloader.php:68`
 
 Parameters:
 
@@ -36,6 +38,7 @@ add_action('smartpay_download_payment_invalid', function( $args, $validation, $p
 
 - Type: Action
 - Fires: When the product requested for download is invalid or not permitted.
+- File: `app/Modules/Frontend/Utilities/Downloader.php:75`
 
 Parameters:
 
@@ -54,6 +57,7 @@ add_action('smartpay_download_product_invalid', function( $args, $validation, $p
 
 - Type: Action
 - Fires: Right before sending the download file to the browser.
+- File: `app/Modules/Frontend/Utilities/Downloader.php:151`
 
 Parameters:
 

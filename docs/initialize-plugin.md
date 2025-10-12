@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: On `plugins_loaded` and `init` respectively as SmartPay boots.
+- File: `smartpay.php:48,55`
 
 Parameters: none
 

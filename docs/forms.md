@@ -4,6 +4,7 @@
 
 - Type: Action
 - Fires: On Form created, updated and deleted
+- File: `app/Models/Form.php:33,38,43`
 
 Parameters:
 
@@ -21,6 +22,7 @@ add_action('smartpay_form_updated', function( $form ) {
 
 - Type: Action
 - Fires: On Before Payment form, before form button, after form button and after form
+- `resources/views/shortcodes/shared/form_details.php:5,146,153,155`
 
 Parameters:
 
@@ -39,6 +41,7 @@ add_action('before_smartpay_payment_form', function( $form ) {
 
 - Type: Action
 - Fires: Within the modal checkout UI to inject content before/after the pay button.
+- File: `resources/views/shortcodes/shared/payment_modal.php:44,101,107`
 
 Parameters:
 

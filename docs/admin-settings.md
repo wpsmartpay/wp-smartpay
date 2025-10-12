@@ -3,6 +3,7 @@
 
 - Type: Action
 - Fires: After SmartPay settings are saved on a tab/section.
+- File: `app/Modules/Admin/Setting.php:446`
 
 Parameters:
 
