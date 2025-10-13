@@ -33,22 +33,3 @@ add_action('before_smartpay_payment_form', function( $form ) {
     echo '<div class="notice">Special promo available today!</div>';
 });
 ```
-
-
-## Checkout Form (Frontend - Modal)
-
-### smartpay_product_modal_popup_content / smartpay_before_product_payment_form_button / smartpay_after_product_payment_form_button
-
-- Type: Action
-- Fires: Within the modal checkout UI to inject content before/after the pay button.
-- File: `resources/views/shortcodes/shared/payment_modal.php:44,101,107`
-
-Parameters:
-
-- `$product` (SmartPay\Models\Product|null)
-
-```php
-add_action('smartpay_product_modal_popup_content', function( $product ) {
-    echo '<p class="text-muted">Secure checkout</p>';
-});
-```
