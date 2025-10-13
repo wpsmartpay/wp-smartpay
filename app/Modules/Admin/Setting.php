@@ -443,6 +443,7 @@ class Setting
 
         if ($doing_section) {
             add_settings_error('smartpay-notices', '', __('Settings updated.', 'smartpay'), 'updated');
+			do_action('smartpay_settings_saved', $output, $input, $tab, $section);
         }
 
         return $output;

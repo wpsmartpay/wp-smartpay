@@ -104,6 +104,7 @@ class CustomerController extends RestController
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('COMMIT');
+		do_action('smartpay_customer_updated', $customer, $requestData);
         return new WP_REST_Response(['customer' => $customer, 'message' => __('Customer updated', 'smartpay')]);
     }
 }

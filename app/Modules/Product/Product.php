@@ -18,9 +18,9 @@ class Product
 
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
 
-        $this->app->addAction('smartpay_create_product_preview_page',[$this, 'createProductPreviewPage']);
-        $this->app->addAction('smartpay_update_product_preview_page',[$this, 'updateProductPreviewPage']);
-        $this->app->addAction('smartpay_delete_product_preview_page',[$this, 'deleteProductPreviewPage']);
+        $this->app->addAction('smartpay_product_created',[$this, 'createProductPreviewPage']);
+        $this->app->addAction('smartpay_product_updated',[$this, 'updateProductPreviewPage']);
+        $this->app->addAction('smartpay_product_deleted',[$this, 'deleteProductPreviewPage']);
     }
 
     public function adminScripts()
@@ -72,7 +72,7 @@ class Product
                 'post_content'  => '<!-- wp:shortcode -->[smartpay_product id="'.$product->id.'" behavior="embedded" label=""]<!-- /wp:shortcode -->',
                 'post_type'     => 'page'
             ];
-    
+
             $pageId = wp_insert_post( $pageArr );
             if( is_wp_error( $pageId ) ) {
                 return;

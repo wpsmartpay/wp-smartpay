@@ -98,6 +98,9 @@ class Payment
         // FIXME: Reform validation
         //smartpay_set_session_payment_data($payment_data);
 
+        // Fire action before processing payment
+        do_action('smartpay_before_payment_processing', $payment_data);
+
         // Send payment data toprocess gateway payment
         $this->_process_gateway_payment($payment_data);
 
@@ -292,7 +295,7 @@ class Payment
         $payment->save();
 
         // TODO: Move to model
-        do_action('smartpay_after_insert_payment', $payment);
+        do_action('smartpay_payment_created', $payment);
 
         if (!empty($payment->id)) {
             // check create WP user is enabled
@@ -333,6 +336,15 @@ class Payment
             do_action('smartpay_payment_cancelled', $payment);
         }elseif (in_array($newStatus, [PaymentModel::ABANDONED, PaymentModel::REVOKED, PaymentModel::REFUNDED])) {
             do_action('smartpay_payment_cancelled', $payment);
+        }
+
+        // Add specific hooks for different status changes
+        if ($newStatus == PaymentModel::FAILED) {
+            do_action('smartpay_payment_failed', $payment);
+        } elseif ($newStatus == PaymentModel::REFUNDED) {
+            do_action('smartpay_payment_refunded', $payment);
+        } elseif ($newStatus == PaymentModel::ABANDONED) {
+            do_action('smartpay_payment_abandoned', $payment);
         }
     }
 }
