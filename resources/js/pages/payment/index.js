@@ -1,7 +1,9 @@
 import { __ } from '@wordpress/i18n'
-import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { DataTable } from '../../components/data-table'
+import { createColumns } from './columns'
+
 const { useEffect, useState } = wp.element
 const { useSelect, dispatch } = wp.data
 
@@ -48,95 +50,25 @@ export const PaymentList = () => {
         })
     }
 
+    // Create columns with deletePayment function
+    const columns = createColumns(deletePayment)
+
+
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
+            <div className="text-black bg-white border-bottom">
                 <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
+                    <div className="d-flex align-items-center justify-content-between py-4">
+                        <h2 className="text-black m-0">
                             {__('Payments', 'smartpay')}
                         </h2>
                     </div>
                 </Container>
             </div>
 
-            <Container className="mt-3">
-                <div className="bg-white">
-                    <Table className="table">
-                        <thead>
-                            <tr className="bg-light">
-                                <th className="w-5 text-left">
-                                    {__('ID', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Customer', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Type', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Amount', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Date', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Status', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Actions', 'smartpay')}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!payments.length && (
-                                <tr>
-                                    <td className="text-center" colSpan="7">
-                                        {__('No payment found.', 'smartpay')}
-                                    </td>
-                                </tr>
-                            )}
-
-                            {payments.map((payment, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{payment.id}</td>
-                                        <td>{payment.email}</td>
-                                        <td>{payment.type}</td>
-                                        <td>
-                                            <span
-                                                dangerouslySetInnerHTML={{
-                                                    __html: `${smartpay.options.currencySymbol} ${payment.amount} `,
-                                                }}
-                                            ></span>
-                                        </td>
-                                        <td>
-                                            {payment.completed_at ||
-                                                payment.created_at}
-                                        </td>
-                                        <td>{payment.status}</td>
-                                        <td>
-                                            <Link
-                                                className="btn-sm p-0 mr-2"
-                                                to={`/payments/${payment.id}/edit`}
-                                            >
-                                                {__('View', 'smartpay')}
-                                            </Link>
-                                            <Button
-                                                className="btn-sm p-0"
-                                                onClick={() =>
-                                                    deletePayment(payment.id)
-                                                }
-                                                variant="link"
-                                            >
-                                                {__('Delete', 'smartpay')}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
+            <Container className="mt-4">
+                <div className="bg-white p-4 rounded-lg shadow-sm">
+                    <DataTable columns={columns} data={payments} />
                 </div>
             </Container>
         </>
