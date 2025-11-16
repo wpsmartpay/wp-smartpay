@@ -39,12 +39,17 @@ mix.webpackConfig({
     .react()
     .sass('resources/sass/app.scss', 'public/css')
     .js('resources/js/admin.js', 'public/js')
+    .react()
     .sass('resources/sass/admin.scss', 'public/css')
     .sass('resources/sass/dashboard.scss', 'public/css')
     .postCss('resources/css/components.css', 'public/css', [
-		require('@tailwindcss/postcss'),
-	])
+        require('@tailwindcss/postcss'),
+        require('autoprefixer'),
+    ])
     .sourceMaps(false)
     .options({
         processCssUrls: false,
+        terser: {
+            extractComments: false,
+        },
     });
