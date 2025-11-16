@@ -20,7 +20,7 @@ class Paginator implements JsonSerializable, IteratorAggregate
         return $this->result;
     }
 
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->result['data']->all());
     }

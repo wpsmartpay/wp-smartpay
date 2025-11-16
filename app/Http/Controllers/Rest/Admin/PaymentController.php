@@ -33,9 +33,41 @@ class PaymentController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $payments = Payment::with(['customer'])->orderBy('id', 'DESC')->get();
+		$page = $request->get_param('page') ?: 1;
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+		$status = $request->get_param('status') ?: '';
+		$sortBy = $request->get_param('sort_by') ?: 'id';
+		$sortOrder = $request->get_param('sort_order') ?: 'desc';
 
-        return new WP_REST_Response(['payments' => $payments]);
+		// Start building the query
+		$query = Payment::with(['customer']);
+
+		// Apply search filter if provided
+		if (!empty($search)) {
+			$query->where(function($q) use ($search) {
+				$q->where('email', 'like', '%' . $search . '%')
+				->orWhereHas('customer', function($customerQuery) use ($search) {
+					$customerQuery->where('first_name', 'like', '%' . $search . '%')
+								->orWhere('last_name', 'like', '%' . $search . '%')
+								->orWhere('email', 'like', '%' . $search . '%');
+				})
+				->orWhere('transaction_id', 'like', '%' . $search . '%');
+			});
+		}
+
+		// Apply status filter if provided
+		if (!empty($status)) {
+			$query->where('status', $status);
+		}
+
+		// Apply sorting
+		$query->orderBy($sortBy, $sortOrder);
+
+		// Get paginated results
+		$payments = $query->paginate($perPage);
+
+		return new WP_REST_Response(['payments' => $payments]);
     }
 
     /**
