@@ -1,10 +1,12 @@
 import {
 	flexRender,
 	getCoreRowModel,
+	getSortedRowModel,
 	useReactTable,
 } from '@tanstack/react-table'
 import { __ } from '@wordpress/i18n'
 import * as React from 'react'
+import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,9 +20,25 @@ import {
 } from '@/components/ui/table'
 import { Spinner } from './ui/spinner'
 
-export function DataTable({ columns, data, pagination, onPaginationChange, onSearchChange, isLoading = false, searchPlaceholder = 'Search...' }) {
+export function DataTable({
+    columns,
+    data,
+    pagination,
+    onPaginationChange,
+    onSearchChange,
+    onSortChange,
+    isLoading = false,
+    searchPlaceholder = 'Search...',
+    enableSearch = true,
+    enableSorting = false,
+    enableFilters = false,
+    filters = [],
+    onFilterChange,
+    sortingState = [],
+}) {
     const [searchValue, setSearchValue] = React.useState('')
     const [debouncedSearch, setDebouncedSearch] = React.useState('')
+    const [sorting, setSorting] = React.useState(sortingState)
 
     // Debounce search input
     React.useEffect(() => {
@@ -33,10 +51,17 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
 
     // Trigger search when debounced value changes
     React.useEffect(() => {
-        if (onSearchChange) {
+        if (onSearchChange && enableSearch) {
             onSearchChange(debouncedSearch)
         }
-    }, [debouncedSearch, onSearchChange])
+    }, [debouncedSearch, onSearchChange, enableSearch])
+
+    // Trigger sort change
+    React.useEffect(() => {
+        if (onSortChange && enableSorting) {
+            onSortChange(sorting)
+        }
+    }, [sorting, onSortChange, enableSorting])
 
     const handleSearchChange = (event) => {
         setSearchValue(event.target.value)
@@ -46,14 +71,18 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        manualPagination: true, // Important: Tell TanStack this is server-side pagination
+        getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
+        manualPagination: true,
+        manualSorting: enableSorting,
         pageCount: pagination?.last_page ?? -1,
         state: {
             pagination: {
-                pageIndex: (pagination?.current_page ?? 1) - 1, // Convert to 0-based index
+                pageIndex: (pagination?.current_page ?? 1) - 1,
                 pageSize: pagination?.per_page ?? 10,
             },
+            sorting: enableSorting ? sorting : undefined,
         },
+        onSortingChange: enableSorting ? setSorting : undefined,
     })
 
     const handlePreviousPage = () => {
@@ -77,23 +106,47 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
     const canPreviousPage = pagination && pagination.current_page > 1
     const canNextPage = pagination && pagination.current_page < pagination.last_page
 
+    const getSortIcon = (header) => {
+        if (!enableSorting || !header.column.getCanSort()) return null
+
+        const sorted = header.column.getIsSorted()
+        if (sorted === 'asc') return <ChevronUp className="ml-2 h-4 w-4" />
+        if (sorted === 'desc') return <ChevronDown className="ml-2 h-4 w-4" />
+        return <ChevronsUpDown className="ml-2 h-4 w-4" />
+    }
+
     return (
         <div>
-            {/* Search/Filter Input */}
-            <div className="flex items-center justify-between py-4">
-                <Input
-                    placeholder={searchPlaceholder}
-                    value={searchValue}
-                    onChange={handleSearchChange}
-                    className="max-w-sm"
-                    disabled={isLoading}
-                />
-                {pagination && (
-                    <div className="text-sm text-gray-600">
-                        {__('Showing', 'smartpay')} {pagination.from} {__('to', 'smartpay')} {pagination.to} {__('of', 'smartpay')} {pagination.total} {__('results', 'smartpay')}
+            {/* Search and Filters */}
+            {(enableSearch || enableFilters) && (
+                <div className="flex items-center justify-between gap-4 py-4">
+                    <div className="flex items-center gap-4 flex-1">
+                        {enableSearch && (
+                            <Input
+                                placeholder={searchPlaceholder}
+                                value={searchValue}
+                                onChange={handleSearchChange}
+                                className="max-w-xs"
+                                disabled={isLoading}
+                            />
+                        )}
+                        {enableFilters && filters && filters.length > 0 && (
+                            <div className="flex items-center gap-2">
+                                {filters.map((filter, index) => (
+                                    <div key={index}>
+                                        {filter}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
+                    {pagination && (
+                        <div className="text-sm text-gray-600">
+                            {__('Showing', 'smartpay')} {pagination.from} {__('to', 'smartpay')} {pagination.to} {__('of', 'smartpay')} {pagination.total} {__('results', 'smartpay')}
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Table */}
             <div className="rounded-md border">
@@ -102,14 +155,24 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
+                                    const canSort = enableSorting && header.column.getCanSort()
                                     return (
-                                        <TableHead key={header.id} className="text-center">
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef.header,
-                                                      header.getContext()
-                                                  )}
+                                        <TableHead
+                                            key={header.id}
+                                            className="text-center"
+                                        >
+                                            {header.isPlaceholder ? null : (
+                                                <div
+                                                    className={canSort ? "flex items-center justify-center cursor-pointer select-none" : "flex items-center justify-center"}
+                                                    onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                                    {getSortIcon(header)}
+                                                </div>
+                                            )}
                                         </TableHead>
                                     )
                                 })}
@@ -123,9 +186,9 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-									<div className="h-[513px] w-full flex items-center justify-center">
-										<Spinner className="size-6"/>
-									</div>
+                                    <div className="h-[513px] w-full flex items-center justify-center">
+                                        <Spinner className="size-6"/>
+                                    </div>
                                 </TableCell>
                             </TableRow>
                         ) : table.getRowModel().rows?.length ? (

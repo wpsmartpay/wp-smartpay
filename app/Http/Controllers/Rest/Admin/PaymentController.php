@@ -37,6 +37,7 @@ class PaymentController extends RestController
 		$perPage = $request->get_param('per_page') ?: 10;
 		$search = $request->get_param('search') ?: '';
 		$status = $request->get_param('status') ?: '';
+		$type = $request->get_param('type') ?: '';
 		$sortBy = $request->get_param('sort_by') ?: 'id';
 		$sortOrder = $request->get_param('sort_order') ?: 'desc';
 
@@ -54,6 +55,11 @@ class PaymentController extends RestController
 		// Apply status filter if provided
 		if (!empty($status)) {
 			$query->where('status', $status);
+		}
+
+		// Apply type filter if provided
+		if (!empty($type)) {
+			$query->where('type', $type);
 		}
 
 		// Apply sorting

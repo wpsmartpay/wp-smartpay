@@ -9,14 +9,17 @@ export const createColumns = (deletePayment) => [
     {
         accessorKey: 'transaction_id',
         header: __('Transaction ID', 'smartpay'),
+		enableSorting: false,
     },
     {
         accessorKey: 'email',
         header: __('Customer', 'smartpay'),
+		enableSorting: false,
     },
     {
         accessorKey: 'type',
         header: __('Type', 'smartpay'),
+		enableSorting: false,
 		cell: ({ row }) => {
 			const type = row.getValue('type');
 			if (type === 'Product Purchase') {
@@ -62,6 +65,7 @@ export const createColumns = (deletePayment) => [
     {
         accessorKey: 'status',
         header: __('Status', 'smartpay'),
+		enableSorting: false,
         cell: ({ row }) => {
             const status = row.getValue('status')
             return (

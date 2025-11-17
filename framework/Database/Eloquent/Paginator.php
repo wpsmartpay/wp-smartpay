@@ -15,7 +15,7 @@ class Paginator implements JsonSerializable, IteratorAggregate
         $this->result = $result;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->result;
     }

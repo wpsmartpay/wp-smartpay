@@ -1,3 +1,4 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DeletePayment } from '@/http/payment'
 import apiFetch from '@wordpress/api-fetch'
 import { __ } from '@wordpress/i18n'
@@ -20,14 +21,20 @@ export const PaymentList = () => {
 	})
 	const [isLoading, setIsLoading] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
+	const [paymentStatus, setPaymentStatus] = useState('')
+	const [paymentType, setPaymentType] = useState('')
 
 	// Fetch payments from API
-	const fetchPayments = useCallback(async (page = 1, perPage = 10, search = '') => {
+	const fetchPayments = useCallback(async (page = 1, perPage = 10, search = '', status = '', type = '', sortBy = 'id', sortOrder = 'desc') => {
 		setIsLoading(true)
 		try {
 			const queryParams = new URLSearchParams({
 				page: page,
 				per_page: perPage,
+				status: status,
+				type: type,
+				sort_by: sortBy,
+				sort_order: sortOrder,
 				...(search && { search: search })
 			})
 
@@ -66,20 +73,41 @@ export const PaymentList = () => {
 
 	// Initial load
 	useEffect(() => {
-		fetchPayments(1, 10, '')
-	}, [fetchPayments])
+		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page])
 
 	// Handle pagination change
 	const handlePaginationChange = useCallback(({ page, per_page }) => {
-		fetchPayments(page, per_page, searchQuery)
-	}, [fetchPayments, searchQuery])
+		fetchPayments(page, per_page, searchQuery, paymentStatus, paymentType)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType])
 
 	// Handle search change
-	const handleSearchChange = useCallback((search) => {
+	const handleSearchChange = (search) => {
 		setSearchQuery(search)
-		// Reset to page 1 when searching
-		fetchPayments(1, pagination.per_page, search)
-	}, [fetchPayments, pagination.per_page])
+	}
+
+	// TODO: Handle SOrting
+	const handleSort = (sortDetails) => {}
+	// const handleSort = useCallback((sortDetails) => {
+	// 	console.log('Sorting by:', sortDetails);
+	// 	const sortBy = sortDetails?.[0]?.id || 'id';
+	// 	const sortOrder = sortDetails?.[0]?.desc ? 'desc' : 'asc';
+	// 	fetchPayments(pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy, sortOrder);
+	// }, [fetchPayments, pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType])
+
+	const handleStatusFilter = (status) => {
+		if (status === 'all') {
+			status = '';
+		}
+		setPaymentStatus(status);
+	}
+
+	const handleTypeFilter = (type) => {
+		if (type === 'all') {
+			type = '';
+		}
+		setPaymentType(type);
+	}
 
 	const deletePayment = async (paymentId) => {
 		const result = await Swal.fire({
@@ -137,8 +165,38 @@ export const PaymentList = () => {
 						pagination={pagination}
 						onPaginationChange={handlePaginationChange}
 						onSearchChange={handleSearchChange}
+						enableSorting={true}
+						onSortChange={handleSort}
 						isLoading={isLoading}
 						searchPlaceholder='Search by Email or Transaction ID'
+						enableFilters={true}
+						filters={[
+							<Select onValueChange={handleStatusFilter}>
+								<SelectTrigger className="w-[180px]">
+									<SelectValue placeholder="Filter by status" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="refunded">Refunded</SelectItem>
+									<SelectItem value="completed">Completed</SelectItem>
+									<SelectItem value="pending">Pending</SelectItem>
+									<SelectItem value="failed">Failed</SelectItem>
+									<SelectItem value="processing">Processing</SelectItem>
+									<SelectItem value="revoked">Revoked</SelectItem>
+									<SelectItem value="abandoned">Abandoned</SelectItem>
+								</SelectContent>
+							</Select>,
+							<Select onValueChange={handleTypeFilter}>
+								<SelectTrigger className="w-[180px]">
+									<SelectValue placeholder="Filter by Type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="form_payment">Form</SelectItem>
+									<SelectItem value="product_purchase">Product</SelectItem>
+								</SelectContent>
+							</Select>
+						]}
 					/>
 				</div>
 			</Container>
