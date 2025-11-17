@@ -47,11 +47,6 @@ class PaymentController extends RestController
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
 				$q->where('email', 'like', '%' . $search . '%')
-				->orWhereHas('customer', function($customerQuery) use ($search) {
-					$customerQuery->where('first_name', 'like', '%' . $search . '%')
-								->orWhere('last_name', 'like', '%' . $search . '%')
-								->orWhere('email', 'like', '%' . $search . '%');
-				})
 				->orWhere('transaction_id', 'like', '%' . $search . '%');
 			});
 		}

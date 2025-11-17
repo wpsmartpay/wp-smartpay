@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/table'
 import { Spinner } from './ui/spinner'
 
-export function DataTable({ columns, data, pagination, onPaginationChange, onSearchChange, isLoading = false }) {
+export function DataTable({ columns, data, pagination, onPaginationChange, onSearchChange, isLoading = false, searchPlaceholder = 'Search...' }) {
     const [searchValue, setSearchValue] = React.useState('')
     const [debouncedSearch, setDebouncedSearch] = React.useState('')
 
@@ -82,7 +82,7 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
             {/* Search/Filter Input */}
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder={__('Filter by customer email...', 'smartpay')}
+                    placeholder={searchPlaceholder}
                     value={searchValue}
                     onChange={handleSearchChange}
                     className="max-w-sm"

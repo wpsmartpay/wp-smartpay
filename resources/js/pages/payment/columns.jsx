@@ -1,13 +1,14 @@
 import { StatusBadge } from '@/components/status-badges'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { __ } from '@wordpress/i18n'
-import { Eye, Trash2 } from 'lucide-react'
+import { Box, Eye, FilePenLine, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export const createColumns = (deletePayment) => [
     {
-        accessorKey: 'id',
-        header: __('ID', 'smartpay'),
+        accessorKey: 'transaction_id',
+        header: __('Transaction ID', 'smartpay'),
     },
     {
         accessorKey: 'email',
@@ -16,6 +17,14 @@ export const createColumns = (deletePayment) => [
     {
         accessorKey: 'type',
         header: __('Type', 'smartpay'),
+		cell: ({ row }) => {
+			const type = row.getValue('type');
+			if (type === 'Product Purchase') {
+				return <Badge variant="secondary" className="bg-slate-100"><Box className='size-3'/> Product</Badge>
+			} else if(type === 'Form Payment') {
+				return <Badge variant="secondary" className="bg-slate-100"><FilePenLine className='size-3'/> Form</Badge>
+			}
+		}
     },
     {
         accessorKey: 'amount',
@@ -28,7 +37,6 @@ export const createColumns = (deletePayment) => [
 			}).format(amount)
             return (
                 <span>
-                    {/* {smartpay.options.currencySymbol} {amount} */}
 					{formatted}
                 </span>
             )
@@ -49,7 +57,6 @@ export const createColumns = (deletePayment) => [
 					minute: 'numeric',
 				})}
 			</span>)
-            // return row.original.completed_at || row.original.created_at
         },
     },
     {

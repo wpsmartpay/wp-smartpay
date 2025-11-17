@@ -138,6 +138,7 @@ export const PaymentList = () => {
 						onPaginationChange={handlePaginationChange}
 						onSearchChange={handleSearchChange}
 						isLoading={isLoading}
+						searchPlaceholder='Search by Email or Transaction ID'
 					/>
 				</div>
 			</Container>
