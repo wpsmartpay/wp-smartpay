@@ -1,3 +1,4 @@
+import { DeletePayment } from '@/http/payment'
 import apiFetch from '@wordpress/api-fetch'
 import { __ } from '@wordpress/i18n'
 import { Container } from 'react-bootstrap'
@@ -89,10 +90,9 @@ export const PaymentList = () => {
 			showCancelButton: true,
 		}).then((result) => {
 			if (result.isConfirmed) {
-				// Your DeletePayment function here
-				// After deletion, refresh the current page
-				fetchPayments(pagination.current_page, pagination.per_page, searchQuery)
-
+				DeletePayment(paymentId).then((response) => {
+                    dispatch('smartpay/payments').deletePayment(paymentId)
+                })
 				Swal.fire({
 					toast: true,
 					icon: 'success',
@@ -107,6 +107,8 @@ export const PaymentList = () => {
 						popup: '',
 					},
 				})
+				// After deletion, refresh the current page
+				fetchPayments(pagination.current_page, pagination.per_page, searchQuery)
 			}
 		})
 	}
