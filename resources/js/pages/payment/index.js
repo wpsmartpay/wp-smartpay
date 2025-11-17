@@ -81,36 +81,37 @@ export const PaymentList = () => {
 		fetchPayments(1, pagination.per_page, search)
 	}, [fetchPayments, pagination.per_page])
 
-	const deletePayment = (paymentId) => {
-		Swal.fire({
+	const deletePayment = async (paymentId) => {
+		const result = await Swal.fire({
 			title: __('Are you sure?', 'smartpay'),
 			text: __("You won't be able to revert this!", 'smartpay'),
 			icon: 'warning',
 			confirmButtonText: __('Yes', 'smartpay'),
 			showCancelButton: true,
-		}).then((result) => {
-			if (result.isConfirmed) {
-				DeletePayment(paymentId).then((response) => {
-                    dispatch('smartpay/payments').deletePayment(paymentId)
-                })
-				Swal.fire({
-					toast: true,
-					icon: 'success',
-					title: __('Payment deleted successfully', 'smartpay'),
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 2000,
-					showClass: {
-						popup: 'swal2-noanimation',
-					},
-					hideClass: {
-						popup: '',
-					},
-				})
-				// After deletion, refresh the current page
-				fetchPayments(pagination.current_page, pagination.per_page, searchQuery)
-			}
+		});
+
+		if (!result.isConfirmed) return;
+
+		await DeletePayment(paymentId);
+
+		wp.data.dispatch('smartpay/payments').deletePayment(paymentId);
+
+		Swal.fire({
+			toast: true,
+			icon: 'success',
+			title: __('Payment deleted successfully', 'smartpay'),
+			position: 'top-end',
+			showConfirmButton: false,
+			timer: 2000,
+			showClass: {
+				popup: 'swal2-noanimation',
+			},
+			hideClass: {
+				popup: '',
+			},
 		})
+
+		fetchPayments(pagination.current_page, pagination.per_page, searchQuery)
 	}
 
 	// Create columns with deletePayment function
