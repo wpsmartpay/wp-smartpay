@@ -16,6 +16,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
+import { Spinner } from './ui/spinner'
 
 export function DataTable({ columns, data, pagination, onPaginationChange, onSearchChange, isLoading = false }) {
     const [searchValue, setSearchValue] = React.useState('')
@@ -122,7 +123,9 @@ export function DataTable({ columns, data, pagination, onPaginationChange, onSea
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    {__('Loading...', 'smartpay')}
+									<div className="h-[513px] w-full flex items-center justify-center">
+										<Spinner className="size-6"/>
+									</div>
                                 </TableCell>
                             </TableRow>
                         ) : table.getRowModel().rows?.length ? (
