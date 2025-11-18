@@ -58,7 +58,7 @@ export function StatusBadge({ status }) {
     <Badge
       variant="outline"
       className={clsx(
-        'flex items-center justify-center gap-1.5 px-2 py-1 rounded-full border text-xs font-medium',
+        'flex items-center min-w-30 justify-center gap-1.5 px-2 py-1 rounded-full border text-xs font-medium',
         color
       )}
     >

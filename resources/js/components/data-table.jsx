@@ -121,7 +121,7 @@ export function DataTable({
                 <div className="flex items-center justify-between gap-4 py-4">
                     <div className="flex items-center gap-4 flex-1">
                         {enableSearch && (
-							<div className='relative'>
+							<div className='relative w-xs'>
 								<Input
 									placeholder={searchPlaceholder}
 									value={searchValue}
@@ -162,11 +162,10 @@ export function DataTable({
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="text-center"
                                         >
                                             {header.isPlaceholder ? null : (
                                                 <div
-                                                    className={canSort ? "flex items-center justify-center cursor-pointer select-none" : "flex items-center justify-center"}
+                                                    className={canSort ? "flex justify-center items-center cursor-pointer select-none" : ""}
                                                     onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                                                 >
                                                     {flexRender(
@@ -189,7 +188,7 @@ export function DataTable({
                                     colSpan={columns.length}
                                     className="h-24 text-center"
                                 >
-                                    <div className="h-[513px] w-full flex items-center justify-center">
+                                    <div className="w-full flex items-center justify-center">
 										<Loader2 className="animate-spin size-6 text-gray-500" />
                                     </div>
                                 </TableCell>
@@ -201,7 +200,7 @@ export function DataTable({
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id} className="text-center">
+                                        <TableCell key={cell.id}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()

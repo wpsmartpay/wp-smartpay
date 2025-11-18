@@ -18,18 +18,48 @@ export const createColumns = (deletePayment) => [
     },
     {
         accessorKey: 'type',
-        header: __('Type', 'smartpay'),
+        header: () => <div className="text-center">{ __('Type', 'smartpay') }</div>,
 		enableSorting: false,
 		cell: ({ row }) => {
 			const type = row.getValue('type');
 			if (type === 'Product Purchase') {
-				return <Badge variant="secondary" className="bg-slate-100"><Box className='size-3'/> Product</Badge>
+				return <div className='flex justify-center items-center'><Badge variant="secondary" className="bg-slate-100 min-w-20"><Box className='size-3'/> Product</Badge></div>
 			} else if(type === 'Form Payment') {
-				return <Badge variant="secondary" className="bg-slate-100"><FilePenLine className='size-3'/> Form</Badge>
+				return <div className='flex justify-center items-center'><Badge variant="secondary" className="bg-slate-100 min-w-20"><FilePenLine className='size-3'/> Form</Badge></div>
 			}
 		}
     },
     {
+        accessorKey: 'date',
+		header: () => <div className="text-center">{ __('Date & Time', 'smartpay') }</div>,
+        cell: ({ row }) => {
+			const dateStr = row.original.completed_at || row.original.created_at;
+			const date = new Date(dateStr)
+			return (<div className='text-center'>
+				{date.toLocaleString('en-US', {
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
+				})}
+			</div>)
+        },
+    },
+    {
+        accessorKey: 'status',
+		header: () => <div className="text-center">{ __('Status', 'smartpay') }</div>,
+		enableSorting: false,
+        cell: ({ row }) => {
+            const status = row.getValue('status')
+            return (
+				<div className='flex items-center justify-center'>
+					<StatusBadge status={status}/>
+				</div>
+            )
+        },
+    },
+	{
         accessorKey: 'amount',
         header: __('Amount', 'smartpay'),
         cell: ({ row }) => {
@@ -39,50 +69,20 @@ export const createColumns = (deletePayment) => [
 				currency: 'USD'
 			}).format(amount)
             return (
-                <span>
+                <div className='text-right pr-2'>
 					{formatted}
-                </span>
-            )
-        },
-    },
-    {
-        accessorKey: 'date',
-        header: __('Date', 'smartpay'),
-        cell: ({ row }) => {
-			const dateStr = row.original.completed_at || row.original.created_at;
-			const date = new Date(dateStr)
-			return (<span>
-				{date.toLocaleString('en-US', {
-					year: 'numeric',
-					month: 'short',
-					day: 'numeric',
-					hour: 'numeric',
-					minute: 'numeric',
-				})}
-			</span>)
-        },
-    },
-    {
-        accessorKey: 'status',
-        header: __('Status', 'smartpay'),
-		enableSorting: false,
-        cell: ({ row }) => {
-            const status = row.getValue('status')
-            return (
-				<div className='flex justify-center items-center'>
-					<StatusBadge status={status}/>
-				</div>
+                </div>
             )
         },
     },
     {
         id: 'actions',
-        header: __('Actions', 'smartpay'),
+        header: () => <div className="text-center">{ __('Actions', 'smartpay') }</div>,
         cell: ({ row }) => {
             const payment = row.original
 
             return (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-end gap-2">
                     <Link to={`/payments/${payment.id}/edit`}>
 						<Button
 							variant="outline"
