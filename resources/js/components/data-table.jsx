@@ -142,11 +142,6 @@ export function DataTable({
                             </div>
                         )}
                     </div>
-                    {pagination && (
-                        <div className="text-sm text-gray-600">
-                            {__('Showing', 'smartpay')} {pagination.from} {__('to', 'smartpay')} {pagination.to} {__('of', 'smartpay')} {pagination.total} {__('results', 'smartpay')}
-                        </div>
-                    )}
                 </div>
             )}
 
@@ -224,6 +219,11 @@ export function DataTable({
 
             {/* Pagination */}
             <div className="flex items-center justify-between space-x-2 py-4">
+				{pagination && (
+					<div className="text-sm text-gray-600">
+						{__('Showing', 'smartpay')} {pagination.from} {__('to', 'smartpay')} {pagination.to} {__('of', 'smartpay')} {pagination.total} {__('results', 'smartpay')}
+					</div>
+				)}
                 <div className="text-sm text-gray-600">
                     {pagination && (
                         <>
