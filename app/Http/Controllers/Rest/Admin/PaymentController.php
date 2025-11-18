@@ -38,8 +38,7 @@ class PaymentController extends RestController
 		$search = $request->get_param('search') ?: '';
 		$status = $request->get_param('status') ?: '';
 		$type = $request->get_param('type') ?: '';
-		$sortBy = $request->get_param('sort_by') ?: 'id';
-		$sortOrder = $request->get_param('sort_order') ?: 'desc';
+		$orderBy = $request->get_param('sort_by') ?: 'id:desc';
 
 		// Start building the query
 		$query = Payment::with(['customer']);
@@ -62,8 +61,11 @@ class PaymentController extends RestController
 			$query->where('type', $type);
 		}
 
-		// Apply sorting
-		$query->orderBy($sortBy, $sortOrder);
+		$orderByParts = explode(',', $orderBy);
+		foreach ($orderByParts as $part) {
+			[$sortBy, $sortOrder] = explode(':', $part);
+			$query->orderBy($sortBy, $sortOrder);
+		}
 
 		// Get paginated results
 		$payments = $query->paginate($perPage);

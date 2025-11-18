@@ -23,9 +23,10 @@ export const PaymentList = () => {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [paymentStatus, setPaymentStatus] = useState('')
 	const [paymentType, setPaymentType] = useState('')
+	const [sortBy, setSortBy] = useState('id:desc')
 
 	// Fetch payments from API
-	const fetchPayments = useCallback(async (page = 1, perPage = 10, search = '', status = '', type = '', sortBy = 'id', sortOrder = 'desc') => {
+	const fetchPayments = useCallback(async (page = 1, perPage = 10, search = '', status = '', type = '', sortBy = 'id:desc') => {
 		setIsLoading(true)
 		try {
 			const queryParams = new URLSearchParams({
@@ -34,7 +35,6 @@ export const PaymentList = () => {
 				status: status,
 				type: type,
 				sort_by: sortBy,
-				sort_order: sortOrder,
 				...(search && { search: search })
 			})
 
@@ -73,13 +73,13 @@ export const PaymentList = () => {
 
 	// Initial load
 	useEffect(() => {
-		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType)
-	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page])
+		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page, sortBy])
 
 	// Handle pagination change
 	const handlePaginationChange = useCallback(({ page, per_page }) => {
-		fetchPayments(page, per_page, searchQuery, paymentStatus, paymentType)
-	}, [fetchPayments, searchQuery, paymentStatus, paymentType])
+		fetchPayments(page, per_page, searchQuery, paymentStatus, paymentType, sortBy)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType, sortBy])
 
 	// Handle search change
 	const handleSearchChange = (search) => {
@@ -87,13 +87,10 @@ export const PaymentList = () => {
 	}
 
 	// TODO: Handle SOrting
-	const handleSort = (sortDetails) => {}
-	// const handleSort = useCallback((sortDetails) => {
-	// 	console.log('Sorting by:', sortDetails);
-	// 	const sortBy = sortDetails?.[0]?.id || 'id';
-	// 	const sortOrder = sortDetails?.[0]?.desc ? 'desc' : 'asc';
-	// 	fetchPayments(pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy, sortOrder);
-	// }, [fetchPayments, pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType])
+	const handleSort = useCallback((sortDetails) => {
+		const sortBy = sortDetails.map((detail) => `${detail.id}:${detail.desc ? 'desc' : 'asc'}`).join(',');
+		setSortBy(sortBy);
+	}, [sortBy]);
 
 	const handleStatusFilter = (status) => {
 		if (status === 'all') {
@@ -139,7 +136,7 @@ export const PaymentList = () => {
 			},
 		})
 
-		fetchPayments(pagination.current_page, pagination.per_page, searchQuery)
+		fetchPayments(pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy);
 	}
 
 	// Create columns with deletePayment function

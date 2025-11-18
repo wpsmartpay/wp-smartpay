@@ -32,6 +32,7 @@ export const createColumns = (deletePayment) => [
     {
         accessorKey: 'date',
 		header: () => <div className="text-center">{ __('Date & Time', 'smartpay') }</div>,
+		enableSorting: false,
         cell: ({ row }) => {
 			const dateStr = row.original.completed_at || row.original.created_at;
 			const date = new Date(dateStr)
