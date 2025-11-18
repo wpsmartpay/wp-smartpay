@@ -71,22 +71,18 @@ export const PaymentList = () => {
 		}
 	}, [])
 
-	// Initial load
 	useEffect(() => {
 		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy)
 	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page, sortBy])
 
-	// Handle pagination change
 	const handlePaginationChange = useCallback(({ page, per_page }) => {
 		fetchPayments(page, per_page, searchQuery, paymentStatus, paymentType, sortBy)
 	}, [fetchPayments, searchQuery, paymentStatus, paymentType, sortBy])
 
-	// Handle search change
 	const handleSearchChange = (search) => {
 		setSearchQuery(search)
 	}
 
-	// TODO: Handle SOrting
 	const handleSort = useCallback((sortDetails) => {
 		const sortBy = sortDetails.map((detail) => `${detail.id}:${detail.desc ? 'desc' : 'asc'}`).join(',');
 		setSortBy(sortBy);

@@ -6,7 +6,6 @@ import {
 } from '@tanstack/react-table'
 import { __ } from '@wordpress/i18n'
 import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react'
-import * as React from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,6 +17,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
+import { useEffect, useState } from '@wordpress/element'
 
 export function DataTable({
     columns,
@@ -32,15 +32,14 @@ export function DataTable({
     enableSorting = false,
     enableFilters = false,
     filters = [],
-    onFilterChange,
     sortingState = [],
 }) {
-    const [searchValue, setSearchValue] = React.useState('')
-    const [debouncedSearch, setDebouncedSearch] = React.useState('')
-    const [sorting, setSorting] = React.useState(sortingState)
+    const [searchValue, setSearchValue] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState('')
+    const [sorting, setSorting] = useState(sortingState)
 
     // Debounce search input
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedSearch(searchValue)
         }, 500)
@@ -49,14 +48,14 @@ export function DataTable({
     }, [searchValue])
 
     // Trigger search when debounced value changes
-    React.useEffect(() => {
+    useEffect(() => {
         if (onSearchChange && enableSearch) {
             onSearchChange(debouncedSearch)
         }
     }, [debouncedSearch, onSearchChange, enableSearch])
 
     // Trigger sort change
-    React.useEffect(() => {
+    useEffect(() => {
         if (onSortChange && enableSorting) {
             onSortChange(sorting)
         }
