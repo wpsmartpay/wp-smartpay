@@ -5,8 +5,8 @@ import {
 	useReactTable,
 } from '@tanstack/react-table'
 import { __ } from '@wordpress/i18n'
+import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react'
 import * as React from 'react'
-import { ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,7 +18,6 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
-import { Spinner } from './ui/spinner'
 
 export function DataTable({
     columns,
@@ -122,13 +121,17 @@ export function DataTable({
                 <div className="flex items-center justify-between gap-4 py-4">
                     <div className="flex items-center gap-4 flex-1">
                         {enableSearch && (
-                            <Input
-                                placeholder={searchPlaceholder}
-                                value={searchValue}
-                                onChange={handleSearchChange}
-                                className="max-w-xs"
-                                disabled={isLoading}
-                            />
+							<div className='relative'>
+								<Input
+									placeholder={searchPlaceholder}
+									value={searchValue}
+									onChange={handleSearchChange}
+									className="max-w-xs"
+								/>
+								{isLoading && searchValue.length > 0 && (
+									<Loader2 className="animate-spin absolute right-3 top-2.5 size-4 text-gray-500" />
+								)}
+							</div>
                         )}
                         {enableFilters && filters && filters.length > 0 && (
                             <div className="flex items-center gap-2">
@@ -187,7 +190,7 @@ export function DataTable({
                                     className="h-24 text-center"
                                 >
                                     <div className="h-[513px] w-full flex items-center justify-center">
-                                        <Spinner className="size-6"/>
+										<Loader2 className="animate-spin size-6 text-gray-500" />
                                     </div>
                                 </TableCell>
                             </TableRow>
