@@ -118,7 +118,7 @@ export function DataTable({
             {/* Search and Filters */}
             {(enableSearch || enableFilters) && (
                 <div className="flex items-center justify-between gap-4 py-4">
-                    <div className="flex items-center gap-4 flex-1">
+                    <div className="flex items-center justify-between gap-4 flex-1">
                         {enableSearch && (
 							<div className='relative w-xs'>
 								<Input

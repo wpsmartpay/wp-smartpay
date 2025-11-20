@@ -140,18 +140,24 @@ export const PaymentList = () => {
 
 	return (
 		<>
-			<div className="text-black bg-white border-bottom">
+			<div className="text-black bg-white border-bottom shadow-xs">
 				<Container>
-					<div className="d-flex align-items-center justify-content-between py-4">
-						<h2 className="text-black m-0">
-							{__('Payments', 'smartpay')}
-						</h2>
+					<div className="d-flex align-items-center justify-content-between py-3">
+						<div className='-mt-1.5'>
+							<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
+								{__('Payments', 'smartpay')}
+							</h2>
+							<p className='text-slate-500 font-medium text-sm! m-0'>{__('Manage your payments here', 'smartpay')}</p>
+						</div>
+						<div className=''>
+							<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
+						</div>
 					</div>
 				</Container>
 			</div>
 
 			<Container className="mt-4">
-				<div className="bg-white p-4 rounded-lg shadow-sm">
+				<div className="bg-white p-4 rounded-lg shadow-md">
 					<DataTable
 						columns={columns}
 						data={data}

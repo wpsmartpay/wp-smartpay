@@ -178,6 +178,8 @@ class Admin
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'apiNonce' => wp_create_nonce('wp_rest'),
                     'options' => $this->getOptionsScriptsData(),
+					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
+					'version' => SMARTPAY_VERSION,
                 )
             );
 
