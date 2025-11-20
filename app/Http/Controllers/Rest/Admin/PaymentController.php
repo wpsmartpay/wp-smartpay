@@ -140,10 +140,16 @@ class PaymentController extends RestController
         $payment = Payment::find($request->get_param('id'));
 
         if (!$payment) {
-            return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);
+            return new WP_REST_Response([
+				'message' => __('Payment not found', 'smartpay'),
+				'status' => 404,
+			], 404);
         }
 
         $payment->delete();
-        return new WP_REST_Response(['message' => __('Payment deleted', 'smartpay')]);
+        return new WP_REST_Response([
+			'message' => __('Payment deleted', 'smartpay'),
+			'status' => 200,
+		]);
     }
 }
