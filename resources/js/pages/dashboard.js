@@ -1,12 +1,14 @@
-import { __ } from '@wordpress/i18n'
 import apiFetch from '@wordpress/api-fetch'
 import { useEffect, useState } from '@wordpress/element'
-import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap'
+import { __ } from '@wordpress/i18n'
+import { Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { Report } from '../components/report/report'
 
 import dayjs from 'dayjs'
 const relativeTime = require('dayjs/plugin/relativeTime')
+let utc = require('dayjs/plugin/utc')
 dayjs.extend(relativeTime)
+dayjs.extend(utc)
 
 export const Dashboard = () => {
     const [report, setReport] = useState({
@@ -147,7 +149,7 @@ export const Dashboard = () => {
                                         >
                                             {`$${payment.amount} paid by ${payment.email}`}
                                             <span>
-                                                {dayjs(
+                                                {dayjs.utc(
                                                     payment.created_at
                                                 ).fromNow()}
                                             </span>
