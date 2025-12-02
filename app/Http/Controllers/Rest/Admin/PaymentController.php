@@ -46,8 +46,7 @@ class PaymentController extends RestController
 		// Apply search filter if provided
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
-				$q->where('email', 'like', '%' . $search . '%')
-				->orWhere('transaction_id', 'like', '%' . $search . '%');
+				$q->where('email', 'like', '%' . $search . '%');
 			});
 		}
 

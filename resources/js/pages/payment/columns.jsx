@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 
 export const createColumns = (deletePayment) => [
     {
-        accessorKey: 'transaction_id',
-        header: __('Transaction ID', 'smartpay'),
+        accessorKey: 'id',
+        header: __('ID', 'smartpay'),
 		enableSorting: false,
     },
     {

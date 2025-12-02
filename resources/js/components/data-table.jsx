@@ -159,7 +159,7 @@ export function DataTable({
                                         >
                                             {header.isPlaceholder ? null : (
                                                 <div
-                                                    className={canSort ? "flex justify-center items-center cursor-pointer select-none" : ""}
+                                                    className={canSort ? "flex justify-end items-center cursor-pointer select-none" : ""}
                                                     onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                                                 >
                                                     {flexRender(
