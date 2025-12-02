@@ -1,27 +1,25 @@
 import domReady from '@wordpress/dom-ready'
 import { render } from '@wordpress/element'
-import { HashRouter, Route, Routes, Link } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
 // Product
-import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
+import { ProductList } from './pages/product/index'
 
 // Customer
 import { CustomerList } from './pages/customer/index'
 import { ShowCustomer } from './pages/customer/show'
 
 // Coupon
-import { CouponList } from './pages/coupon/index'
 import { CreateCoupon } from './pages/coupon/create'
 import { EditCoupon } from './pages/coupon/edit'
+import { CouponList } from './pages/coupon/index'
 
 // Payment
 import { PaymentList } from './pages/payment/index'
-import { CreatePayment } from './pages/payment/create'
-import { EditPayment } from './pages/payment/edit'
 
 // Other pages
 import { NotFound } from './pages/not-found'
@@ -91,16 +89,6 @@ domReady(function () {
                             exact
                             path="/payments"
                             element={<PaymentList />}
-                        />
-                        <Route
-                            exact
-                            path="/payments/create"
-                            element={<CreatePayment />}
-                        />
-                        <Route
-                            exact
-                            path="/payments/:paymentId/edit"
-                            element={<EditPayment />}
                         />
 
                         <Route element={<NotFound />} />
