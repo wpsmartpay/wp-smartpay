@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n'
 import { Container } from 'react-bootstrap'
 import { DataTable } from '../../components/data-table'
 import { createColumns } from './columns'
+import { PaymentDetailsDialog } from './PaymentDetailsDialog'
 
 const { useEffect, useState, useCallback } = wp.element
 
@@ -14,6 +15,8 @@ export const PaymentList = () => {
 	const [paymentStatus, setPaymentStatus] = useState('')
 	const [paymentType, setPaymentType] = useState('')
 	const [sortBy, setSortBy] = useState('id:desc')
+	const [selectedPaymentId, setSelectedPaymentId] = useState(null)
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [pagination, setPagination] = useState({
 		current_page: 1,
 		per_page: 10,
@@ -60,6 +63,19 @@ export const PaymentList = () => {
 		}
 	}
 
+	const handleViewPayment = (paymentId) => {
+		setSelectedPaymentId(paymentId)
+		setIsDialogOpen(true)
+	}
+
+	const handleDialogClose = (open) => {
+		setIsDialogOpen(open)
+		if (!open) {
+			setSelectedPaymentId(null)
+			fetchPayments(pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy)
+		}
+	}
+
 	useEffect(() => {
 		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy)
 	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page, sortBy])
@@ -91,8 +107,8 @@ export const PaymentList = () => {
 		setPaymentType(type);
 	}
 
-	// Create columns with deletePayment function
-	const columns = createColumns(deletePayment)
+	// Create columns with deletePayment and handleViewPayment functions
+	const columns = createColumns(deletePayment, handleViewPayment)
 
 	return (
 		<>
@@ -126,7 +142,7 @@ export const PaymentList = () => {
 						searchPlaceholder='Search by Email or Transaction ID'
 						enableFilters={true}
 						filters={[
-							<Select onValueChange={handleStatusFilter}>
+							<Select key="status-filter" onValueChange={handleStatusFilter}>
 								<SelectTrigger className="w-[180px]">
 									<SelectValue placeholder="Filter by status" />
 								</SelectTrigger>
@@ -141,7 +157,7 @@ export const PaymentList = () => {
 									<SelectItem value="abandoned">Abandoned</SelectItem>
 								</SelectContent>
 							</Select>,
-							<Select onValueChange={handleTypeFilter}>
+							<Select key="type-filter" onValueChange={handleTypeFilter}>
 								<SelectTrigger className="w-[180px]">
 									<SelectValue placeholder="Filter by Type" />
 								</SelectTrigger>
@@ -155,6 +171,11 @@ export const PaymentList = () => {
 					/>
 				</div>
 			</Container>
+			<PaymentDetailsDialog
+				paymentId={selectedPaymentId}
+				open={isDialogOpen}
+				onOpenChange={handleDialogClose}
+			/>
 		</>
 	)
 }

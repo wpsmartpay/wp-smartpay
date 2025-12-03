@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n'
 import { Box, Eye, FilePenLine, LinkIcon, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-export const createColumns = (deletePayment) => [
+export const createColumns = (deletePayment, onViewPayment) => [
     {
 		accessorKey: 'id',
 		header: __('ID', 'smartpay'),
@@ -107,16 +107,15 @@ export const createColumns = (deletePayment) => [
 
 			return (
 				<div className="flex items-center justify-end gap-2">
-					<Link to={`/payments/${payment.id}/edit`}>
-						<Button
-							variant="outline"
-							size="icon"
-							title={__('View', 'smartpay')}
-							className="hover:bg-gray-100"
-							>
-							<Eye className="w-4 h-4 text-gray-700" />
-						</Button>
-					</Link>
+					<Button
+						variant="outline"
+						size="icon"
+						title={__('View', 'smartpay')}
+						onClick={() => onViewPayment(payment.id)}
+						className="hover:bg-gray-100"
+					>
+						<Eye className="w-4 h-4 text-gray-700" />
+					</Button>
 					<Button
 						variant="outline"
 						size="icon"
