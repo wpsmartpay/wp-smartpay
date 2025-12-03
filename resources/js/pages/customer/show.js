@@ -1,8 +1,8 @@
+import { useEffect, useState } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
 import * as dayjs from 'dayjs'
 import { Container } from 'react-bootstrap'
-import { __ } from '@wordpress/i18n'
 import { Link, useParams } from 'react-router-dom'
-import { useState, useEffect } from '@wordpress/element'
 import { Loading } from '../../components/Loading'
 import {
     PAYMENT_STATUS_COMPLETED,

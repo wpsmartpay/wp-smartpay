@@ -1,11 +1,12 @@
 {
-    "/public/js/app.js": "/public/js/app.js",
-    "/public/js/admin.js": "/public/js/admin.js",
-    "/public/css/dashboard.css": "/public/css/dashboard.css",
-    "/public/css/admin.css": "/public/css/admin.css",
-    "/public/css/app.css": "/public/css/app.css",
     "/public/js/bootstrap.js": "/public/js/bootstrap.js",
     "/public/js/integration.js": "/public/js/integration.js",
     "/public/js/debuglog.js": "/public/js/debuglog.js",
-    "/public/js/dashboard.js": "/public/js/dashboard.js"
+    "/public/js/dashboard.js": "/public/js/dashboard.js",
+    "/public/js/app.js": "/public/js/app.js",
+    "/public/js/admin.js": "/public/js/admin.js",
+    "/public/css/components.css": "/public/css/components.css",
+    "/public/css/dashboard.css": "/public/css/dashboard.css",
+    "/public/css/admin.css": "/public/css/admin.css",
+    "/public/css/app.css": "/public/css/app.css"
 }

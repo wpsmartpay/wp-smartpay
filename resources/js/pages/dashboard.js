@@ -4,7 +4,10 @@ import { __ } from '@wordpress/i18n'
 import { Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { Report } from '../components/report/report'
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import dayjs from 'dayjs'
+import { ArrowUpRightIcon, Terminal } from 'lucide-react'
 const relativeTime = require('dayjs/plugin/relativeTime')
 let utc = require('dayjs/plugin/utc')
 dayjs.extend(relativeTime)
@@ -49,6 +52,24 @@ export const Dashboard = () => {
                             <h2 className="m-0 mb-3">
                                 {__('Monthly Report', 'smartpay')}
                             </h2>
+							<Button variant="outline">Button</Button>
+							      <div className="flex items-start gap-2">
+        <Button variant="destructive" size="lg">
+          Large
+        </Button>
+        <Button size="icon-lg" aria-label="Submit" >
+          <ArrowUpRightIcon />
+        </Button>
+      </div>
+
+<Alert variant="default | destructive">
+  <Terminal />
+  <AlertTitle>Heads up!</AlertTitle>
+  <AlertDescription>
+    You can add components and dependencies to your app using the cli.
+  </AlertDescription>
+</Alert>
+
                             <Card className="m-0 p-3">
                                 <Report
                                     height="350"

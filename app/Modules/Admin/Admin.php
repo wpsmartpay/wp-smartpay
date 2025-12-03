@@ -162,7 +162,9 @@ class Admin
     {
         if ('toplevel_page_smartpay' === $hook || 'smartpay_page_smartpay-form' === $hook || 'smartpay_page_smartpay-setting' === $hook || 'smartpay_page_smartpay-integrations' === $hook) {
             wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
-            wp_enqueue_style('smartpay-admin');
+            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', '', SMARTPAY_VERSION);
+            wp_enqueue_style('smartpay-admin'); // TODO: Remove admin css after refactoring
+            wp_enqueue_style('smartpay-components');
         }
         if ('toplevel_page_smartpay' === $hook) {
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
@@ -176,6 +178,8 @@ class Admin
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'apiNonce' => wp_create_nonce('wp_rest'),
                     'options' => $this->getOptionsScriptsData(),
+					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
+					'version' => SMARTPAY_VERSION,
                 )
             );
 

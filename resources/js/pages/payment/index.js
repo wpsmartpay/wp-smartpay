@@ -1,144 +1,160 @@
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
-import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
-const { useEffect, useState } = wp.element
-const { useSelect, dispatch } = wp.data
+import { Container } from 'react-bootstrap'
+import { DataTable } from '../../components/data-table'
+import { createColumns } from './columns'
 
-import { DeletePayment } from '../../http/payment'
+const { useEffect, useState, useCallback } = wp.element
 
 export const PaymentList = () => {
-    const [payments, setPayments] = useState([])
+	const [data, setData] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [searchQuery, setSearchQuery] = useState('')
+	const [paymentStatus, setPaymentStatus] = useState('')
+	const [paymentType, setPaymentType] = useState('')
+	const [sortBy, setSortBy] = useState('id:desc')
+	const [pagination, setPagination] = useState({
+		current_page: 1,
+		per_page: 10,
+		last_page: 1,
+		total: 0,
+		from: 0,
+		to: 0
+	})
 
-    const paymentList = useSelect((select) =>
-        select('smartpay/payments').getPayments()
-    )
+	// Fetch payments from API
+	const fetchPayments = useCallback(async (page = 1, perPage = 10, search = '', status = '', type = '', sortBy = 'id:desc') => {
+		setIsLoading(true)
 
-    useEffect(() => {
-        setPayments(paymentList)
-    }, [paymentList])
+		try {
+			const result = await GetPayments({ page, perPage, search, status, type, sortBy });
 
-    const deletePayment = (paymentId) => {
-        Swal.fire({
-            title: __('Are you sure?', 'smartpay'),
-            text: __("You won't be able to revert this!", 'smartpay'),
-            icon: 'warning',
-            confirmButtonText: __('Yes', 'smartpay'),
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                DeletePayment(paymentId).then((response) => {
-                    dispatch('smartpay/payments').deletePayment(paymentId)
-                    Swal.fire({
-                        toast: true,
-                        icon: 'success',
-                        title: __(response.message, 'smartpay'),
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        showClass: {
-                            popup: 'swal2-noanimation',
-                        },
-                        hideClass: {
-                            popup: '',
-                        },
-                    })
-                })
-            }
-        })
-    }
+			// Extract data and pagination info
+			const { data: paymentData = [], ...paginationData } = result;
 
-    return (
-        <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Payments', 'smartpay')}
-                        </h2>
-                    </div>
-                </Container>
-            </div>
+			setData(paymentData)
+			setPagination({
+				current_page: paginationData.current_page,
+				per_page: paginationData.per_page,
+				last_page: paginationData.last_page,
+				total: paginationData.total,
+				from: paginationData.from,
+				to: paginationData.to
+			})
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: __('Error', 'smartpay'),
+				text: __('Failed to load payments', 'smartpay'),
+			})
+		} finally {
+			setIsLoading(false)
+		}
+	}, []);
 
-            <Container className="mt-3">
-                <div className="bg-white">
-                    <Table className="table">
-                        <thead>
-                            <tr className="bg-light">
-                                <th className="w-5 text-left">
-                                    {__('ID', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Customer', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Type', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Amount', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Date', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Status', 'smartpay')}
-                                </th>
-                                <th className="w-30 text-left">
-                                    {__('Actions', 'smartpay')}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!payments.length && (
-                                <tr>
-                                    <td className="text-center" colSpan="7">
-                                        {__('No payment found.', 'smartpay')}
-                                    </td>
-                                </tr>
-                            )}
+	const deletePayment = async (paymentId) => {
+		const deleted = await DeletePayment(paymentId);
+		if (deleted) {
+			fetchPayments(pagination.current_page, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy);
+		}
+	}
 
-                            {payments.map((payment, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{payment.id}</td>
-                                        <td>{payment.email}</td>
-                                        <td>{payment.type}</td>
-                                        <td>
-                                            <span
-                                                dangerouslySetInnerHTML={{
-                                                    __html: `${smartpay.options.currencySymbol} ${payment.amount} `,
-                                                }}
-                                            ></span>
-                                        </td>
-                                        <td>
-                                            {payment.completed_at ||
-                                                payment.created_at}
-                                        </td>
-                                        <td>{payment.status}</td>
-                                        <td>
-                                            <Link
-                                                className="btn-sm p-0 mr-2"
-                                                to={`/payments/${payment.id}/edit`}
-                                            >
-                                                {__('View', 'smartpay')}
-                                            </Link>
-                                            <Button
-                                                className="btn-sm p-0"
-                                                onClick={() =>
-                                                    deletePayment(payment.id)
-                                                }
-                                                variant="link"
-                                            >
-                                                {__('Delete', 'smartpay')}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </Table>
-                </div>
-            </Container>
-        </>
-    )
+	useEffect(() => {
+		fetchPayments(1, pagination.per_page, searchQuery, paymentStatus, paymentType, sortBy)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType, pagination.per_page, sortBy])
+
+	const handlePaginationChange = useCallback(({ page, per_page }) => {
+		fetchPayments(page, per_page, searchQuery, paymentStatus, paymentType, sortBy)
+	}, [fetchPayments, searchQuery, paymentStatus, paymentType, sortBy])
+
+	const handleSearchChange = (search) => {
+		setSearchQuery(search)
+	}
+
+	const handleSort = useCallback((sortDetails) => {
+		const sortBy = sortDetails.map((detail) => `${detail.id}:${detail.desc ? 'desc' : 'asc'}`).join(',');
+		setSortBy(sortBy);
+	}, [sortBy]);
+
+	const handleStatusFilter = (status) => {
+		if (status === 'all') {
+			status = '';
+		}
+		setPaymentStatus(status);
+	}
+
+	const handleTypeFilter = (type) => {
+		if (type === 'all') {
+			type = '';
+		}
+		setPaymentType(type);
+	}
+
+	// Create columns with deletePayment function
+	const columns = createColumns(deletePayment)
+
+	return (
+		<>
+			<div className="text-black bg-white border-bottom shadow-xs">
+				<Container>
+					<div className="d-flex align-items-center justify-content-between py-3">
+						<div className='-mt-1.5'>
+							<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
+								{__('Payments', 'smartpay')}
+							</h2>
+							<p className='text-slate-500 font-medium text-sm! m-0'>{__('Manage your payments here', 'smartpay')}</p>
+						</div>
+						<div className=''>
+							<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
+						</div>
+					</div>
+				</Container>
+			</div>
+
+			<Container className="mt-4">
+				<div className="bg-white p-4 rounded-lg shadow-md">
+					<DataTable
+						columns={columns}
+						data={data}
+						pagination={pagination}
+						onPaginationChange={handlePaginationChange}
+						onSearchChange={handleSearchChange}
+						enableSorting={true}
+						onSortChange={handleSort}
+						isLoading={isLoading}
+						searchPlaceholder='Search by Email or Transaction ID'
+						enableFilters={true}
+						filters={[
+							<Select onValueChange={handleStatusFilter}>
+								<SelectTrigger className="w-[180px]">
+									<SelectValue placeholder="Filter by status" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="refunded">Refunded</SelectItem>
+									<SelectItem value="completed">Completed</SelectItem>
+									<SelectItem value="pending">Pending</SelectItem>
+									<SelectItem value="failed">Failed</SelectItem>
+									<SelectItem value="processing">Processing</SelectItem>
+									<SelectItem value="revoked">Revoked</SelectItem>
+									<SelectItem value="abandoned">Abandoned</SelectItem>
+								</SelectContent>
+							</Select>,
+							<Select onValueChange={handleTypeFilter}>
+								<SelectTrigger className="w-[180px]">
+									<SelectValue placeholder="Filter by Type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="form_payment">Form</SelectItem>
+									<SelectItem value="product_purchase">Product</SelectItem>
+								</SelectContent>
+							</Select>
+						]}
+					/>
+				</div>
+			</Container>
+		</>
+	)
 }
