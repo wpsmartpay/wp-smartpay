@@ -9,13 +9,12 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCoupon, GetCoupons } from '../../http/coupon'
 import { createColumns } from './columns'
 const { useEffect, useState, useCallback } = wp.element
-const { dispatch } = wp.data
 
 export const CouponList = () => {
 	const [data, setData] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
-	const [paymentType, setPaymentType] = useState('')
+	const [couponType, setCouponType] = useState('')
 	const [pagination, setPagination] = useState({
 		current_page: 1,
 		per_page: 10,
@@ -56,42 +55,19 @@ export const CouponList = () => {
 	}, []);
 
 	useEffect(() => {
-		fetchCoupons(1, pagination.per_page, searchQuery, paymentType)
-	}, [fetchCoupons, searchQuery, paymentType, pagination.per_page])
+		fetchCoupons(1, pagination.per_page, searchQuery, couponType)
+	}, [fetchCoupons, searchQuery, couponType, pagination.per_page])
 
 	const handlePaginationChange = useCallback(({ page, per_page }) => {
-		fetchCoupons(page, per_page, searchQuery, paymentType)
-	}, [fetchCoupons, searchQuery, paymentType])
+		fetchCoupons(page, per_page, searchQuery, couponType)
+	}, [fetchCoupons, searchQuery, couponType])
 
-    const deleteCoupon = (couponId) => {
-        Swal.fire({
-            title: __('Are you sure?', 'smartpay'),
-            text: __("You won't be able to revert this!", 'smartpay'),
-            icon: 'warning',
-            confirmButtonText: __('Yes', 'smartpay'),
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                DeleteCoupon(couponId).then((response) => {
-                    dispatch('smartpay/coupons').deleteCoupon(couponId)
-                    Swal.fire({
-                        toast: true,
-                        icon: 'success',
-                        title: __(response.message, 'smartpay'),
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        showClass: {
-                            popup: 'swal2-noanimation',
-                        },
-                        hideClass: {
-                            popup: '',
-                        },
-                    })
-                })
-            }
-        })
-    }
+	const deleteCoupon = async (couponId) => {
+		const deleted = await DeleteCoupon(couponId);
+		if (deleted) {
+			fetchCoupons(pagination.current_page, pagination.per_page, searchQuery, couponType);
+		}
+	}
 
 	const handleSearchChange = (search) => {
 		setSearchQuery(search)
@@ -101,7 +77,7 @@ export const CouponList = () => {
 		if (type === 'all') {
 			type = '';
 		}
-		setPaymentType(type);
+		setCouponType(type);
 	}
 
 	// Create columns with deleteCoupon function

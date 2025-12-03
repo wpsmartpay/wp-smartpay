@@ -69,7 +69,7 @@ export const createColumns = (deletePayment) => [
 				return <div className='text-center'><Badge variant="secondary" className="bg-green-50 text-green-700 bordering-green-200 min-w-20"><BadgeCheck className='size-3'/> { __('Never', 'smartpay') }</Badge></div>
 			}
 			if (date < now) {
-				return <div className='text-center'><Badge variant="secondary" className="bg-red-50 text-red-700 bordering-red-200 min-w-20"><ShieldOff className='size-3'/> { __('Expired', 'smartpay') }</Badge></div>
+				return <div className='text-center'><Badge variant="secondary" className="bg-red-50 text-red-700 bordering-red-200 min-w-20"><ShieldOff className='size-2'/> { __('Expired', 'smartpay') }</Badge></div>
 			}
 			return (<div className='text-center'>
 				<Badge variant="secondary" className="bg-slate-50 text-slate-700 bordering-slate-200 min-w-20"><Timer className='size-3'/>
