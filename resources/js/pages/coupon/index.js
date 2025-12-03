@@ -1,21 +1,67 @@
+import { DataTable } from '@/components/data-table'
+import { Button } from '@/components/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { __ } from '@wordpress/i18n'
+import { Plus } from 'lucide-react'
+import { Container } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { DeleteCoupon } from '../../http/coupon'
-const { useEffect, useState } = wp.element
-const { useSelect, dispatch } = wp.data
+import { DeleteCoupon, GetCoupons } from '../../http/coupon'
+import { createColumns } from './columns'
+const { useEffect, useState, useCallback } = wp.element
+const { dispatch } = wp.data
 
 export const CouponList = () => {
-    const [coupons, setCoupons] = useState([])
+	const [data, setData] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [searchQuery, setSearchQuery] = useState('')
+	const [paymentType, setPaymentType] = useState('')
+	const [pagination, setPagination] = useState({
+		current_page: 1,
+		per_page: 10,
+		last_page: 1,
+		total: 0,
+		from: 0,
+		to: 0
+	})
 
-    const couponList = useSelect((select) =>
-        select('smartpay/coupons').getCoupons()
-    )
+	// Fetch coupons from API
+	const fetchCoupons = useCallback(async (page = 1, perPage = 10, search = '', type = '') => {
+		setIsLoading(true)
 
-    useEffect(() => {
-        setCoupons(couponList)
-    }, [couponList])
+		try {
+			const result = await GetCoupons({ page, perPage, search, type });
+
+			// Extract data and pagination info
+			const { data: couponData = [], ...paginationData } = result;
+
+			setData(couponData)
+			setPagination({
+				current_page: paginationData.current_page,
+				per_page: paginationData.per_page,
+				last_page: paginationData.last_page,
+				total: paginationData.total,
+				from: paginationData.from,
+				to: paginationData.to
+			})
+		} catch (error) {
+			Swal.fire({
+				icon: 'error',
+				title: __('Error', 'smartpay'),
+				text: __('Failed to load payments', 'smartpay'),
+			})
+		} finally {
+			setIsLoading(false)
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchCoupons(1, pagination.per_page, searchQuery, paymentType)
+	}, [fetchCoupons, searchQuery, paymentType, pagination.per_page])
+
+	const handlePaginationChange = useCallback(({ page, per_page }) => {
+		fetchCoupons(page, per_page, searchQuery, paymentType)
+	}, [fetchCoupons, searchQuery, paymentType])
 
     const deleteCoupon = (couponId) => {
         Swal.fire({
@@ -47,88 +93,81 @@ export const CouponList = () => {
         })
     }
 
+	const handleSearchChange = (search) => {
+		setSearchQuery(search)
+	}
+
+	const handleTypeFilter = (type) => {
+		if (type === 'all') {
+			type = '';
+		}
+		setPaymentType(type);
+	}
+
+	// Create columns with deleteCoupon function
+	const columns = createColumns(deleteCoupon);
+
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Coupons', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
-                            <Link
+			<div className="text-black bg-white border-bottom shadow-xs">
+				<Container>
+					<div className="d-flex align-items-center justify-content-between py-3">
+						<div className='-mt-1.5'>
+							<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
+								{__('Coupons', 'smartpay')}
+							</h2>
+							<p className='text-slate-500 font-medium text-sm! m-0'>{__('Manage your coupons here', 'smartpay')}</p>
+						</div>
+						<div className=''>
+							<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
+						</div>
+					</div>
+				</Container>
+			</div>
+
+			<Container className="mt-4">
+				<div className="bg-white p-4 rounded-lg shadow-md">
+					<DataTable
+						columns={columns}
+						data={data}
+						pagination={pagination}
+						onPaginationChange={handlePaginationChange}
+						onSearchChange={handleSearchChange}
+						isLoading={isLoading}
+						searchPlaceholder='Search by Coupon Code'
+						enableFilters={true}
+						filters={[
+							<Select key="type-filter" onValueChange={handleTypeFilter}>
+								<SelectTrigger className="w-[180px]">
+									<SelectValue placeholder="Filter by Type" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="fixed">Fixed</SelectItem>
+									<SelectItem value="percent">Percent</SelectItem>
+								</SelectContent>
+							</Select>
+						]}
+						isJustifyBetween={false}
+						enableActions={true}
+						actions={[
+							<Link
                                 role="button"
-                                className="btn btn-primary btn-sm text-decoration-none"
+                                className="text-decoration-none"
                                 to="/coupons/create"
                             >
-                                {__('Create', 'smartpay')}
+                                <Button
+									variant="default"
+									title={__('Create', 'smartpay')}
+								>
+									<Plus className="w-4 h-4 text-white" />
+									<span>{__('Add Coupon', 'smartpay')}</span>
+								</Button>
                             </Link>
-                        </div>
-                    </div>
-                </Container>
-            </div>
-            <Container className="mt-3">
-                <div className="bg-white">
-                    <Table className="table">
-                        <thead>
-                        <tr className="bg-light">
-                            <th className="w-25 text-center">
-                                <strong>{__('Title', 'smartpay')}</strong>
-                            </th>
-                            <th className="text-center">
-                                <strong>{__('Type', 'smartpay')}</strong>
-                            </th>
-                            <th className="text-center">
-                                <strong>{__('Amount', 'smartpay')}</strong>
-                            </th>
-                            <th className="text-center">
-                                <strong>{__('Expire At', 'smartpay')}</strong>
-                            </th>
-                            <th className="w-25 text-center">
-                                {__('Actions', 'smartpay')}
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {!coupons.length && (
-                            <tr>
-                                <td className="text-center" colSpan="5">
-                                    {__('No coupon found.', 'smartpay')}
-                                </td>
-                            </tr>
-                        )}
-
-                        {coupons.map((coupons) => {
-                            return (
-                                <tr key={coupons.id}>
-                                    <td className='text-center'>{coupons.title || ''}</td>
-                                    <td className='text-center'>{coupons.discount_type.toUpperCase() || ''}</td>
-                                    <td className='text-center'>{coupons.discount_type === 'percent' ? `${coupons.discount_amount}%` : coupons.discount_amount}</td>
-                                    <td className='text-center'>{coupons.expiry_date && coupons.expiry_date.startsWith('-') || coupons.expiry_date.startsWith('1970') ? 'Never' : coupons.expiry_date}</td>
-                                    <td className="text-center justify-content-center" style={{display: 'flex'}}>
-                                        <Link
-                                            className="btn-sm p-0 mr-2 text-decoration-none"
-                                            to={`/coupons/${coupons.id}/edit`}
-                                        >
-                                            {__('Edit', 'smartpay')}
-                                        </Link>
-                                        <Button
-                                            className="btn-sm p-0"
-                                            onClick={() =>
-                                                deleteCoupon(coupons.id)
-                                            }
-                                            variant="link"
-                                        >
-                                            {__('Delete', 'smartpay')}
-                                        </Button>
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                        </tbody>
-                    </Table>
-                </div>
-            </Container>
+						]}
+					/>
+				</div>
+			</Container>
         </>
     )
 }

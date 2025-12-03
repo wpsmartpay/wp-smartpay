@@ -32,7 +32,12 @@ class CouponController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $coupons = Coupon::orderBy('id', 'DESC')->get();
+		$page = $request->get_param('page') ?: 1;
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+		$type = $request->get_param('type') ?: '';
+
+        $coupons = Coupon::orderBy('id', 'DESC')->paginate();
 
         return new WP_REST_Response(['coupons' => $coupons]);
     }
