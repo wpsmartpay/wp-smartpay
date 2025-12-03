@@ -33,7 +33,6 @@ class PaymentController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-		$page = $request->get_param('page') ?: 1;
 		$perPage = $request->get_param('per_page') ?: 10;
 		$search = $request->get_param('search') ?: '';
 		$status = $request->get_param('status') ?: '';

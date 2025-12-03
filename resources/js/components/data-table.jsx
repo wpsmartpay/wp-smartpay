@@ -31,8 +31,11 @@ export function DataTable({
     enableSearch = true,
     enableSorting = false,
     enableFilters = false,
+	enableActions = false,
     filters = [],
     sortingState = [],
+	isJustifyBetween = true,
+	actions = [],
 }) {
     const [searchValue, setSearchValue] = useState('')
     const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -118,7 +121,7 @@ export function DataTable({
             {/* Search and Filters */}
             {(enableSearch || enableFilters) && (
                 <div className="flex items-center justify-between gap-4 py-4">
-                    <div className="flex items-center justify-between gap-4 flex-1">
+                    <div className={`flex items-center gap-4 flex-1` + (isJustifyBetween ? ' justify-between' : '')}>
                         {enableSearch && (
 							<div className='relative w-xs'>
 								<Input
@@ -137,6 +140,15 @@ export function DataTable({
                                 {filters.map((filter, index) => (
                                     <div key={index}>
                                         {filter}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+						{enableActions && actions && actions.length > 0 && (
+                            <div className="flex items-center gap-2 ml-auto">
+                                {actions.map((action, index) => (
+                                    <div key={index}>
+                                        {action}
                                     </div>
                                 ))}
                             </div>
