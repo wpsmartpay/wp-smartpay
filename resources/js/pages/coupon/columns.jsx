@@ -1,7 +1,8 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { __ } from '@wordpress/i18n'
-import { Percent, Pin, SquarePen, Trash2 } from 'lucide-react'
+import { BadgeCheck, Percent, Pin, SquarePen, Timer, Trash2 } from 'lucide-react'
+import { ShieldOff } from 'react-feather'
 import { Link } from 'react-router-dom'
 
 export const createColumns = (deletePayment) => [
@@ -28,13 +29,13 @@ export const createColumns = (deletePayment) => [
 			if (type === 'percent') {
 				return (
 					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-green-100 text-green-800 min-w-20"><Percent className='size-3'/> Percent</Badge>
+						<Badge variant="secondary" className="bg-purple-50 text-purple-600 min-w-20"><Percent className='size-3'/> Percent</Badge>
 					</div>
 				)
 			} else if(type === 'fixed') {
 				return (
 					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-blue-100 text-blue-800 min-w-20"><Pin className='size-3'/> Fixed</Badge>
+						<Badge variant="secondary" className="bg-blue-50 text-blue-600 min-w-20"><Pin className='size-3'/> Fixed</Badge>
 					</div>
 				)
 			}
@@ -62,14 +63,24 @@ export const createColumns = (deletePayment) => [
 		cell: ({ row }) => {
 			const dateStr = row.original.expiry_date;
 			const date = new Date(dateStr)
+			const now = new Date();
+
+			if (dateStr === null) {
+				return <div className='text-center'><Badge variant="secondary" className="bg-green-50 text-green-700 bordering-green-200 min-w-20"><BadgeCheck className='size-3'/> { __('Never', 'smartpay') }</Badge></div>
+			}
+			if (date < now) {
+				return <div className='text-center'><Badge variant="secondary" className="bg-red-50 text-red-700 bordering-red-200 min-w-20"><ShieldOff className='size-3'/> { __('Expired', 'smartpay') }</Badge></div>
+			}
 			return (<div className='text-center'>
-				{date.toLocaleString('en-US', {
-					year: 'numeric',
-					month: 'short',
-					day: 'numeric',
-					hour: 'numeric',
-					minute: 'numeric',
-				})}
+				<Badge variant="secondary" className="bg-slate-50 text-slate-700 bordering-slate-200 min-w-20"><Timer className='size-3'/>
+					{date.toLocaleString('en-US', {
+						year: 'numeric',
+						month: 'short',
+						day: 'numeric',
+						hour: 'numeric',
+						minute: 'numeric',
+					})}
+				</Badge>
 			</div>)
 		},
 	},
