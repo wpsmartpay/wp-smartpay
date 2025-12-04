@@ -33,6 +33,6 @@ class Coupon extends Model
 		if ($value === '0000-00-00 00:00:00' || empty($value)) {
 			return null;
 		}
-        return gmdate('Y-m-d', strtotime($value));
+        return gmdate('Y-m-d H:i:s', strtotime($value));
     }
 }
