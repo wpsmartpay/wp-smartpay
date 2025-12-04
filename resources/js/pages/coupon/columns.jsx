@@ -3,9 +3,8 @@ import { Button } from '@/components/ui/button'
 import { __ } from '@wordpress/i18n'
 import { BadgeCheck, Percent, Pin, SquarePen, Timer, Trash2 } from 'lucide-react'
 import { ShieldOff } from 'react-feather'
-import { Link } from 'react-router-dom'
 
-export const createColumns = (deletePayment) => [
+export const createColumns = (deletePayment, handleEditCoupon) => [
 	{
 		accessorKey: 'title',
 		header: __('COUPON CODE', 'smartpay'),
@@ -91,16 +90,15 @@ export const createColumns = (deletePayment) => [
 			const coupon = row.original
 			return (
 				<div className="flex items-center justify-end gap-2">
-					<Link className="btn-sm p-0 mr-2 text-decoration-none" to={`/coupons/${coupon.id}/edit`}>
-                        <Button
-							variant="outline"
-							size="icon"
-							title={__('Edit', 'smartpay')}
-							className="hover:bg-gray-100"
-						>
-							<SquarePen className="w-4 h-4 text-gray-700" />
-						</Button>
-                    </Link>
+					<Button
+						variant="outline"
+						size="icon"
+						title={__('Edit', 'smartpay')}
+						className="hover:bg-gray-100"
+						onClick={() => handleEditCoupon(coupon.id)}
+					>
+						<SquarePen className="w-4 h-4 text-gray-700" />
+					</Button>
 					<Button
 						variant="outline"
 						size="icon"

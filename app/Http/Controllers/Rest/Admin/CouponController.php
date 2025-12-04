@@ -89,7 +89,7 @@ class CouponController extends RestController
         $coupon->discount_type   = $request['discount_type'];
         $coupon->discount_amount = $request['discount_amount'];
         $coupon->status          = Coupon::PUBLISH;
-        $coupon->expiry_date     = gmdate('Y-m-d', strtotime($request['expiry_date']));
+        $coupon->expiry_date     =  $request['expiry_date'] ? gmdate('Y-m-d H:i:s', strtotime($request['expiry_date'])) : null;
         $coupon->save();
 
         return new WP_REST_Response(['coupon' => $coupon, 'message' => __('Coupon created', 'smartpay')]);
@@ -153,7 +153,7 @@ class CouponController extends RestController
         $coupon->discount_type   = $request['discount_type'];
         $coupon->discount_amount = $request['discount_amount'];
         $coupon->status          = Coupon::PUBLISH;
-        $coupon->expiry_date     = gmdate('Y-m-d', strtotime($request['expiry_date']));
+        $coupon->expiry_date     =  $request['expiry_date'] ? gmdate('Y-m-d H:i:s', strtotime($request['expiry_date'])) : null;
         $coupon->save();
 
         return new WP_REST_Response(['coupon' => $coupon, 'message' => 'Coupon updated']);
