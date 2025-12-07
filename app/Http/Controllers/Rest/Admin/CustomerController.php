@@ -33,7 +33,18 @@ class CustomerController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $customers = Customer::orderBy('id', 'DESC')->get();
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+
+        $query = Customer::orderBy('id', 'DESC');
+
+		if (!empty($search)) {
+			$query->where(function($q) use ($search) {
+				$q->where('email', 'like', '%' . $search . '%');
+			});
+		}
+
+		$customers = $query->paginate($perPage);
 
         return new WP_REST_Response(['customers' => $customers]);
     }
