@@ -4,10 +4,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { __ } from '@wordpress/i18n'
 import { Plus } from 'lucide-react'
 import { Container } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCoupon, GetCoupons } from '../../http/coupon'
 import { createColumns } from './columns'
+import { CouponDialog } from './CouponDialog'
 const { useEffect, useState, useCallback } = wp.element
 
 export const CouponList = () => {
@@ -15,6 +15,8 @@ export const CouponList = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
 	const [couponType, setCouponType] = useState('')
+	const [selectedCouponId, setSelectedCouponId] = useState(null)
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [pagination, setPagination] = useState({
 		current_page: 1,
 		per_page: 10,
@@ -80,8 +82,26 @@ export const CouponList = () => {
 		setCouponType(type);
 	}
 
-	// Create columns with deleteCoupon function
-	const columns = createColumns(deleteCoupon);
+	const handleCreateCoupon = () => {
+		setSelectedCouponId(null)
+		setIsDialogOpen(true)
+	}
+
+	const handleEditCoupon = (couponId) => {
+		setSelectedCouponId(couponId)
+		setIsDialogOpen(true)
+	}
+
+	const handleDialogClose = (open) => {
+		setIsDialogOpen(open)
+		if (!open) {
+			setSelectedCouponId(null)
+			fetchCoupons(pagination.current_page, pagination.per_page, searchQuery, couponType)
+		}
+	}
+
+	// Create columns with deleteCoupon and handleEditCoupon functions
+	const columns = createColumns(deleteCoupon, handleEditCoupon);
 
     return (
         <>
@@ -127,23 +147,24 @@ export const CouponList = () => {
 						isJustifyBetween={false}
 						enableActions={true}
 						actions={[
-							<Link
-                                role="button"
-                                className="text-decoration-none"
-                                to="/coupons/create"
-                            >
-                                <Button
-									variant="default"
-									title={__('Create', 'smartpay')}
-								>
-									<Plus className="w-4 h-4 text-white" />
-									<span>{__('Add Coupon', 'smartpay')}</span>
-								</Button>
-                            </Link>
+							<Button
+								key="create-coupon"
+								variant="default"
+								title={__('Create', 'smartpay')}
+								onClick={handleCreateCoupon}
+							>
+								<Plus className="w-4 h-4 text-white" />
+								<span>{__('Add Coupon', 'smartpay')}</span>
+							</Button>
 						]}
 					/>
 				</div>
 			</Container>
+			<CouponDialog
+				couponId={selectedCouponId}
+				open={isDialogOpen}
+				onOpenChange={handleDialogClose}
+			/>
         </>
     )
 }

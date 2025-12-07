@@ -5,7 +5,7 @@ import {
 	useReactTable,
 } from '@tanstack/react-table'
 import { __ } from '@wordpress/i18n'
-import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2, SearchX } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -219,9 +219,12 @@ export function DataTable({
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
-                                    className="h-24 text-center"
+                                    className="min-h-24 py-10! text-center bg-slate-50"
                                 >
-                                    {__('No payment found.', 'smartpay')}
+									<div className="flex items-center justify-center flex-col text-slate-700 gap-3 w-full">
+										<SearchX className='size-10'/>
+										<span className='font-semibold text-lg!'>{__('No Record Found.', 'smartpay')}</span>
+									</div>
                                 </TableCell>
                             </TableRow>
                         )}

@@ -14,8 +14,6 @@ import { CustomerList } from './pages/customer/index'
 import { ShowCustomer } from './pages/customer/show'
 
 // Coupon
-import { CreateCoupon } from './pages/coupon/create'
-import { EditCoupon } from './pages/coupon/edit'
 import { CouponList } from './pages/coupon/index'
 
 // Payment
@@ -73,23 +71,9 @@ domReady(function () {
 
                         {/* Coupon */}
                         <Route exact path="/coupons" element={<CouponList />} />
-                        <Route
-                            exact
-                            path="/coupons/create"
-                            element={<CreateCoupon />}
-                        />
-                        <Route
-                            exact
-                            path="/coupons/:couponId/edit"
-                            element={<EditCoupon />}
-                        />
 
                         {/* Payment */}
-                        <Route
-                            exact
-                            path="/payments"
-                            element={<PaymentList />}
-                        />
+                        <Route exact path="/payments" element={<PaymentList />} />
 
                         <Route element={<NotFound />} />
                     </Routes>
