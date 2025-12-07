@@ -1,4 +1,5 @@
 import { DataTable } from '@/components/data-table'
+import Header from '@/components/Header'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { __ } from '@wordpress/i18n'
@@ -105,21 +106,10 @@ export const CouponList = () => {
 
     return (
         <>
-			<div className="text-black bg-white border-bottom shadow-xs">
-				<Container>
-					<div className="d-flex align-items-center justify-content-between py-3">
-						<div className='-mt-1.5'>
-							<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
-								{__('Coupons', 'smartpay')}
-							</h2>
-							<p className='text-slate-500 font-medium text-sm! m-0'>{__('Manage your coupons here', 'smartpay')}</p>
-						</div>
-						<div className=''>
-							<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
-						</div>
-					</div>
-				</Container>
-			</div>
+			<Header
+				title={__('Coupons', 'smartpay')}
+				subtitle={__('Manage your coupons here', 'smartpay')}
+			/>
 
 			<Container className="mt-4">
 				<div className="bg-white p-4 rounded-lg shadow-md">

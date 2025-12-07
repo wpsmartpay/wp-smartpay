@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
@@ -112,21 +113,10 @@ export const PaymentList = () => {
 
 	return (
 		<>
-			<div className="text-black bg-white border-bottom shadow-xs">
-				<Container>
-					<div className="d-flex align-items-center justify-content-between py-3">
-						<div className='-mt-1.5'>
-							<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
-								{__('Payments', 'smartpay')}
-							</h2>
-							<p className='text-slate-500 font-medium text-sm! m-0'>{__('Manage your payments here', 'smartpay')}</p>
-						</div>
-						<div className=''>
-							<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
-						</div>
-					</div>
-				</Container>
-			</div>
+			<Header
+				title={__('Payments', 'smartpay')}
+				subtitle={__('Manage your payments here', 'smartpay')}
+			/>
 
 			<Container className="mt-4">
 				<div className="bg-white p-4 rounded-lg shadow-md">

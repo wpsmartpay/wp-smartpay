@@ -1,6 +1,7 @@
+import Header from '@/components/Header'
 import { __ } from '@wordpress/i18n'
+import { Button, Container, Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCustomer } from '../../http/customer'
 const { useEffect, useState } = wp.element
@@ -49,15 +50,10 @@ export const CustomerList = () => {
 
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Customers', 'smartpay')}
-                        </h2>
-                    </div>
-                </Container>
-            </div>
+			<Header
+				title={__('Customers', 'smartpay')}
+				subtitle={__('Manage your customers here', 'smartpay')}
+			/>
 
             <Container className="mt-3">
                 <div className="bg-white">
