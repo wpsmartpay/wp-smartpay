@@ -5,9 +5,9 @@ import { Container } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import { Loading } from '../../components/Loading'
 import {
-    PAYMENT_STATUS_COMPLETED,
-    PAYMENT_STATUS_PENDING,
-    PAYMENT_STATUS_REFUNDED,
+	PAYMENT_STATUS_COMPLETED,
+	PAYMENT_STATUS_PENDING,
+	PAYMENT_STATUS_REFUNDED,
 } from '../../utils/constant'
 const { useSelect, dispatch } = wp.data
 
@@ -22,18 +22,19 @@ export const ShowCustomer = () => {
     )
 
     useEffect(() => {
-        setCustomer(customerData)
-        setIsLoading(false)
+		console.log('Customer Data:', customerData);
+		setCustomer(customerData)
+		setIsLoading(false)
     }, [customerData])
 
     const filterPaymentsByStatus = (status = '') => {
-        if (!customer?.payments) {
+        if (!customer?.payments?.data) {
             return []
         }
 
         return status
-            ? customer?.payments.filter((payment) => payment.status === status)
-            : customer?.payments
+            ? customer?.payments?.data.filter((payment) => payment.status === status)
+            : customer?.payments?.data
     }
 
     return (

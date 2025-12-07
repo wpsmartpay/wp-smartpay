@@ -4,6 +4,7 @@ namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Customer;
+use SmartPay\Models\Payment;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -68,13 +69,27 @@ class CustomerController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $customer = Customer::with(['payments'])->find($request->get_param('id'));
+		$perPage = $request->get_param('per_page') ?: 10;
 
+		$customer = Customer::find($request->get_param('id'));
         if (!$customer) {
             return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
         }
 
-        return new WP_REST_Response(['customer' => $customer]);
+		$completed_payments = $customer->payments()->where('status', '=', Payment::COMPLETED)->count();
+		$refunded_payments = $customer->payments()->where('status', '=', Payment::REFUNDED)->count();
+		$pending_payments = $customer->payments()->where('status', '=', Payment::PENDING)->count();
+		$customer_payments = $customer->payments()->orderBy('id', 'DESC')->paginate($perPage);
+
+        return new WP_REST_Response([
+			'customer' => $customer,
+			'payments' => $customer_payments,
+			'payment_stats' => [
+				'completed' => $completed_payments,
+				'refunded' => $refunded_payments,
+				'pending' => $pending_payments,
+			],
+		]);
     }
 
     /**

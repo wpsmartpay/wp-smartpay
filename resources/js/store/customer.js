@@ -26,10 +26,14 @@ const actions = {
             id,
         }
     },
-    setCustomer(customer) {
+    setCustomer(customer, payments, paymentStats) {
         return {
             type: 'SET_CUSTOMER',
-            customer,
+            customer: {
+				...customer,
+				payments,
+				paymentStats,
+			},
         }
     },
     deleteCustomer(customerId) {
@@ -115,7 +119,7 @@ registerStore('smartpay/customers', {
         },
         *getCustomer(id) {
             const response = yield actions.getCustomer(id)
-            return actions.setCustomer(response?.customer)
+            return actions.setCustomer(response?.customer, response?.payments, response?.payment_stats)
         },
     },
 })
