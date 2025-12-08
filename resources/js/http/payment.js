@@ -59,14 +59,15 @@ export const Update = (paymentId, body) => {
     })
 }
 
-export const GetPayments = async ({ page = 1, perPage = 10, search = '', status = '', type = '', sortBy = 'id:desc' }) => {
+export const GetPayments = async ({ page = 1, perPage = 10, search = '', status = '', type = '', customerId = '', sortBy = 'id:desc' }) => {
 	const queryParams = new URLSearchParams({
         page,
         per_page: perPage,
         status,
         type,
         sort_by: sortBy,
-        ...(search && { search })
+        ...(search && { search }),
+        ...(customerId && { customer_id: customerId })
 	})
 
 	const response = await apiFetch({

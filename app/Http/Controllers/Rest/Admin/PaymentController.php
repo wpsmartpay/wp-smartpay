@@ -37,15 +37,22 @@ class PaymentController extends RestController
 		$search = $request->get_param('search') ?: '';
 		$status = $request->get_param('status') ?: '';
 		$type = $request->get_param('type') ?: '';
+		$customerId = $request->get_param('customer_id') ?: '';
 		$orderBy = $request->get_param('sort_by') ?: 'id:desc';
 
 		// Start building the query
 		$query = Payment::with(['customer']);
 
+		// Apply customer filter if provided
+		if (!empty($customerId)) {
+			$query->where('customer_id', $customerId);
+		}
+
 		// Apply search filter if provided
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
-				$q->where('email', 'like', '%' . $search . '%');
+				$q->where('email', 'like', '%' . $search . '%')
+				  ->orWhere('transaction_id', 'like', '%' . $search . '%');
 			});
 		}
 
