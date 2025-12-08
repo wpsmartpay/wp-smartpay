@@ -37,15 +37,22 @@ class PaymentController extends RestController
 		$search = $request->get_param('search') ?: '';
 		$status = $request->get_param('status') ?: '';
 		$type = $request->get_param('type') ?: '';
+		$customerId = $request->get_param('customer_id') ?: '';
 		$orderBy = $request->get_param('sort_by') ?: 'id:desc';
 
 		// Start building the query
 		$query = Payment::with(['customer']);
 
+		// Apply customer filter if provided
+		if (!empty($customerId)) {
+			$query->where('customer_id', $customerId);
+		}
+
 		// Apply search filter if provided
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
-				$q->where('email', 'like', '%' . $search . '%');
+				$q->where('email', 'like', '%' . $search . '%')
+				  ->orWhere('transaction_id', 'like', '%' . $search . '%');
 			});
 		}
 
@@ -68,7 +75,26 @@ class PaymentController extends RestController
 		// Get paginated results
 		$payments = $query->paginate($perPage);
 
-		return new WP_REST_Response(['payments' => $payments]);
+		$response = ['payments' => $payments];
+
+		// If filtering by customer, include payment statistics
+		if (!empty($customerId)) {
+			$baseQuery = Payment::where('customer_id', $customerId);
+
+			$totalPayments = $baseQuery->count();
+			$completedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::COMPLETED)->count();
+			$pendingPayments = Payment::where('customer_id', $customerId)->where('status', Payment::PENDING)->count();
+			$refundedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::REFUNDED)->count();
+
+			$response['payment_stats'] = [
+				'total' => $totalPayments,
+				'completed' => $completedPayments,
+				'pending' => $pendingPayments,
+				'refunded' => $refundedPayments,
+			];
+		}
+
+		return new WP_REST_Response($response);
     }
 
     /**

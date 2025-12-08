@@ -4,6 +4,7 @@ namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Customer;
+use SmartPay\Models\Payment;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -68,13 +69,12 @@ class CustomerController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $customer = Customer::with(['payments'])->find($request->get_param('id'));
-
+		$customer = Customer::find($request->get_param('id'));
         if (!$customer) {
             return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
         }
 
-        return new WP_REST_Response(['customer' => $customer]);
+        return new WP_REST_Response([ 'customer' => $customer ]);
     }
 
     /**
