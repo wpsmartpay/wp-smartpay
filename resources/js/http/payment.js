@@ -77,5 +77,14 @@ export const GetPayments = async ({ page = 1, perPage = 10, search = '', status 
 		},
 	})
 
-	return response?.payments || {};
+	// Return payments data along with payment_stats if available
+	const paymentsData = response?.payments || {};
+	if (response?.payment_stats) {
+		return {
+			...paymentsData,
+			payment_stats: response.payment_stats
+		};
+	}
+
+	return paymentsData;
 }

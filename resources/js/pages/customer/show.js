@@ -26,6 +26,12 @@ export const ShowCustomer = () => {
     const [sortBy, setSortBy] = useState('id:desc')
     const [selectedPaymentId, setSelectedPaymentId] = useState(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const [paymentStats, setPaymentStats] = useState({
+		total: 0,
+		completed: 0,
+		pending: 0,
+		refunded: 0,
+	})
     const [pagination, setPagination] = useState({
 		current_page: 1,
 		per_page: 5,
@@ -41,7 +47,6 @@ export const ShowCustomer = () => {
     )
 
     useEffect(() => {
-		console.log('Customer Data:', customerData);
 		setCustomer(customerData)
 		setIsLoading(false)
     }, [customerData])
@@ -61,8 +66,8 @@ export const ShowCustomer = () => {
 				sortBy
 			});
 
-			// Extract data and pagination info
-			const { data: paymentData = [], ...paginationData } = result;
+			// Extract data, stats and pagination info
+			const { data: paymentData = [], payment_stats, ...paginationData } = result;
 
 			setPayments(paymentData)
 			setPagination({
@@ -73,6 +78,10 @@ export const ShowCustomer = () => {
 				from: paginationData.from,
 				to: paginationData.to
 			})
+
+			if (payment_stats) {
+				setPaymentStats(payment_stats)
+			}
 		} catch (error) {
 			Swal.fire({
 				icon: 'error',
@@ -152,7 +161,7 @@ export const ShowCustomer = () => {
                     <Loading />
                 ) : (
 					<>
-						<CustomerStats customer={customer} />
+						<CustomerStats customer={customer} paymentStats={paymentStats} />
 
 						<div className="bg-white p-4 rounded-lg shadow-md mt-4">
 							<h3 className="m-0! text-xl!">{__('Recent Payments', 'smartpay')}</h3>

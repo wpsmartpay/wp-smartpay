@@ -2,7 +2,7 @@ import StatCard from '@/components/stat-card';
 import { __ } from '@wordpress/i18n';
 import { CircleUser } from 'lucide-react';
 
-export default function CustomerStats({ customer }){
+export default function CustomerStats({ customer, paymentStats }){
 	return (
 		<div className="bg-white p-4 rounded-lg shadow-sm">
 			<div className="flex justify-between items-center">
@@ -33,10 +33,10 @@ export default function CustomerStats({ customer }){
 			</div>
 
 			<div className="flex flex-wrap gap-6 mt-4">
-				<StatCard title={__('Total Payments', 'smartpay')} value={customer?.payments?.total} type="info" />
-				<StatCard title={__('Completed Payments', 'smartpay')} value={customer?.paymentStats?.completed} type="success" />
-				<StatCard title={__('Pending Payments', 'smartpay')} value={customer?.paymentStats?.pending} type="warning" />
-				<StatCard title={__('Refunded Payments', 'smartpay')} value={customer?.paymentStats?.refunded} type="danger" />
+				<StatCard title={__('Total Payments', 'smartpay')} value={paymentStats.total} type="info" />
+				<StatCard title={__('Completed Payments', 'smartpay')} value={paymentStats.completed} type="success" />
+				<StatCard title={__('Pending Payments', 'smartpay')} value={paymentStats.pending} type="warning" />
+				<StatCard title={__('Refunded Payments', 'smartpay')} value={paymentStats.refunded} type="danger" />
 			</div>
 		</div>
 	);
