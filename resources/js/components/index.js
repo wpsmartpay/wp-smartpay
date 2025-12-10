@@ -1,6 +1,6 @@
 import { DataTable } from "./data-table";
-import Header from "./header";
-import StatCard from "./stat-card";
+import { Header } from "./header";
+import { StatCard } from "./stat-card";
 import { StatusBadge } from "./status-badges";
 import * as AlertComponents from "./ui/alert";
 import * as BadgeComponents from "./ui/badge";

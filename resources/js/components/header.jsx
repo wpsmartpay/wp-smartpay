@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 
-export default function Header({title, subtitle}){
+export function Header({title, subtitle}){
 	return (
 		<div className="text-black bg-white border-bottom shadow-xs">
 			<Container>
