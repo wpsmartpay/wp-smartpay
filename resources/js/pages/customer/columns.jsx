@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { __ } from '@wordpress/i18n'
 import { Eye, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+const { Button } = window.WPSmartPayUI;
 
 export const createColumns = (deleteCustomer) => [
 	{

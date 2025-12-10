@@ -1,10 +1,9 @@
-import { DataTable } from '@/components/data-table'
-import Header from '@/components/Header'
 import { __ } from '@wordpress/i18n'
 import { Container } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCustomer, GetCustomers } from '../../http/customer'
 import { createColumns } from './columns'
+const { DataTable, Header } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 
 export const CustomerList = () => {

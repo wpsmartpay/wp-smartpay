@@ -1,11 +1,8 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Update } from '@/http/payment'
-import { useEffect, useState } from '@wordpress/element'
-import { __ } from '@wordpress/i18n'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { Update } from '@/http/payment';
+import { useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import Swal from 'sweetalert2/dist/sweetalert2.js';
+const { Button, Card, CardContent, Dialog, DialogContent, DialogHeader, DialogTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } = window.WPSmartPayUI;
 const { useSelect, dispatch } = wp.data
 
 export const PaymentDetailsDialog = ({ paymentId, open, onOpenChange }) => {

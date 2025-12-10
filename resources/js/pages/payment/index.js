@@ -1,11 +1,9 @@
-import Header from '@/components/Header'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
 import { Container } from 'react-bootstrap'
-import { DataTable } from '../../components/data-table'
 import { createColumns } from './columns'
 import { PaymentDetailsDialog } from './PaymentDetailsDialog'
+const { Header, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
 
 const { useEffect, useState, useCallback } = wp.element
 

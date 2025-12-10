@@ -1,5 +1,5 @@
 import { DataTable } from "./data-table";
-import Header from "./Header";
+import Header from "./header";
 import StatCard from "./stat-card";
 import { StatusBadge } from "./status-badges";
 import * as AlertComponents from "./ui/alert";
