@@ -1,7 +1,3 @@
-import { DataTable } from '@/components/data-table'
-import Header from '@/components/Header'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { __ } from '@wordpress/i18n'
 import { Plus } from 'lucide-react'
 import { Container } from 'react-bootstrap'
@@ -9,6 +5,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCoupon, GetCoupons } from '../../http/coupon'
 import { createColumns } from './columns'
 import { CouponDialog } from './CouponDialog'
+const { DataTable, Header, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 
 export const CouponList = () => {

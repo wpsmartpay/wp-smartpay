@@ -1,16 +1,14 @@
-import Header from '@/components/Header'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
 import { Container } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { DataTable } from '../../components/data-table'
 import { Loading } from '../../components/Loading'
 import { PaymentDetailsDialog } from '../payment/PaymentDetailsDialog'
 import CustomerStats from './customer-stats'
 import { createPaymentColumns } from './payment-columns'
 
+const { Header, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 const { useSelect } = wp.data
 

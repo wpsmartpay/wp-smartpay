@@ -1,8 +1,6 @@
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { __ } from '@wordpress/i18n'
-import { BadgeCheck, Percent, Pin, SquarePen, Timer, Trash2 } from 'lucide-react'
-import { ShieldOff } from 'react-feather'
+import { __ } from '@wordpress/i18n';
+import { BadgeCheck, Percent, Pin, ShieldOff, SquarePen, Timer, Trash2 } from 'lucide-react';
+const { Badge, Button } = window.WPSmartPayUI;
 
 export const createColumns = (deletePayment, handleEditCoupon) => [
 	{

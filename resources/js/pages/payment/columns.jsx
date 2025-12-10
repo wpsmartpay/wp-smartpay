@@ -1,9 +1,7 @@
-import { StatusBadge } from '@/components/status-badges'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { __ } from '@wordpress/i18n'
-import { Box, Eye, FilePenLine, LinkIcon, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { __ } from '@wordpress/i18n';
+import { Box, Eye, FilePenLine, LinkIcon, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+const { Badge, Button, StatusBadge } = window.WPSmartPayUI;
 
 export const createColumns = (deletePayment, onViewPayment) => [
     {
@@ -101,7 +99,7 @@ export const createColumns = (deletePayment, onViewPayment) => [
 	},
 	{
 		id: 'actions',
-		header: () => <div className="text-center">{ __('Actions', 'smartpay') }</div>,
+		header: () => <div className="text-right mr-3">{ __('Actions', 'smartpay') }</div>,
 		cell: ({ row }) => {
 			const payment = row.original
 

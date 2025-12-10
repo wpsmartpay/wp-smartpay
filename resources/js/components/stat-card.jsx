@@ -6,7 +6,7 @@ import {
 	Sigma
 } from 'lucide-react'
 
-export default function StatCard({ title, value, type }) {
+export function StatCard({ title, value, type }) {
   const normalized = type?.toLowerCase()
 
   const typeMap = {

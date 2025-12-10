@@ -1,6 +1,6 @@
-import StatCard from '@/components/stat-card';
 import { __ } from '@wordpress/i18n';
 import { CircleUser } from 'lucide-react';
+const { StatCard } = window.WPSmartPayUI;
 
 export default function CustomerStats({ customer, paymentStats }){
 	return (
