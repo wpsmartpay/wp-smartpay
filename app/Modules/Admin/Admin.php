@@ -167,6 +167,8 @@ class Admin
             wp_enqueue_style('smartpay-components');
         }
         if ('toplevel_page_smartpay' === $hook) {
+			wp_register_script('smartpay-ui', SMARTPAY_PLUGIN_ASSETS . '/js/ui.js', ['wp-element', 'wp-data'], SMARTPAY_VERSION, true);
+			wp_enqueue_script('smartpay-ui');
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
             wp_localize_script(

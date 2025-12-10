@@ -5,6 +5,7 @@
     "/public/js/dashboard.js": "/public/js/dashboard.js",
     "/public/js/app.js": "/public/js/app.js",
     "/public/js/admin.js": "/public/js/admin.js",
+    "/public/js/ui.js": "/public/js/ui.js",
     "/public/css/components.css": "/public/css/components.css",
     "/public/css/dashboard.css": "/public/css/dashboard.css",
     "/public/css/admin.css": "/public/css/admin.css",
