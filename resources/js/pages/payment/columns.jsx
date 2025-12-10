@@ -99,7 +99,7 @@ export const createColumns = (deletePayment, onViewPayment) => [
 	},
 	{
 		id: 'actions',
-		header: () => <div className="text-center">{ __('Actions', 'smartpay') }</div>,
+		header: () => <div className="text-right mr-3">{ __('Actions', 'smartpay') }</div>,
 		cell: ({ row }) => {
 			const payment = row.original
 
