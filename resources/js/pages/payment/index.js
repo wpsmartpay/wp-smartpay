@@ -117,7 +117,7 @@ export const PaymentList = () => {
 			/>
 
 			<Container className="mt-4">
-				<div className="bg-white p-4 rounded-lg shadow-md">
+				<div className="bg-white p-4 rounded-md shadow-md">
 					<DataTable
 						columns={columns}
 						data={data}

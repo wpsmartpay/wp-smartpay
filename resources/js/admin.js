@@ -26,6 +26,9 @@ import './store/index'
 
 import './admin/menu-fix'
 
+// Pro CSS
+import './utils/pro-css'
+
 //Hooks
 import { createHooks } from '@wordpress/hooks'
 export const smartPayRouteHooks = createHooks()

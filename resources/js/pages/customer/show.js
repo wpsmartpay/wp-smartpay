@@ -161,7 +161,7 @@ export const ShowCustomer = () => {
 					<>
 						<CustomerStats customer={customer} paymentStats={paymentStats} />
 
-						<div className="bg-white p-4 rounded-lg shadow-md mt-4">
+						<div className="bg-white p-4 rounded-md shadow-md mt-4">
 							<h3 className="m-0! text-xl!">{__('Recent Payments', 'smartpay')}</h3>
 							<DataTable
 								columns={columns}

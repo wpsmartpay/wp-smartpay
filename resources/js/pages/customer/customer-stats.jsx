@@ -4,7 +4,7 @@ const { StatCard } = window.WPSmartPayUI;
 
 export default function CustomerStats({ customer, paymentStats }){
 	return (
-		<div className="bg-white p-4 rounded-lg shadow-sm">
+		<div className="bg-white p-4 rounded-md shadow-sm">
 			<div className="flex justify-between items-center">
 				<div className="flex gap-4 items-center">
 					<CircleUser size={60} className='text-gray-500' />
