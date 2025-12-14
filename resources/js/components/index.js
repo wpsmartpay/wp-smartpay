@@ -14,6 +14,7 @@ import * as InputComponents from "./ui/input";
 import * as LabelComponents from "./ui/label";
 import * as PopoverComponents from "./ui/popover";
 import * as SelectComponents from "./ui/select";
+import * as SwitchComponents from "./ui/switch";
 import * as TableComponents from "./ui/table";
 import * as TextareaComponents from "./ui/textarea";
 
@@ -31,6 +32,7 @@ window.WPSmartPayUI = {
 	...SelectComponents,
 	...TableComponents,
 	...TextareaComponents,
+	...SwitchComponents,
 	DataTable,
 	Header,
 	StatCard,
