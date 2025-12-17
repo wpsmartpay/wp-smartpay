@@ -5,6 +5,8 @@ mix.webpackConfig({
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM',
+		jquery: 'jQuery',
+        $: 'jQuery'
     },
     resolve: {
         alias: {
