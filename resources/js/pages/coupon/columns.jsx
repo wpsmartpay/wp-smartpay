@@ -26,13 +26,13 @@ export const createColumns = (deletePayment, handleEditCoupon) => [
 			if (type === 'percent') {
 				return (
 					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-purple-50 text-purple-600 min-w-20"><Percent className='size-3'/> Percent</Badge>
+						<Badge variant="secondary" className="bg-purple-50 text-purple-600 border-purple-200! min-w-20"><Percent className='size-3'/> Percent</Badge>
 					</div>
 				)
 			} else if(type === 'fixed') {
 				return (
 					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-blue-50 text-blue-600 min-w-20"><Pin className='size-3'/> Fixed</Badge>
+						<Badge variant="secondary" className="bg-blue-50 text-blue-600 border-blue-200! min-w-20"><Pin className='size-3'/> Fixed</Badge>
 					</div>
 				)
 			}
@@ -63,13 +63,13 @@ export const createColumns = (deletePayment, handleEditCoupon) => [
 			const now = new Date();
 
 			if (dateStr === null) {
-				return <div className='text-center'><Badge variant="secondary" className="bg-green-50 text-green-700 bordering-green-200 min-w-20"><BadgeCheck className='size-3'/> { __('Never', 'smartpay') }</Badge></div>
+				return <div className='text-center'><Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200! min-w-20"><BadgeCheck className='size-3'/> { __('Never', 'smartpay') }</Badge></div>
 			}
 			if (date < now) {
-				return <div className='text-center'><Badge variant="secondary" className="bg-red-50 text-red-700 bordering-red-200 min-w-20"><ShieldOff className='size-2'/> { __('Expired', 'smartpay') }</Badge></div>
+				return <div className='text-center'><Badge variant="secondary" className="bg-red-50 text-red-700 border-red-200! min-w-20"><ShieldOff className='size-2'/> { __('Expired', 'smartpay') }</Badge></div>
 			}
 			return (<div className='text-center'>
-				<Badge variant="secondary" className="bg-slate-50 text-slate-700 bordering-slate-200 min-w-20"><Timer className='size-3'/>
+				<Badge variant="secondary" className="bg-slate-50 text-slate-700 border-slate-200! min-w-20"><Timer className='size-3'/>
 					{date.toLocaleString('en-US', {
 						year: 'numeric',
 						month: 'short',
@@ -92,7 +92,7 @@ export const createColumns = (deletePayment, handleEditCoupon) => [
 						variant="outline"
 						size="icon"
 						title={__('Edit', 'smartpay')}
-						className="hover:bg-gray-100"
+						className="hover:bg-gray-100 cursor-pointer"
 						onClick={() => handleEditCoupon(coupon.id)}
 					>
 						<SquarePen className="w-4 h-4 text-gray-700" />
@@ -102,7 +102,7 @@ export const createColumns = (deletePayment, handleEditCoupon) => [
 						size="icon"
 						title={__('Delete', 'smartpay')}
 						onClick={() => deletePayment(coupon.id)}
-						className="hover:bg-red-50"
+						className="hover:bg-red-50 cursor-pointer border-red-200!"
 					>
 						<Trash2 className="w-4 h-4 text-red-600" />
 					</Button>

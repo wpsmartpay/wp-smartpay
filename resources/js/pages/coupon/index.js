@@ -141,7 +141,7 @@ export const CouponList = () => {
 								onClick={handleCreateCoupon}
 							>
 								<Plus className="w-4 h-4 text-white" />
-								<span>{__('Add Coupon', 'smartpay')}</span>
+								<span>{__('Create Coupon', 'smartpay')}</span>
 							</Button>
 						]}
 					/>

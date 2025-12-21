@@ -110,7 +110,7 @@ export const createColumns = (deletePayment, onViewPayment) => [
 						size="icon"
 						title={__('View', 'smartpay')}
 						onClick={() => onViewPayment(payment.id)}
-						className="hover:bg-gray-100"
+						className="hover:bg-gray-100 cursor-pointer"
 					>
 						<Eye className="w-4 h-4 text-gray-700" />
 					</Button>
@@ -119,7 +119,7 @@ export const createColumns = (deletePayment, onViewPayment) => [
 						size="icon"
 						title={__('Delete', 'smartpay')}
 						onClick={() => deletePayment(payment.id)}
-						className="hover:bg-red-50"
+						className="hover:bg-red-50 cursor-pointer border-red-200!"
 					>
 						<Trash2 className="w-4 h-4 text-red-600" />
 					</Button>
