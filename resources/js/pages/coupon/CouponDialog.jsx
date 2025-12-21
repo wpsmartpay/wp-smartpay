@@ -186,7 +186,7 @@ export const CouponDialog = ({ couponId, open, onOpenChange }) => {
 								placeholder={__('Enter coupon code here', 'smartpay')}
 								value={coupon.title || ''}
 								onChange={(e) => handleChange('title', e.target.value)}
-								className={errors.title ? 'border-red-500' : ''}
+								className={errors.title ? 'border-red-500!' : ''}
 							/>
 							{errors.title && (
 								<p className="text-sm mb-0! mt-1! text-red-500">{errors.title}</p>
@@ -269,7 +269,7 @@ export const CouponDialog = ({ couponId, open, onOpenChange }) => {
                                 placeholder="0"
                                 value={coupon.discount_amount || ''}
                                 onChange={(e) => handleChange('discount_amount', e.target.value)}
-                                className={errors.discount_amount ? 'border-red-500' : ''}
+                                className={errors.discount_amount ? 'border-red-500!' : ''}
                             />
                             {errors.discount_amount && (
                                 <p className="text-sm mb-0! mt-1! text-red-500">{errors.discount_amount}</p>
