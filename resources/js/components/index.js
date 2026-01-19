@@ -12,6 +12,7 @@ import * as DialogComponents from "./ui/dialog";
 import * as DropDownComponents from "./ui/dropdown-menu";
 import * as InputComponents from "./ui/input";
 import * as LabelComponents from "./ui/label";
+import { MultiSelect } from "./ui/multi-select";
 import * as PopoverComponents from "./ui/popover";
 import * as SelectComponents from "./ui/select";
 import * as SwitchComponents from "./ui/switch";
@@ -37,4 +38,5 @@ window.WPSmartPayUI = {
 	Header,
 	StatCard,
 	StatusBadge,
+	MultiSelect,
 }
