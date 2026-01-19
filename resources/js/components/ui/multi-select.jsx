@@ -13,7 +13,7 @@ export const MultiSelect = ({
   const [selected, setSelected] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const isGrouped = options.length > 0 && 'heading' in options[0];
+  const isGrouped = options.length > 0 && 'group' in options[0];
 
   const toggleOption = (value) => {
     const newSelected = selected.includes(value)
@@ -142,7 +142,7 @@ export const MultiSelect = ({
                   <div key={groupIdx} className="mb-1 last:mb-0">
                     <div className="px-2 py-1.5">
                       <h3 className="text-[11px]! m-0! font-semibold text-slate-500! uppercase">
-                        {group.heading}
+                        {group.group}
                       </h3>
                     </div>
                     {group.options.map(option => {
