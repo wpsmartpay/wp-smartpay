@@ -1,16 +1,22 @@
 import { cn } from "@/lib/utils";
-import { ChevronDown, Search, X } from 'lucide-react';
+import { ChevronDown, Loader2, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 export const MultiSelect = ({
   options = [],
   placeholder = "Select options",
   onChange,
-  searchable = true
+  searchable = true,
+  onSearch,
+  debounceTime = 300,
+  loading = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const searchTimeoutRef = useRef(null);
+  const prevSearchQueryRef = useRef('');
 
   const searchInputRef = useRef(null);
   const hiddenInputRef = useRef(null);
@@ -23,6 +29,28 @@ export const MultiSelect = ({
       searchInputRef.current.focus();
     }
   }, [isOpen, searchable]);
+
+  // Call onSearch when search query changes
+  useEffect(() => {
+    if (!onSearch || !isOpen) return;
+    if (prevSearchQueryRef.current === searchQuery) return;
+
+    prevSearchQueryRef.current = searchQuery;
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Debounce the search
+    searchTimeoutRef.current = setTimeout(() => {
+      onSearch(searchQuery);
+    }, debounceTime);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   const handleHiddenInputChange = (e) => {
     const value = e.target.value;
@@ -75,8 +103,14 @@ export const MultiSelect = ({
     return options;
   };
 
-  // Filter options based on search
+  // Filter options based on search (only if onSearch is not provided)
   const getFilteredOptions = () => {
+    // If onSearch callback is provided, parent handles filtering
+    if (onSearch) {
+      return options;
+    }
+
+    // Otherwise, do client-side filtering
     if (!searchQuery) return options;
 
     const query = searchQuery.toLowerCase();
@@ -161,6 +195,9 @@ export const MultiSelect = ({
               <div className="p-3 border-b border-slate-200">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  {loading && (
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 animate-spin" />
+                  )}
                   <input
                     ref={searchInputRef}
                     type="text"
@@ -176,7 +213,12 @@ export const MultiSelect = ({
 
             {/* Options List */}
             <div className="max-h-80 overflow-auto p-1">
-              {filteredOptions.length === 0 ? (
+              {loading ? (
+                <div className="py-6 text-center text-sm text-slate-500">
+                  <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
+                  Loading...
+                </div>
+              ) : filteredOptions.length === 0 ? (
                 <div className="py-6 text-center text-sm text-slate-500">
                   No options found
                 </div>
@@ -185,7 +227,7 @@ export const MultiSelect = ({
                 filteredOptions.map((group, groupIdx) => (
                   <div key={groupIdx} className="mb-1 last:mb-0">
                     <div className="px-2 py-1.5">
-                      <h3 className="text-xs! font-semibold text-slate-400! uppercase m-0!">
+                      <h3 className="text-xs! font-medium text-slate-400! uppercase m-0!">
                         {group.group}
                       </h3>
                     </div>
