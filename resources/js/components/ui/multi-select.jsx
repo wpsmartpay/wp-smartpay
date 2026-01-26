@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ChevronDown, Search, X } from 'lucide-react';
-import { useState } from 'react';
-// const cn = (...classes) => classes.filter(Boolean).join(' ');
+import { useEffect, useRef, useState } from 'react';
 
 export const MultiSelect = ({
   options = [],
@@ -13,7 +12,33 @@ export const MultiSelect = ({
   const [selected, setSelected] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const searchInputRef = useRef(null);
+  const hiddenInputRef = useRef(null);
+
   const isGrouped = options.length > 0 && 'group' in options[0];
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (isOpen && searchable && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isOpen, searchable]);
+
+  const handleHiddenInputChange = (e) => {
+    const value = e.target.value;
+    if (value) {
+      setSearchQuery(value);
+      setIsOpen(true);
+      // Clear hidden input and focus search
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+          searchInputRef.current.setSelectionRange(value.length, value.length);
+        }
+      }, 0);
+      e.target.value = '';
+    }
+  };
 
   const toggleOption = (value) => {
     const newSelected = selected.includes(value)
@@ -21,6 +46,13 @@ export const MultiSelect = ({
       : [...selected, value];
     setSelected(newSelected);
     onChange?.(newSelected);
+
+    // Close dropdown and focus hidden input after selection
+    setIsOpen(false);
+    setSearchQuery('');
+    setTimeout(() => {
+      hiddenInputRef.current?.focus();
+    }, 0);
   };
 
   const clearAll = () => {
@@ -30,7 +62,9 @@ export const MultiSelect = ({
 
   const removeOption = (value, e) => {
     e.stopPropagation();
-    toggleOption(value);
+    const newSelected = selected.filter(v => v !== value);
+    setSelected(newSelected);
+    onChange?.(newSelected);
   };
 
   // Get all options (flattened if grouped)
@@ -68,40 +102,49 @@ export const MultiSelect = ({
 
   return (
     <div className="relative w-full">
-      {/* Trigger Button */}
-      <button
+      {/* Trigger Container */}
+      <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 hover:border-slate-300 focus:outline-none focus:ring-2 transition-all focus:border focus:ring-slate-950/40 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-auto min-h-10 w-full items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 hover:border-slate-300 cursor-pointer transition-all disabled:cursor-not-allowed disabled:opacity-50"
       >
         <div className="flex items-center gap-1.5 flex-wrap flex-1 mr-2">
           {selected.length === 0 ? (
-            <span className="text-slate-500 py-0.5">{placeholder}</span>
+            <span className="text-slate-500">{placeholder}</span>
           ) : (
-            selected.map(value => {
-              const option = allOptions.find(o => o.value === value);
-              if (!option) return null;
+            <>
+              {selected.map(value => {
+                const option = allOptions.find(o => o.value === value);
+                if (!option) return null;
 
-              return (
-                <span
-                  key={value}
-                  className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-900 border border-slate-200"
-                >
-                  {option.icon && <span className="text-sm">{option.icon}</span>}
-                  {option.label}
-                  <X
-                    className="h-3 w-3 cursor-pointer text-slate-500 hover:text-slate-700"
-                    onClick={(e) => removeOption(value, e)}
-                  />
-                </span>
-              );
-            })
+                return (
+                  <span
+                    key={value}
+                    className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-900 border border-slate-200"
+                  >
+                    {option.icon && <span className="text-sm">{option.icon}</span>}
+                    {option.label}
+                    <X
+                      className="h-3 w-3 cursor-pointer text-slate-500 hover:text-slate-700"
+                      onClick={(e) => removeOption(value, e)}
+                    />
+                  </span>
+                );
+              })}
+              {/* Hidden input for cursor blinking */}
+              <input
+                ref={hiddenInputRef}
+                type="text"
+                className="w-px min-h-4! h-4! border-none! outline-none! shadow-none bg-transparent p-0 m-0 caret-slate-900"
+                onInput={handleHiddenInputChange}
+              />
+            </>
           )}
         </div>
         <ChevronDown className={cn(
           "h-4 w-4 text-slate-500 transition-transform shrink-0 mt-0.5",
           isOpen && "rotate-180"
         )} />
-      </button>
+      </div>
 
       {/* Dropdown */}
       {isOpen && (
@@ -119,6 +162,7 @@ export const MultiSelect = ({
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input
+                    ref={searchInputRef}
                     type="text"
                     placeholder="Search..."
                     value={searchQuery}
@@ -141,7 +185,7 @@ export const MultiSelect = ({
                 filteredOptions.map((group, groupIdx) => (
                   <div key={groupIdx} className="mb-1 last:mb-0">
                     <div className="px-2 py-1.5">
-                      <h3 className="text-[11px]! m-0! font-semibold text-slate-500! uppercase">
+                      <h3 className="text-xs! font-semibold text-slate-400! uppercase m-0!">
                         {group.group}
                       </h3>
                     </div>
@@ -153,7 +197,8 @@ export const MultiSelect = ({
                           onClick={() => toggleOption(option.value)}
                           className={cn(
                             "relative flex cursor-pointer select-none items-center rounded-sm ml-2 px-2 py-1.5 text-sm outline-none transition-colors hover:bg-slate-200/80 hover:text-slate-900",
-                            isSelected && "bg-slate-200/80 text-slate-900 opacity-60", !isSelected && "text-slate-700"
+                            isSelected && "bg-slate-200/80 text-slate-900 opacity-60",
+                            !isSelected && "text-slate-700"
                           )}
                         >
                           {option.icon && (
@@ -188,7 +233,7 @@ export const MultiSelect = ({
                       className={cn(
                         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-slate-200/80 hover:text-slate-900",
                         isSelected && "bg-slate-200/80 text-slate-900 opacity-60",
-						!isSelected && "text-slate-700"
+                        !isSelected && "text-slate-700"
                       )}
                     >
                       {option.icon && (
