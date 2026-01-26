@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 export const MultiSelect = ({
   options = [],
   placeholder = "Select options",
+  searchBoxPlaceholder = "Search...",
   onChange,
   searchable = true,
   onSearch,
@@ -201,7 +202,7 @@ export const MultiSelect = ({
                   <input
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Search..."
+                    placeholder={searchBoxPlaceholder}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="flex h-9 w-full rounded-md border border-slate-200 bg-white pl-9! pr-3! py-1! text-sm shadow-sm transition-colors placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950"
