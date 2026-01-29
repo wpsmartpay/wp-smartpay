@@ -7,13 +7,14 @@ export const MultiSelect = ({
   placeholder = "Select options",
   searchBoxPlaceholder = "Search...",
   onChange,
+  value = [],
   searchable = true,
   onSearch,
   debounceTime = 300,
   loading = false
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(value);
   const [searchQuery, setSearchQuery] = useState('');
 
   const searchTimeoutRef = useRef(null);
@@ -23,6 +24,12 @@ export const MultiSelect = ({
   const hiddenInputRef = useRef(null);
 
   const isGrouped = options.length > 0 && 'group' in options[0];
+
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      setSelected(value);
+    }
+  }, [value]);
 
   // Focus search input when dropdown opens
   useEffect(() => {
@@ -302,22 +309,16 @@ export const MultiSelect = ({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-slate-200 p-2 flex gap-2">
-              {selected.length > 0 && (
-                <button
-                  onClick={clearAll}
-                  className="inline-flex items-center justify-center flex-1 rounded-md text-sm font-medium ring-offset-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 h-9 px-3"
-                >
-                  Clear All
-                </button>
-              )}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="inline-flex items-center justify-center flex-1 rounded-md text-sm font-medium ring-offset-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 bg-slate-900 text-slate-50 hover:bg-slate-900/90 h-9 px-3"
-              >
-                Done
-              </button>
-            </div>
+            {selected.length > 0 && (
+				<div className="border-t border-slate-200 p-2 flex gap-2">
+					<button
+					onClick={clearAll}
+					className="inline-flex items-center justify-center flex-1 rounded-md text-sm font-medium ring-offset-white transition-colors focus:outline-none focus:ring-2 focus:ring-slate-950 focus:ring-offset-2 border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900 h-9 px-3"
+					>
+					Clear All
+					</button>
+				</div>
+            )}
           </div>
         </>
       )}
