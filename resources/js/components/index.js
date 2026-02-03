@@ -3,6 +3,7 @@ import { Header } from "./header";
 import './icons';
 import { StatCard } from "./stat-card";
 import { StatusBadge } from "./status-badges";
+import * as AccordionComponents from "./ui/accordion";
 import * as AlertComponents from "./ui/alert";
 import * as BadgeComponents from "./ui/badge";
 import * as ButtonComponents from "./ui/button";
@@ -34,6 +35,7 @@ window.WPSmartPayUI = {
 	...TableComponents,
 	...TextareaComponents,
 	...SwitchComponents,
+	...AccordionComponents,
 	DataTable,
 	Header,
 	StatCard,
