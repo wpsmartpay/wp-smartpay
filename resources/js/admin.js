@@ -63,12 +63,12 @@ domReady(function () {
                         {/* Customer */}
                         <Route
                             exact
-                            path="/customers"
+                            path="/members"
                             element={<CustomerList />}
                         />
                         <Route
                             exact
-                            path="/customers/:customerId/"
+                            path="/members/:customerId/"
                             element={<ShowCustomer />}
                         />
 

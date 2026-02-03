@@ -18,7 +18,7 @@ class Admin
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
         $this->app->addAction('wp_ajax_smartpay_debug_log_clear', [$this, 'smartpayDebugLogClear']);
-        $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage'], 99);
+        // $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage'], 99);
         $this->app->addAction('admin_init', [$this, 'redirectToWelcomePage']);
         $this->app->addAction('admin_notices', [$this, 'customerEmailSubscribe']);
         $this->app->addAction('wp_ajax_smartpay_contact_optin_notice_dismiss', [$this, 'customerOptinNoticeDismiss']);
@@ -51,36 +51,40 @@ class Admin
             }
         );
 
-        add_submenu_page(
-            'smartpay',
-            __('SmartPay - Products', 'smartpay'),
-            __('Products', 'smartpay'),
-            'manage_options',
-            'smartpay#/products',
-            function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
+        // add_submenu_page(
+        //     'smartpay',
+        //     __('SmartPay - Products', 'smartpay'),
+        //     __('Products', 'smartpay'),
+        //     'manage_options',
+        //     'smartpay#/products',
+        //     function () {
+		// 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+        //         echo smartpay_view('admin');
+        //     }
+        // );
+
+        // add_submenu_page(
+        //     'smartpay',
+        //     __('SmartPay - Forms', 'smartpay'),
+        //     __('Forms', 'smartpay'),
+        //     'manage_options',
+        //     'smartpay-form',
+        //     function () {
+		// 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+        //         echo smartpay_view('form-builder');
+        //     }
+        // );
+
+        $this->smartpayProMenu();
+
+        do_action('smartpay_admin_add_menu_items');
 
         add_submenu_page(
             'smartpay',
-            __('SmartPay - Forms', 'smartpay'),
-            __('Forms', 'smartpay'),
+            __('SmartPay - Members', 'smartpay'),
+            __('Members', 'smartpay'),
             'manage_options',
-            'smartpay-form',
-            function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('form-builder');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('SmartPay - Customers', 'smartpay'),
-            __('Customers', 'smartpay'),
-            'manage_options',
-            'smartpay#/customers',
+            'smartpay#/members',
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
@@ -135,9 +139,15 @@ class Admin
             }
         );
 
-        $this->smartpayProMenu();
+        add_submenu_page(
+            'smartpay',
+            __('Getting Started', 'smartpay'),
+            __('Getting Started', 'smartpay'),
+            'manage_options',
+            'wpsmartpay-getting-started',
+            [$this, 'outputDashboardMarkup']
+        );
 
-        do_action('smartpay_admin_add_menu_items');
     }
 
     private function smartpayProMenu()
@@ -275,17 +285,6 @@ class Admin
         die();
     }
 
-    public function registerDashboardPage()
-    {
-        add_submenu_page(
-            'smartpay',
-            __('Getting Started', 'smartpay'),
-            __('Getting Started', 'smartpay'),
-            'manage_options',
-            'wpsmartpay-getting-started',
-            [$this, 'outputDashboardMarkup']
-        );
-    }
 
     public function outputDashboardMarkup()
     {

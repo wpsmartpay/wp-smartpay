@@ -1,6 +1,6 @@
-import { __ } from '@wordpress/i18n'
-import { Eye, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { __ } from '@wordpress/i18n';
+import { Eye, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 const { Button } = window.WPSmartPayUI;
 
 export const createColumns = (deleteCustomer) => [
@@ -48,7 +48,7 @@ export const createColumns = (deleteCustomer) => [
 
 			return (
 				<div className="flex items-center justify-end gap-2">
-					<Link to={`/customers/${customer.id}`}>
+					<Link to={`/members/${customer.id}`}>
 						<Button
 							variant="outline"
 							size="icon"
