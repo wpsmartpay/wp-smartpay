@@ -73,8 +73,8 @@ export const CustomerList = () => {
     return (
         <>
 			<Header
-				title={__('Customers', 'smartpay')}
-				subtitle={__('Manage your customers here', 'smartpay')}
+				title={__('Members', 'smartpay')}
+				subtitle={__('Manage your members here', 'smartpay')}
 			/>
 
 			<Container className="mt-4">

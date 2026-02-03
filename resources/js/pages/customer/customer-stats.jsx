@@ -20,7 +20,7 @@ export default function CustomerStats({ customer, paymentStats }){
 				<div className="">
 					<h3 className="my-0 mb-2 text-right">{`#${customer?.id}`}</h3>
 					<p className="m-0">
-						{__('Customer since', 'smartpay')}{' '}
+						{__('Member since', 'smartpay')}{' '}
 						<strong>
 							{new Date(customer?.created_at).toLocaleString('en-US', {
 								year: 'numeric',
