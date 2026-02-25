@@ -51,29 +51,29 @@ class Admin
             }
         );
 
-        // add_submenu_page(
-        //     'smartpay',
-        //     __('SmartPay - Products', 'smartpay'),
-        //     __('Products', 'smartpay'),
-        //     'manage_options',
-        //     'smartpay#/products',
-        //     function () {
-		// 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-        //         echo smartpay_view('admin');
-        //     }
-        // );
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Products', 'smartpay'),
+            __('Products', 'smartpay'),
+            'manage_options',
+            'smartpay#/products',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
 
-        // add_submenu_page(
-        //     'smartpay',
-        //     __('SmartPay - Forms', 'smartpay'),
-        //     __('Forms', 'smartpay'),
-        //     'manage_options',
-        //     'smartpay-form',
-        //     function () {
-		// 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-        //         echo smartpay_view('form-builder');
-        //     }
-        // );
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Forms', 'smartpay'),
+            __('Forms', 'smartpay'),
+            'manage_options',
+            'smartpay-form',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('form-builder');
+            }
+        );
 
         $this->smartpayProMenu();
 

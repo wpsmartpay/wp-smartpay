@@ -78,8 +78,11 @@ export const GetCoupons = async ({ page = 1, perPage = 10, search = '', type = '
         ...(search && { search })
 	})
 
+	const url = `${smartpay.restUrl}/v1/coupons`;
+    const separator = url.includes('?') ? '&' : '?';
+
 	const response = await apiFetch({
-		path: `${smartpay.restUrl}/v1/coupons?${queryParams.toString()}`,
+		path: `${url}${separator}${queryParams.toString()}`,
 		headers: {
 			'X-WP-Nonce': smartpay.apiNonce,
 		},
