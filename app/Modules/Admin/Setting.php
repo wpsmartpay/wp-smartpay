@@ -162,6 +162,23 @@ class Setting
                                 'after'  => __('After - 10$', 'smartpay'),
                             ),
                         ),
+                        'order_number_settings' => array(
+                            'id'   => 'order_number_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('Order Number Options', 'smartpay') . '</h4>',
+                            'type' => 'header',
+                        ),
+                        'payment_number_starting' => array(
+                            'id'    => 'payment_number_starting',
+                            'name'  => __('Starting Order Number', 'smartpay'),
+                            'desc'  => __('The starting number for new orders if you do not want to start from 1. Must be numeric. Existing payment IDs will have this number added to them.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                        'payment_number_padding' => array(
+                            'id'    => 'payment_number_padding',
+                            'name'  => __('Order Number Zero Padding', 'smartpay'),
+                            'desc'  => __('Number of zeros to pad the payment ID with (e.g., 5 will output 00012). Leave blank to disable.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
                     ),
                 )
             ),
@@ -242,6 +259,12 @@ class Setting
                             'name'  => __('Purchase Email Heading', 'smartpay'),
                             'desc'  => __('Enter the heading for the purchase receipt email.', 'smartpay'),
                             'type'  => 'text'
+                        ),
+                        'hide_payment_number_in_email' => array(
+                            'id'    => 'hide_payment_number_in_email',
+                            'name'  => __('Hide Payment Number', 'smartpay'),
+                            'desc'  => __('Hide the payment/order number from the customer email receipt.', 'smartpay'),
+                            'type'  => 'checkbox'
                         ),
                     ),
                 )

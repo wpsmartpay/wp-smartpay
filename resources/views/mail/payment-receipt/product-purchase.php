@@ -135,9 +135,11 @@ $product       = Product::with('parent')->find($productId);
                                             </tr>
                                         </table>
                                         <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
-                                        <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
-                                            <?php echo esc_html__('Payment ', 'smartpay') . ' #' . esc_html($payment->id); ?>
-                                        </p>
+                                        <?php if ( ! smartpay_get_option('hide_payment_number_in_email', false) ) : ?>
+                                            <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
+                                                <?php echo esc_html__('Order/Payment Number ', 'smartpay') . ': ' . esc_html($payment->get_payment_number()); ?>
+                                            </p>
+                                        <?php endif; ?>
                                         <div class="sm-leading-40" style="line-height: 48px">&zwnj;</div>
                                         <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
                                         <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
