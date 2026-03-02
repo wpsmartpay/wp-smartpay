@@ -144,3 +144,130 @@ p.excerpt {
     overflow: hidden;
     height: 60px;
 }
+
+// =============================================
+// Modern SmartPay Admin Dashboard Styles
+// =============================================
+
+.smartpay-dashboard-header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        min-height: 56px;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e1e1e;
+    }
+}
+
+.smartpay-dashboard {
+    padding: 24px;
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__section-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 16px;
+        color: #1e1e1e;
+    }
+
+    &__card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+}
+
+.smartpay-recent-payments {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__detail {
+        color: #1e1e1e;
+        font-weight: 500;
+    }
+
+    &__time {
+        color: #757575;
+        font-size: 12px;
+        white-space: nowrap;
+        margin-left: 8px;
+    }
+
+    &__empty {
+        text-align: center;
+        color: #757575;
+        padding: 24px 0;
+    }
+}
+
+// Page header (used across all admin pages)
+.smartpay-page-header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 2px;
+        color: #1e1e1e;
+    }
+
+    &__subtitle {
+        font-size: 13px;
+        color: #757575;
+        margin: 0;
+    }
+
+    &__logo img {
+        height: 28px;
+        width: auto;
+    }
+}

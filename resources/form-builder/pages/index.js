@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { Link } from 'react-router-dom'
-import { Container, Table, Button, Alert } from 'react-bootstrap'
+import { Button } from '@wordpress/components'
 import { useState, useEffect } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -54,37 +54,34 @@ export const FormList = () => {
 
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Forms', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
-                            <Link
-                                role="button"
-                                className="btn btn-primary btn-sm text-decoration-none px-3"
-                                to="create"
-                            >
-                                {__('Add new', 'smartpay')}
-                            </Link>
-                        </div>
+            <div className="smartpay-form-header">
+                <div className="smartpay-form-header__inner">
+                    <h2 className="smartpay-form-header__title">
+                        {__('Forms', 'smartpay')}
+                    </h2>
+                    <div className="smartpay-form-header__actions">
+                        <Link
+                            className="components-button is-primary smartpay-form-header__add-btn"
+                            to="create"
+                        >
+                            {__('Add new', 'smartpay')}
+                        </Link>
                     </div>
-                </Container>
+                </div>
             </div>
 
-            <Container className="mt-3">
-                <div className="bg-white">
-                    <Table className="table">
+            <div className="smartpay-form-list">
+                <div className="smartpay-form-list__inner">
+                    <table className="smartpay-table">
                         <thead>
-                            <tr className="bg-light">
-                                <th className="w-50 text-left">
+                            <tr>
+                                <th className="smartpay-table__col--title">
                                     <strong>{__('Title', 'smartpay')}</strong>
                                 </th>
-                                <th className="text-left">
+                                <th className="smartpay-table__col--date">
                                     {__('Date', 'smartpay')}
                                 </th>
-                                <th className="text-right">
+                                <th className="smartpay-table__col--actions">
                                     {__('Actions', 'smartpay')}
                                 </th>
                             </tr>
@@ -92,7 +89,7 @@ export const FormList = () => {
                         <tbody>
                             {!forms.length && (
                                 <tr>
-                                    <td className="text-center" colSpan="3">
+                                    <td className="smartpay-table__empty" colSpan="3">
                                         {__('No form found.', 'smartpay')}
                                     </td>
                                 </tr>
@@ -103,38 +100,26 @@ export const FormList = () => {
                                     <tr key={index}>
                                         <td>{form.title || ''}</td>
                                         <td>{form.updated_at || ''}</td>
-                                        <td className="text-right">
-                                            {form?.extra
-                                                ?.form_preview_page_permalink && (
-                                                <>
-                                                    <Button
-                                                        variant="link"
-                                                        href={
-                                                            form.extra
-                                                                .form_preview_page_permalink
-                                                        }
-                                                        target="_blank"
-                                                        className="btn btn-sm text-decoration-none p-0 mr-2"
-                                                    >
-                                                        {__(
-                                                            'Preview',
-                                                            'smartpay'
-                                                        )}
-                                                    </Button>
-                                                </>
+                                        <td className="smartpay-table__col--actions">
+                                            {form?.extra?.form_preview_page_permalink && (
+                                                <Button
+                                                    variant="link"
+                                                    href={form.extra.form_preview_page_permalink}
+                                                    target="_blank"
+                                                >
+                                                    {__('Preview', 'smartpay')}
+                                                </Button>
                                             )}
                                             <Link
-                                                className="btn btn-sm btn-link p-0 mr-2"
+                                                className="components-button is-link"
                                                 to={`/${form.id}/edit`}
                                             >
                                                 {__('Edit', 'smartpay')}
                                             </Link>
                                             <Button
-                                                className="btn-sm p-0"
-                                                onClick={() =>
-                                                    deleteForm(form.id)
-                                                }
                                                 variant="link"
+                                                isDestructive
+                                                onClick={() => deleteForm(form.id)}
                                             >
                                                 {__('Delete', 'smartpay')}
                                             </Button>
@@ -143,9 +128,9 @@ export const FormList = () => {
                                 )
                             })}
                         </tbody>
-                    </Table>
+                    </table>
                 </div>
-            </Container>
+            </div>
         </>
     )
 }

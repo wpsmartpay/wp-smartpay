@@ -1,7 +1,6 @@
 import apiFetch from '@wordpress/api-fetch'
 import { useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
-import { Card, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { Report } from '../components/report/report'
 
 import dayjs from 'dayjs'
@@ -32,41 +31,34 @@ export const Dashboard = () => {
 
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container fluid>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('SmartPay', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto"></div>
-                    </div>
-                </Container>
+            <div className="smartpay-dashboard-header">
+                <div className="smartpay-dashboard-header__inner">
+                    <h2 className="smartpay-dashboard-header__title">
+                        {__('SmartPay', 'smartpay')}
+                    </h2>
+                </div>
             </div>
-            <Container fluid>
-                <Row className="mt-2">
-                    <Col md={9}>
-                        <div className="py-3">
-                            <h2 className="m-0 mb-3">
+
+            <div className="smartpay-dashboard">
+                <div className="smartpay-dashboard__grid">
+                    {/* Report Chart */}
+                    <div className="smartpay-dashboard__chart">
+                        <div className="smartpay-dashboard__section">
+                            <h2 className="smartpay-dashboard__section-title">
                                 {__('Monthly Report', 'smartpay')}
                             </h2>
-                            <Card className="m-0 p-3">
+                            <div className="smartpay-dashboard__card">
                                 <Report
                                     height="350"
                                     series={[
                                         {
-                                            name: __(
-                                                'Product Purchase',
-                                                'smartpay'
-                                            ),
+                                            name: __('Product Purchase', 'smartpay'),
                                             data: report?.monthlyReport.map(
                                                 (data) => data.product_purchase
                                             ),
                                         },
                                         {
-                                            name: __(
-                                                'Form Payment',
-                                                'smartpay'
-                                            ),
+                                            name: __('Form Payment', 'smartpay'),
                                             data: report?.monthlyReport.map(
                                                 (data) => data.form_payment
                                             ),
@@ -80,24 +72,18 @@ export const Dashboard = () => {
                                             toolbar: {
                                                 show: true,
                                             },
-                                            // zoom: {
-                                            //     enabled: true,
-                                            // },
                                         },
                                         plotOptions: {
                                             bar: {
                                                 horizontal: false,
                                                 columnWidth: '60%',
+                                                borderRadius: 4,
                                             },
                                         },
+                                        colors: ['#3858e9', '#22c55e'],
                                         dataLabels: {
                                             enabled: false,
                                         },
-                                        // stroke: {
-                                        //     show: true,
-                                        //     width: 2,
-                                        //     colors: ['transparent']
-                                        // },
                                         xaxis: {
                                             categories: report?.monthlyReport.map(
                                                 (data) => data.date
@@ -105,62 +91,57 @@ export const Dashboard = () => {
                                         },
                                         yaxis: {
                                             title: {
-                                                text: 'Revenue',
+                                                text: __('Revenue', 'smartpay'),
                                             },
                                         },
-                                        // responsive: [
-                                        //     {
-                                        //         breakpoint: 480,
-                                        //         options: {
-                                        //             legend: {
-                                        //                 position: 'bottom',
-                                        //                 offsetX: -10,
-                                        //                 offsetY: 0,
-                                        //             },
-                                        //         },
-                                        //     },
-                                        // ],
                                         legend: {
                                             position: 'bottom',
-                                            offsetY: 20,
+                                            offsetY: 10,
                                         },
                                         fill: {
                                             opacity: 1,
                                         },
+                                        grid: {
+                                            borderColor: '#e5e7eb',
+                                        },
                                     }}
                                 />
-                            </Card>
+                            </div>
                         </div>
-                    </Col>
-                    <Col md={3}>
-                        <div className="py-3">
-                            <h2 className="m-0 mb-3">
-                                {__('Recent Payments')}
+                    </div>
+
+                    {/* Recent Payments Sidebar */}
+                    <div className="smartpay-dashboard__sidebar">
+                        <div className="smartpay-dashboard__section">
+                            <h2 className="smartpay-dashboard__section-title">
+                                {__('Recent Payments', 'smartpay')}
                             </h2>
-                            <ListGroup>
-                                {!report.recentPayments.length && (
-                                    <p>{__('No payment found', 'smartpay')}</p>
-                                )}
-                                {report.recentPayments.map((payment) => {
-                                    return (
-                                        <ListGroup.Item
-                                            className="d-flex justify-content-between align-items-center"
+                            <div className="smartpay-dashboard__card">
+                                <ul className="smartpay-recent-payments">
+                                    {!report.recentPayments.length && (
+                                        <li className="smartpay-recent-payments__empty">
+                                            {__('No payment found', 'smartpay')}
+                                        </li>
+                                    )}
+                                    {report.recentPayments.map((payment) => (
+                                        <li
+                                            className="smartpay-recent-payments__item"
                                             key={payment.id}
                                         >
-                                            {`$${payment.amount} paid by ${payment.email}`}
-                                            <span>
-                                                {dayjs.utc(
-                                                    payment.created_at
-                                                ).fromNow()}
+                                            <span className="smartpay-recent-payments__detail">
+                                                {`$${payment.amount} paid by ${payment.email}`}
                                             </span>
-                                        </ListGroup.Item>
-                                    )
-                                })}
-                            </ListGroup>
+                                            <span className="smartpay-recent-payments__time">
+                                                {dayjs.utc(payment.created_at).fromNow()}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
-                    </Col>
-                </Row>
-            </Container>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

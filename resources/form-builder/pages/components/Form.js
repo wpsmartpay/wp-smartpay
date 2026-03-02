@@ -1,15 +1,15 @@
-import {Button, Container, Form, Tab, Tabs} from 'react-bootstrap'
+import { Button, TextControl, TabPanel } from '@wordpress/components'
+import { __ } from '@wordpress/i18n'
+import { parse } from '@wordpress/blocks'
 
-import {Alert} from '../../components/Alert'
-import {FormBuilder} from './FormBuilder'
-import {FormOptionTab} from './FormOptionTab'
-import {FormPricingTab} from './FormPricingTab'
-import {__} from '@wordpress/i18n'
-import {parse} from '@wordpress/blocks'
+import { Alert } from '../../components/Alert'
+import { FormBuilder } from './FormBuilder'
+import { FormOptionTab } from './FormOptionTab'
+import { FormPricingTab } from './FormPricingTab'
 
-export const FormForm = ({form, onSubmit, setFormData, shouldReset = false,}) => {
+export const FormForm = ({ form, onSubmit, setFormData, shouldReset = false }) => {
     const checkRequiredBlocks = (blocks) => {
-        const requiredBlocks = {name: 0, email: 0}
+        const requiredBlocks = { name: 0, email: 0 }
 
         if (blocks.length) {
             blocks.map((block) => {
@@ -26,7 +26,6 @@ export const FormForm = ({form, onSubmit, setFormData, shouldReset = false,}) =>
 
     const saveForm = () => {
         const blocks = parse(form.body)
-
         const requiredBlocks = checkRequiredBlocks(blocks)
 
         if (requiredBlocks.name < 1) {
@@ -42,132 +41,120 @@ export const FormForm = ({form, onSubmit, setFormData, shouldReset = false,}) =>
         }
     }
 
+    const tabs = [
+        {
+            name: 'builder',
+            title: __('Builder', 'smartpay'),
+            className: 'smartpay-tab smartpay-tab--builder',
+        },
+        {
+            name: 'pricing',
+            title: __('Pricing', 'smartpay'),
+            className: 'smartpay-tab smartpay-tab--pricing',
+        },
+        {
+            name: 'options',
+            title: __('Options', 'smartpay'),
+            className: 'smartpay-tab smartpay-tab--options',
+        },
+    ]
+
     return (
         <>
-            <div
-                className="text-black bg-white border-bottom"
-                style={{
-                    position: 'fixed',
-                    left: '160px',
-                    right: 0,
-                    top: '32px',
-                    zIndex: 99,
-                }}
-            >
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
+            {/* Top toolbar */}
+            <div className="smartpay-form-header">
+                <div className="smartpay-form-header__inner">
+                    <h2 className="smartpay-form-header__title">
+                        {form.id
+                            ? __('Edit Form', 'smartpay')
+                            : __('Create Form', 'smartpay')}
+                    </h2>
+                    <div className="smartpay-form-header__actions">
+                        {form.id && (
+                            <TextControl
+                                value={`[smartpay_form id="${form.id}"]`}
+                                readOnly
+                                className="smartpay-form-header__shortcode"
+                            />
+                        )}
+                        {form.id && form.extra?.form_preview_page_permalink && (
+                            <Button
+                                variant="tertiary"
+                                href={form.extra.form_preview_page_permalink}
+                                target="_blank"
+                                className="smartpay-form-header__preview-btn"
+                            >
+                                {__('Preview', 'smartpay')}
+                            </Button>
+                        )}
+                        <Button
+                            variant="primary"
+                            onClick={saveForm}
+                            className="smartpay-form-header__save-btn"
+                        >
                             {form.id
-                                ? __('Edit Form', 'smartpay')
-                                : __('Create Form', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
-                            <div className="d-flex flex-row">
-                                {form.id && (
-                                    <Form.Control
-                                        size="sm"
-                                        type="text"
-                                        value={`[smartpay_form id="${form.id}"]`}
-                                        readOnly
-                                        className="mr-2"
-                                    />
-                                )}
-                                {form.id &&
-                                    form.extra?.form_preview_page_permalink && (
-                                        <>
-                                            <Button
-                                                variant="link"
-                                                href={
-                                                    form.extra
-                                                        .form_preview_page_permalink
-                                                }
-                                                target="_blank"
-                                                className="btn btn-sm text-decoration-none px-3 mr-2"
-                                            >
-                                                {__('Preview', 'smartpay')}
-                                            </Button>
-                                        </>
-                                    )}
-                                <Button
-                                    onClick={saveForm}
-                                    className="btn btn-primary btn-sm text-decoration-none px-3"
-                                >
-                                    {form.id
-                                        ? __('Save', 'smartpay')
-                                        : __('Publish', 'smartpay')}
-                                </Button>
-                            </div>
-                        </div>
+                                ? __('Save', 'smartpay')
+                                : __('Publish', 'smartpay')}
+                        </Button>
                     </div>
-                </Container>
+                </div>
             </div>
 
-            <Container style={{marginTop: '80px'}}>
-                <div className="p-4 bg-white">
-                    <Form.Control
-                        type="text"
-                        className="mb-4"
-                        name="title"
+            {/* Main content */}
+            <div className="smartpay-form-content">
+                <div className="smartpay-form-content__inner">
+                    <TextControl
                         value={form.title || ''}
-                        onChange={(e) => {
-                            setFormData({
-                                [e.target.name]: e.target.value,
-                            })
+                        onChange={(value) => {
+                            setFormData({ title: value })
                         }}
-                        placeholder={__(
-                            'Your awesome form title here',
-                            'smartpay'
-                        )}
+                        placeholder={__('Your awesome form title here', 'smartpay')}
+                        className="smartpay-form-content__title"
+                        __nextHasNoMarginBottom
                     />
 
-                    <Tabs fill defaultActiveKey="builder">
-                        <Tab
-                            eventKey="builder"
-                            className="mt-3"
-                            title={
-                                <p className="font-weight-bold m-0">
-                                    {__('Builder', 'smartpay')}
-                                </p>
+                    <TabPanel
+                        className="smartpay-form-tabs"
+                        activeClass="is-active"
+                        tabs={tabs}
+                    >
+                        {(tab) => {
+                            switch (tab.name) {
+                                case 'builder':
+                                    return (
+                                        <div className="smartpay-form-tab-content">
+                                            <FormBuilder
+                                                form={form}
+                                                setFormData={setFormData}
+                                                shouldReset={shouldReset}
+                                            />
+                                        </div>
+                                    )
+                                case 'pricing':
+                                    return (
+                                        <div className="smartpay-form-tab-content">
+                                            <FormPricingTab
+                                                form={form}
+                                                setFormData={setFormData}
+                                            />
+                                        </div>
+                                    )
+                                case 'options':
+                                    return (
+                                        <div className="smartpay-form-tab-content">
+                                            <FormOptionTab
+                                                form={form}
+                                                setFormData={setFormData}
+                                            />
+                                        </div>
+                                    )
+                                default:
+                                    return null
                             }
-                        >
-                            <FormBuilder
-                                form={form}
-                                setFormData={setFormData}
-                                shouldReset={shouldReset}
-                            />
-                        </Tab>
-                        <Tab
-                            eventKey="pricing"
-                            className="mt-3"
-                            title={
-                                <p className="font-weight-bold m-0">
-                                    {__('Pricing', 'smartpay')}
-                                </p>
-                            }
-                        >
-                            <FormPricingTab
-                                form={form}
-                                setFormData={setFormData}
-                            />
-                        </Tab>
-
-                        <Tab
-                            eventKey="options"
-                            className="mt-3"
-                            title={
-                                <p className="font-weight-bold m-0">
-                                    {__('Options', 'smartpay')}
-                                </p>
-                            }
-                        >
-                            <FormOptionTab
-                                form={form}
-                                setFormData={setFormData}
-                            />
-                        </Tab>
-                    </Tabs>
+                        }}
+                    </TabPanel>
                 </div>
-            </Container>
+            </div>
         </>
     )
 }
