@@ -563,6 +563,16 @@ class QueryBuilderHandler
     }
 
     /**
+     * @param $limit
+     *
+     * @return $this
+     */
+    public function take($limit)
+    {
+        return $this->limit($limit);
+    }
+
+    /**
      * @param $offset
      *
      * @return $this
@@ -572,6 +582,16 @@ class QueryBuilderHandler
         $this->statements['offset'] = $offset;
 
         return $this;
+    }
+
+    /**
+     * @param $offset
+     *
+     * @return $this
+     */
+    public function skip($offset)
+    {
+        return $this->offset($offset);
     }
 
     /**

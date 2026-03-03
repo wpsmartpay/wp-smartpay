@@ -170,16 +170,48 @@ class Admin
 
     public function adminScripts($hook)
     {
-        if ('toplevel_page_smartpay' === $hook || 'smartpay_page_smartpay-form' === $hook || 'smartpay_page_smartpay-setting' === $hook || 'smartpay_page_smartpay-integrations' === $hook) {
+        // Fallback: hook suffix can vary (e.g. URL-encoded slug); also check request page param
+        $request_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
+        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/members', 'smartpay#/coupons', 'smartpay#/payments'], true);
+
+        $admin_style_hooks = [
+            'toplevel_page_smartpay',
+            'smartpay_page_smartpay-form',
+            'smartpay_page_smartpay-setting',
+            'smartpay_page_smartpay-integrations',
+            'smartpay_page_smartpay#/products',
+            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/coupons',
+            'smartpay_page_smartpay#/payments',
+        ];
+        if (in_array($hook, $admin_style_hooks, true) || $is_main_admin_page) {
             wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
             wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', '', SMARTPAY_VERSION);
             wp_enqueue_style('smartpay-admin'); // TODO: Remove admin css after refactoring
             wp_enqueue_style('smartpay-components');
         }
-        if ('toplevel_page_smartpay' === $hook) {
-			wp_register_script('smartpay-ui', SMARTPAY_PLUGIN_ASSETS . '/js/ui.js', ['wp-element', 'wp-data'], SMARTPAY_VERSION, true);
-			wp_enqueue_script('smartpay-ui');
-            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data'], SMARTPAY_VERSION, true);
+        // Enqueue UI components on main admin SPA and form-builder (form list) page so WPSmartPayUI is defined
+        $admin_spa_hooks = [
+            'toplevel_page_smartpay',
+            'smartpay_page_smartpay#/products',
+            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/coupons',
+            'smartpay_page_smartpay#/payments',
+            'smartpay_page_smartpay-form',
+        ];
+        if (in_array($hook, $admin_spa_hooks, true) || $is_main_admin_page) {
+            wp_register_script('smartpay-ui', SMARTPAY_PLUGIN_ASSETS . '/js/ui.js', ['wp-element', 'wp-data'], SMARTPAY_VERSION, true);
+            wp_enqueue_script('smartpay-ui');
+        }
+        $main_admin_hooks = [
+            'toplevel_page_smartpay',
+            'smartpay_page_smartpay#/products',
+            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/coupons',
+            'smartpay_page_smartpay#/payments',
+        ];
+        if (in_array($hook, $main_admin_hooks, true) || $is_main_admin_page) {
+            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data', 'smartpay-ui'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
             wp_localize_script(
                 'smartpay-admin',

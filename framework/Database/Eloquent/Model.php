@@ -904,6 +904,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         return $this->forwardCallToModelQueryBuilder($method, $params);
     }
 
+    /**
+     * Begin querying the model.
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\ModelQueryBuilder
+     */
+    public static function query()
+    {
+        return (new static)->newQuery();
+    }
+
     public static function __callStatic($method, $params)
     {
         return call_user_func_array([new static, $method], $params);
