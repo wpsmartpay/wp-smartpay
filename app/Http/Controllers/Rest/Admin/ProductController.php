@@ -27,16 +27,55 @@ class ProductController extends RestController
     }
 
     /**
-     * Get all parent products
+     * Get all parent products with pagination
      *
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $products = Product::where('parent_id', 0)->with(['variations'])->orderBy('id', 'DESC')->get();
+        $page     = (int) $request->get_param('page') ?: 1;
+        $per_page = (int) $request->get_param('per_page') ?: 10;
+        $search   = sanitize_text_field($request->get_param('search') ?? '');
+        $sort_by  = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
 
-        return new WP_REST_Response(['products' => $products]);
+        $query = Product::where(function ($q) {
+            $q->where('parent_id', 0)->orWhereNull('parent_id');
+        })->with(['variations']);
+
+        // Search
+        if (!empty($search)) {
+            $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        // Sorting
+        $sort_parts = explode(':', $sort_by);
+        $sort_column = in_array($sort_parts[0], ['id', 'title', 'created_at']) ? $sort_parts[0] : 'id';
+        $sort_order  = isset($sort_parts[1]) && strtolower($sort_parts[1]) === 'asc' ? 'ASC' : 'DESC';
+        $query->orderBy($sort_column, $sort_order);
+
+        // Get total count
+        $total = $query->count();
+        $last_page = max(1, (int) ceil($total / $per_page));
+
+        // Paginate
+        $offset = ($page - 1) * $per_page;
+        $products = $query->skip($offset)->take($per_page)->get();
+
+        $from = $total > 0 ? $offset + 1 : 0;
+        $to   = min($offset + $per_page, $total);
+
+        return new WP_REST_Response([
+            'products' => [
+                'data'         => $products,
+                'current_page' => $page,
+                'per_page'     => $per_page,
+                'last_page'    => $last_page,
+                'total'        => $total,
+                'from'         => $from,
+                'to'           => $to,
+            ],
+        ]);
     }
 
     /**

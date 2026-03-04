@@ -1,136 +1,105 @@
 import { __ } from '@wordpress/i18n'
+import { Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Button } from '@wordpress/components'
-import { useState, useEffect } from '@wordpress/element'
-import { useSelect, dispatch } from '@wordpress/data'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { Delete } from '../http/form'
-
+import { Delete, GetForms } from '../http/form'
+import { createFormColumns } from './columns'
 import { createHooks } from '@wordpress/hooks'
+const { useState, useEffect, useCallback } = wp.element
 
 window.SMARTPAY_FORM_HOOKS = createHooks()
 
 export const FormList = () => {
-    const [forms, setForms] = useState([])
+	const { Header, DataTable, Button } = window.WPSmartPayUI
+	const [data, setData] = useState([])
+	const [isLoading, setIsLoading] = useState(false)
+	const [searchQuery, setSearchQuery] = useState('')
+	const [sortBy, setSortBy] = useState('id:desc')
+	const [pagination, setPagination] = useState({
+		current_page: 1,
+		per_page: 10,
+		last_page: 1,
+		total: 0,
+		from: 0,
+		to: 0,
+	})
 
-    const formsData = useSelect(
-        (select) => select('smartpay/forms').getForms(),
-        []
-    )
+	const fetchForms = useCallback(async (page = 1, perPage = 10, search = '', sortBy = 'id:desc') => {
+		setIsLoading(true)
 
-    useEffect(() => {
-        setForms(formsData)
-    }, [formsData])
+		try {
+			const result = await GetForms({ page, perPage, search, sortBy })
+			const { data: formData = [], ...paginationData } = result
 
-    const deleteForm = (formId) => {
-        Swal.fire({
-            title: __('Are you sure?', 'smartpay'),
-            text: __("You won't be able to revert this!", 'smartpay'),
-            icon: 'warning',
-            confirmButtonText: __('Yes', 'smartpay'),
-            showCancelButton: true,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Delete(formId).then((response) => {
-                    dispatch('smartpay/forms').deleteForm(formId)
-                    Swal.fire({
-                        toast: true,
-                        icon: 'success',
-                        title: __(response.message, 'smartpay'),
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 2000,
-                        showClass: {
-                            popup: 'swal2-noanimation',
-                        },
-                        hideClass: {
-                            popup: '',
-                        },
-                    })
-                })
-            }
-        })
-    }
+			setData(formData)
+			setPagination({
+				current_page: paginationData.current_page,
+				per_page: paginationData.per_page,
+				last_page: paginationData.last_page,
+				total: paginationData.total,
+				from: paginationData.from,
+				to: paginationData.to,
+			})
+		} catch (error) {
+			console.error('Failed to load forms', error)
+		} finally {
+			setIsLoading(false)
+		}
+	}, [])
 
-    return (
-        <>
-            <div className="smartpay-form-header">
-                <div className="smartpay-form-header__inner">
-                    <h2 className="smartpay-form-header__title">
-                        {__('Forms', 'smartpay')}
-                    </h2>
-                    <div className="smartpay-form-header__actions">
-                        <Link
-                            className="components-button is-primary smartpay-form-header__add-btn"
-                            to="create"
-                        >
-                            {__('Add new', 'smartpay')}
-                        </Link>
-                    </div>
-                </div>
-            </div>
+	useEffect(() => {
+		fetchForms(1, pagination.per_page, searchQuery, sortBy)
+	}, [fetchForms, searchQuery, pagination.per_page, sortBy])
 
-            <div className="smartpay-form-list">
-                <div className="smartpay-form-list__inner">
-                    <table className="smartpay-table">
-                        <thead>
-                            <tr>
-                                <th className="smartpay-table__col--title">
-                                    <strong>{__('Title', 'smartpay')}</strong>
-                                </th>
-                                <th className="smartpay-table__col--date">
-                                    {__('Date', 'smartpay')}
-                                </th>
-                                <th className="smartpay-table__col--actions">
-                                    {__('Actions', 'smartpay')}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {!forms.length && (
-                                <tr>
-                                    <td className="smartpay-table__empty" colSpan="3">
-                                        {__('No form found.', 'smartpay')}
-                                    </td>
-                                </tr>
-                            )}
+	const handlePaginationChange = useCallback(({ page, per_page }) => {
+		fetchForms(page, per_page, searchQuery, sortBy)
+	}, [fetchForms, searchQuery, sortBy])
 
-                            {forms.map((form, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td>{form.title || ''}</td>
-                                        <td>{form.updated_at || ''}</td>
-                                        <td className="smartpay-table__col--actions">
-                                            {form?.extra?.form_preview_page_permalink && (
-                                                <Button
-                                                    variant="link"
-                                                    href={form.extra.form_preview_page_permalink}
-                                                    target="_blank"
-                                                >
-                                                    {__('Preview', 'smartpay')}
-                                                </Button>
-                                            )}
-                                            <Link
-                                                className="components-button is-link"
-                                                to={`/${form.id}/edit`}
-                                            >
-                                                {__('Edit', 'smartpay')}
-                                            </Link>
-                                            <Button
-                                                variant="link"
-                                                isDestructive
-                                                onClick={() => deleteForm(form.id)}
-                                            >
-                                                {__('Delete', 'smartpay')}
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </>
-    )
+	const handleSearchChange = (search) => {
+		setSearchQuery(search)
+	}
+
+	const deleteForm = async (formId) => {
+		const deleted = await Delete(formId)
+		if (deleted) {
+			fetchForms(pagination.current_page, pagination.per_page, searchQuery, sortBy)
+		}
+	}
+
+	const columns = createFormColumns(deleteForm)
+
+	return (
+		<>
+			<Header
+				title={__('Forms', 'smartpay')}
+				subtitle={__('Manage your forms here', 'smartpay')}
+			/>
+
+			<div className="p-4 max-w-7xl mx-auto">
+				<div className="bg-white p-4 rounded-md shadow-md">
+					<DataTable
+						columns={columns}
+						data={data}
+						pagination={pagination}
+						onPaginationChange={handlePaginationChange}
+						onSearchChange={handleSearchChange}
+						isLoading={isLoading}
+						searchPlaceholder={__('Search by form name', 'smartpay')}
+						enableActions={true}
+						actions={[
+							<Link to="create" key="create-form-link">
+								<Button
+									key="create-form"
+									variant="default"
+									title={__('Create', 'smartpay')}
+								>
+									<Plus className="w-4 h-4 text-white" />
+									<span>{__('Add New', 'smartpay')}</span>
+								</Button>
+							</Link>
+						]}
+					/>
+				</div>
+			</div>
+		</>
+	)
 }

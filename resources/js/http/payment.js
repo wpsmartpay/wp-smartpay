@@ -14,8 +14,9 @@ export const DeletePayment = async (paymentId) => {
 	if (!popup.isConfirmed) return;
 
 	try {
+        const baseUrl = smartpay.restUrl.replace(/\/$/, '');
 		await apiFetch({
-			path: `${smartpay.restUrl}/v1/payments/${paymentId}`,
+			url: `${baseUrl}/v1/payments/${paymentId}`,
 			method: 'DELETE',
 			headers: {
 				'X-WP-Nonce': smartpay.apiNonce,
@@ -49,8 +50,9 @@ export const DeletePayment = async (paymentId) => {
 }
 
 export const Update = (paymentId, body) => {
+    const baseUrl = smartpay.restUrl.replace(/\/$/, '');
     return apiFetch({
-        path: `${smartpay.restUrl}/v1/payments/${paymentId}`,
+        url: `${baseUrl}/v1/payments/${paymentId}`,
         method: 'PUT',
         headers: {
             'X-WP-Nonce': smartpay.apiNonce,
@@ -70,8 +72,12 @@ export const GetPayments = async ({ page = 1, perPage = 10, search = '', status 
         ...(customerId && { customer_id: customerId })
 	})
 
+    const baseUrl = smartpay.restUrl.replace(/\/$/, '');
+    const url = `${baseUrl}/v1/payments`;
+    const separator = url.includes('?') ? '&' : '?';
+
 	const response = await apiFetch({
-		path: `${smartpay.restUrl}/v1/payments?${queryParams.toString()}`,
+		url: `${url}${separator}${queryParams.toString()}`,
 		headers: {
 			'X-WP-Nonce': smartpay.apiNonce,
 		},

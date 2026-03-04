@@ -110,6 +110,9 @@ class Form
             'smartpay-form',
             'smartpay',
             [
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
                 'apiNonce' => wp_create_nonce('wp_rest')
             ]
         );

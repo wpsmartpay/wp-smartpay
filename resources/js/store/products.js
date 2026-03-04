@@ -10,7 +10,7 @@ const actions = {
     getProducts() {
         return {
             type: 'GET_PRODUCTS',
-            path: `${smartpay.restUrl}/v1/products`,
+            path: `v1/products`,
         }
     },
     setProducts(products) {
@@ -22,7 +22,7 @@ const actions = {
     getProduct(id) {
         return {
             type: 'GET_PRODUCT',
-            path: `${smartpay.restUrl}/v1/products/${id}`,
+            path: `v1/products/${id}`,
             id,
         }
     },
@@ -107,16 +107,18 @@ registerStore('smartpay/products', {
 
     controls: {
         GET_PRODUCTS(action) {
+            const baseUrl = smartpay.restUrl.replace(/\/$/, '');
             return apiFetch({
-                path: action.path,
+                url: `${baseUrl}/${action.path}`,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
             })
         },
         GET_PRODUCT(action) {
+            const baseUrl = smartpay.restUrl.replace(/\/$/, '');
             return apiFetch({
-                path: action.path,
+                url: `${baseUrl}/${action.path}`,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
@@ -127,7 +129,8 @@ registerStore('smartpay/products', {
     resolvers: {
         *getProducts() {
             const response = yield actions.getProducts()
-            return actions.setProducts(response?.products)
+            const products = response?.products?.data || response?.products || []
+            return actions.setProducts(products)
         },
         *getProduct(id) {
             const response = yield actions.getProduct(id)
