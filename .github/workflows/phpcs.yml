@@ -1,0 +1,32 @@
+name: WordPress Coding Standards
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: cs2pr, phpcs, phpcbf
+          coverage: none
+
+      - name: Install WPCS
+        run: |
+          composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --dev wp-coding-standards/wpcs:"^3.0" \
+            phpcompatibility/phpcompatibility-wp:"*"
+          phpcs --config-set installed_paths \
+            $(composer global config home)/vendor/wp-coding-standards/wpcs,\
+            $(composer global config home)/vendor/phpcompatibility/phpcompatibility-wp
+
+      - name: Run PHPCS
+        run: phpcs --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
