@@ -96,3 +96,38 @@ Pro add-on (`wp-smartpay-pro`) extends this via hooks/filters.
 - [ ] All functions/classes properly prefixed or namespaced
 - [ ] readme.txt updated if user-facing changes
 - [ ] Changelog entry added
+
+---
+
+## Skills Reference
+
+Detailed coding standards live in the pro plugin (private):
+- `../wp-smartpay-pro/.claude/skills/wp-standards.md`
+- `../wp-smartpay-pro/.claude/skills/wp-ui-components.md`
+- `../wp-smartpay-pro/.claude/skills/php-coding-standards.md`
+- `../wp-smartpay-pro/.claude/skills/security-standards.md`
+- `../wp-smartpay-pro/.claude/skills/hooks-catalog.md`
+- `../wp-smartpay-pro/.claude/skills/integration-patterns.md`
+
+When running Claude Code from the pro plugin directory (recommended), these are
+available at `.claude/skills/`. Read them before writing any code for this plugin.
+
+## Reference Docs (in pro plugin)
+
+- `../wp-smartpay-pro/docs/architecture.md`
+- `../wp-smartpay-pro/docs/codebase-reference.md`
+- `../wp-smartpay-pro/docs/project-rules.md`
+
+---
+
+## !! IMPORTANT: Keeping Docs in Sync !!
+
+Whenever changes are made to this plugin, update the relevant docs in the pro plugin:
+
+1. `../wp-smartpay-pro/docs/features-and-roadmap.md` — feature additions, removals, status changes
+2. `../wp-smartpay-pro/docs/architecture.md` — folder structure, DB, REST endpoint changes
+3. `../wp-smartpay-pro/docs/codebase-reference.md` — new patterns, hooks, helpers, key files
+4. This `CLAUDE.md` — if plugin namespace, prefixes, or major architecture decisions change
+
+Do this **in the same response** as implementing the change.
+Never let the docs drift from the current state of the plugin.
