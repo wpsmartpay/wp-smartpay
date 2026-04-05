@@ -28,4 +28,6 @@ jobs:
             phpcompatibility/phpcompatibility-wp:"*"
 
       - name: Run PHPCS
-        run: $(composer global config home)/vendor/bin/phpcs --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
+        run: |
+          PHPCS_BIN="$(composer global config home 2>/dev/null | tail -n1)/vendor/bin/phpcs"
+          "$PHPCS_BIN" --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
