@@ -18,6 +18,12 @@ class AddUuidColumnOnPaymentTable
         $table = $wpdb->prefix . 'smartpay_payments';
         $dbName = $wpdb->dbname;
 
+        // Bail early if the table doesn't exist yet (e.g. during activation sandbox scrape).
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
+            return;
+        }
+
         // check the uuid column exist on payments table
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $row = $wpdb->get_results("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '$dbName' AND TABLE_NAME = '$table' AND COLUMN_NAME = 'uuid'");

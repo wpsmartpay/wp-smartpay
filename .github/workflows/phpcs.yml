@@ -19,15 +19,8 @@ jobs:
           tools: cs2pr
           coverage: none
 
-      - name: Install PHPCS and standards
-        run: |
-          composer global config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-          composer global require --dev \
-            squizlabs/php_codesniffer:"^3.8" \
-            wp-coding-standards/wpcs:"^3.0" \
-            phpcompatibility/phpcompatibility-wp:"*"
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPCS
-        run: |
-          PHPCS_BIN="$(composer global config home 2>/dev/null | tail -n1)/vendor/bin/phpcs"
-          "$PHPCS_BIN" --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
+        run: vendor/bin/phpcs --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
