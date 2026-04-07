@@ -1,9 +1,8 @@
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
-import { Container } from 'react-bootstrap'
 import { createColumns } from './columns'
 import { PaymentDetailsDialog } from './PaymentDetailsDialog'
-const { Header, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
+const { Header, Card, CardContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
 
 const { useEffect, useState, useCallback } = wp.element
 
@@ -116,49 +115,51 @@ export const PaymentList = () => {
 				subtitle={__('Manage your payments here', 'smartpay')}
 			/>
 
-			<Container className="mt-4">
-				<div className="bg-white p-4 rounded-md shadow-md">
-					<DataTable
-						columns={columns}
-						data={data}
-						pagination={pagination}
-						onPaginationChange={handlePaginationChange}
-						onSearchChange={handleSearchChange}
-						enableSorting={true}
-						onSortChange={handleSort}
-						isLoading={isLoading}
-						searchPlaceholder='Search by Email or Transaction ID'
-						enableFilters={true}
-						filters={[
-							<Select key="status-filter" onValueChange={handleStatusFilter}>
-								<SelectTrigger className="w-[180px]">
-									<SelectValue placeholder="Filter by status" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">All</SelectItem>
-									<SelectItem value="refunded">Refunded</SelectItem>
-									<SelectItem value="completed">Completed</SelectItem>
-									<SelectItem value="pending">Pending</SelectItem>
-									<SelectItem value="failed">Failed</SelectItem>
-									<SelectItem value="processing">Processing</SelectItem>
-									<SelectItem value="revoked">Revoked</SelectItem>
-									<SelectItem value="abandoned">Abandoned</SelectItem>
-								</SelectContent>
-							</Select>,
-							<Select key="type-filter" onValueChange={handleTypeFilter}>
-								<SelectTrigger className="w-[180px]">
-									<SelectValue placeholder="Filter by Type" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">All</SelectItem>
-									<SelectItem value="form_payment">Form</SelectItem>
-									<SelectItem value="product_purchase">Product</SelectItem>
-								</SelectContent>
-							</Select>
-						]}
-					/>
-				</div>
-			</Container>
+			<div className="p-4 max-w-7xl mx-auto">
+				<Card>
+					<CardContent>
+						<DataTable
+							columns={columns}
+							data={data}
+							pagination={pagination}
+							onPaginationChange={handlePaginationChange}
+							onSearchChange={handleSearchChange}
+							enableSorting={true}
+							onSortChange={handleSort}
+							isLoading={isLoading}
+							searchPlaceholder='Search by Email or Transaction ID'
+							enableFilters={true}
+							filters={[
+								<Select key="status-filter" onValueChange={handleStatusFilter}>
+									<SelectTrigger className="w-[180px]">
+										<SelectValue placeholder="Filter by status" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All</SelectItem>
+										<SelectItem value="refunded">Refunded</SelectItem>
+										<SelectItem value="completed">Completed</SelectItem>
+										<SelectItem value="pending">Pending</SelectItem>
+										<SelectItem value="failed">Failed</SelectItem>
+										<SelectItem value="processing">Processing</SelectItem>
+										<SelectItem value="revoked">Revoked</SelectItem>
+										<SelectItem value="abandoned">Abandoned</SelectItem>
+									</SelectContent>
+								</Select>,
+								<Select key="type-filter" onValueChange={handleTypeFilter}>
+									<SelectTrigger className="w-[180px]">
+										<SelectValue placeholder="Filter by Type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All</SelectItem>
+										<SelectItem value="form_payment">Form</SelectItem>
+										<SelectItem value="product_purchase">Product</SelectItem>
+									</SelectContent>
+								</Select>
+							]}
+						/>
+					</CardContent>
+				</Card>
+			</div>
 			<PaymentDetailsDialog
 				paymentId={selectedPaymentId}
 				open={isDialogOpen}

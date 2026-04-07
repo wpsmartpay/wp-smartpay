@@ -1,11 +1,10 @@
 import { __ } from '@wordpress/i18n'
 import { Plus } from 'lucide-react'
-import { Container } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCoupon, GetCoupons } from '../../http/coupon'
 import { createColumns } from './columns'
 import { CouponDialog } from './CouponDialog'
-const { DataTable, Header, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } = window.WPSmartPayUI;
+const { DataTable, Header, Card, CardContent, Button, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 
 export const CouponList = () => {
@@ -108,45 +107,47 @@ export const CouponList = () => {
 				subtitle={__('Manage your coupons here', 'smartpay')}
 			/>
 
-			<Container className="mt-4">
-				<div className="bg-white p-4 rounded-md shadow-md">
-					<DataTable
-						columns={columns}
-						data={data}
-						pagination={pagination}
-						onPaginationChange={handlePaginationChange}
-						onSearchChange={handleSearchChange}
-						isLoading={isLoading}
-						searchPlaceholder='Search by Coupon Code'
-						enableFilters={true}
-						filters={[
-							<Select key="type-filter" onValueChange={handleTypeFilter}>
-								<SelectTrigger className="w-[180px]">
-									<SelectValue placeholder="Filter by Type" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="all">All</SelectItem>
-									<SelectItem value="fixed">Fixed</SelectItem>
-									<SelectItem value="percent">Percent</SelectItem>
-								</SelectContent>
-							</Select>
-						]}
-						isJustifyBetween={false}
-						enableActions={true}
-						actions={[
-							<Button
-								key="create-coupon"
-								variant="default"
-								title={__('Create', 'smartpay')}
-								onClick={handleCreateCoupon}
-							>
-								<Plus className="w-4 h-4 text-white" />
-								<span>{__('Create Coupon', 'smartpay')}</span>
-							</Button>
-						]}
-					/>
-				</div>
-			</Container>
+			<div className="p-4 max-w-7xl mx-auto">
+				<Card>
+					<CardContent>
+						<DataTable
+							columns={columns}
+							data={data}
+							pagination={pagination}
+							onPaginationChange={handlePaginationChange}
+							onSearchChange={handleSearchChange}
+							isLoading={isLoading}
+							searchPlaceholder='Search by Coupon Code'
+							enableFilters={true}
+							filters={[
+								<Select key="type-filter" onValueChange={handleTypeFilter}>
+									<SelectTrigger className="w-[180px]">
+										<SelectValue placeholder="Filter by Type" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All</SelectItem>
+										<SelectItem value="fixed">Fixed</SelectItem>
+										<SelectItem value="percent">Percent</SelectItem>
+									</SelectContent>
+								</Select>
+							]}
+							isJustifyBetween={false}
+							enableActions={true}
+							actions={[
+								<Button
+									key="create-coupon"
+									variant="default"
+									title={__('Create', 'smartpay')}
+									onClick={handleCreateCoupon}
+								>
+									<Plus className="w-4 h-4" />
+									<span>{__('Create Coupon', 'smartpay')}</span>
+								</Button>
+							]}
+						/>
+					</CardContent>
+				</Card>
+			</div>
 			<CouponDialog
 				couponId={selectedCouponId}
 				open={isDialogOpen}

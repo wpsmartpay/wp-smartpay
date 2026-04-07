@@ -1,9 +1,8 @@
 import { __ } from '@wordpress/i18n'
-import { Container } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { DeleteCustomer, GetCustomers } from '../../http/customer'
 import { createColumns } from './columns'
-const { DataTable, Header } = window.WPSmartPayUI;
+const { DataTable, Header, Card, CardContent } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 
 export const CustomerList = () => {
@@ -77,19 +76,21 @@ export const CustomerList = () => {
 				subtitle={__('Manage your members here', 'smartpay')}
 			/>
 
-			<Container className="mt-4">
-				<div className="bg-white p-4 rounded-md shadow-md">
-					<DataTable
-						columns={columns}
-						data={data}
-						pagination={pagination}
-						onPaginationChange={handlePaginationChange}
-						onSearchChange={handleSearchChange}
-						isLoading={isLoading}
-						searchPlaceholder='Search by Email...'
-					/>
-				</div>
-			</Container>
+			<div className="p-4 max-w-7xl mx-auto">
+				<Card>
+					<CardContent>
+						<DataTable
+							columns={columns}
+							data={data}
+							pagination={pagination}
+							onPaginationChange={handlePaginationChange}
+							onSearchChange={handleSearchChange}
+							isLoading={isLoading}
+							searchPlaceholder='Search by Email...'
+						/>
+					</CardContent>
+				</Card>
+			</div>
         </>
     )
 }

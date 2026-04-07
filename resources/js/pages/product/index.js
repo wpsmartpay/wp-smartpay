@@ -9,7 +9,7 @@ const { useState, useEffect, useCallback } = wp.element
 window.SMARTPAY_PRODUCT_HOOKS = createHooks()
 
 export const ProductList = () => {
-	const { Header, DataTable, Button } = window.WPSmartPayUI
+	const { Header, DataTable, Button, Card, CardContent } = window.WPSmartPayUI
 	const [data, setData] = useState([])
 	const [isLoading, setIsLoading] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
@@ -75,7 +75,8 @@ export const ProductList = () => {
 			/>
 
 			<div className="p-4 max-w-7xl mx-auto">
-				<div className="bg-white p-4 rounded-md shadow-md">
+				<Card>
+					<CardContent>
 					<DataTable
 						columns={columns}
 						data={data}
@@ -92,13 +93,14 @@ export const ProductList = () => {
 									variant="default"
 									title={__('Create', 'smartpay')}
 								>
-									<Plus className="w-4 h-4 text-white" />
+									<Plus className="w-4 h-4" />
 									<span>{__('Add New', 'smartpay')}</span>
 								</Button>
 							</Link>
 						]}
 					/>
-				</div>
+					</CardContent>
+				</Card>
 			</div>
 		</>
 	)
