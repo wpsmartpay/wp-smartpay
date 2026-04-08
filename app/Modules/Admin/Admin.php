@@ -189,6 +189,7 @@ class Admin
             wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', '', SMARTPAY_VERSION);
             wp_enqueue_style('smartpay-admin'); // TODO: Remove admin css after refactoring
             wp_enqueue_style('smartpay-components');
+            wp_enqueue_style('wp-components');
         }
         // Enqueue UI components on main admin SPA and form-builder (form list) page so WPSmartPayUI is defined
         $admin_spa_hooks = [

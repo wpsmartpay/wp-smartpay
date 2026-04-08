@@ -21,6 +21,7 @@ import { PaymentList } from './pages/payment/index'
 
 // Other pages
 import { NotFound } from './pages/not-found'
+import { AdminFooter } from './components/AdminFooter'
 
 import './store/index'
 
@@ -87,6 +88,8 @@ domReady(function () {
                     'smartPayAdminRoute',
                     [],
                 )}
+
+                <AdminFooter />
             </div>
         )
     }

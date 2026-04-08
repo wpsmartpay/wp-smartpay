@@ -105,5 +105,32 @@
     },
     "gitHooks": {
         "commit-msg": "jiti scripts/verify-commit-msg.js"
+    },
+    "smartpayProject": {
+        "pluginSlug": "wp-smartpay",
+        "pluginType": "free",
+        "displayName": "SmartPay",
+        "description": "WordPress payment form plugin - Free core",
+        "requires": {
+            "php": ">=8.1",
+            "wordpress": ">=6.0"
+        },
+        "localDev": {
+            "tool": "wp-env"
+        },
+        "workflow": {
+            "model": "gitflow",
+            "branches": {
+                "main": "master",
+                "develop": "dev",
+                "featurePrefix": "feat",
+                "releasePrefix": "release",
+                "hotfixPrefix": "fix"
+            }
+        },
+        "related": {
+            "proPluginSlug": "wp-smartpay-pro",
+            "proMinVersion": "2.7"
+        }
     }
 }
