@@ -53,6 +53,46 @@
         margin: 0;
     }
 
+    .modal {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .smartpayshowcoupon:focus {
+        border-bottom: 1px solid #8998d7;
+        outline: 0;
+    }
+    .smartpayshowcoupon:hover {
+        border-bottom: 1px solid #8998d7;
+        text-decoration: none;
+    }
+    .amount {
+        border-color: #CCD3DA !important;
+        border-radius: 4px;
+        padding: 2px 0;
+    }
+
+    .smartpay-product-coupon-form,
+    .smartpay-coupon-form {
+        .d-flex {
+            gap: 10px;
+        }
+        .smartpay-coupon-form-close {
+            width: 35px;
+            height: 35px;
+            text-align: center;
+            border-radius: 4px;
+            padding: 6px 0 !important;
+        }
+    }
+    .smartpay-product-coupon-form {
+        margin-bottom: 20px;
+    }
+
+    .smartpay-payment .payment-modal--gateway .gateways .gateway--label {
+        margin-bottom: 8px;
+    }
+
+
     // Customer dashboard
     .customer-dashboard {
         .profile img {

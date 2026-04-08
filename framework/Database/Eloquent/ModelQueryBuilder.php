@@ -140,7 +140,10 @@ class ModelQueryBuilder
 
         $class = get_class($this->model);
 
-        throw new ModelNotFoundException("$class($id) not found.", 404);
+        throw new ModelNotFoundException(
+			sprintf("%s(%s) not found.", esc_html($class), esc_html($id)),
+			404
+        );
     }
 
     public function fresh()
@@ -165,7 +168,10 @@ class ModelQueryBuilder
 
         $class = get_class($this->model);
 
-        throw new ModelNotFoundException("There is no $class available.", 404);
+        throw new ModelNotFoundException(
+			sprintf("There is no %s available.", esc_html($class)),
+			404
+        );
     }
 
     public function firstOrNew(array $attributes, array $values = [])
@@ -176,7 +182,8 @@ class ModelQueryBuilder
     public function paginate($perPage = null)
     {
         $result = $this->getQuery()->paginate(
-            $perPage ?: (isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10)
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+            $perPage ?: (isset($_GET['per_page']) ? max(1, absint($_GET['per_page'])) : 10)
         );
 
         $result['data'] = $this->hydrate($result['data']);
@@ -314,6 +321,8 @@ class ModelQueryBuilder
 
         $tableName = $this->model->getTable();
 
+		// Custom Query, caching not applicable.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         return $wpdb->get_col("DESC " . $wpdb->prefix . $tableName, 0);
     }
 

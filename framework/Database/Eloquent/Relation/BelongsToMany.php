@@ -213,9 +213,11 @@ class BelongsToMany extends Relation
 
     public function paginate($perPage = null)
     {
-        $perPage = $perPage ?: (isset($_REQUEST['per_page']) ? intval($_REQUEST['per_page']) : 10);
+	    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+	    $perPage = $perPage ?: (isset($_GET['per_page']) ? max(1, absint($_GET['per_page'])) : 10);
 
-        $page = isset($_REQUEST['page']) ? intval($_REQUEST['page']) : 1;
+	    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Safe read-only GET input, no nonce required.
+	    $page = isset($_GET['page']) ? max(1, absint($_GET['page'])) : 1;
 
         $offest = ($page - 1) * $perPage;
 

@@ -6,7 +6,6 @@
 @import '~@wordpress/base-styles/z-index';
 
 // Internal
-// @import 'components/header/styles';
 @import 'components/sidebar/styles';
 @import 'components/block-editor/styles';
 
@@ -27,9 +26,6 @@ body.block-editor-page {
 .editor-styles-wrapper {
     width: 100%;
 
-    @include break-small {
-        // width: calc(100% - #{$sidebar-width});
-    }
     // We need the styles scoped to "body" to be added to the
     // div.editor-styles wrapper
     font-family: $editor-html-font;
@@ -39,7 +35,6 @@ body.block-editor-page {
 
     // Important all other selectors scoped underneath
     // `div.editor-styles-wrapper`
-    // @import '~@wordpress/editor/src/style.scss';
     @import '~@wordpress/block-library/build-style/style.css';
 }
 
@@ -49,23 +44,337 @@ body.block-editor-page {
     @include reset;
 }
 
-// New
-.interface-interface-skeleton {
-    &__body {
-        position: relative;
+// Block editor internal overrides
+.smartpay-block-editor {
+    .components-popover.block-editor-block-popover.block-editor-block-list__block-popover {
+        width: auto;
+        .components-popover__content {
+            width: 100%;
+        }
+    }
+    .components-popover {
+        background-color: #ffffff;
+
+        .block-editor-block-popover.block-editor-block-list__block-popover {
+            width: 100%;
+            .components-popover__content {
+                width: 100%;
+            }
+        }
+
+        .block-editor-block-list__empty-block-inserter {
+            background-color: #f9f9f9;
+        }
+    }
+    .block-editor-block-list__insertion-point {
+        background-color: #f9f9f9;
+        margin-top: 16px;
     }
 
-    &__content,
-    &__sidebar {
-        position: absolute;
+    .block-editor-block-toolbar {
+        display: flex;
+        justify-content: center;
+        padding: 4px 0;
+        div {
+            display: flex;
+        }
+    }
+    .components-toolbar-group {
+        border-right: none;
+    }
+
+    &-sidebar {
+        .block-editor-block-inspector__no-blocks {
+            padding: 16px;
+            display: block;
+        }
+        .block-editor-block-card {
+            padding: 16px;
+        }
+        .block-editor-skip-to-selected-block {
+            margin: 16px;
+        }
+    }
+}
+
+.smartpay .interface-interface-skeleton {
+    position: absolute;
+    top: 8px;
+    bottom: 0;
+    left: 0 !important;
+    right: 0;
+
+    &__body {
+        display: flex;
     }
 
     &__content {
         width: 70%;
-        left: 0px;
     }
     &__sidebar {
         width: 30%;
-        right: 0px;
+        box-shadow: none;
+        border: none;
+    }
+}
+
+// ============================
+// Modern SmartPay Form Builder
+// ============================
+
+// Header toolbar
+.smartpay-form-header {
+    position: fixed;
+    left: 160px;
+    right: 0;
+    top: 32px;
+    z-index: 99;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        min-height: 56px;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e1e1e;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__shortcode {
+        .components-text-control__input {
+            font-size: 12px;
+            font-family: monospace;
+            background: #f6f7f7;
+            border-color: #ddd;
+            max-width: 220px;
+            height: 32px;
+        }
+    }
+
+    &__add-btn {
+        text-decoration: none !important;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+    }
+}
+
+// Main form content area
+.smartpay-form-content {
+    margin-top: 80px;
+    padding: 0 24px;
+
+    &__inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 24px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+    }
+
+    &__title {
+        .components-text-control__input {
+            font-size: 20px;
+            font-weight: 500;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 16px;
+
+            &:focus {
+                border-color: var(--wp-admin-theme-color, #3858e9);
+                box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+            }
+        }
+    }
+}
+
+// Tabs
+.smartpay-form-tabs {
+    .components-tab-panel__tabs {
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 16px;
+    }
+
+    .components-tab-panel__tabs-item {
+        font-weight: 600;
+        font-size: 14px;
+        padding: 12px 20px;
+
+        &.is-active {
+            color: var(--wp-admin-theme-color, #3858e9);
+            box-shadow: inset 0 -3px 0 0 var(--wp-admin-theme-color, #3858e9);
+        }
+    }
+}
+
+.smartpay-form-tab-content {
+    padding: 8px 0;
+}
+
+// Form list page
+.smartpay-form-list {
+    padding: 16px 24px;
+
+    &__inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+}
+
+// Modern table styling
+.smartpay-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead tr {
+        background: #f6f7f7;
+    }
+
+    th,
+    td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+    }
+
+    th {
+        font-weight: 600;
+        color: #1e1e1e;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+
+    &__col--title {
+        width: 50%;
+    }
+
+    &__col--actions {
+        text-align: right !important;
+
+        .components-button {
+            margin-left: 8px;
+        }
+    }
+
+    &__empty {
+        text-align: center !important;
+        color: #757575;
+        padding: 32px !important;
+    }
+
+    tbody tr:hover {
+        background: #f6f7f7;
+    }
+}
+
+// Card components
+.smartpay-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 16px;
+
+    &__title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+
+// Amounts section
+.smartpay-amounts {
+    &__row {
+        margin-bottom: 8px;
+    }
+
+    &__add {
+        margin-top: 16px;
+    }
+}
+
+.smartpay-amount-row {
+    border: 1px solid #e0e0e0;
+    background: #f6f7f7;
+    border-radius: 4px;
+
+    &__body {
+        padding: 12px !important;
+    }
+
+    &__fields {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    &__label {
+        flex: 3;
+    }
+
+    &__amount {
+        flex: 1;
+    }
+}
+
+// Settings section
+.smartpay-settings-section {
+    > * + * {
+        margin-top: 16px;
+    }
+}
+
+.smartpay-settings-card {
+    background: #f6f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.smartpay-settings-external-link {
+    margin-top: 16px;
+
+    &__fields {
+        display: flex;
+        gap: 16px;
+    }
+
+    &__url {
+        flex: 3;
+    }
+
+    &__label {
+        flex: 1;
+    }
+}
+
+// Custom amount section
+.smartpay-custom-amount {
+    background: #f6f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+
+    &__label-field {
+        margin-top: 16px;
     }
 }

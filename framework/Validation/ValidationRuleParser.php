@@ -69,8 +69,6 @@ class ValidationRuleParser
         if (is_string($rule)) {
             return explode('|', $rule);
         }
-
-        var_dump('check laravel');
     }
 
     /**

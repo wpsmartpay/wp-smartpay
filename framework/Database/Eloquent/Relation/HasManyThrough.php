@@ -243,8 +243,10 @@ class HasManyThrough extends Relation
         if (!is_null($model = $this->first($columns))) {
             return $model;
         }
-
-        throw (new ModelNotFoundException)->setModel(get_class($this->parent));
+	    $modelClass = get_class($this->parent);
+	    $exception = new ModelNotFoundException();
+	    $exception->setModel($modelClass);
+		throw $exception;
     }
 
     /**
@@ -304,7 +306,10 @@ class HasManyThrough extends Relation
             return $result;
         }
 
-        throw (new ModelNotFoundException)->setModel(get_class($this->parent));
+		$modelClass = get_class($this->parent);
+		$exception = new ModelNotFoundException();
+		$exception->setModel($modelClass);
+		throw $exception;
     }
 
     /**

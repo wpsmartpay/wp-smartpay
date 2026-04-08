@@ -1,13 +1,13 @@
-=== Download Manager and Payment Form WordPress Plugin - WP SmartPay ===
-Contributors: themesgrove
-Tags: download manager, digital product, donation, ecommerce, stripe, paypal, paddle, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
-Requires at least: 4.9
-Tested up to: 6.2.2
-Requires PHP: 7.4.0
-Stable Tag: 2.7.8
-License: GNU Version 2 or later
+=== SmartPay ===
+Contributors: converswp
+Tags: download manager, ecommerce, digital product, payment gateways, donations,
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 8.1
+Stable Tag: 2.8.2
+License: GPL-3.0-or-later
 
-The Simplest way to sell digital downloads and set up payment forms with Stripe, Paypal and Paddle. Accept donations, service payment and manage downloads with ease.
+Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
 
 == Description ==
 The Simplest way to sell digital downloads and accept payments to run your business online. Often, you don't need a sophisticated store, cart, or checkout process to sell your digital product or take payment. You need a simple payment form to do it all. Do it smartly with WP SmartPay.
@@ -70,16 +70,6 @@ By upgrading to WP SmartPay Pro, you also get access to one-on-one help from our
 
 [**Upgrade to WP SmartPay Pro Now**](https://wpsmartpay.com/)
 
-####🧩 Payment Gateway Integrations
-- [PayPal](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paypal) - The most used and widely available international payment gateway. WP SmartPay's core version comes with PayPal standard support.
-- [Stripe](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-stripe) - is the best payment processor that supports many languages, countries, and currencies. Check support for your country.
-- [Paddle](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paddle) - accept PayPal, Credit/Debit card payment without the tax hassle. If your country doesn't support PayPal or Stripe, then Paddle is your best rescue.
-- [Razorpay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-razorpay) - The most popular and only full-stack payment solution of India. Integrate Razorpay with WP SmartPay and accept, and process payments easily.
-- [Mollie](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-mollie) - is one of the most used and popular payment gateways in Europe and supports various payment methods such as iDEAL, Apple Pay, GPay, Credit Card, PayPal, etc.
-- [toyyibPay](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-toyyibpay) - is an online payment platform for businesses & individuals with the least expensive and free charge rates for certain deals.
-- [Paytm](https://wpsmartpay.com/docs/wpsmartpay/configure-payment-methods/how-to-setup-paytm) - More popular Indian digital payments and financial services provider that allow to get the payments with various banks.
-- [bKash](#) - The most popular mobile payment gateway of Bangladesh. Integrate bKash easily with WP SmartPay.
-
 #### LOCALE AND CURRENCY SETTINGS
 - Stripe currently supports [27 languages](https://support.stripe.com/questions/supported-languages-for-stripe-checkout), [39 countries](https://stripe.com/global), and [135+ currencies](https://stripe.com/docs/currencies).
 - Paypal currently supports [200 countries/regions](https://www.paypal.com/en/webapps/mpp/country-worldwide) and support 25 currencies
@@ -122,6 +112,43 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [2.8.2] =
+* Fix - broken Form
+
+= [2.8.1] =
+* Feature - Added Coupon Validation, both frontend & backend
+* Fix - Fix Compatibility Issue with Pro Version
+* Fix - Deprecation Issues
+* Fix - Improve Performance
+* Update - Coupon List UI & UX
+* Update - Documentation link
+
+= [2.8.0] =
+* Fix - Major Security Issues
+* Fix - Deprecation Issues
+* Fix - Text domain warnings
+* Fix - Escaping warnings
+* Fix - Nonce Verification
+* Fix - Input Sanitization & Validation
+
+= [2.7.13] =
+* Fix - Input sanitization for form submission.
+* Fix - Text domain warning.
+
+= [2.7.12] =
+* Fix - Add instructions to enable payment gateways in pro version.
+
+= [2.7.11] =
+* Fix - WordPress was showing wrong version.
+
+= [2.7.10] =
+* Fix - Errors due to return type declaration.
+* Fix - Error due to early triggering text domain.
+
+= [2.7.9] =
+* Fix - Form builder unaccessible due to overlapping styles.
+* Add - Block picker at the bottom of the form editor.
+
 = [2.7.8] =
 * Add - Missing strings for translation.
 

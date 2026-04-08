@@ -67,16 +67,18 @@ class Payment
     function ajax_process_payment()
     {
         // TODO: Convert response to JSON
-        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field($_POST['data']['smartpay_action'])) {
+	    // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (!isset($_POST['data']['smartpay_action']) || 'smartpay_process_payment' != sanitize_text_field(wp_unslash($_POST['data']['smartpay_action']))) {
             echo '<p class="text-danger">Payment process action not acceptable!</p>';
             die();
         }
 
-        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce($_POST['data']['smartpay_process_payment'], 'smartpay_process_payment')) {
+        if (!isset($_POST['data']['smartpay_process_payment']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['data']['smartpay_process_payment'])), 'smartpay_process_payment')) {
             echo '<p class="text-danger">Payment process nonce verification failed!</p>';
             die();
         }
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $validate = $this->_checkValidation(sanitize_post($_POST['data']) ?? []);
 
         if (!$validate) {
@@ -84,6 +86,7 @@ class Payment
             die();
         }
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $payment_data = $this->_prepare_payment_data(sanitize_post($_POST['data']) ?? []);
 
         if (!$payment_data || !is_array($payment_data)) {
@@ -95,6 +98,9 @@ class Payment
         // FIXME: Reform validation
         //smartpay_set_session_payment_data($payment_data);
 
+        // Fire action before processing payment
+        do_action('smartpay_before_payment_processing', $payment_data);
+
         // Send payment data toprocess gateway payment
         $this->_process_gateway_payment($payment_data);
 
@@ -103,7 +109,8 @@ class Payment
 
     private function _process_gateway_payment($paymentData, $ajax = true)
     {
-        $gateway = sanitize_text_field($_POST['data']['smartpay_gateway']) ?? '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $gateway = isset($_POST['data']['smartpay_gateway']) ? sanitize_text_field(wp_unslash($_POST['data']['smartpay_gateway'])) : '';
 
         if ('free'!==$gateway && (!is_string($gateway) || !smartpay_is_gateway_active($gateway))) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';
@@ -143,14 +150,14 @@ class Payment
         return apply_filters('smartpay_prepare_payment_data', array(
             'payment_type'  => $_data['smartpay_payment_type'],
             'payment_data'  => $payment_data,
-            'date'          => date('Y-m-d H:i:s', time()),
+            'date'          => gmdate('Y-m-d H:i:s', time()),
             'amount'        => $payment_data['total_amount'] ?? '',
             'currency'      => smartpay_get_currency() ?? 'USD',
             'gateway'       => $_data['smartpay_gateway'],
             'customer'      => $this->_get_payment_customer($_data),
             'email'         => $_data['smartpay_email'],
 			'mobile'        => $_data['smartpay_payment_mobile'] ?? '',
-            'key'           => strtolower(md5($_data['smartpay_email'] . date('Y-m-d H:i:s') . rand(1, 10))),
+            'key'           => strtolower(md5($_data['smartpay_email'] . gmdate('Y-m-d H:i:s') . wp_rand(1, 10))),
             'extra'         => $extra
         ), $_data);
     }
@@ -239,16 +246,21 @@ class Payment
 
     private function _get_payment_customer($_data)
     {
-        $customer = Customer::where('email', $_data['smartpay_email'])->first();
+        // Sanitize Data.
+        $first_name = sanitize_text_field( $_data['smartpay_first_name'] ?? '' );
+        $last_name  = sanitize_text_field( $_data['smartpay_last_name'] ?? '' );
+        $email      = sanitize_email( sanitize_text_field( $_data['smartpay_email'] ?? '' ) );
+
+        $customer = Customer::where('email', $email)->first();
 
         if ($customer && $customer->id) {
             $customer_id = $customer->id;
         } else {
             $customer = new Customer();
             $customer->user_id      = is_user_logged_in() ? get_current_user_id() : 0;
-            $customer->first_name   = $_data['smartpay_first_name'];
-            $customer->last_name    = $_data['smartpay_last_name'];
-            $customer->email        = $_data['smartpay_email'];
+            $customer->first_name   = $first_name;
+            $customer->last_name    = $last_name;
+            $customer->email        = $email;
 
             $customer->save();
             $customer_id = $customer->id;
@@ -256,9 +268,9 @@ class Payment
 
         return [
             'customer_id' => $customer_id ?? 0,
-            'first_name'  => $_data['smartpay_first_name'] ?? '',
-            'last_name'   => $_data['smartpay_last_name'] ?? '',
-            'email'       => $_data['smartpay_email'] ?? '',
+            'first_name'  => $first_name,
+            'last_name'   => $last_name,
+            'email'       => $email,
         ];
     }
 
@@ -283,7 +295,7 @@ class Payment
         $payment->save();
 
         // TODO: Move to model
-        do_action('smartpay_after_insert_payment', $payment);
+        do_action('smartpay_payment_created', $payment);
 
         if (!empty($payment->id)) {
             // check create WP user is enabled
@@ -324,6 +336,15 @@ class Payment
             do_action('smartpay_payment_cancelled', $payment);
         }elseif (in_array($newStatus, [PaymentModel::ABANDONED, PaymentModel::REVOKED, PaymentModel::REFUNDED])) {
             do_action('smartpay_payment_cancelled', $payment);
+        }
+
+        // Add specific hooks for different status changes
+        if ($newStatus == PaymentModel::FAILED) {
+            do_action('smartpay_payment_failed', $payment);
+        } elseif ($newStatus == PaymentModel::REFUNDED) {
+            do_action('smartpay_payment_refunded', $payment);
+        } elseif ($newStatus == PaymentModel::ABANDONED) {
+            do_action('smartpay_payment_abandoned', $payment);
         }
     }
 }

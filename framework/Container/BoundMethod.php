@@ -182,7 +182,7 @@ class BoundMethod
         } elseif (!$parameter->isOptional() && !array_key_exists($paramName, $parameters)) {
             $message = "Unable to resolve dependency [{$parameter}] in class {$parameter->getDeclaringClass()->getName()}";
 
-            throw new BindingResolutionException($message);
+            throw new BindingResolutionException(esc_html($message));
         }
     }
 

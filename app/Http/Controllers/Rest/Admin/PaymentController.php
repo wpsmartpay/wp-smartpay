@@ -17,7 +17,7 @@ class PaymentController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -33,9 +33,68 @@ class PaymentController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $payments = Payment::with(['customer'])->orderBy('id', 'DESC')->get();
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+		$status = $request->get_param('status') ?: '';
+		$type = $request->get_param('type') ?: '';
+		$customerId = $request->get_param('customer_id') ?: '';
+		$orderBy = $request->get_param('sort_by') ?: 'id:desc';
 
-        return new WP_REST_Response(['payments' => $payments]);
+		// Start building the query
+		$query = Payment::with(['customer']);
+
+		// Apply customer filter if provided
+		if (!empty($customerId)) {
+			$query->where('customer_id', $customerId);
+		}
+
+		// Apply search filter if provided
+		if (!empty($search)) {
+			$query->where(function($q) use ($search) {
+				$q->where('email', 'like', '%' . $search . '%')
+				  ->orWhere('transaction_id', 'like', '%' . $search . '%');
+			});
+		}
+
+		// Apply status filter if provided
+		if (!empty($status)) {
+			$query->where('status', $status);
+		}
+
+		// Apply type filter if provided
+		if (!empty($type)) {
+			$query->where('type', $type);
+		}
+
+		$orderByParts = explode(',', $orderBy);
+		foreach ($orderByParts as $part) {
+			[$sortBy, $sortOrder] = explode(':', $part);
+			$query->orderBy($sortBy, $sortOrder);
+		}
+
+		// Get paginated results
+		$payments = $query->paginate($perPage);
+
+		$response = ['payments' => $payments];
+
+		// If filtering by customer, include payment statistics
+		if (!empty($customerId)) {
+			$baseQuery = Payment::where('customer_id', $customerId);
+
+			$totalPayments = $baseQuery->count();
+			$completedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::COMPLETED)->count();
+			$pendingPayments = Payment::where('customer_id', $customerId)->where('status', Payment::PENDING)->count();
+			$refundedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::REFUNDED)->count();
+
+			$response['payment_stats'] = [
+				'total' => $totalPayments,
+				'completed' => $completedPayments,
+				'pending' => $pendingPayments,
+				'refunded' => $refundedPayments,
+			];
+		}
+
+		return new WP_REST_Response($response);
     }
 
     /**
@@ -105,10 +164,16 @@ class PaymentController extends RestController
         $payment = Payment::find($request->get_param('id'));
 
         if (!$payment) {
-            return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);
+            return new WP_REST_Response([
+				'message' => __('Payment not found', 'smartpay'),
+				'status' => 404,
+			], 404);
         }
 
         $payment->delete();
-        return new WP_REST_Response(['message' => __('Payment deleted', 'smartpay')]);
+        return new WP_REST_Response([
+			'message' => __('Payment deleted', 'smartpay'),
+			'status' => 200,
+		]);
     }
 }

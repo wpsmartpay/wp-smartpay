@@ -11,6 +11,9 @@
 .smartpay {
     @import '~bootstrap/scss/bootstrap-grid';
     @import 'admin/admin';
+    .wrap {
+        margin: 0 auto;
+    }
 }
 
 .dashicons-smartpay::before {
@@ -95,8 +98,11 @@ body.smartpay_page_smartpay-form.swal2-toast-shown {
         white-space: nowrap;
         vertical-align: baseline;
         border-radius: 0.25rem;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-            border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition:
+            color 0.15s ease-in-out,
+            background-color 0.15s ease-in-out,
+            border-color 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out;
     }
 }
 
@@ -109,27 +115,30 @@ body.smartpay_page_smartpay-form.swal2-toast-shown {
 
     .tooltip .tooltiptext {
         visibility: hidden;
-        width: 150px;
+        width: 160px;
         background-color: black;
         color: #fff;
         text-align: center;
         border-radius: 6px;
-        padding: 5px 0;
+        padding: 5px;
 
         /* Position the tooltip */
         position: absolute;
         top: -5px;
         left: 105%;
-        z-index: 1; 
+        z-index: 1;
     }
 
     .tooltip:hover .tooltiptext {
         visibility: visible;
     }
+    .nav-tabs .nav-link:focus {
+        box-shadow: none;
+    }
 }
 
 .smartpay .d-flex {
-    display: flex!important;
+    display: flex !important;
     justify-content: space-between;
     width: 100%;
 }
@@ -137,4 +146,507 @@ body.smartpay_page_smartpay-form.swal2-toast-shown {
 p.excerpt {
     overflow: hidden;
     height: 60px;
+}
+
+// =============================================
+// Modern SmartPay Admin Dashboard Styles
+// =============================================
+
+.smartpay-dashboard-header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 24px;
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        min-height: 56px;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e1e1e;
+    }
+}
+
+.smartpay-dashboard {
+    padding: 24px;
+
+    &__grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        max-width: 1200px;
+        margin: 20px auto;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__section-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 16px;
+        color: #1e1e1e;
+    }
+
+    &__card {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+    }
+}
+
+.smartpay-recent-payments {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    &__item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__detail {
+        color: #1e1e1e;
+        font-weight: 500;
+    }
+
+    &__time {
+        color: #757575;
+        font-size: 12px;
+        white-space: nowrap;
+        margin-left: 8px;
+    }
+
+    &__empty {
+        text-align: center;
+        color: #757575;
+        padding: 24px 0;
+    }
+}
+
+// =============================================
+// Dashboard — Stats Overview, Top tables, Quick Links
+// =============================================
+
+.smartpay-dashboard {
+    // Full-width section (outside the chart/sidebar grid)
+    &__section--full {
+        max-width: 1200px;
+        margin: 0 auto 24px;
+    }
+
+    // Equal-column grid for top products / top forms
+    &__grid--equal {
+        grid-template-columns: 1fr 1fr;
+
+        @media (max-width: 900px) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+// Stats card header: title on left, period tabs on right
+.smartpay-stats-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+
+    &__title {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+        color: #1e1e1e;
+    }
+}
+
+// Period tab strip
+.smartpay-period-tabs {
+    display: flex;
+    gap: 2px;
+    background: #f0f0f1;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.smartpay-period-tab {
+    background: none;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #50575e;
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        color 0.15s;
+
+    &:hover {
+        background: #fff;
+        color: #1e1e1e;
+    }
+
+    &.is-active {
+        background: #fff;
+        color: var(--wp-admin-theme-color, #2271b1);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+}
+
+// 4-column stat tiles grid
+.smartpay-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Individual stat tile
+.smartpay-stat-tile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #dddddd;
+
+    &__icon {
+        font-size: 28px !important;
+        width: 28px !important;
+        height: 28px !important;
+        flex-shrink: 0;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__value {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: inherit;
+    }
+
+    &__label {
+        font-size: 12px;
+        font-weight: 500;
+        margin-top: 2px;
+        opacity: 0.8;
+    }
+
+    // Icon-only color accents — no box background color
+    // &--revenue .smartpay-stat-tile__icon   { color: var(--wp-admin-theme-color, #2271b1); }
+    // &--completed .smartpay-stat-tile__icon { color: #00a32a; }
+    // &--pending .smartpay-stat-tile__icon   { color: #dba617; }
+    // &--failed .smartpay-stat-tile__icon    { color: #d63638; }
+}
+
+// All-time totals strip below the tiles
+.smartpay-totals-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #50575e;
+
+        .dashicons {
+            font-size: 16px !important;
+            width: 16px !important;
+            height: 16px !important;
+            color: #a0a0a0;
+        }
+
+        strong {
+            color: #1e1e1e;
+            font-weight: 600;
+        }
+    }
+}
+
+// Top products / top forms table
+.smartpay-top-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    thead th {
+        text-align: left;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #757575;
+        padding: 0 0 10px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid #f7f7f7;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &:hover td {
+            background: #f9f9f9;
+        }
+    }
+
+    tbody td {
+        padding: 10px 0;
+        color: #1e1e1e;
+        vertical-align: middle;
+
+        &:not(:first-child) {
+            color: #50575e;
+            text-align: right;
+            white-space: nowrap;
+        }
+    }
+
+    thead th:not(:first-child) {
+        text-align: right;
+    }
+}
+
+// Empty + loading placeholders inside cards
+.smartpay-empty-notice,
+.smartpay-loading-text {
+    text-align: center;
+    color: #757575;
+    font-size: 13px;
+    padding: 24px 0;
+    margin: 0;
+}
+
+// Quick Links grid — 2 columns to fit sidebar (320px) and wider contexts
+.smartpay-quick-links {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+
+    @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.smartpay-quick-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #1e1e1e;
+    font-size: 14px;
+    font-weight: 500;
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+
+    &:hover {
+        background: #edf2fb;
+        border-color: var(--wp-admin-theme-color, #2271b1);
+        color: var(--wp-admin-theme-color, #2271b1);
+
+        .smartpay-quick-link__icon {
+            color: var(--wp-admin-theme-color, #2271b1);
+        }
+    }
+
+    &__icon {
+        font-size: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        color: #757575;
+        flex-shrink: 0;
+        transition: color 0.15s;
+    }
+
+    &__label {
+        line-height: 1;
+    }
+}
+
+// =============================================
+// Admin Footer — appears on every admin SPA page
+// =============================================
+
+.smartpay-admin-footer {
+    margin-top: 40px;
+    background: #f6f7f7;
+    border-top: 1px solid #e0e0e0;
+}
+
+.smartpay-admin-footer__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+// Centered branding + nav links
+.smartpay-admin-footer__center {
+    padding: 24px 0 20px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.smartpay-admin-footer__made-with {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: #757575;
+}
+
+.smartpay-admin-footer__heart {
+    color: #d63638;
+}
+
+.smartpay-admin-footer__links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.smartpay-admin-footer__link-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.smartpay-admin-footer__sep {
+    color: #c0c0c0;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.smartpay-admin-footer__link {
+    font-size: 13px;
+    color: #2271b1;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        color: #135e96;
+    }
+}
+
+// Bottom bar: rate us (left) + version (right)
+.smartpay-admin-footer__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 0;
+    font-size: 13px;
+    color: #757575;
+}
+
+.smartpay-admin-footer__rate {
+    margin: 0;
+    font-size: 13px;
+    color: #757575;
+}
+
+.smartpay-admin-footer__stars {
+    color: #dba617;
+    text-decoration: none;
+    font-size: 13px;
+
+    &:hover {
+        text-decoration: none;
+        color: #996800;
+    }
+}
+
+.smartpay-admin-footer__version {
+    margin: 0;
+    font-size: 13px;
+    color: #a0a0a0;
+    white-space: nowrap;
+}
+
+// Responsive: stack bar items on narrow screens
+@media (max-width: 600px) {
+    .smartpay-admin-footer__bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+// Page header (used across all admin pages)
+.smartpay-page-header {
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+    &__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 2px;
+        color: #1e1e1e;
+    }
+
+    &__subtitle {
+        font-size: 13px;
+        color: #757575;
+        margin: 0;
+    }
+
+    &__logo img {
+        height: 28px;
+        width: auto;
+    }
 }

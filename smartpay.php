@@ -1,15 +1,20 @@
 <?php
-
 /**
  * Plugin Name: SmartPay
- * Description: Simplest way to sell digital downloads and fundraise with WordPress. Easily connect Paddle, Stripe, Paypal to accept donations and manage downloads.
+ * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
- * Tags: download manager, digital product, donation, ecommerce, paddle, stripe, paypal, document manager, file manager, download protection, recurring payment, donations, donation plugin, wordpress donation plugin, wp donation, fundraising, fundraiser, crowdfunding, wordpress donations, gutenberg, gutenberg donations, nonprofit, paypal donations, paypal donate, stripe donations, stripe donate, authorize.net, authorize.net donations, bkash, bkash payment,
- * Version:     2.7.8
+ * Tags: download manager, ecommerce, digital product, payment gateways, donations,
+ *
+ * Version: 2.8.2
+ * Requires PHP: 8.1
+ * Requires at least: 6.0
+ * Tested up to: 6.8
+ *
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Text Domain: smartpay
- * Domain Path: resources/languages
+ * Domain Path: /languages
+ * License: GPLv3+
  *
  * @package WP SmartPay
  * @category Core
@@ -27,7 +32,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '2.7.8');
+define('SMARTPAY_VERSION', '2.8.2');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
@@ -42,12 +47,10 @@ $smartpay_options = smartpay_get_settings();
 add_action('plugins_loaded', function () use ($app) {
     do_action('smartpay_loaded');
 
-    load_plugin_textdomain('smartpay', false, dirname(plugin_basename(__FILE__)) . '/resources/languages');
-
     // Run The Application
-    $app->boot();
+     $app->boot();
 });
 
-add_action('init', function () {
+add_action('init', function () use ($app) {
     do_action('smartpay_init');
 });

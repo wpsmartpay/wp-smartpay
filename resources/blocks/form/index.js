@@ -1,15 +1,16 @@
-const { __ } = wp.i18n
-const { registerBlockType } = wp.blocks
-const { Fragment, useEffect, useState  } = wp.element
-
-import Sidebar from './components/Sidebar'
-import SelectForm from './components/SelectForm'
+import { __ } from '@wordpress/i18n'
+import { registerBlockType } from '@wordpress/blocks'
+import { useEffect, useState } from '@wordpress/element'
+import { Placeholder, SelectControl, Spinner, PanelBody, TextControl } from '@wordpress/components'
+import { InspectorControls } from '@wordpress/block-editor'
+import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/form', {
     title: __('SmartPay Form', 'smartpay'),
-    description: __('Simple block to show a form', 'smartpay'),
-    icon: 'format-aside',
+    description: __('Display a SmartPay payment form with popup or embedded checkout.', 'smartpay'),
+    icon: 'feedback',
     category: 'widgets',
+    keywords: [__('payment', 'smartpay'), __('form', 'smartpay'), __('checkout', 'smartpay')],
 
     attributes: {
         id: {
@@ -27,84 +28,83 @@ export default registerBlockType('smartpay/form', {
     },
 
     edit: ({ attributes, setAttributes }) => {
-        function setId(id) {
-            setAttributes({ id: parseInt(id) })
-        }
+        const [forms, setForms] = useState([])
+        const [isLoading, setIsLoading] = useState(true)
 
-        function setBehavior(behavior) {
-            setAttributes({ behavior: behavior })
-        }
-
-        function setLabel(label) {
-            setAttributes({ label: label })
-        }
-
-        const [forms, setForms] = useState([]);
-
-        useEffect( () => {
-            wp.apiFetch({
-                path: `smartpay/v1/forms`,
+        useEffect(() => {
+            apiFetch({
+                path: 'smartpay/v1/forms',
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
             })
-            .then( ( data ) => {
-                let formList = []
-                formList = data?.forms.map( form => {
-                    return {
+                .then((data) => {
+                    const formList = (data?.forms || []).map((form) => ({
                         value: form.id,
                         label: `(#${form.id}) ${form.title}`,
-                    }
+                    }))
+                    setForms(formList)
+                    setIsLoading(false)
                 })
-                setForms( formList );
-			} )
-            .catch( () => {
-				setForms( [] );
-			} );
-        }, [] );
+                .catch(() => {
+                    setForms([])
+                    setIsLoading(false)
+                })
+        }, [])
 
-        let formOptions = [
-            {
-                value: null,
-                label: __('Select a form', 'smartpay'),
-            },
-            ...forms
+        const formOptions = [
+            { value: 0, label: __('Select a form', 'smartpay') },
+            ...forms,
         ]
 
-        return (
-            <Fragment>
-                <div className="smartpay">
-                    <div className="container block-editor form card py-4">
-                        <div className="card-body text-center">
-                            {/* <img src={smartpay_logo} className="logo img-fluid" /> */}
-                            <strong>{__('SmartPay', 'smartpay')}</strong>
-                            <div className="d-flex justify-content-center mt-1">
-                                <div className="col-md-8">
-                                    <h5
-                                        className="text-center mb-3 m-0 font-weight-normal"
-                                        style={{ fontSize: '16px' }}
-                                    >
-                                        {__('Select a Form', 'smartpay')}
-                                    </h5>
-                                    <SelectForm
-                                        formOptions={formOptions}
-                                        formId={attributes.id}
-                                        onSetId={setId}
-                                        className="form-control form-control-sm mx-auto"
-                                    ></SelectForm>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        const selectedForm = forms.find((f) => f.value === attributes.id)
 
-                <Sidebar
-                    attributes={attributes}
-                    onSetId={setId}
-                    onSetBehavior={setBehavior}
-                    onSetLabel={setLabel}
-                ></Sidebar>
-            </Fragment>
+        return (
+            <>
+                <InspectorControls>
+                    <PanelBody title={__('Form Settings', 'smartpay')}>
+                        <SelectControl
+                            label={__('Shortcode behavior', 'smartpay')}
+                            value={attributes.behavior}
+                            onChange={(value) => setAttributes({ behavior: value })}
+                            options={[
+                                { value: 'popup', label: __('Popup', 'smartpay') },
+                                { value: 'embedded', label: __('Embedded', 'smartpay') },
+                            ]}
+                            __nextHasNoMarginBottom
+                        />
+                        {attributes.behavior === 'popup' && (
+                            <TextControl
+                                label={__('Button label', 'smartpay')}
+                                value={attributes.label}
+                                onChange={(value) => setAttributes({ label: value })}
+                                __nextHasNoMarginBottom
+                            />
+                        )}
+                    </PanelBody>
+                </InspectorControls>
+
+                <Placeholder
+                    icon="feedback"
+                    label={__('SmartPay Form', 'smartpay')}
+                    instructions={
+                        selectedForm
+                            ? __('Selected: ', 'smartpay') + selectedForm.label
+                            : __('Choose a form to display on this page.', 'smartpay')
+                    }
+                >
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <SelectControl
+                            value={attributes.id}
+                            onChange={(value) => setAttributes({ id: parseInt(value) })}
+                            options={formOptions}
+                            __nextHasNoMarginBottom
+                        />
+                    )}
+                </Placeholder>
+            </>
         )
     },
 

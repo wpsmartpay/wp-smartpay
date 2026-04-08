@@ -162,6 +162,23 @@ class Setting
                                 'after'  => __('After - 10$', 'smartpay'),
                             ),
                         ),
+                        'order_number_settings' => array(
+                            'id'   => 'order_number_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('Order Number Options', 'smartpay') . '</h4>',
+                            'type' => 'header',
+                        ),
+                        'payment_number_starting' => array(
+                            'id'    => 'payment_number_starting',
+                            'name'  => __('Starting Order Number', 'smartpay'),
+                            'desc'  => __('The starting number for new orders if you do not want to start from 1. Must be numeric. Existing payment IDs will have this number added to them.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                        'payment_number_padding' => array(
+                            'id'    => 'payment_number_padding',
+                            'name'  => __('Order Number Zero Padding', 'smartpay'),
+                            'desc'  => __('Number of zeros to pad the payment ID with (e.g., 5 will output 00012). Leave blank to disable.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
                     ),
                 )
             ),
@@ -219,7 +236,11 @@ class Setting
                         'new_user_notification' => array(
                             'id'    => 'new_user_notification',
                             'name'  => __('New user notification', 'smartpay'),
-                            'desc'  => __('Send notification to their account details. [You must enable the <a href="'. admin_url('admin.php?page=smartpay-setting&tab=general') .'"><strong> Create WP user</strong></a> to notify the user]', 'smartpay'),
+                            'desc'  => sprintf(
+                                /* translators: 1: settings page. */
+	                            __('Send notification to their account details. You must enable the %s to notify the user.', 'smartpay'),
+	                            '<a href="' . esc_url( admin_url('admin.php?page=smartpay-setting&tab=general') ) . '"><strong>' . __('Create WP user', 'smartpay') . '</strong></a>'
+                            ),
                             'type'  => 'checkbox'
                         ),
                         'purchase_email_settings' => array(
@@ -238,6 +259,12 @@ class Setting
                             'name'  => __('Purchase Email Heading', 'smartpay'),
                             'desc'  => __('Enter the heading for the purchase receipt email.', 'smartpay'),
                             'type'  => 'text'
+                        ),
+                        'hide_payment_number_in_email' => array(
+                            'id'    => 'hide_payment_number_in_email',
+                            'name'  => __('Hide Payment Number', 'smartpay'),
+                            'desc'  => __('Hide the payment/order number from the customer email receipt.', 'smartpay'),
+                            'type'  => 'checkbox'
                         ),
                     ),
                 )
@@ -361,6 +388,7 @@ class Setting
         global $smartpay_options;
 
         $doing_section = false;
+	    // phpcs:ignore WordPress.Security.NonceVerification.Missing
         if (!empty($_POST['_wp_http_referer'])) {
             $doing_section = true;
         }
@@ -369,12 +397,15 @@ class Setting
         $input         = $input ? $input : array();
 
         if ($doing_section) {
-            parse_str($_POST['_wp_http_referer'], $referrer); // Pull out the tab and section
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+            parse_str(sanitize_text_field(wp_unslash($_POST['_wp_http_referer'])), $referrer); // Pull out the tab and section
             $tab      = isset($referrer['tab']) ? $referrer['tab'] : 'general';
             $section  = isset($referrer['section']) ? $referrer['section'] : 'main';
 
+	        // phpcs:ignore WordPress.Security.NonceVerification.Missing
             if (!empty($_POST['smartpay_section_override'])) {
-                $section = sanitize_text_field($_POST['smartpay_section_override']);
+	            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $section = sanitize_text_field(wp_unslash($_POST['smartpay_section_override']));
             }
 
             $setting_types = $this->_registered_settings_types($tab, $section);
@@ -435,6 +466,7 @@ class Setting
 
         if ($doing_section) {
             add_settings_error('smartpay-notices', '', __('Settings updated.', 'smartpay'), 'updated');
+			do_action('smartpay_settings_saved', $output, $input, $tab, $section);
         }
 
         return $output;
@@ -487,6 +519,7 @@ class Setting
         }
         $args['options'] = $currencies;
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $this->settings_select_callback($args);
     }
 
@@ -551,6 +584,7 @@ class Setting
         $html .= '</select>';
         $html .= '<small class="form-text text-muted" for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> ' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -573,6 +607,7 @@ class Setting
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"></label>';
         $html    .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -603,6 +638,8 @@ class Setting
             }
         }
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }
 
@@ -627,6 +664,7 @@ class Setting
         $html    .= '</div>';
         $html         .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo apply_filters('smartpay_after_setting_output', $html, $args);
     }
 
@@ -651,7 +689,13 @@ class Setting
             ],
             'mollie' => [
                 'label' => 'Mollie'
-            ]
+            ],
+	        'toyyibpay' => [
+				'label' => 'Toyyibpay'
+	        ],
+	        'paytm' => [
+				'label' => 'PayTM'
+	        ]
         ];
 
         // add filter to load up the all registered gateway label to show the available gateways on setting
@@ -688,16 +732,24 @@ class Setting
                     $html .= '<input type="checkbox" disabled />';
                     $html .= '<label class="text-muted mr-2"><b>' . $gatewayOption['label'] . '</b></label>';
                     $html .= '<span class="badge text-uppercase">' . __('pro', 'smartpay') . '</span>';
-                    $html .= '<span class="tooltiptext">' . __('available in Pro version', 'smartpay') . '</span>';
+                    $html .= '<span class="tooltiptext">' . __('Available in Pro Version', 'smartpay') . '</span>';
                     $html .= '</div>';
                     $html .= '</div>';
                 }
             }
+        } else {
+            $html .= '<small class="form-text text-muted">' . __( 'Add more payment gateways from the Integrations panel.', 'smartpay' ) . '</small>';
         }
 
         $url   = esc_url('https://wpsmartpay.com');
-        $html .= '<small class="form-text text-muted">' . sprintf(__('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'), $url) . '</small>';
+        $html .= '<small class="form-text text-muted">' .
+                 sprintf(
+					 /* translators: 1: Url */
+					 __('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'),
+					 $url
+                 ) . '</small>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo  $html;
     }
 
@@ -716,10 +768,11 @@ class Setting
 
     public function settings_missing_callback($args)
     {
-        printf(
+        wp_kses_post(sprintf(
+			/* translators: id */
             __('The callback function used for the %s setting is missing.', 'smartpay'),
             '<strong>' . $args['id'] . '</strong>'
-        );
+        ));
     }
 
     public function settings_page_select_callback($args)
@@ -739,6 +792,7 @@ class Setting
             'option_none_value'     => null, // string
         );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         wp_dropdown_pages($args);
         // FIXME:: Show label
     }
@@ -772,18 +826,7 @@ class Setting
         $html    .= '<small class="form-text text-muted">' . wp_kses_post($args['desc']) . '</small>';
 
         // $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
-        echo $html;
-    }
-
-    public function settings_custom_content_callback($args)
-    {
-        echo $args['content'] ?? '';
-    }
-
-    public function  settings_descriptive_text_callback($args)
-    {
-        $html = wp_kses_post($args['desc']);
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -832,6 +875,7 @@ class Setting
         $html = '<textarea class="' . $class . ' large-text" cols="' . esc_attr($cols) . '" rows="' . esc_attr($rows) . '" style="'.$style.'" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']">' . esc_textarea(stripslashes($value)) . '</textarea>';
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 
@@ -881,7 +925,7 @@ class Setting
                     case 'site_inactive':
 
                         $warningclass = 'danger';
-                        $message = __('Your %s is not active for this URL.', 'smartpay');
+                        $message = __('Your license is not active for this URL.', 'smartpay');
 
                         break;
 
@@ -931,6 +975,7 @@ class Setting
                         } else {
 
                             $message = sprintf(
+								/* translators: 1: time */
                                 __('Valid License. Your license key expires on %s.', 'smartpay'),
                                 date_i18n(get_option('date_format'), strtotime($license->expires, current_time('timestamp')))
                             );
@@ -952,7 +997,7 @@ class Setting
 
         $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"> '  . wp_kses_post($args['desc']) . '</label>';
 
-        $html .= '<div class="my-3"><label>' . __('License Status: ', 'smartpay') . '</label><span class="ml-2 license-status alert-' . esc_attr($warningclass) . ' d-inline-block">' . __($message, 'smartpay') . '</span></div>';
+        $html .= '<div class="my-3"><label>' . __('License Status: ', 'smartpay') . '</label><span class="ml-2 license-status alert-' . esc_attr($warningclass) . ' d-inline-block">' . esc_html($message) . '</span></div>';
 
         if ((is_object($license) && 'valid' == $license->license) || 'valid' == $license) {
             $html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __('Deactivate License',  'smartpay') . '"/>';
@@ -960,6 +1005,7 @@ class Setting
 
         wp_nonce_field(smartpay_sanitize_key($args['id']) . '-nonce', smartpay_sanitize_key($args['id']) . '-nonce');
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo $html;
     }
 }

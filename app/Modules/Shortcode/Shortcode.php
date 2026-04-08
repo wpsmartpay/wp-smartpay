@@ -57,6 +57,7 @@ class Shortcode
         try {
             ob_start();
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo smartpay_view('shortcodes.form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
 
             return ob_get_clean();
@@ -92,7 +93,7 @@ class Shortcode
 
         try {
             ob_start();
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo smartpay_view('shortcodes.product', ['product' => $product, 'behavior' => $behavior, 'label' => $label]);
 
             return ob_get_clean();
@@ -109,7 +110,8 @@ class Shortcode
 	 */
     public function payment_receipt_shortcode($atts)
     {
-        $payment_uuid = isset($_GET['smartpay-payment']) ? ($_GET['smartpay-payment']) : null;
+	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
+        $payment_uuid = isset($_GET['smartpay-payment']) ? sanitize_text_field(wp_unslash($_GET['smartpay-payment'])) : null;
 
         if (!$payment_uuid) {
             return;
@@ -128,6 +130,7 @@ class Shortcode
 
         try {
             ob_start();
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
             echo smartpay_view('shortcodes.payment_receipt', ['payment' => $payment]);
 
             return ob_get_clean();
@@ -159,7 +162,7 @@ class Shortcode
         }
 
         ob_start();
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
         echo smartpay_view('shortcodes.customer_dashboard', ['customer' => $customer]);
 
         return ob_get_clean();

@@ -202,4 +202,33 @@ class Payment extends Model
         $this->transaction_id = $transactionId;
         return $this->save();
     }
+
+    /**
+     * Get formatted payment number
+     *
+     * @return string
+     */
+    public function get_payment_number(): string
+    {
+        if (!$this->id) {
+            return '';
+        }
+
+        $id = (int) $this->id;
+        
+        $starting_number = smartpay_get_option('payment_number_starting', '');
+        if (!empty($starting_number) && is_numeric($starting_number)) {
+            $id += (int) $starting_number;
+        }
+
+        $id = (string) $id;
+
+        $padding = smartpay_get_option('payment_number_padding', '');
+        
+        if (!empty($padding) && is_numeric($padding)) {
+            $id = str_pad($id, (int)$padding, '0', STR_PAD_LEFT);
+        }
+
+        return $id;
+    }
 }

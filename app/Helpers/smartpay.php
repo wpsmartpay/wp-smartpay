@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/integration.php';
 
+use SmartPay\Models\Customer;
 use SmartPay\Modules\Gateway\Gateway;
 use SmartPay\Modules\Payment\Payment;
 use SmartPay\Models\Payment as PaymentModel;
@@ -27,7 +28,7 @@ function smartpay_amount_format($amount, $currency = '')
      * when updating the form amount with empty value, then it saves the empty string
      * handle the null value also
      */
-    $amount = abs((float) $amount) ?? 0;
+    $amount = number_format((float) $amount, 2) ?? 0.00;
 
 
     if ($position == 'before') {
@@ -936,7 +937,7 @@ function smartpay_get_ip()
         // To check ip is pass from proxy.
         // Can include more than 1 ip, first is the public one.
 
-        $ips = explode(',', wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR']));
+        $ips = explode(',', sanitize_text_field(wp_unslash($_SERVER['HTTP_X_FORWARDED_FOR'])));
         if (is_array($ips)) {
             $ip = filter_var($ips[0], FILTER_VALIDATE_IP);
         }
@@ -1055,4 +1056,14 @@ function smartpay_get_payment_product_or_form_name($payment_id): array {
  */
 function smartpay_get_additional_payment_data($paymentData) {
     return apply_filters('smartpay_get_additional_payment_data', $paymentData);
+}
+
+function smartpay_get_customer_by_user_id($userId) {
+	$customer = Customer::where('user_id', $userId)->first();
+
+	if (empty($customer)) {
+		return false;
+	}
+
+	return $customer;
 }

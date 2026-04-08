@@ -334,10 +334,6 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function relationshipExists($key)
     {
-        if (method_exists(get_class(), $key)) {
-            return;
-        }
-
         return method_exists($this, $key);
     }
 
@@ -388,18 +384,20 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $attributes = $this->getAttributes();
 
+		$parent_class = get_parent_class($this);
+
         // Check if any accessor is available and call it
         foreach (get_class_methods($this) as $method) {
-            if (method_exists(get_class(), $method)) {
+            if ($parent_class && method_exists($parent_class, $method)) {
                 continue;
             }
 
@@ -423,6 +421,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         $json = json_encode($this->jsonSerialize(), $options);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- The generated Exception has already escaped.
             throw JsonEncodingException::forModel($this, json_last_error_msg());
         }
 
@@ -508,12 +507,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function push()
     {
-        if (!$this->save()) return false;
+        if (!$this->save()) {
+            return false;
+        }
 
         foreach ($this->relations as $models) {
             $relations = ModelCollection::make($models);
             foreach ($relations as $relation) {
-                if (!$relation->push()) return false;
+                if (!$relation->push()) {
+                    return false;
+                }
             }
         }
 
@@ -606,11 +609,11 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         $time = $this->freshTimestamp();
 
         if (!$this->isDirty(static::UPDATED_AT)) {
-            $this->{static::UPDATED_AT} = date('Y-m-d H-i-s', $time);
+            $this->{static::UPDATED_AT} = gmdate('Y-m-d H-i-s', $time);
         }
 
         if (!$this->exists && !$this->isDirty(static::CREATED_AT)) {
-            $this->{static::CREATED_AT} = date('Y-m-d H-i-s', $time);
+            $this->{static::CREATED_AT} = gmdate('Y-m-d H-i-s', $time);
         }
     }
 
@@ -685,8 +688,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
         foreach ($this->attributes as $key => $value) {
             if (!array_key_exists($key, $this->original)) {
                 $dirty[$key] = $value;
-            } elseif (
-                $value !== $this->original[$key] &&
+            } elseif ($value !== $this->original[$key] &&
                 !$this->originalIsNumericallyEquivalent($key)
             ) {
                 $dirty[$key] = $value;
@@ -735,6 +737,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
     public function belongsTo($related, $foreignKey = null, $otherKey = null)
     {
+	    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- used for relation resolution
         list(, $caller) = debug_backtrace(false, 2);
 
         $relation = $caller['function'];
@@ -803,7 +806,8 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
 
         $methods = ['belongsToMany'];
 
-        foreach (debug_backtrace(false) as $key => $trace) {
+	    // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace -- used for relation resolution
+	    foreach (debug_backtrace(false) as $key => $trace) {
             if (!in_array($trace['function'], $methods) && $trace['function'] != $self) {
                 $caller = $trace['function'];
                 break;
@@ -829,7 +833,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return !is_null($this->getAttribute($offset));
     }
@@ -840,7 +844,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->getAttribute($offset);
     }
@@ -852,7 +856,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->setAttribute($offset, $value);
     }
@@ -863,7 +867,7 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->attributes[$offset], $this->relations[$offset]);
     }
@@ -898,6 +902,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public function __call($method, $params)
     {
         return $this->forwardCallToModelQueryBuilder($method, $params);
+    }
+
+    /**
+     * Begin querying the model.
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\ModelQueryBuilder
+     */
+    public static function query()
+    {
+        return (new static)->newQuery();
     }
 
     public static function __callStatic($method, $params)

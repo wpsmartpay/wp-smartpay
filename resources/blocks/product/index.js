@@ -1,15 +1,17 @@
-const { __ } = wp.i18n
-const { registerBlockType } = wp.blocks
-const { Fragment, useEffect, useState  } = wp.element
-
-import Sidebar from './components/Sidebar'
-import SelectProduct from './components/SelectProduct'
+import { __ } from '@wordpress/i18n'
+import { registerBlockType } from '@wordpress/blocks'
+import { useEffect, useState } from '@wordpress/element'
+import { Placeholder, SelectControl, Spinner } from '@wordpress/components'
+import { InspectorControls } from '@wordpress/block-editor'
+import { PanelBody, SelectControl as SidebarSelect, TextControl } from '@wordpress/components'
+import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/product', {
     title: __('SmartPay Product', 'smartpay'),
-    description: __('Simple block to show a product', 'smartpay'),
-    icon: 'format-aside',
+    description: __('Display a SmartPay product with popup or embedded checkout.', 'smartpay'),
+    icon: 'cart',
     category: 'widgets',
+    keywords: [__('payment', 'smartpay'), __('product', 'smartpay'), __('checkout', 'smartpay')],
 
     attributes: {
         id: {
@@ -27,86 +29,83 @@ export default registerBlockType('smartpay/product', {
     },
 
     edit: ({ attributes, setAttributes }) => {
-        function setId(id) {
-            setAttributes({ id: parseInt(id) })
-        }
+        const [products, setProducts] = useState([])
+        const [isLoading, setIsLoading] = useState(true)
 
-        function setBehavior(behavior) {
-            setAttributes({ behavior: behavior })
-        }
-
-        function setLabel(label) {
-            setAttributes({ label: label })
-        }
-
-        const [products, setProducts] = useState([]);
-
-        useEffect( () => {
-            wp.apiFetch({
-                path: `smartpay/v1/products`,
+        useEffect(() => {
+            apiFetch({
+                path: 'smartpay/v1/products',
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
             })
-            .then( ( data ) => {
-                let productList = []
-                productList = data?.products.map( product => {
-                    return {
+                .then((data) => {
+                    const productList = (data?.products || []).map((product) => ({
                         value: product.id,
                         label: `(#${product.id}) ${product.title}`,
-                    }
+                    }))
+                    setProducts(productList)
+                    setIsLoading(false)
                 })
-                setProducts( productList );
-			} )
-            .catch( () => {
-				setProducts( [] );
-			} );
-        }, [] );
-        
-        let productOptions = [
-            {
-                value: null,
-                label: __('Select a product', 'smartpay'),
-            },
-            ...products
+                .catch(() => {
+                    setProducts([])
+                    setIsLoading(false)
+                })
+        }, [])
+
+        const productOptions = [
+            { value: 0, label: __('Select a product', 'smartpay') },
+            ...products,
         ]
 
-        return (
-            products ?
-            <Fragment>
-                <div className="smartpay">
-                    <div className="container block-editor product card py-4">
-                        <div className="card-body text-center">
-                            {/* <img src={smartpay_logo} className="logo img-fluid" /> */}
-                            <strong>{__('SmartPay', 'smartpay')}</strong>
-                            <div className="d-flex justify-content-center mt-1">
-                                <div className="col-md-8">
-                                    <h5
-                                        className="text-center mb-3 m-0 font-weight-normal"
-                                        style={{ fontSize: '16px' }}
-                                    >
-                                        {__('Select a Product', 'smartpay')}
-                                    </h5>
-                                    <SelectProduct
-                                        productOptions={productOptions}
-                                        productId={attributes.id}
-                                        onSetId={setId}
-                                        className="form-control form-control-sm mx-auto"
-                                    ></SelectProduct>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        const selectedProduct = products.find((p) => p.value === attributes.id)
 
-                <Sidebar
-                    attributes={attributes}
-                    onSetId={setId}
-                    onSetBehavior={setBehavior}
-                    onSetLabel={setLabel}
-                ></Sidebar>
-            </Fragment>
-            : <h2>Loading</h2>
+        return (
+            <>
+                <InspectorControls>
+                    <PanelBody title={__('Product Settings', 'smartpay')}>
+                        <SelectControl
+                            label={__('Shortcode behavior', 'smartpay')}
+                            value={attributes.behavior}
+                            onChange={(value) => setAttributes({ behavior: value })}
+                            options={[
+                                { value: 'popup', label: __('Popup', 'smartpay') },
+                                { value: 'embedded', label: __('Embedded', 'smartpay') },
+                            ]}
+                            __nextHasNoMarginBottom
+                        />
+                        {attributes.behavior === 'popup' && (
+                            <TextControl
+                                label={__('Button label', 'smartpay')}
+                                value={attributes.label}
+                                onChange={(value) => setAttributes({ label: value })}
+                                __nextHasNoMarginBottom
+                            />
+                        )}
+                    </PanelBody>
+                </InspectorControls>
+
+                <Placeholder
+                    icon="cart"
+                    label={__('SmartPay Product', 'smartpay')}
+                    instructions={
+                        selectedProduct
+                            ? __('Selected: ', 'smartpay') + selectedProduct.label
+                            : __('Choose a product to display on this page.', 'smartpay')
+                    }
+                >
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <SelectControl
+                            value={attributes.id}
+                            onChange={(value) => setAttributes({ id: parseInt(value) })}
+                            options={productOptions}
+                            __nextHasNoMarginBottom
+                        />
+                    )}
+                </Placeholder>
+            </>
         )
     },
 

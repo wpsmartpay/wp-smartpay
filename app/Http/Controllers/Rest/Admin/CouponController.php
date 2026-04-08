@@ -17,7 +17,7 @@ class CouponController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -32,7 +32,23 @@ class CouponController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $coupons = Coupon::orderBy('id', 'DESC')->get();
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+		$type = $request->get_param('type') ?: '';
+
+        $query = Coupon::orderBy('id', 'DESC');
+
+		if (!empty($search)) {
+			$query->where(function($q) use ($search) {
+				$q->where('title', 'like', '%' . $search . '%');
+			});
+		}
+
+		if (!empty($type)) {
+			$query->where('discount_type', $type);
+		}
+
+		$coupons = $query->paginate($perPage);
 
         return new WP_REST_Response(['coupons' => $coupons]);
     }
@@ -46,6 +62,26 @@ class CouponController extends RestController
     public function store(WP_REST_Request $request): WP_REST_Response
     {
         $request = \json_decode($request->get_body(), true);
+	    $errors = [];
+
+	    if (!$request['title']) {
+		    $errors['title'] = 'Coupon Code is required.';
+	    }
+
+	    if (!$request['discount_amount'] || $request['discount_amount'] <= 0) {
+		    $errors['discount_amount'] = 'Discount amount must be greater than 0.';
+	    }
+
+	    if ($request['discount_type'] === 'percent' && $request['discount_amount'] >= 100) {
+		    $errors['discount_amount'] = 'Percentage discount cannot exceed 100%.';
+	    }
+
+	    if (!empty($errors)) {
+		    return new WP_REST_Response([
+			    'error' => 'Validation failed.',
+			    'errors' => $errors
+		    ], 400);
+	    }
 
         $coupon = new Coupon();
         $coupon->title           = $request['title'];
@@ -53,7 +89,7 @@ class CouponController extends RestController
         $coupon->discount_type   = $request['discount_type'];
         $coupon->discount_amount = $request['discount_amount'];
         $coupon->status          = Coupon::PUBLISH;
-        $coupon->expiry_date     = date('Y-m-d', strtotime($request['expiry_date']));
+        $coupon->expiry_date     =  $request['expiry_date'] ? gmdate('Y-m-d H:i:s', strtotime($request['expiry_date'])) : null;
         $coupon->save();
 
         return new WP_REST_Response(['coupon' => $coupon, 'message' => __('Coupon created', 'smartpay')]);
@@ -91,13 +127,33 @@ class CouponController extends RestController
         }
 
         $request = \json_decode($request->get_body(), true);
+	    $errors = [];
+
+	    if (!$request['title']) {
+		    $errors['title'] = 'Coupon Code is required.';
+	    }
+
+	    if (!$request['discount_amount'] || $request['discount_amount'] <= 0) {
+		    $errors['discount_amount'] = 'Discount amount must be greater than 0.';
+	    }
+
+	    if ($request['discount_type'] === 'percent' && $request['discount_amount'] >= 100) {
+		    $errors['discount_amount'] = 'Percentage discount cannot exceed 100%.';
+	    }
+
+	    if (!empty($errors)) {
+		    return new WP_REST_Response([
+			    'error' => 'Validation failed.',
+			    'errors' => $errors
+		    ], 400);
+	    }
 
         $coupon->title           = $request['title'];
         $coupon->description     = $request['description'];
         $coupon->discount_type   = $request['discount_type'];
         $coupon->discount_amount = $request['discount_amount'];
         $coupon->status          = Coupon::PUBLISH;
-        $coupon->expiry_date     = date('Y-m-d', strtotime($request['expiry_date']));
+        $coupon->expiry_date     =  $request['expiry_date'] ? gmdate('Y-m-d H:i:s', strtotime($request['expiry_date'])) : null;
         $coupon->save();
 
         return new WP_REST_Response(['coupon' => $coupon, 'message' => 'Coupon updated']);

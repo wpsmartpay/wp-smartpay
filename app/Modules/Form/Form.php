@@ -16,9 +16,9 @@ class Form
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
-        $this->app->addAction('smartpay_create_form_preview_page', [$this, 'createFormPreviewPage']);
-        $this->app->addAction('smartpay_update_form_preview_page', [$this, 'updateFormPreviewPage']);
-        $this->app->addAction('smartpay_delete_form_preview_page', [$this, 'deleteFormPreviewPage']);
+        $this->app->addAction('smartpay_form_created', [$this, 'createFormPreviewPage']);
+        $this->app->addAction('smartpay_form_updated', [$this, 'updateFormPreviewPage']);
+        $this->app->addAction('smartpay_form_deleted', [$this, 'deleteFormPreviewPage']);
     }
 
     public function adminScripts($hook)
@@ -101,14 +101,18 @@ class Form
         wp_enqueue_script(
             'smartpay-form',
             SMARTPAY_PLUGIN_ASSETS . '/form-builder/index.js',
-            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
-            SMARTPAY_VERSION
+            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives', 'smartpay-ui'],
+            SMARTPAY_VERSION,
+	        false
         );
 
         wp_localize_script(
             'smartpay-form',
             'smartpay',
             [
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
                 'apiNonce' => wp_create_nonce('wp_rest')
             ]
         );

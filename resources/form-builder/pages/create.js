@@ -16,7 +16,12 @@ const defaultFormData = {
 
     <!-- wp:smartpay-form/email -->
     <div class="wp-block-smartpay-form-email form-element"><label for="email">Email</label><input type="email" class="form-control" id="email" name="smartpay_form[email]" placeholder="Email" required/></div>
-    <!-- /wp:smartpay-form/email -->`,
+    <!-- /wp:smartpay-form/email -->
+    
+    <!-- wp:paragraph -->
+    <p></p>
+    <!-- /wp:paragraph -->
+    `,
     fields: [],
     settings: {
         allowCustomAmount: false,

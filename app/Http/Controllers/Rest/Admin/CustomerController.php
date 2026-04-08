@@ -4,6 +4,7 @@ namespace SmartPay\Http\Controllers\Rest\Admin;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Customer;
+use SmartPay\Models\Payment;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -17,7 +18,7 @@ class CustomerController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -33,7 +34,18 @@ class CustomerController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $customers = Customer::orderBy('id', 'DESC')->get();
+		$perPage = $request->get_param('per_page') ?: 10;
+		$search = $request->get_param('search') ?: '';
+
+        $query = Customer::orderBy('id', 'DESC');
+
+		if (!empty($search)) {
+			$query->where(function($q) use ($search) {
+				$q->where('email', 'like', '%' . $search . '%');
+			});
+		}
+
+		$customers = $query->paginate($perPage);
 
         return new WP_REST_Response(['customers' => $customers]);
     }
@@ -57,13 +69,12 @@ class CustomerController extends RestController
      */
     public function show(WP_REST_Request $request): WP_REST_Response
     {
-        $customer = Customer::with(['payments'])->find($request->get_param('id'));
-
+		$customer = Customer::find($request->get_param('id'));
         if (!$customer) {
             return new WP_REST_Response(['message' => __('Customer not found', 'smartpay')], 404);
         }
 
-        return new WP_REST_Response(['customer' => $customer]);
+        return new WP_REST_Response([ 'customer' => $customer ]);
     }
 
     /**

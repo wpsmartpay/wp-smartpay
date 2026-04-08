@@ -22,7 +22,13 @@ trait ValidatesAttributes
     protected function requireParameterCount($count, $parameters, $rule)
     {
         if (count($parameters) < $count) {
-            throw new InvalidArgumentException("Validation rule $rule requires at least $count parameters.");
+            throw new InvalidArgumentException(
+	            sprintf(
+		            'Validation rule %s requires at least %d parameters.',
+		            esc_html($rule),
+		            (int) $count
+	            )
+            );
         }
     }
 
@@ -401,6 +407,8 @@ trait ValidatesAttributes
             }
         }
 
+		// This is a custom table query with SAFE prepare, caching not applicable.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared
         return is_null($wpdb->get_row($wpdb->prepare($query, $bindings)));
     }
 }

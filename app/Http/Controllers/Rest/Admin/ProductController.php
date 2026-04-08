@@ -18,7 +18,7 @@ class ProductController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -27,16 +27,55 @@ class ProductController extends RestController
     }
 
     /**
-     * Get all parent products
+     * Get all parent products with pagination
      *
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $products = Product::where('parent_id', 0)->with(['variations'])->orderBy('id', 'DESC')->get();
+        $page     = (int) $request->get_param('page') ?: 1;
+        $per_page = (int) $request->get_param('per_page') ?: 10;
+        $search   = sanitize_text_field($request->get_param('search') ?? '');
+        $sort_by  = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
 
-        return new WP_REST_Response(['products' => $products]);
+        $query = Product::where(function ($q) {
+            $q->where('parent_id', 0)->orWhereNull('parent_id');
+        })->with(['variations']);
+
+        // Search
+        if (!empty($search)) {
+            $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        // Sorting
+        $sort_parts = explode(':', $sort_by);
+        $sort_column = in_array($sort_parts[0], ['id', 'title', 'created_at']) ? $sort_parts[0] : 'id';
+        $sort_order  = isset($sort_parts[1]) && strtolower($sort_parts[1]) === 'asc' ? 'ASC' : 'DESC';
+        $query->orderBy($sort_column, $sort_order);
+
+        // Get total count
+        $total = $query->count();
+        $last_page = max(1, (int) ceil($total / $per_page));
+
+        // Paginate
+        $offset = ($page - 1) * $per_page;
+        $products = $query->skip($offset)->take($per_page)->get();
+
+        $from = $total > 0 ? $offset + 1 : 0;
+        $to   = min($offset + $per_page, $total);
+
+        return new WP_REST_Response([
+            'products' => [
+                'data'         => $products,
+                'current_page' => $page,
+                'per_page'     => $per_page,
+                'last_page'    => $last_page,
+                'total'        => $total,
+                'from'         => $from,
+                'to'           => $to,
+            ],
+        ]);
     }
 
     /**
@@ -48,6 +87,7 @@ class ProductController extends RestController
     public function store(WP_REST_Request $request): WP_REST_Response
     {
         global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         try {
@@ -70,6 +110,7 @@ class ProductController extends RestController
                     $this->createVariation($variationData, $product->id);
                 });
 
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->query('COMMIT');
 
                 // get the currently stored product
@@ -77,14 +118,18 @@ class ProductController extends RestController
 
                 return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
             }else{
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->query('ROLLBACK');
+	            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
                 error_log('Failed to create product.');
                 return new WP_REST_Response(['message' => __('Failed to create product.', 'smartpay')], 500);
             }
         } catch (\Exception $e) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
-            return new WP_REST_Response(['message' => __($e->getMessage(), 'smartpay')], 500);
+            return new WP_REST_Response(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -108,6 +153,7 @@ class ProductController extends RestController
     public function update(WP_REST_Request $request): WP_REST_Response
     {
         global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         try {
@@ -148,12 +194,15 @@ class ProductController extends RestController
                 $variation->save();
             });
 
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('COMMIT');
             //            $product->refresh();
             $product->load('variations');
             return new WP_REST_Response(['product' => $product, 'message' => __('Product updated', 'smartpay')]);
         } catch (\Exception $e) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }
@@ -168,6 +217,7 @@ class ProductController extends RestController
     public function destroy(WP_REST_Request $request): WP_REST_Response
     {
         global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         try {
@@ -182,10 +232,13 @@ class ProductController extends RestController
             }
 
             $product->delete();
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('COMMIT');
             return new WP_REST_Response(['message' => __('Product deleted', 'smartpay')], 200);
         } catch (\Exception $e) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
+	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log($e->getMessage());
             return new WP_REST_Response($e->getMessage(), 500);
         }

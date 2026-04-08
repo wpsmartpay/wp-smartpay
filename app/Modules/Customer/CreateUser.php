@@ -33,6 +33,7 @@ class CreateUser {
             try {
                 $user = wp_insert_user( $new_customer_data );
                 if ($user){
+                    do_action('smartpay_customer_user_created', $user, $payment);
                     //send notification to only new user
                     // check the new user notification
                     $enable_user_notification = (bool) smartpay_get_settings()['new_user_notification'] ?? false;
@@ -41,7 +42,10 @@ class CreateUser {
                     }
                 }
             }catch (\Exception $e){
-                smartpay_debug_log(sprintf(__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage()));
+                smartpay_debug_log(sprintf(
+					/* translators: 1: Error Message */
+					__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage())
+                );
             }
             return true;
         }

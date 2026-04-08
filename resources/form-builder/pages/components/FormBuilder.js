@@ -24,7 +24,7 @@ export const FormBuilder = ({form, setFormData, shouldReset}) => {
     return (
         <div
             className="smartpay-form-block-editor block-editor"
-            style={{minHeight: '70vh'}}
+            style={{minHeight: '70vh', position:'relative'}}
         >
             <ShortcutProvider>
                 <SlotFillProvider>

@@ -148,6 +148,7 @@ class Activator {
 	}
 
 	public static function activatePlugin() {
+		// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
 		if ( isset( $_GET['activate-multi'] ) || is_network_admin() ) {
 			return;
 		}

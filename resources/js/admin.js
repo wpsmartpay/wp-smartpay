@@ -1,13 +1,13 @@
 import domReady from '@wordpress/dom-ready'
 import { render } from '@wordpress/element'
-import { HashRouter, Route, Routes, Link } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { Dashboard } from './pages/dashboard'
 
 // Product
-import { ProductList } from './pages/product/index'
 import { CreateProduct } from './pages/product/create'
 import { EditProduct } from './pages/product/edit'
+import { ProductList } from './pages/product/index'
 
 // Customer
 import { CustomerList } from './pages/customer/index'
@@ -15,20 +15,20 @@ import { ShowCustomer } from './pages/customer/show'
 
 // Coupon
 import { CouponList } from './pages/coupon/index'
-import { CreateCoupon } from './pages/coupon/create'
-import { EditCoupon } from './pages/coupon/edit'
 
 // Payment
 import { PaymentList } from './pages/payment/index'
-import { CreatePayment } from './pages/payment/create'
-import { EditPayment } from './pages/payment/edit'
 
 // Other pages
 import { NotFound } from './pages/not-found'
+import { AdminFooter } from './components/AdminFooter'
 
 import './store/index'
 
 import './admin/menu-fix'
+
+// Pro CSS
+import './utils/pro-css'
 
 //Hooks
 import { createHooks } from '@wordpress/hooks'
@@ -64,44 +64,20 @@ domReady(function () {
                         {/* Customer */}
                         <Route
                             exact
-                            path="/customers"
+                            path="/members"
                             element={<CustomerList />}
                         />
                         <Route
                             exact
-                            path="/customers/:customerId/"
+                            path="/members/:customerId/"
                             element={<ShowCustomer />}
                         />
 
                         {/* Coupon */}
                         <Route exact path="/coupons" element={<CouponList />} />
-                        <Route
-                            exact
-                            path="/coupons/create"
-                            element={<CreateCoupon />}
-                        />
-                        <Route
-                            exact
-                            path="/coupons/:couponId/edit"
-                            element={<EditCoupon />}
-                        />
 
                         {/* Payment */}
-                        <Route
-                            exact
-                            path="/payments"
-                            element={<PaymentList />}
-                        />
-                        <Route
-                            exact
-                            path="/payments/create"
-                            element={<CreatePayment />}
-                        />
-                        <Route
-                            exact
-                            path="/payments/:paymentId/edit"
-                            element={<EditPayment />}
-                        />
+                        <Route exact path="/payments" element={<PaymentList />} />
 
                         <Route element={<NotFound />} />
                     </Routes>
@@ -112,6 +88,8 @@ domReady(function () {
                     'smartPayAdminRoute',
                     [],
                 )}
+
+                <AdminFooter />
             </div>
         )
     }

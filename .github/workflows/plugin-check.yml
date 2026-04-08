@@ -1,0 +1,32 @@
+name: Plugin Check (PCP)
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: '.'
+          categories: |
+            plugin_repo
+            security
+            performance
+            accessibility

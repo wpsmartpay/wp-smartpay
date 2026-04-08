@@ -18,7 +18,7 @@ class FormController extends RestController
     public function middleware(WP_REST_Request $request)
     {
         if (!current_user_can('manage_options')) {
-            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.'), [
+            return new \WP_Error('rest_forbidden', esc_html__('You cannot view the resource.', 'smartpay'), [
                 'status' => is_user_logged_in() ? 403 : 401,
             ]);
         }
@@ -27,16 +27,53 @@ class FormController extends RestController
     }
 
     /**
-     * Get all parent forms
+     * Get all forms with pagination
      *
      * @param WP_REST_Request $request
      * @return WP_REST_Response
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $forms = Form::orderBy('id', 'DESC')->get();
+        $page     = (int) $request->get_param('page') ?: 1;
+        $per_page = (int) $request->get_param('per_page') ?: 10;
+        $search   = sanitize_text_field($request->get_param('search') ?? '');
+        $sort_by  = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
 
-        return new WP_REST_Response(['forms' => $forms]);
+        $query = Form::query();
+
+        // Search
+        if (!empty($search)) {
+            $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        // Sorting
+        $sort_parts = explode(':', $sort_by);
+        $sort_column = in_array($sort_parts[0], ['id', 'title', 'created_at', 'updated_at']) ? $sort_parts[0] : 'id';
+        $sort_order  = isset($sort_parts[1]) && strtolower($sort_parts[1]) === 'asc' ? 'ASC' : 'DESC';
+        $query->orderBy($sort_column, $sort_order);
+
+        // Get total count
+        $total = $query->count();
+        $last_page = max(1, (int) ceil($total / $per_page));
+
+        // Paginate
+        $offset = ($page - 1) * $per_page;
+        $forms = $query->skip($offset)->take($per_page)->get();
+
+        $from = $total > 0 ? $offset + 1 : 0;
+        $to   = min($offset + $per_page, $total);
+
+        return new WP_REST_Response([
+            'forms' => [
+                'data'         => $forms,
+                'current_page' => $page,
+                'per_page'     => $per_page,
+                'last_page'    => $last_page,
+                'total'        => $total,
+                'from'         => $from,
+                'to'           => $to,
+            ],
+        ]);
     }
 
     /**

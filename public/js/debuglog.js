@@ -1,1 +1,1 @@
-!function(a){a(".smartpay-clear-debug-log").on("click",(function(o){o.preventDefault(),a.ajax({url:debugLog.ajax_url,method:"POST",data:{action:"smartpay_debug_log_clear"}}).done((function(a){location.reload()}))}))}(jQuery);
+(()=>{var a;(a=jQuery)(".smartpay-clear-debug-log").on("click",function(e){e.preventDefault(),a.ajax({url:debugLog.ajax_url,method:"POST",data:{action:"smartpay_debug_log_clear"}}).done(function(a){location.reload()})})})();

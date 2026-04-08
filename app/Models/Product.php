@@ -32,16 +32,16 @@ class Product extends Model
 
         static::created(function ($product) {
             if($product->id){
-                do_action('smartpay_create_product_preview_page', $product);
+                do_action('smartpay_product_created', $product);
             }
         });
 
         static::updated(function($product){
-            do_action('smartpay_update_product_preview_page', $product);
+            do_action('smartpay_product_updated', $product);
         });
 
         static::deleting(function($product) {
-            do_action('smartpay_delete_product_preview_page', $product);
+            do_action('smartpay_product_deleted', $product);
         });
     }
 
