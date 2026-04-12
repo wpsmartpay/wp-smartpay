@@ -264,7 +264,12 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
 }
 
 /**
- * Get the 10 most recent completed payments.
+ * Get the 10 most recent completed payments, enriched with source name and admin URL.
+ *
+ * Each row includes:
+ *   - id, amount, email, type, completed_at
+ *   - source_name  : product or form title (null when not found)
+ *   - view_url     : SPA deep-link to the payment detail page
  *
  * @return array
  */
@@ -275,14 +280,57 @@ function smartpay_dashboard_get_recent_payments(): array
         ->limit( 10 )
         ->get();
 
-    $result = [];
+    // Collect product and form IDs in one pass so we can batch-load titles.
+    $product_ids = [];
+    $form_ids    = [];
+
     foreach ( $payments as $payment ) {
+        $data = $payment->data ?? [];
+        if ( Payment::PRODUCT_PURCHASE === $payment->type && ! empty( $data['product_id'] ) ) {
+            $product_ids[] = (int) $data['product_id'];
+        } elseif ( Payment::FORM_PAYMENT === $payment->type && ! empty( $data['form_id'] ) ) {
+            $form_ids[] = (int) $data['form_id'];
+        }
+    }
+
+    // Batch load titles.
+    $product_titles = [];
+    if ( ! empty( $product_ids ) ) {
+        $products = Product::whereIn( 'id', array_unique( $product_ids ) )->get();
+        foreach ( $products as $p ) {
+            $product_titles[ (int) $p->id ] = $p->title;
+        }
+    }
+
+    $form_titles = [];
+    if ( ! empty( $form_ids ) ) {
+        $forms = Form::whereIn( 'id', array_unique( $form_ids ) )->get();
+        foreach ( $forms as $f ) {
+            $form_titles[ (int) $f->id ] = $f->title;
+        }
+    }
+
+    $admin_base = admin_url( 'admin.php?page=smartpay' );
+    $result     = [];
+
+    foreach ( $payments as $payment ) {
+        $data        = $payment->data ?? [];
+        $source_name = null;
+
+        if ( Payment::PRODUCT_PURCHASE === $payment->type && ! empty( $data['product_id'] ) ) {
+            $source_name = $product_titles[ (int) $data['product_id'] ] ?? null;
+        } elseif ( Payment::FORM_PAYMENT === $payment->type && ! empty( $data['form_id'] ) ) {
+            $source_name = $form_titles[ (int) $data['form_id'] ] ?? null;
+        }
+
         $result[] = [
-            'id'         => (int) $payment->id,
-            'amount'     => (float) $payment->amount,
-            'email'      => $payment->email,
-            'type'       => $payment->type,
-            'created_at' => $payment->created_at,
+            'id'          => (int) $payment->id,
+            'amount'      => (float) $payment->amount,
+            'email'       => $payment->email,
+            'type'        => $payment->type,
+            'source_name' => $source_name,
+            'completed_at' => $payment->completed_at,
+            'view_url'    => $admin_base . '#/payments/' . (int) $payment->id,
         ];
     }
 

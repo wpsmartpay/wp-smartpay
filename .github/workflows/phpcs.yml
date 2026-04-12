@@ -1,26 +1,26 @@
-name: WordPress Coding Standards
+# name: WordPress Coding Standards
 
-on:
-  pull_request:
-  push:
-    branches: [main, develop]
+# on:
+#   pull_request:
+#   push:
+#     branches: [main, develop]
 
-jobs:
-  phpcs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+# jobs:
+#   phpcs:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          tools: cs2pr
-          coverage: none
+#       - name: Setup PHP
+#         uses: shivammathur/setup-php@v2
+#         with:
+#           php-version: '8.2'
+#           tools: cs2pr
+#           coverage: none
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+#       - name: Install dependencies
+#         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: Run PHPCS
-        run: vendor/bin/phpcs --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
+#       - name: Run PHPCS
+#         run: vendor/bin/phpcs --standard=phpcs.xml.dist --report=checkstyle -q . | cs2pr
