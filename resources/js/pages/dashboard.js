@@ -12,6 +12,7 @@ import {
     ExternalLink,
     Receipt,
     UserCheck,
+    ArrowUpRight,
 } from 'lucide-react'
 import { Report } from '../components/report/report'
 import { StatCard } from '../components/stat-card'
@@ -334,32 +335,97 @@ export const Dashboard = () => {
                                 {__('No recent payments.', 'smartpay')}
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                                {recentPayments.map((payment) => {
-                                    const initials = emailToInitials(payment.email)
-                                    const name     = emailToName(payment.email)
-                                    return (
-                                        <div key={payment.id} className="flex items-center gap-3">
-                                            {/* Avatar */}
-                                            <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-muted text-xs font-semibold text-muted-foreground select-none">
-                                                {initials}
-                                            </div>
-                                            {/* Name + email */}
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-medium text-card-foreground leading-none truncate">
-                                                    {name}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground truncate mt-0.5">
-                                                    {payment.email}
-                                                </p>
-                                            </div>
-                                            {/* Amount */}
-                                            <span className="text-sm font-semibold text-card-foreground tabular-nums flex-shrink-0">
-                                                +{formatRevenue(payment.amount)}
-                                            </span>
-                                        </div>
-                                    )
-                                })}
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-sm">
+                                    <thead>
+                                        <tr className="border-b border-border">
+                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
+                                                {__('Customer', 'smartpay')}
+                                            </th>
+                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
+                                                {__('Product / Form', 'smartpay')}
+                                            </th>
+                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
+                                                {__('Date', 'smartpay')}
+                                            </th>
+                                            <th className="pb-2 text-right text-xs font-medium text-muted-foreground whitespace-nowrap">
+                                                {__('Amount', 'smartpay')}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {recentPayments.map((payment) => {
+                                            const initials    = emailToInitials(payment.email)
+                                            const name        = emailToName(payment.email)
+                                            const completedAt = payment.completed_at
+                                                ? new Date(payment.completed_at).toLocaleString(undefined, {
+                                                      day:    'numeric',
+                                                      month:  'short',
+                                                      year:   'numeric',
+                                                      hour:   '2-digit',
+                                                      minute: '2-digit',
+                                                  })
+                                                : '—'
+
+                                            return (
+                                                <tr
+                                                    key={payment.id}
+                                                    className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors group"
+                                                >
+                                                    {/* Customer */}
+                                                    <td className="py-2 pr-4">
+                                                        <div className="flex items-center gap-2.5 min-w-0">
+                                                            <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-muted text-xs font-semibold text-muted-foreground select-none">
+                                                                {initials}
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <p className="font-medium text-card-foreground leading-none truncate max-w-[140px] m-0">
+                                                                    {name}
+                                                                </p>
+                                                                <p className="text-xs text-muted-foreground truncate max-w-[140px] mt-0">
+                                                                    {payment.email}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    {/* Product / Form name */}
+                                                    <td className="py-3 pr-4">
+                                                        <span className="text-card-foreground truncate max-w-[160px] block">
+                                                            {payment.source_name || (
+                                                                <span className="text-muted-foreground italic">—</span>
+                                                            )}
+                                                        </span>
+                                                    </td>
+
+                                                    {/* Date/time */}
+                                                    <td className="py-3 pr-4 whitespace-nowrap text-muted-foreground text-xs">
+                                                        {completedAt}
+                                                    </td>
+
+                                                    {/* Amount + quick-view */}
+                                                    <td className="py-3 text-right whitespace-nowrap">
+                                                        <div className="flex items-center justify-end gap-2">
+                                                            <span className="font-semibold text-card-foreground tabular-nums">
+                                                                +{formatRevenue(payment.amount)}
+                                                            </span>
+                                                            {payment.view_url && (
+                                                                <a
+                                                                    href={payment.view_url}
+                                                                    title={__('View payment', 'smartpay')}
+                                                                    aria-label={__('View payment details', 'smartpay')}
+                                                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground no-underline flex-shrink-0"
+                                                                >
+                                                                    <ArrowUpRight className="h-3.5 w-3.5" />
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
                         )}
                     </CardContent>

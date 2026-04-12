@@ -19,6 +19,7 @@ import * as SelectComponents from "./ui/select";
 import * as SwitchComponents from "./ui/switch";
 import * as TableComponents from "./ui/table";
 import * as TextareaComponents from "./ui/textarea";
+import * as SheetComponents from "./ui/sheet";
 
 window.WPSmartPayUI = {
 	...AlertComponents,
@@ -36,6 +37,7 @@ window.WPSmartPayUI = {
 	...TextareaComponents,
 	...SwitchComponents,
 	...AccordionComponents,
+	...SheetComponents,
 	DataTable,
 	Header,
 	StatCard,

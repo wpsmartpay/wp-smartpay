@@ -2,13 +2,13 @@ import { __ } from '@wordpress/i18n'
 
 const { version } = window.smartpay
 
-const FOOTER_LINKS = [
-    { label: __('Support', 'smartpay'),   url: 'https://wpsmartpay.com/support/' },
-    { label: __('Docs', 'smartpay'),      url: 'https://wpsmartpay.com/docs/' },
-    { label: __('Community', 'smartpay'), url: 'https://wpsmartpay.com/community/' },
-]
+const RATE_URL = 'https://wordpress.org/support/plugin/smartpay/reviews/#new-post'
 
-const RATE_URL = 'https://wordpress.org/plugins/smartpay/#reviews'
+const FOOTER_LINKS = [
+    { label: __( 'Support', 'smartpay' ),   url: 'https://wpsmartpay.com/support/' },
+    { label: __( 'Docs', 'smartpay' ),      url: 'https://docs.wpsmartpay.com/en/category/wpsmartpay' },
+    { label: __( 'Community', 'smartpay' ), url: 'https://wpsmartpay.com/community/' },
+]
 
 export function AdminFooter() {
     return (
@@ -18,33 +18,30 @@ export function AdminFooter() {
         >
             <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
 
-                {/* Left: branding + version */}
-                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <span>
-                        {__('Made with', 'smartpay')}
-                        {' '}
-                        <span
-                            className="text-red-400"
-                            aria-label={__('love', 'smartpay')}
-                        >
-                            ♥
-                        </span>
-                        {' '}
-                        {__('by the WP SmartPay Team', 'smartpay')}
-                    </span>
-                    <span className="hidden sm:inline text-border" aria-hidden="true">·</span>
-                    <span className="hidden sm:inline text-xs font-mono text-muted-foreground/60">
-                        v{version}
-                    </span>
-                </div>
+                {/* Left: rating prompt */}
+                <p className="text-sm text-muted-foreground m-0">
+                    {__( 'If you like', 'smartpay' )}{' '}
+                    <strong className="text-foreground font-medium">WP SmartPay</strong>{' '}
+                    {__( 'please leave us a', 'smartpay' )}{' '}
+                    <a
+                        href={RATE_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-amber-400 hover:text-amber-500 transition-colors no-underline tracking-tight"
+                        aria-label={__( 'Rate WP SmartPay on WordPress.org', 'smartpay' )}
+                    >
+                        ★★★★★
+                    </a>{' '}
+                    {__( 'rating. A huge thanks in advance!', 'smartpay' )}
+                </p>
 
-                {/* Right: links + rate */}
-                <div className="flex items-center gap-4 text-sm">
+                {/* Right: nav links + version */}
+                <div className="flex items-center gap-4 text-sm flex-shrink-0">
                     <nav
                         className="flex items-center gap-3"
-                        aria-label={__('Footer navigation', 'smartpay')}
+                        aria-label={__( 'Footer navigation', 'smartpay' )}
                     >
-                        {FOOTER_LINKS.map(({ label, url }) => (
+                        {FOOTER_LINKS.map( ( { label, url } ) => (
                             <a
                                 key={label}
                                 href={url}
@@ -54,20 +51,14 @@ export function AdminFooter() {
                             >
                                 {label}
                             </a>
-                        ))}
+                        ) )}
                     </nav>
 
                     <span className="text-border" aria-hidden="true">·</span>
 
-                    <a
-                        href={RATE_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-amber-400 hover:text-amber-500 transition-colors no-underline text-sm tracking-tight"
-                        aria-label={__('Rate WP SmartPay on WordPress.org', 'smartpay')}
-                    >
-                        ★★★★★
-                    </a>
+                    <span className="text-xs font-mono text-muted-foreground/60">
+                        v{version}
+                    </span>
                 </div>
 
             </div>

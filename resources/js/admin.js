@@ -21,7 +21,7 @@ import { PaymentList } from './pages/payment/index'
 
 // Other pages
 import { NotFound } from './pages/not-found'
-import { AdminFooter } from './components/AdminFooter'
+// import { AdminFooter } from './components/AdminFooter'
 
 import './store/index'
 
@@ -64,12 +64,12 @@ domReady(function () {
                         {/* Customer */}
                         <Route
                             exact
-                            path="/members"
+                            path="/customers"
                             element={<CustomerList />}
                         />
                         <Route
                             exact
-                            path="/members/:customerId/"
+                            path="/customers/:customerId"
                             element={<ShowCustomer />}
                         />
 
@@ -89,7 +89,7 @@ domReady(function () {
                     [],
                 )}
 
-                <AdminFooter />
+                {/* <AdminFooter /> */}
             </div>
         )
     }

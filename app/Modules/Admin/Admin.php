@@ -22,6 +22,8 @@ class Admin
         $this->app->addAction('admin_init', [$this, 'redirectToWelcomePage']);
         $this->app->addAction('admin_notices', [$this, 'customerEmailSubscribe']);
         $this->app->addAction('wp_ajax_smartpay_contact_optin_notice_dismiss', [$this, 'customerOptinNoticeDismiss']);
+        $this->app->addFilter('admin_footer_text', [$this, 'adminFooterText']);
+        $this->app->addFilter('update_footer', [$this, 'adminFooterVersion'], 11);
     }
 
     public function adminMenu()
@@ -81,10 +83,10 @@ class Admin
 
         add_submenu_page(
             'smartpay',
-            __('SmartPay - Members', 'smartpay'),
-            __('Members', 'smartpay'),
+            __('SmartPay - Customers', 'smartpay'),
+            __('Customers', 'smartpay'),
             'manage_options',
-            'smartpay#/members',
+            'smartpay#/customers',
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
@@ -172,7 +174,7 @@ class Admin
     {
         // Fallback: hook suffix can vary (e.g. URL-encoded slug); also check request page param
         $request_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
-        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/members', 'smartpay#/coupons', 'smartpay#/payments'], true);
+        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments'], true);
 
         $admin_style_hooks = [
             'toplevel_page_smartpay',
@@ -180,7 +182,7 @@ class Admin
             'smartpay_page_smartpay-setting',
             'smartpay_page_smartpay-integrations',
             'smartpay_page_smartpay#/products',
-            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
         ];
@@ -195,7 +197,7 @@ class Admin
         $admin_spa_hooks = [
             'toplevel_page_smartpay',
             'smartpay_page_smartpay#/products',
-            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
             'smartpay_page_smartpay-form',
@@ -207,7 +209,7 @@ class Admin
         $main_admin_hooks = [
             'toplevel_page_smartpay',
             'smartpay_page_smartpay#/products',
-            'smartpay_page_smartpay#/members',
+            'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
         ];
@@ -528,5 +530,65 @@ class Admin
         $userId = sanitize_text_field(wp_unslash($_REQUEST['user_id']));
         update_user_meta($userId, $meta_value, time());
         wp_die();
+    }
+
+    /**
+     * Replace the default WP admin footer text on all SmartPay pages.
+     *
+     * @param string $text Default footer text.
+     * @return string
+     */
+    public function adminFooterText( string $text ): string
+    {
+        if ( ! $this->isSmartPayAdminPage() ) {
+            return $text;
+        }
+
+        $rate_url = 'https://wordpress.org/support/plugin/smartpay/reviews/#new-post';
+
+        return sprintf(
+            /* translators: %s: five-star rating link */
+            wp_kses(
+                __( 'If you like <strong>WP SmartPay</strong> please leave us a %s rating. A huge thanks in advance!', 'smartpay' ),
+                [ 'strong' => [] ]
+            ),
+            '<a href="' . esc_url( $rate_url ) . '" target="_blank" rel="noopener noreferrer" style="color:#f0ad4e;text-decoration:none;" aria-label="' . esc_attr__( 'Rate WP SmartPay on WordPress.org', 'smartpay' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+        );
+    }
+
+    /**
+     * Replace the WP version string in the admin footer on all SmartPay pages.
+     *
+     * @param string $text Default version text.
+     * @return string
+     */
+    public function adminFooterVersion( string $text ): string
+    {
+        if ( ! $this->isSmartPayAdminPage() ) {
+            return $text;
+        }
+
+        return sprintf(
+            /* translators: %s: plugin version number */
+            esc_html__( 'Version %s', 'smartpay' ),
+            esc_html( SMARTPAY_VERSION )
+        );
+    }
+
+    /**
+     * Determine whether the current admin screen belongs to SmartPay.
+     *
+     * @return bool
+     */
+    private function isSmartPayAdminPage(): bool
+    {
+        $screen = get_current_screen();
+
+        if ( ! $screen ) {
+            return false;
+        }
+
+        // All SmartPay menu pages share 'smartpay' in the screen id.
+        return str_contains( $screen->id, 'smartpay' );
     }
 }

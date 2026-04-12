@@ -48,7 +48,7 @@ export const createColumns = (deleteCustomer) => [
 
 			return (
 				<div className="flex items-center justify-end gap-2">
-					<Link to={`/members/${customer.id}`}>
+					<Link to={`/customers/${customer.id}`}>
 						<Button
 							variant="outline"
 							size="icon"
