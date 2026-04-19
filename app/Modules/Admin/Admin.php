@@ -68,7 +68,7 @@ class Admin
         add_submenu_page(
             'smartpay',
             __('SmartPay - Forms', 'smartpay'),
-            __('Forms', 'smartpay'),
+            __('Forms (Legacy)', 'smartpay'),
             'manage_options',
             'smartpay-form',
             function () {
