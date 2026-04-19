@@ -14,6 +14,14 @@ export const OptionComponent = ({product, setProductData}) => {
                         <h2 className="m-0">{__('Checkout Options', 'smartpay')}</h2>
                         <hr/>
                         <div className="col-md-10 mt-4 mx-auto">
+
+                            {/* Hook: inject content before built-in option cards */}
+                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                'smartpay.product.options.before',
+                                null,
+                                product,
+                                setProductData
+                            )}
                             <Card className="bg-light">
                                 <div className="p-3">
                                     <div className="form-group mb-0">
@@ -116,6 +124,15 @@ export const OptionComponent = ({product, setProductData}) => {
                                     }
                                 </div>
                             </Card>
+
+                            {/* Hook: inject content after built-in option cards */}
+                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                'smartpay.product.options.after',
+                                null,
+                                product,
+                                setProductData
+                            )}
+
                         </div>
                     </Card.Body>
                 </Card>
