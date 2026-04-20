@@ -3,6 +3,7 @@
 namespace SmartPay\Models;
 
 use SmartPay\Models\Customer;
+use SmartPay\Models\PaymentLog;
 use SmartPay\Framework\Database\Eloquent\Model;
 use SmartPay\Framework\Database\Eloquent\Relation\HasMany;
 use SmartPay\Framework\Database\Eloquent\Relation\HasOne;
@@ -60,12 +61,23 @@ class Payment extends Model
 
         static::saving(function ($payment) {
             if ($payment->isDirty('status')) {
+                $old_status = $payment->original['status'] ?? self::PENDING;
+                $new_status = $payment->attributes['status'];
+
                 do_action(
                     'smartpay_update_payment_status',
                     $payment,
-                    $payment->attributes['status'],
-                    $payment->original['status'] ?? self::PENDING
+                    $new_status,
+                    $old_status
                 );
+
+                if ( $payment->id && function_exists( 'smartpay_record_payment_log' ) ) {
+                    smartpay_record_payment_log(
+                        (int) $payment->id,
+                        'status_changed',
+                        sprintf( '%s → %s', $old_status, $new_status )
+                    );
+                }
             }
         });
     }
@@ -73,6 +85,11 @@ class Payment extends Model
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(PaymentLog::class, 'payment_id', 'id');
     }
 
     /**

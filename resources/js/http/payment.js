@@ -61,6 +61,37 @@ export const Update = (paymentId, body) => {
     })
 }
 
+export const GetPayment = async (paymentId) => {
+    const baseUrl = smartpay.restUrl.replace(/\/$/, '');
+    const response = await apiFetch({
+        url: `${baseUrl}/v1/payments/${paymentId}`,
+        headers: { 'X-WP-Nonce': smartpay.apiNonce },
+    });
+    return response?.payment || null;
+}
+
+export const GetPaymentLogs = async (paymentId, page = 1, perPage = 20) => {
+    const baseUrl = smartpay.restUrl.replace(/\/$/, '');
+    const url = new URL(`${baseUrl}/v1/payments/${paymentId}/logs`);
+    url.searchParams.set('page', page);
+    url.searchParams.set('per_page', perPage);
+    const response = await apiFetch({
+        url: url.toString(),
+        headers: { 'X-WP-Nonce': smartpay.apiNonce },
+    });
+    return response;
+}
+
+export const AddPaymentLog = async (paymentId, note) => {
+    const baseUrl = smartpay.restUrl.replace(/\/$/, '');
+    return apiFetch({
+        url: `${baseUrl}/v1/payments/${paymentId}/logs`,
+        method: 'POST',
+        headers: { 'X-WP-Nonce': smartpay.apiNonce },
+        body: JSON.stringify({ note }),
+    });
+}
+
 export const GetPayments = async ({ page = 1, perPage = 10, search = '', status = '', type = '', customerId = '', sortBy = 'id:desc' }) => {
 	const queryParams = new URLSearchParams({
         page,

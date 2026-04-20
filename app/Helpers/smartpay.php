@@ -1067,3 +1067,27 @@ function smartpay_get_customer_by_user_id($userId) {
 
 	return $customer;
 }
+
+/**
+ * Record a payment activity log entry.
+ *
+ * @param int    $payment_id Payment ID.
+ * @param string $action     Action key (e.g. 'status_changed', 'admin_note').
+ * @param string $note       Optional human-readable note.
+ * @return \SmartPay\Models\PaymentLog|null
+ */
+function smartpay_record_payment_log( int $payment_id, string $action, string $note = '' ) {
+	if ( $payment_id <= 0 ) {
+		return null;
+	}
+
+	$log             = new \SmartPay\Models\PaymentLog();
+	$log->payment_id = $payment_id;
+	$log->action     = sanitize_key( $action );
+	$log->note       = sanitize_textarea_field( $note );
+	$log->created_at = current_time( 'mysql', true );
+	$log->save();
+
+	return $log;
+}
+

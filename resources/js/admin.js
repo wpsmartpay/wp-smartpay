@@ -18,6 +18,7 @@ import { CouponList } from './pages/coupon/index'
 
 // Payment
 import { PaymentList } from './pages/payment/index'
+import { PaymentDetailPage } from './pages/payment/PaymentDetailPage'
 
 // Other pages
 import { NotFound } from './pages/not-found'
@@ -78,6 +79,7 @@ domReady(function () {
 
                         {/* Payment */}
                         <Route exact path="/payments" element={<PaymentList />} />
+                        <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
 
                         <Route element={<NotFound />} />
                     </Routes>

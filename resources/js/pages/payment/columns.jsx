@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Box, Eye, FilePenLine, LinkIcon, Trash2 } from 'lucide-react';
+import { Box, Eye, FilePenLine, LinkIcon, ScanSearch, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const { Badge, Button, StatusBadge } = window.WPSmartPayUI;
 
@@ -105,14 +105,24 @@ export const createColumns = (deletePayment, onViewPayment) => [
 
 			return (
 				<div className="flex items-center justify-end gap-2">
+					<Link to={`/payments/${payment.id}`}>
+						<Button
+							variant="outline"
+							size="icon"
+							title={__('View Details', 'smartpay')}
+							className="hover:bg-gray-100 cursor-pointer"
+						>
+							<Eye className="w-4 h-4 text-gray-700" />
+						</Button>
+					</Link>
 					<Button
 						variant="outline"
 						size="icon"
-						title={__('View', 'smartpay')}
+						title={__('Quick View', 'smartpay')}
 						onClick={() => onViewPayment(payment.id)}
 						className="hover:bg-gray-100 cursor-pointer"
 					>
-						<Eye className="w-4 h-4 text-gray-700" />
+						<ScanSearch className="w-4 h-4 text-gray-700" />
 					</Button>
 					<Button
 						variant="outline"

@@ -62,6 +62,19 @@ class Payment
                 'permission_callback' => [$paymentController, 'middleware'],
             ],
         ]);
+
+        register_rest_route('smartpay/v1', 'payments/(?P<id>[\d]+)/logs', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$paymentController, 'logs'],
+                'permission_callback' => [$paymentController, 'middleware'],
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [$paymentController, 'addLog'],
+                'permission_callback' => [$paymentController, 'middleware'],
+            ],
+        ]);
     }
 
     function ajax_process_payment()
