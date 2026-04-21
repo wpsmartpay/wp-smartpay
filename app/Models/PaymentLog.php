@@ -14,6 +14,7 @@ class PaymentLog extends Model {
 
 	protected $fillable = array(
 		'payment_id',
+		'user_id',
 		'action',
 		'note',
 	);

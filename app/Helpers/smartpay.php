@@ -1083,6 +1083,7 @@ function smartpay_record_payment_log( int $payment_id, string $action, string $n
 
 	$log             = new \SmartPay\Models\PaymentLog();
 	$log->payment_id = $payment_id;
+	$log->user_id    = get_current_user_id() ?: null;
 	$log->action     = sanitize_key( $action );
 	$log->note       = sanitize_textarea_field( $note );
 	$log->created_at = current_time( 'mysql', true );

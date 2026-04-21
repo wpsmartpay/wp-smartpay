@@ -187,15 +187,25 @@ class PaymentController extends RestController
 
         $total  = PaymentLog::where( 'payment_id', $payment->id )->count();
         $offset = ( $page - 1 ) * $per_page;
-        $items  = PaymentLog::where( 'payment_id', $payment->id )
+        $items = PaymentLog::where( 'payment_id', $payment->id )
             ->orderBy( 'created_at', 'DESC' )
             ->skip( $offset )
             ->take( $per_page )
             ->get();
 
+        $data = array_map(
+            function ( $log ) {
+                $arr              = $log->toArray();
+                $user_id          = (int) ( $log->user_id ?? 0 );
+                $arr['user_name'] = $user_id ? get_the_author_meta( 'display_name', $user_id ) : '';
+                return $arr;
+            },
+            $items instanceof \SmartPay\Framework\Database\Eloquent\ModelCollection ? $items->all() : (array) $items
+        );
+
         return new WP_REST_Response(
             array(
-                'data'         => $items,
+                'data'         => $data,
                 'current_page' => $page,
                 'per_page'     => $per_page,
                 'total'        => $total,

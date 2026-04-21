@@ -97,7 +97,10 @@ export const ActivityLogSection = ( { paymentId } ) => {
 									{ formatActionLabel( log.action ) }
 								</span>
 								<span className="flex-1 text-gray-600">{ log.note }</span>
-								<span className="text-gray-400 whitespace-nowrap text-xs">
+								<span className="text-right text-xs text-gray-400 whitespace-nowrap shrink-0">
+									{ log.user_name && (
+										<span className="block font-medium text-gray-500">{ log.user_name }</span>
+									) }
 									{ formatDate( log.created_at ) }
 								</span>
 							</li>

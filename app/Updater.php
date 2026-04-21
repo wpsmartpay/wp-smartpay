@@ -29,5 +29,6 @@ class Updater
         \AddSettingsColumnOnProductTable::up();
 		\AddUuidColumnOnPaymentTable::up();
 		\CreateSmartpayPaymentLogsTable::up();
+		\AddUserIdToPaymentLogsTable::up();
     }
 }
