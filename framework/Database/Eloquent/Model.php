@@ -550,7 +550,9 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
             return false;
         }
 
-        $this->updateTimestamps();
+        if ($this->timestamps) {
+            $this->updateTimestamps();
+        }
 
         $this->setAttribute($this->getKeyName(), $query->insert($this->attributes));
 
