@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n'
 import { HelpCircle } from 'lucide-react'
 import { HelpDrawer } from './HelpDrawer'
 
-export function Header({ title, subtitle }) {
+export function Header({ title, subtitle, children }) {
     const [helpOpen, setHelpOpen] = useState(false)
 
     return (
@@ -17,6 +17,7 @@ export function Header({ title, subtitle }) {
                         )}
                     </div>
                     <div className="smartpay-page-header__actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        {children}
                         <button
                             type="button"
                             onClick={() => setHelpOpen(true)}
