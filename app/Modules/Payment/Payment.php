@@ -125,6 +125,12 @@ class Payment
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
         $gateway = isset($_POST['data']['smartpay_gateway']) ? sanitize_text_field(wp_unslash($_POST['data']['smartpay_gateway'])) : '';
 
+        // Zero-amount payments must always use the free gateway regardless of what
+        // the frontend sent — no payment processor should be called for free orders.
+        if ( isset( $paymentData['amount'] ) && floatval( $paymentData['amount'] ) == 0 ) {
+            $gateway = 'free';
+        }
+
         if ('free'!==$gateway && (!is_string($gateway) || !smartpay_is_gateway_active($gateway))) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';
             return;
