@@ -277,12 +277,21 @@ jQuery(($) => {
                     data: formData,
                 }
                 jQuery.post(smartpay.ajaxUrl, data, (response) => {
-                    // Show second step
+                    // JSON response: gateway signals a redirect (e.g. free gateway)
+                    if (
+                        response &&
+                        typeof response === 'object' &&
+                        response.success &&
+                        response.data &&
+                        response.data.redirect
+                    ) {
+                        window.location.href = response.data.redirect
+                        return
+                    }
+
+                    // Legacy HTML response (other gateways echo HTML/scripts)
                     $paymentSecondStep.css('display', 'flex')
-
                     $('.back-to-first-step').show()
-
-                    // Hide first step
                     $paymentFirstStep.hide()
 
                     setTimeout(() => {

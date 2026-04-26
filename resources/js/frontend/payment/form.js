@@ -122,6 +122,32 @@ jQuery(($) => {
                         data: formData,
                     },
                     (response) => {
+                        // JSON response: gateway signals a redirect (e.g. free gateway)
+                        if (
+                            response &&
+                            typeof response === 'object' &&
+                            response.success &&
+                            response.data &&
+                            response.data.redirect
+                        ) {
+                            window.location.href = response.data.redirect
+                            return
+                        }
+
+                        // JSON error response
+                        if (response && typeof response === 'object' && response.success === false) {
+                            const msg = (response.data && response.data.message) || 'Something went wrong. Please try again.'
+                            $parentWrapper
+                                .find('#payment-response')
+                                .html(`<p class="text-danger">${msg}</p>`)
+                                .show()
+                            setTimeout(() => {
+                                $(e.currentTarget).text(buttonText).attr('disabled', false)
+                            }, 500)
+                            return
+                        }
+
+                        // Legacy HTML response (other gateways echo HTML/scripts)
                         if (response) {
                             $parentWrapper
                                 .find('#payment-response')
