@@ -342,8 +342,19 @@ class Payment
             return;
         }
 
-        $payment->completed_at = current_time('mysql');
-        $payment->save();
+        $completed_at = current_time('mysql');
+
+        // Direct DB update avoids re-triggering the model's saving() lifecycle,
+        // which would fire a duplicate status_changed log entry.
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->prefix . 'smartpay_payments',
+            array( 'completed_at' => $completed_at ),
+            array( 'id'           => (int) $payment->id ),
+            array( '%s' ),
+            array( '%d' )
+        );
+        $payment->completed_at = $completed_at;
 
         do_action('smartpay_payment_completed', $payment);
     }
