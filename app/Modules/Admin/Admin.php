@@ -17,6 +17,7 @@ class Admin
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
+        $this->app->addAction('admin_bar_menu', [$this, 'adminToolbarMenu'], 999);
         $this->app->addAction('wp_ajax_smartpay_debug_log_clear', [$this, 'smartpayDebugLogClear']);
         // $this->app->addAction('smartpay_admin_add_menu_items', [$this, 'registerDashboardPage'], 99);
         $this->app->addAction('admin_init', [$this, 'redirectToWelcomePage']);
@@ -150,6 +151,70 @@ class Admin
             [$this, 'outputDashboardMarkup']
         );
 
+    }
+
+    /**
+     * Add SmartPay entry to the WP admin toolbar.
+     *
+     * @param \WP_Admin_Bar $wp_admin_bar
+     */
+    public function adminToolbarMenu( \WP_Admin_Bar $wp_admin_bar )
+    {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // Credit-card SVG, sized for the toolbar (20 × 20 px).
+        $icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"'
+            . ' style="position:relative;top:4px;margin-right:5px;fill:currentColor;" aria-hidden="true">'
+            . '<path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6'
+            . 'c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>'
+            . '</svg>';
+
+        $wp_admin_bar->add_node(
+            array(
+                'id'    => 'smartpay-toolbar',
+                'title' => $icon . esc_html__( 'SmartPay', 'smartpay' ),
+                'href'  => esc_url( admin_url( 'admin.php?page=smartpay' ) ),
+                'meta'  => array( 'class' => 'smartpay-toolbar-menu' ),
+            )
+        );
+
+        $wp_admin_bar->add_node(
+            array(
+                'parent' => 'smartpay-toolbar',
+                'id'     => 'smartpay-toolbar-dashboard',
+                'title'  => esc_html__( 'Dashboard', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay' ) ),
+            )
+        );
+
+        $wp_admin_bar->add_node(
+            array(
+                'parent' => 'smartpay-toolbar',
+                'id'     => 'smartpay-toolbar-payments',
+                'title'  => esc_html__( 'Payments', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/payments' ) ),
+            )
+        );
+
+        $wp_admin_bar->add_node(
+            array(
+                'parent' => 'smartpay-toolbar',
+                'id'     => 'smartpay-toolbar-customers',
+                'title'  => esc_html__( 'Customers', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/customers' ) ),
+            )
+        );
+
+        $wp_admin_bar->add_node(
+            array(
+                'parent' => 'smartpay-toolbar',
+                'id'     => 'smartpay-toolbar-settings',
+                'title'  => esc_html__( 'Settings', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay-setting' ) ),
+            )
+        );
     }
 
     private function smartpayProMenu()
