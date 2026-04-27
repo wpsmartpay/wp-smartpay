@@ -169,49 +169,6 @@ export const PaymentDetailsDialog = ({ paymentId, open, onOpenChange }) => {
                                     </div>
                                 )}
 
-                                {payment.type === 'Form Payment' && (
-                                    <div className="mt-4 pt-4 border-t">
-                                        <h3 className="text-lg font-semibold mb-3">
-                                            {__('Form Payment Details', 'smartpay')}
-                                        </h3>
-                                        <div className="space-y-2">
-                                            <p className="mb-2">
-                                                <strong>{__('Form', 'smartpay')}: </strong>
-                                                <span>#{payment?.data?.form_id}</span>
-                                            </p>
-                                            <p className="mb-2">
-                                                <strong>{__('Total Amount', 'smartpay')}: </strong>
-                                                <span>{payment?.data?.total_amount}</span>
-                                            </p>
-                                            <p className="mb-2">
-                                                <strong>{__('Price Type', 'smartpay')}: </strong>
-                                                <span>{payment?.data?.billing_type}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {payment?.customer && (
-                                    <div className="mt-4 pt-4 border-t">
-                                        <h3 className="text-lg font-semibold mb-3">
-                                            {__('Customer Details', 'smartpay')}
-                                        </h3>
-                                        <div className="space-y-2">
-                                            <p className="mb-2">
-                                                <strong>{__('First Name', 'smartpay')}: </strong>
-                                                <span>{payment?.customer?.first_name}</span>
-                                            </p>
-                                            <p className="mb-2">
-                                                <strong>{__('Last Name', 'smartpay')}: </strong>
-                                                <span>{payment?.customer?.last_name}</span>
-                                            </p>
-                                            <p className="mb-2">
-                                                <strong>{__('Email', 'smartpay')}: </strong>
-                                                <span>{payment?.customer?.email}</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
                             </CardContent>
                         </Card>
 
@@ -229,58 +186,61 @@ export const PaymentDetailsDialog = ({ paymentId, open, onOpenChange }) => {
 }
 
 const DisplayFormData = ({ formData, formFields }) => {
-    const build = (fields) => {
-        if (!Array.isArray(fields)) {
-            return
-        }
-
+    const build = ( fields ) => {
+        if ( ! Array.isArray( fields ) ) return {}
         let tempFields = {}
-
-        fields.forEach((item) => {
-            const data = item[Object.keys(item)[0]]
-            if (data.hasOwnProperty('attributes')) {
-                item = data
-            }
-
-            const key = item['attributes']['name']
-            if (item.hasOwnProperty('fields')) {
-                tempFields[key] = build(item['fields'])
-            } else {
-                tempFields[key] = item['settings']['label']
-            }
-        })
-
+        fields.forEach( ( item ) => {
+            const data = item[ Object.keys( item )[ 0 ] ]
+            if ( data?.attributes ) item = data
+            const key = item[ 'attributes' ]?.[ 'name' ]
+            if ( ! key ) return
+            tempFields[ key ] = item.fields ? build( item.fields ) : item.settings?.label
+        } )
         return tempFields
     }
 
-    const renderFields = (labels, formData) => {
-        return (
-            <div key={Math.random().toString(36).substr(2, 11)}>
-                {Object.keys(labels).map(function (key) {
-                    if ('object' === typeof labels[key]) {
-                        return renderFields(labels[key], formData[key])
-                    } else {
-                        return (
-                            formData[key] && (
-                                <p key={key} className="mb-2">
-                                    <strong>{labels[key]}: </strong>
-                                    <span>{formData[key]}</span>
-                                </p>
-                            )
-                        )
-                    }
-                })}
-            </div>
-        )
-    }
+    const humanize = ( str ) =>
+        String( str ).replace( /_/g, ' ' ).replace( /\b\w/g, ( c ) => c.toUpperCase() )
+
+    const renderRaw = ( data ) =>
+        Object.entries( data || {} ).flatMap( ( [ key, val ] ) => {
+            if ( val === null || val === undefined || val === '' ) return []
+            if ( typeof val === 'object' && ! Array.isArray( val ) ) return renderRaw( val )
+            return (
+                <p key={ key } className="mb-2">
+                    <strong>{ humanize( key ) }: </strong>
+                    <span>{ String( val ) }</span>
+                </p>
+            )
+        } )
+
+    const renderFields = ( labels, data ) => (
+        <div key={ Math.random().toString( 36 ).substr( 2, 11 ) }>
+            { Object.keys( labels ).map( ( key ) =>
+                typeof labels[ key ] === 'object'
+                    ? renderFields( labels[ key ], data?.[ key ] )
+                    : data?.[ key ] && (
+                        <p key={ key } className="mb-2">
+                            <strong>{ labels[ key ] }: </strong>
+                            <span>{ data[ key ] }</span>
+                        </p>
+                    )
+            ) }
+        </div>
+    )
+
+    const labels = build( formFields || [] )
+    const hasLabels = Object.keys( labels ).length > 0
 
     return (
         <Card>
             <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold mb-3">
-                    {__('Form Data', 'smartpay')}
+                    { __( 'Form Data', 'smartpay' ) }
                 </h3>
-                {renderFields(build(formFields), formData)}
+                <div className="space-y-1">
+                    { hasLabels ? renderFields( labels, formData ) : renderRaw( formData ) }
+                </div>
             </CardContent>
         </Card>
     )
