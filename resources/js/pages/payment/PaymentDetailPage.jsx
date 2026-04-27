@@ -222,7 +222,7 @@ export const PaymentDetailPage = () => {
 						{ payment.subscription_id && (
 							<InfoField label={ __( 'Subscription', 'smartpay' ) }>
 								<Link
-									to={ `/subscriptions/${ payment.subscription_id }/edit` }
+									to={ `/subscriptions/${ payment.subscription_id }` }
 									className="text-blue-600 hover:underline"
 								>
 									#{ payment.subscription_id }
