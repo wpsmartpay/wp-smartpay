@@ -1,5 +1,6 @@
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
+import { applyFilters } from '@wordpress/hooks'
 import { createColumns } from './columns'
 import { PaymentDetailsDialog } from './PaymentDetailsDialog'
 const { Header, Card, CardContent, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
@@ -108,6 +109,8 @@ export const PaymentList = () => {
 	// Create columns with deletePayment and handleViewPayment functions
 	const columns = createColumns(deletePayment, handleViewPayment)
 
+	const paymentListActions = applyFilters( 'smartpay_payment_list_actions', [] )
+
 	return (
 		<>
 			<Header
@@ -128,6 +131,8 @@ export const PaymentList = () => {
 							onSortChange={handleSort}
 							isLoading={isLoading}
 							searchPlaceholder='Search by Email or Transaction ID'
+							enableActions={paymentListActions.length > 0}
+							actions={paymentListActions}
 							enableFilters={true}
 							filters={[
 								<Select key="status-filter" onValueChange={handleStatusFilter}>
