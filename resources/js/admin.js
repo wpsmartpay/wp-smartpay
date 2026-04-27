@@ -79,6 +79,8 @@ domReady(function () {
 
                         {/* Payment */}
                         <Route exact path="/payments" element={<PaymentList />} />
+                        {/* Reserve /payments/new for pro plugin — must come before :paymentId */}
+                        <Route exact path="/payments/new" element={null} />
                         <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
 
                         <Route element={<NotFound />} />
