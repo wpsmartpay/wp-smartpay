@@ -68,11 +68,13 @@
         transform: translateX(16px) !important;
     }
 }
-.wp-submenu a[href^="https://wpsmartpay.com"]
-{
+.wp-submenu a[href^='https://wpsmartpay.com'] {
     color: #fcac33 !important;
 }
-
+#wp-admin-bar-smartpay-toolbar svg {
+    display: inline-block;
+    vertical-align: sub;
+}
 // sweetalert
 
 body.toplevel_page_smartpay.swal2-toast-shown,
@@ -627,7 +629,7 @@ p.excerpt {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 24px;
+        padding: 16px 0;
         max-width: 1200px;
         margin: 0 auto;
     }
@@ -646,7 +648,7 @@ p.excerpt {
     }
 
     &__logo img {
-        height: 28px;
-        width: auto;
+        height: auto;
+        width: 156px;
     }
 }

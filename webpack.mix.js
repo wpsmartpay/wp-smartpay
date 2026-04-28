@@ -2,6 +2,9 @@ const mix = require('laravel-mix');
 const path = require('path');
 
 mix.webpackConfig({
+    watchOptions: {
+        ignored: /node_modules|public|mix-manifest\.json$/,
+    },
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM',

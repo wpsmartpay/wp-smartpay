@@ -28,6 +28,7 @@ $has_payment_error = false;
                 <div class="d-flex flex-column justify-content-center modal-title">
                     <p class="payment-modal--small-title mb-2 text-capitalize"><?php echo esc_html($product->title ?? $form->title ?? 'Product/Form'); ?></p>
                     <h2 class="payment-modal--title amount m-0">--</h2>
+                    <p class="sp-tax-amount-note m-0 text-muted" style="display:none;"></p>
                 </div>
 
 
@@ -100,7 +101,7 @@ $has_payment_error = false;
 
                             <?php do_action('smartpay_before_product_payment_form_button', $product); ?>
 
-                            <button type="button" class="btn btn-success btn-block btn-lg smartpay-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>>
+                            <button type="button" class="btn btn-success btn-block btn-lg smartpay-form-pay-now" <?php if ($has_payment_error) echo 'disabled'; ?>>
                                 <?php echo esc_html__('Pay Now', 'smartpay'); ?>
                             </button>
 

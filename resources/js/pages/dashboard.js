@@ -243,7 +243,7 @@ export const Dashboard = () => {
             <div className="p-4 max-w-7xl mx-auto flex flex-col gap-5">
 
                 {/* ── Stat cards ─────────────────────────────────────────── */}
-                <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <div className="grid grid-cols-4 gap-4 lg:grid-cols-4">
                     {STAT_CARDS.map((card) => (
                         <StatCard
                             key={card.title}
@@ -256,12 +256,12 @@ export const Dashboard = () => {
                 </div>
 
                 {/* ── Area chart (2/3) + Highlights + Quick Links (1/3) ──── */}
-                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="grid grid-cols-3 gap-4 lg:grid-cols-3">
 
                     {/* Area chart */}
                     <div className="lg:col-span-2">
                         <Card className="h-full">
-                            <CardHeader>
+                            <CardHeader> 
                                 <CardTitle>{__('Revenue Overview', 'smartpay')}</CardTitle>
                                 <CardDescription>
                                     {__('Product purchases & form payments', 'smartpay')}

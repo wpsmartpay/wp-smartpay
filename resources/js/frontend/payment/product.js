@@ -239,7 +239,7 @@ jQuery(($) => {
     /** Send ajax request to process payment **/
     $(document.body).on(
         'click',
-        '.smartpay-payment button.smartpay-pay-now',
+        '.smartpay-payment button.smartpay-form-pay-now',
         (e) => {
             e.preventDefault()
             $parentWrapper = $(e.currentTarget).parents('.smartpay-payment')

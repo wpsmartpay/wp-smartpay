@@ -17,7 +17,7 @@ export function Header({ title, subtitle, children }) {
                         )}
                     </div>
                     <div className="smartpay-page-header__actions" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        {children}
+                        {/* {children} */}
                         <button
                             type="button"
                             onClick={() => setHelpOpen(true)}
