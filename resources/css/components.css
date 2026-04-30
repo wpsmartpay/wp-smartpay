@@ -124,3 +124,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ── Integrations page ─────────────────────────────────── */
+
+.sp-integrations-toolbar {
+  gap: 0.75rem;
+}
+
+.sp-period-selector {
+  @apply inline-flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1;
+}
+
+.sp-period-selector__item {
+  @apply inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors cursor-pointer;
+}
+
+.sp-period-selector__item:hover {
+  @apply bg-background text-foreground;
+}
+
+.sp-period-selector__item--active {
+  @apply bg-background shadow-sm text-foreground;
+}
+
+.sp-badge {
+  @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium;
+}
+
+.sp-badge--neutral {
+  @apply border-slate-200 bg-slate-50 text-slate-600;
+}
