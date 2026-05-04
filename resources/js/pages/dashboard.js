@@ -392,15 +392,18 @@ export const Dashboard = () => {
                                                     {/* Product / Form name */}
                                                     <td className="py-3 pr-4">
                                                         {payment.source_name ? (
-                                                            <div className="flex items-center gap-2">
+                                                            <div className="flex items-center gap-2 flex-wrap">
                                                                 <a
                                                                     href={payment.source_url}
                                                                     className="text-card-foreground truncate max-w-[120px] block hover:underline no-underline"
                                                                 >
                                                                     {payment.source_name}
                                                                 </a>
-                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap">
+                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 whitespace-nowrap">
                                                                     {payment.source_type}
+                                                                </span>
+                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 whitespace-nowrap">
+                                                                    Completed
                                                                 </span>
                                                             </div>
                                                         ) : (
