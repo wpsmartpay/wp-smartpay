@@ -32,6 +32,9 @@ export function DataTable({
     enableSorting = false,
     enableFilters = false,
 	enableActions = false,
+    enableRowSelection = false,
+    rowSelection = {},
+    onRowSelectionChange,
     filters = [],
     sortingState = [],
 	isJustifyBetween = true,
@@ -76,21 +79,31 @@ export function DataTable({
         manualPagination: true,
         manualSorting: enableSorting,
         pageCount: pagination?.last_page ?? -1,
+        enableRowSelection,
         state: {
             pagination: {
                 pageIndex: (pagination?.current_page ?? 1) - 1,
                 pageSize: pagination?.per_page ?? 10,
             },
             sorting: enableSorting ? sorting : undefined,
+            rowSelection,
         },
         onSortingChange: enableSorting ? setSorting : undefined,
+        onRowSelectionChange: enableRowSelection && onRowSelectionChange
+            ? (updater) => {
+                  const newSelection = typeof updater === 'function'
+                      ? updater(table.getState().rowSelection)
+                      : updater
+                  onRowSelectionChange(newSelection)
+              }
+            : undefined,
     })
 
     const handlePreviousPage = () => {
         if (onPaginationChange && pagination && pagination.current_page > 1) {
             onPaginationChange({
                 page: pagination.current_page - 1,
-                per_page: pagination.per_page
+                per_page: pagination.per_page,
             })
         }
     }
@@ -99,7 +112,7 @@ export function DataTable({
         if (onPaginationChange && pagination && pagination.current_page < pagination.last_page) {
             onPaginationChange({
                 page: pagination.current_page + 1,
-                per_page: pagination.per_page
+                per_page: pagination.per_page,
             })
         }
     }

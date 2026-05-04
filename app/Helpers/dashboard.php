@@ -316,11 +316,17 @@ function smartpay_dashboard_get_recent_payments(): array
     foreach ( $payments as $payment ) {
         $data        = $payment->data ?? [];
         $source_name = null;
+        $source_url  = null;
+        $source_type = null;
 
         if ( Payment::PRODUCT_PURCHASE === $payment->type && ! empty( $data['product_id'] ) ) {
             $source_name = $product_titles[ (int) $data['product_id'] ] ?? null;
+            $source_url  = $admin_base . '#/products/' . (int) $data['product_id'];
+            $source_type = 'Product';
         } elseif ( Payment::FORM_PAYMENT === $payment->type && ! empty( $data['form_id'] ) ) {
             $source_name = $form_titles[ (int) $data['form_id'] ] ?? null;
+            $source_url  = $admin_base . '#/payments?form=' . (int) $data['form_id'];
+            $source_type = 'Form';
         }
 
         $result[] = [
@@ -329,6 +335,8 @@ function smartpay_dashboard_get_recent_payments(): array
             'email'       => $payment->email,
             'type'        => $payment->type,
             'source_name' => $source_name,
+            'source_url'  => $source_url,
+            'source_type'  => $source_type,
             'completed_at' => $payment->completed_at,
             'view_url'    => $admin_base . '#/payments/' . (int) $payment->id,
         ];

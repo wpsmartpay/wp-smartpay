@@ -391,11 +391,21 @@ export const Dashboard = () => {
 
                                                     {/* Product / Form name */}
                                                     <td className="py-3 pr-4">
-                                                        <span className="text-card-foreground truncate max-w-[160px] block">
-                                                            {payment.source_name || (
-                                                                <span className="text-muted-foreground italic">—</span>
-                                                            )}
-                                                        </span>
+                                                        {payment.source_name ? (
+                                                            <div className="flex items-center gap-2">
+                                                                <a
+                                                                    href={payment.source_url}
+                                                                    className="text-card-foreground truncate max-w-[120px] block hover:underline no-underline"
+                                                                >
+                                                                    {payment.source_name}
+                                                                </a>
+                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground whitespace-nowrap">
+                                                                    {payment.source_type}
+                                                                </span>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-muted-foreground italic">—</span>
+                                                        )}
                                                     </td>
 
                                                     {/* Date/time */}
