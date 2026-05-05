@@ -1069,6 +1069,94 @@ function smartpay_get_customer_by_user_id($userId) {
 }
 
 /**
+ * Calculate goal progress for a form.
+ *
+ * @param int $form_id Form post ID.
+ * @return array{current: float, target: float, percentage: float, type: string, goal_reached: bool}
+ */
+function smartpay_calculate_goal_progress( int $form_id ): array {
+	$settings = get_post_meta( $form_id, '_smartpay_settings', true );
+	$settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
+	$goal     = $settings['goal'] ?? [];
+
+	if ( empty( $goal['enabled'] ) ) {
+		return [
+			'current'     => 0,
+			'target'      => 0,
+			'percentage'  => 0,
+			'type'        => 'quantity',
+			'goal_reached' => false,
+		];
+	}
+
+	$type   = $goal['type'] ?? 'quantity';
+	$target = floatval( $goal['target'] ?? 100 );
+
+	$transient_key = "smartpay_goal_{$form_id}_{$type}";
+	$cached        = get_transient( $transient_key );
+
+	if ( false !== $cached ) {
+		$current = floatval( $cached );
+	} else {
+		global $wpdb;
+		$table = $wpdb->prefix . 'smartpay_payments';
+
+		// Filter by form_id stored in payment data JSON
+		$row = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COUNT(*) as cnt, COALESCE(SUM(amount),0) as total_amount FROM {$table} WHERE status = %s AND data LIKE %s",
+				\SmartPay\Models\Payment::COMPLETED,
+				'%\"form_id\":' . (int) $form_id . '%'
+			),
+			ARRAY_A
+		);
+
+		$current = (float) ( $type === 'quantity' ? ( $row['cnt'] ?? 0 ) : ( $row['total_amount'] ?? 0 ) );
+
+		set_transient( $transient_key, $current, MINUTE_IN_SECONDS );
+	}
+
+	$percentage = $target > 0 ? min( 100, ( $current / $target ) * 100 ) : 0;
+
+	return [
+		'current'      => $current,
+		'target'       => $target,
+		'percentage'   => round( $percentage, 1 ),
+		'type'         => $type,
+		'goal_reached' => $current >= $target,
+	];
+}
+
+/**
+ * Invalidate goal progress cache for a form.
+ *
+ * @param int $form_id Form post ID.
+ */
+function smartpay_invalidate_goal_cache( int $form_id ): void {
+	delete_transient( "smartpay_goal_{$form_id}_quantity" );
+	delete_transient( "smartpay_goal_{$form_id}_amount" );
+}
+
+/**
+ * Recalculate and cache goal progress for a form.
+ *
+ * @param int $form_id Form post ID.
+ * @param array $payment_data Payment data array containing form_id.
+ */
+function smartpay_recalculate_goal_cache_on_payment( int $form_id ): void {
+	$settings = get_post_meta( $form_id, '_smartpay_settings', true );
+	$settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
+	$goal     = $settings['goal'] ?? [];
+
+	if ( empty( $goal['enabled'] ) ) {
+		return;
+	}
+
+	smartpay_invalidate_goal_cache( $form_id );
+	// Trigger recalculation by deleting transient — next read recalculates.
+}
+
+/**
  * Record a payment activity log entry.
  *
  * @param int    $payment_id Payment ID.
