@@ -20,6 +20,9 @@ import { CouponList } from './pages/coupon/index'
 import { PaymentList } from './pages/payment/index'
 import { PaymentDetailPage } from './pages/payment/PaymentDetailPage'
 
+// Form Data
+import { FormData } from './pages/form-data/index.jsx'
+
 // Other pages
 import { NotFound } from './pages/not-found'
 // import { AdminFooter } from './components/AdminFooter'
@@ -82,6 +85,9 @@ domReady(function () {
                         {/* Reserve /payments/new for pro plugin — must come before :paymentId */}
                         <Route exact path="/payments/new" element={null} />
                         <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
+
+                        {/* Form Data */}
+                        <Route exact path="/form-data" element={<FormData />} />
 
                         <Route element={<NotFound />} />
                     </Routes>

@@ -1,13 +1,19 @@
 import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { useReducer, useEffect } from '@wordpress/element'
-import { Container, Form, Button, Alert } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm } from './components/form'
 import { productDefaultData } from '../../utils/constant'
 
 const { useSelect, dispatch } = wp.data
+
+const {
+    Header,
+    Card,
+    CardContent,
+    Button,
+} = window.WPSmartPayUI
 
 const reducer = (state, data) => {
     return {
@@ -60,57 +66,46 @@ export const EditProduct = () => {
         <>
             {product && (
                 <>
-                    <div className="text-black bg-white border-bottom d-fixed">
-                        <Container>
-                            <div className="d-flex align-items-center justify-content-between">
-                                <h2 className="text-black">
-                                    {__('Edit Product', 'smartpay')}
-                                </h2>
-                                <div className="ml-auto">
-                                    <div className="d-flex flex-row">
-                                        <Form.Control
-                                            size="sm"
-                                            type="text"
-                                            value={`[smartpay_product id="${product.id}"]`}
-                                            readOnly
-                                            className="mr-2"
-                                        />
-                                        {
-                                            product.id && product.extra?.product_preview_page_permalink && (
-                                                <>
-                                                    <Button
-                                                        variant="link"
-                                                        href={product.extra.product_preview_page_permalink}
-                                                        target="_blank"
-                                                        className="btn btn-sm text-decoration-none px-3 mr-2"
-                                                    >
-                                                        {__(
-                                                            'Preview',
-                                                            'smartpay'
-                                                        )}
-                                                    </Button>
-                                                </>
-                                            )
-                                        }
+                    <Header
+                        title={__('Edit Product', 'smartpay')}
+                        subtitle={`#${product.id}`}
+                    />
+
+                    <div className="p-4 max-w-7xl mx-auto">
+                        <Card className="mb-4">
+                            <CardContent>
+                                <div className="flex items-center justify-between flex-wrap gap-3">
+                                    <span className="text-sm text-gray-500 font-mono bg-muted px-2 py-1 rounded">
+                                        [smartpay_product id="{product.id}"]
+                                    </span>
+                                    <div className="flex items-center gap-2">
                                         <Button
-                                            type="button"
-                                            className="btn btn-sm btn-primary px-3"
+                                            variant="default"
+                                            size="sm"
                                             onClick={Save}
                                         >
                                             {__('Save', 'smartpay')}
                                         </Button>
+                                        {product.id && product.extra?.product_preview_page_permalink && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                href={product.extra.product_preview_page_permalink}
+                                                target="_blank"
+                                            >
+                                                {__('Preview', 'smartpay')}
+                                            </Button>
+                                        )}
                                     </div>
                                 </div>
-                            </div>
-                        </Container>
-                    </div>
+                            </CardContent>
+                        </Card>
 
-                    <Container>
                         <ProductForm
                             product={product}
                             setProductData={setProductData}
                         />
-                    </Container>
+                    </div>
                 </>
             )}
         </>

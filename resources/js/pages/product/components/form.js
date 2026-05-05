@@ -177,6 +177,7 @@ export const ProductForm = ({ product, setProductData }) => {
                     <Row>
                         <Col md={8}>
                             <Form.Group controlId="title">
+                                <Form.Label className="text-sm font-medium text-gray-700">{__('Product Title', 'smartpay')}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="title"
@@ -188,13 +189,16 @@ export const ProductForm = ({ product, setProductData }) => {
                                     onChange={_setProductData}
                                 />
                             </Form.Group>
-                            <Form.Control
-                                as="textarea"
-                                name="description"
-                                id="description"
-                                value={product.description}
-                                onChange={_setProductData}
-                            />
+                            <Form.Group controlId="description" className="mt-3">
+                                <Form.Label className="text-sm font-medium text-gray-700">{__('Description', 'smartpay')}</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    name="description"
+                                    id="description"
+                                    value={product.description}
+                                    onChange={_setProductData}
+                                />
+                            </Form.Group>
                         </Col>
                         <Col md={4}>
                             <div className="border rounded bg-light text-center p-4 select-image-box d-flex flex-column align-items-center">
@@ -242,10 +246,10 @@ export const ProductForm = ({ product, setProductData }) => {
                 </Card.Body>
             </Card>
 
-            <Tabs fill defaultActiveKey="files">
+            <Tabs fill defaultActiveKey="files" className="mt-4 smartpay-product-tabs">
                 <Tab
                     eventKey="files"
-                    className="text-decoration-none"
+                    className="text-decoration-none pt-3"
                     title={__('Files', 'smartpay')}
                 >
                     <div className="product-files-section">
@@ -335,56 +339,60 @@ export const ProductForm = ({ product, setProductData }) => {
                 </Tab>
                 <Tab
                     eventKey="pricing"
-                    className="text-decoration-none"
+                    className="text-decoration-none pt-3"
                     title={__('Pricing & Variation', 'smartpay')}
                 >
                     {!product.variations.length && (
-                        <div className="form-row">
-                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                'smartpay.product.price.section',
-                                [],
-                                product,
-                                setProductData
-                            )}
-                            <div className="col-6">
-                                <div className="form-group">
-                                    <label
-                                        htmlFor="base_price"
-                                        className="text-muted my-2 d-block"
-                                    >
-                                        {__('Base price', 'smartpay')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="base_price"
-                                        name="base_price"
-                                        value={product.base_price || ''}
-                                        placeholder={__('eg. 100', 'smartpay')}
-                                        onChange={_setProductData}
-                                    />
+                        <Card className="mt-3">
+                            <Card.Body>
+                                <div className="form-row">
+                                    {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                        'smartpay.product.price.section',
+                                        [],
+                                        product,
+                                        setProductData
+                                    )}
+                                    <div className="col-6">
+                                        <div className="form-group">
+                                            <label
+                                                htmlFor="base_price"
+                                                className="text-muted my-2 d-block"
+                                            >
+                                                {__('Base price', 'smartpay')}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="base_price"
+                                                name="base_price"
+                                                value={product.base_price || ''}
+                                                placeholder={__('eg. 100', 'smartpay')}
+                                                onChange={_setProductData}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <div className="form-group">
+                                            <label
+                                                htmlFor="sale_price"
+                                                className="text-muted my-2 d-block"
+                                            >
+                                                {__('Sales price', 'smartpay')}
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="sale_price"
+                                                name="sale_price"
+                                                value={product?.sale_price || ''}
+                                                placeholder={__('eg. 90', 'smartpay')}
+                                                onChange={_setProductData}
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="col-6">
-                                <div className="form-group">
-                                    <label
-                                        htmlFor="sale_price"
-                                        className="text-muted my-2 d-block"
-                                    >
-                                        {__('Sales price', 'smartpay')}
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="sale_price"
-                                        name="sale_price"
-                                        value={product?.sale_price || ''}
-                                        placeholder={__('eg. 90', 'smartpay')}
-                                        onChange={_setProductData}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            </Card.Body>
+                        </Card>
                     )}
 
                     <div className="smartpay-variations">
@@ -742,7 +750,7 @@ export const ProductForm = ({ product, setProductData }) => {
                 </Tab>
                 <Tab
                     eventKey="options"
-                    className="text-decoration-none"
+                    className="text-decoration-none pt-3"
                     title={__('Options', 'smartpay')}
                 >
                     <OptionComponent

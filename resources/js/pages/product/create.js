@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n'
-import { Button, Container } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { useReducer } from '@wordpress/element'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -8,6 +8,12 @@ import { ProductForm } from './components/form'
 import { productDefaultData } from '../../utils/constant'
 
 const { dispatch } = wp.data
+
+const {
+    Header,
+    Card,
+    CardContent,
+} = window.WPSmartPayUI
 
 const reducer = (state, data) => {
     return {
@@ -64,31 +70,30 @@ export const CreateProduct = () => {
 
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Create Product', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
+            <Header
+                title={__('Create Product', 'smartpay')}
+            />
+
+            <div className="p-4 max-w-7xl mx-auto">
+                <Card className="mb-4">
+                    <CardContent>
+                        <div className="flex justify-end">
                             <Button
-                                type="button"
-                                className="btn btn-sm btn-primary px-3"
+                                variant="default"
+                                size="sm"
                                 onClick={createProduct}
                             >
                                 {__('Publish', 'smartpay')}
                             </Button>
                         </div>
-                    </div>
-                </Container>
-            </div>
+                    </CardContent>
+                </Card>
 
-            <Container>
                 <ProductForm
                     product={product}
                     setProductData={setProductData}
                 />
-            </Container>
+            </div>
         </>
     )
 }

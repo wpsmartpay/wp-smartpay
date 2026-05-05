@@ -12,7 +12,6 @@ import {
     ExternalLink,
     Receipt,
     UserCheck,
-    ArrowUpRight,
 } from 'lucide-react'
 import { Report } from '../components/report/report'
 import { StatCard } from '../components/stat-card'
@@ -34,21 +33,6 @@ const formatRevenue = (amount) =>
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
     })}`
-
-const emailToInitials = (email = '') => {
-    const handle = email.split('@')[0] || ''
-    const parts  = handle.split(/[._-]/).filter(Boolean)
-    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase()
-    return handle.slice(0, 2).toUpperCase()
-}
-
-const emailToName = (email = '') => {
-    const handle = email.split('@')[0] || email
-    return handle
-        .split(/[._-]/)
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' ')
-}
 
 // ─── Period config ────────────────────────────────────────────────────────────
 const PERIODS = [
@@ -93,8 +77,8 @@ const QUICK_LINKS = [
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 export const Dashboard = () => {
     const [period, setPeriod]   = useState('month')
-    const [data, setData]       = useState(null)
-    const [loading, setLoading] = useState(true)
+    const [data, setData]        = useState(null)
+    const [loading, setLoading]  = useState(true)
 
     const {
         Card,
@@ -114,9 +98,8 @@ export const Dashboard = () => {
             .finally(() => setLoading(false))
     }, [period])
 
-    const periodStats    = data?.period_stats    || {}
-    const monthlyChart   = data?.monthly_chart   || []
-    const recentPayments = data?.recent_payments || []
+    const periodStats  = data?.period_stats  || {}
+    const monthlyChart = data?.monthly_chart || []
 
     // ─── Stat cards ───────────────────────────────────────────────────────────
     const STAT_CARDS = [
@@ -207,6 +190,8 @@ export const Dashboard = () => {
         },
     }
 
+    const getQuickLinkHref = (hash) => `${adminUrl}?page=smartpay#${hash}`
+
     return (
         <>
             {/* ── Page header ──────────────────────────────────────────────── */}
@@ -255,13 +240,13 @@ export const Dashboard = () => {
                     ))}
                 </div>
 
-                {/* ── Area chart (2/3) + Highlights + Quick Links (1/3) ──── */}
+                {/* ── Area chart (2/3) + Quick Links (1/3) ──── */}
                 <div className="grid grid-cols-3 gap-4 lg:grid-cols-3">
 
                     {/* Area chart */}
                     <div className="lg:col-span-2">
                         <Card className="h-full">
-                            <CardHeader> 
+                            <CardHeader>
                                 <CardTitle>{__('Revenue Overview', 'smartpay')}</CardTitle>
                                 <CardDescription>
                                     {__('Product purchases & form payments', 'smartpay')}
@@ -297,7 +282,7 @@ export const Dashboard = () => {
                                     {QUICK_LINKS.map(({ label, icon: Icon, hash }) => (
                                         <a
                                             key={label}
-                                            href={`${adminUrl}?page=smartpay#${hash}`}
+                                            href={getQuickLinkHref(hash)}
                                             className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors no-underline group"
                                         >
                                             <Icon className="h-4 w-4 flex-shrink-0" />
@@ -309,141 +294,11 @@ export const Dashboard = () => {
                             </CardContent>
                         </Card>
 
+                        {/* Pro hook — subscription health widget */}
+                        {window.smartPayRouteHooks.applyFilters('smartpay_dashboard_bottom', null, { period, data })}
+
                     </div>
                 </div>
-
-                {/* ── Recent Sales ────────────────────────────────────────── */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{__('Recent Sales', 'smartpay')}</CardTitle>
-                        <CardDescription>
-                            {loading
-                                ? __('Loading…', 'smartpay')
-                                : periodStats.completed_count
-                                    ? `${periodStats.completed_count} ${__('completed payments this period.', 'smartpay')}`
-                                    : __('No completed payments this period.', 'smartpay')
-                            }
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                        {loading ? (
-                            <div className="p-4 text-center text-muted-foreground text-sm">
-                                {__('Loading…', 'smartpay')}
-                            </div>
-                        ) : !recentPayments.length ? (
-                            <div className="p-4 text-center text-muted-foreground text-sm">
-                                {__('No recent payments.', 'smartpay')}
-                            </div>
-                        ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-sm">
-                                    <thead>
-                                        <tr className="border-b border-border">
-                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
-                                                {__('Customer', 'smartpay')}
-                                            </th>
-                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
-                                                {__('Product / Form', 'smartpay')}
-                                            </th>
-                                            <th className="pb-2 text-left text-xs font-medium text-muted-foreground pr-4 whitespace-nowrap">
-                                                {__('Date', 'smartpay')}
-                                            </th>
-                                            <th className="pb-2 text-right text-xs font-medium text-muted-foreground whitespace-nowrap">
-                                                {__('Amount', 'smartpay')}
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {recentPayments.map((payment) => {
-                                            const initials    = emailToInitials(payment.email)
-                                            const name        = emailToName(payment.email)
-                                            const completedAt = payment.completed_at
-                                                ? new Date(payment.completed_at).toLocaleString(undefined, {
-                                                      day:    'numeric',
-                                                      month:  'short',
-                                                      year:   'numeric',
-                                                      hour:   '2-digit',
-                                                      minute: '2-digit',
-                                                  })
-                                                : '—'
-
-                                            return (
-                                                <tr
-                                                    key={payment.id}
-                                                    className="border-b border-border/50 last:border-0 hover:bg-muted/30 transition-colors group"
-                                                >
-                                                    {/* Customer */}
-                                                    <td className="py-2 pr-4">
-                                                        <div className="flex items-center gap-2.5 min-w-0">
-                                                            <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-muted text-xs font-semibold text-muted-foreground select-none">
-                                                                {initials}
-                                                            </div>
-                                                            <div className="min-w-0">
-                                                                <p className="font-medium text-card-foreground leading-none truncate max-w-[140px] m-0">
-                                                                    {name}
-                                                                </p>
-                                                                <p className="text-xs text-muted-foreground truncate max-w-[140px] mt-0">
-                                                                    {payment.email}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                    {/* Product / Form name */}
-                                                    <td className="py-3 pr-4">
-                                                        {payment.source_name ? (
-                                                            <div className="flex items-center gap-2 flex-wrap">
-                                                                <a
-                                                                    href={payment.source_url}
-                                                                    className="text-card-foreground truncate max-w-[120px] block hover:underline no-underline"
-                                                                >
-                                                                    {payment.source_name}
-                                                                </a>
-                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 whitespace-nowrap">
-                                                                    {payment.source_type}
-                                                                </span>
-                                                                <span className="text-xs px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 whitespace-nowrap">
-                                                                    Completed
-                                                                </span>
-                                                            </div>
-                                                        ) : (
-                                                            <span className="text-muted-foreground italic">—</span>
-                                                        )}
-                                                    </td>
-
-                                                    {/* Date/time */}
-                                                    <td className="py-3 pr-4 whitespace-nowrap text-muted-foreground text-xs">
-                                                        {completedAt}
-                                                    </td>
-
-                                                    {/* Amount + quick-view */}
-                                                    <td className="py-3 text-right whitespace-nowrap">
-                                                        <div className="flex items-center justify-end gap-2">
-                                                            <span className="font-semibold text-card-foreground tabular-nums">
-                                                                +{formatRevenue(payment.amount)}
-                                                            </span>
-                                                            {payment.view_url && (
-                                                                <a
-                                                                    href={payment.view_url}
-                                                                    title={__('View payment', 'smartpay')}
-                                                                    aria-label={__('View payment details', 'smartpay')}
-                                                                    className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground no-underline flex-shrink-0"
-                                                                >
-                                                                    <ArrowUpRight className="h-3.5 w-3.5" />
-                                                                </a>
-                                                            )}
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-
             </div>
         </>
     )
