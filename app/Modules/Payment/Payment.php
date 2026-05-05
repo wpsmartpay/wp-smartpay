@@ -114,6 +114,43 @@ class Payment
         // Fire action before processing payment
         do_action('smartpay_before_payment_processing', $payment_data);
 
+        // Goal gate — block payment if form goal is met and stop_orders is active
+        $form_id = $payment_data['payment_data']['form_id'] ?? 0;
+        if ( $form_id > 0 ) {
+            $progress = smartpay_calculate_goal_progress( $form_id );
+            $settings = get_post_meta( $form_id, '_smartpay_settings', true );
+            $settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
+            $goal     = $settings['goal'] ?? [];
+
+            if ( ! empty( $goal['enabled'] ) ) {
+                $blocked = false;
+                $stop_message = '';
+
+                // Block if goal reached and stop_orders behavior is set
+                if ( ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
+                    && ( $progress['goal_reached'] ?? false )
+                ) {
+                    $blocked     = true;
+                    $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
+                }
+
+                // Block if stop collection date is set and today is past that date
+                if ( ! $blocked && ! empty( $goal['stopCollectionDate'] ) ) {
+                    $today      = gmdate( 'Y-m-d' );
+                    $cutoff     = $goal['stopCollectionDate'];
+                    if ( $cutoff && $today > $cutoff ) {
+                        $blocked     = true;
+                        $stop_message = $goal['goalMetMessage'] ?: __( 'This form is no longer accepting payments.', 'smartpay' );
+                    }
+                }
+
+                if ( $blocked ) {
+                    echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
+                    die();
+                }
+            }
+        }
+
         // Send payment data toprocess gateway payment
         $this->_process_gateway_payment($payment_data);
 
@@ -354,6 +391,12 @@ class Payment
             array( '%s' ),
             array( '%d' )
         );
+
+        // Invalidate goal cache so progress bar reflects new completed payment.
+        $form_id = $payment->data['form_id'] ?? 0;
+        if ( $form_id > 0 && function_exists( 'smartpay_invalidate_goal_cache' ) ) {
+            smartpay_invalidate_goal_cache( (int) $form_id );
+        }
         $payment->completed_at = $completed_at;
 
         do_action('smartpay_payment_completed', $payment);
