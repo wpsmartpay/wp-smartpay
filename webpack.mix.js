@@ -44,6 +44,7 @@ mix.webpackConfig({
     .sass('resources/sass/app.scss', 'public/css')
     .js('resources/js/admin.js', 'public/js')
     .js('resources/js/components/index.js', 'public/js/ui.js')
+    .js('resources/js/pages/support/index.js', 'public/js/support.js')
     .react()
     .sass('resources/sass/admin.scss', 'public/css')
     .sass('resources/sass/dashboard.scss', 'public/css')
