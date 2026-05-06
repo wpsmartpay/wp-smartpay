@@ -1,10 +1,16 @@
-import { useState } from '@wordpress/element'
+import { useState, useEffect } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { HelpCircle } from 'lucide-react'
 import { HelpDrawer } from './HelpDrawer'
 
+const BASE_TITLE = 'SmartPay'
+
 export function Header({ title, subtitle, children }) {
     const [helpOpen, setHelpOpen] = useState(false)
+
+    useEffect(() => {
+        document.title = title ? `${title} — ${BASE_TITLE}` : BASE_TITLE
+    }, [title])
 
     return (
         <>
