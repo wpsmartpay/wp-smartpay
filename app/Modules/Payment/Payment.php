@@ -1,7 +1,7 @@
 <?php
-defined('ABSPATH') || exit;
 
 namespace SmartPay\Modules\Payment;
+defined('ABSPATH') || exit;
 
 use Ramsey\Uuid\Uuid;
 use SmartPay\Models\Product;

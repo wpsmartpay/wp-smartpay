@@ -1,7 +1,7 @@
 <?php
-defined('ABSPATH') || exit;
 
 namespace SmartPay\Framework\Validation;
+defined('ABSPATH') || exit;
 
 class ValidationData
 {

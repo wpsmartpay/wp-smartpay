@@ -1,7 +1,7 @@
 <?php
-defined('ABSPATH') || exit;
 
 namespace SmartPay\Modules\Admin;
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Admin\Logger;
 

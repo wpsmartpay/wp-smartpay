@@ -1,7 +1,7 @@
 <?php
-defined('ABSPATH') || exit;
 
 namespace SmartPay\Modules\Integration;
+defined('ABSPATH') || exit;
 
 class Integration
 {
