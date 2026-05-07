@@ -6,15 +6,15 @@ import {
     CreditCard,
     Activity,
     XCircle,
-    Package,
-    FileText,
-    CalendarRange,
-    ExternalLink,
     Receipt,
+    Package,
     UserCheck,
+    FileText,
+    Settings,
+    Plug,
+    BarChart3,
+    HelpCircle,
 } from 'lucide-react'
-import { Report } from '../components/report/report'
-import { StatCard } from '../components/stat-card'
 import { Header } from '../components/header'
 
 const { adminUrl, apiNonce, options } = window.smartpay
@@ -34,45 +34,110 @@ const formatRevenue = (amount) =>
         maximumFractionDigits: 2,
     })}`
 
-// ─── Period config ────────────────────────────────────────────────────────────
-const PERIODS = [
-    { key: 'today', label: __('Today', 'smartpay') },
-    { key: 'week',  label: __('This Week', 'smartpay') },
-    { key: 'month', label: __('This Month', 'smartpay') },
-]
-
-const getPeriodLabel = (period) => {
-    const now = new Date()
-    const fmt = (d) =>
-        d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
-
-    if (period === 'today') return fmt(now)
-
-    if (period === 'week') {
-        const mon = new Date(now)
-        mon.setDate(now.getDate() - ((now.getDay() + 6) % 7))
-        return `${fmt(mon)} → ${fmt(now)}`
-    }
-
-    // month
-    const start = new Date(now.getFullYear(), now.getMonth(), 1)
-    return `${fmt(start)} → ${fmt(now)}`
-}
-
-// ─── URL builder ──────────────────────────────────────────────────────────────
-const buildDashboardUrl = (period) => {
+const buildUrl = (period) => {
     const url = new URL(`${window.smartpay.restUrl}/v1/dashboard`)
     url.searchParams.set('period', period)
     return url.toString()
 }
 
-// ─── Quick links ──────────────────────────────────────────────────────────────
-const QUICK_LINKS = [
-    { label: __('Products', 'smartpay'),  icon: Package,   hash: '/products' },
-    { label: __('Forms', 'smartpay'),     icon: FileText,  hash: '/forms' },
-    { label: __('Payments', 'smartpay'),  icon: Receipt,   hash: '/payments' },
-    { label: __('Customers', 'smartpay'), icon: UserCheck, hash: '/customers' },
+const timeAgo = (dateStr) => {
+    if (!dateStr) return ''
+    const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000)
+    if (diff < 60)    return __('just now', 'smartpay')
+    if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`
+    return `${Math.floor(diff / 86400)}d ago`
+}
+
+const avatarInitials = (email) => {
+    const [local] = (email || '').split('@')
+    return local.slice(0, 2).toUpperCase()
+}
+
+// ─── Period config ────────────────────────────────────────────────────────────
+const PERIODS = [
+    { key: 'today', label: __('Today', 'smartpay') },
+    { key: 'week',  label: __('Week to date', 'smartpay') },
+    { key: 'month', label: __('Month to date', 'smartpay') },
 ]
+
+// ─── Management groups ────────────────────────────────────────────────────────
+const MANAGEMENT_GROUPS = [
+    {
+        label: __('PAYMENTS & PRODUCTS', 'smartpay'),
+        items: [
+            { label: __('View Payments', 'smartpay'),  icon: Receipt,   hash: '/payments' },
+            { label: __('Products', 'smartpay'),       icon: Package,   hash: '/products' },
+            { label: __('Customers', 'smartpay'),      icon: UserCheck, hash: '/customers' },
+            { label: __('Forms', 'smartpay'),          icon: FileText,  hash: '/forms' },
+        ],
+    },
+    {
+        label: __('CONFIGURATION', 'smartpay'),
+        items: [
+            { label: __('Settings', 'smartpay'),      icon: Settings,   adminPage: 'smartpay-setting' },
+            { label: __('Integrations', 'smartpay'),  icon: Plug,       adminPage: 'smartpay-integrations' },
+            { label: __('Reports', 'smartpay'),       icon: BarChart3,  hash: '/reports' },
+            { label: __('Support', 'smartpay'),       icon: HelpCircle, adminPage: 'smartpay-support' },
+        ],
+    },
+]
+
+// ─── % Change badge ───────────────────────────────────────────────────────────
+function ChangeBadge({ current, prev }) {
+    let label, cls
+
+    if (prev === 0 && current === 0) {
+        label = '0%'
+        cls   = 'text-muted-foreground bg-muted'
+    } else if (prev === 0) {
+        label = __('New', 'smartpay')
+        cls   = 'text-green-700 bg-green-50'
+    } else {
+        const pct = Math.round(((current - prev) / Math.abs(prev)) * 100)
+        if (pct > 0) {
+            label = `+${pct}%`
+            cls   = 'text-green-700 bg-green-50'
+        } else if (pct < 0) {
+            label = `${pct}%`
+            cls   = 'text-red-600 bg-red-50'
+        } else {
+            label = '0%'
+            cls   = 'text-muted-foreground bg-muted'
+        }
+    }
+
+    return (
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded tabular-nums ${cls}`}>
+            {label}
+        </span>
+    )
+}
+
+// ─── Single stat cell (used in 2×2 grid) ─────────────────────────────────────
+function StatCell({ icon: Icon, title, value, current, prev, loading, borderRight, borderBottom }) {
+    const borders = [
+        borderRight  ? 'border-r border-border' : '',
+        borderBottom ? 'border-b border-border' : '',
+    ].filter(Boolean).join(' ')
+
+    return (
+        <div className={`p-6 ${borders}`}>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                {Icon && <Icon className="w-4 h-4" />}
+                {title}
+            </div>
+            <div className="flex items-end justify-between gap-2">
+                <span className="text-3xl font-bold tracking-tight text-card-foreground">
+                    {loading ? '—' : value}
+                </span>
+                {!loading && (
+                    <ChangeBadge current={current ?? 0} prev={prev ?? 0} />
+                )}
+            </div>
+        </div>
+    )
+}
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 export const Dashboard = () => {
@@ -80,225 +145,184 @@ export const Dashboard = () => {
     const [data, setData]        = useState(null)
     const [loading, setLoading]  = useState(true)
 
-    const {
-        Card,
-        CardHeader,
-        CardTitle,
-        CardDescription,
-        CardContent,
-    } = window.WPSmartPayUI
+    const { Card, CardHeader, CardTitle, CardContent, CardFooter } = window.WPSmartPayUI
 
     useEffect(() => {
         setLoading(true)
         apiFetch({
-            path:    buildDashboardUrl(period),
+            path:    buildUrl(period),
             headers: { 'X-WP-Nonce': apiNonce },
         })
             .then(setData)
             .finally(() => setLoading(false))
     }, [period])
 
-    const periodStats  = data?.period_stats  || {}
-    const monthlyChart = data?.monthly_chart || []
+    const curr           = data?.period_stats          || {}
+    const prev           = data?.previous_period_stats || {}
+    const recentPayments = data?.recent_payments        || []
 
-    // ─── Stat cards ───────────────────────────────────────────────────────────
-    const STAT_CARDS = [
-        {
-            title:  __('Total Revenue', 'smartpay'),
-            value:  loading ? '—' : formatRevenue(periodStats.revenue),
-            change: __('Period total', 'smartpay'),
-            icon:   DollarSign,
-        },
-        {
-            title:  __('Completed', 'smartpay'),
-            value:  loading ? '—' : `+${periodStats.completed_count || 0}`,
-            change: __('Payments completed', 'smartpay'),
-            icon:   CreditCard,
-        },
-        {
-            title:  __('Pending', 'smartpay'),
-            value:  loading ? '—' : `${periodStats.pending_count || 0}`,
-            change: __('Awaiting completion', 'smartpay'),
-            icon:   Activity,
-        },
-        {
-            title:  __('Failed', 'smartpay'),
-            value:  loading ? '—' : `${periodStats.failed_count || 0}`,
-            change: __('Failed payments', 'smartpay'),
-            icon:   XCircle,
-        },
-    ]
-
-    // ─── Area chart options (shadcn-style) ────────────────────────────────────
-    const chartSeries = [
-        {
-            name: __('Products', 'smartpay'),
-            data: monthlyChart.map((d) => Number(d.product_purchase || 0)),
-        },
-        {
-            name: __('Forms', 'smartpay'),
-            data: monthlyChart.map((d) => Number(d.form_payment || 0)),
-        },
-    ]
-
-    const chartOptions = {
-        chart: {
-            type:       'area',
-            toolbar:    { show: false },
-            zoom:       { enabled: false },
-            fontFamily: 'inherit',
-            animations: { enabled: true, speed: 500 },
-        },
-        stroke:     { curve: 'smooth', width: 2 },
-        fill: {
-            type:     'gradient',
-            gradient: { opacityFrom: 0.35, opacityTo: 0.02, stops: [0, 95, 100] },
-        },
-        colors:     ['#3858e9', '#22c55e'],
-        dataLabels: { enabled: false },
-        xaxis: {
-            type:       'category',
-            categories: monthlyChart.map((d) => d.date),
-            labels: {
-                style:     { fontSize: '11px', colors: '#6b7280' },
-                rotate:    0,
-                formatter: (val, idx) => (idx % 5 === 0 ? val : ''),
-            },
-            axisBorder: { show: false },
-            axisTicks:  { show: false },
-        },
-        yaxis: {
-            labels: {
-                formatter: (v) => `${currencySymbol}${Number(v).toLocaleString()}`,
-                style:     { fontSize: '11px', colors: '#6b7280' },
-            },
-        },
-        grid: {
-            borderColor:     '#f3f4f6',
-            strokeDashArray: 4,
-            xaxis:           { lines: { show: false } },
-        },
-        tooltip: {
-            y: { formatter: (v) => formatRevenue(v) },
-        },
-        legend: {
-            show:            true,
-            position:        'top',
-            horizontalAlign: 'right',
-            fontSize:        '12px',
-            labels:          { colors: '#6b7280' },
-        },
-    }
-
-    const getQuickLinkHref = (hash) => `${adminUrl}?page=smartpay#${hash}`
+    const getHref = (item) =>
+        item.adminPage
+            ? `${adminUrl}?page=${item.adminPage}`
+            : `${adminUrl}?page=smartpay#${item.hash}`
 
     return (
         <>
-            {/* ── Page header ──────────────────────────────────────────────── */}
             <Header
                 title={__('Dashboard', 'smartpay')}
                 subtitle={__('Overview of your payment activity', 'smartpay')}
             />
 
-            {/* ── Period selector + date range badge ───────────────────────── */}
-            <div className="flex items-center justify-between px-4 pt-4 pb-0 max-w-7xl mx-auto flex-wrap gap-3">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground border border-border rounded-lg px-3 py-1.5 bg-background">
-                    <CalendarRange className="w-4 h-4" />
-                    <span>{getPeriodLabel(period)}</span>
-                </div>
+            <div className="sp-page-content sp-page-content--sm">
 
-                <div className="flex items-center gap-0.5 rounded-lg border border-border bg-muted/40 p-1">
-                    {PERIODS.map(({ key, label }) => (
-                        <button
-                            key={key}
-                            type="button"
-                            onClick={() => setPeriod(key)}
-                            className={
-                                period === key
-                                    ? 'inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium bg-background shadow-sm text-foreground transition-all border-0 cursor-pointer'
-                                    : 'inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-all bg-transparent border-0 cursor-pointer'
-                            }
-                        >
-                            {label}
-                        </button>
-                    ))}
-                </div>
-            </div>
+                {/* ── Stats Overview ──────────────────────────────────────── */}
+                <Card>
+                    <CardHeader className="border-b border-border pb-0">
+                        <CardTitle>{__('Stats Overview', 'smartpay')}</CardTitle>
+                    </CardHeader>
 
-            <div className="p-4 max-w-7xl mx-auto flex flex-col gap-5">
-
-                {/* ── Stat cards ─────────────────────────────────────────── */}
-                <div className="grid grid-cols-4 gap-4 lg:grid-cols-4">
-                    {STAT_CARDS.map((card) => (
-                        <StatCard
-                            key={card.title}
-                            title={card.title}
-                            value={card.value}
-                            change={card.change}
-                            icon={card.icon}
-                        />
-                    ))}
-                </div>
-
-                {/* ── Area chart (2/3) + Quick Links (1/3) ──── */}
-                <div className="grid grid-cols-3 gap-4 lg:grid-cols-3">
-
-                    {/* Area chart */}
-                    <div className="lg:col-span-2">
-                        <Card className="h-full">
-                            <CardHeader>
-                                <CardTitle>{__('Revenue Overview', 'smartpay')}</CardTitle>
-                                <CardDescription>
-                                    {__('Product purchases & form payments', 'smartpay')}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {loading ? (
-                                    <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
-                                        {__('Loading…', 'smartpay')}
-                                    </div>
-                                ) : (
-                                    <Report
-                                        type="area"
-                                        height="300"
-                                        series={chartSeries}
-                                        options={chartOptions}
-                                    />
-                                )}
-                            </CardContent>
-                        </Card>
+                    {/* Period tabs */}
+                    <div className="sp-tabs__nav">
+                        <nav className="flex gap-0">
+                            {PERIODS.map(({ key, label }) => (
+                                <button
+                                    key={key}
+                                    type="button"
+                                    onClick={() => setPeriod(key)}
+                                    className={period === key
+                                        ? 'sp-tabs__item sp-tabs__item--active'
+                                        : 'sp-tabs__item'
+                                    }
+                                >
+                                    {label}
+                                </button>
+                            ))}
+                        </nav>
                     </div>
 
-                    {/* Sidebar */}
-                    <div className="flex flex-col gap-4">
+                    {/* 2×2 stats grid */}
+                    <div className="grid grid-cols-2">
+                        <StatCell
+                            icon={DollarSign}
+                            title={__('Total Revenue', 'smartpay')}
+                            value={formatRevenue(curr.revenue)}
+                            current={curr.revenue}
+                            prev={prev.revenue}
+                            loading={loading}
+                            borderRight
+                            borderBottom
+                        />
+                        <StatCell
+                            icon={CreditCard}
+                            title={__('Completed Payments', 'smartpay')}
+                            value={curr.completed_count ?? 0}
+                            current={curr.completed_count}
+                            prev={prev.completed_count}
+                            loading={loading}
+                            borderBottom
+                        />
+                        <StatCell
+                            icon={Activity}
+                            title={__('Pending', 'smartpay')}
+                            value={curr.pending_count ?? 0}
+                            current={curr.pending_count}
+                            prev={prev.pending_count}
+                            loading={loading}
+                            borderRight
+                        />
+                        <StatCell
+                            icon={XCircle}
+                            title={__('Failed', 'smartpay')}
+                            value={curr.failed_count ?? 0}
+                            current={curr.failed_count}
+                            prev={prev.failed_count}
+                            loading={loading}
+                        />
+                    </div>
 
-                        {/* Quick Links */}
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>{__('Quick Links', 'smartpay')}</CardTitle>
-                            </CardHeader>
-                            <CardContent className="px-3 pb-3 pt-0">
-                                <nav className="flex flex-col gap-0.5">
-                                    {QUICK_LINKS.map(({ label, icon: Icon, hash }) => (
+                    <CardFooter className="border-t border-border pt-4 pb-4">
+                        <a
+                            href={`${adminUrl}?page=smartpay#/reports`}
+                            className="text-sm text-primary hover:underline no-underline font-medium"
+                        >
+                            {__('View detailed reports →', 'smartpay')}
+                        </a>
+                    </CardFooter>
+                </Card>
+
+                {/* ── Recent Payments ─────────────────────────────────────── */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{__('Recent Payments', 'smartpay')}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                        {loading ? (
+                            <div className="sp-state-loading">{__('Loading…', 'smartpay')}</div>
+                        ) : recentPayments.length === 0 ? (
+                            <div className="sp-state-empty">{__('No payments yet.', 'smartpay')}</div>
+                        ) : (
+                            <div className="flex flex-col divide-y divide-border">
+                                {recentPayments.map((payment) => (
+                                    <a
+                                        key={payment.id}
+                                        href={payment.view_url}
+                                        className="flex items-center gap-4 py-3 no-underline -mx-6 px-6 hover:bg-muted/30 transition-colors"
+                                    >
+                                        <div className="flex-shrink-0 flex items-center justify-center w-9 h-9 rounded-full bg-muted text-xs font-semibold text-muted-foreground select-none">
+                                            {avatarInitials(payment.email)}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-card-foreground truncate leading-none">
+                                                {payment.email}
+                                            </p>
+                                            {payment.source_name && (
+                                                <p className="text-xs text-muted-foreground truncate mt-1">
+                                                    {payment.source_name}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <span className="text-xs text-muted-foreground flex-shrink-0">
+                                            {timeAgo(payment.completed_at)}
+                                        </span>
+                                        <span className="text-sm font-semibold text-card-foreground tabular-nums flex-shrink-0">
+                                            {formatRevenue(payment.amount)}
+                                        </span>
+                                    </a>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* ── SmartPay Management ──────────────────────────────────── */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{__('SmartPay Management', 'smartpay')}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0 flex flex-col gap-6">
+                        {MANAGEMENT_GROUPS.map((group) => (
+                            <div key={group.label}>
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                                    {group.label}
+                                </p>
+                                <div className="sp-grid sp-grid--2">
+                                    {group.items.map((item) => (
                                         <a
-                                            key={label}
-                                            href={getQuickLinkHref(hash)}
-                                            className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors no-underline group"
+                                            key={item.label}
+                                            href={getHref(item)}
+                                            className="flex items-center gap-3 py-2 text-sm font-semibold text-card-foreground no-underline hover:text-primary transition-colors"
                                         >
-                                            <Icon className="h-4 w-4 flex-shrink-0" />
-                                            <span className="flex-1">{label}</span>
-                                            <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity" />
+                                            <item.icon className="w-4 h-4 text-primary flex-shrink-0" />
+                                            {item.label}
                                         </a>
                                     ))}
-                                </nav>
-                            </CardContent>
-                        </Card>
+                                </div>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
 
-                        {/* Pro hook — subscription health widget */}
-                        {window.smartPayRouteHooks.applyFilters('smartpay_dashboard_bottom', null, { period, data })}
 
-                    </div>
-                </div>
             </div>
         </>
     )

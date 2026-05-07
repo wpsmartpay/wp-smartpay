@@ -30,11 +30,11 @@ class DashboardController extends RestController
     }
 
     /**
-     * Get full dashboard summary data.
+     * Get dashboard summary data.
      *
      * Accepts an optional `period` query param: today | week | month (default: month).
-     * Period-sensitive data (stats, top products, top forms) is filtered to that window.
-     * Monthly chart and recent payments are always unfiltered.
+     * Returns current and previous period stats (for % change badges), all-time totals,
+     * and the 10 most recent completed payments.
      *
      * @param WP_REST_Request $request The REST request object.
      * @return WP_REST_Response
@@ -46,16 +46,17 @@ class DashboardController extends RestController
             $period = 'month';
         }
 
-        $date_range = $this->resolve_date_range( $period );
+        $date_range      = $this->resolve_date_range( $period );
+        $prev_date_range = $this->resolve_previous_date_range( $period );
 
         return new WP_REST_Response( [
-            'period'          => $period,
-            'totals'          => smartpay_dashboard_get_totals(),
-            'period_stats'    => smartpay_dashboard_get_period_stats( $date_range ),
-            'monthly_chart'   => smartpay_dashboard_get_monthly_chart(),
-            'top_products'    => smartpay_dashboard_get_top_products( $date_range ),
-            'top_forms'       => smartpay_dashboard_get_top_forms( $date_range ),
-            'recent_payments' => smartpay_dashboard_get_recent_payments(),
+            'period'                => $period,
+            'date_range'            => $date_range,
+            'previous_date_range'   => $prev_date_range,
+            'totals'                => smartpay_dashboard_get_totals(),
+            'period_stats'          => smartpay_dashboard_get_period_stats( $date_range ),
+            'previous_period_stats' => smartpay_dashboard_get_period_stats( $prev_date_range ),
+            'recent_payments'       => smartpay_dashboard_get_recent_payments(),
         ] );
     }
 
@@ -85,5 +86,41 @@ class DashboardController extends RestController
         }
 
         return [ 'start' => $start, 'end' => $now ];
+    }
+
+    /**
+     * Resolve the full start/end window for the period immediately before the current one.
+     *
+     * today → yesterday 00:00:00–23:59:59
+     * week  → previous Mon 00:00:00 → previous Sun 23:59:59
+     * month → 1st of previous month → last day of previous month 23:59:59
+     *
+     * @param string $period 'today' | 'week' | 'month'.
+     * @return array{ start: string, end: string }
+     */
+    private function resolve_previous_date_range( string $period ): array
+    {
+        $timestamp = current_time( 'timestamp' );
+
+        switch ( $period ) {
+            case 'today':
+                $ts    = strtotime( '-1 day', $timestamp );
+                $start = gmdate( 'Y-m-d', $ts ) . ' 00:00:00';
+                $end   = gmdate( 'Y-m-d', $ts ) . ' 23:59:59';
+                break;
+
+            case 'week':
+                $start = gmdate( 'Y-m-d', strtotime( 'monday last week', $timestamp ) ) . ' 00:00:00';
+                $end   = gmdate( 'Y-m-d', strtotime( 'sunday last week', $timestamp ) ) . ' 23:59:59';
+                break;
+
+            case 'month':
+            default:
+                $start = gmdate( 'Y-m-d', strtotime( 'first day of previous month', $timestamp ) ) . ' 00:00:00';
+                $end   = gmdate( 'Y-m-d', strtotime( 'last day of previous month', $timestamp ) ) . ' 23:59:59';
+                break;
+        }
+
+        return [ 'start' => $start, 'end' => $end ];
     }
 }
