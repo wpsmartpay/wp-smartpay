@@ -64,7 +64,7 @@ final class FreePurchase extends PaymentGateway
         $payment = smartpay_insert_payment($payment_data);
 
         if ( ! $payment || ! $payment->id ) {
-            wp_redirect( get_permalink( $smartpay_options['payment_failure_page'] ), 302 );
+            wp_safe_redirect( get_permalink( $smartpay_options['payment_failure_page'] ), 302 );
             smartpay_debug_log(
                 sprintf(
                     /* translators: 1: Payment id */

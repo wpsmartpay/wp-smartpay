@@ -16,12 +16,12 @@ function smartpay_dashboard_get_totals(): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-    $total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    $total_products  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_products" );  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    $total_forms     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_forms" );     // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" );
+    $total_products  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_products" );
+    $total_forms     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_forms" );
     // phpcs:enable
 
     return [
@@ -44,11 +44,11 @@ function smartpay_dashboard_get_period_stats( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
     $start  = $date_range['start'];
     $end    = $date_range['end'];
 
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $revenue = (float) $wpdb->get_var(
         $wpdb->prepare(
             "SELECT COALESCE( SUM( amount ), 0 )
@@ -154,9 +154,9 @@ function smartpay_dashboard_get_top_products( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT
@@ -177,6 +177,7 @@ function smartpay_dashboard_get_top_products( array $date_range ): array
             $date_range['end']
         )
     );
+    // phpcs:enable
 
     if ( empty( $rows ) ) {
         return [];
@@ -214,9 +215,9 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT
@@ -237,6 +238,7 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
             $date_range['end']
         )
     );
+    // phpcs:enable
 
     if ( empty( $rows ) ) {
         return [];

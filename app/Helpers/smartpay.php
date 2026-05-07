@@ -1100,9 +1100,10 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 		$current = floatval( $cached );
 	} else {
 		global $wpdb;
-		$table = $wpdb->prefix . 'smartpay_payments';
+		$table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
 
 		// Filter by form_id stored in payment data JSON
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT COUNT(*) as cnt, COALESCE(SUM(amount),0) as total_amount FROM {$table} WHERE status = %s AND data LIKE %s",
@@ -1111,6 +1112,7 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 			),
 			ARRAY_A
 		);
+		// phpcs:enable
 
 		$current = (float) ( $type === 'quantity' ? ( $row['cnt'] ?? 0 ) : ( $row['total_amount'] ?? 0 ) );
 

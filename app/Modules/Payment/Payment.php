@@ -385,6 +385,7 @@ class Payment
         // Direct DB update avoids re-triggering the model's saving() lifecycle,
         // which would fire a duplicate status_changed log entry.
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->update(
             $wpdb->prefix . 'smartpay_payments',
             array( 'completed_at' => $completed_at ),

@@ -9,7 +9,7 @@ class CreateSmartpayProductsTable
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_products';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_products' );
 
         $defaultStatus = Product::PUBLISH;
 

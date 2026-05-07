@@ -7,7 +7,7 @@ class CreateSmartpayCustomersTable
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_customers';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_customers' );
 
         $charsetCollate = $wpdb->get_charset_collate();
 

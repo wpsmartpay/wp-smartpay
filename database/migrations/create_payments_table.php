@@ -9,7 +9,7 @@ class CreateSmartpayPaymentsTable
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_payments';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
 
         $defaultType = Payment::PRODUCT_PURCHASE;
         $defaultStatus = Payment::PENDING;

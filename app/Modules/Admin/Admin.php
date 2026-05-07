@@ -240,6 +240,7 @@ class Admin
     public function adminScripts($hook)
     {
         // Fallback: hook suffix can vary (e.g. URL-encoded slug); also check request page param
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reading page slug for asset enqueue routing, not processing form data
         $request_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
         $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments'], true);
 
@@ -477,8 +478,8 @@ class Admin
         $rate_url = 'https://wordpress.org/support/plugin/smartpay/reviews/#new-post';
 
         return sprintf(
-            /* translators: %s: five-star rating link */
             wp_kses(
+                /* translators: %s: five-star rating link */
                 __( 'If you like <strong>WP SmartPay</strong> please leave us a %s rating. A huge thanks in advance!', 'smartpay' ),
                 [ 'strong' => [] ]
             ),
