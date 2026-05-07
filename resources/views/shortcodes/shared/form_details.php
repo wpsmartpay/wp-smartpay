@@ -3,6 +3,42 @@
         <div class="card form bg-transparent border-0">
             <div class="card-body smartpay_form_builder_wrapper">
 				<?php do_action( 'before_smartpay_payment_form', $form ); ?>
+
+				<?php
+				$goal_progress = smartpay_calculate_goal_progress( $form->id ?? 0 );
+				$form_settings = is_string( $form->settings ?? null ) ? json_decode( $form->settings, true ) : ( $form->settings ?? [] );
+				$goal           = $form_settings['goal'] ?? [];
+				?>
+				<?php if ( ! empty( $goal['enabled'] ) ) : ?>
+					<?php
+					$show_to_public = $goal['showToPublic'] ?? true;
+					if ( $show_to_public ) :
+						$current     = $goal_progress['current'];
+						$target      = $goal_progress['target'];
+						$percentage  = $goal_progress['percentage'];
+						$goal_reached = $goal_progress['goal_reached'];
+						?>
+						<div class="smartpay-goal-progress" style="margin-bottom: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; text-align: left;">
+							<?php if ( $goal_reached ) : ?>
+								<p style="margin: 0 0 12px; font-weight: 600; color: #28a745;">
+									<?php echo esc_html( $goal['goalMetMessage'] ?? __( 'Goal reached!', 'smartpay' ) ); ?>
+								</p>
+							<?php else : ?>
+								<?php $type_label = ( $goal['type'] ?? 'quantity' ) === 'quantity' ? _n( 'sold', 'sold', floor( $current ), 'smartpay' ) : __( 'raised', 'smartpay' ); ?>
+								<p style="margin: 0 0 8px; font-size: 14px; color: #555;">
+									<strong><?php echo esc_html( number_format( $current ) ); ?></strong> / <?php echo esc_html( number_format( $target ) ); ?> <?php echo esc_html( $type_label ); ?>
+								</p>
+							<?php endif; ?>
+							<div style="background: #e9ecef; border-radius: 4px; height: 12px; overflow: hidden;">
+								<div style="width: <?php echo esc_attr( $percentage ); ?>%; background: #28a745; height: 100%; border-radius: 4px; transition: width 0.3s ease;"></div>
+							</div>
+							<?php if ( ! $goal_reached ) : ?>
+								<p style="margin: 8px 0 0; font-size: 12px; color: #888; text-align: right;"><?php echo esc_html( $percentage ); ?>%</p>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				<?php endif; ?>
+
                 <form id="smartpay-payment-form" action="<?php echo esc_url(smartpay_get_payment_page_uri()); ?>" method="POST"
                       enctype="multipart/form-data">
                     <div id="form-response" class="mb-3"></div>

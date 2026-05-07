@@ -146,10 +146,28 @@ class PaymentController extends RestController
 
         if ( Payment::FORM_PAYMENT === $raw_type && ! empty( $data['data']['form_id'] ) ) {
             $form_id = absint( $data['data']['form_id'] );
-            $form    = \SmartPay\Models\Form::find( $form_id );
 
-            $data['data']['form_title']    = $form ? esc_html( $form->title ) : sprintf( '#%d (deleted)', $form_id );
-            $data['data']['form_edit_url'] = $form ? '#/forms/' . $form_id . '/edit' : '';
+            // Check native forms table first.
+            $form = \SmartPay\Models\Form::find( $form_id );
+
+            if ( $form ) {
+                $data['data']['form_type']    = 'native';
+                $data['data']['form_title']    = esc_html( $form->title );
+                $data['data']['form_edit_url'] = '#/forms/' . $form_id . '/edit';
+            } else {
+                // Fall back to legacy WP post form.
+                $legacy = get_post( $form_id );
+
+                if ( $legacy && 'smartpay_form' === $legacy->post_type ) {
+                    $data['data']['form_type']    = 'legacy';
+                    $data['data']['form_title']    = esc_html( $legacy->post_title ) ?: sprintf( 'Form #%d', $form_id );
+                    $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
+                } else {
+                    $data['data']['form_type']    = '';
+                    $data['data']['form_title']    = sprintf( 'Form #%d (deleted)', $form_id );
+                    $data['data']['form_edit_url'] = '';
+                }
+            }
         }
 
         // Resolve related subscription if any.

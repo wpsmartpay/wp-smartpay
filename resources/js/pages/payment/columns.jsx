@@ -49,6 +49,42 @@ export const createColumns = (deletePayment, onViewPayment) => [
 		}
 	},
 	{
+		accessorKey: 'source_name',
+		header: () => <div className="text-center">{ __('Product / Form', 'smartpay') }</div>,
+		enableSorting: false,
+		cell: ({ row }) => {
+			const payment = row.original
+			const type    = payment.type
+			const data    = payment.data || {}
+
+			if (type === 'Product Purchase') {
+				return (
+					<div className='flex justify-center items-center gap-1.5'>
+						<span className='text-sm text-gray-700'>
+							#{ data?.product_id || '—' }
+						</span>
+						<span className='inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200 capitalize'>
+							product
+						</span>
+					</div>
+				)
+			}
+			if (type === 'Form Payment') {
+				return (
+					<div className='flex justify-center items-center gap-1.5'>
+						<span className='text-sm text-gray-700'>
+							#{ data?.form_id || '—' }
+						</span>
+						<span className='inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200 capitalize'>
+							form
+						</span>
+					</div>
+				)
+			}
+			return <span className="text-muted-foreground">—</span>
+		}
+	},
+	{
 		accessorKey: 'date',
 		header: () => <div className="text-center">{ __('Date & Time', 'smartpay') }</div>,
 		enableSorting: false,

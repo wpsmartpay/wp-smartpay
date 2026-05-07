@@ -93,10 +93,57 @@ domReady(function () {
                     </Routes>
                 </HashRouter>
 
-                {/* load the smartpay-pro routes */}
+                {/* load the smartpay-pro routes — pass our Routes so pro can extend them */}
                 {window.smartPayRouteHooks.applyFilters(
                     'smartPayAdminRoute',
-                    [],
+                    null,
+                    <Routes>
+                        {/* Dashboard */}
+                        <Route exact path="/" element={<Dashboard />} />
+
+                        {/* Product */}
+                        <Route
+                            exact
+                            path="/products"
+                            element={<ProductList />}
+                        />
+                        <Route
+                            exact
+                            path="/products/create"
+                            element={<CreateProduct />}
+                        />
+                        <Route
+                            exact
+                            path="/products/:productId/edit"
+                            element={<EditProduct />}
+                        />
+
+                        {/* Customer */}
+                        <Route
+                            exact
+                            path="/customers"
+                            element={<CustomerList />}
+                        />
+                        <Route
+                            exact
+                            path="/customers/:customerId"
+                            element={<ShowCustomer />}
+                        />
+
+                        {/* Coupon */}
+                        <Route exact path="/coupons" element={<CouponList />} />
+
+                        {/* Payment */}
+                        <Route exact path="/payments" element={<PaymentList />} />
+                        {/* Reserve /payments/new for pro plugin — must come before :paymentId */}
+                        <Route exact path="/payments/new" element={null} />
+                        <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
+
+                        {/* Form Data */}
+                        <Route exact path="/form-data" element={<FormData />} />
+
+                        <Route element={<NotFound />} />
+                    </Routes>,
                 )}
 
                 {/* <AdminFooter /> */}

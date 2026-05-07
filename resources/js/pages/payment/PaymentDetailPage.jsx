@@ -275,7 +275,23 @@ export const PaymentDetailPage = () => {
 				<SectionCard key="form_details" title={ __( 'Form Details', 'smartpay' ) }>
 					<dl className="grid grid-cols-2 gap-x-6 gap-y-4">
 						<InfoField label={ __( 'Form', 'smartpay' ) }>
-							{ payment.data?.form_title || `#${ payment.data?.form_id }` }
+							{ payment.data?.form_edit_url ? (
+								<div className="flex items-center gap-2">
+									<a
+										href={ payment.data.form_edit_url }
+										className="text-blue-600 hover:underline"
+									>
+										{ payment.data?.form_title || `#${ payment.data?.form_id }` }
+									</a>
+									{ payment.data?.form_type && (
+										<span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 capitalize">
+											{ payment.data.form_type }
+										</span>
+									) }
+								</div>
+							) : (
+								payment.data?.form_title || `#${ payment.data?.form_id }`
+							) }
 						</InfoField>
 						<InfoField label={ __( 'Total Amount', 'smartpay' ) }>
 							{ payment.data?.total_amount }
