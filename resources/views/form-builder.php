@@ -1,4 +1,4 @@
-<?php ?>
+<?php defined('ABSPATH') || exit; ?>
 <div class="smartpay" style="display: block !important;">
     <div class="wrap d-none">
         <h2></h2>

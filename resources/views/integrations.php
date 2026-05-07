@@ -1,3 +1,4 @@
+<?php defined('ABSPATH') || exit; ?>
 <div class="smartpay">
     <div class="wrap container">
         <h1 class="wp-heading-inline"></h1>

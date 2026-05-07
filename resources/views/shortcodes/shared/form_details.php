@@ -1,3 +1,4 @@
+<?php defined('ABSPATH') || exit; ?>
 <div class="smartpay" style="margin: 0 auto;">
     <div class="smartpay-form-shortcode smartpay-payment">
         <div class="card form bg-transparent border-0">

@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Frontend\Utilities\Downloader;
 

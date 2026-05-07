@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Foundation\Integration;
 use SmartPay\Modules\Integration\Integration as IntegrationModule;

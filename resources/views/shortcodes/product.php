@@ -1,4 +1,5 @@
 <?php if ('embedded' == $behavior) : ?>
+defined('ABSPATH') || exit;
 
 <?php include __DIR__ . '/shared/product_details.php'; ?>
 

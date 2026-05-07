@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 namespace SmartPay\Modules\Gateway\Gateways;
 
