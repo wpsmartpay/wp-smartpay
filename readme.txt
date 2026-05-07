@@ -2,7 +2,7 @@
 Contributors: converswp
 Tags: download manager, ecommerce, digital product, payment gateways, donations,
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 8.1
 Stable Tag: 2.8.2
 License: GPL-3.0-or-later
