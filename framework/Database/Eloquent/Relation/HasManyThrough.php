@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent\Relation;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Eloquent\Model;
 use SmartPay\Framework\Database\Eloquent\ModelQueryBuilder;
@@ -105,7 +106,7 @@ class HasManyThrough extends Relation
      * @param  \SmartPay\Framework\Database\Eloquent\ModelQueryBuilder|null  $query
      * @return void
      */
-    protected function setJoin(ModelQueryBuilder $query = null)
+    protected function setJoin(?ModelQueryBuilder $query = null)
     {
         $query = $query ?: $this->query;
 

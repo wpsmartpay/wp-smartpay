@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay;
+defined('ABSPATH') || exit;
 
 class Deactivator
 {

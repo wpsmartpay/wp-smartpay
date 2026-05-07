@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Container;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Contracts\Container\Container;
 use SmartPay\Framework\Contracts\Container\ContextualBindingBuilder as ContextualBindingBuilderContract;

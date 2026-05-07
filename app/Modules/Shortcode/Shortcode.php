@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Shortcode;
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Payment;
 use SmartPay\Models\Product;

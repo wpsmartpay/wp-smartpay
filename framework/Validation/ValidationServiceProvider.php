@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Validation;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Support\ServiceProvider;
 

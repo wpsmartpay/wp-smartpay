@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\QueryBuilder;
+defined('ABSPATH') || exit;
 
 class NestedCriteria extends QueryBuilderHandler
 {

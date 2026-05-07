@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Connection;
 use SmartPay\Framework\Database\QueryBuilder\QueryBuilderHandler;

@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Validation\Contracts;
+defined('ABSPATH') || exit;
 
 interface File
 {

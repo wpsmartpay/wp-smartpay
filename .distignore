@@ -10,6 +10,7 @@
 /resources/js
 /scripts
 /temp
+/test-results
 
 # Files
 .distignore

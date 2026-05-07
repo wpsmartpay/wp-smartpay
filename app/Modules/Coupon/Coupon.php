@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Coupon;
+defined('ABSPATH') || exit;
 
 use SmartPay\Http\Controllers\Rest\Admin\CouponController;
 use SmartPay\Models\Coupon as ModelsCoupon;

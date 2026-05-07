@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Customer;
+defined('ABSPATH') || exit;
 
 use SmartPay\Http\Controllers\Rest\Admin\CustomerController;
 use WP_REST_Server;

@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Concerns\WordPressAction;
 use SmartPay\Framework\Container\Container;

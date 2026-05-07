@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Payment;
 

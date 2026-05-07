@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay;
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Admin\Utilities\Upload;
 
