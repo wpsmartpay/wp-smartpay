@@ -272,14 +272,20 @@ export const Dashboard = () => {
                                             {avatarInitials(payment.email)}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-card-foreground truncate leading-none">
-                                                {payment.email}
-                                            </p>
-                                            {payment.source_name && (
-                                                <p className="text-xs text-muted-foreground truncate mt-1">
-                                                    {payment.source_name}
+                                            <div className="flex items-center gap-2">
+                                                <p className="text-sm font-medium text-card-foreground truncate leading-none">
+                                                    {payment.email}
                                                 </p>
-                                            )}
+                                                <span className="text-xs text-muted-foreground flex-shrink-0 tabular-nums">
+                                                    #{payment.id}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground truncate mt-1">
+                                                {payment.source_name
+                                                    ? `${payment.source_type}: ${payment.source_name}`
+                                                    : payment.source_type || '—'
+                                                }
+                                            </p>
                                         </div>
                                         <span className="text-xs text-muted-foreground flex-shrink-0">
                                             {timeAgo(payment.completed_at)}
