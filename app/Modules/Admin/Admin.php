@@ -325,6 +325,7 @@ class Admin
                 true
             );
             wp_localize_script('smartpay-support', 'smartpaySupport', $this->getSupportData());
+            wp_localize_script( 'smartpay-support', 'smartpay', array( 'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ) );
         }
 
         $this->registerBlocks($hook);
