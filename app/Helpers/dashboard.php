@@ -307,9 +307,21 @@ function smartpay_dashboard_get_recent_payments(): array
 
     $form_titles = [];
     if ( ! empty( $form_ids ) ) {
+        // Legacy forms (smartpay_forms DB table).
         $forms = Form::whereIn( 'id', array_unique( $form_ids ) )->get();
         foreach ( $forms as $f ) {
             $form_titles[ (int) $f->id ] = $f->title;
+        }
+
+        // Native forms (smartpay_form CPT) — fallback for IDs not in legacy table.
+        foreach ( array_unique( $form_ids ) as $form_id ) {
+            if ( isset( $form_titles[ $form_id ] ) ) {
+                continue;
+            }
+            $post = get_post( $form_id );
+            if ( $post && 'smartpay_form' === $post->post_type ) {
+                $form_titles[ $form_id ] = $post->post_title;
+            }
         }
     }
 

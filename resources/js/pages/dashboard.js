@@ -280,12 +280,14 @@ export const Dashboard = () => {
                                                     #{payment.id}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-muted-foreground truncate mt-1">
-                                                {payment.source_name
-                                                    ? `${payment.source_type}: ${payment.source_name}`
-                                                    : payment.source_type || '—'
-                                                }
-                                            </p>
+                                            {payment.source_type && (
+                                                <p className="text-xs text-muted-foreground truncate mt-1">
+                                                    {payment.source_name
+                                                        ? `${payment.source_type}: ${payment.source_name}`
+                                                        : payment.source_type
+                                                    }
+                                                </p>
+                                            )}
                                         </div>
                                         <span className="text-xs text-muted-foreground flex-shrink-0">
                                             {timeAgo(payment.completed_at)}
