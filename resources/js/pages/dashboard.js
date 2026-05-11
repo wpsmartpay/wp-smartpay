@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch'
-import { useEffect, useState } from '@wordpress/element'
+import { useEffect, useRef, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import {
     DollarSign,
@@ -140,10 +140,15 @@ function StatCell({ icon: Icon, title, value, current, prev, loading, borderRigh
 }
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
+const now       = new Date()
+const monthLabel = now.toLocaleString( 'default', { month: 'long', year: 'numeric' } )
+
 export const Dashboard = () => {
-    const [period, setPeriod]   = useState('month')
-    const [data, setData]        = useState(null)
-    const [loading, setLoading]  = useState(true)
+    const [period, setPeriod]             = useState('month')
+    const [data, setData]                  = useState(null)
+    const [loading, setLoading]            = useState(true)
+    const [recentPayments, setRecent]      = useState([])
+    const recentSet                        = useRef(false)
 
     const { Card, CardHeader, CardTitle, CardContent, CardFooter } = window.WPSmartPayUI
 
@@ -153,13 +158,18 @@ export const Dashboard = () => {
             path:    buildUrl(period),
             headers: { 'X-WP-Nonce': apiNonce },
         })
-            .then(setData)
+            .then((res) => {
+                setData(res)
+                if ( ! recentSet.current ) {
+                    setRecent(res.recent_payments || [])
+                    recentSet.current = true
+                }
+            })
             .finally(() => setLoading(false))
     }, [period])
 
-    const curr           = data?.period_stats          || {}
-    const prev           = data?.previous_period_stats || {}
-    const recentPayments = data?.recent_payments        || []
+    const curr = data?.period_stats          || {}
+    const prev = data?.previous_period_stats || {}
 
     const getHref = (item) =>
         item.adminPage
@@ -253,7 +263,7 @@ export const Dashboard = () => {
                 {/* ── Recent Payments ─────────────────────────────────────── */}
                 <Card>
                     <CardHeader>
-                        <CardTitle>{__('Recent Payments', 'smartpay')}</CardTitle>
+                        <CardTitle>{__('Recent Payments', 'smartpay')} <span className="text-sm font-normal text-muted-foreground">({monthLabel})</span></CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
                         {loading ? (

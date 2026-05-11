@@ -278,7 +278,11 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
  */
 function smartpay_dashboard_get_recent_payments(): array
 {
+    $month_start = gmdate( 'Y-m-01 00:00:00' );
+    $month_end   = current_time( 'mysql' );
+
     $payments = Payment::where( 'status', Payment::COMPLETED )
+        ->whereBetween( 'completed_at', $month_start, $month_end )
         ->orderBy( 'id', 'DESC' )
         ->limit( 10 )
         ->get();
