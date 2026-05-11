@@ -144,16 +144,17 @@ const now       = new Date()
 const monthLabel = now.toLocaleString( 'default', { month: 'long', year: 'numeric' } )
 
 export const Dashboard = () => {
-    const [period, setPeriod]             = useState('month')
-    const [data, setData]                  = useState(null)
-    const [loading, setLoading]            = useState(true)
-    const [recentPayments, setRecent]      = useState([])
-    const recentSet                        = useRef(false)
+    const [period, setPeriod]          = useState('month')
+    const [data, setData]              = useState(null)
+    const [statsLoading, setStatsLoad] = useState(true)
+    const [recentPayments, setRecent]  = useState([])
+    const [recentLoading, setRecentLoad] = useState(true)
+    const recentSet                    = useRef(false)
 
     const { Card, CardHeader, CardTitle, CardContent, CardFooter } = window.WPSmartPayUI
 
     useEffect(() => {
-        setLoading(true)
+        setStatsLoad(true)
         apiFetch({
             path:    buildUrl(period),
             headers: { 'X-WP-Nonce': apiNonce },
@@ -163,9 +164,10 @@ export const Dashboard = () => {
                 if ( ! recentSet.current ) {
                     setRecent(res.recent_payments || [])
                     recentSet.current = true
+                    setRecentLoad(false)
                 }
             })
-            .finally(() => setLoading(false))
+            .finally(() => setStatsLoad(false))
     }, [period])
 
     const curr = data?.period_stats          || {}
@@ -218,7 +220,7 @@ export const Dashboard = () => {
                             value={formatRevenue(curr.revenue)}
                             current={curr.revenue}
                             prev={prev.revenue}
-                            loading={loading}
+                            loading={statsLoading}
                             borderRight
                             borderBottom
                         />
@@ -228,7 +230,7 @@ export const Dashboard = () => {
                             value={curr.completed_count ?? 0}
                             current={curr.completed_count}
                             prev={prev.completed_count}
-                            loading={loading}
+                            loading={statsLoading}
                             borderBottom
                         />
                         <StatCell
@@ -237,7 +239,7 @@ export const Dashboard = () => {
                             value={curr.pending_count ?? 0}
                             current={curr.pending_count}
                             prev={prev.pending_count}
-                            loading={loading}
+                            loading={statsLoading}
                             borderRight
                         />
                         <StatCell
@@ -246,7 +248,7 @@ export const Dashboard = () => {
                             value={curr.failed_count ?? 0}
                             current={curr.failed_count}
                             prev={prev.failed_count}
-                            loading={loading}
+                            loading={statsLoading}
                         />
                     </div>
 
@@ -266,7 +268,7 @@ export const Dashboard = () => {
                         <CardTitle>{__('Recent Payments', 'smartpay')} <span className="text-sm font-normal text-muted-foreground">({monthLabel})</span></CardTitle>
                     </CardHeader>
                     <CardContent className="pt-0">
-                        {loading ? (
+                        {recentLoading ? (
                             <div className="sp-state-loading">{__('Loading…', 'smartpay')}</div>
                         ) : recentPayments.length === 0 ? (
                             <div className="sp-state-empty">{__('No payments yet.', 'smartpay')}</div>
