@@ -13,7 +13,7 @@ $key            = !empty($sections) ? key($sections) : 'main';
 // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
 $section        = isset($_GET['section']) && !empty($sections) && array_key_exists(sanitize_text_field(wp_unslash($_GET['section'])), $sections) ? sanitize_text_field(wp_unslash($_GET['section'])) : $key;
 
-$has_main_settings = isset($all_settings[$active_tab]) && !empty($all_settings[$active_tab]['main']); // true if not empty, else false
+$has_main_settings = isset($all_settings[$active_tab]) && !empty($all_settings[$active_tab]['main']);
 
 if (!$has_main_settings) {
     foreach ($all_settings[$active_tab] as $s_id => $s_title) {
@@ -44,104 +44,84 @@ if (false === $has_main_settings) {
 ob_start();
 ?>
 <div class="smartpay <?php echo 'settings-' . esc_attr($active_tab); ?>">
-    <div class="wrap container">
-        <h1 class="wp-heading-inline"></h1>
-    </div>
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-dark rounded-top">
-            <div class="lh-100">
-                <h2 class="text-white"><?php esc_html_e('SmartPay Settings', 'smartpay'); ?></h2>
-            </div>
-            <div>
-                <a class="btn btn-dark btn-sm" href="https://wpsmartpay.com/changelog/" target="_blank">v<?php echo esc_html(SMARTPAY_VERSION); ?></a>
+    <div class="container-full">
+        <div class="wrap" style="display:none">
+            <h1 class="wp-heading-inline"></h1>
+        </div>
+
+        <div class="smartpay-page-header">
+            <div class="smartpay-page-header__inner">
+                <div class="smartpay-page-header__text">
+                    <h2 class="smartpay-page-header__title"><?php esc_html_e( 'Settings', 'smartpay' ); ?></h2>
+                    <p class="smartpay-page-header__subtitle"><?php esc_html_e( 'Configure your SmartPay preferences', 'smartpay' ); ?></p>
+                </div>
+                <div class="smartpay-page-header__actions">
+                    <div class="smartpay-page-header__logo">
+                        <img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
+                    </div>
+                </div>
             </div>
         </div>
 
-        
-        <div class="p-4 max-w-7xl mx-auto">
-            <div class="card border-light shadow-sm mt-0">
-                <div class="card-header rounded-0">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <?php
-                        foreach ($settings_tabs as $tab_id => $tab_name) {
-                            $tab_url = add_query_arg(array(
-                                'settings-updated' => false,
-                                'tab'              => $tab_id,
-                            ));
+        <div class="sp-content-wide">
 
-                            // Remove the section from the tabs so we always end up at the main section
-                            $tab_url = remove_query_arg('section', $tab_url);
+            <div class="sp-tabs__nav flex overflow-x-auto">
+                <?php foreach ($settings_tabs as $tab_id => $tab_name) :
+                    $tab_url = remove_query_arg('section', add_query_arg(['settings-updated' => false, 'tab' => $tab_id]));
+                ?>
+                    <a href="<?php echo esc_url($tab_url); ?>"
+                    class="sp-tabs__item <?php echo ($active_tab === $tab_id) ? 'sp-tabs__item--active' : ''; ?>">
+                        <?php echo esc_html($tab_name); ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
 
-                            $active = $active_tab == $tab_id ? ' active' : '';
-                            echo '<li class="nav-item">';
-                            echo '<a href="' . esc_url($tab_url) . '" class="nav-link' . esc_attr($active) . '">';
-                            echo esc_html($tab_name);
-                            echo '</a>';
-                            echo '</li>';
-                        }
-                        ?>
-                    </ul>
-                </div>
+            <div class="bg-white border border-border sp-card--tab-connected overflow-hidden">
+                <div class="p-6">
 
-                <div class="card-body">
-                    <?php
-                    $number_of_sections = count($sections);
-                    $number = 0;
-                    if ($number_of_sections > 1) {
-                        echo '<ul class="d-flex bd-highlight nav nav-pills border-bottom px-3 pb-2 mt-n2 mx-n4">';
-                        foreach ($sections as $section_id => $section_name) {
-                            echo '<li class="bd-highlight nav-item m-0">';
-                            $number++;
-                            $tab_url = add_query_arg(array(
-                                'settings-updated' => false,
-                                'tab' => $active_tab,
-                                'section' => $section_id
-                            ));
-                            $class = 'nav-link text-decoration-none py-1';
-                            if ($section == $section_id) {
-                                $class .= ' active bg-secondary';
-                            }
-                            echo '<a class="' . esc_attr($class) . '" href="' . esc_url($tab_url) . '">' . esc_html($section_name) . '</a>';
-
-                            echo '</li>';
-                        }
-
-                        $payment_mode = smartpay_is_test_mode() ? __('Test Mode', 'smartpay') : __('Live Mode', 'smartpay');
-
-                        $test_mode_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                                            </svg>';
-                        echo '<li class="ml-auto bd-highlight nav-item m-0">';
-                        echo '<span class="btn-sm btn-secondary disabled">' . wp_kses_post($test_mode_svg) . wp_kses_post($payment_mode) . '</span>';
-                        echo '</li>';
-                        echo '</ul>';
-                    }
-                    ?>
-                    <form method="POST" action="options.php">
-                        <table class="form-table">
-                            <?php
-                            settings_fields('smartpay_settings');
-                            do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section);
-
-                            // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
-                            if (true === $override) :
+                    <?php if (count($sections) > 1) : ?>
+                        <?php $payment_mode = smartpay_is_test_mode() ? __('Test Mode', 'smartpay') : __('Live Mode', 'smartpay'); ?>
+                        <div class="sp-tabs__nav flex items-center mb-6">
+                            <?php foreach ($sections as $section_id => $section_name) :
+                                $tab_url = add_query_arg(['settings-updated' => false, 'tab' => $active_tab, 'section' => $section_id]);
                             ?>
-                                <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
-                            <?php endif; ?>
-                        </table>
+                                <a class="sp-tabs__item <?php echo ($section === $section_id) ? 'sp-tabs__item--active' : ''; ?>"
+                                href="<?php echo esc_url($tab_url); ?>">
+                                    <?php echo esc_html($section_name); ?>
+                                </a>
+                            <?php endforeach; ?>
+                            <span class="ml-auto text-xs text-muted-foreground border border-border rounded-md px-3 py-1.5 whitespace-nowrap">
+                                <?php echo esc_html($payment_mode); ?>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+
+                    <form method="POST" action="options.php">
+                        <?php settings_fields('smartpay_settings'); ?>
+                        <?php do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section); ?>
+                        <?php if (true === $override) : ?>
+                            <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
+                        <?php endif; ?>
+
                         <?php if ($active_tab !== 'debug_log') : ?>
-                            <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
+                            <p class="submit">
+                                <input type="submit" name="submit" id="submit"
+                                    class="sp-btn sp-btn--primary"
+                                    value="<?php echo esc_attr__('Save Changes', 'smartpay'); ?>" />
+                            </p>
                         <?php endif; ?>
                         <?php if ($active_tab === 'debug_log') : ?>
-                            <button class="btn btn-primary smartpay-clear-debug-log"><?php echo esc_html__('Clear Log', 'smartpay') ?></button>
+                            <button type="button" class="sp-btn sp-btn--primary smartpay-clear-debug-log">
+                                <?php echo esc_html__('Clear Log', 'smartpay'); ?>
+                            </button>
                         <?php endif; ?>
                     </form>
+
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
-    <!-- container end -->
 </div>
 <?php
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.

@@ -77,9 +77,50 @@ class Admin
             }
         );
 
-        $this->smartpayProMenu();
-
         do_action('smartpay_admin_add_menu_items');
+
+        add_submenu_page(
+            'smartpay',
+            __('SmartPay - Payments', 'smartpay'),
+            __('Payments', 'smartpay'),
+            'manage_options',
+            'smartpay#/payments',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        $pro_active = (
+            in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins', []))
+            || in_array('smartpay-pro/smartpay-pro.php', get_option('active_plugins', []))
+        );
+
+        if ( ! $pro_active ) {
+            add_submenu_page(
+                'smartpay',
+                __('SmartPay - Subscriptions', 'smartpay'),
+                __('Subscriptions', 'smartpay'),
+                'manage_options',
+                'smartpay#/subscriptions',
+                function () {
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                    echo smartpay_view('admin');
+                }
+            );
+
+            add_submenu_page(
+                'smartpay',
+                __('SmartPay - Reports', 'smartpay'),
+                __('Reports', 'smartpay'),
+                'manage_options',
+                'smartpay#/reports',
+                function () {
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                    echo smartpay_view('admin');
+                }
+            );
+        }
 
         add_submenu_page(
             'smartpay',
@@ -99,18 +140,6 @@ class Admin
             __('Coupons', 'smartpay'),
             'manage_options',
             'smartpay#/coupons',
-            function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('SmartPay - Payments', 'smartpay'),
-            __('Payments', 'smartpay'),
-            'manage_options',
-            'smartpay#/payments',
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
@@ -152,6 +181,8 @@ class Admin
                 echo smartpay_view('support');
             }
         );
+
+        $this->smartpayProMenu();
 
     }
 
@@ -242,7 +273,7 @@ class Admin
         // Fallback: hook suffix can vary (e.g. URL-encoded slug); also check request page param
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reading page slug for asset enqueue routing, not processing form data
         $request_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
-        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments'], true);
+        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments', 'smartpay#/subscriptions', 'smartpay#/reports'], true);
 
         $admin_style_hooks = [
             'toplevel_page_smartpay',
@@ -253,6 +284,8 @@ class Admin
             'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
+            'smartpay_page_smartpay#/subscriptions',
+            'smartpay_page_smartpay#/reports',
         ];
         if (in_array($hook, $admin_style_hooks, true) || $is_main_admin_page) {
             wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
@@ -268,6 +301,8 @@ class Admin
             'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
+            'smartpay_page_smartpay#/subscriptions',
+            'smartpay_page_smartpay#/reports',
             'smartpay_page_smartpay-form',
         ];
         if (in_array($hook, $admin_spa_hooks, true) || $is_main_admin_page) {
@@ -280,6 +315,8 @@ class Admin
             'smartpay_page_smartpay#/customers',
             'smartpay_page_smartpay#/coupons',
             'smartpay_page_smartpay#/payments',
+            'smartpay_page_smartpay#/subscriptions',
+            'smartpay_page_smartpay#/reports',
         ];
         if (in_array($hook, $main_admin_hooks, true) || $is_main_admin_page) {
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data', 'smartpay-ui'], SMARTPAY_VERSION, true);

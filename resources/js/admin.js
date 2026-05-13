@@ -25,6 +25,7 @@ import { FormData } from './pages/form-data/index.jsx'
 
 // Other pages
 import { NotFound } from './pages/not-found'
+import { SubscriptionsLockedPage, ReportsLockedPage } from './components/LockedFeaturePage'
 // import { AdminFooter } from './components/AdminFooter'
 
 import './store/index'
@@ -88,6 +89,26 @@ domReady(function () {
 
                         {/* Form Data */}
                         <Route exact path="/form-data" element={<FormData />} />
+
+                        {/* Pro feature locked previews — rendered only when pro is not active */}
+                        <Route
+                            exact
+                            path="/subscriptions"
+                            element={
+                                window.smartpayProData?.isActive
+                                    ? null
+                                    : <SubscriptionsLockedPage />
+                            }
+                        />
+                        <Route
+                            exact
+                            path="/reports"
+                            element={
+                                window.smartpayProData?.isActive
+                                    ? null
+                                    : <ReportsLockedPage />
+                            }
+                        />
 
                         <Route element={<NotFound />} />
                     </Routes>

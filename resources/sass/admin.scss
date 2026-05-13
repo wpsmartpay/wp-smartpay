@@ -629,8 +629,8 @@ p.excerpt {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 0;
-        max-width: 1200px;
+        padding: 16px 1rem;
+        max-width: 80rem;
         margin: 0 auto;
     }
 
@@ -650,5 +650,99 @@ p.excerpt {
     &__logo img {
         height: auto;
         width: 156px;
+    }
+}
+
+// Settings page — WordPress-generated form-table override
+.smartpay {
+    table.form-table,
+    table.form-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    table.form-table tr {
+        display: flex;
+        align-items: flex-start;
+        padding: 18px 0;
+        border: none;
+        border-bottom: 1px solid #f3f4f6;
+        background: transparent;
+        box-shadow: none;
+        margin: 0;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    table.form-table th {
+        display: block;
+        width: 220px;
+        min-width: 180px;
+        flex-shrink: 0;
+        padding: 4px 20px 0 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        border: none;
+        background: none;
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+    }
+
+    table.form-table td {
+        display: block;
+        flex: 1;
+        width: auto;
+        min-width: 0;
+        padding: 0;
+        border: none;
+    }
+
+    table.form-table input[type="text"],
+    table.form-table input[type="email"],
+    table.form-table input[type="url"],
+    table.form-table input[type="number"],
+    table.form-table input[type="password"] {
+        max-width: 420px;
+        width: 100%;
+    }
+
+    table.form-table textarea {
+        max-width: 420px;
+        width: 100%;
+    }
+
+    table.form-table p.description,
+    table.form-table .description {
+        color: #6b7280;
+        font-size: 12px;
+        margin-top: 4px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 782px) {
+        table.form-table tr {
+            flex-direction: column;
+        }
+
+        table.form-table th {
+            width: 100%;
+            padding: 0 0 4px;
+        }
+
+        table.form-table input[type="text"],
+        table.form-table input[type="email"],
+        table.form-table input[type="url"],
+        table.form-table input[type="number"],
+        table.form-table input[type="password"],
+        table.form-table textarea {
+            max-width: 100%;
+        }
     }
 }
