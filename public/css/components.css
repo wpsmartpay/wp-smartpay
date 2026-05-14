@@ -3302,10 +3302,10 @@
   }
 }
 :root {
-  --sp-brand: #f97316;
-  --sp-brand-dark: #ea6c0a;
-  --sp-brand-light: #fff7ed;
-  --sp-brand-ring: rgba(249, 115, 22, 0.25);
+  --sp-brand: #293c81;
+  --sp-brand-dark: #1e2f6e;
+  --sp-brand-light: #eef0f9;
+  --sp-brand-ring: rgba(41, 60, 129, 0.2);
   --sp-surface: #ffffff;
   --sp-surface-muted: #f9fafb;
   --sp-border: #e5e7eb;
@@ -3332,7 +3332,7 @@
 .sp-layout {
   max-width: 80rem;
   margin: 0 auto;
-  padding: 20px 1rem 32px;
+  padding: 28px 1rem 48px;
   box-sizing: border-box;
 }
 .sp-page-head {
@@ -3431,7 +3431,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 .sp-search {
   position: relative;
@@ -3545,7 +3545,7 @@
   border-bottom: 1px solid var(--sp-border);
 }
 .sp-table th, .sp-table thead th {
-  padding: 10px 14px;
+  padding: 13px 18px;
   text-align: left;
   font-size: 11px;
   font-weight: 600;
@@ -3587,7 +3587,7 @@
   background: var(--sp-brand-light);
 }
 .sp-table td, .sp-table tbody td {
-  padding: 13px 14px;
+  padding: 18px 18px;
   color: var(--sp-text);
   vertical-align: middle;
   border: none;
@@ -3669,11 +3669,11 @@ input[type="checkbox"].sp-checkbox:focus {
   height: 36px;
   padding: 0 12px;
   background: var(--sp-brand-light);
-  border: 1px solid #fed7aa;
+  border: 1px solid #bfcbf0;
   border-radius: var(--sp-radius-sm);
   font-size: 13px;
   font-weight: 600;
-  color: #c2410c;
+  color: var(--sp-brand);
   white-space: nowrap;
 }
 .sp-selection-count__clear {
@@ -3683,17 +3683,17 @@ input[type="checkbox"].sp-checkbox:focus {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: rgba(194, 65, 12, 0.15);
+  background: rgba(41, 60, 129, 0.12);
   border: none;
   cursor: pointer;
-  color: #c2410c;
+  color: var(--sp-brand);
   font-size: 10px;
   line-height: 1;
   padding: 0;
   transition: background 0.12s;
 }
 .sp-selection-count__clear:hover {
-  background: rgba(194, 65, 12, 0.28);
+  background: rgba(41, 60, 129, 0.22);
 }
 .sp-action-dropdown {
   position: relative;
@@ -3735,8 +3735,8 @@ input[type="checkbox"].sp-checkbox:focus {
   text-overflow: ellipsis;
 }
 .sp-avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
