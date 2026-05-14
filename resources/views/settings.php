@@ -127,7 +127,7 @@ ob_start();
 			<?php endforeach; ?>
 		</div>
 
-		<?php if ( count( $sections ) > 1 ) : ?>
+		<?php if ( count( $sections ) > 1 && 'emails' !== $active_tab ) : ?>
 		<!-- Sub-section navigation (e.g. Extensions → Stripe, Paddle…) -->
 		<div class="sp-filter-tabs sp-settings-subtabs">
 			<?php foreach ( $sections as $section_id => $section_name ) :
@@ -141,6 +141,52 @@ ob_start();
 			<?php endforeach; ?>
 		</div>
 		<?php endif; ?>
+
+		<?php if ( 'emails' === $active_tab ) : ?>
+
+			<div id="sp-email-templates">
+				<p style="font-size:13px;color:var(--sp-text-muted);margin:0;padding:20px 0;">
+					<?php esc_html_e( 'Loading email notifications…', 'smartpay' ); ?>
+				</p>
+			</div>
+
+		<?php elseif ( 'antispam' === $active_tab ) : ?>
+
+			<form method="POST" action="options.php">
+				<?php settings_fields( 'smartpay_settings' ); ?>
+
+				<table class="form-table"><tbody>
+					<?php foreach ( $groups as $group ) : ?>
+						<?php foreach ( $group['fields'] as $field ) :
+							if ( empty( $field['id'] ) ) {
+								continue;
+							}
+							$callback = 'settings_' . $field['type'] . '_callback';
+							if ( ! method_exists( $setting_instance, $callback ) ) {
+								continue;
+							}
+						?>
+						<tr>
+							<th scope="row">
+								<label for="smartpay_settings[<?php echo esc_attr( $field['id'] ); ?>]">
+									<?php echo esc_html( $field['name'] ); ?>
+								</label>
+							</th>
+							<td><?php $setting_instance->$callback( $field ); ?></td>
+						</tr>
+						<?php endforeach; ?>
+					<?php endforeach; ?>
+				</tbody></table>
+
+				<div class="sp-settings-actions">
+					<input type="submit" name="submit" id="submit"
+						class="sp-btn sp-btn--primary"
+						value="<?php echo esc_attr__( 'Save Changes', 'smartpay' ); ?>" />
+				</div>
+
+			</form>
+
+		<?php else : ?>
 
 		<form method="POST" action="options.php">
 			<?php settings_fields( 'smartpay_settings' ); ?>
@@ -177,11 +223,11 @@ ob_start();
 								if ( empty( $field['id'] ) ) {
 									continue;
 								}
-								$callback    = 'settings_' . $field['type'] . '_callback';
+								$callback     = 'settings_' . $field['type'] . '_callback';
 								if ( ! method_exists( $setting_instance, $callback ) ) {
 									continue;
 								}
-								$is_last     = ( $i === $total - 1 );
+								$is_last      = ( $i === $total - 1 );
 								$is_fullwidth = in_array( $field['type'], [ 'textarea', 'descriptive_text', 'gateways' ], true );
 							?>
 							<div class="sp-settings-row<?php
@@ -223,6 +269,8 @@ ob_start();
 			</div>
 
 		</form>
+
+		<?php endif; ?>
 
 	</div><!-- .sp-layout -->
 </div>
