@@ -304,6 +304,8 @@ export const ProductList = () => {
 	/* Pagination */
 	const goToPage = (page) => fetchProducts(page, debouncedSearch)
 
+	const hasSelection = checkedIds.size > 0
+
 	return (
 		<>
 			<Header
@@ -313,7 +315,7 @@ export const ProductList = () => {
 
 			<div className="sp-layout">
 
-				{/* Toolbar */}
+				{/* Toolbar — no layout shift, all buttons always present */}
 				<div className="sp-toolbar">
 					<div className="sp-search">
 						<Search className="sp-search__icon" size={14} />
@@ -325,7 +327,34 @@ export const ProductList = () => {
 							onChange={(e) => setSearchQuery(e.target.value)}
 						/>
 					</div>
+
+					{/* Selection count pill — only appears when rows checked */}
+					{hasSelection && (
+						<span className="sp-selection-count">
+							{checkedIds.size} {__('selected', 'smartpay')}
+							<button
+								className="sp-selection-count__clear"
+								onClick={() => setCheckedIds(new Set())}
+								title={__('Clear selection', 'smartpay')}
+							>
+								✕
+							</button>
+						</span>
+					)}
+
 					<div className="sp-toolbar__spacer" />
+
+					{/* Delete — always visible, armed only when rows selected */}
+					<button
+						className={`sp-btn sp-btn--outline-destructive${hasSelection ? ' sp-btn--armed' : ''}`}
+						onClick={hasSelection
+							? bulkDelete
+							: () => window.alert(__('Please select one or more products first.', 'smartpay'))
+						}
+					>
+						{__('Delete selected', 'smartpay')}
+					</button>
+
 					<Link to="/products/create" className="sp-btn sp-btn--primary" style={{ textDecoration: 'none' }}>
 						+ {__('Add Product', 'smartpay')}
 					</Link>
@@ -334,31 +363,13 @@ export const ProductList = () => {
 				{/* Table card */}
 				<div className="sp-table-card">
 
-					{/* Bulk actions bar */}
-					{checkedIds.size > 0 && (
-						<div className="sp-bulk-bar sp-bulk-bar--visible">
-							<span className="sp-bulk-bar__count">
-								{checkedIds.size} {__('selected', 'smartpay')}
-							</span>
-							<div className="sp-bulk-bar__actions">
-								<button
-									className="sp-btn sp-btn--sm sp-btn--outline"
-									style={{ borderColor: '#fecaca', color: '#b91c1c' }}
-									onClick={bulkDelete}
-								>
-									{__('Delete selected', 'smartpay')}
-								</button>
-							</div>
-						</div>
-					)}
-
 					<table className="sp-table">
 						<thead>
 							<tr>
 								<th className="sp-col--check">
 									<input
 										type="checkbox"
-										className="sp-checkbox"
+										className="sp-checkbox sp-select-all"
 										checked={allChecked}
 										ref={(el) => { if (el) el.indeterminate = someChecked }}
 										onChange={toggleAll}
