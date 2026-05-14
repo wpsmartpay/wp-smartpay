@@ -525,9 +525,6 @@
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
   }
-  .mb-6 {
-    margin-bottom: calc(var(--spacing) * 6);
-  }
   .-ml-1 {
     margin-left: calc(var(--spacing) * -1);
   }
@@ -4443,6 +4440,137 @@ input[type="checkbox"].sp-checkbox:focus {
 .sp-detail-sidebar .sp-btn {
   width: 100%;
   justify-content: center;
+}
+.sp-settings-tabs {
+  margin-bottom: 20px;
+}
+.sp-settings-subtabs {
+  margin-bottom: 16px;
+}
+.sp-filter-tab--sm {
+  font-size: 12px !important;
+  padding: 4px 11px !important;
+}
+.sp-settings-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.sp-settings-card .sp-settings-card__body {
+  padding: 0 !important;
+}
+.sp-settings-card .sp-settings-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 8px 28px;
+  align-items: start;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--sp-border);
+}
+.sp-settings-card .sp-settings-row--last {
+  border-bottom: none;
+}
+.sp-settings-card .sp-settings-row--fullwidth {
+  grid-template-columns: 1fr;
+  gap: 8px 0;
+}
+.sp-settings-row__left {
+  padding-top: 3px;
+}
+.sp-settings-row__label {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--sp-text);
+  margin-bottom: 2px;
+}
+.sp-settings-row__desc {
+  font-size: 12px;
+  color: var(--sp-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+.sp-settings-row__control {
+  padding-top: 3px;
+}
+.sp-settings-row__control input[type="text"], .sp-settings-row__control input[type="email"], .sp-settings-row__control input[type="url"], .sp-settings-row__control select, .sp-settings-row__control textarea {
+  max-width: 100% !important;
+  width: 100% !important;
+  min-height: unset !important;
+  height: 36px;
+  padding: 0 10px !important;
+  border: 1px solid var(--sp-border) !important;
+  border-radius: var(--sp-radius-sm) !important;
+  font-size: 13px !important;
+  color: var(--sp-text) !important;
+  background: var(--sp-surface) !important;
+  box-shadow: none !important;
+  outline: none !important;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.sp-settings-row__control input[type="text"]:focus, .sp-settings-row__control input[type="email"]:focus, .sp-settings-row__control select:focus {
+  border-color: var(--sp-brand) !important;
+  box-shadow: 0 0 0 3px var(--sp-brand-ring) !important;
+}
+.sp-settings-row__control textarea {
+  height: auto !important;
+  padding: 8px 10px !important;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  resize: vertical;
+}
+.sp-settings-row__control input.regular-text {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.sp-settings-row__control textarea.large-text {
+  width: 100% !important;
+}
+.sp-settings-row__control small.form-text, .sp-settings-row__control .form-text {
+  display: block;
+  font-size: 11.5px;
+  color: var(--sp-text-muted);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+.sp-settings-row__control input[type="checkbox"] {
+  width: 16px !important;
+  height: 16px !important;
+  margin: 0 6px 0 0 !important;
+  vertical-align: middle;
+  accent-color: var(--sp-brand);
+  cursor: pointer;
+}
+.sp-settings-row__control .custom-control {
+  padding-left: 2.5rem;
+}
+.sp-settings-row__control .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--sp-brand) !important;
+  border-color: var(--sp-brand) !important;
+}
+.sp-settings-row__control .custom-switch .custom-control-label::before {
+  border-radius: 0.75rem;
+}
+.sp-settings-row__control .mb-2 {
+  margin-bottom: 6px;
+}
+.sp-settings-row__control .mb-2 label {
+  font-size: 13px;
+  color: var(--sp-text);
+  cursor: pointer;
+}
+.sp-settings-row__control .badge {
+  font-size: 10px;
+  font-weight: 600;
+}
+.sp-settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 0 8px;
+  border-top: 1px solid var(--sp-border);
 }
 @property --tw-animation-delay {
   syntax: "*";
