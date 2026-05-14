@@ -520,6 +520,49 @@ input[type="checkbox"].sp-checkbox:focus {
   min-width: 180px;
 }
 
+/* ── Base button ───────────────────────────────────────────── */
+.sp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--sp-radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+  border: 1px solid transparent;
+}
+
+.sp-btn--outline {
+  background: var(--sp-surface);
+  border-color: var(--sp-border);
+  color: var(--sp-text);
+}
+.sp-btn--outline:hover {
+  border-color: var(--sp-border-strong);
+  background: var(--sp-surface-muted);
+}
+
+.sp-btn--icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--sp-border);
+  background: var(--sp-surface);
+  color: var(--sp-text-muted);
+  border-radius: var(--sp-radius-sm);
+}
+.sp-btn--icon:hover {
+  border-color: var(--sp-border-strong);
+  color: var(--sp-text);
+  background: var(--sp-surface-muted);
+}
+
 /* Consistent button height across toolbar */
 .sp-toolbar .sp-btn {
   height: 36px;
