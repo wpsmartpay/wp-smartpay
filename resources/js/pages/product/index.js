@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n'
-import { Search } from 'lucide-react'
+import { ChevronDown, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { createHooks } from '@wordpress/hooks'
 import { DeleteProduct, GetProducts } from '../../http/product'
@@ -226,6 +226,7 @@ export const ProductList = () => {
 	const [searchQuery,  setSearchQuery]  = useState('')
 	const [debouncedSearch, setDebouncedSearch] = useState('')
 	const [openRowId,    setOpenRowId]    = useState(null)
+	const [actionOpen,   setActionOpen]   = useState(false)
 	const [checkedIds,   setCheckedIds]   = useState(new Set())
 	const [pagination,   setPagination]   = useState({
 		current_page: 1, last_page: 1, total: 0, from: 0, to: 0,
@@ -256,9 +257,9 @@ export const ProductList = () => {
 		fetchProducts(1, debouncedSearch)
 	}, [fetchProducts, debouncedSearch])
 
-	/* Close dropdown on outside click */
+	/* Close all dropdowns on outside click */
 	useEffect(() => {
-		const close = () => setOpenRowId(null)
+		const close = () => { setOpenRowId(null); setActionOpen(false) }
 		document.addEventListener('click', close)
 		return () => document.removeEventListener('click', close)
 	}, [])
@@ -344,16 +345,34 @@ export const ProductList = () => {
 
 					<div className="sp-toolbar__spacer" />
 
-					{/* Delete — always visible, armed only when rows selected */}
-					<button
-						className={`sp-btn sp-btn--outline-destructive${hasSelection ? ' sp-btn--armed' : ''}`}
-						onClick={hasSelection
-							? bulkDelete
-							: () => window.alert(__('Please select one or more products first.', 'smartpay'))
-						}
+					{/* Bulk action dropdown — always visible */}
+					<div
+						className="sp-action-dropdown"
+						onClick={(e) => e.stopPropagation()}
 					>
-						{__('Delete selected', 'smartpay')}
-					</button>
+						<button
+							className="sp-btn sp-btn--outline"
+							onClick={() => setActionOpen((o) => !o)}
+						>
+							{__('Select Action', 'smartpay')}
+							<ChevronDown size={14} style={{ marginLeft: 2, opacity: 0.6 }} />
+						</button>
+						<div className={`sp-dropdown${actionOpen ? ' sp-dropdown--open' : ''}`}>
+							<button
+								className="sp-dropdown__item sp-dropdown__item--destructive"
+								onClick={() => {
+									setActionOpen(false)
+									if (!hasSelection) {
+										window.alert(__('Please select one or more products first.', 'smartpay'))
+										return
+									}
+									bulkDelete()
+								}}
+							>
+								{__('Delete selected', 'smartpay')}
+							</button>
+						</div>
+					</div>
 
 					<Link to="/products/create" className="sp-btn sp-btn--primary" style={{ textDecoration: 'none' }}>
 						+ {__('Add Product', 'smartpay')}
