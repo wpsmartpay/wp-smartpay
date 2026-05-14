@@ -44,10 +44,11 @@
    PAGE LAYOUT
    ════════════════════════════════════════════════════════════ */
 
-/* Main page wrapper — place inside .wrap or equivalent WP div */
+/* Main page wrapper — matches header inner width + alignment */
 .sp-layout {
-  padding: 0 24px 48px;
-  max-width: 1400px;
+  max-width: 80rem;        /* same as .smartpay-page-header__inner */
+  margin: 0 auto;          /* center within WP content area */
+  padding: 20px 1rem 32px; /* top gap below header, 1rem sides match header, modest bottom */
   box-sizing: border-box;
 }
 

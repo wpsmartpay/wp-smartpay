@@ -3330,8 +3330,9 @@
   color: #fff !important;
 }
 .sp-layout {
-  padding: 0 24px 48px;
-  max-width: 1400px;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 20px 1rem 32px;
   box-sizing: border-box;
 }
 .sp-page-head {
