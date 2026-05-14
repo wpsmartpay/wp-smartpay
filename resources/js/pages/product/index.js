@@ -216,7 +216,7 @@ const ProductRow = ({ product, onDelete, openId, setOpenId, checked, onCheck }) 
 
 /* ── Main list ────────────────────────────────────────────── */
 
-const PER_PAGE = 20
+const PER_PAGE_OPTIONS = [10, 20, 50, 100]
 
 export const ProductList = () => {
 	const { Header } = window.WPSmartPayUI
@@ -228,6 +228,7 @@ export const ProductList = () => {
 	const [openRowId,    setOpenRowId]    = useState(null)
 	const [actionOpen,   setActionOpen]   = useState(false)
 	const [checkedIds,   setCheckedIds]   = useState(new Set())
+	const [perPage,      setPerPage]      = useState(20)
 	const [pagination,   setPagination]   = useState({
 		current_page: 1, last_page: 1, total: 0, from: 0, to: 0,
 	})
@@ -241,7 +242,7 @@ export const ProductList = () => {
 	const fetchProducts = useCallback(async (page = 1, search = '') => {
 		setIsLoading(true)
 		try {
-			const result = await GetProducts({ page, perPage: PER_PAGE, search, sortBy: 'id:desc' })
+			const result = await GetProducts({ page, perPage, search, sortBy: 'id:desc' })
 			const { data: rows = [], ...paginationData } = result
 			setData(rows)
 			setPagination(paginationData)
@@ -251,7 +252,7 @@ export const ProductList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [])
+	}, [perPage])
 
 	useEffect(() => {
 		fetchProducts(1, debouncedSearch)
@@ -315,6 +316,11 @@ export const ProductList = () => {
 			/>
 
 			<div className="sp-layout">
+
+				<div className="sp-page-title__inner">
+					<h1 className="sp-page-title__heading">{__('Products', 'smartpay')}</h1>
+					<p className="sp-page-title__sub">{__('Manage your products here', 'smartpay')}</p>
+				</div>
 
 				{/* Toolbar — no layout shift, all buttons always present */}
 				<div className="sp-toolbar">
@@ -446,9 +452,21 @@ export const ProductList = () => {
 					{/* Pagination */}
 					{pagination.total > 0 && (
 						<div className="sp-pagination">
-							<span className="sp-pagination__info">
-								{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {__('products', 'smartpay')}
-							</span>
+							<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+								<span className="sp-pagination__info">
+									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {__('products', 'smartpay')}
+								</span>
+								<select
+									className="sp-filter-select"
+									style={{ height: 28, fontSize: 12, padding: '0 22px 0 8px' }}
+									value={perPage}
+									onChange={(e) => { setPerPage(Number(e.target.value)) }}
+								>
+									{PER_PAGE_OPTIONS.map((n) => (
+										<option key={n} value={n}>{n} {__('per page', 'smartpay')}</option>
+									))}
+								</select>
+							</div>
 							<div className="sp-pagination__nav">
 								<button
 									className="sp-pagination__btn"

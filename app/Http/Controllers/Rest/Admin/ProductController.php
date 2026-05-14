@@ -35,10 +35,11 @@ class ProductController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $page     = (int) $request->get_param('page') ?: 1;
-        $per_page = (int) $request->get_param('per_page') ?: 10;
-        $search   = sanitize_text_field($request->get_param('search') ?? '');
-        $sort_by  = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
+        $page         = (int) $request->get_param('page') ?: 1;
+        $per_page     = (int) $request->get_param('per_page') ?: 10;
+        $search       = sanitize_text_field($request->get_param('search') ?? '');
+        $sort_by      = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
+        $billing_type = sanitize_text_field($request->get_param('billing_type') ?? '');
 
         $query = Product::where(function ($q) {
             $q->where('parent_id', 0)->orWhereNull('parent_id');
@@ -47,6 +48,17 @@ class ProductController extends RestController
         // Search
         if (!empty($search)) {
             $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        // Billing type filter — matches on parent extra OR any variation extra
+        if (!empty($billing_type)) {
+            $like = '%"billing_type":"' . $billing_type . '"%';
+            $query->where(function ($q) use ($like) {
+                $q->where('extra', 'LIKE', $like)
+                  ->orWhereHas('variations', function ($vq) use ($like) {
+                      $vq->where('extra', 'LIKE', $like);
+                  });
+            });
         }
 
         // Sorting

@@ -619,7 +619,7 @@ p.excerpt {
     }
 }
 
-// Page header (used across all admin pages)
+// Page header — compact nav bar (logo left, help right)
 .smartpay-page-header {
     background: #fff;
     border-bottom: 1px solid #e0e0e0;
@@ -629,27 +629,41 @@ p.excerpt {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 16px 1rem;
+        padding: 10px 1rem;
         max-width: 80rem;
         margin: 0 auto;
     }
 
-    &__title {
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0 0 2px;
-        color: #1e1e1e;
-    }
-
-    &__subtitle {
-        font-size: 13px;
-        color: #757575;
-        margin: 0;
-    }
-
     &__logo img {
         height: auto;
-        width: 156px;
+        width: 120px;
+        display: block;
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    &__help-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: none;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 12.5px;
+        color: #555;
+        cursor: pointer;
+        line-height: 1;
+        transition: background 0.15s, border-color 0.15s;
+
+        &:hover {
+            background: #f6f7f7;
+            border-color: #c0c0c0;
+        }
     }
 }
 
