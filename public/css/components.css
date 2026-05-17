@@ -4571,6 +4571,7 @@ input[type="checkbox"].sp-checkbox:focus {
   justify-content: flex-end;
   padding: 16px 0 8px;
   border-top: 1px solid var(--sp-border);
+  margin-top: 30px;
 }
 @property --tw-animation-delay {
   syntax: "*";

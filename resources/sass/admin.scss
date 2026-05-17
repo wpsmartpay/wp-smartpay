@@ -624,6 +624,7 @@ p.excerpt {
     background: #fff;
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin-left: -20px;
 
     &__inner {
         display: flex;
@@ -658,7 +659,9 @@ p.excerpt {
         color: #555;
         cursor: pointer;
         line-height: 1;
-        transition: background 0.15s, border-color 0.15s;
+        transition:
+            background 0.15s,
+            border-color 0.15s;
 
         &:hover {
             background: #f6f7f7;
@@ -718,11 +721,11 @@ p.excerpt {
         border: none;
     }
 
-    table.form-table input[type="text"],
-    table.form-table input[type="email"],
-    table.form-table input[type="url"],
-    table.form-table input[type="number"],
-    table.form-table input[type="password"] {
+    table.form-table input[type='text'],
+    table.form-table input[type='email'],
+    table.form-table input[type='url'],
+    table.form-table input[type='number'],
+    table.form-table input[type='password'] {
         max-width: 420px;
         width: 100%;
     }
@@ -750,11 +753,11 @@ p.excerpt {
             padding: 0 0 4px;
         }
 
-        table.form-table input[type="text"],
-        table.form-table input[type="email"],
-        table.form-table input[type="url"],
-        table.form-table input[type="number"],
-        table.form-table input[type="password"],
+        table.form-table input[type='text'],
+        table.form-table input[type='email'],
+        table.form-table input[type='url'],
+        table.form-table input[type='number'],
+        table.form-table input[type='password'],
         table.form-table textarea {
             max-width: 100%;
         }

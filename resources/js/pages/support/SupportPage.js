@@ -77,35 +77,36 @@ function SupportTab() {
 
     return (
         <div>
-            <div style={styles.sectionHeader}>
-                <h2 style={styles.sectionTitle}>{__('Resources', 'smartpay')}</h2>
-                <p style={styles.sectionDesc}>{__('Everything you need to get help, learn more, or contribute.', 'smartpay')}</p>
+            <div style={{ marginBottom: 20 }}>
+                <h2 style={{ color: 'var(--sp-text)', fontSize: 15, fontWeight: 700, margin: '0 0 4px' }}>{__('Resources', 'smartpay')}</h2>
+                <p style={{ color: 'var(--sp-text-muted)', fontSize: 13, margin: 0 }}>{__('Everything you need to get help, learn more, or contribute.', 'smartpay')}</p>
             </div>
-            <div style={styles.docGrid}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
                 {DOC_LINKS.map((link) => (
                     <a
                         key={link.url}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={styles.docCard}
-                        onMouseEnter={e => Object.assign(e.currentTarget.style, styles.docCardHover)}
-                        onMouseLeave={e => Object.assign(e.currentTarget.style, styles.docCard)}
+                        className="sp-detail-card"
+                        style={{ display: 'flex', gap: 14, padding: '16px 18px', textDecoration: 'none', color: 'inherit', marginBottom: 0 }}
+                        onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--sp-brand)' }}
+                        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--sp-border)' }}
                     >
-                        <div style={styles.docIcon}>{link.icon}</div>
+                        <div style={{ color: 'var(--sp-brand)', flexShrink: 0, marginTop: 1 }}>{link.icon}</div>
                         <div>
-                            <div style={styles.docTitle}>{link.title}</div>
-                            <div style={styles.docDesc}>{link.desc}</div>
+                            <div style={{ color: 'var(--sp-text)', fontSize: '13.5px', fontWeight: 600, marginBottom: 3 }}>{link.title}</div>
+                            <div style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', lineHeight: 1.5 }}>{link.desc}</div>
                         </div>
                     </a>
                 ))}
             </div>
 
             {version && (
-                <div style={styles.versionBadge}>
-                    <span style={styles.versionPill}>v{version}</span>
-                    <span style={styles.versionText}>{__('SmartPay is up to date.', 'smartpay')}</span>
-                    <a href="https://wpsmartpay.com/changelog/" target="_blank" rel="noopener noreferrer" style={styles.versionLink}>
+                <div className="sp-detail-card" style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, padding: '12px 18px' }}>
+                    <span style={{ background: 'var(--sp-brand-light)', borderRadius: 'var(--sp-radius-sm)', color: 'var(--sp-brand)', fontSize: 11, fontWeight: 700, letterSpacing: '.05em', padding: '3px 8px', textTransform: 'uppercase' }}>v{version}</span>
+                    <span style={{ color: 'var(--sp-text)', flex: 1, fontSize: 13 }}>{__('SmartPay is up to date.', 'smartpay')}</span>
+                    <a href="https://wpsmartpay.com/changelog/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--sp-brand)', fontSize: '12.5px', textDecoration: 'none' }}>
                         {__("What's new →", 'smartpay')}
                     </a>
                 </div>
@@ -118,32 +119,30 @@ export function SupportPage() {
     const [tab, setTab] = useState('support')
 
     return (
-        <div style={styles.page}>
+        <>
             <Header
                 title={__('Support', 'smartpay')}
                 subtitle={__('Documentation, debug tools, and system information.', 'smartpay')}
             />
 
-            <div style={styles.body}>
-                <div style={styles.tabBar}>
+            <div className="sp-layout">
+                <div className="sp-filter-tabs" style={{ marginBottom: 24 }}>
                     {TABS.map((t) => (
                         <button
                             key={t.key}
                             type="button"
                             onClick={() => setTab(t.key)}
-                            style={tab === t.key ? { ...styles.tabBtn, ...styles.tabBtnActive } : styles.tabBtn}
+                            className={'sp-filter-tab' + (tab === t.key ? ' sp-filter-tab--active' : '')}
                         >
                             {t.label}
                         </button>
                     ))}
                 </div>
 
-                <div style={styles.tabContent}>
-                    {tab === 'support' && <SupportTab />}
-                    {tab === 'debug'   && <DebugTab />}
-                </div>
+                {tab === 'support' && <SupportTab />}
+                {tab === 'debug'   && <DebugTab />}
             </div>
-        </div>
+        </>
     )
 }
 
@@ -154,130 +153,4 @@ function DebugTab() {
             <DebugLog />
         </div>
     )
-}
-
-const styles = {
-    page: {
-        background: '#f9fafb',
-        minHeight: 'calc(100vh - 32px)',
-    },
-    body: {
-        maxWidth: '960px',
-        margin: '0 auto',
-        padding: '24px 32px 48px',
-    },
-    tabBar: {
-        display: 'flex',
-        gap: '0',
-        borderBottom: '1px solid #e5e7eb',
-        marginBottom: '28px',
-    },
-    tabBtn: {
-        background: 'none',
-        border: 'none',
-        borderBottom: '2px solid transparent',
-        color: '#6b7280',
-        cursor: 'pointer',
-        fontSize: '13.5px',
-        fontWeight: '500',
-        marginBottom: '-1px',
-        padding: '10px 18px',
-        transition: 'color .15s',
-    },
-    tabBtnActive: {
-        borderBottomColor: '#111827',
-        color: '#111827',
-        fontWeight: '600',
-    },
-    tabContent: {},
-    sectionHeader: {
-        marginBottom: '20px',
-    },
-    sectionTitle: {
-        color: '#111827',
-        fontSize: '15px',
-        fontWeight: '700',
-        margin: '0 0 4px',
-    },
-    sectionDesc: {
-        color: '#6b7280',
-        fontSize: '13px',
-        margin: '0',
-    },
-    docGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '12px',
-    },
-    docCard: {
-        alignItems: 'flex-start',
-        background: '#fff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '10px',
-        boxShadow: '0 1px 2px rgba(0,0,0,.04)',
-        color: 'inherit',
-        display: 'flex',
-        gap: '14px',
-        padding: '16px 18px',
-        textDecoration: 'none',
-        transition: 'border-color .15s, box-shadow .15s',
-    },
-    docCardHover: {
-        alignItems: 'flex-start',
-        background: '#fafafa',
-        border: '1px solid #c7d2fe',
-        borderRadius: '10px',
-        boxShadow: '0 2px 8px rgba(99,102,241,.08)',
-        color: 'inherit',
-        display: 'flex',
-        gap: '14px',
-        padding: '16px 18px',
-        textDecoration: 'none',
-    },
-    docIcon: {
-        color: '#6366f1',
-        flexShrink: '0',
-        marginTop: '1px',
-    },
-    docTitle: {
-        color: '#111827',
-        fontSize: '13.5px',
-        fontWeight: '600',
-        marginBottom: '3px',
-    },
-    docDesc: {
-        color: '#6b7280',
-        fontSize: '12.5px',
-        lineHeight: '1.5',
-    },
-    versionBadge: {
-        alignItems: 'center',
-        background: '#fff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '10px',
-        display: 'flex',
-        gap: '10px',
-        marginTop: '16px',
-        padding: '12px 18px',
-    },
-    versionPill: {
-        background: '#eef2ff',
-        borderRadius: '5px',
-        color: '#6366f1',
-        fontSize: '11px',
-        fontWeight: '700',
-        letterSpacing: '.05em',
-        padding: '3px 8px',
-        textTransform: 'uppercase',
-    },
-    versionText: {
-        color: '#374151',
-        flex: '1',
-        fontSize: '13px',
-    },
-    versionLink: {
-        color: '#6366f1',
-        fontSize: '12.5px',
-        textDecoration: 'none',
-    },
 }

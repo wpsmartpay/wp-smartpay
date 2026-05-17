@@ -19,7 +19,7 @@ function CopyButton({ text }) {
     }
 
     return (
-        <button type="button" onClick={copy} style={styles.copyBtn}>
+        <button type="button" onClick={copy} className="sp-btn sp-btn--outline" style={{ flexShrink: 0, fontSize: 12 }}>
             {copied ? __('Copied!', 'smartpay') : __('Copy', 'smartpay')}
         </button>
     )
@@ -48,147 +48,67 @@ export function SystemInfo() {
     const toggle = (key) => setOpen(prev => ({ ...prev, [key]: !prev[key] }))
 
     return (
-        <div style={styles.card}>
-            <div style={styles.cardHeader}>
+        <div className="sp-detail-card">
+            <div className="sp-detail-card__header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
-                    <h3 style={styles.cardTitle}>{__('System Information', 'smartpay')}</h3>
-                    <p style={styles.cardDesc}>{__('Share this with support when reporting an issue.', 'smartpay')}</p>
+                    <span className="sp-detail-card__title">{__('System Information', 'smartpay')}</span>
+                    <p style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', margin: '4px 0 0' }}>{__('Share this with support when reporting an issue.', 'smartpay')}</p>
                 </div>
                 <CopyButton text={buildCopyText(systemInfo)} />
             </div>
 
-            {Object.entries(systemInfo).map(([key, rows]) => (
-                <div key={key} style={styles.section}>
-                    <button
-                        type="button"
-                        style={styles.sectionToggle}
-                        onClick={() => toggle(key)}
-                    >
-                        <span style={styles.sectionLabel}>{SECTION_LABELS[key] ?? key}</span>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14" height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            style={{ transform: open[key] ? 'rotate(180deg)' : 'none', transition: 'transform .2s', flexShrink: 0 }}
+            <div className="sp-detail-card__body" style={{ padding: 0 }}>
+                {Object.entries(systemInfo).map(([key, rows]) => (
+                    <div key={key} style={{ borderBottom: '1px solid var(--sp-border)' }}>
+                        <button
+                            type="button"
+                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '12px 20px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: 'var(--sp-text)' }}
+                            onClick={() => toggle(key)}
                         >
-                            <path d="m6 9 6 6 6-6"/>
-                        </svg>
-                    </button>
+                            <span style={{ flex: 1, textAlign: 'left' }}>{SECTION_LABELS[key] ?? key}</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14" height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{ transform: open[key] ? 'rotate(180deg)' : 'none', transition: 'transform .2s', flexShrink: 0 }}
+                            >
+                                <path d="m6 9 6 6 6-6"/>
+                            </svg>
+                        </button>
 
-                    {open[key] && (
-                        key === 'plugins' ? (
-                            <table style={styles.table}>
-                                <tbody>
-                                    {rows.map((plugin, i) => (
-                                        <tr key={i} style={i % 2 === 0 ? styles.rowEven : styles.rowOdd}>
-                                            <td style={styles.cellLabel}>{plugin.name}</td>
-                                            <td style={styles.cellValue}>{plugin.version}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <table style={styles.table}>
-                                <tbody>
-                                    {rows.map((row, i) => (
-                                        <tr key={i} style={i % 2 === 0 ? styles.rowEven : styles.rowOdd}>
-                                            <td style={styles.cellLabel}>{row.label}</td>
-                                            <td style={styles.cellValue}>{row.value}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )
-                    )}
-                </div>
-            ))}
+                        {open[key] && (
+                            key === 'plugins' ? (
+                                <table className="sp-kv-table" style={{ margin: '0 0 8px' }}>
+                                    <tbody>
+                                        {rows.map((plugin, i) => (
+                                            <tr key={i}>
+                                                <td>{plugin.name}</td>
+                                                <td>{plugin.version}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <table className="sp-kv-table" style={{ margin: '0 0 8px' }}>
+                                    <tbody>
+                                        {rows.map((row, i) => (
+                                            <tr key={i}>
+                                                <td>{row.label}</td>
+                                                <td>{row.value}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )
+                        )}
+                    </div>
+                ))}
+            </div>
         </div>
     )
-}
-
-const styles = {
-    card: {
-        background: '#fff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '12px',
-        overflow: 'hidden',
-    },
-    cardHeader: {
-        alignItems: 'flex-start',
-        borderBottom: '1px solid #f3f4f6',
-        display: 'flex',
-        justifyContent: 'space-between',
-        padding: '20px 24px 16px',
-    },
-    cardTitle: {
-        color: '#111827',
-        fontSize: '15px',
-        fontWeight: '700',
-        margin: '0 0 3px',
-    },
-    cardDesc: {
-        color: '#6b7280',
-        fontSize: '12.5px',
-        margin: '0',
-    },
-    copyBtn: {
-        alignItems: 'center',
-        background: '#fff',
-        border: '1px solid #e5e7eb',
-        borderRadius: '7px',
-        color: '#374151',
-        cursor: 'pointer',
-        display: 'inline-flex',
-        flexShrink: '0',
-        fontSize: '12px',
-        fontWeight: '500',
-        marginTop: '2px',
-        padding: '6px 14px',
-        transition: 'background .15s',
-        whiteSpace: 'nowrap',
-    },
-    section: {
-        borderBottom: '1px solid #f3f4f6',
-    },
-    sectionToggle: {
-        alignItems: 'center',
-        background: 'none',
-        border: 'none',
-        borderBottom: 'none',
-        color: '#374151',
-        cursor: 'pointer',
-        display: 'flex',
-        fontSize: '13px',
-        fontWeight: '600',
-        gap: '8px',
-        justifyContent: 'space-between',
-        padding: '13px 24px',
-        width: '100%',
-    },
-    sectionLabel: { flex: 1, textAlign: 'left' },
-    table: {
-        borderCollapse: 'collapse',
-        width: '100%',
-    },
-    rowEven: { background: '#fff' },
-    rowOdd:  { background: '#f9fafb' },
-    cellLabel: {
-        color: '#374151',
-        fontSize: '12.5px',
-        fontWeight: '500',
-        padding: '8px 24px',
-        width: '220px',
-    },
-    cellValue: {
-        color: '#111827',
-        fontSize: '12.5px',
-        fontFamily: 'monospace',
-        padding: '8px 24px 8px 0',
-        wordBreak: 'break-all',
-    },
 }
