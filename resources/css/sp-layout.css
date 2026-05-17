@@ -1516,3 +1516,127 @@ input.sp-note-input {
   border-top: 1px solid var(--sp-border);
   margin-top: 30px;
 }
+
+/* ════════════════════════════════════════════════════════════
+   INTEGRATIONS PAGE
+   ════════════════════════════════════════════════════════════ */
+
+.sp-integ-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.sp-integ-toolbar .sp-filter-tabs {
+  margin-bottom: 0;
+}
+
+.sp-integ-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1200px) {
+  .sp-integ-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 860px) {
+  .sp-integ-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.sp-integ-card {
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-border);
+  border-radius: var(--sp-radius);
+  box-shadow: var(--sp-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.sp-integ-card:hover {
+  border-color: #9ca3af;
+}
+
+.sp-integ-card__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 16px 16px 0;
+}
+
+.sp-integ-card__logo img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.sp-integ-card__body {
+  padding: 10px 16px 8px;
+  flex: 1;
+}
+
+.sp-integ-card__name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sp-text);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.sp-integ-card__desc {
+  font-size: 12px;
+  color: var(--sp-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sp-integ-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px 16px;
+}
+
+.sp-integ-card__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--sp-border);
+  margin-top: auto;
+}
+
+.sp-integ-card__status {
+  font-size: 12px;
+  color: var(--sp-text-muted);
+}
+
+.sp-integ-card__settings {
+  margin-left: auto;
+  color: var(--sp-text-muted);
+  transition: color 0.12s;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sp-integ-card__settings:hover {
+  color: var(--sp-text);
+}
+
+/* Toggle switch for integration cards */
+.sp-integ-card .custom-control { padding-left: 2.5rem; }
+.sp-integ-card .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--sp-brand) !important;
+  border-color: var(--sp-brand) !important;
+}
+.sp-integ-card .custom-switch .custom-control-label::before {
+  border-radius: 0.75rem;
+}
