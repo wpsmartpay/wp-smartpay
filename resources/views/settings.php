@@ -100,15 +100,10 @@ ob_start();
 
 	<div class="smartpay-page-header">
 		<div class="smartpay-page-header__inner">
-			<div class="smartpay-page-header__text">
-				<h2 class="smartpay-page-header__title"><?php esc_html_e( 'Settings', 'smartpay' ); ?></h2>
-				<p class="smartpay-page-header__subtitle"><?php esc_html_e( 'Configure your SmartPay preferences', 'smartpay' ); ?></p>
+			<div class="smartpay-page-header__logo">
+				<img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
 			</div>
-			<div class="smartpay-page-header__actions">
-				<div class="smartpay-page-header__logo">
-					<img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
-				</div>
-			</div>
+			<div class="smartpay-page-header__actions"></div>
 		</div>
 	</div>
 
