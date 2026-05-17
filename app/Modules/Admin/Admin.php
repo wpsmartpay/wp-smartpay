@@ -353,6 +353,8 @@ class Admin
 
         if ('smartpay_page_smartpay-support' === $hook) {
             wp_enqueue_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', array(), SMARTPAY_VERSION);
+            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', array(), SMARTPAY_VERSION);
+            wp_enqueue_style('smartpay-components');
             wp_enqueue_style('wp-components');
             wp_enqueue_script(
                 'smartpay-support',

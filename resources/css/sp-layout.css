@@ -1640,3 +1640,100 @@ input.sp-note-input {
 .sp-integ-card .custom-switch .custom-control-label::before {
   border-radius: 0.75rem;
 }
+
+/* ════════════════════════════════════════════════════════════
+   ACCORDION  (collapsible sections inside cards)
+   ════════════════════════════════════════════════════════════ */
+
+.sp-accordion-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sp-text);
+  text-align: left;
+  transition: background 0.1s;
+}
+.sp-accordion-btn:hover { background: var(--sp-surface-muted); }
+
+.sp-accordion-btn__chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.sp-accordion-btn--open .sp-accordion-btn__chevron {
+  transform: rotate(180deg);
+}
+
+/* ════════════════════════════════════════════════════════════
+   SUPPORT PAGE  (resource link rows, version tag)
+   ════════════════════════════════════════════════════════════ */
+
+.sp-support-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--sp-border);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.1s;
+}
+.sp-support-link:last-child { border-bottom: none; }
+.sp-support-link:hover {
+  background: var(--sp-surface-muted);
+  text-decoration: none;
+  color: inherit;
+}
+
+.sp-support-link__icon {
+  color: var(--sp-brand);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.sp-support-link__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sp-text);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.sp-support-link__desc {
+  font-size: 12.5px;
+  color: var(--sp-text-muted);
+  line-height: 1.4;
+}
+
+.sp-support-link__arrow {
+  color: var(--sp-text-subtle);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  transition: color 0.1s, transform 0.1s;
+}
+.sp-support-link:hover .sp-support-link__arrow {
+  color: var(--sp-brand);
+  transform: translate(1px, -1px);
+}
+
+.sp-version-tag {
+  display: inline-block;
+  background: var(--sp-brand-light);
+  color: var(--sp-brand);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+  padding: 2px 8px;
+  border-radius: var(--sp-radius-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}

@@ -39,6 +39,22 @@ function buildCopyText(systemInfo) {
     return lines.join('\n')
 }
 
+const ChevronIcon = () => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14" height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="sp-accordion-btn__chevron"
+    >
+        <path d="m6 9 6 6 6-6"/>
+    </svg>
+)
+
 export function SystemInfo() {
     const { systemInfo } = window.smartpaySupport || {}
     const [open, setOpen] = useState({ wordpress: true, server: true, smartpay: true, plugins: false })
@@ -52,7 +68,9 @@ export function SystemInfo() {
             <div className="sp-detail-card__header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                     <span className="sp-detail-card__title">{__('System Information', 'smartpay')}</span>
-                    <p style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', margin: '4px 0 0' }}>{__('Share this with support when reporting an issue.', 'smartpay')}</p>
+                    <p style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', margin: '4px 0 0' }}>
+                        {__('Share this with support when reporting an issue.', 'smartpay')}
+                    </p>
                 </div>
                 <CopyButton text={buildCopyText(systemInfo)} />
             </div>
@@ -62,49 +80,34 @@ export function SystemInfo() {
                     <div key={key} style={{ borderBottom: '1px solid var(--sp-border)' }}>
                         <button
                             type="button"
-                            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '12px 20px', background: 'none', border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 600, color: 'var(--sp-text)' }}
+                            className={`sp-accordion-btn${open[key] ? ' sp-accordion-btn--open' : ''}`}
                             onClick={() => toggle(key)}
                         >
-                            <span style={{ flex: 1, textAlign: 'left' }}>{SECTION_LABELS[key] ?? key}</span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14" height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                style={{ transform: open[key] ? 'rotate(180deg)' : 'none', transition: 'transform .2s', flexShrink: 0 }}
-                            >
-                                <path d="m6 9 6 6 6-6"/>
-                            </svg>
+                            <span style={{ flex: 1 }}>{SECTION_LABELS[key] ?? key}</span>
+                            <ChevronIcon />
                         </button>
 
                         {open[key] && (
-                            key === 'plugins' ? (
-                                <table className="sp-kv-table" style={{ margin: '0 0 8px' }}>
+                            <div style={{ padding: '0 20px 4px' }}>
+                                <table className="sp-kv-table">
                                     <tbody>
-                                        {rows.map((plugin, i) => (
-                                            <tr key={i}>
-                                                <td>{plugin.name}</td>
-                                                <td>{plugin.version}</td>
-                                            </tr>
-                                        ))}
+                                        {key === 'plugins'
+                                            ? rows.map((plugin, i) => (
+                                                <tr key={i}>
+                                                    <td>{plugin.name}</td>
+                                                    <td>{plugin.version}</td>
+                                                </tr>
+                                            ))
+                                            : rows.map((row, i) => (
+                                                <tr key={i}>
+                                                    <td>{row.label}</td>
+                                                    <td>{row.value}</td>
+                                                </tr>
+                                            ))
+                                        }
                                     </tbody>
                                 </table>
-                            ) : (
-                                <table className="sp-kv-table" style={{ margin: '0 0 8px' }}>
-                                    <tbody>
-                                        {rows.map((row, i) => (
-                                            <tr key={i}>
-                                                <td>{row.label}</td>
-                                                <td>{row.value}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            )
+                            </div>
                         )}
                     </div>
                 ))}
