@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n'
-import { Button } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { useReducer } from '@wordpress/element'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
@@ -11,8 +10,6 @@ const { dispatch } = wp.data
 
 const {
     Header,
-    Card,
-    CardContent,
 } = window.WPSmartPayUI
 
 const reducer = (state, data) => {
@@ -74,20 +71,16 @@ export const CreateProduct = () => {
                 title={__('Create Product', 'smartpay')}
             />
 
-            <div className="p-4 max-w-7xl mx-auto">
-                <Card className="mb-4">
-                    <CardContent>
-                        <div className="flex justify-end">
-                            <Button
-                                variant="default"
-                                size="sm"
-                                onClick={createProduct}
-                            >
+            <div className="sp-layout">
+                <div className="sp-detail-card" style={{ marginBottom: 16 }}>
+                    <div className="sp-detail-card__body">
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button type="button" className="sp-btn sp-btn--primary" onClick={createProduct}>
                                 {__('Publish', 'smartpay')}
-                            </Button>
+                            </button>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 <ProductForm
                     product={product}

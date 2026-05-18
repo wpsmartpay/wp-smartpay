@@ -10,9 +10,6 @@ const { useSelect, dispatch } = wp.data
 
 const {
     Header,
-    Card,
-    CardContent,
-    Button,
 } = window.WPSmartPayUI
 
 const reducer = (state, data) => {
@@ -71,35 +68,26 @@ export const EditProduct = () => {
                         subtitle={`#${product.id}`}
                     />
 
-                    <div className="p-4 max-w-7xl mx-auto">
-                        <Card className="mb-4">
-                            <CardContent>
-                                <div className="flex items-center justify-between flex-wrap gap-3">
-                                    <span className="text-sm text-gray-500 font-mono bg-muted px-2 py-1 rounded">
-                                        [smartpay_product id="{product.id}"]
-                                    </span>
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="default"
-                                            size="sm"
-                                            onClick={Save}
-                                        >
+                    <div className="sp-layout">
+                        <div className="sp-detail-card" style={{ marginBottom: 16 }}>
+                            <div className="sp-detail-card__body">
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+                                    <code style={{ background: 'var(--sp-surface-muted)', border: '1px solid var(--sp-border)', borderRadius: 'var(--sp-radius-sm)', padding: '4px 10px', fontSize: 12, fontFamily: 'monospace', color: 'var(--sp-text-muted)' }}>
+                                        {`[smartpay_product id="${product.id}"]`}
+                                    </code>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <button type="button" className="sp-btn sp-btn--primary" onClick={Save}>
                                             {__('Save', 'smartpay')}
-                                        </Button>
+                                        </button>
                                         {product.id && product.extra?.product_preview_page_permalink && (
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                href={product.extra.product_preview_page_permalink}
-                                                target="_blank"
-                                            >
+                                            <a href={product.extra.product_preview_page_permalink} target="_blank" rel="noopener noreferrer" className="sp-btn sp-btn--outline" style={{ textDecoration: 'none' }}>
                                                 {__('Preview', 'smartpay')}
-                                            </Button>
+                                            </a>
                                         )}
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
                         <ProductForm
                             product={product}
