@@ -14,7 +14,7 @@ export function Header({ title, subtitle }) {
 
     return (
         <>
-            {/* Compact nav bar — logo left, help right */}
+            {/* Compact nav bar — logo left, actions + help right */}
             <div className="smartpay-page-header">
                 <div className="smartpay-page-header__inner">
                     <div className="smartpay-page-header__logo">

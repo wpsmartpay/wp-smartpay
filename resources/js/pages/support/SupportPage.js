@@ -1,6 +1,7 @@
 import { useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { Header } from '../../components/header'
+import { GettingStartedBanner } from '../../components/GettingStartedBanner'
 import { SystemInfo } from './SystemInfo'
 import { DebugLog } from './DebugLog'
 
@@ -121,8 +122,10 @@ function SupportTab() {
 
     return (
         <div className="sp-detail-grid">
-            {/* Main column — resource links */}
+            {/* Main column — getting started + resource links */}
             <div>
+                <GettingStartedBanner dismissible={false} />
+
                 <div className="sp-detail-card">
                     <div className="sp-detail-card__header">
                         <span className="sp-detail-card__title">{__('Resources', 'smartpay')}</span>
