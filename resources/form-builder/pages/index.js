@@ -17,18 +17,33 @@ const colorIndex = (str) => {
 	return h
 }
 
+const fmtDate = (val) => {
+	if (!val) return '—'
+	const d = new Date(val)
+	return isNaN(d) ? val : d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+const statusBadgeClass = (status) => {
+	if (status === 'publish') return 'sp-badge sp-badge--success'
+	if (status === 'draft')   return 'sp-badge sp-badge--neutral'
+	return 'sp-badge sp-badge--warning'
+}
+
 /* ── Row ──────────────────────────────────────────────────── */
 
 const FormRow = ({ form, onDelete, openId, setOpenId, checked, onCheck }) => {
 	const isOpen   = openId === form.id
 	const initials = (form.title || '?').substring(0, 2).toUpperCase()
-	const dateLabel = form.updated_at || '—'
 
 	return (
 		<tr className={checked ? 'sp-row--selected' : ''}>
 			<td className="sp-col--check">
 				<input type="checkbox" className="sp-checkbox sp-row-check"
 					checked={checked} onChange={onCheck} />
+			</td>
+
+			<td className="sp-cell--muted sp-col--nowrap" style={{ fontVariantNumeric: 'tabular-nums', fontSize: 12 }}>
+				#{form.id}
 			</td>
 
 			<td>
@@ -41,12 +56,19 @@ const FormRow = ({ form, onDelete, openId, setOpenId, checked, onCheck }) => {
 							style={{ textDecoration: 'none', color: 'inherit' }}>
 							{form.title || __('Untitled', 'smartpay')}
 						</Link>
-						<div className="sp-customer__email">#{form.id}</div>
 					</div>
 				</div>
 			</td>
 
-			<td className="sp-cell--muted sp-col--nowrap">{dateLabel}</td>
+			<td>
+				<span className={statusBadgeClass(form.status)}>
+					{form.status || 'publish'}
+				</span>
+			</td>
+
+			<td className="sp-cell--muted sp-col--nowrap">{fmtDate(form.created_at)}</td>
+
+			<td className="sp-cell--muted sp-col--nowrap">{fmtDate(form.updated_at)}</td>
 
 			<td className="sp-cell--actions">
 				<div className={`sp-row-actions${isOpen ? ' sp-row-actions--open' : ''}`}
@@ -230,16 +252,19 @@ export const FormList = () => {
 										ref={(el) => { if (el) el.indeterminate = someChecked }}
 										onChange={toggleAll} />
 								</th>
+								<th style={{ width: 60 }}>{__('ID', 'smartpay')}</th>
 								<th>{__('Form', 'smartpay')}</th>
+								<th>{__('Status', 'smartpay')}</th>
+								<th>{__('Start Date', 'smartpay')}</th>
 								<th>{__('Last Updated', 'smartpay')}</th>
 								<th className="sp-col--actions"></th>
 							</tr>
 						</thead>
 						<tbody>
 							{isLoading ? (
-								<tr><td colSpan={4} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
+								<tr><td colSpan={7} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
 							) : data.length === 0 ? (
-								<tr><td colSpan={4}>
+								<tr><td colSpan={7}>
 									<div className="sp-empty">
 										<div className="sp-empty__icon">📋</div>
 										<div className="sp-empty__title">{__('No forms found', 'smartpay')}</div>
