@@ -6,14 +6,17 @@
 
     <div class="smartpay-page-header">
         <div class="smartpay-page-header__inner">
-            <div class="smartpay-page-header__text">
-                <h2 class="smartpay-page-header__title"><?php esc_html_e( 'Integrations', 'smartpay' ); ?></h2>
-                <p class="smartpay-page-header__subtitle"><?php esc_html_e( 'Manage your payment gateways and extensions', 'smartpay' ); ?></p>
+            <div class="smartpay-page-header__logo">
+                <img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
             </div>
             <div class="smartpay-page-header__actions">
-                <div class="smartpay-page-header__logo">
-                    <img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
-                </div>
+                <a href="https://wpsmartpay.com/docs/" target="_blank" rel="noopener noreferrer"
+                    class="smartpay-page-header__help-btn"
+                    title="<?php esc_attr_e( 'Help &amp; Documentation', 'smartpay' ); ?>"
+                    aria-label="<?php esc_attr_e( 'Open help documentation', 'smartpay' ); ?>">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="opacity:.7" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                    <?php esc_html_e( 'Help', 'smartpay' ); ?>
+                </a>
             </div>
         </div>
     </div>

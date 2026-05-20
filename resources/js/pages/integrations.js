@@ -150,9 +150,15 @@ export const IntegrationsPage = () => {
 				subtitle={__('Manage your integrations here', 'smartpay')}
 			/>
 
-			<div className="p-4 max-w-7xl mx-auto">
+			<div className="sp-layout">
+
+				<div className="sp-page-title__inner">
+					<h1 className="sp-page-title__heading">{__('Integrations', 'smartpay')}</h1>
+					<p className="sp-page-title__sub">{__('Connect SmartPay with your favourite tools', 'smartpay')}</p>
+				</div>
+
 				{isLoading && (
-					<div className="p-8 text-center text-muted-foreground">
+					<div className="sp-state-loading">
 						{__('Loading…', 'smartpay')}
 					</div>
 				)}
@@ -164,7 +170,7 @@ export const IntegrationsPage = () => {
 				)}
 
 				{!isLoading && !error && (
-					<div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+					<div className="sp-grid sp-grid--cards">
 						{integrations.map((integration) => (
 							<IntegrationCard
 								key={integration.namespace}
