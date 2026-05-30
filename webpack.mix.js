@@ -8,8 +8,17 @@ mix.webpackConfig({
     externals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-		jquery: 'jQuery',
-        $: 'jQuery'
+        jquery: 'jQuery',
+        $: 'jQuery',
+        '@wordpress/element':    'wp.element',
+        '@wordpress/data':       'wp.data',
+        '@wordpress/components': 'wp.components',
+        '@wordpress/i18n':       'wp.i18n',
+        '@wordpress/plugins':    'wp.plugins',
+        '@wordpress/edit-post':  'wp.editPost',
+        '@wordpress/api-fetch':  'wp.apiFetch',
+        '@wordpress/hooks':      'wp.hooks',
+        '@wordpress/core-data':  'wp.coreData',
     },
     resolve: {
         alias: {
@@ -44,6 +53,8 @@ mix.webpackConfig({
     .sass('resources/sass/app.scss', 'public/css')
     .js('resources/js/admin.js', 'public/js')
     .js('resources/js/components/index.js', 'public/js/ui.js')
+    .js('resources/js/admin/form-editor-sidebar/index.js', 'public/js/admin/form-editor-sidebar.js')
+    .css('resources/css/admin/form-editor-sidebar.css', 'public/css/admin/form-editor-sidebar.css')
     .js('resources/js/pages/support/index.js', 'public/js/support.js')
     .react()
     .sass('resources/sass/admin.scss', 'public/css')

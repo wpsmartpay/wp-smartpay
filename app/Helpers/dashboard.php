@@ -267,6 +267,107 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
 }
 
 /**
+ * Get time-series chart data for Revenue and Orders grouped by the given period.
+ *
+ * today → 24 hourly buckets (00–23)
+ * week  → 7 daily buckets (Mon–Sun)
+ * month → one bucket per calendar day up to today
+ *
+ * @param array  $date_range { start: string, end: string } in site local time.
+ * @param string $period     'today' | 'week' | 'month'.
+ * @return array<array{ label: string, revenue: float, orders: int }>
+ */
+function smartpay_dashboard_get_chart_data( array $date_range, string $period ): array {
+    global $wpdb;
+
+    $prefix = esc_sql( $wpdb->prefix );
+    $start  = $date_range['start'];
+    $end    = $date_range['end'];
+    $now_ts = current_time( 'timestamp' );
+
+    // ── Build empty bucket map ────────────────────────────────────────────────
+    $buckets = [];
+
+    if ( 'today' === $period ) {
+        for ( $h = 0; $h <= 23; $h++ ) {
+            $key             = sprintf( '%02d', $h );
+            $buckets[ $key ] = [
+                'label'   => sprintf( '%dh', $h ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+        }
+    } elseif ( 'week' === $period ) {
+        $start_ts = strtotime( $start );
+        for ( $d = 0; $d < 7; $d++ ) {
+            $day_ts          = strtotime( "+{$d} days", $start_ts );
+            $key             = gmdate( 'Y-m-d', $day_ts );
+            $buckets[ $key ] = [
+                'label'   => gmdate( 'D', $day_ts ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+        }
+    } else {
+        // month: one bucket per day from the 1st up through today.
+        $ts     = strtotime( $start );
+        $end_ts = min( strtotime( $end ), $now_ts );
+        while ( $ts <= $end_ts ) {
+            $key             = gmdate( 'Y-m-d', $ts );
+            $buckets[ $key ] = [
+                'label'   => gmdate( 'M d', $ts ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+            $ts = strtotime( '+1 day', $ts );
+        }
+    }
+
+    // ── Query completed payments and fill buckets ─────────────────────────────
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    if ( 'today' === $period ) {
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT DATE_FORMAT( completed_at, '%%H' ) AS bucket,
+                        COALESCE( SUM( amount ), 0 )        AS revenue,
+                        COUNT(*)                             AS orders
+                 FROM {$prefix}smartpay_payments
+                 WHERE status = %s AND completed_at BETWEEN %s AND %s
+                 GROUP BY bucket",
+                Payment::COMPLETED,
+                $start,
+                $end
+            )
+        );
+    } else {
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT DATE( completed_at )                AS bucket,
+                        COALESCE( SUM( amount ), 0 )        AS revenue,
+                        COUNT(*)                             AS orders
+                 FROM {$prefix}smartpay_payments
+                 WHERE status = %s AND completed_at BETWEEN %s AND %s
+                 GROUP BY bucket",
+                Payment::COMPLETED,
+                $start,
+                $end
+            )
+        );
+    }
+    // phpcs:enable
+
+    foreach ( $rows as $row ) {
+        $key = (string) $row->bucket;
+        if ( isset( $buckets[ $key ] ) ) {
+            $buckets[ $key ]['revenue'] = (float) $row->revenue;
+            $buckets[ $key ]['orders']  = (int) $row->orders;
+        }
+    }
+
+    return array_values( $buckets );
+}
+
+/**
  * Get the 10 most recent completed payments, enriched with source name and admin URL.
  *
  * Each row includes:

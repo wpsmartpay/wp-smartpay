@@ -201,7 +201,7 @@ class Payment
         $extra = [];
         if ('form_payment' === $_data['smartpay_payment_type']) {
             $extra['form_data'] = $_data['smartpay_form_data'] ?? [];
-            $extra['form_fields'] = Form::find($_data['smartpay_form_id'])->fields ?? [];
+            $extra['form_fields'] = Form::find($_data['smartpay_form_id'])?->fields ?? [];
         }
 
         return apply_filters('smartpay_prepare_payment_data', array(
@@ -268,6 +268,8 @@ class Payment
 
                 $form = Form::where('id', $formId)->first();
 
+                if (empty($formId) || empty($form)) return [];
+
                 foreach ($form->amounts as $amount) {
                     if ($amount['key'] === $_data['smartpay_amount_key']) {
                         $additional_amount = $amount['additional_charge'];
@@ -275,8 +277,6 @@ class Payment
                         break;
                     }
                 }
-
-                if (empty($formId) || empty($form)) return [];
 
                 $payment_data = [
                     'form_id'           => $form->id,

@@ -23,6 +23,9 @@ import { PaymentDetailPage } from './pages/payment/PaymentDetailPage'
 // Form Data
 import { FormData } from './pages/form-data/index.jsx'
 
+// Native Forms
+import { NativeFormList } from './admin/native-forms'
+
 // Other pages
 import { NotFound } from './pages/not-found'
 import { SubscriptionsLockedPage, ReportsLockedPage } from './components/LockedFeaturePage'
@@ -44,130 +47,43 @@ domReady(function () {
     const SmartPay = () => {
         return (
             <div>
+                {/* Free plugin router — always rendered */}
                 <HashRouter>
                     <Routes>
-                        {/* Dashboard */}
                         <Route exact path="/" element={<Dashboard />} />
 
-                        {/* Product */}
-                        <Route
-                            exact
-                            path="/products"
-                            element={<ProductList />}
-                        />
-                        <Route
-                            exact
-                            path="/products/create"
-                            element={<CreateProduct />}
-                        />
-                        <Route
-                            exact
-                            path="/products/:productId/edit"
-                            element={<EditProduct />}
-                        />
+                        <Route exact path="/products"                 element={<ProductList />} />
+                        <Route exact path="/products/create"          element={<CreateProduct />} />
+                        <Route exact path="/products/:productId/edit" element={<EditProduct />} />
 
-                        {/* Customer */}
+                        <Route exact path="/customers"                element={<CustomerList />} />
+                        <Route exact path="/customers/:customerId"    element={<ShowCustomer />} />
+
+                        <Route exact path="/coupons"                  element={<CouponList />} />
+
+                        <Route exact path="/payments"                 element={<PaymentList />} />
+                        <Route exact path="/payments/new"             element={null} />
+                        <Route exact path="/payments/:paymentId"      element={<PaymentDetailPage />} />
+
+                        <Route exact path="/form-data"                element={<FormData />} />
+
+                        <Route exact path="/native-forms" element={<NativeFormList />} />
+
                         <Route
-                            exact
-                            path="/customers"
-                            element={<CustomerList />}
+                            exact path="/subscriptions"
+                            element={window.smartpayProData?.isActive ? null : <SubscriptionsLockedPage />}
                         />
                         <Route
-                            exact
-                            path="/customers/:customerId"
-                            element={<ShowCustomer />}
-                        />
-
-                        {/* Coupon */}
-                        <Route exact path="/coupons" element={<CouponList />} />
-
-                        {/* Payment */}
-                        <Route exact path="/payments" element={<PaymentList />} />
-                        {/* Reserve /payments/new for pro plugin — must come before :paymentId */}
-                        <Route exact path="/payments/new" element={null} />
-                        <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
-
-                        {/* Form Data */}
-                        <Route exact path="/form-data" element={<FormData />} />
-
-                        {/* Pro feature locked previews — rendered only when pro is not active */}
-                        <Route
-                            exact
-                            path="/subscriptions"
-                            element={
-                                window.smartpayProData?.isActive
-                                    ? null
-                                    : <SubscriptionsLockedPage />
-                            }
-                        />
-                        <Route
-                            exact
-                            path="/reports"
-                            element={
-                                window.smartpayProData?.isActive
-                                    ? null
-                                    : <ReportsLockedPage />
-                            }
+                            exact path="/reports"
+                            element={window.smartpayProData?.isActive ? null : <ReportsLockedPage />}
                         />
 
                         <Route element={<NotFound />} />
                     </Routes>
                 </HashRouter>
 
-                {/* load the smartpay-pro routes — pass our Routes so pro can extend them */}
-                {window.smartPayRouteHooks.applyFilters(
-                    'smartPayAdminRoute',
-                    null,
-                    <Routes>
-                        {/* Dashboard */}
-                        <Route exact path="/" element={<Dashboard />} />
-
-                        {/* Product */}
-                        <Route
-                            exact
-                            path="/products"
-                            element={<ProductList />}
-                        />
-                        <Route
-                            exact
-                            path="/products/create"
-                            element={<CreateProduct />}
-                        />
-                        <Route
-                            exact
-                            path="/products/:productId/edit"
-                            element={<EditProduct />}
-                        />
-
-                        {/* Customer */}
-                        <Route
-                            exact
-                            path="/customers"
-                            element={<CustomerList />}
-                        />
-                        <Route
-                            exact
-                            path="/customers/:customerId"
-                            element={<ShowCustomer />}
-                        />
-
-                        {/* Coupon */}
-                        <Route exact path="/coupons" element={<CouponList />} />
-
-                        {/* Payment */}
-                        <Route exact path="/payments" element={<PaymentList />} />
-                        {/* Reserve /payments/new for pro plugin — must come before :paymentId */}
-                        <Route exact path="/payments/new" element={null} />
-                        <Route exact path="/payments/:paymentId" element={<PaymentDetailPage />} />
-
-                        {/* Form Data */}
-                        <Route exact path="/form-data" element={<FormData />} />
-
-                        <Route element={<NotFound />} />
-                    </Routes>,
-                )}
-
-                {/* <AdminFooter /> */}
+                {/* Pro plugin adds its own HashRouter with pro-only routes */}
+                {window.smartPayRouteHooks.applyFilters('smartPayAdminRoute', null)}
             </div>
         )
     }

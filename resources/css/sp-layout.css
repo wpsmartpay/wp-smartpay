@@ -1737,3 +1737,7 @@ input.sp-note-input {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+@keyframes sp-spin {
+  to { transform: rotate(360deg); }
+}

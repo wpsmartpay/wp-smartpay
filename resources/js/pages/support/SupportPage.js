@@ -124,7 +124,7 @@ function SupportTab() {
         <div className="sp-detail-grid">
             {/* Main column — getting started + resource links */}
             <div>
-                <GettingStartedBanner dismissible={false} />
+                <GettingStartedBanner dismissible={false} hasPayments={false} />
 
                 <div className="sp-detail-card">
                     <div className="sp-detail-card__header">

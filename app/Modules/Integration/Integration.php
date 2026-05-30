@@ -21,6 +21,14 @@ class Integration
     public static function getIntegrations()
     {
         return [
+            'products'  => [
+                'name'       => __( 'Products', 'smartpay' ),
+                'excerpt'    => __( 'Sell digital products and downloads directly from your WordPress site.', 'smartpay' ),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/products.png',
+                'manager'    => Products::class,
+                'type'       => 'free',
+                'categories' => [ 'Core' ],
+            ],
             'paddle'    =>  [
                 'name'       => 'Paddle',
                 'excerpt'    => 'Paddle provides financial services for SaaS and Digital services.',
