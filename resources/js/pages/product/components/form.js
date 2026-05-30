@@ -1,6 +1,6 @@
 import { Trash2, HardDrive, Package, Image } from 'react-feather'
 import { __ } from '@wordpress/i18n'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { DeleteProduct } from '../../../http/product'
 import { variationDefaultData } from '../../../utils/constant'
 import { OptionComponent } from './option'
@@ -552,7 +552,7 @@ export const ProductForm = ({ product, setProductData, activeTab }) => {
                                         <button
                                             type="button"
                                             className="sp-btn sp-btn--outline"
-                                            style={{ fontSize: 12, height: 28, padding: '0 10px', flexShrink: 0 }}
+                                            style={{ fontSize: 12, padding: '0 10px', flexShrink: 0 }}
                                             onClick={() => addProductFile(variation)}
                                         >
                                             {__('Select Files', 'smartpay')}

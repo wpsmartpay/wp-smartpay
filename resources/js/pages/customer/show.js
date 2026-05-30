@@ -1,7 +1,7 @@
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
 import { Link, useParams } from 'react-router-dom'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { PaymentDetailsDialog } from '../payment/PaymentDetailsDialog'
 import CustomerStats from './customer-stats'
 import { createPaymentColumns } from './payment-columns'

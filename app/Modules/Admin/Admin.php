@@ -227,6 +227,15 @@ class Admin
         $wp_admin_bar->add_node(
             array(
                 'parent' => 'smartpay-toolbar',
+                'id'     => 'smartpay-toolbar-forms',
+                'title'  => esc_html__( 'Forms', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/native-forms' ) ),
+            )
+        );
+
+        $wp_admin_bar->add_node(
+            array(
+                'parent' => 'smartpay-toolbar',
                 'id'     => 'smartpay-toolbar-payments',
                 'title'  => esc_html__( 'Payments', 'smartpay' ),
                 'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/payments' ) ),
@@ -236,9 +245,9 @@ class Admin
         $wp_admin_bar->add_node(
             array(
                 'parent' => 'smartpay-toolbar',
-                'id'     => 'smartpay-toolbar-customers',
-                'title'  => esc_html__( 'Customers', 'smartpay' ),
-                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/customers' ) ),
+                'id'     => 'smartpay-toolbar-integrations',
+                'title'  => esc_html__( 'Integrations', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay-integrations' ) ),
             )
         );
 

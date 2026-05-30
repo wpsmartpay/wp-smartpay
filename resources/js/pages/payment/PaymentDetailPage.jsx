@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { GetPayment, Update } from '@/http/payment'
 import { ActivityLogSection } from './ActivityLogSection'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
 const { Header } = window.WPSmartPayUI
 

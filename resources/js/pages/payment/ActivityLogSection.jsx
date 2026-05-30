@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { AddPaymentLog, GetPaymentLogs } from '@/http/payment'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
 /* ── Helpers ──────────────────────────────────────────────── */
 

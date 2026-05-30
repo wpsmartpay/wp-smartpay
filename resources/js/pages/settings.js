@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { GetSettings, UpdateSettings, ClearDebugLog } from '../http/settings'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
 const { useState, useEffect, useCallback } = wp.element
 const { Header, Button, Card, CardContent, CardFooter, Switch, Alert, AlertDescription } = window.WPSmartPayUI

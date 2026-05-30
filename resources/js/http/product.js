@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch'
 import { __ } from '@wordpress/i18n'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
 export const GetProducts = async ({ page = 1, perPage = 10, search = '', sortBy = 'id:desc', billingType = '' }) => {
 	const queryParams = new URLSearchParams({

@@ -374,7 +374,7 @@ export const PaymentList = () => {
 									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {__('payments', 'smartpay')}
 								</span>
 								<select className="sp-filter-select"
-									style={{ height: 28, fontSize: 12, padding: '0 22px 0 8px' }}
+									style={{ fontSize: 12, padding: '0 22px 0 8px' }}
 									value={perPage}
 									onChange={(e) => setPerPage(Number(e.target.value))}>
 									{PER_PAGE_OPTIONS.map((n) => (

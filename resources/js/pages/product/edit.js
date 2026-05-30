@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { Link, useParams } from 'react-router-dom'
 import { useReducer, useEffect, useState } from '@wordpress/element'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm, CoverImageCard } from './components/form'
 import { productDefaultData } from '../../utils/constant'

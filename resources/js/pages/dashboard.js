@@ -7,7 +7,6 @@ import {
     Activity,
     XCircle,
     Receipt,
-    Package,
     UserCheck,
     FileText,
     Settings,
@@ -17,6 +16,7 @@ import {
     HelpCircle,
     ChevronRight,
     Plus,
+    RefreshCw,
 } from 'lucide-react'
 import { Header } from '../components/header'
 import { SetupWizard } from '../components/SetupWizard'
@@ -74,12 +74,12 @@ const PERIODS = [
 // ─── Management groups ────────────────────────────────────────────────────────
 const MANAGEMENT_GROUPS = [
     {
-        label: __('PAYMENTS & PRODUCTS', 'smartpay'),
+        label: __('MANAGEMENT', 'smartpay'),
         items: [
-            { label: __('Payments', 'smartpay'),   icon: Receipt,   hash: '/payments' },
-            { label: __('Products', 'smartpay'),   icon: Package,   hash: '/products' },
-            { label: __('Customers', 'smartpay'),  icon: UserCheck, hash: '/customers' },
-            { label: __('Forms', 'smartpay'),      icon: FileText,  hash: '/forms' },
+            { label: __('Forms', 'smartpay'),          icon: FileText,   hash: '/native-forms' },
+            { label: __('Payments', 'smartpay'),       icon: Receipt,    hash: '/payments' },
+            { label: __('Subscriptions', 'smartpay'),  icon: RefreshCw,  hash: '/subscriptions' },
+            { label: __('Customers', 'smartpay'),      icon: UserCheck,  hash: '/customers' },
         ],
     },
     {
@@ -717,21 +717,26 @@ export const Dashboard = () => {
                                 <span className="sp-detail-card__title">{__( 'QUICK ACTIONS', 'smartpay' )}</span>
                             </div>
                             <div className="sp-detail-card__body" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 16px' }}>
-                                { options?.productsEnabled && (
-                                    <a
-                                        href={ `${ adminUrl }?page=smartpay#/products/create` }
-                                        className="sp-btn sp-btn--outline"
-                                        style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
-                                    >
-                                        {__( '+ Add New Product', 'smartpay' )}
-                                    </a>
-                                ) }
                                 <a
                                     href={ `${ adminUrl }?page=smartpay#/native-forms` }
                                     className="sp-btn sp-btn--primary"
                                     style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
                                 >
                                     {__( '+ Create Payment Form', 'smartpay' )}
+                                </a>
+                                <a
+                                    href={ `${ adminUrl }?page=smartpay#/native-forms` }
+                                    className="sp-btn sp-btn--outline"
+                                    style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
+                                >
+                                    {__( 'Forms', 'smartpay' )}
+                                </a>
+                                <a
+                                    href={ `${ adminUrl }?page=smartpay-integrations` }
+                                    className="sp-btn sp-btn--outline"
+                                    style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
+                                >
+                                    {__( 'Integrations', 'smartpay' )}
                                 </a>
                             </div>
                         </div>
