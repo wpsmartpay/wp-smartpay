@@ -358,6 +358,7 @@ export const ProductList = () => {
 					>
 						<button
 							className="sp-btn sp-btn--outline"
+							disabled={!hasSelection}
 							onClick={() => setActionOpen((o) => !o)}
 						>
 							{__('Select Action', 'smartpay')}

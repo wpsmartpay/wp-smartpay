@@ -213,6 +213,7 @@ export const CouponList = () => {
 
 					<div className="sp-action-dropdown" onClick={(e) => e.stopPropagation()}>
 						<button className="sp-btn sp-btn--outline"
+							disabled={!hasSelection}
 							onClick={() => setActionOpen((o) => !o)}>
 							{__('Select Action', 'smartpay')}
 							<ChevronDown size={14} style={{ marginLeft: 2, opacity: 0.6 }} />
