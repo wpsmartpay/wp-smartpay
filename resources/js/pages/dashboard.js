@@ -384,8 +384,8 @@ const SalesGrowthChart = ( { chartData, loading, period } ) => {
 // ─── Onboarding Progress Card ─────────────────────────────────────────────────
 const ONBOARDING_ITEMS = [
     { id: 1, label: __( 'Configure currency & settings', 'smartpay' ) },
-    { id: 2, label: __( 'Connect a payment gateway', 'smartpay' ) },
-    { id: 3, label: __( 'Create a product or form', 'smartpay' ) },
+    { id: 2, label: __( 'Create a payment form', 'smartpay' ) },
+    { id: 3, label: __( 'Connect a payment gateway', 'smartpay' ) },
     { id: 4, label: __( 'Receive your first payment', 'smartpay' ) },
 ]
 
@@ -410,6 +410,13 @@ const OnboardingProgressCard = ( { hasPayments, onLaunchWizard } ) => {
     const isChecked = ( id ) => id === 4 ? hasPayments : !! checked[ id ]
     const doneCount = ONBOARDING_ITEMS.filter( ( item ) => isChecked( item.id ) ).length
     const allDone   = doneCount === 4
+
+    const toggle = ( id ) => {
+        if ( id === 4 ) return
+        const next = { ...checked, [ id ]: ! checked[ id ] }
+        setChecked( next )
+        localStorage.setItem( 'sp_onboarding_v1', JSON.stringify( next ) )
+    }
 
     return (
         <div className="sp-detail-card" style={{ overflow: 'hidden' }}>
@@ -453,13 +460,21 @@ const OnboardingProgressCard = ( { hasPayments, onLaunchWizard } ) => {
                         {ONBOARDING_ITEMS.map( ( item, i ) => {
                             const done = isChecked( item.id )
                             return (
-                                <li key={item.id} style={{
-                                    display:    'flex',
-                                    alignItems: 'center',
-                                    gap:        10,
-                                    padding:    '6px 0',
-                                    borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
-                                }}>
+                                <li key={item.id}
+                                    onClick={() => toggle( item.id )}
+                                    onMouseOver={( e ) => { if ( item.id !== 4 ) e.currentTarget.style.background = 'var(--sp-surface-muted, #f6f7f7)' }}
+                                    onMouseOut={( e )  => { e.currentTarget.style.background = 'transparent' }}
+                                    style={{
+                                        display:    'flex',
+                                        alignItems: 'center',
+                                        gap:        10,
+                                        padding:    '6px 0',
+                                        borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
+                                        cursor:     item.id === 4 ? 'default' : 'pointer',
+                                        margin:     '0 -16px',
+                                        padding:    '6px 16px',
+                                        borderRadius: 4,
+                                    }}>
                                     <CheckCircle done={done} />
                                     <span style={{
                                         fontSize:       12.5,
