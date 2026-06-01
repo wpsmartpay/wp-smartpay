@@ -183,10 +183,10 @@ const TemplateBrowser = ( { onUse } ) => {
 	}, [] )
 
 	return (
-		<div style={ { display: 'flex', height: '520px', overflow: 'hidden', margin: '0 -24px -24px' } }>
+		<div style={ { display: 'flex', height: '640px', overflow: 'hidden', margin: '0 -24px -24px' } }>
 			{/* Sidebar */}
 			<aside style={ {
-				width:      '180px',
+				width:      '200px',
 				flexShrink: 0,
 				borderRight:'1px solid #e5e7eb',
 				overflowY:  'auto',
@@ -262,7 +262,7 @@ const TemplateBrowser = ( { onUse } ) => {
 							<p style={ { margin: '4px 0 0', fontSize: '12px' } }>{ __( 'Try a different category or search term', 'smartpay' ) }</p>
 						</div>
 					) : (
-						<div style={ { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(175px, 1fr))', gap: '12px' } }>
+						<div style={ { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px' } }>
 							{ filtered.map( ( t ) => (
 								<TemplateCard key={ t.id } template={ t } onUse={ onUse } />
 							) ) }
@@ -297,7 +297,7 @@ export const NewFormModal = ( { open, onClose, onBlank } ) => {
 
 	return (
 		<Dialog open={ open } onOpenChange={ handleOpenChange }>
-			<DialogContent className="sm:max-w-3xl">
+			<DialogContent className="sm:max-w-5xl">
 				<DialogHeader>
 					{ view === 'templates' ? (
 						<div style={ { display: 'flex', alignItems: 'center', gap: '10px' } }>
