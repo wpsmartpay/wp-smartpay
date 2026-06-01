@@ -41,6 +41,11 @@ class Admin
             30
         );
 
+        // Force hook prefix back to 'smartpay' — WordPress derives it from sanitize_title(menu_title)
+        // which would give 'wpsmartpay'. We keep the slug-based prefix for stability.
+        global $admin_page_hooks;
+        $admin_page_hooks['smartpay'] = 'smartpay';
+
         add_submenu_page(
             'smartpay',
             __('Dashboard', 'smartpay'),
