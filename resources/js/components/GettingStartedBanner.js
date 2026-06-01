@@ -18,6 +18,14 @@ const ITEMS = [
     },
     {
         id: 2,
+        label: __( 'Create a payment form', 'smartpay' ),
+        desc:  __( 'Build a form to collect payments on your site. Use a template or start from scratch.', 'smartpay' ),
+        links: [
+            { label: __( 'Create Form', 'smartpay' ), href: `${adminUrl}?page=smartpay#/native-forms` },
+        ],
+    },
+    {
+        id: 3,
         label: __( 'Connect a payment gateway', 'smartpay' ),
         desc:  __( 'Link Stripe, PayPal, Paddle, or another provider to process payments.', 'smartpay' ),
         links: [
@@ -25,18 +33,9 @@ const ITEMS = [
         ],
     },
     {
-        id: 3,
-        label: __( 'Create a product or form', 'smartpay' ),
-        desc:  __( 'Add a product to sell or build a payment form for your site.', 'smartpay' ),
-        links: [
-            { label: __( 'Add Product', 'smartpay' ), href: `${adminUrl}?page=smartpay#/products/create` },
-            { label: __( 'Create Form', 'smartpay' ),  href: `${adminUrl}?page=smartpay#/native-forms` },
-        ],
-    },
-    {
         id: 4,
         label: __( 'Receive your first payment', 'smartpay' ),
-        desc:  __( 'Share your form or product link — this checks automatically.', 'smartpay' ),
+        desc:  __( 'Share your form link — this checks automatically.', 'smartpay' ),
         links: [],
         auto: true,
     },

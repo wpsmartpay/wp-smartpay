@@ -5,6 +5,7 @@ import apiFetch from '@wordpress/api-fetch'
 const { adminUrl, apiNonce, restUrl, options = {} } = window.smartpay
 
 const WIZARD_KEY = 'sp_wizard_v1_shown'
+const TOTAL_STEPS = 4
 
 // restUrl = 'http://site.com/wp-json/smartpay' (no /v1) — must add /v1/ explicitly
 const buildUrl = ( path ) => new URL( `${restUrl}/v1/${path}` ).toString()
@@ -31,7 +32,7 @@ function StepDots( { current, total } ) {
     )
 }
 
-// ── Step 1 ────────────────────────────────────────────────────
+// ── Step 1: Configure settings ────────────────────────────────
 
 function Step1( { onNext } ) {
     const [currency,     setCurrency]     = useState( options.currency || 'USD' )
@@ -135,16 +136,75 @@ function Step1( { onNext } ) {
     )
 }
 
-// ── Step 2 ────────────────────────────────────────────────────
+// ── Step 2: Create a form ─────────────────────────────────────
 
 function Step2( { onNext } ) {
-    const gateways   = options.gateways || {}
-    const intUrl     = `${adminUrl}?page=smartpay-integrations`
-    const hasGateways = Object.keys( gateways ).length > 0
+    const formsUrl = `${adminUrl}?page=smartpay#/native-forms`
 
     return (
         <div style={bodyStyle}>
             <div style={stepBadgeStyle}>02</div>
+            <h2 style={headingStyle}>{__( 'Create your first payment form', 'smartpay' )}</h2>
+            <p style={subStyle}>{__( 'Build a form to collect payments on your site. Use a template or start from scratch — takes less than a minute.', 'smartpay' )}</p>
+
+            <div style={{ marginBottom: 28 }}>
+                <a
+                    href={formsUrl}
+                    style={{
+                        display:        'flex',
+                        alignItems:     'center',
+                        justifyContent: 'space-between',
+                        padding:        '14px 16px',
+                        border:         '1px solid #e5e7eb',
+                        borderRadius:   8,
+                        textDecoration: 'none',
+                        background:     '#fff',
+                        transition:     'border-color .15s, box-shadow .15s',
+                    }}
+                    onMouseOver={( e ) => { e.currentTarget.style.borderColor = '#293c81'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(41,60,129,.08)' }}
+                    onMouseOut={( e )  => { e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.boxShadow = 'none' }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 8, background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6b7280" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                        </div>
+                        <span style={{ fontSize: 13.5, fontWeight: 600, color: '#1d2327' }}>
+                            {__( 'Open Form Builder', 'smartpay' )}
+                        </span>
+                    </div>
+                    <span style={{ fontSize: 12, color: '#293c81', fontWeight: 600 }}>{__( 'Create →', 'smartpay' )}</span>
+                </a>
+            </div>
+
+            <div style={footerStyle}>
+                <button type="button" onClick={onNext} style={btnPrimary}
+                    onMouseOver={( e ) => e.currentTarget.style.background = '#1a2730'}
+                    onMouseOut={( e )  => e.currentTarget.style.background = '#1d2327'}
+                >
+                    {__( "I've created a form →", 'smartpay' )}
+                </button>
+                <button type="button" onClick={onNext} style={btnGhost}>
+                    {__( 'Skip for now', 'smartpay' )}
+                </button>
+            </div>
+        </div>
+    )
+}
+
+// ── Step 3: Connect a gateway ─────────────────────────────────
+
+function Step3( { onNext } ) {
+    const gateways    = options.gateways || {}
+    const intUrl      = `${adminUrl}?page=smartpay-integrations`
+    const hasGateways = Object.keys( gateways ).length > 0
+
+    return (
+        <div style={bodyStyle}>
+            <div style={stepBadgeStyle}>03</div>
             <h2 style={headingStyle}>{__( 'Connect a payment gateway', 'smartpay' )}</h2>
             <p style={subStyle}>{__( 'Link a gateway to start accepting real payments. You can configure credentials on the next screen.', 'smartpay' )}</p>
 
@@ -201,16 +261,16 @@ function Step2( { onNext } ) {
                     {__( "I've connected a gateway →", 'smartpay' )}
                 </button>
                 <button type="button" onClick={onNext} style={btnGhost}>
-                    {__( "Skip for now", 'smartpay' )}
+                    {__( 'Skip for now', 'smartpay' )}
                 </button>
             </div>
         </div>
     )
 }
 
-// ── Step 3 ────────────────────────────────────────────────────
+// ── Step 4: Done ──────────────────────────────────────────────
 
-function Step3( { onClose } ) {
+function Step4( { onClose } ) {
     const go = ( href ) => {
         onClose()
         window.location.href = href
@@ -218,7 +278,6 @@ function Step3( { onClose } ) {
 
     return (
         <div style={{ ...bodyStyle, textAlign: 'center', padding: '48px 40px 40px' }}>
-            {/* Success icon */}
             <div style={{
                 width: 64, height: 64, borderRadius: '50%',
                 background: '#f0fdf4', border: '2px solid #86efac',
@@ -234,7 +293,7 @@ function Step3( { onClose } ) {
                 {__( "You're ready to accept payments", 'smartpay' )}
             </h2>
             <p style={{ ...subStyle, maxWidth: 380, margin: '0 auto 32px' }}>
-                {__( 'Create your first payment form and start collecting payments today.', 'smartpay' )}
+                {__( 'Your store is set up. Share your form link and start collecting payments today.', 'smartpay' )}
             </p>
 
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 24 }}>
@@ -245,7 +304,7 @@ function Step3( { onClose } ) {
                     onMouseOver={( e ) => e.currentTarget.style.background = '#1a2730'}
                     onMouseOut={( e )  => e.currentTarget.style.background = '#1d2327'}
                 >
-                    {__( 'Build a Payment Form', 'smartpay' )}
+                    {__( 'View My Forms', 'smartpay' )}
                 </button>
             </div>
 
@@ -275,10 +334,11 @@ export function SetupWizard( { isOpen, onClose } ) {
     const STEPS = [
         <Step1 key={1} onNext={() => setStep( 2 )} />,
         <Step2 key={2} onNext={() => setStep( 3 )} />,
-        <Step3 key={3} onClose={handleClose} />,
+        <Step3 key={3} onNext={() => setStep( 4 )} />,
+        <Step4 key={4} onClose={handleClose} />,
     ]
 
-    const progressPct = ( step / 3 ) * 100
+    const progressPct = ( step / TOTAL_STEPS ) * 100
 
     return (
         <div style={{
@@ -330,9 +390,9 @@ export function SetupWizard( { isOpen, onClose } ) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
                             <span style={{ fontSize: 11, color: '#9ca3af', fontWeight: 500 }}>
-                                {__( 'Step', 'smartpay' )} {step} {__( 'of 3', 'smartpay' )}
+                                {__( 'Step', 'smartpay' )} {step} {__( 'of', 'smartpay' )} {TOTAL_STEPS}
                             </span>
-                            <StepDots current={step} total={3} />
+                            <StepDots current={step} total={TOTAL_STEPS} />
                         </div>
                         <button
                             type="button"
@@ -378,18 +438,18 @@ const bodyStyle = {
 }
 
 const stepBadgeStyle = {
-    display:      'inline-flex',
-    alignItems:   'center',
+    display:        'inline-flex',
+    alignItems:     'center',
     justifyContent: 'center',
-    width:        28,
-    height:       28,
-    borderRadius: 6,
-    background:   '#eef0f8',
-    color:        '#293c81',
-    fontSize:     11,
-    fontWeight:   700,
-    letterSpacing: '.5px',
-    marginBottom: 14,
+    width:          28,
+    height:         28,
+    borderRadius:   6,
+    background:     '#eef0f8',
+    color:          '#293c81',
+    fontSize:       11,
+    fontWeight:     700,
+    letterSpacing:  '.5px',
+    marginBottom:   14,
 }
 
 const headingStyle = {
@@ -470,27 +530,27 @@ const btnPrimary = {
 }
 
 const btnGhost = {
-    background:  'none',
-    border:      'none',
-    cursor:      'pointer',
-    fontSize:    12.5,
-    color:       '#9ca3af',
-    fontWeight:  500,
-    padding:     '11px 4px',
-    lineHeight:  1,
+    background:     'none',
+    border:         'none',
+    cursor:         'pointer',
+    fontSize:       12.5,
+    color:          '#9ca3af',
+    fontWeight:     500,
+    padding:        '11px 4px',
+    lineHeight:     1,
     textDecoration: 'none',
-    transition:  'color .15s',
+    transition:     'color .15s',
 }
 
 const spinnerStyle = {
-    display:     'inline-block',
-    width:       12,
-    height:      12,
-    border:      '2px solid rgba(255,255,255,.3)',
-    borderTop:   '2px solid #fff',
+    display:      'inline-block',
+    width:        12,
+    height:       12,
+    border:       '2px solid rgba(255,255,255,.3)',
+    borderTop:    '2px solid #fff',
     borderRadius: '50%',
-    animation:   'sp-spin .7s linear infinite',
-    marginRight: 4,
+    animation:    'sp-spin .7s linear infinite',
+    marginRight:  4,
 }
 
 export default SetupWizard
