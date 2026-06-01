@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n'
 const SECTION_LABELS = {
     wordpress: __('WordPress', 'smartpay'),
     server:    __('Server', 'smartpay'),
-    smartpay:  __('SmartPay', 'smartpay'),
+    smartpay:  __('WPSmartPay', 'smartpay'),
     plugins:   __('Active Plugins', 'smartpay'),
 }
 

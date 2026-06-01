@@ -319,7 +319,7 @@ export function SetupWizard( { isOpen, onClose } ) {
                         )}
                         <div>
                             <span style={{ display: 'block', fontSize: 14, fontWeight: 700, color: '#293c81', lineHeight: 1.2, letterSpacing: '-.2px' }}>
-                                WP SmartPay
+                                WPSmartPay
                             </span>
                             <span style={{ display: 'block', fontSize: 11, color: '#9ca3af', fontWeight: 500, marginTop: 1 }}>
                                 {__( 'Setup Wizard', 'smartpay' )}

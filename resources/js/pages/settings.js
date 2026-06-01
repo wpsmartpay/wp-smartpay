@@ -247,7 +247,7 @@ export const SettingsPage = () => {
 	if (isLoading || !schema) {
 		return (
 			<>
-				<Header title={__('Settings', 'smartpay')} subtitle={__('Configure SmartPay', 'smartpay')} />
+				<Header title={__('Settings', 'smartpay')} subtitle={__('Configure WPSmartPay', 'smartpay')} />
 				{loadError ? (
 					<div className="p-4 max-w-5xl mx-auto">
 						<Alert variant="destructive">
@@ -265,7 +265,7 @@ export const SettingsPage = () => {
 
 	return (
 		<>
-			<Header title={__('Settings', 'smartpay')} subtitle={__('Configure SmartPay', 'smartpay')} />
+			<Header title={__('Settings', 'smartpay')} subtitle={__('Configure WPSmartPay', 'smartpay')} />
 
 			<div className="p-4 max-w-5xl mx-auto">
 				{/* Tab nav */}

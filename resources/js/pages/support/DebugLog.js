@@ -50,7 +50,7 @@ export function DebugLog() {
             <div className="sp-detail-card__header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div>
                     <span className="sp-detail-card__title">{__('Debug Log', 'smartpay')}</span>
-                    <p style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', margin: '4px 0 0' }}>{__('Recent log entries from the SmartPay debug log file.', 'smartpay')}</p>
+                    <p style={{ color: 'var(--sp-text-muted)', fontSize: '12.5px', margin: '4px 0 0' }}>{__('Recent log entries from the WPSmartPay debug log file.', 'smartpay')}</p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, flexShrink: 0, marginTop: 2 }}>
                     {log && <CopyButton text={log} />}

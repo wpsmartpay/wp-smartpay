@@ -50,14 +50,14 @@ final class FreePurchase extends PaymentGateway
         if ( Payment::PRODUCT_PURCHASE === $payment_data['payment_type'] ) {
             $product = Product::where('id', $payment_data['payment_data']['product_id'])->first();
             if ( ! $product || floatval( $product->sale_price ) != 0 ) {
-                smartpay_debug_log( __( 'SmartPay-FreePurchase: product not found or price is not zero.', 'smartpay' ) );
+                smartpay_debug_log( __( 'WPSmartPay-FreePurchase: product not found or price is not zero.', 'smartpay' ) );
                 die( 'Free gateway is only allowed for zero-price products.' );
             }
         }
 
         // For any payment type: amount must be 0.
         if ( floatval( $payment_data['amount'] ) != 0 ) {
-            smartpay_debug_log( __( 'SmartPay-FreePurchase: amount is not zero.', 'smartpay' ) );
+            smartpay_debug_log( __( 'WPSmartPay-FreePurchase: amount is not zero.', 'smartpay' ) );
             die( 'Free gateway is only allowed for zero-amount orders.' );
         }
 
@@ -68,7 +68,7 @@ final class FreePurchase extends PaymentGateway
             smartpay_debug_log(
                 sprintf(
                     /* translators: 1: Payment id */
-                    __( 'SmartPay-FreePurchase: Payment #%s Can\'t insert payment.', 'smartpay' ),
+                    __( 'WPSmartPay-FreePurchase: Payment #%s Can\'t insert payment.', 'smartpay' ),
                     $payment->id ?? 0
                 )
             );
@@ -78,7 +78,7 @@ final class FreePurchase extends PaymentGateway
         smartpay_debug_log(
             sprintf(
                 /* translators: 1: Payment id */
-                __( 'SmartPay-FreePurchase: Payment #%s status changed to Pending.', 'smartpay' ),
+                __( 'WPSmartPay-FreePurchase: Payment #%s status changed to Pending.', 'smartpay' ),
                 $payment->id
             )
         );
@@ -94,7 +94,7 @@ final class FreePurchase extends PaymentGateway
             smartpay_debug_log(
                 sprintf(
                     /* translators: 1: Payment id */
-                    __( 'SmartPay-FreePurchase: Payment #%s status changed to Completed.', 'smartpay' ),
+                    __( 'WPSmartPay-FreePurchase: Payment #%s status changed to Completed.', 'smartpay' ),
                     $payment->id
                 )
             );

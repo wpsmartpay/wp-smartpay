@@ -104,13 +104,13 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
     const ctaUrl = isInstalled ? licenseUrl : upgradeUrl
     const ctaLabel = isInstalled
         ? __('Activate Your License', 'smartpay')
-        : __('Upgrade to SmartPay Pro', 'smartpay')
+        : __('Upgrade to WPSmartPay Pro', 'smartpay')
     const modalTitle = isInstalled
         ? __('License activation required', 'smartpay')
         : /* translators: %s feature name */ __('Unlock', 'smartpay') + ' ' + title
     const modalDesc = isInstalled
         ? __(
-              'Your SmartPay Pro license needs to be activated to access this feature.',
+              'Your WPSmartPay Pro license needs to be activated to access this feature.',
               'smartpay'
           )
         : excerpt

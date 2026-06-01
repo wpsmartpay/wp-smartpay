@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SmartPay
+ * Plugin Name: WPSmartPay
  * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, ecommerce, digital product, payment gateways, donations,
@@ -16,15 +16,15 @@
  * Domain Path: /languages
  * License: GPLv3+
  *
- * @package WP SmartPay
+ * @package WPSmartPay
  * @category Core
  *
- * WP SmartPay is free software: you can redistribute it and/or modify
+ * WPSmartPay is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * WP SmartPay is distributed in the hope that it will be useful,
+ * WPSmartPay is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.

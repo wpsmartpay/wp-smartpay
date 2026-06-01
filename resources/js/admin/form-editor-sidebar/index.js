@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { useRef, useEffect } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
+import { useRef, useEffect, useState, createPortal } from '@wordpress/element';
+import { useSelect, useDispatch } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
-import { Button } from '@wordpress/components';
+import { Button, Modal } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
 import {
 	PluginDocumentSettingPanel,
@@ -102,6 +102,334 @@ const PricingPanel = () => {
 				{ __( 'Add Amount', 'smartpay' ) }
 			</Button>
 		</div>
+	);
+};
+
+// ── SmartPay block manifest ───────────────────────────────────────────────────
+
+const SP_BLOCKS = [
+	{ name: 'smartpay-form/name',           label: __( 'Name Field',  'smartpay' ), required: true  },
+	{ name: 'smartpay-form/email',          label: __( 'Email',       'smartpay' ), required: true  },
+	{ name: 'smartpay-form/text-input',     label: __( 'Text Input',  'smartpay' ), required: false },
+	{ name: 'smartpay-form/textarea-input', label: __( 'Text Area',   'smartpay' ), required: false },
+	{ name: 'smartpay-form/radio-input',    label: __( 'Radio',       'smartpay' ), required: false },
+	{ name: 'smartpay-form/checkbox-input', label: __( 'Checkbox',    'smartpay' ), required: false },
+	{ name: 'smartpay-form/select-input',   label: __( 'Select',      'smartpay' ), required: false },
+	{ name: 'smartpay-form/address-input',  label: __( 'Address',     'smartpay' ), required: false },
+];
+
+// Blocks that may only appear once in the form.
+const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email' ] );
+
+/**
+ * Quick-add strip — always visible below the canvas.
+ * Smart: tracks which unique blocks are already in the form.
+ */
+const QuickAddStrip = ( { onAddField, usedNames } ) => {
+	const hasName  = usedNames.has( 'smartpay-form/name' );
+	const hasEmail = usedNames.has( 'smartpay-form/email' );
+	const allRequired = hasName && hasEmail;
+
+	const label = ! allRequired
+		? __( 'Required fields missing —', 'smartpay' )
+		: __( 'Insert field:', 'smartpay' );
+
+	return (
+		<div className="sp-quick-add-strip">
+			<div className="sp-quick-add-strip__inner">
+				<span className={ `sp-quick-add-strip__label${ ! allRequired ? ' sp-quick-add-strip__label--warn' : '' }` }>
+					{ label }
+				</span>
+				{ SP_BLOCKS.map( ( { name, label: blkLabel, required } ) => {
+					const isUsed = UNIQUE_BLOCKS.has( name ) && usedNames.has( name );
+					return (
+						<button
+							key={ name }
+							className={ `sp-quick-add-btn${ required && ! isUsed ? ' sp-quick-add-btn--required' : '' }${ isUsed ? ' sp-quick-add-btn--used' : '' }` }
+							onClick={ () => ! isUsed && onAddField( name ) }
+							disabled={ isUsed }
+							title={ isUsed ? __( 'Already in form', 'smartpay' ) : blkLabel }
+						>
+							{ isUsed ? '✓ ' : '+ ' }{ blkLabel }
+						</button>
+					);
+				} ) }
+			</div>
+		</div>
+	);
+};
+
+/**
+ * Mounts the quick-add strip via a React portal.
+ *
+ * The strip lives in the MAIN document below the canvas so form-editor-sidebar.css
+ * applies without any iframe CSS injection. When the form is empty it expands into
+ * the primary empty-state guide; otherwise it collapses to a slim insert toolbar.
+ *
+ * Selectors tried (WP 7 → WP 6 fallback):
+ *   .editor-visual-editor      — WP 7.0
+ *   .edit-post-visual-editor   — WP 6.x
+ */
+const FormBuilderHelper = () => {
+	const blocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks(),
+		[]
+	);
+	const usedNames = new Set( blocks.map( ( b ) => b.name ) );
+
+	const { insertBlocks } = useDispatch( 'core/block-editor' );
+	const [ tick, setTick ]   = useState( 0 );
+	const quickAddRef = useRef( null );
+
+	useEffect( () => {
+		let mounted  = true;
+		let rafId    = null;
+		let mutTimer = null;
+
+		// Quick-add strip target — main document, below the canvas.
+		const getStripTarget = () =>
+			document.querySelector( '.interface-interface-skeleton__content' ) ||
+			document.querySelector( '.editor-visual-editor' ) ||
+			document.querySelector( '.edit-post-visual-editor' );
+
+		const setupPortal = () => {
+			const stripTarget = getStripTarget();
+			if ( ! stripTarget ) return false;
+
+			if ( ! quickAddRef.current || ! quickAddRef.current.isConnected ) {
+				quickAddRef.current?.remove();
+				const el = stripTarget.ownerDocument.createElement( 'div' );
+				el.className = 'sp-quick-add-portal';
+				stripTarget.appendChild( el );
+				quickAddRef.current = el;
+			}
+
+			if ( mounted ) setTick( ( n ) => n + 1 );
+			return true;
+		};
+
+		const trySetup = () => {
+			if ( ! mounted ) return;
+			if ( ! setupPortal() ) rafId = requestAnimationFrame( trySetup );
+		};
+
+		rafId = requestAnimationFrame( trySetup );
+
+		const observer = new MutationObserver( () => {
+			clearTimeout( mutTimer );
+			mutTimer = setTimeout( () => {
+				if ( ! mounted ) return;
+				if ( ! quickAddRef.current || ! quickAddRef.current.isConnected ) setupPortal();
+			}, 200 );
+		} );
+		observer.observe( document.body, { childList: true, subtree: true } );
+
+		return () => {
+			mounted = false;
+			cancelAnimationFrame( rafId );
+			clearTimeout( mutTimer );
+			observer.disconnect();
+			quickAddRef.current?.remove();
+			quickAddRef.current = null;
+		};
+	}, [] );
+
+	const addField = ( name ) => insertBlocks( wp.blocks.createBlock( name ) );
+
+	if ( tick === 0 || ! quickAddRef.current ) return null;
+
+	return createPortal(
+		<QuickAddStrip onAddField={ addField } usedNames={ usedNames } />,
+		quickAddRef.current
+	);
+};
+
+/**
+ * Form guide — a native Modal that walks the user through adding fields.
+ *
+ * - Auto-opens for a brand-new, empty form (isCleanNewPost).
+ * - Re-openable any time via the "Guide" button portaled into the editor header.
+ * - Lists required fields (Name, Email) and optional fields, each a one-click add.
+ *   Already-added unique fields render disabled with a check.
+ * - Native <Modal> provides the X / ESC / overlay close; a Close button is also
+ *   offered in the footer.
+ */
+const FormGuide = () => {
+	const blocks = useSelect(
+		( select ) => select( 'core/block-editor' ).getBlocks(),
+		[]
+	);
+	const usedNames = new Set( blocks.map( ( b ) => b.name ) );
+
+	const { insertBlocks } = useDispatch( 'core/block-editor' );
+	const { openGeneralSidebar } = useDispatch( 'core/edit-post' );
+	const [ isOpen, setIsOpen ]     = useState( false );
+	const [ btnTick, setBtnTick ]   = useState( 0 );
+	const autoOpened = useRef( false );
+	const btnRef     = useRef( null );
+
+	// Open the existing form settings panels (Pricing, Form Settings, Goal),
+	// which live in the editor's Document settings sidebar.
+	const openSettings = () => openGeneralSidebar?.( 'edit-post/document' );
+
+	// Auto-open once when the editor opens — for both empty and populated forms.
+	useEffect( () => {
+		if ( autoOpened.current ) return;
+		autoOpened.current = true;
+		setIsOpen( true );
+	}, [] );
+
+	// Portal a "Guide" button into the editor header settings area.
+	useEffect( () => {
+		let mounted  = true;
+		let rafId    = null;
+		let mutTimer = null;
+
+		const getHeader = () =>
+			document.querySelector( '.editor-header__settings' ) ||
+			document.querySelector( '.edit-post-header__settings' );
+
+		const setupBtn = () => {
+			const header = getHeader();
+			if ( ! header ) return false;
+
+			if ( ! btnRef.current || ! btnRef.current.isConnected ) {
+				btnRef.current?.remove();
+				const el = document.createElement( 'div' );
+				el.className = 'sp-guide-btn-portal';
+				header.insertBefore( el, header.firstChild );
+				btnRef.current = el;
+			}
+
+			if ( mounted ) setBtnTick( ( n ) => n + 1 );
+			return true;
+		};
+
+		const trySetup = () => {
+			if ( ! mounted ) return;
+			if ( ! setupBtn() ) rafId = requestAnimationFrame( trySetup );
+		};
+
+		rafId = requestAnimationFrame( trySetup );
+
+		const observer = new MutationObserver( () => {
+			clearTimeout( mutTimer );
+			mutTimer = setTimeout( () => {
+				if ( ! mounted ) return;
+				if ( ! btnRef.current || ! btnRef.current.isConnected ) setupBtn();
+			}, 200 );
+		} );
+		observer.observe( document.body, { childList: true, subtree: true } );
+
+		return () => {
+			mounted = false;
+			cancelAnimationFrame( rafId );
+			clearTimeout( mutTimer );
+			observer.disconnect();
+			btnRef.current?.remove();
+			btnRef.current = null;
+		};
+	}, [] );
+
+	const addField = ( name ) => insertBlocks( wp.blocks.createBlock( name ) );
+
+	const addRequired = () => {
+		const toAdd = [ 'smartpay-form/name', 'smartpay-form/email' ]
+			.filter( ( name ) => ! usedNames.has( name ) )
+			.map( ( name ) => wp.blocks.createBlock( name ) );
+		if ( toAdd.length ) insertBlocks( toAdd );
+	};
+
+	const allRequiredAdded =
+		usedNames.has( 'smartpay-form/name' ) && usedNames.has( 'smartpay-form/email' );
+
+	const FieldButton = ( { name, label } ) => {
+		const isUsed = UNIQUE_BLOCKS.has( name ) && usedNames.has( name );
+		return (
+			<Button
+				variant="secondary"
+				__next40pxDefaultSize
+				className={ `sp-guide-modal__field${ isUsed ? ' is-used' : '' }` }
+				style={ { margin: '0px 10px 10px 0' } }
+				disabled={ isUsed }
+				onClick={ () => ! isUsed && addField( name ) }
+			>
+				<span className="sp-guide-modal__field-icon" aria-hidden="true">{ isUsed ? '✓' : '+' }</span>
+				{ label }
+			</Button>
+		);
+	};
+
+	return (
+		<>
+			{ btnTick > 0 && btnRef.current && createPortal(
+				<>
+					<Button
+						variant="tertiary"
+						className="sp-guide-trigger"
+						onClick={ openSettings }
+					>
+						{ __( 'Settings', 'smartpay' ) }
+					</Button>
+					<Button
+						variant="tertiary"
+						className="sp-guide-trigger"
+						onClick={ () => setIsOpen( true ) }
+					>
+						{ __( 'Guide', 'smartpay' ) }
+					</Button>
+				</>,
+				btnRef.current
+			) }
+
+			{ isOpen && (
+				<Modal
+					title={ __( 'WPSmartPay Help Guide', 'smartpay' ) }
+					onRequestClose={ () => setIsOpen( false ) }
+					className="sp-guide-modal"
+				>
+					<p className="sp-guide-modal__desc">
+						{ __( 'Build your payment form — click a field below, or type', 'smartpay' ) }
+						{ ' ' }<code>/</code>{ ' ' }
+						{ __( 'in the editor to add one.', 'smartpay' ) }
+					</p>
+
+					<h3 className="sp-guide-modal__heading">{ __( 'Required fields', 'smartpay' ) }</h3>
+					<div className="sp-guide-modal__grid">
+						{ SP_BLOCKS.filter( ( b ) => b.required ).map( ( b ) => (
+							<FieldButton key={ b.name } name={ b.name } label={ b.label } />
+						) ) }
+					</div>
+
+					<h3 className="sp-guide-modal__heading">{ __( 'Add more fields', 'smartpay' ) }</h3>
+					<div className="sp-guide-modal__grid">
+						{ SP_BLOCKS.filter( ( b ) => ! b.required ).map( ( b ) => (
+							<FieldButton key={ b.name } name={ b.name } label={ b.label } />
+						) ) }
+					</div>
+
+					<div className="sp-guide-modal__footer">
+						<Button
+							variant="primary"
+							__next40pxDefaultSize
+							disabled={ allRequiredAdded }
+							onClick={ addRequired }
+						>
+							{ allRequiredAdded
+								? __( 'Required fields added ✓', 'smartpay' )
+								: __( 'Add required fields', 'smartpay' ) }
+						</Button>
+						<Button
+							variant="tertiary"
+							__next40pxDefaultSize
+							onClick={ () => setIsOpen( false ) }
+						>
+							{ __( 'Close', 'smartpay' ) }
+						</Button>
+					</div>
+				</Modal>
+			) }
+		</>
 	);
 };
 
@@ -245,7 +573,7 @@ const OptionsPanel = () => {
 			<ToggleControl
 				__nextHasNoMarginBottom
 				label={ __( 'Show Form Title', 'smartpay' ) }
-				checked={ !! settings.show_title }
+				checked={ settings.show_title !== false }
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
@@ -391,6 +719,10 @@ registerPlugin( 'smartpay-form-sidebar', {
 
 		return (
 			<>
+				{ /* Quick-add strip below the canvas + guide modal / header button */ }
+				<FormBuilderHelper />
+				<FormGuide />
+
 				{ MainDashboardButton && (
 					<MainDashboardButton>
 						<a

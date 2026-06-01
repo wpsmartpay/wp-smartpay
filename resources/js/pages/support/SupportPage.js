@@ -73,7 +73,7 @@ const DOC_LINKS = [
     {
         icon: <ChatIcon />,
         title: __('Contact Support', 'smartpay'),
-        desc:  __('Open a ticket and get help from the SmartPay team.', 'smartpay'),
+        desc:  __('Open a ticket and get help from the WPSmartPay team.', 'smartpay'),
         url:   'https://wpsmartpay.com/support/',
     },
     {
@@ -91,7 +91,7 @@ const DOC_LINKS = [
     {
         icon: <StarIcon />,
         title: __('Leave a Review', 'smartpay'),
-        desc:  __('Enjoying SmartPay? Share your experience on WordPress.org.', 'smartpay'),
+        desc:  __('Enjoying WPSmartPay? Share your experience on WordPress.org.', 'smartpay'),
         url:   'https://wordpress.org/support/plugin/wp-smartpay/reviews/',
     },
 ]

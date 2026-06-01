@@ -31,7 +31,7 @@ class EmailNotification
 
             $log_message = sprintf(
 				/* translators: 1: time 2: mail to 3: subject 4: error message */
-                __('Email from SmartPay failed to send.\nSend time: %1$s\nTo: %2$s\nSubject: %3$s\nError: %4$s\n\n', 'smartpay'),
+                __('Email from WPSmartPay failed to send.\nSend time: %1$s\nTo: %2$s\nSubject: %3$s\nError: %4$s\n\n', 'smartpay'),
                 date_i18n('F j Y H:i:s', current_time('timestamp')),
                 $mailTo,
                 $subject,

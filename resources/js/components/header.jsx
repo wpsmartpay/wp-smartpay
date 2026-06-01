@@ -18,7 +18,7 @@ export function Header({ title, subtitle }) {
             <div className="smartpay-page-header">
                 <div className="smartpay-page-header__inner">
                     <div className="smartpay-page-header__logo">
-                        <img src={smartpay.logo} alt="SmartPay" />
+                        <img src={smartpay.logo} alt="WPSmartPay" />
                     </div>
                     <div className="smartpay-page-header__actions">
                         <button

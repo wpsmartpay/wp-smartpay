@@ -36,8 +36,8 @@ class NativeForm {
 			'smartpay_form',
 			array(
 				'labels'             => array(
-					'name'          => __( 'SmartPay Forms', 'smartpay' ),
-					'singular_name' => __( 'SmartPay Form', 'smartpay' ),
+					'name'          => __( 'WPSmartPay Forms', 'smartpay' ),
+					'singular_name' => __( 'WPSmartPay Form', 'smartpay' ),
 					'edit_item'     => __( 'Edit Form', 'smartpay' ),
 					'view_item'     => __( 'View Form', 'smartpay' ),
 				),
@@ -127,7 +127,7 @@ class NativeForm {
 			array(
 				array(
 					'slug'  => 'wp-smartpay',
-					'title' => __( 'WP SmartPay', 'smartpay' ),
+					'title' => __( 'WPSmartPay', 'smartpay' ),
 					'icon'  => null,
 				),
 			),
