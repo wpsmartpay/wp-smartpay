@@ -270,6 +270,11 @@ export const NativeFormList = () => {
 
 			<div className="sp-layout">
 
+				<div className="sp-page-title__inner">
+					<h1 className="sp-page-title__heading">{__('Forms', 'smartpay')}</h1>
+					<p className="sp-page-title__sub">{__('Manage your payment forms here', 'smartpay')}</p>
+				</div>
+
 				<div className="sp-toolbar">
 					<div className="sp-search">
 						<Search className="sp-search__icon" size={14} />
