@@ -433,29 +433,32 @@ class NativeForm {
 		);
 
 		// Form editor sidebar — pricing + settings panels.
+		$public_dir  = plugin_dir_path( SMARTPAY_PLUGIN_FILE ) . 'public';
 		$sidebar_js  = SMARTPAY_PLUGIN_ASSETS . '/js/admin/form-editor-sidebar.js';
 		$sidebar_css = SMARTPAY_PLUGIN_ASSETS . '/css/admin/form-editor-sidebar.css';
 
-		wp_enqueue_script(
-			'smartpay-form-editor-sidebar',
-			$sidebar_js,
-			array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data' ),
-			SMARTPAY_VERSION,
-			true
-		);
+		if ( file_exists( $public_dir . '/js/admin/form-editor-sidebar.js' ) ) {
+			wp_enqueue_script(
+				'smartpay-form-editor-sidebar',
+				$sidebar_js,
+				array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data' ),
+				SMARTPAY_VERSION,
+				true
+			);
 
-		wp_set_script_translations( 'smartpay-form-editor-sidebar', 'smartpay' );
+			wp_set_script_translations( 'smartpay-form-editor-sidebar', 'smartpay' );
 
-		wp_localize_script(
-			'smartpay-form-editor-sidebar',
-			'smartpayFormEditor',
-			array(
-				'logoUrl'      => SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png',
-				'formsListUrl' => admin_url( 'admin.php?page=smartpay' ) . '#/native-forms',
-			)
-		);
+			wp_localize_script(
+				'smartpay-form-editor-sidebar',
+				'smartpayFormEditor',
+				array(
+					'logoUrl'      => SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png',
+					'formsListUrl' => admin_url( 'admin.php?page=smartpay' ) . '#/native-forms',
+				)
+			);
+		}
 
-		if ( file_exists( $sidebar_css ) ) {
+		if ( file_exists( $public_dir . '/css/admin/form-editor-sidebar.css' ) ) {
 			wp_enqueue_style(
 				'smartpay-form-editor-sidebar',
 				$sidebar_css,
