@@ -98,36 +98,29 @@ class Admin
             }
         );
 
-        $pro_active = (
-            in_array('wp-smartpay-pro/smartpay-pro.php', get_option('active_plugins', []))
-            || in_array('smartpay-pro/smartpay-pro.php', get_option('active_plugins', []))
+        add_submenu_page(
+            'smartpay',
+            __('WPSmartPay - Subscriptions', 'smartpay'),
+            __('Subscriptions', 'smartpay'),
+            'manage_options',
+            'smartpay#/subscriptions',
+            function () {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
         );
 
-        if ( ! $pro_active ) {
-            add_submenu_page(
-                'smartpay',
-                __('WPSmartPay - Subscriptions', 'smartpay'),
-                __('Subscriptions', 'smartpay'),
-                'manage_options',
-                'smartpay#/subscriptions',
-                function () {
-                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                    echo smartpay_view('admin');
-                }
-            );
-
-            add_submenu_page(
-                'smartpay',
-                __('WPSmartPay - Reports', 'smartpay'),
-                __('Reports', 'smartpay'),
-                'manage_options',
-                'smartpay#/reports',
-                function () {
-                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                    echo smartpay_view('admin');
-                }
-            );
-        }
+        add_submenu_page(
+            'smartpay',
+            __('WPSmartPay - Invoices', 'smartpay'),
+            __('Invoices', 'smartpay'),
+            'manage_options',
+            'smartpay#/invoices',
+            function () {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
 
         add_submenu_page(
             'smartpay',
@@ -155,13 +148,13 @@ class Admin
 
         add_submenu_page(
             'smartpay',
-            __('WPSmartPay - Settings', 'smartpay'),
-            __('Settings', 'smartpay'),
+            __('WPSmartPay - Reports', 'smartpay'),
+            __('Reports', 'smartpay'),
             'manage_options',
-            'smartpay-setting',
+            'smartpay#/reports',
             function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('settings');
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
             }
         );
 
@@ -174,6 +167,18 @@ class Admin
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('integrations');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
+            __('WPSmartPay - Settings', 'smartpay'),
+            __('Settings', 'smartpay'),
+            'manage_options',
+            'smartpay-setting',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('settings');
             }
         );
 
@@ -289,7 +294,7 @@ class Admin
         // Fallback: hook suffix can vary (e.g. URL-encoded slug); also check request page param
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- reading page slug for asset enqueue routing, not processing form data
         $request_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
-        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments', 'smartpay#/subscriptions', 'smartpay#/reports'], true);
+        $is_main_admin_page = in_array($request_page, ['smartpay', 'smartpay#/products', 'smartpay#/customers', 'smartpay#/coupons', 'smartpay#/payments', 'smartpay#/subscriptions', 'smartpay#/invoices', 'smartpay#/reports'], true);
 
         $admin_style_hooks = [
             'toplevel_page_smartpay',

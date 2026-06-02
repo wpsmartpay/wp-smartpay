@@ -28,7 +28,7 @@ import { NativeFormList } from './admin/native-forms'
 
 // Other pages
 import { NotFound } from './pages/not-found'
-import { SubscriptionsLockedPage, ReportsLockedPage } from './components/LockedFeaturePage'
+import { SubscriptionsLockedPage, ReportsLockedPage, InvoicesLockedPage } from './components/LockedFeaturePage'
 // import { AdminFooter } from './components/AdminFooter'
 
 import './store/index'
@@ -77,6 +77,8 @@ domReady(function () {
                             exact path="/reports"
                             element={window.smartpayProData?.isActive ? null : <ReportsLockedPage />}
                         />
+                        <Route exact path="/invoices"           element={window.smartpayProData?.isActive ? null : <InvoicesLockedPage />} />
+                        <Route exact path="/invoices/:invoiceId" element={window.smartpayProData?.isActive ? null : <InvoicesLockedPage />} />
 
                         <Route element={<NotFound />} />
                     </Routes>

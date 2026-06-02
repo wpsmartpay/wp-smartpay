@@ -200,3 +200,14 @@ export const ReportsLockedPage = () => (
         )}
     />
 )
+
+export const InvoicesLockedPage = () => (
+    <LockedFeaturePage
+        title={__('Invoices', 'smartpay')}
+        subtitle={__('Send payment requests to customers', 'smartpay')}
+        excerpt={__(
+            'Create and send professional invoice payment links to customers directly from your dashboard.',
+            'smartpay'
+        )}
+    />
+)
