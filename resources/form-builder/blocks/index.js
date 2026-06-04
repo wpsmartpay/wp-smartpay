@@ -17,6 +17,7 @@ import { CheckboxField } from './CheckboxField'
 import { SelectField } from './SelectField'
 import { PricingField } from './PricingField'
 import { PricingOption } from './PricingField/option'
+import { SubmitButton } from './SubmitButton'
 
 const unregisterBlocks = [
     'core/quote',
@@ -87,6 +88,7 @@ const smartPayBlocks = [
     SelectField,
     PricingField,
     PricingOption,
+    SubmitButton,
 ]
 
 export const registerBlocks = () => {

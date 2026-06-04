@@ -33,6 +33,20 @@ $default_amount    = reset( $amounts );
 // block's position in the body), so the template skips its own amount section to
 // avoid duplicate cards. The block emits the same markup + field names.
 $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
+
+// Pay Button block — when present it owns the submit button's appearance. The
+// block renders nothing inline (its save() returns null); we read its attributes
+// here and render the real button after the gateway selector below, so the pay
+// action always sits last regardless of where the block was placed.
+$submit_btn = null;
+if ( has_block( 'smartpay-form/submit-button', $post_id ) ) {
+	foreach ( parse_blocks( $body ) as $sp_block ) {
+		if ( 'smartpay-form/submit-button' === ( $sp_block['blockName'] ?? '' ) ) {
+			$submit_btn = is_array( $sp_block['attrs'] ?? null ) ? $sp_block['attrs'] : array();
+			break;
+		}
+	}
+}
 ?>
 <?php if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) : ?>
 	<?php
@@ -206,11 +220,75 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 
 					<?php do_action( 'before_smartpay_payment_form_button', (object) array( 'id' => $post_id ) ); ?>
 
-					<button type="button"
-						class="btn btn-success btn-block btn-lg smartpay-form-pay-now"
-						<?php echo $has_payment_error ? 'disabled' : ''; ?>>
-						<?php echo esc_html( $pay_button_label ); ?>
-					</button>
+					<?php if ( is_array( $submit_btn ) ) : ?>
+						<?php
+						// Render the Pay Button block's configured button. Numerics are
+						// cast; colours pass through sanitize + esc_attr; the icon SVG is
+						// from a fixed server-side whitelist (no user input).
+						$btn_full   = ! empty( $submit_btn['fullWidth'] );
+						$btn_align  = in_array( $submit_btn['align'] ?? 'left', array( 'left', 'center', 'right' ), true ) ? $submit_btn['align'] : 'left';
+						$btn_width  = absint( $submit_btn['width'] ?? 0 );
+						$btn_bg     = sanitize_text_field( $submit_btn['bgColor'] ?? '#28a745' );
+						$btn_text   = sanitize_text_field( $submit_btn['textColor'] ?? '#ffffff' );
+						$btn_border = sanitize_text_field( $submit_btn['borderColor'] ?? '' );
+						$btn_bw     = absint( $submit_btn['borderWidth'] ?? 0 );
+						$btn_radius = absint( $submit_btn['borderRadius'] ?? 6 );
+						$btn_fs     = absint( $submit_btn['fontSize'] ?? 16 );
+						$btn_fw     = preg_replace( '/[^0-9a-z]/', '', (string) ( $submit_btn['fontWeight'] ?? '600' ) );
+						$btn_py     = absint( $submit_btn['paddingY'] ?? 14 );
+						$btn_px     = absint( $submit_btn['paddingX'] ?? 24 );
+
+						// Icon: a custom media image/SVG, or a preset whitelist SVG.
+						$btn_icon = '';
+						if ( 'custom' === ( $submit_btn['iconType'] ?? 'preset' ) ) {
+							$custom_icon_url = esc_url_raw( $submit_btn['customIconUrl'] ?? '' );
+							if ( $custom_icon_url ) {
+								$btn_icon = '<img src="' . esc_url( $custom_icon_url ) . '" alt="" class="smartpay-submit-icon-img" style="height:1.25em;width:auto;display:inline-block;" />';
+							}
+						} else {
+							$btn_icon = smartpay_submit_button_icon_svg( sanitize_key( $submit_btn['icon'] ?? '' ) );
+						}
+
+						$btn_ipos   = 'right' === ( $submit_btn['iconPosition'] ?? 'left' ) ? 'right' : 'left';
+						$btn_label  = $submit_btn['label'] ?? $pay_button_label;
+
+						$btn_style  = 'display:inline-flex;align-items:center;justify-content:center;';
+						$btn_style .= 'gap:' . ( $btn_icon ? '8px' : '0' ) . ';';
+						$btn_style .= 'background:' . $btn_bg . ';color:' . $btn_text . ';';
+						$btn_style .= 'border-radius:' . $btn_radius . 'px;';
+						$btn_style .= 'font-size:' . $btn_fs . 'px;font-weight:' . $btn_fw . ';';
+						$btn_style .= 'padding:' . $btn_py . 'px ' . $btn_px . 'px;line-height:1.2;cursor:pointer;';
+						$btn_style .= $btn_bw > 0 ? 'border:' . $btn_bw . 'px solid ' . $btn_border . ';' : 'border:none;';
+						if ( $btn_full ) {
+							$btn_style .= 'width:100%;';
+						} elseif ( $btn_width ) {
+							$btn_style .= 'width:' . $btn_width . '%;';
+						}
+						$wrap_style = 'text-align:' . ( $btn_full ? 'left' : $btn_align ) . ';';
+						?>
+						<div class="smartpay-submit-button-wrap" style="<?php echo esc_attr( $wrap_style ); ?>">
+							<button type="button"
+								class="smartpay-form-pay-now"
+								style="<?php echo esc_attr( $btn_style ); ?>"
+								<?php echo $has_payment_error ? 'disabled' : ''; ?>>
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preset SVG is a fixed server-side whitelist; custom icon URL is esc_url()d at build above.
+								echo 'left' === $btn_ipos ? $btn_icon : '';
+								?>
+								<span><?php echo esc_html( $btn_label ); ?></span>
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preset SVG is a fixed server-side whitelist; custom icon URL is esc_url()d at build above.
+								echo 'right' === $btn_ipos ? $btn_icon : '';
+								?>
+							</button>
+						</div>
+					<?php else : ?>
+						<button type="button"
+							class="btn btn-success btn-block btn-lg smartpay-form-pay-now"
+							<?php echo $has_payment_error ? 'disabled' : ''; ?>>
+							<?php echo esc_html( $pay_button_label ); ?>
+						</button>
+					<?php endif; ?>
 
 					<?php do_action( 'after_smartpay_payment_form_button', (object) array( 'id' => $post_id ) ); ?>
 
