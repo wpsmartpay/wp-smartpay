@@ -35,19 +35,19 @@ class PaymentController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-		$perPage = $request->get_param('per_page') ?: 10;
-		$search = $request->get_param('search') ?: '';
-		$status = $request->get_param('status') ?: '';
-		$type = $request->get_param('type') ?: '';
-		$customerId = $request->get_param('customer_id') ?: '';
-		$orderBy = $request->get_param('sort_by') ?: 'id:desc';
+		$perPage    = (int) ($request->get_param('per_page') ?: 10);
+		$search     = sanitize_text_field($request->get_param('search') ?: '');
+		$status     = sanitize_text_field($request->get_param('status') ?: '');
+		$type       = sanitize_text_field($request->get_param('type') ?: '');
+		$customerId = absint($request->get_param('customer_id') ?: 0);
+		$orderBy    = sanitize_text_field($request->get_param('sort_by') ?: 'id:desc');
 
 		// Start building the query
 		$query = Payment::with(['customer']);
 
 		// Apply customer filter if provided
 		if (!empty($customerId)) {
-			$query->where('customer_id', $customerId);
+			$query->where('customer_id', (int) $customerId);
 		}
 
 		// Apply search filter if provided
@@ -68,9 +68,12 @@ class PaymentController extends RestController
 			$query->where('type', $type);
 		}
 
+		$allowed_columns = ['id', 'email', 'transaction_id', 'amount', 'created_at', 'completed_at'];
 		$orderByParts = explode(',', $orderBy);
 		foreach ($orderByParts as $part) {
-			[$sortBy, $sortOrder] = explode(':', $part);
+			$pieces    = explode(':', trim($part));
+			$sortBy    = in_array($pieces[0] ?? '', $allowed_columns, true) ? $pieces[0] : 'id';
+			$sortOrder = strtoupper($pieces[1] ?? 'DESC') === 'ASC' ? 'ASC' : 'DESC';
 			$query->orderBy($sortBy, $sortOrder);
 		}
 
@@ -272,9 +275,23 @@ class PaymentController extends RestController
             return new WP_REST_Response(['message' => __('Payment not found', 'smartpay')], 404);
         }
 
-        $request = json_decode($request->get_body(), true);
+        $body = json_decode($request->get_body(), true);
 
-        $payment->status = $request['status'];
+        $allowed_statuses = [
+            Payment::COMPLETED,
+            Payment::PENDING,
+            Payment::REFUNDED,
+            Payment::ABANDONED,
+            Payment::REVOKED,
+            Payment::FAILED,
+        ];
+
+        $status = sanitize_text_field($body['status'] ?? '');
+        if (!in_array($status, $allowed_statuses, true)) {
+            return new WP_REST_Response(['message' => esc_html__('Invalid payment status.', 'smartpay')], 422);
+        }
+
+        $payment->status = $status;
         $payment->save();
 
         return new WP_REST_Response(['payment' => $payment, 'message' => __('Payment updated', 'smartpay')]);

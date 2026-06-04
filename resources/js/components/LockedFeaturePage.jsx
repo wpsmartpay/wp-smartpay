@@ -104,13 +104,13 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
     const ctaUrl = isInstalled ? licenseUrl : upgradeUrl
     const ctaLabel = isInstalled
         ? __('Activate Your License', 'smartpay')
-        : __('Upgrade to SmartPay Pro', 'smartpay')
+        : __('Upgrade to WPSmartPay Pro', 'smartpay')
     const modalTitle = isInstalled
         ? __('License activation required', 'smartpay')
         : /* translators: %s feature name */ __('Unlock', 'smartpay') + ' ' + title
     const modalDesc = isInstalled
         ? __(
-              'Your SmartPay Pro license needs to be activated to access this feature.',
+              'Your WPSmartPay Pro license needs to be activated to access this feature.',
               'smartpay'
           )
         : excerpt
@@ -196,6 +196,17 @@ export const ReportsLockedPage = () => (
         subtitle={__('Insights and analytics for your business', 'smartpay')}
         excerpt={__(
             'Track revenue, monitor growth, and analyze customer behavior with detailed, filterable reports.',
+            'smartpay'
+        )}
+    />
+)
+
+export const InvoicesLockedPage = () => (
+    <LockedFeaturePage
+        title={__('Invoices', 'smartpay')}
+        subtitle={__('Send payment requests to customers', 'smartpay')}
+        excerpt={__(
+            'Create and send professional invoice payment links to customers directly from your dashboard.',
             'smartpay'
         )}
     />

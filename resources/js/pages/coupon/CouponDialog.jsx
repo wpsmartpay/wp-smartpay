@@ -3,7 +3,7 @@ import { useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
 import { format, set } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 const { Button, Calendar, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DropdownMenu, DropdownMenuContent, DropdownMenuTrigger, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Textarea } = window.WPSmartPayUI;
 const { useSelect, dispatch } = wp.data
 

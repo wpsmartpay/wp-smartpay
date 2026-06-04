@@ -1,0 +1,32 @@
+// Editor canvas for the Pricing block.
+// Reuse the exact frontend card + preset styles so editor === frontend.
+@import '../../../sass/pricing-cards';
+
+// Editor-only: keep the default small "+" appender (like core/buttons) from
+// stretching to full card height inside the flex grid — center it instead.
+.smartpay-pricing .form-plan-grid > .block-list-appender {
+    align-self: center;
+}
+
+// In the editor each option is a selected block; show a subtle pointer.
+.smartpay-pricing .form-plan-card {
+    cursor: default;
+    display: block;
+    box-sizing: border-box;
+}
+
+// The `.form-plan-card` border IS the visible box. Suppress WordPress' own
+// block-boundary outline on the option blocks so it doesn't draw a second,
+// overlapping bracket around each card (only the selected one keeps a hint).
+.smartpay-pricing .form-plan-grid > [data-block] {
+    &::before,
+    &::after {
+        display: none !important;
+    }
+}
+
+// Keep selection legible: the active option gets a clean ring on the card.
+.smartpay-pricing .form-plan-grid > .is-selected .form-plan-card,
+.smartpay-pricing .form-plan-grid > .has-child-selected .form-plan-card {
+    box-shadow: 0 0 0 2px var(--color-green, rgb(40, 167, 69));
+}

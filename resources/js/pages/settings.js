@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { GetSettings, UpdateSettings, ClearDebugLog } from '../http/settings'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
 const { useState, useEffect, useCallback } = wp.element
 const { Header, Button, Card, CardContent, CardFooter, Switch, Alert, AlertDescription } = window.WPSmartPayUI
@@ -247,7 +247,7 @@ export const SettingsPage = () => {
 	if (isLoading || !schema) {
 		return (
 			<>
-				<Header title={__('Settings', 'smartpay')} subtitle={__('Configure SmartPay', 'smartpay')} />
+				<Header title={__('Settings', 'smartpay')} subtitle={__('Configure WPSmartPay', 'smartpay')} />
 				{loadError ? (
 					<div className="p-4 max-w-5xl mx-auto">
 						<Alert variant="destructive">
@@ -265,7 +265,7 @@ export const SettingsPage = () => {
 
 	return (
 		<>
-			<Header title={__('Settings', 'smartpay')} subtitle={__('Configure SmartPay', 'smartpay')} />
+			<Header title={__('Settings', 'smartpay')} subtitle={__('Configure WPSmartPay', 'smartpay')} />
 
 			<div className="p-4 max-w-5xl mx-auto">
 				{/* Tab nav */}

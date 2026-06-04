@@ -1,45 +1,40 @@
 import { __ } from '@wordpress/i18n';
 import { CircleUser } from 'lucide-react';
-const { StatCard, Card, CardContent } = window.WPSmartPayUI;
 
-export default function CustomerStats({ customer, paymentStats }){
+const StatItem = ({ title, value, color }) => (
+	<div style={{ background: 'var(--sp-surface-muted)', border: '1px solid var(--sp-border)', borderRadius: 'var(--sp-radius-sm)', padding: '10px 16px', minWidth: 110 }}>
+		<div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--sp-text-subtle)', marginBottom: 4 }}>{title}</div>
+		<div style={{ fontSize: 22, fontWeight: 700, color: color || 'var(--sp-text)' }}>{value ?? 0}</div>
+	</div>
+)
+
+export default function CustomerStats({ customer, paymentStats }) {
 	return (
-		<Card>
-			<CardContent>
-				<div className="flex justify-between items-center">
-					<div className="flex gap-4 items-center">
-						<CircleUser size={60} className='text-muted-foreground' />
+		<div className="sp-detail-card">
+			<div className="sp-detail-card__body">
+				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+					<div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+						<CircleUser size={52} style={{ color: 'var(--sp-text-subtle)', flexShrink: 0 }} />
 						<div>
-							<h2 className="m-0 mb-1 text-card-foreground">
-								{customer?.full_name}
-							</h2>
-							<p className="m-0 text-muted-foreground">
-								{customer?.email}
-							</p>
+							<h2 style={{ margin: '0 0 3px', fontSize: 18, fontWeight: 700, color: 'var(--sp-text)' }}>{customer?.full_name}</h2>
+							<p style={{ margin: 0, fontSize: 13, color: 'var(--sp-text-muted)' }}>{customer?.email}</p>
 						</div>
 					</div>
-					<div>
-						<h3 className="my-0 mb-2 text-right text-muted-foreground">{`#${customer?.id}`}</h3>
-						<p className="m-0 text-sm text-muted-foreground">
+					<div style={{ textAlign: 'right' }}>
+						<div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sp-text-subtle)', marginBottom: 4 }}>#{customer?.id}</div>
+						<p style={{ margin: 0, fontSize: '12.5px', color: 'var(--sp-text-muted)' }}>
 							{__('Member since', 'smartpay')}{' '}
-							<strong className="text-card-foreground">
-								{new Date(customer?.created_at).toLocaleString('en-US', {
-									year: 'numeric',
-									month: 'short',
-									day: 'numeric',
-								})}
-							</strong>
+							<strong style={{ color: 'var(--sp-text)' }}>{new Date(customer?.created_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</strong>
 						</p>
 					</div>
 				</div>
-
-				<div className="flex flex-wrap gap-6 mt-4">
-					<StatCard title={__('Total Payments', 'smartpay')} value={paymentStats.total} type="info" />
-					<StatCard title={__('Completed Payments', 'smartpay')} value={paymentStats.completed} type="success" />
-					<StatCard title={__('Pending Payments', 'smartpay')} value={paymentStats.pending} type="warning" />
-					<StatCard title={__('Refunded Payments', 'smartpay')} value={paymentStats.refunded} type="danger" />
+				<div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--sp-border)' }}>
+					<StatItem title={__('Total Payments', 'smartpay')} value={paymentStats.total} />
+					<StatItem title={__('Completed', 'smartpay')} value={paymentStats.completed} color="var(--sp-brand)" />
+					<StatItem title={__('Pending', 'smartpay')} value={paymentStats.pending} />
+					<StatItem title={__('Refunded', 'smartpay')} value={paymentStats.refunded} />
 				</div>
-			</CardContent>
-		</Card>
-	);
+			</div>
+		</div>
+	)
 }

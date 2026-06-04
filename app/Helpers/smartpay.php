@@ -1183,3 +1183,29 @@ function smartpay_record_payment_log( int $payment_id, string $action, string $n
 	return $log;
 }
 
+if ( ! function_exists( 'smartpay_is_pro_active' ) ) {
+	/**
+	 * Whether SmartPay Pro is active and licensed.
+	 *
+	 * Defaults to false. The Pro plugin hooks `smartpay_is_pro_active` to return
+	 * true once installed, active, and licensed (valid or in grace period).
+	 *
+	 * @return bool
+	 */
+	function smartpay_is_pro_active(): bool {
+		return (bool) apply_filters( 'smartpay_is_pro_active', false );
+	}
+}
+
+if ( ! function_exists( 'smartpay_pro_feature_available' ) ) {
+	/**
+	 * Whether a specific Pro feature is available.
+	 *
+	 * @param string $feature Feature slug (e.g. 'subscription').
+	 * @return bool
+	 */
+	function smartpay_pro_feature_available( string $feature ): bool {
+		return (bool) apply_filters( 'smartpay_pro_feature_available', false, $feature );
+	}
+}
+

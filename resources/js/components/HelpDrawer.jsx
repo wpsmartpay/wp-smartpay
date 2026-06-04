@@ -76,7 +76,7 @@ export function HelpDrawer( { open, onOpenChange } ) {
                         {__( 'Help & Documentation', 'smartpay' )}
                     </SheetTitle>
                     <SheetDescription className="text-xs">
-                        {__( 'Guides, references and developer docs for WP SmartPay.', 'smartpay' )}
+                        {__( 'Guides, references and developer docs for WPSmartPay.', 'smartpay' )}
                     </SheetDescription>
                 </SheetHeader>
 

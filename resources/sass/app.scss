@@ -324,3 +324,7 @@
 .plan-additional-info {
     font-size: 0.7rem;
 }
+
+// Pricing block — var-driven card styling + Grid/List/Compact presets.
+// Imported last so it layers over the legacy rules above.
+@import 'pricing-cards';

@@ -1,13 +1,12 @@
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
-import { useParams } from 'react-router-dom'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { Loading } from '../../components/Loading'
+import { Link, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { PaymentDetailsDialog } from '../payment/PaymentDetailsDialog'
 import CustomerStats from './customer-stats'
 import { createPaymentColumns } from './payment-columns'
 
-const { Header, Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
+const { Header, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, DataTable } = window.WPSmartPayUI;
 const { useEffect, useState, useCallback } = wp.element
 const { useSelect } = wp.data
 
@@ -153,18 +152,25 @@ export const ShowCustomer = () => {
 				subtitle={__('View and manage member information', 'smartpay')}
 			/>
 
-			<div className="p-4 max-w-7xl mx-auto">
+			<div className="sp-layout">
+				<Link to="/customers" className="sp-back-btn">
+					<span className="sp-back-btn__arrow">←</span>
+					{__('All Customers', 'smartpay')}
+				</Link>
+
 				{isLoading ? (
-					<Loading />
+					<div className="sp-detail-card" style={{ padding: 40, textAlign: 'center' }}>
+						<div style={{ width: 120, height: 14, background: '#f3f4f6', borderRadius: 4, margin: '0 auto' }} />
+					</div>
 				) : (
 					<>
 						<CustomerStats customer={customer} paymentStats={paymentStats} />
 
-						<Card className="mt-4">
-							<CardHeader>
-								<CardTitle>{__('Recent Payments', 'smartpay')}</CardTitle>
-							</CardHeader>
-							<CardContent>
+						<div className="sp-detail-card" style={{ marginTop: 16 }}>
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Recent Payments', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body" style={{ padding: '16px 20px' }}>
 								<DataTable
 									columns={columns}
 									data={payments}
@@ -204,8 +210,8 @@ export const ShowCustomer = () => {
 										</Select>
 									]}
 								/>
-							</CardContent>
-						</Card>
+							</div>
+						</div>
 					</>
 				)}
 			</div>

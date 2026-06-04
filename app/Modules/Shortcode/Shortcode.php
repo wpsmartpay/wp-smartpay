@@ -34,9 +34,10 @@ class Shortcode
     public function form_shortcode($atts)
     {
         extract(shortcode_atts([
-            'id' => null,
-            'behavior'  => 'popup',
-            'label'     => '',
+            'id'         => null,
+            'behavior'   => 'popup',
+            'label'      => '',
+            'show_title' => 'true',
         ], $atts));
 
         if (!isset($id)) return;
@@ -59,7 +60,7 @@ class Shortcode
             ob_start();
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-            echo smartpay_view('shortcodes.form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
+            echo smartpay_view('shortcodes.form', ['form' => $form, 'behavior' => $behavior, 'label' => $label, 'show_title' => 'false' !== $show_title]);
 
             return ob_get_clean();
         } catch (\Exception $e) {

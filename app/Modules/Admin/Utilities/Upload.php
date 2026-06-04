@@ -51,7 +51,7 @@ class Upload
 
             // Top level blank index.php
             if (!file_exists($upload_path . '/index.php') && wp_is_writable($upload_path)) {
-                @file_put_contents($upload_path . '/index.php', '<?php' . PHP_EOL . '// SmartPay is awesome!.');
+                @file_put_contents($upload_path . '/index.php', '<?php' . PHP_EOL . '// WPSmartPay is awesome!.');
             }
 
             // Now place index.php files in all sub folders
@@ -59,7 +59,7 @@ class Upload
             foreach ($folders as $folder) {
                 // Create index.php, if it doesn't exist
                 if (!file_exists($folder . 'index.php') && wp_is_writable($folder)) {
-                    @file_put_contents($folder . 'index.php', '<?php' . PHP_EOL . '// SmartPay is awesome!.');
+                    @file_put_contents($folder . 'index.php', '<?php' . PHP_EOL . '// WPSmartPay is awesome!.');
                 }
             }
 

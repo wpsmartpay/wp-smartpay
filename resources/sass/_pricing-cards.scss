@@ -1,0 +1,263 @@
+// Pricing cards — shared by the frontend (app.scss) and the block editor
+// (PricingField/editor.scss). Everything is scoped under `.smartpay-pricing`
+// (the block wrapper) so it never collides with the legacy shortcode/native
+// form rules in app.scss, which still target bare `.form-plan-*` selectors.
+//
+// Var-driven so native block supports (color, background, border, typography,
+// spacing) and the Grid / List / Compact presets layer on top. Fallbacks make
+// it self-contained inside the editor iframe.
+
+.smartpay-pricing {
+    // ── Grid layout (default) ───────────────────────────────────────────────
+    .form-plan-grid {
+        display: flex;
+        flex-wrap: wrap;
+        // Explicit "Gap between options" control, falling back to native Block
+        // Spacing (blockGap), then a sane default.
+        gap: var(--sp-plan-gap, var(--wp--style--block-gap, 12px));
+        margin: 0;
+        padding: 0;
+        align-items: stretch;
+    }
+
+    .form-plan-card {
+        position: relative;
+        margin: 0; // spacing handled by grid gap
+        // Default internal padding — kept tight; the option's native
+        // Dimensions → Padding writes an inline style here and overrides it.
+        padding: var(--sp-card-pad, 0.85em 1em);
+        border: var(--radio-border-width, 2px) solid rgb(214 221 227); // visible card edge
+
+        border-radius: var(--card-radius, 0.5em);
+        background-color: #fff; // default; native background overrides
+        transition: box-shadow 0.15s ease-out, background-color 0.15s ease-out;
+
+        &:hover {
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.12);
+        }
+
+        // Selected = teal fill + green border + green check badge (see .radio).
+        &.selected {
+            border-color: var(--color-green, rgb(40, 167, 69));
+            background-color: var(--color-teal, #f0f8ff);
+        }
+    }
+
+    // Native text colour cascades to the label only when the user sets one.
+    .form-plan-card.has-text-color .plan-type {
+        color: inherit;
+    }
+
+    // ── Radio → hidden by default, becomes a green check badge when selected ──
+    .radio {
+        position: absolute;
+        top: 0.7em;
+        right: 0.7em;
+        margin: 0;
+        width: var(--radio-size, 1.4em);
+        height: var(--radio-size, 1.4em);
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background: #fff;
+        border: var(--radio-border-width, 2px) solid var(--color-gray, #e2ebf6);
+        border-radius: 50%;
+        cursor: pointer;
+        opacity: 0;
+        outline: none;
+        transition: background 0.2s ease-out, border-color 0.2s ease-out;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            width: 0.375rem;
+            height: 0.75rem;
+            border: 2px solid #fff;
+            border-top: 0;
+            border-left: 0;
+            transform: rotate(45deg) translate(-50%, -50%);
+        }
+
+        &:checked {
+            opacity: 1;
+            background: var(--color-green, rgb(40, 167, 69));
+            border-color: var(--color-green, rgb(40, 167, 69));
+        }
+    }
+
+    .plan-details {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        min-width: 100px; // keeps cards from collapsing too narrow
+        padding: 0; // internal padding lives on .form-plan-card now
+        transition: border-color 0.2s ease-out;
+    }
+
+    .plan-type {
+        color: var(--color-green, rgb(40, 167, 69));
+        font-size: 1.1em; // relative → native fontSize scales it
+        font-weight: bold;
+        line-height: 1.15;
+    }
+
+    .plan-cost {
+        color: inherit;
+        font-size: 1.35em; // relative → native fontSize scales it
+        font-weight: bold;
+        padding: 0.2em 0 0;
+        display: inline-flex;
+        align-items: baseline;
+    }
+
+    .plan-symbol::before {
+        content: var(--sp-currency, '$');
+        margin-right: 1px;
+    }
+
+    .plan-cycle {
+        font-size: 0.7em;
+        font-weight: normal;
+        margin-left: 2px;
+    }
+
+    .slash {
+        font-weight: normal;
+    }
+
+    // Inline amount editor (editor canvas only).
+    .plan-amount-input {
+        width: 3.5em;
+        max-width: 6em;
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        box-shadow: none;
+
+        &:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        -moz-appearance: textfield;
+        appearance: textfield;
+    }
+
+    // Custom amount input — self-contained so it renders identically on the
+    // frontend (where Bootstrap is loaded) and in the editor iframe (where it
+    // is NOT). Mirrors Bootstrap's .input-group look.
+    .form-amounts--label {
+        display: block;
+        margin: 0 0 0.5rem;
+    }
+
+    .custom-amount-wrapper {
+        margin: 0;
+
+        .input-group {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            width: 100%;
+            max-width: 320px;
+            margin: 0;
+        }
+
+        .input-group-prepend {
+            display: flex;
+            margin-right: -1px;
+        }
+
+        .input-group-text {
+            display: flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            background: var(--sp-input-bg, #e9ecef);
+            border: 1px solid var(--sp-input-border, #ced4da);
+            border-right: 0;
+            border-radius: 0.25rem 0 0 0.25rem;
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .form-control,
+        .form--custom-amount {
+            flex: 1 1 auto;
+            width: 1%;
+            min-width: 0;
+            padding: 0.375rem 0.75rem;
+            background: var(--sp-input-bg, #fff);
+            border: 1px solid var(--sp-input-border, #ced4da);
+            border-radius: 0 0.25rem 0.25rem 0;
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.5;
+            box-shadow: none;
+
+            &:focus {
+                outline: none;
+                border-color: var(--color-green, rgb(40, 167, 69));
+                box-shadow: none;
+            }
+        }
+    }
+
+    // ── List preset: one option per row, label left / price right ────────────
+    &.is-style-list {
+        .form-plan-grid {
+            flex-direction: column;
+        }
+        .form-plan-card {
+            width: 100%;
+        }
+        .plan-details {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 0;
+        }
+        .plan-cost {
+            padding: 0;
+        }
+    }
+
+    // ── Compact preset: every option inline on one line ─────────────────────
+    &.is-style-compact {
+        .form-plan-grid {
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .form-plan-card {
+            padding: var(--sp-card-pad, 0.45em 0.8em);
+        }
+        .plan-details {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.4em;
+            min-width: 0;
+        }
+        .plan-type {
+            font-size: 1em;
+        }
+        .plan-cost {
+            font-size: 1em;
+            padding: 0;
+        }
+        // Selection check would overlap inline content — keep it off here.
+        .radio {
+            position: static;
+            display: none;
+        }
+    }
+}

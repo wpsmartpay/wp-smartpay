@@ -58,6 +58,7 @@ class DashboardController extends RestController
             'period_stats'          => smartpay_dashboard_get_period_stats( $date_range ),
             'previous_period_stats' => smartpay_dashboard_get_period_stats( $prev_date_range ),
             'recent_payments'       => smartpay_dashboard_get_recent_payments(),
+            'chart_data'            => smartpay_dashboard_get_chart_data( $date_range, $period ),
         ] );
     }
 
