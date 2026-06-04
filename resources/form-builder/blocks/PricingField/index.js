@@ -30,6 +30,9 @@ export const PricingField = {
             html: false,
             multiple: false,
             reusable: false,
+            // Adds the inspector "List View" tab (child options + small "+"
+            // appender), exactly like core/buttons.
+            listView: true,
             color: {
                 background: true,
                 gradients: true,

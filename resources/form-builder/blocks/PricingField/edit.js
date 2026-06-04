@@ -7,7 +7,6 @@ import {
 } from '@wordpress/components'
 import {
     InspectorControls,
-    InnerBlocks,
     PanelColorSettings,
     useBlockProps,
     useInnerBlocksProps,
@@ -51,7 +50,6 @@ export const edit = ({ attributes, setAttributes }) => {
             templateInsertUpdatesSelection: true,
             defaultBlock: DEFAULT_OPTION,
             directInsert: true,
-            renderAppender: InnerBlocks.ButtonBlockAppender,
             orientation: layout?.orientation ?? 'horizontal',
         }
     )

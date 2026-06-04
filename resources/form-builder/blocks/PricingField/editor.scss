@@ -2,30 +2,10 @@
 // Reuse the exact frontend card + preset styles so editor === frontend.
 @import '../../../sass/pricing-cards';
 
-// Editor-only: the InnerBlocks "+" appender should read as an "Add option" tile.
-.smartpay-pricing .form-plan-grid {
-    .block-list-appender {
-        display: flex;
-        align-self: stretch;
-    }
-
-    .block-editor-button-block-appender {
-        flex-direction: column;
-        gap: 6px;
-        min-height: 100%;
-        min-width: 140px;
-        padding: 18px;
-        border: 2px dashed #d8dde3;
-        border-radius: var(--card-radius, 0.5em);
-        color: #646970;
-        background: transparent;
-
-        &:hover {
-            border-color: var(--color-green, rgb(40, 167, 69));
-            color: var(--color-green, rgb(40, 167, 69));
-            box-shadow: none;
-        }
-    }
+// Editor-only: keep the default small "+" appender (like core/buttons) from
+// stretching to full card height inside the flex grid — center it instead.
+.smartpay-pricing .form-plan-grid > .block-list-appender {
+    align-self: center;
 }
 
 // In the editor each option is a selected block; show a subtle pointer.
