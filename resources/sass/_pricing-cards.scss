@@ -12,7 +12,9 @@
     .form-plan-grid {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--wp--style--block-gap, 12px); // native Block Spacing (blockGap)
+        // Explicit "Gap between options" control, falling back to native Block
+        // Spacing (blockGap), then a sane default.
+        gap: var(--sp-plan-gap, var(--wp--style--block-gap, 12px));
         margin: 0;
         padding: 0;
         align-items: stretch;

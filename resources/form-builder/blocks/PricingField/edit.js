@@ -4,6 +4,7 @@ import {
     ToggleControl,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
+    __experimentalUnitControl as UnitControl,
 } from '@wordpress/components'
 import {
     InspectorControls,
@@ -24,6 +25,7 @@ export const edit = ({ attributes, setAttributes }) => {
         allowCustomAmount,
         customAmountLabel,
         currencySymbol,
+        gap,
         layout,
         customInputBackground,
         customInputBorder,
@@ -32,6 +34,7 @@ export const edit = ({ attributes, setAttributes }) => {
     const wrapperStyle = {
         '--sp-currency': `'${currencySymbol}'`,
     }
+    if (gap) wrapperStyle['--sp-plan-gap'] = gap
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
@@ -111,6 +114,19 @@ export const edit = ({ attributes, setAttributes }) => {
                             'smartpay'
                         )}
                     </p>
+                    <UnitControl
+                        label={__('Gap between options', 'smartpay')}
+                        value={gap}
+                        onChange={(v) => setAttributes({ gap: v ?? '' })}
+                        units={[
+                            { value: 'px', label: 'px', default: 12 },
+                            { value: 'em', label: 'em', default: 1 },
+                            { value: 'rem', label: 'rem', default: 1 },
+                        ]}
+                        min={0}
+                        placeholder={__('Default', 'smartpay')}
+                        __next40pxDefaultSize
+                    />
                     <TextControl
                         label={__('Currency symbol', 'smartpay')}
                         value={currencySymbol}

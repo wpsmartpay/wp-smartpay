@@ -65,6 +65,7 @@ export const PricingField = {
         // Block styles registered explicitly in blocks/index.js (Grid default).
         attributes: {
             preset: { type: 'string', default: 'grid' },
+            gap: { type: 'string', default: '' },
             allowCustomAmount: { type: 'boolean', default: false },
             customAmountLabel: { type: 'string', default: 'Enter custom amount' },
             currencySymbol: { type: 'string', default: '$' },

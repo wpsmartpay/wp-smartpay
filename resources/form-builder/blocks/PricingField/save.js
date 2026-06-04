@@ -16,6 +16,7 @@ export const save = ({ attributes }) => {
         allowCustomAmount,
         customAmountLabel,
         currencySymbol,
+        gap,
         customInputBackground,
         customInputBorder,
     } = attributes
@@ -23,6 +24,7 @@ export const save = ({ attributes }) => {
     const wrapperStyle = {
         '--sp-currency': `'${currencySymbol}'`,
     }
+    if (gap) wrapperStyle['--sp-plan-gap'] = gap
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
