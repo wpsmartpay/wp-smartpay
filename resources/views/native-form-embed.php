@@ -34,50 +34,13 @@ $default_amount    = reset( $amounts );
 // avoid duplicate cards. The block emits the same markup + field names.
 $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 
-// Pay Button block — when present it owns the submit button's appearance. The
-// block renders nothing inline (its save() returns null); we read its attributes
-// here and render the real button after the gateway selector below, so the pay
-// action always sits last regardless of where the block was placed.
-$submit_btn = null;
-if ( has_block( 'smartpay-form/submit-button', $post_id ) ) {
-	foreach ( parse_blocks( $body ) as $sp_block ) {
-		if ( 'smartpay-form/submit-button' === ( $sp_block['blockName'] ?? '' ) ) {
-			$submit_btn = is_array( $sp_block['attrs'] ?? null ) ? $sp_block['attrs'] : array();
-			break;
-		}
-	}
-}
+// Submit Button block — the Pay Button child owns the button's appearance. All
+// children render nothing inline (save() returns null); we read the pay child's
+// attributes here and render the real button after the gateway selector below,
+// so the pay action always sits last. Null → fall back to the legacy button.
+$submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/submit-pay' );
+
 ?>
-<?php if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) : ?>
-	<?php
-	$progress    = smartpay_calculate_goal_progress( (int) $post_id );
-	$show_public = $goal['showToPublic'] ?? true;
-	if ( $show_public ) :
-		$current      = $progress['current'];
-		$target       = $progress['target'];
-		$percentage   = $progress['percentage'];
-		$goal_reached = $progress['goal_reached'];
-		?>
-	<div class="smartpay-goal-progress" style="margin-bottom: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; text-align: left;">
-		<?php if ( $goal_reached ) : ?>
-			<p style="margin: 0 0 12px; font-weight: 600; color: #28a745;">
-				<?php echo esc_html( $goal['goalMetMessage'] ?? __( 'Goal reached!', 'smartpay' ) ); ?>
-			</p>
-		<?php else : ?>
-			<?php $type_label = ( $goal['type'] ?? 'quantity' ) === 'quantity' ? _n( 'sold', 'sold', floor( $current ), 'smartpay' ) : __( 'raised', 'smartpay' ); ?>
-			<p style="margin: 0 0 8px; font-size: 14px; color: #555;">
-				<strong><?php echo esc_html( number_format( $current ) ); ?></strong> / <?php echo esc_html( number_format( $target ) ); ?> <?php echo esc_html( $type_label ); ?>
-			</p>
-		<?php endif; ?>
-		<div style="background: #e9ecef; border-radius: 4px; height: 12px; overflow: hidden;">
-			<div style="width: <?php echo esc_attr( $percentage ); ?>%; background: #28a745; height: 100%; border-radius: 4px; transition: width 0.3s ease;"></div>
-		</div>
-		<?php if ( ! $goal_reached ) : ?>
-			<p style="margin: 8px 0 0; font-size: 12px; color: #888; text-align: right;"><?php echo esc_html( $percentage ); ?>%</p>
-		<?php endif; ?>
-	</div>
-	<?php endif; ?>
-<?php endif; ?>
 
 <div class="smartpay">
 	<div class="smartpay-form-shortcode smartpay-payment">
@@ -93,9 +56,13 @@ if ( has_block( 'smartpay-form/submit-button', $post_id ) ) {
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>
 
 					<?php
-					// Render Gutenberg blocks (form fields).
+					// Render Gutenberg blocks (form fields). Set the form-render
+					// context so dynamic blocks (Goal Progress) can resolve their
+					// owning form, since the global post here is the host page.
+					smartpay_current_form_render_id( (int) $post_id );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo do_blocks( $body );
+					smartpay_current_form_render_id( 0 );
 					?>
 
 					<div id="mobile-field"></div>

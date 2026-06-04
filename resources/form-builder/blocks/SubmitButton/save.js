@@ -1,8 +1,9 @@
+import { InnerBlocks } from '@wordpress/block-editor'
+
 /**
- * The Pay Button renders nothing inline. The form embed template reads this
- * block's attributes and renders the real button after the gateway selector,
- * so the pay action always sits last. Returning null keeps the block's
- * attributes in the saved content (as a self-closing block comment) for the
- * template to parse, without emitting frontend markup here.
+ * Serializes the child blocks (Coupon + Pay Button) without a wrapper. The
+ * children render nothing on the frontend (their save() is null) — the form
+ * embed template + Coupon module read their attributes and render the real
+ * markup after the gateway selector.
  */
-export const save = () => null
+export const save = () => <InnerBlocks.Content />

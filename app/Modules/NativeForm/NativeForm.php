@@ -27,6 +27,7 @@ class NativeForm {
 		add_action( 'admin_footer-edit.php', array( $this, 'shortcode_column_script' ) );
 		add_filter( 'smartpay_prepare_payment_data', array( $this, 'fix_cpt_form_payment_data' ), 5, 2 );
 		add_action( 'save_post_smartpay_form', array( $this, 'sync_pricing_block_amounts' ), 20, 2 );
+		add_filter( 'render_block_smartpay-form/goal-progress', 'smartpay_render_goal_progress_block', 10, 2 );
 	}
 
 	/**
@@ -147,6 +148,33 @@ class NativeForm {
 				'supports'           => array( 'title', 'editor', 'custom-fields', 'revisions' ),
 				'capability_type'    => 'post',
 				'map_meta_cap'       => true,
+				// Seed a new form with the essential blocks: name, email, a pricing
+				// option, and the submit button. Authors can edit/remove from here.
+				'template'           => array(
+					array( 'smartpay-form/name' ),
+					array( 'smartpay-form/email' ),
+					array(
+						'smartpay-form/pricing',
+						array(),
+						array(
+							array(
+								'smartpay-form/pricing-option',
+								array(
+									'label'  => 'Basic',
+									'amount' => '0',
+								),
+							),
+						),
+					),
+					array(
+						'smartpay-form/submit-button',
+						array(),
+						array(
+							array( 'smartpay-form/submit-coupon' ),
+							array( 'smartpay-form/submit-pay' ),
+						),
+					),
+				),
 			)
 		);
 

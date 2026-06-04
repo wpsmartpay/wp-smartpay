@@ -17,6 +17,69 @@
     }
 }
 
+// Submit area container — a little breathing room between coupon + button.
+.smartpay-submit-area > .block-editor-inner-blocks > .block-editor-block-list__layout > * + * {
+    margin-top: 14px;
+}
+
+// Editor preview of the Coupon child (frontend renders the real one with AJAX).
+.smartpay-submit-coupon-block {
+    .smartpay-coupon-preview__toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 0;
+        background: none;
+        border: 0;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: default;
+
+        span {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    }
+
+    .smartpay-coupon-preview__row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+        margin-top: 10px;
+    }
+
+    .smartpay-coupon-preview__input {
+        flex: 1 1 auto;
+        padding: 11px 14px;
+        border: 1.5px solid #e2e6ea;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 14px;
+        color: #9aa5b1;
+    }
+
+    .smartpay-coupon-preview__apply {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 20px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .smartpay-coupon-preview__close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        border: 1.5px solid #e2e6ea;
+        border-radius: 8px;
+        background: #fff;
+        color: #6b7280;
+    }
+}
+
 // Inspector icon picker — a small grid of icon buttons.
 .smartpay-submit-icon-picker {
     display: flex;

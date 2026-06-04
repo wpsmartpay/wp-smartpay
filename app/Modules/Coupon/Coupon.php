@@ -22,7 +22,8 @@ class Coupon
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
         $this->app->addFilter('smartpay_settings_general', [$this, 'couponSettings']);
         $this->app->addAction('before_smartpay_payment_form', [$this, 'showAlert'], 10, 1);
-        $this->app->addAction('before_smartpay_payment_form', [$this, 'smartpayCouponPaymentForm'], 20, 1);
+        // Render the coupon section just before the submit button (not at the top of the form).
+        $this->app->addAction('before_smartpay_payment_form_button', [$this, 'smartpayCouponPaymentForm'], 10, 1);
         $this->app->addAction('before_smartpay_payment_form_button', [$this, 'showAppliedCouponData'], 20, 1);
         $this->app->addAction('smartpay_before_product_payment_form_button', [$this, 'showAppliedCouponData']);
         $this->app->addAction('smartpay_product_modal_popup_content', [$this, 'productPaymentModalContent'], 20, 1);
@@ -103,21 +104,60 @@ class Coupon
         if (!$enable_coupon_settings) {
             return;
         }
+
+        $form_id = isset($form->id) ? (int) $form->id : 0;
+
+        // Defaults (legacy forms with no Submit Button block).
+        $toggle_label = __('Have a coupon?', 'smartpay');
+        $placeholder  = __('Coupon code', 'smartpay');
+        $apply_label  = __('Apply', 'smartpay');
+        $accent       = '#28a745';
+
+        // Forms using the Submit Button block: the Coupon child controls the
+        // section's visibility + text. No Coupon child = the section is hidden.
+        $uses_block = function_exists('smartpay_get_submit_button_attrs')
+            && null !== smartpay_get_submit_button_attrs($form_id);
+
+        if ($uses_block) {
+            $coupon = function_exists('smartpay_get_submit_child_attrs')
+                ? smartpay_get_submit_child_attrs($form_id, 'smartpay-form/submit-coupon')
+                : null;
+
+            if (null === $coupon) {
+                return; // Coupon child removed → hide the coupon section.
+            }
+
+            $toggle_label = isset($coupon['toggleLabel']) && '' !== $coupon['toggleLabel'] ? $coupon['toggleLabel'] : $toggle_label;
+            $placeholder  = isset($coupon['placeholder']) && '' !== $coupon['placeholder'] ? $coupon['placeholder'] : $placeholder;
+            $apply_label  = isset($coupon['applyLabel']) && '' !== $coupon['applyLabel'] ? $coupon['applyLabel'] : $apply_label;
+            $accent       = isset($coupon['accentColor']) && '' !== $coupon['accentColor'] ? $coupon['accentColor'] : $accent;
+        }
+
+        $accent = sanitize_text_field($accent);
         ?>
-        <div class="smartpay-coupon-form-toggle">
-            <div class="coupon-info mb-4 p-4 bg-light">
-                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
+        <div class="smartpay-coupon">
+            <div class="smartpay-coupon-form-toggle">
+                <button type="button" class="smartpayshowcoupon" style="color:<?php echo esc_attr($accent); ?>;">
+                    <svg class="smartpay-coupon__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" />
+                        <path d="M9 6v12" stroke-dasharray="2 2" />
+                    </svg>
+                    <span><?php echo esc_html($toggle_label); ?></span>
+                </button>
             </div>
+            <form class="smartpay-coupon-form d-none">
+                <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
+                <div class="smartpay-coupon__row">
+                    <input type="text" name="coupon_code" id="coupon_code" class="smartpay-coupon__input" placeholder="<?php echo esc_attr($placeholder); ?>" autocomplete="off" />
+                    <button type="submit" name="submitcoupon" class="smartpay-coupon__apply" style="background:<?php echo esc_attr($accent); ?>;"><?php echo esc_html($apply_label); ?></button>
+                    <button type="button" class="smartpay-coupon-form-close" aria-label="<?php esc_attr_e('Remove coupon code', 'smartpay'); ?>" title="<?php esc_attr_e('Cancel', 'smartpay'); ?>">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                            <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </form>
         </div>
-        <form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
-	        <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
-            <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
-            <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0 form-control" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded btn btn-outline-success" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
-            </div>
-        </form>
         <?php
     }
 

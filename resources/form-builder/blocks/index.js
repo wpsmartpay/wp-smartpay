@@ -18,6 +18,9 @@ import { SelectField } from './SelectField'
 import { PricingField } from './PricingField'
 import { PricingOption } from './PricingField/option'
 import { SubmitButton } from './SubmitButton'
+import { SubmitPay } from './SubmitButton/pay'
+import { SubmitCoupon } from './SubmitButton/coupon'
+import { GoalProgress } from './GoalProgress'
 
 const unregisterBlocks = [
     'core/quote',
@@ -89,6 +92,9 @@ const smartPayBlocks = [
     PricingField,
     PricingOption,
     SubmitButton,
+    SubmitPay,
+    SubmitCoupon,
+    GoalProgress,
 ]
 
 export const registerBlocks = () => {

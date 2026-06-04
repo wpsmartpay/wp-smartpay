@@ -1,0 +1,10 @@
+// Editor canvas for the Goal Progress block. The frontend bar is rendered by
+// the render_block_smartpay-form/goal-progress filter from these attributes;
+// here we mirror it so the editor preview is WYSIWYG.
+.smartpay-goal-progress-block {
+    .smartpay-goal-progress {
+        p {
+            line-height: 1.4;
+        }
+    }
+}

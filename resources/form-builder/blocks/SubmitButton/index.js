@@ -5,52 +5,30 @@ import { save } from './save'
 import './editor.scss'
 
 /**
- * Submit Button — the form's submit / pay action. One per form.
+ * Submit Button — the form's submit area (container). One per form.
  *
- * This block is an editor-side CONFIGURATOR: its save() renders nothing on the
- * frontend. The form embed template (native-form-embed.php) reads this block's
- * attributes and renders the real `<button class="smartpay-form-pay-now">`
- * AFTER the payment-gateway selector, so the action always sits last — the
- * gateways are template-rendered after do_blocks(), so a body-level button
- * would otherwise appear above them. Styling is stored as explicit attributes
- * and applied as inline styles server-side (native block supports cannot
- * serialize through a null save).
+ * Holds two child blocks: an optional Coupon block and the Pay Button block.
+ * Like the rest of the submit area it is an editor-side configurator — the
+ * children's save() render nothing; the form embed template + Coupon module
+ * read the children's attributes and render the real markup after the payment
+ * gateway selector, so the submit area always sits last. Remove the Coupon
+ * child to hide the coupon section for that form.
  */
 export const SubmitButton = {
     namespace: 'smartpay-form/submit-button',
     settings: {
         title: __('Submit Button', 'smartpay'),
         description: __(
-            "The form's submit / pay button. Only one per form.",
+            "The form's submit area — pay button and optional coupon. One per form.",
             'smartpay'
         ),
         icon: button,
-        keywords: ['pay', 'submit', 'button', 'checkout', 'buy', 'order'],
+        keywords: ['pay', 'submit', 'button', 'checkout', 'buy', 'order', 'coupon'],
         supports: {
             html: false,
             multiple: false,
             reusable: false,
             customClassName: false,
-        },
-        attributes: {
-            label: { type: 'string', default: 'Pay Now' },
-            iconType: { type: 'string', default: 'preset' }, // preset | custom
-            icon: { type: 'string', default: '' }, // preset slug; '' = none
-            customIconUrl: { type: 'string', default: '' }, // media library / uploaded SVG|image
-            customIconId: { type: 'number', default: 0 },
-            iconPosition: { type: 'string', default: 'left' }, // left | right
-            align: { type: 'string', default: 'left' }, // left | center | right
-            width: { type: 'number', default: 0 }, // 0 = auto, else 25/50/75/100
-            fullWidth: { type: 'boolean', default: false },
-            bgColor: { type: 'string', default: '#28a745' },
-            textColor: { type: 'string', default: '#ffffff' },
-            borderColor: { type: 'string', default: '' },
-            borderWidth: { type: 'number', default: 0 },
-            borderRadius: { type: 'number', default: 6 },
-            fontSize: { type: 'number', default: 16 },
-            fontWeight: { type: 'string', default: '600' },
-            paddingY: { type: 'number', default: 14 },
-            paddingX: { type: 'number', default: 24 },
         },
         edit,
         save,

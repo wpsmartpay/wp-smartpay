@@ -577,62 +577,8 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			<div className="sp-sidebar-field">
-				<span className="sp-label">{ __( 'Pay Button Label', 'smartpay' ) }</span>
-				<TextControl
-					__nextHasNoMarginBottom
-					className="sp-input"
-					value={ settings.pay_button_label || '' }
-					onChange={ ( val ) => updateSettings( { pay_button_label: val } ) }
-					placeholder={ __( 'Pay Now', 'smartpay' ) }
-				/>
-			</div>
-
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Allow Custom Amount', 'smartpay' ) }
-				checked={ !! settings.allow_custom_amount }
-				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
-			/>
-			{ settings.allow_custom_amount && (
-				<div className="sp-sidebar-field sp-sidebar-field--indent">
-					<span className="sp-label">{ __( 'Custom Amount Label', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.custom_amount_label || '' }
-						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
-						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
-					/>
-				</div>
-			) }
-
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Allow External Link', 'smartpay' ) }
-				checked={ !! settings.allow_external_link }
-				onChange={ ( val ) => updateSettings( { allow_external_link: val } ) }
-			/>
-			{ settings.allow_external_link && (
-				<div className="sp-sidebar-field sp-sidebar-field--indent">
-					<span className="sp-label">{ __( 'External Link URL', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.external_link_url || '' }
-						onChange={ ( val ) => updateSettings( { external_link_url: val } ) }
-						placeholder="https://"
-					/>
-					<span className="sp-label">{ __( 'External Link Label', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.external_link_label || '' }
-						onChange={ ( val ) => updateSettings( { external_link_label: val } ) }
-						placeholder={ __( 'Buy Now', 'smartpay' ) }
-					/>
-				</div>
-			) }
+			{ /* Pay Button Label → Submit Button block · Allow Custom Amount → Pricing
+			     block · Allow External Link → removed. These now live on the blocks. */ }
 
 			<div className="sp-sidebar-field">
 				<SelectControl

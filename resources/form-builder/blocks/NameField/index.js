@@ -10,6 +10,9 @@ export const NameField = {
         description: __('Name fields', 'smartpay'),
         icon: page,
         keywords: ['name', 'first name', 'last name'],
+        supports: {
+            multiple: false, // one Name field per form
+        },
         attributes: {
             attributes: {
                 type: Object,

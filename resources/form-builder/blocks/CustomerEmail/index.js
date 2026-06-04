@@ -10,6 +10,9 @@ export const CustomerEmail = {
         description: __('Email fields', 'smartpay'),
         icon: page,
         keywords: ['email'],
+        supports: {
+            multiple: false, // one Email field per form
+        },
         attributes: {
             attributes: {
                 type: Object,
