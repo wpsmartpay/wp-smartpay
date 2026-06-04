@@ -26,6 +26,104 @@ class NativeForm {
 		add_action( 'manage_smartpay_form_posts_custom_column', array( $this, 'render_shortcode_column' ), 10, 2 );
 		add_action( 'admin_footer-edit.php', array( $this, 'shortcode_column_script' ) );
 		add_filter( 'smartpay_prepare_payment_data', array( $this, 'fix_cpt_form_payment_data' ), 5, 2 );
+		add_action( 'save_post_smartpay_form', array( $this, 'sync_pricing_block_amounts' ), 20, 2 );
+	}
+
+	/**
+	 * Sync the Pricing block's options into the `_smartpay_amounts` post meta.
+	 *
+	 * When a `smartpay-form/pricing` block is present in the form, it is the
+	 * source of truth for pricing. Its options are written to the meta so the
+	 * frontend template default selection and server-side payment validation
+	 * (which trust the stored amounts, not the posted amount) stay correct.
+	 *
+	 * @param int      $post_id Saved form post ID.
+	 * @param \WP_Post $post    Saved form post object.
+	 */
+	public function sync_pricing_block_amounts( $post_id, $post ): void {
+		if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+
+		if ( ! ( $post instanceof \WP_Post ) || 'smartpay_form' !== $post->post_type ) {
+			return;
+		}
+
+		if ( ! has_block( 'smartpay-form/pricing', $post ) ) {
+			return; // No block — leave sidebar-managed amounts untouched.
+		}
+
+		$blocks  = parse_blocks( $post->post_content );
+		$pricing = $this->find_block( $blocks, 'smartpay-form/pricing' );
+		if ( null === $pricing ) {
+			return;
+		}
+
+		// Options are the parent's child `smartpay-form/pricing-option` blocks.
+		$children = isset( $pricing['innerBlocks'] ) && is_array( $pricing['innerBlocks'] )
+			? $pricing['innerBlocks']
+			: array();
+		$pro      = function_exists( 'smartpay_is_pro_active' ) && smartpay_is_pro_active();
+		$amounts  = array();
+
+		foreach ( $children as $child ) {
+			if ( ! is_array( $child ) || 'smartpay-form/pricing-option' !== ( $child['blockName'] ?? '' ) ) {
+				continue;
+			}
+			$item = isset( $child['attrs'] ) && is_array( $child['attrs'] ) ? $child['attrs'] : array();
+
+			$billing_type = sanitize_text_field( $item['billing_type'] ?? 'One Time' );
+			// Subscriptions are Pro-only — downgrade defensively without Pro.
+			if ( 'Subscription' === $billing_type && ! $pro ) {
+				$billing_type = 'One Time';
+			}
+
+			$key = sanitize_key( $item['key'] ?? '' );
+			if ( '' === $key ) {
+				$key = 'opt-' . wp_generate_password( 9, false, false );
+			}
+
+			$amount = array(
+				'key'          => $key,
+				'label'        => sanitize_text_field( $item['label'] ?? '' ),
+				'amount'       => max( 0, (float) ( $item['amount'] ?? 0 ) ),
+				'billing_type' => $billing_type,
+			);
+
+			if ( 'Subscription' === $billing_type ) {
+				$amount['billing_period'] = sanitize_text_field( $item['billing_period'] ?? 'month' );
+				$amount['setup_fee']      = max( 0, (float) ( $item['setup_fee'] ?? 0 ) );
+				$amount['billing_cycle']  = sanitize_text_field( (string) ( $item['billing_cycle'] ?? '' ) );
+			}
+
+			$amounts[] = $amount;
+		}
+
+		if ( ! empty( $amounts ) ) {
+			update_post_meta( $post_id, '_smartpay_amounts', wp_json_encode( $amounts ) );
+		}
+	}
+
+	/**
+	 * Recursively locate the first block matching $name within a parsed tree.
+	 *
+	 * @param array  $blocks Parsed blocks (from parse_blocks()).
+	 * @param string $name   Block name to find.
+	 * @return array|null    The matching block array, or null.
+	 */
+	private function find_block( array $blocks, string $name ) {
+		foreach ( $blocks as $block ) {
+			if ( isset( $block['blockName'] ) && $name === $block['blockName'] ) {
+				return $block;
+			}
+			if ( ! empty( $block['innerBlocks'] ) ) {
+				$found = $this->find_block( $block['innerBlocks'], $name );
+				if ( null !== $found ) {
+					return $found;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -413,6 +511,18 @@ class NativeForm {
 				'adminUrl' => admin_url( 'admin.php' ),
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'apiNonce' => wp_create_nonce( 'wp_rest' ),
+				'isPro'    => smartpay_is_pro_active(),
+			)
+		);
+
+		// Dedicated object for the Pricing block — collision-proof (the shared
+		// `smartpay` object is localized by multiple modules on this handle).
+		wp_localize_script(
+			'smartpay-form',
+			'smartpayPricingData',
+			array(
+				'isPro'      => smartpay_is_pro_active(),
+				'upgradeUrl' => 'https://wpsmartpay.com/pricing',
 			)
 		);
 

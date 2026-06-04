@@ -58,6 +58,26 @@ jQuery(($) => {
         }
     )
 
+    /**
+     * Default-select the first option on load.
+     *
+     * The Pricing block's option cards carry no server-rendered `checked` /
+     * `.selected` (a child block can't know its index), so select the first one
+     * here to seed the amount, billing type and hidden coordination inputs.
+     */
+    $('.smartpay-form-shortcode .form-amounts').each(function () {
+        const $amounts = $(this)
+        if ($amounts.find('.form-plan-card.selected').length) {
+            return
+        }
+        const $first = $amounts.find('.form-plan-card').first()
+        if (!$first.length) {
+            return
+        }
+        $first.find('input[name="_form_amount"]').prop('checked', true)
+        $first.trigger('click')
+    })
+
     /** select gateway **/
     $(document.body).on('click', '.smartpay-form-shortcode .gateways .gateway', (e) => {
         $(e.currentTarget)

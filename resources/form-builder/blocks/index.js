@@ -15,6 +15,8 @@ import { RadioField } from './RadioField'
 import { AddressField } from './AddressField'
 import { CheckboxField } from './CheckboxField'
 import { SelectField } from './SelectField'
+import { PricingField } from './PricingField'
+import { PricingOption } from './PricingField/option'
 
 const unregisterBlocks = [
     'core/quote',
@@ -83,6 +85,8 @@ const smartPayBlocks = [
     AddressField,
     CheckboxField,
     SelectField,
+    PricingField,
+    PricingOption,
 ]
 
 export const registerBlocks = () => {

@@ -28,6 +28,11 @@ $chosen_gw = isset( $_REQUEST['gateway'] ) && smartpay_is_gateway_active( saniti
 $goal              = $settings['goal'] ?? array();
 $has_payment_error = empty( $gateways );
 $default_amount    = reset( $amounts );
+
+// When a Pricing block is present it renders its own amount cards inline (at the
+// block's position in the body), so the template skips its own amount section to
+// avoid duplicate cards. The block emits the same markup + field names.
+$has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 ?>
 <?php if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) : ?>
 	<?php
@@ -81,7 +86,7 @@ $default_amount    = reset( $amounts );
 
 					<div id="mobile-field"></div>
 
-					<?php if ( ! empty( $amounts ) ) : ?>
+					<?php if ( ! empty( $amounts ) && ! $has_pricing_block ) : ?>
 					<div class="form--amount-section mb-3">
 						<label class="form-amounts--label d-block m-0 mb-2">
 							<?php esc_html_e( 'Select an amount', 'smartpay' ); ?>

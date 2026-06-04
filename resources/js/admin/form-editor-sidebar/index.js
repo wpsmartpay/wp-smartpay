@@ -738,13 +738,7 @@ registerPlugin( 'smartpay-form-sidebar', {
 					</MainDashboardButton>
 				) }
 
-				<PluginDocumentSettingPanel
-					name="sp-pricing"
-					title={ __( 'Pricing', 'smartpay' ) }
-					className="sp-sidebar-pricing"
-				>
-					<PricingPanel />
-				</PluginDocumentSettingPanel>
+					{ /* Pricing is authored via the Pricing block now; sidebar repeater hidden. */ }
 
 				<PluginDocumentSettingPanel
 					name="sp-form-settings"
