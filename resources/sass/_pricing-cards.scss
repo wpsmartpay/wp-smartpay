@@ -150,14 +150,64 @@
         appearance: textfield;
     }
 
-    // Custom "Pay" input theming.
+    // Custom amount input — self-contained so it renders identically on the
+    // frontend (where Bootstrap is loaded) and in the editor iframe (where it
+    // is NOT). Mirrors Bootstrap's .input-group look.
+    .form-amounts--label {
+        display: block;
+        margin: 0 0 0.5rem;
+    }
+
     .custom-amount-wrapper {
-        .input-group-text {
-            background: var(--sp-input-bg, #e9ecef);
+        margin: 0;
+
+        .input-group {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: stretch;
+            width: 100%;
+            max-width: 320px;
+            margin: 0;
         }
+
+        .input-group-prepend {
+            display: flex;
+            margin-right: -1px;
+        }
+
+        .input-group-text {
+            display: flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            background: var(--sp-input-bg, #e9ecef);
+            border: 1px solid var(--sp-input-border, #ced4da);
+            border-right: 0;
+            border-radius: 0.25rem 0 0 0.25rem;
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+
+        .form-control,
         .form--custom-amount {
+            flex: 1 1 auto;
+            width: 1%;
+            min-width: 0;
+            padding: 0.375rem 0.75rem;
             background: var(--sp-input-bg, #fff);
-            border-color: var(--sp-input-border, #ced4da);
+            border: 1px solid var(--sp-input-border, #ced4da);
+            border-radius: 0 0.25rem 0.25rem 0;
+            color: #495057;
+            font-size: 1rem;
+            line-height: 1.5;
+            box-shadow: none;
+
+            &:focus {
+                outline: none;
+                border-color: var(--color-green, rgb(40, 167, 69));
+                box-shadow: none;
+            }
         }
     }
 

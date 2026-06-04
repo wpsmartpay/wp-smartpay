@@ -1,6 +1,5 @@
 import {
     PanelBody,
-    PanelColorSettings,
     TextControl,
     ToggleControl,
     __experimentalToggleGroupControl as ToggleGroupControl,
@@ -9,6 +8,7 @@ import {
 import {
     InspectorControls,
     InnerBlocks,
+    PanelColorSettings,
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor'
