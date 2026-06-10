@@ -30,12 +30,12 @@ class Activator {
 	}
 
 	public function migrate() {
-		\CreateSmartpayProductsTable::up();
-		\CreateSmartpayFormsTable::up();
-		\CreateSmartpayCouponsTable::up();
-		\CreateSmartpayCustomersTable::up();
-		\CreateSmartpayPaymentsTable::up();
-		\CreateSmartpayPaymentLogsTable::up();
+		\Smartpay_CreateSmartpayProductsTable::up();
+		\Smartpay_CreateSmartpayFormsTable::up();
+		\Smartpay_CreateSmartpayCouponsTable::up();
+		\Smartpay_CreateSmartpayCustomersTable::up();
+		\Smartpay_CreateSmartpayPaymentsTable::up();
+		\Smartpay_CreateSmartpayPaymentLogsTable::up();
 	}
 
 	/**

@@ -3,7 +3,7 @@ defined('ABSPATH') || exit;
 
 use SmartPay\Models\Coupon;
 
-class CreateSmartpayCouponsTable
+class Smartpay_CreateSmartpayCouponsTable
 {
     public static function up()
     {

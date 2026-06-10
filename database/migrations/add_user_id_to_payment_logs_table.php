@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class AddUserIdToPaymentLogsTable {
+class Smartpay_AddUserIdToPaymentLogsTable {
 
 	public static function up() {
 		global $wpdb;

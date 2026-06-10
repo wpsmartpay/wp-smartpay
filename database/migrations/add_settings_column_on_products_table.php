@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') || exit;
 
-class AddSettingsColumnOnProductTable
+class Smartpay_AddSettingsColumnOnProductTable
 {
 
     public static function up()
