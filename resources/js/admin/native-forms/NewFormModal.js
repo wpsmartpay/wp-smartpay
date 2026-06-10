@@ -2,7 +2,7 @@ import { CATEGORIES, TEMPLATES } from './templates'
 
 const { __ }                = wp.i18n
 const { useState, useMemo } = wp.element
-const { Dialog, DialogContent, DialogHeader, DialogTitle } = window.WPSmartPayUI
+const { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } = window.WPSmartPayUI
 
 /* ─── Template card ──────────────────────────────────────────────── */
 const TemplateCard = ( { template, onUse } ) => {
@@ -135,8 +135,8 @@ const PickerCard = ( { icon, title, description, onClick } ) => {
 
 /* ─── Picker view ────────────────────────────────────────────────── */
 const PickerView = ( { onBlank, onTemplate } ) => (
-	<div style={ { padding: '8px 0 8px' } }>
-		<div style={ { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', maxWidth: '440px', margin: '0 auto' } }>
+	<div style={ { padding: '4px 0 8px' } }>
+		<div style={ { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' } }>
 			<PickerCard
 				onClick={ onBlank }
 				title={ __( 'Start from Blank', 'smartpay' ) }
@@ -183,7 +183,7 @@ const TemplateBrowser = ( { onUse } ) => {
 	}, [] )
 
 	return (
-		<div style={ { display: 'flex', height: '640px', overflow: 'hidden', margin: '0 -24px -24px' } }>
+		<div style={ { display: 'flex', height: 'min(620px, 68vh)', overflow: 'hidden', margin: '0 -24px -24px', borderTop: '1px solid #e5e7eb' } }>
 			{/* Sidebar */}
 			<aside style={ {
 				width:      '200px',
@@ -295,26 +295,30 @@ export const NewFormModal = ( { open, onClose, onBlank } ) => {
 		window.location.href = `${ base }post-new.php?post_type=smartpay_form&sp_template=${ template.id }`
 	}
 
+	const isTemplates = view === 'templates'
+
 	return (
 		<Dialog open={ open } onOpenChange={ handleOpenChange }>
-			<DialogContent className="sm:max-w-5xl">
+			<DialogContent className={ isTemplates ? 'sm:max-w-5xl' : 'sm:max-w-2xl' }>
 				<DialogHeader>
-					{ view === 'templates' ? (
-						<div style={ { display: 'flex', alignItems: 'center', gap: '10px' } }>
+					{ isTemplates ? (
+						<div style={ { display: 'flex', alignItems: 'center', gap: '12px' } }>
 							<button
 								onClick={ () => setView( 'picker' ) }
 								style={ {
-									display:      'flex',
-									alignItems:   'center',
-									border:       '1px solid #e5e7eb',
-									borderRadius: '6px',
-									padding:      '4px 10px',
-									background:   '#fff',
-									cursor:       'pointer',
-									fontSize:     '13px',
-									color:        '#374151',
-									gap:          '4px',
-									flexShrink:   0,
+									display:        'inline-flex',
+									alignItems:     'center',
+									justifyContent: 'center',
+									gap:            '5px',
+									border:         '1px solid #e5e7eb',
+									borderRadius:   '6px',
+									padding:        '6px 12px',
+									background:     '#fff',
+									cursor:         'pointer',
+									fontSize:       '13px',
+									fontWeight:     500,
+									color:          '#374151',
+									flexShrink:     0,
 								} }
 							>
 								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -322,26 +326,32 @@ export const NewFormModal = ( { open, onClose, onBlank } ) => {
 								</svg>
 								{ __( 'Back', 'smartpay' ) }
 							</button>
-							<DialogTitle style={ { margin: 0 } }>
-								{ __( 'Choose a Template', 'smartpay' ) }
-							</DialogTitle>
+							<div style={ { display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 } }>
+								<DialogTitle style={ { margin: 0 } }>
+									{ __( 'Choose a Template', 'smartpay' ) }
+								</DialogTitle>
+								<DialogDescription style={ { margin: 0 } }>
+									{ __( 'Pick a pre-built form to start from.', 'smartpay' ) }
+								</DialogDescription>
+							</div>
 						</div>
 					) : (
-						<DialogTitle>
-							{ __( 'New Form', 'smartpay' ) }
-							<br/>
-							<small>{ __( 'How would you like to start?', 'smartpay' ) }</small>
-						</DialogTitle>
+						<>
+							<DialogTitle>{ __( 'Create a New Form', 'smartpay' ) }</DialogTitle>
+							<DialogDescription>
+								{ __( 'How would you like to start?', 'smartpay' ) }
+							</DialogDescription>
+						</>
 					) }
 				</DialogHeader>
 
-				{ view === 'picker' ? (
+				{ isTemplates ? (
+					<TemplateBrowser onUse={ handleUseTemplate } />
+				) : (
 					<PickerView
 						onBlank={ onBlank }
 						onTemplate={ () => setView( 'templates' ) }
 					/>
-				) : (
-					<TemplateBrowser onUse={ handleUseTemplate } />
 				) }
 			</DialogContent>
 		</Dialog>

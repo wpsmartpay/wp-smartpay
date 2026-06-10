@@ -265,19 +265,15 @@ const FormGuide = () => {
 	const { openGeneralSidebar } = useDispatch( 'core/edit-post' );
 	const [ isOpen, setIsOpen ]     = useState( false );
 	const [ btnTick, setBtnTick ]   = useState( 0 );
-	const autoOpened = useRef( false );
 	const btnRef     = useRef( null );
 
 	// Open the existing form settings panels (Pricing, Form Settings, Goal),
 	// which live in the editor's Document settings sidebar.
 	const openSettings = () => openGeneralSidebar?.( 'edit-post/document' );
 
-	// Auto-open once when the editor opens — for both empty and populated forms.
-	useEffect( () => {
-		if ( autoOpened.current ) return;
-		autoOpened.current = true;
-		setIsOpen( true );
-	}, [] );
+	// Note: the guide modal is NOT auto-opened on editor load — it gets in the
+	// way. Users open it on demand via the "Guide" button portaled into the
+	// editor header (below); the slim quick-add toolbar stays available too.
 
 	// Portal a "Guide" button into the editor header settings area.
 	useEffect( () => {

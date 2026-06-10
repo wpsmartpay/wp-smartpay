@@ -98,6 +98,155 @@
                 }
             }
         }
+
+        // ── Stacked gateway accordion ───────────────────────────────
+        // Full-width selectable cards, one per gateway, stacked vertically.
+        // The selected card (its hidden radio :checked) expands to reveal its
+        // content. Pure CSS — the radio drives both the highlight and the
+        // expand/collapse, so it works without JavaScript.
+        .smartpay-gateways-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px !important;
+
+            .smartpay-gateway-card {
+                position: relative;
+                border: 1px solid #e3e8ee;
+                border-radius: 10px;
+                background: #fff;
+                overflow: hidden;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+                &:hover {
+                    border-color: #cbd5e1;
+                }
+
+                // Initial (server-rendered) highlight; the :has() rule below
+                // keeps it in sync as the user switches gateways.
+                &.selected {
+                    border-color: var(--color-green, #28a745);
+                }
+            }
+
+            // Visually hide the radio but keep it focusable & submittable.
+            .smartpay-gateway-card__radio {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                margin: 0;
+                pointer-events: none;
+            }
+
+            .smartpay-gateway-card__head {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 0;
+                padding: 14px 16px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .smartpay-gateway-card__radiomark {
+                position: relative;
+                flex-shrink: 0;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                border: 2px solid #cbd5e1;
+                background: #fff;
+                transition: border-color 0.15s ease;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--color-green, #28a745);
+                    transform: translate(-50%, -50%) scale(0);
+                    transition: transform 0.15s ease;
+                }
+            }
+
+            .smartpay-gateway-card__icon {
+                display: inline-flex;
+                align-items: center;
+                flex-shrink: 0;
+
+                img {
+                    max-height: 26px;
+                    width: auto;
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__label {
+                flex: 1 1 auto;
+                min-width: 0;
+                font-size: 15px;
+                font-weight: 600;
+                color: #1a202c;
+            }
+
+            .smartpay-gateway-card__chevron {
+                flex-shrink: 0;
+                display: inline-flex;
+                color: #94a3b8;
+                transition: transform 0.2s ease;
+            }
+
+            // Smooth height transition via grid-template-rows 0fr → 1fr.
+            .smartpay-gateway-card__body {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.22s ease;
+            }
+
+            .smartpay-gateway-card__body-inner {
+                overflow: hidden;
+                min-height: 0;
+            }
+
+            .smartpay-gateway-card__hint {
+                margin: 0;
+                padding: 0 16px 16px 46px;
+                font-size: 13px;
+                line-height: 1.5;
+                color: #64748b;
+            }
+
+            // ── Expanded / selected state (driven by :checked) ──────
+            .smartpay-gateway-card__radio:checked
+                ~ .smartpay-gateway-card__head {
+                .smartpay-gateway-card__radiomark {
+                    border-color: var(--color-green, #28a745);
+
+                    &::after {
+                        transform: translate(-50%, -50%) scale(1);
+                    }
+                }
+
+                .smartpay-gateway-card__chevron {
+                    transform: rotate(180deg);
+                }
+            }
+
+            .smartpay-gateway-card__radio:checked
+                ~ .smartpay-gateway-card__body {
+                grid-template-rows: 1fr;
+            }
+
+            // Card-level highlight that tracks the checked radio dynamically.
+            .smartpay-gateway-card:has(.smartpay-gateway-card__radio:checked) {
+                border-color: var(--color-green, #28a745);
+                box-shadow: 0 0 0 1px var(--color-green, #28a745);
+            }
+        }
     }
 
     .btn {
@@ -122,70 +271,58 @@
     // ── Coupon section ──────────────────────────────────────────────
     // Refined, minimal: a quiet "Have a coupon?" link that reveals a single
     // aligned row (input · Apply · dismiss). No floating boxes; the × is a
-    // clear ghost icon-button at the end of the row.
-    $sp-coupon-accent: #28a745;
-    $sp-coupon-border: #e2e6ea;
-
+    // clear ghost icon-button at the end of the row. Fully self-contained:
+    // does NOT borrow the theme's .btn / .form-control look (those are often
+    // unstyled), so the coupon always renders correctly on any theme. The
+    // accent flows in from PHP via the --sp-coupon-accent custom property.
     .smartpay-coupon {
+        --sp-coupon-accent: #28a745;
         margin-bottom: 18px;
-    }
+        text-align: left;
 
-    .smartpay-coupon-form-toggle {
         .smartpayshowcoupon {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 2px 0;
-            background: none;
-            border: 0;
-            color: $sp-coupon-accent;
             font-size: 14px;
             font-weight: 500;
-            line-height: 1.4;
+            color: var(--sp-coupon-accent);
+            text-decoration: none;
+            border-bottom: 1px dashed currentColor;
+            padding-bottom: 1px;
             cursor: pointer;
             transition: opacity 0.15s ease;
 
-            .smartpay-coupon__icon {
-                color: $sp-coupon-accent;
-            }
-
-            span {
-                text-decoration: underline;
-                text-underline-offset: 2px;
-                text-decoration-thickness: 1px;
-            }
-
-            &:hover {
-                opacity: 0.78;
+            &:hover,
+            &:focus {
+                opacity: 0.75;
+                text-decoration: none;
+                outline: 0;
             }
         }
     }
 
     .smartpay-coupon-form {
-        margin-top: 10px;
-        padding: 0 !important;
+        margin-top: 12px;
 
-        &:not(.d-none) {
-            animation: sp-coupon-reveal 0.22s ease both;
-        }
-
-        .smartpay-coupon__row {
+        .smartpay-coupon-row {
             display: flex;
             align-items: stretch;
             gap: 8px;
         }
 
-        .smartpay-coupon__input {
+        .smartpay-coupon-input {
             flex: 1 1 auto;
             min-width: 0;
+            height: 44px;
             margin: 0;
-            padding: 11px 14px;
-            border: 1.5px solid $sp-coupon-border;
-            border-radius: 8px;
+            padding: 0 14px;
+            font-size: 15px;
+            color: #1a202c;
             background: #fff;
-            font-size: 14px;
-            line-height: 1.3;
-            color: #1f2933;
+            border: 1px solid #d7dde5;
+            border-radius: 8px;
+            box-shadow: none;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
             &::placeholder {
@@ -193,32 +330,41 @@
             }
 
             &:focus {
-                outline: none;
-                border-color: $sp-coupon-accent;
-                box-shadow: 0 0 0 3px rgba($sp-coupon-accent, 0.15);
+                outline: 0;
+                border-color: var(--sp-coupon-accent);
+                box-shadow: 0 0 0 3px
+                    color-mix(in srgb, var(--sp-coupon-accent) 18%, transparent);
             }
         }
 
-        .smartpay-coupon__apply {
+        .smartpay-coupon-apply {
             flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
             padding: 0 20px;
-            border: 0;
-            border-radius: 8px;
-            background: $sp-coupon-accent;
-            color: #fff;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             line-height: 1;
+            color: #fff;
             white-space: nowrap;
+            background: var(--sp-coupon-accent);
+            border: 0;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.15s ease, transform 0.05s ease;
+            transition: filter 0.15s ease, transform 0.05s ease;
 
             &:hover {
-                background: darken($sp-coupon-accent, 7%);
+                filter: brightness(0.93);
             }
-
             &:active {
                 transform: translateY(1px);
+            }
+            &:focus-visible {
+                outline: 0;
+                box-shadow: 0 0 0 3px
+                    color-mix(in srgb, var(--sp-coupon-accent) 30%, transparent);
             }
         }
 
@@ -228,30 +374,27 @@
             align-items: center;
             justify-content: center;
             width: 44px;
+            height: 44px;
             padding: 0;
-            border: 1.5px solid $sp-coupon-border;
-            border-radius: 8px;
-            background: #fff;
+            font-size: 20px;
+            line-height: 1;
             color: #6b7280;
+            background: transparent;
+            border: 1px solid #d7dde5;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+            transition: color 0.15s ease, border-color 0.15s ease,
+                background 0.15s ease;
 
             &:hover {
-                background: #fef2f2;
-                border-color: #fecaca;
                 color: #ef4444;
+                border-color: #ef4444;
+                background: #fef2f2;
             }
-        }
-    }
-
-    @keyframes sp-coupon-reveal {
-        from {
-            opacity: 0;
-            transform: translateY(-4px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
+            &:focus-visible {
+                outline: 0;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+            }
         }
     }
 }

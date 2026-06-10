@@ -160,20 +160,47 @@ $submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/su
 							<?php esc_html_e( 'Select a payment method', 'smartpay' ); ?>
 						</label>
 						<div class="mb-4">
-							<div class="gateways m-0 justify-content-left d-flex">
+							<div class="smartpay-gateways-accordion">
 								<?php foreach ( $gateways as $gw_id => $gateway ) : ?>
-								<div class="gateway custom-control custom-radio <?php echo $gw_id === $chosen_gw ? 'selected' : ''; ?>">
+								<div class="smartpay-gateway-card<?php echo $gw_id === $chosen_gw ? ' selected' : ''; ?>"
+									data-gateway="<?php echo esc_attr( $gw_id ); ?>">
 									<input type="radio"
 										name="smartpay_gateway"
 										id="<?php echo 'smartpay_gateway_' . esc_attr( $gw_id ); ?>"
 										value="<?php echo esc_attr( $gw_id ); ?>"
 										<?php checked( $gw_id, $chosen_gw ); ?>
-										class="radio" />
+										class="radio smartpay-gateway-card__radio" />
 									<label for="<?php echo 'smartpay_gateway_' . esc_attr( $gw_id ); ?>"
-										class="gateway--label custom-control-label">
-										<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>"
-											alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+										class="smartpay-gateway-card__head">
+										<span class="smartpay-gateway-card__radiomark" aria-hidden="true"></span>
+										<span class="smartpay-gateway-card__icon">
+											<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>"
+												alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+										</span>
+										<span class="smartpay-gateway-card__label">
+											<?php echo esc_html( $gateway['checkout_label'] ); ?>
+										</span>
+										<span class="smartpay-gateway-card__chevron" aria-hidden="true">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+										</span>
 									</label>
+									<div class="smartpay-gateway-card__body">
+										<div class="smartpay-gateway-card__body-inner">
+										<?php
+										// Let gateways / add-ons inject inline checkout content
+										// (instructions, fields, notices) under the selected gateway.
+										// When nothing is injected, the default hint below explains
+										// the redirect-style flow.
+										do_action( 'smartpay_native_gateway_checkout_fields', $gw_id, $gateway, $post_id );
+										?>
+										<p class="smartpay-gateway-card__hint">
+											<?php
+											/* translators: %s: payment gateway label, e.g. PayPal. */
+											printf( esc_html__( "You'll complete your payment securely with %s after submitting the form.", 'smartpay' ), esc_html( $gateway['checkout_label'] ) );
+											?>
+										</p>
+									</div>
+								</div>
 								</div>
 								<?php endforeach; ?>
 							</div>
