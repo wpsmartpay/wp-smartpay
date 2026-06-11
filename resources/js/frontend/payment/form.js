@@ -1,6 +1,72 @@
 const { SUBSCRIPTION } = require('../../utils/constant')
+const { SUBDIVISIONS } = require('../../../form-builder/blocks/AddressField/data/locations')
 
 jQuery(($) => {
+    /**
+     * Address country → state cascade. When the Country select changes, rebuild
+     * the State field: a <select> of that country's subdivisions when we have
+     * them, otherwise a free-text input. Submission name/id/required/class are
+     * preserved so the checkout contract is unchanged. Values come from a trusted
+     * static map (no user input), and options are set via .text() (no XSS).
+     */
+    const SP_ADDR = '.smartpay-address'
+    const SP_COUNTRY = '[name="smartpay_form[address][country]"]'
+    const SP_STATE = '[name="smartpay_form[address][state]"]'
+
+    const smartpayBuildStateField = ($container, countryCode) => {
+        const $state = $container.find(SP_STATE)
+        if (!$state.length) return
+
+        const subs = (SUBDIVISIONS && SUBDIVISIONS[countryCode]) || null
+        const id = $state.attr('id') || 'state'
+        const cls = $state.attr('class') || 'form-control'
+        const required = $state.prop('required')
+        const current = $state.val()
+
+        let $field
+        if (subs && subs.length) {
+            $field = $('<select>')
+            $('<option>').val('').text(smartpay_form_i18n('select_state')).appendTo($field)
+            subs.forEach((s) => {
+                $('<option>').val(s.code).text(s.name).appendTo($field)
+            })
+        } else {
+            $field = $('<input>')
+                .attr('type', 'text')
+                .attr('placeholder', smartpay_form_i18n('state_placeholder'))
+        }
+
+        $field
+            .attr('id', id)
+            .attr('name', 'smartpay_form[address][state]')
+            .attr('class', cls)
+        if (required) $field.attr('required', 'required')
+        if (current) $field.val(current)
+
+        $state.replaceWith($field)
+    }
+
+    // Minimal i18n shim — falls back to English if the global isn't localized.
+    function smartpay_form_i18n(key) {
+        const dict = (window.smartpay && window.smartpay.i18n) || {}
+        const fallback = {
+            select_state: 'Select state',
+            state_placeholder: 'State / Province / Region',
+        }
+        return dict[key] || fallback[key]
+    }
+
+    $(document.body).on('change', `${SP_ADDR} ${SP_COUNTRY}`, function () {
+        smartpayBuildStateField($(this).closest(SP_ADDR), this.value)
+    })
+
+    // Initialise on load: match the State field to the current country (empty
+    // country → free-text input, so it never shows the wrong country's states).
+    $(SP_ADDR).each(function () {
+        const $country = $(this).find(SP_COUNTRY)
+        smartpayBuildStateField($(this), $country.length ? $country.val() : '')
+    })
+
     /** Select form fixed amount **/
     $(document.body).on(
         'click',

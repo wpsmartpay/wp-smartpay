@@ -1,17 +1,15 @@
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 
 const TEMPLATE = [
-    ['smartpay-form/checkbox-input-label'],
-    ['smartpay-form/checkbox-input-input'],
+    ['smartpay-form/address-label'],
+    ['smartpay-form/address-input-field'],
 ]
-
-const ALLOWED = ['smartpay-form/checkbox-input-label', 'smartpay-form/checkbox-input-input']
 
 export const edit = () => {
     const blockProps = useBlockProps({ className: 'form-element' })
     const innerBlocksProps = useInnerBlocksProps(blockProps, {
         template: TEMPLATE,
-        allowedBlocks: ALLOWED,
+        allowedBlocks: ['smartpay-form/address-label', 'smartpay-form/address-input-field'],
         templateLock: 'all',
     })
     return <div {...innerBlocksProps} />

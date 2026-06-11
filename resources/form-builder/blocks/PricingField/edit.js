@@ -22,6 +22,7 @@ const DEFAULT_OPTION = {
 export const edit = ({ attributes, setAttributes }) => {
     const {
         preset,
+        showDescription,
         allowCustomAmount,
         customAmountLabel,
         currencySymbol,
@@ -39,7 +40,9 @@ export const edit = ({ attributes, setAttributes }) => {
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
     const blockProps = useBlockProps({
-        className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}`,
+        className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}${
+            showDescription === false ? ' is-hide-desc' : ''
+        }`,
         style: wrapperStyle,
     })
 
@@ -114,6 +117,16 @@ export const edit = ({ attributes, setAttributes }) => {
                             'smartpay'
                         )}
                     </p>
+                    <ToggleControl
+                        label={__('Show option descriptions', 'smartpay')}
+                        help={__(
+                            'Display each option’s description (List preset only).',
+                            'smartpay'
+                        )}
+                        checked={showDescription !== false}
+                        onChange={(v) => setAttributes({ showDescription: v })}
+                        __nextHasNoMarginBottom
+                    />
                     <UnitControl
                         label={__('Gap between options', 'smartpay')}
                         value={gap}

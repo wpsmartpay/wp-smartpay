@@ -1344,13 +1344,39 @@ function smartpay_get_submit_child_attrs( int $form_id, string $child_name ): ?a
 		return null;
 	}
 
-	foreach ( parse_blocks( $post->post_content ) as $block ) {
-		if ( 'smartpay-form/submit-button' !== ( $block['blockName'] ?? '' ) ) {
-			continue;
+	// Find the submit-button block anywhere in the tree (it may be nested inside
+	// a Group/Columns), then return the requested child's attributes.
+	$submit_button = smartpay_find_block_recursive( parse_blocks( $post->post_content ), 'smartpay-form/submit-button' );
+	if ( null === $submit_button ) {
+		return null;
+	}
+
+	foreach ( (array) ( $submit_button['innerBlocks'] ?? array() ) as $child ) {
+		if ( $child_name === ( $child['blockName'] ?? '' ) ) {
+			return is_array( $child['attrs'] ?? null ) ? $child['attrs'] : array();
 		}
-		foreach ( (array) ( $block['innerBlocks'] ?? array() ) as $child ) {
-			if ( $child_name === ( $child['blockName'] ?? '' ) ) {
-				return is_array( $child['attrs'] ?? null ) ? $child['attrs'] : array();
+	}
+
+	return null;
+}
+
+/**
+ * Depth-first search a parsed-block tree for the first block of a given name.
+ *
+ * @param array  $blocks Parsed blocks (from parse_blocks()).
+ * @param string $name   Block name to find.
+ * @return array|null The matching block array, or null when not found.
+ */
+function smartpay_find_block_recursive( array $blocks, string $name ): ?array {
+	foreach ( $blocks as $block ) {
+		$block_name = $block['blockName'] ?? '';
+		if ( $name === $block_name ) {
+			return $block;
+		}
+		if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+			$found = smartpay_find_block_recursive( $block['innerBlocks'], $name );
+			if ( null !== $found ) {
+				return $found;
 			}
 		}
 	}

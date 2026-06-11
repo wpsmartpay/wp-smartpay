@@ -13,6 +13,7 @@ import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 export const save = ({ attributes }) => {
     const {
         preset,
+        showDescription,
         allowCustomAmount,
         customAmountLabel,
         currencySymbol,
@@ -28,8 +29,12 @@ export const save = ({ attributes }) => {
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
+    // Only add `is-hide-desc` when explicitly turned off — keeping the default-on
+    // markup byte-identical to previously-saved blocks (no validation breakage).
+    const presetClass = `is-style-${preset || 'grid'}`
+    const descClass = showDescription === false ? ' is-hide-desc' : ''
     const blockProps = useBlockProps.save({
-        className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}`,
+        className: `form--amount-section smartpay-pricing ${presetClass}${descClass}`,
         style: wrapperStyle,
     })
     const innerProps = useInnerBlocksProps.save({ className: 'form-plan-grid' })

@@ -212,3 +212,59 @@ Split-registry rule (free bundles its own `@wordpress/hooks`): shared filters MU
 - Confirm exact submit field contract by reading the existing checkout JS that posts `smartpay_amount_key` (find in `resources/js/frontend/`).
 - Confirm how current form-builder blocks reach the frontend (saved markup vs server render) to match the pricing block's render path.
 - Confirm the form CPT slug + the precise save hook where `_smartpay_amounts` is currently written (REST `FormController` vs `save_post`) to attach the block sync without double-writing.
+
+---
+
+## 11. Layout & Recurring extensions (refined from screenshots, 2026-06)
+
+Both reference designs are the **same `smartpay-form/pricing` block**, different config.
+No new selectable-amount block; extend the existing parent/child.
+
+| Reference | Block config |
+|---|---|
+| "Choose A Plan" (plan cards, radio + name + description left, `$99 / year` right) | `preset: list` + options carrying `description` + per-option billing |
+| "Donation Amount" (amount tiles grid + custom amount + once/recurring two-card) | `preset: grid` + `allowCustomAmount` + `recurringChoice: optional` |
+
+### A. Child `pricing-option` — add `description`
+- New attr `description: { type: 'string', default: '' }`.
+- Editor: `TextControl`/`RichText` (inspector + inline under label).
+- `save.js`: emit `<span class="plan-desc">` when non-empty.
+- Carried into `_smartpay_amounts` sync (`NativeForm::sync_pricing_block_amounts`).
+- Visible only in `list` preset (CSS); hidden in `grid` so tiles stay compact.
+
+### B. Parent `pricing` — layout presets
+- Reuse existing `preset` attr: `grid` (today) | `list` (new).
+- `list` = full-width rows: `[radio] label + description  ……  $99 / year`.
+  Radio left, text left, price right. Reuses the gateway-accordion `:checked`
+  card styling (blue border + filled radio on selected).
+- Inspector: `SelectControl` preset. Wrapper class `.form-plan-grid--{preset}`.
+  Price-right + description handled in CSS, minimal `save.js` branching.
+
+### C. Parent `pricing` — recurring choice (DECIDED: parent toggle)
+- New attrs: `recurringChoice: 'off' | 'optional'` (default `off`),
+  `recurringPeriod` (default `month`), `recurringYesLabel`, `recurringNoLabel`.
+- When `optional`: render a two-card selector (same `:checked` styling):
+  - "Yes, count me in! / Every {period}"  → sets `_form_billing_type=Subscription`,
+    `_form_billing_period={recurringPeriod}`.
+  - "No, donate once."                     → `_form_billing_type=One Time`.
+- Applies recurrence to whatever amount/tile the donor picked.
+- **Pro-locked** (same gate as per-option Subscription): without pro the "Yes"
+  card is disabled + "Available in Pro" CTA.
+
+### D. Combination (no extra blocks)
+One Pricing block exposes independently: amount source (grid|list ± custom amount)
+and recurrence (per-option **or** global recurring choice). Author mixes freely:
+donation grid + recurring (img 2), plan list (img 3), or any combination.
+
+### E. Checkout — unchanged contract
+Cards stay a radio group (`_form_amount` / `_form_amount_key`); recurrence writes
+`_form_billing_type` (+ `_form_billing_period`). `Payment.php` validates the key
+against synced `_smartpay_amounts`. Selection logic via Interactivity API, shared
+by both presets and the recurring cards.
+
+### F. Phases
+1. `description` attr — option index/edit/save + meta sync.  ← P1
+2. `list` preset — parent inspector select + CSS (radio/text-left, price-right).
+3. Recurring choice — parent attrs + two-card render + hidden-input wiring + pro-lock.
+4. Combination QA + style polish (donation+recurring, plan-list e2e).
+5. Docs — this PLAN.md, free `docs/`, pro roadmap.

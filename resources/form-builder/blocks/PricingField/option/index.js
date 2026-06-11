@@ -48,11 +48,15 @@ export const PricingOption = {
         attributes: {
             key: { type: 'string' },
             label: { type: 'string', default: 'Plan' },
+            description: { type: 'string', default: '' },
             amount: { type: 'string', default: '0' },
             billing_type: { type: 'string', default: 'One Time' },
             billing_period: { type: 'string', default: 'month' },
             setup_fee: { type: 'string', default: '0' },
             billing_cycle: { type: 'string', default: '' },
+        },
+        __experimentalLabel: (attributes) => {
+            return attributes.label || __('Pricing Option', 'smartpay')
         },
         edit,
         save,

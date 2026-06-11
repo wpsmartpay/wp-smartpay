@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n'
 import { useEffect } from '@wordpress/element'
 import { applyFilters } from '@wordpress/hooks'
 
-const DEFAULT_UPGRADE_URL = 'https://wpsmartpay.com/pricing'
+const DEFAULT_UPGRADE_URL = 'https://wpsmartpay.com/pricing/?utm_source=free-plugin&utm_medium=pricing-block&utm_campaign=upgrade-to-pro'
 
 const BILLING_PERIODS = [
     { label: __('Daily', 'smartpay'), value: 'day' },
@@ -37,7 +37,7 @@ const readProFlag = () => {
         try {
             const d = w.smartpayPricingData
             if (d && typeof d.isPro !== 'undefined') {
-                return { isPro: truthy(d.isPro), upgradeUrl: d.upgradeUrl || DEFAULT_UPGRADE_URL }
+                return { isPro: truthy(d.isPro), upgradeUrl: DEFAULT_UPGRADE_URL }
             }
         } catch (e) {}
     }
@@ -47,7 +47,7 @@ const readProFlag = () => {
 const generateKey = () => 'opt-' + Math.random().toString(36).substr(2, 9)
 
 export const edit = ({ attributes, setAttributes }) => {
-    const { key, label, amount, billing_type, billing_period, setup_fee, billing_cycle } = attributes
+    const { key, label, description, amount, billing_type, billing_period, setup_fee, billing_cycle } = attributes
     const { isPro: pro, upgradeUrl } = readProFlag()
     const isSub = billing_type === 'Subscription'
 
@@ -67,6 +67,9 @@ export const edit = ({ attributes, setAttributes }) => {
     return (
         <>
             <label {...blockProps}>
+                {/* Visual-only radio so the builder canvas matches the frontend
+                    (real radio is rendered by save.js). Hidden in Grid via CSS. */}
+                <span className="radio" aria-hidden="true" />
                 <span className="plan-details">
                     <RichText
                         tagName="span"
@@ -75,6 +78,14 @@ export const edit = ({ attributes, setAttributes }) => {
                         allowedFormats={[]}
                         onChange={(v) => setAttributes({ label: v })}
                         placeholder={__('Plan name', 'smartpay')}
+                    />
+                    <RichText
+                        tagName="span"
+                        className="plan-desc"
+                        value={description}
+                        allowedFormats={[]}
+                        onChange={(v) => setAttributes({ description: v })}
+                        placeholder={__('Short description (optional)', 'smartpay')}
                     />
                     <span className="plan-cost">
                         <span className="plan-symbol" />
@@ -99,6 +110,13 @@ export const edit = ({ attributes, setAttributes }) => {
                         label={__('Amount Label', 'smartpay')}
                         value={label}
                         onChange={(v) => setAttributes({ label: v })}
+                        __nextHasNoMarginBottom
+                    />
+                    <TextControl
+                        label={__('Description', 'smartpay')}
+                        help={__('Shown under the label in the list layout.', 'smartpay')}
+                        value={description}
+                        onChange={(v) => setAttributes({ description: v })}
                         __nextHasNoMarginBottom
                     />
                     <Flex>
@@ -129,10 +147,10 @@ export const edit = ({ attributes, setAttributes }) => {
                             <Notice status="info" isDismissible={false}>
                                 <Flex align="center" justify="flex-start" gap={2}>
                                     <Icon icon={lock} size={18} />
-                                    <span>{__('Subscriptions are a Pro feature.', 'smartpay')}</span>
+                                    <span>{__('Subscription is available in the Pro plan.', 'smartpay')}</span>
                                 </Flex>
                                 <ExternalLink href={upgradeUrl}>
-                                    {__('Available in Pro — Upgrade', 'smartpay')}
+                                    {__('Upgrade to Pro', 'smartpay')}
                                 </ExternalLink>
                             </Notice>
                         </div>

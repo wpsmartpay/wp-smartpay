@@ -87,6 +87,7 @@ class NativeForm {
 			$amount = array(
 				'key'          => $key,
 				'label'        => sanitize_text_field( $item['label'] ?? '' ),
+				'description'  => sanitize_text_field( $item['description'] ?? '' ),
 				'amount'       => max( 0, (float) ( $item['amount'] ?? 0 ) ),
 				'billing_type' => $billing_type,
 			);
@@ -152,7 +153,14 @@ class NativeForm {
 				// option, and the submit button. Authors can edit/remove from here.
 				'template'           => array(
 					array( 'smartpay-form/name' ),
-					array( 'smartpay-form/email' ),
+					array(
+						'smartpay-form/email',
+						array(),
+						array(
+							array( 'smartpay-form/email-label' ),
+							array( 'smartpay-form/email-input' ),
+						),
+					),
 					array(
 						'smartpay-form/pricing',
 						array(),
@@ -938,7 +946,7 @@ class NativeForm {
 				var blockSupports = {
 					color: { text: true, background: true },
 					spacing: { margin: true, padding: true },
-					typography: { fontSize: true }
+					typography: { fontSize: true, lineHeight: true, __experimentalFontStyle: true, __experimentalFontWeight: true }
 				};
 
 				wp.blocks.getBlockTypes().forEach( function ( block ) {

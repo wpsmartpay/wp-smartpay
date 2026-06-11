@@ -9,7 +9,7 @@ import { useBlockProps, RichText } from '@wordpress/block-editor'
  * from the `--sp-currency` CSS variable set by the parent (save can't read context).
  */
 export const save = ({ attributes }) => {
-    const { key, label, amount, billing_type, billing_period } = attributes
+    const { key, label, description, amount, billing_type, billing_period } = attributes
     const billingType = billing_type || 'One Time'
     const isSub = billingType !== 'One Time'
     const blockProps = useBlockProps.save({ className: 'form-plan-card plan-amount' })
@@ -25,6 +25,9 @@ export const save = ({ attributes }) => {
             />
             <span className="plan-details" aria-hidden="true">
                 <RichText.Content tagName="span" className="plan-type" value={label} />
+                {description && (
+                    <RichText.Content tagName="span" className="plan-desc" value={description} />
+                )}
                 <span className="plan-cost">
                     <span className="plan-symbol" />
                     {amount}
