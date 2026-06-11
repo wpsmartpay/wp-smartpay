@@ -1,4 +1,5 @@
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
+import { gridJustifyStyle } from './layout'
 
 /**
  * Parent save — wraps the option cards + custom amount + coordination inputs.
@@ -13,6 +14,7 @@ import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 export const save = ({ attributes }) => {
     const {
         preset,
+        showPlanName,
         showDescription,
         allowCustomAmount,
         customAmountLabel,
@@ -32,12 +34,18 @@ export const save = ({ attributes }) => {
     // Only add `is-hide-desc` when explicitly turned off — keeping the default-on
     // markup byte-identical to previously-saved blocks (no validation breakage).
     const presetClass = `is-style-${preset || 'grid'}`
+    const nameClass = showPlanName === false ? ' is-hide-name' : ''
     const descClass = showDescription === false ? ' is-hide-desc' : ''
     const blockProps = useBlockProps.save({
-        className: `form--amount-section smartpay-pricing ${presetClass}${descClass}`,
+        className: `form--amount-section smartpay-pricing ${presetClass}${nameClass}${descClass}`,
         style: wrapperStyle,
     })
-    const innerProps = useInnerBlocksProps.save({ className: 'form-plan-grid' })
+    // Native Layout justification lands on .smartpay-pricing; forward it to the
+    // nested .form-plan-grid (the real card flex container) so it takes effect.
+    const innerProps = useInnerBlocksProps.save({
+        className: 'form-plan-grid',
+        style: gridJustifyStyle(attributes.layout),
+    })
 
     return (
         <div {...blockProps}>

@@ -9173,7 +9173,7 @@
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card {
   position: relative;
   border: 1px solid #e3e8ee;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #fff;
   overflow: hidden;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -9182,7 +9182,8 @@
   border-color: #cbd5e1;
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card.selected {
-  border-color: var(--color-green, #28a745);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radio {
   position: absolute;
@@ -9204,26 +9205,7 @@
           user-select: none;
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radiomark {
-  position: relative;
-  flex-shrink: 0;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e1;
-  background: #fff;
-  transition: border-color 0.15s ease;
-}
-.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radiomark::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-green, #28a745);
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.15s ease;
+  display: none;
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__icon {
   display: inline-flex;
@@ -9257,18 +9239,62 @@
   overflow: hidden;
   min-height: 0;
 }
-.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint {
-  margin: 0;
-  padding: 0 16px 16px 46px;
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0 16px 16px 16px;
+  background: #f8fafc;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-logo {
+  display: inline-flex;
+  align-items: center;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-logo img {
+  max-height: 20px;
+  width: auto;
+  display: block;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-title-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 12px 0;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-redirect-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-redirect-icon {
+  display: inline-flex;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-redirect-icon svg {
+  display: block;
+}
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint-redirect-text {
   font-size: 13px;
   line-height: 1.5;
   color: #64748b;
 }
-.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radio:checked ~ .smartpay-gateway-card__head .smartpay-gateway-card__radiomark {
-  border-color: var(--color-green, #28a745);
-}
-.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radio:checked ~ .smartpay-gateway-card__head .smartpay-gateway-card__radiomark::after {
-  transform: translate(-50%, -50%) scale(1);
+.smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__hint {
+  margin: 0;
+  padding: 0 16px 16px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #64748b;
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card__radio:checked ~ .smartpay-gateway-card__head .smartpay-gateway-card__chevron {
   transform: rotate(180deg);
@@ -9277,8 +9303,8 @@
   grid-template-rows: 1fr;
 }
 .smartpay .smartpay-form-shortcode .form .smartpay-gateways-accordion .smartpay-gateway-card:has(.smartpay-gateway-card__radio:checked) {
-  border-color: var(--color-green, #28a745);
-  box-shadow: 0 0 0 1px var(--color-green, #28a745);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 .smartpay .smartpay-form-shortcode .btn {
   font-size: 16px;
@@ -9794,8 +9820,8 @@
     width: 0.375rem;
   }
   .radio:checked {
-    background: var(--color-green) !important;
-    border-color: var(--color-green) !important;
+    background: var(--color-green);
+    border-color: var(--color-green);
     opacity: 1;
   }
 }
@@ -9871,6 +9897,11 @@
 .smartpay-pricing .form-plan-card {
   position: relative;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  text-align: center;
   padding: var(--sp-card-pad, 0.85em 1em);
   border: var(--radio-border-width, 2px) solid rgb(214, 221, 227);
   border-radius: var(--card-radius, 0.5em);
@@ -9884,13 +9915,19 @@
   border-color: var(--color-green, rgb(40, 167, 69));
   background-color: var(--color-teal, #f0f8ff);
 }
+.smartpay-pricing .plan-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
 .smartpay-pricing .form-plan-card.has-text-color .plan-type {
   color: inherit;
 }
 .smartpay-pricing .radio {
   position: absolute;
-  top: 0.7em;
-  right: 0.7em;
+  right: -0.2em;
+  top: -0.4em;
   margin: 0;
   width: var(--radio-size, 1.4em);
   height: var(--radio-size, 1.4em);
@@ -9930,6 +9967,9 @@
   padding: 0;
   transition: border-color 0.2s ease-out;
 }
+.smartpay-pricing .plan-info {
+  display: contents;
+}
 .smartpay-pricing .plan-type {
   color: var(--color-green, rgb(40, 167, 69));
   font-size: 1.1em;
@@ -9942,6 +9982,9 @@
   font-size: 0.82em;
   font-weight: normal;
   line-height: 1.4;
+}
+.smartpay-pricing.is-hide-name .plan-type {
+  display: none;
 }
 .smartpay-pricing .plan-cost {
   color: inherit;
@@ -10039,37 +10082,51 @@
   box-shadow: none;
 }
 .smartpay-pricing.is-style-list {
-  --sp-accent: #293c81;
+  --sp-accent: #2563eb;
 }
 .smartpay-pricing.is-style-list .form-plan-grid {
   flex-direction: column;
+  gap: var(--sp-plan-gap, 16px);
 }
 .smartpay-pricing.is-style-list .form-plan-card {
   width: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 0.85em;
-  padding: var(--sp-card-pad, 1em 1.15em);
+  justify-content: space-between;
+  gap: 1.25em;
+  padding: var(--sp-card-pad, 1.25em 1.5em);
+  text-align: left;
+  border: 1.5px solid #e2e8f0;
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
+}
+.smartpay-pricing.is-style-list .form-plan-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 .smartpay-pricing.is-style-list .form-plan-card.selected {
   border-color: var(--sp-accent);
-  background-color: #fff;
-  box-shadow: 0 0 0 1px var(--sp-accent);
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
 }
 .smartpay-pricing.is-style-list .radio {
   position: relative;
   flex-shrink: 0;
-  opacity: 1;
-  width: var(--radio-size, 1.25em);
-  height: var(--radio-size, 1.25em);
-  background: #fff;
-  border: 2px solid var(--color-gray, #cbd5e1);
+  opacity: 1 !important;
+  width: var(--radio-size, 1.35em);
+  height: var(--radio-size, 1.35em);
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1;
+  align-self: center;
+  margin-top: 0;
 }
 .smartpay-pricing.is-style-list .radio::after {
   top: 50%;
   left: 50%;
-  width: 0.6em;
-  height: 0.6em;
+  width: 0.55em;
+  height: 0.55em;
   border: 0;
   border-radius: 50%;
   background: var(--sp-accent);
@@ -10077,51 +10134,84 @@
   transition: transform 0.15s ease-out;
 }
 .smartpay-pricing.is-style-list .radio:checked {
-  background: #fff;
-  border-color: var(--sp-accent);
+  background: #ffffff !important;
+  border-color: var(--sp-accent) !important;
 }
 .smartpay-pricing.is-style-list .radio:checked::after {
   transform: translate(-50%, -50%) scale(1);
 }
-.smartpay-pricing.is-style-list .plan-details {
+.smartpay-pricing.is-style-list .plan-name {
   flex: 1 1 auto;
-  min-width: 0;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-areas: "label price" "desc  price";
-  -moz-column-gap: 1em;
-       column-gap: 1em;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
+  gap: 1.25em;
+  min-width: 0;
+}
+.smartpay-pricing.is-style-list .plan-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 .smartpay-pricing.is-style-list .plan-type {
-  grid-area: label;
-  color: var(--color-dark, #111827);
+  color: #0f172a;
+  font-size: 1.05em;
+  font-weight: 600;
 }
 .smartpay-pricing.is-style-list .plan-desc {
   display: block;
-  grid-area: desc;
+  color: #96989b;
+  font-size: 0.85em;
+  font-weight: normal;
+}
+.smartpay-pricing.is-style-list .plan-details {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-left: auto;
+  text-align: right;
 }
 .smartpay-pricing.is-style-list .plan-cost {
-  grid-area: price;
-  justify-self: end;
-  align-self: center;
   padding: 0;
-  color: var(--color-dark, #111827);
+  color: #0f172a;
+  font-size: 1.25em;
+  font-weight: 600;
   text-align: right;
   white-space: nowrap;
+}
+.smartpay-pricing.is-style-list .plan-cost .slash {
+  display: inline-block;
+  margin: 0px 2px;
+}
+.smartpay-pricing.is-style-list .plan-cost .slash,
+.smartpay-pricing.is-style-list .plan-cost .plan-cycle {
+  color: #96989b;
+  font-weight: normal;
+  font-size: 0.85em;
 }
 .smartpay-pricing.is-style-list.is-hide-desc .plan-desc {
   display: none;
 }
-.smartpay-pricing.is-style-list.is-hide-desc .plan-details {
-  grid-template-areas: "label price";
+.smartpay-pricing.is-style-list.is-hide-name .plan-type {
+  display: none;
 }
 .smartpay-pricing.is-style-compact .form-plan-grid {
   flex-direction: row;
   flex-wrap: wrap;
 }
 .smartpay-pricing.is-style-compact .form-plan-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
   padding: var(--sp-card-pad, 0.45em 0.8em);
+  text-align: left;
+}
+.smartpay-pricing.is-style-compact .plan-name {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4em;
 }
 .smartpay-pricing.is-style-compact .plan-details {
   flex-direction: row;

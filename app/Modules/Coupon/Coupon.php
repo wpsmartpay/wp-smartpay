@@ -99,34 +99,30 @@ class Coupon
 
     public function smartpayCouponPaymentForm($form)
     {
-        $enable_coupon_settings = smartpay_get_option('coupon_settings_for_form');
+        $form_id = isset($form->id) ? (int) $form->id : 0;
 
-        if (!$enable_coupon_settings) {
+        // Coupon visibility is controlled solely by the per-form setting
+        // (Form Settings → Enable Coupon). Default off; the global option no
+        // longer forces it on, so turning it off here always hides the coupon.
+        $settings = $form_id ? get_post_meta($form_id, '_smartpay_settings', true) : '';
+        $settings = is_string($settings) ? json_decode($settings, true) : (is_array($settings) ? $settings : []);
+
+        if (empty($settings['enable_coupon'])) {
             return;
         }
 
-        $form_id = isset($form->id) ? (int) $form->id : 0;
-
-        // Defaults (legacy forms with no Submit Button block).
+        // Text + colors come from the Submit Button's Coupon child block (styling
+        // only); defaults are used when the child is absent.
         $toggle_label = __('Have a coupon?', 'smartpay');
         $placeholder  = __('Coupon code', 'smartpay');
         $apply_label  = __('Apply', 'smartpay');
         $accent       = '#28a745';
 
-        // Forms using the Submit Button block: the Coupon child controls the
-        // section's visibility + text. No Coupon child = the section is hidden.
-        $uses_block = function_exists('smartpay_get_submit_button_attrs')
-            && null !== smartpay_get_submit_button_attrs($form_id);
+        $coupon = function_exists('smartpay_get_submit_child_attrs')
+            ? smartpay_get_submit_child_attrs($form_id, 'smartpay-form/submit-coupon')
+            : null;
 
-        if ($uses_block) {
-            $coupon = function_exists('smartpay_get_submit_child_attrs')
-                ? smartpay_get_submit_child_attrs($form_id, 'smartpay-form/submit-coupon')
-                : null;
-
-            if (null === $coupon) {
-                return; // Coupon child removed → hide the coupon section.
-            }
-
+        if (is_array($coupon)) {
             $toggle_label = isset($coupon['toggleLabel']) && '' !== $coupon['toggleLabel'] ? $coupon['toggleLabel'] : $toggle_label;
             $placeholder  = isset($coupon['placeholder']) && '' !== $coupon['placeholder'] ? $coupon['placeholder'] : $placeholder;
             $apply_label  = isset($coupon['applyLabel']) && '' !== $coupon['applyLabel'] ? $coupon['applyLabel'] : $apply_label;
@@ -135,28 +131,21 @@ class Coupon
 
         $accent = sanitize_text_field($accent);
         ?>
-        <div class="smartpay-coupon">
-            <div class="smartpay-coupon-form-toggle">
-                <button type="button" class="smartpayshowcoupon" style="color:<?php echo esc_attr($accent); ?>;">
-                    <svg class="smartpay-coupon__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                        <path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" />
-                        <path d="M9 6v12" stroke-dasharray="2 2" />
-                    </svg>
-                    <span><?php echo esc_html($toggle_label); ?></span>
-                </button>
-            </div>
-            <form class="smartpay-coupon-form d-none">
+        <div class="smartpay-coupon" style="--sp-coupon-accent:<?php echo esc_attr($accent); ?>;">
+            <a href="#" class="smartpayshowcoupon">
+                <?php echo esc_html($toggle_label); ?>
+            </a>
+            <?php // NOTE: a <div>, not a <form> — this renders inside the main payment
+            // <form>, and the HTML parser drops nested <form> elements. The Apply
+            // button is type="button" so it never submits the outer payment form. ?>
+            <div class="smartpay-coupon-form" style="display:none;">
                 <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
-                <div class="smartpay-coupon__row">
-                    <input type="text" name="coupon_code" id="coupon_code" class="smartpay-coupon__input" placeholder="<?php echo esc_attr($placeholder); ?>" autocomplete="off" />
-                    <button type="submit" name="submitcoupon" class="smartpay-coupon__apply" style="background:<?php echo esc_attr($accent); ?>;"><?php echo esc_html($apply_label); ?></button>
-                    <button type="button" class="smartpay-coupon-form-close" aria-label="<?php esc_attr_e('Remove coupon code', 'smartpay'); ?>" title="<?php esc_attr_e('Cancel', 'smartpay'); ?>">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-                            <path d="M18 6 6 18M6 6l12 12" />
-                        </svg>
-                    </button>
+                <div class="smartpay-coupon-row">
+                    <input type="text" name="coupon_code" id="coupon_code" class="form-control smartpay-coupon-input" placeholder="<?php echo esc_attr($placeholder); ?>" autocomplete="off" />
+                    <button type="button" name="submitcoupon" class="btn smartpay-coupon-apply"><?php echo esc_html($apply_label); ?></button>
+                    <button type="button" class="btn smartpay-coupon-form-close" aria-label="<?php esc_attr_e('Cancel', 'smartpay'); ?>" title="<?php esc_attr_e('Cancel', 'smartpay'); ?>">&times;</button>
                 </div>
-            </form>
+            </div>
         </div>
         <?php
     }
@@ -188,20 +177,37 @@ class Coupon
         $couponDiscountAmount = $coupon->discount_amount;
         $couponDiscountType = $coupon->discount_type;
 
+        // Resolve the form's amounts. Legacy forms live in the Form table; native
+        // (block) forms store amounts in post meta. Fall back to meta so coupons
+        // work on both — otherwise couponData is empty and the frontend errors.
         $form = Form::where('id', $formId)->first();
-        $formAmounts = $form->amounts;
+        $formAmounts = $form ? $form->amounts : null;
+
+        if (empty($formAmounts)) {
+            $meta = get_post_meta((int) $formId, '_smartpay_amounts', true);
+            $formAmounts = is_string($meta) ? json_decode($meta, true) : (is_array($meta) ? $meta : []);
+        }
+
+        if (empty($formAmounts) || !is_array($formAmounts)) {
+            wp_send_json_error(['message' => __('No amounts found for this form', 'smartpay')]);
+        }
+
         $couponData = [];
 
         foreach ($formAmounts as $singleAmount) {
+            $amount = (float) ($singleAmount['amount'] ?? 0);
+
             if ($couponDiscountType == 'fixed') {
-                $discountAmount = $singleAmount['amount'] - $couponDiscountAmount;
-                $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
-                $couponAmount = $couponDiscountAmount;
+                $couponAmount   = $couponDiscountAmount;
+                $discountAmount = max($amount - $couponDiscountAmount, 0);
             } elseif ($couponDiscountType == 'percent') {
-                $discountAmount = $singleAmount['amount'] - ($singleAmount['amount'] * $couponDiscountAmount) / 100;
-                $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
-                $couponAmount = ($singleAmount['amount'] * $couponDiscountAmount) / 100;
+                $couponAmount   = ($amount * $couponDiscountAmount) / 100;
+                $discountAmount = max($amount - $couponAmount, 0);
+            } else {
+                $couponAmount   = 0;
+                $discountAmount = $amount;
             }
+
             $couponData['_form_amount_' . $singleAmount['key']] = [
                 'mainAmount'        => $singleAmount['amount'],
                 'discountAmount'    =>  $discountAmount,

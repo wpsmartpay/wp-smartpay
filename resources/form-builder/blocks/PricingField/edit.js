@@ -13,6 +13,7 @@ import {
     useInnerBlocksProps,
 } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
+import { gridJustifyStyle } from './layout'
 
 const DEFAULT_OPTION = {
     name: 'smartpay-form/pricing-option',
@@ -22,6 +23,7 @@ const DEFAULT_OPTION = {
 export const edit = ({ attributes, setAttributes }) => {
     const {
         preset,
+        showPlanName,
         showDescription,
         allowCustomAmount,
         customAmountLabel,
@@ -41,13 +43,17 @@ export const edit = ({ attributes, setAttributes }) => {
 
     const blockProps = useBlockProps({
         className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}${
-            showDescription === false ? ' is-hide-desc' : ''
-        }`,
+            showPlanName === false ? ' is-hide-name' : ''
+        }${showDescription === false ? ' is-hide-desc' : ''}`,
         style: wrapperStyle,
     })
 
+    // The native Layout "justification" lands on the block root (.smartpay-pricing),
+    // but the cards live in the nested .form-plan-grid — so forward it there.
+    const gridStyle = gridJustifyStyle(layout)
+
     const innerBlocksProps = useInnerBlocksProps(
-        { className: 'form-plan-grid' },
+        { className: 'form-plan-grid', style: gridStyle },
         {
             allowedBlocks: ['smartpay-form/pricing-option'],
             template: [
@@ -117,6 +123,16 @@ export const edit = ({ attributes, setAttributes }) => {
                             'smartpay'
                         )}
                     </p>
+                    <ToggleControl
+                        label={__('Show Plan name', 'smartpay')}
+                        help={__(
+                            'Display each option’s plan name (label).',
+                            'smartpay'
+                        )}
+                        checked={showPlanName !== false}
+                        onChange={(v) => setAttributes({ showPlanName: v })}
+                        __nextHasNoMarginBottom
+                    />
                     <ToggleControl
                         label={__('Show option descriptions', 'smartpay')}
                         help={__(

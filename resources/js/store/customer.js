@@ -92,7 +92,7 @@ registerStore('smartpay/customers', {
     controls: {
         GET_CUSTOMERS(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
@@ -100,7 +100,7 @@ registerStore('smartpay/customers', {
         },
         GET_CUSTOMER(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },

@@ -33,7 +33,7 @@
         border: 0;
         font-size: 14px;
         font-weight: 500;
-        cursor: default;
+        cursor: pointer;
 
         span {
             text-decoration: underline;
@@ -45,7 +45,6 @@
         display: flex;
         align-items: stretch;
         gap: 8px;
-        margin-top: 10px;
     }
 
     .smartpay-coupon-preview__input {
@@ -77,6 +76,13 @@
         border-radius: 8px;
         background: #fff;
         color: #6b7280;
+        cursor: pointer;
+
+        &:hover {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #ef4444;
+        }
     }
 }
 

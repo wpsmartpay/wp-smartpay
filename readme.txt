@@ -1,8 +1,8 @@
-=== SmartPay ===
+=== SmartPay for WordPress - WPSmartPay ===
 Contributors: converswp
 Tags: download manager, ecommerce, digital product, payment gateways, donations,
 Requires at least: 6.0
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 8.1
 Stable Tag: 3.0.0
 License: GPL-3.0-or-later

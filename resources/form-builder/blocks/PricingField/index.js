@@ -65,6 +65,7 @@ export const PricingField = {
         // Block styles registered explicitly in blocks/index.js (Grid default).
         attributes: {
             preset: { type: 'string', default: 'grid' },
+            showPlanName: { type: 'boolean', default: true },
             showDescription: { type: 'boolean', default: true },
             gap: { type: 'string', default: '' },
             allowCustomAmount: { type: 'boolean', default: false },

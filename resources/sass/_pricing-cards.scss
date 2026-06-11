@@ -23,6 +23,13 @@
     .form-plan-card {
         position: relative;
         margin: 0; // spacing handled by grid gap
+        // Grid default: stack the name group over the price, centered tile.
+        // List / Compact reset direction + alignment below.
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.25em;
+        text-align: center;
         // Default internal padding — kept tight; the option's native
         // Dimensions → Padding writes an inline style here and overrides it.
         padding: var(--sp-card-pad, 0.85em 1em);
@@ -30,7 +37,9 @@
 
         border-radius: var(--card-radius, 0.5em);
         background-color: #fff; // default; native background overrides
-        transition: box-shadow 0.15s ease-out, background-color 0.15s ease-out;
+        transition:
+            box-shadow 0.15s ease-out,
+            background-color 0.15s ease-out;
 
         &:hover {
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.12);
@@ -43,6 +52,16 @@
         }
     }
 
+    // Left group = radio + name/desc. Grid: stacked & centered (radio is an
+    // absolute corner badge, so this just centers the label). List/Compact make
+    // it an inline row with the radio beside the text.
+    .plan-name {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 0;
+    }
+
     // Native text colour cascades to the label only when the user sets one.
     .form-plan-card.has-text-color .plan-type {
         color: inherit;
@@ -51,8 +70,8 @@
     // ── Radio → hidden by default, becomes a green check badge when selected ──
     .radio {
         position: absolute;
-        top: 0.7em;
-        right: 0.7em;
+        right: -0.2em;
+        top: -0.4em;
         margin: 0;
         width: var(--radio-size, 1.4em);
         height: var(--radio-size, 1.4em);
@@ -65,7 +84,9 @@
         cursor: pointer;
         opacity: 0;
         outline: none;
-        transition: background 0.2s ease-out, border-color 0.2s ease-out;
+        transition:
+            background 0.2s ease-out,
+            border-color 0.2s ease-out;
 
         &::after {
             content: '';
@@ -96,6 +117,13 @@
         transition: border-color 0.2s ease-out;
     }
 
+    // Wrapper around label + description. Transparent by default (Grid/Compact
+    // treat plan-type/plan-desc/plan-cost as siblings); the List preset turns it
+    // into a real flex column so the name stacks above the description.
+    .plan-info {
+        display: contents;
+    }
+
     .plan-type {
         color: var(--color-green, rgb(40, 167, 69));
         font-size: 1.1em; // relative → native fontSize scales it
@@ -111,6 +139,11 @@
         font-size: 0.82em;
         font-weight: normal;
         line-height: 1.4;
+    }
+
+    // When the parent hides plan names, drop the label across every preset.
+    &.is-hide-name .plan-type {
+        display: none;
     }
 
     .plan-cost {
@@ -229,44 +262,56 @@
     // Classic radio on the left, label + description stacked, price pinned right.
     // Selected = accent border + filled radio (the "Choose A Plan" look).
     &.is-style-list {
-        --sp-accent: #293c81;
+        --sp-accent: #2563eb; // Vibrant blue accent color
 
         .form-plan-grid {
             flex-direction: column;
+            gap: var(--sp-plan-gap, 16px);
         }
 
         .form-plan-card {
             width: 100%;
             display: flex;
+            flex-direction: row;
             align-items: center;
-            gap: 0.85em;
-            padding: var(--sp-card-pad, 1em 1.15em);
+            justify-content: space-between;
+            gap: 1.25em;
+            padding: var(--sp-card-pad, 1.25em 1.5em);
+            text-align: left;
+            border: 1.5px solid #e2e8f0; // Clean, soft border
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            box-sizing: border-box;
+
+            &:hover {
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            }
 
             &.selected {
                 border-color: var(--sp-accent);
-                background-color: #fff; // no teal fill — plan style, not donation tile
-                box-shadow: 0 0 0 1px var(--sp-accent);
+                background-color: #ffffff;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
             }
         }
 
         // Classic radio: left, visible empty circle → filled accent dot.
-        // position:relative (NOT static) so the ::after dot anchors to the radio,
-        // not the card (the card is position:relative — static here would float
-        // the dot into the middle of the row).
         .radio {
             position: relative;
             flex-shrink: 0;
-            opacity: 1;
-            width: var(--radio-size, 1.25em);
-            height: var(--radio-size, 1.25em);
-            background: #fff;
-            border: 2px solid var(--color-gray, #cbd5e1);
+            opacity: 1 !important;
+            width: var(--radio-size, 1.35em);
+            height: var(--radio-size, 1.35em);
+            background: #ffffff !important;
+            border: 1.5px solid #cbd5e1;
+            align-self: center;
+            margin-top: 0;
 
             &::after {
                 top: 50%;
                 left: 50%;
-                width: 0.6em;
-                height: 0.6em;
+                width: 0.55em;
+                height: 0.55em;
                 border: 0;
                 border-radius: 50%;
                 background: var(--sp-accent);
@@ -275,8 +320,8 @@
             }
 
             &:checked {
-                background: #fff;
-                border-color: var(--sp-accent);
+                background: #ffffff !important;
+                border-color: var(--sp-accent) !important;
 
                 &::after {
                     transform: translate(-50%, -50%) scale(1);
@@ -284,45 +329,75 @@
             }
         }
 
-        // Label + description on the left rows, price spanning the right column.
-        .plan-details {
+        // Line = [radio + name/desc] ←space-between→ [price].
+        .plan-name {
             flex: 1 1 auto;
-            min-width: 0;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            grid-template-areas:
-                'label price'
-                'desc  price';
-            column-gap: 1em;
+            flex-direction: row;
             align-items: center;
+            justify-content: flex-start;
+            gap: 1.25em;
+            min-width: 0;
+        }
+
+        // Name + description stacked beside the radio.
+        .plan-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
         }
 
         .plan-type {
-            grid-area: label;
-            color: var(--color-dark, #111827);
+            color: #0f172a;
+            font-size: 1.05em;
+            font-weight: 600;
         }
 
         .plan-desc {
             display: block;
-            grid-area: desc;
+            color: #96989b;
+            font-size: 0.85em;
+            font-weight: normal;
+        }
+
+        // Price + duration group, pinned hard right.
+        .plan-details {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-left: auto;
+            text-align: right;
         }
 
         .plan-cost {
-            grid-area: price;
-            justify-self: end;
-            align-self: center;
             padding: 0;
-            color: var(--color-dark, #111827);
+            color: #0f172a;
+            font-size: 1.25em;
+            font-weight: 600;
             text-align: right;
             white-space: nowrap;
+
+            .slash {
+                display: inline-block;
+                margin: 0px 2px;
+            }
+
+            .slash,
+            .plan-cycle {
+                color: #96989b;
+                font-weight: normal;
+                font-size: 0.85em;
+            }
         }
 
-        // When the parent hides descriptions, collapse the desc row entirely.
+        // When the parent hides descriptions, drop the description row.
         &.is-hide-desc .plan-desc {
             display: none;
         }
-        &.is-hide-desc .plan-details {
-            grid-template-areas: 'label price';
+        // Name hidden → drop the label, description stays beside the price.
+        &.is-hide-name .plan-type {
+            display: none;
         }
     }
 
@@ -333,7 +408,16 @@
             flex-wrap: wrap;
         }
         .form-plan-card {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.4em;
             padding: var(--sp-card-pad, 0.45em 0.8em);
+            text-align: left;
+        }
+        .plan-name {
+            flex-direction: row;
+            align-items: center;
+            gap: 0.4em;
         }
         .plan-details {
             flex-direction: row;

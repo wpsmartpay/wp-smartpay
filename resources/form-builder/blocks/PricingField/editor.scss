@@ -9,9 +9,10 @@
 }
 
 // In the editor each option is a selected block; show a subtle pointer.
+// NB: don't force `display` here — the preset (Grid flex-column / List flex-row
+// / Compact flex-row) owns the card layout; overriding it flattens the cards.
 .smartpay-pricing .form-plan-card {
     cursor: default;
-    display: block;
     box-sizing: border-box;
 }
 

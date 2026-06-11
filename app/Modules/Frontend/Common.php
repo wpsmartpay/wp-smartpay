@@ -28,7 +28,11 @@ class Common
 
         wp_register_script('smartpay-bootstrap', SMARTPAY_PLUGIN_ASSETS . '/js/bootstrap.js', ['jquery'], SMARTPAY_VERSION, true);
         wp_enqueue_script('smartpay-bootstrap');
-        wp_register_script('smartpay-app', SMARTPAY_PLUGIN_ASSETS . '/js/app.js', ['jquery', 'smartpay-bootstrap'], SMARTPAY_VERSION, true);
+        // app.js bundles modules that import @wordpress/i18n (externalized to
+        // window.wp.i18n). Without wp-i18n, `wp` is undefined and the bundle
+        // throws at eval — silently killing every handler bound after that point
+        // (e.g. the coupon toggle/apply). Declaring it as a dependency loads it.
+        wp_register_script('smartpay-app', SMARTPAY_PLUGIN_ASSETS . '/js/app.js', ['jquery', 'smartpay-bootstrap', 'wp-i18n'], SMARTPAY_VERSION, true);
         wp_enqueue_script('smartpay-app');
         wp_localize_script(
             'smartpay-app',

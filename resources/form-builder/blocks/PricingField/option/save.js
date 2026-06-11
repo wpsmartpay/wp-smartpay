@@ -15,25 +15,30 @@ export const save = ({ attributes }) => {
     const blockProps = useBlockProps.save({ className: 'form-plan-card plan-amount' })
 
     return (
-        <label {...blockProps}>
-            <input
-                type="radio"
-                name="_form_amount"
-                id={`_form_amount_${key}`}
-                className="radio"
-                value={amount}
-            />
+        <label {...blockProps}> 
+            <span className="plan-name" aria-hidden="true">
+                <input
+                    type="radio"
+                    name="_form_amount"
+                    id={`_form_amount_${key}`}
+                    className="radio"
+                    value={amount}
+                />
+                <span className="plan-info">
+                    <RichText.Content tagName="span" className="plan-type" value={label} />
+                    {description && (
+                        <RichText.Content tagName="span" className="plan-desc" value={description} />
+                    )}
+                </span>
+            </span>
+            
             <span className="plan-details" aria-hidden="true">
-                <RichText.Content tagName="span" className="plan-type" value={label} />
-                {description && (
-                    <RichText.Content tagName="span" className="plan-desc" value={description} />
-                )}
                 <span className="plan-cost">
                     <span className="plan-symbol" />
                     {amount}
                     {isSub && billing_period && (
                         <>
-                            <span className="slash">/</span>
+                            <span className="slash"> / </span>
                             <span className="plan-cycle">{billing_period}</span>
                         </>
                     )}

@@ -5,16 +5,34 @@ import {
 } from '@wordpress/blocks'
 import { registerCoreBlocks } from '@wordpress/block-library'
 import { NameField } from './NameField'
+import { NameFieldColumn } from './NameField/field'
+import { NameLabel } from './NameField/label'
+import { NameInput } from './NameField/input'
 import { CustomerEmail } from './CustomerEmail'
+import { EmailLabel } from './CustomerEmail/label'
+import { EmailInput } from './CustomerEmail/input'
 import { TextInputField } from './TextInputField'
+import { TextInputLabel } from './TextInputField/label'
+import { TextInputInput } from './TextInputField/input'
 // import { TextField } from './TextField'
 // import { NumericField } from './NumericField'
 // import { EmailField } from './EmailField'
 import { TextAreaField } from './TextAreaField'
+import { TextAreaLabel } from './TextAreaField/label'
+import { TextAreaInput } from './TextAreaField/input'
 import { RadioField } from './RadioField'
+import { RadioLabel } from './RadioField/label'
+import { RadioInput } from './RadioField/input'
 import { AddressField } from './AddressField'
+import { AddressFieldLine } from './AddressField/field'
+import { AddressLabel } from './AddressField/label'
+import { AddressInput } from './AddressField/input'
 import { CheckboxField } from './CheckboxField'
+import { CheckboxLabel } from './CheckboxField/label'
+import { CheckboxInput } from './CheckboxField/input'
 import { SelectField } from './SelectField'
+import { SelectLabel } from './SelectField/label'
+import { SelectInput } from './SelectField/input'
 import { PricingField } from './PricingField'
 import { PricingOption } from './PricingField/option'
 import { SubmitButton } from './SubmitButton'
@@ -79,16 +97,34 @@ const unregisterBlocks = [
 
 const smartPayBlocks = [
     NameField,
+    NameFieldColumn,
+    NameLabel,
+    NameInput,
     CustomerEmail,
+    EmailLabel,
+    EmailInput,
     TextInputField,
+    TextInputLabel,
+    TextInputInput,
     // TextField,
     // NumericField,
     // EmailField,
     TextAreaField,
+    TextAreaLabel,
+    TextAreaInput,
     RadioField,
+    RadioLabel,
+    RadioInput,
     AddressField,
+    AddressFieldLine,
+    AddressLabel,
+    AddressInput,
     CheckboxField,
+    CheckboxLabel,
+    CheckboxInput,
     SelectField,
+    SelectLabel,
+    SelectInput,
     PricingField,
     PricingOption,
     SubmitButton,

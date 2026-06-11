@@ -67,26 +67,30 @@ export const edit = ({ attributes, setAttributes }) => {
     return (
         <>
             <label {...blockProps}>
-                {/* Visual-only radio so the builder canvas matches the frontend
-                    (real radio is rendered by save.js). Hidden in Grid via CSS. */}
-                <span className="radio" aria-hidden="true" />
+                {/* Left group: visual-only radio + name/desc. The real radio is
+                    rendered by save.js; hidden in Grid/Compact via CSS. */}
+                <span className="plan-name" aria-hidden="true">
+                    <span className="radio" />
+                    <span className="plan-info">
+                        <RichText
+                            tagName="span"
+                            className="plan-type"
+                            value={label}
+                            allowedFormats={[]}
+                            onChange={(v) => setAttributes({ label: v })}
+                            placeholder={__('Plan name', 'smartpay')}
+                        />
+                        <RichText
+                            tagName="span"
+                            className="plan-desc"
+                            value={description}
+                            allowedFormats={[]}
+                            onChange={(v) => setAttributes({ description: v })}
+                            placeholder={__('Short description (optional)', 'smartpay')}
+                        />
+                    </span>
+                </span>
                 <span className="plan-details">
-                    <RichText
-                        tagName="span"
-                        className="plan-type"
-                        value={label}
-                        allowedFormats={[]}
-                        onChange={(v) => setAttributes({ label: v })}
-                        placeholder={__('Plan name', 'smartpay')}
-                    />
-                    <RichText
-                        tagName="span"
-                        className="plan-desc"
-                        value={description}
-                        allowedFormats={[]}
-                        onChange={(v) => setAttributes({ description: v })}
-                        placeholder={__('Short description (optional)', 'smartpay')}
-                    />
                     <span className="plan-cost">
                         <span className="plan-symbol" />
                         <input
@@ -98,7 +102,7 @@ export const edit = ({ attributes, setAttributes }) => {
                             onChange={(e) => setAttributes({ amount: e.target.value })}
                         />
                         {isSub && billing_period && (
-                            <span className="plan-cycle">/{billing_period}</span>
+                            <span className="plan-cycle"> / {billing_period}</span>
                         )}
                     </span>
                 </span>
