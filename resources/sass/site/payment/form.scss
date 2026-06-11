@@ -186,7 +186,7 @@
             .smartpay-gateway-card {
                 position: relative;
                 border: 1px solid #e3e8ee;
-                border-radius: 10px;
+                border-radius: 12px;
                 background: #fff;
                 overflow: hidden;
                 transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -198,7 +198,8 @@
                 // Initial (server-rendered) highlight; the :has() rule below
                 // keeps it in sync as the user switches gateways.
                 &.selected {
-                    border-color: var(--color-green, #28a745);
+                    border-color: #cbd5e1;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
                 }
             }
 
@@ -223,27 +224,7 @@
             }
 
             .smartpay-gateway-card__radiomark {
-                position: relative;
-                flex-shrink: 0;
-                width: 18px;
-                height: 18px;
-                border-radius: 50%;
-                border: 2px solid #cbd5e1;
-                background: #fff;
-                transition: border-color 0.15s ease;
-
-                &::after {
-                    content: '';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    width: 8px;
-                    height: 8px;
-                    border-radius: 50%;
-                    background: var(--color-green, #28a745);
-                    transform: translate(-50%, -50%) scale(0);
-                    transition: transform 0.15s ease;
-                }
+                display: none;
             }
 
             .smartpay-gateway-card__icon {
@@ -285,9 +266,70 @@
                 min-height: 0;
             }
 
+            // Redirect Hint Box to match mockup styles perfectly
+            .smartpay-gateway-card__hint-box {
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 0 16px 16px 16px;
+                background: #f8fafc;
+            }
+
+            .smartpay-gateway-card__hint-title-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .smartpay-gateway-card__hint-logo {
+                display: inline-flex;
+                align-items: center;
+
+                img {
+                    max-height: 20px;
+                    width: auto;
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__hint-title-text {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1e293b;
+            }
+
+            .smartpay-gateway-card__hint-divider {
+                height: 1px;
+                background: #e2e8f0;
+                margin: 12px 0;
+            }
+
+            .smartpay-gateway-card__hint-redirect-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .smartpay-gateway-card__hint-redirect-icon {
+                display: inline-flex;
+                color: #94a3b8;
+                flex-shrink: 0;
+
+                svg {
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__hint-redirect-text {
+                font-size: 13px;
+                line-height: 1.5;
+                color: #64748b;
+            }
+
             .smartpay-gateway-card__hint {
                 margin: 0;
-                padding: 0 16px 16px 46px;
+                padding: 0 16px 16px 16px;
                 font-size: 13px;
                 line-height: 1.5;
                 color: #64748b;
@@ -296,14 +338,6 @@
             // ── Expanded / selected state (driven by :checked) ──────
             .smartpay-gateway-card__radio:checked
                 ~ .smartpay-gateway-card__head {
-                .smartpay-gateway-card__radiomark {
-                    border-color: var(--color-green, #28a745);
-
-                    &::after {
-                        transform: translate(-50%, -50%) scale(1);
-                    }
-                }
-
                 .smartpay-gateway-card__chevron {
                     transform: rotate(180deg);
                 }
@@ -316,8 +350,8 @@
 
             // Card-level highlight that tracks the checked radio dynamically.
             .smartpay-gateway-card:has(.smartpay-gateway-card__radio:checked) {
-                border-color: var(--color-green, #28a745);
-                box-shadow: 0 0 0 1px var(--color-green, #28a745);
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             }
         }
     }

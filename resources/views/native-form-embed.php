@@ -193,12 +193,29 @@ $submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/su
 										// the redirect-style flow.
 										do_action( 'smartpay_native_gateway_checkout_fields', $gw_id, $gateway, $post_id );
 										?>
-										<p class="smartpay-gateway-card__hint">
-											<?php
-											/* translators: %s: payment gateway label, e.g. PayPal. */
-											printf( esc_html__( "You'll complete your payment securely with %s after submitting the form.", 'smartpay' ), esc_html( $gateway['checkout_label'] ) );
-											?>
-										</p>
+										<div class="smartpay-gateway-card__hint-box">
+											<div class="smartpay-gateway-card__hint-title-row">
+												<span class="smartpay-gateway-card__hint-logo">
+													<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>" alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+												</span>
+												<span class="smartpay-gateway-card__hint-title-text">
+													<?php printf( esc_html__( '%s selected.', 'smartpay' ), esc_html( $gateway['checkout_label'] ) ); ?>
+												</span>
+											</div>
+											<div class="smartpay-gateway-card__hint-divider"></div>
+											<div class="smartpay-gateway-card__hint-redirect-row">
+												<span class="smartpay-gateway-card__hint-redirect-icon" aria-hidden="true">
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+														<rect x="2" y="4" width="16" height="15" rx="2" stroke="#94a3b8"></rect>
+														<line x1="2" y1="9" x2="18" y2="9" stroke="#cbd5e1"></line>
+														<path d="M14 14h6m0 0v-6m0 6l-6-6" stroke="#64748b" stroke-width="2"></path>
+													</svg>
+												</span>
+												<span class="smartpay-gateway-card__hint-redirect-text">
+													<?php esc_html_e( 'After submission, you will be redirected to securely complete next steps.', 'smartpay' ); ?>
+												</span>
+											</div>
+										</div>
 									</div>
 								</div>
 								</div>

@@ -1,1 +1,184 @@
-.sp-pricing-panel{display:flex;flex-direction:column;gap:10px}.sp-pricing-panel .components-button{align-self:flex-start;margin-top:4px}.sp-amount-card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;display:flex;flex-direction:column;gap:8px;padding:12px}.sp-amount-card .card-header{align-items:center;display:flex;justify-content:space-between;margin-bottom:2px}.sp-amount-card .card-row{display:flex;gap:8px}.sp-amount-card .card-col{flex:1;min-width:0}.sp-amount-card .subscription-fields{border-top:1px solid #e5e7eb;display:flex;flex-direction:column;gap:8px;padding-top:8px}.sp-amount-card .remove-btn{font-size:11px;padding:0}.sp-options-panel--sidebar{display:flex;flex-direction:column;gap:12px}.sp-form-template-picker{border-bottom:1px solid #e5e7eb;display:flex;flex-direction:column;gap:6px;padding-bottom:12px}.sp-form-template-picker__label{color:#374151;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}.sp-form-template-picker__grid{display:grid;gap:8px;grid-template-columns:repeat(3,1fr)}.sp-form-template-picker__card{background:#fff;border:2px solid #e5e7eb;border-radius:6px;cursor:pointer;overflow:hidden;padding:0;text-align:left;transition:border-color .15s,background .15s}.sp-form-template-picker__card:hover{border-color:#c7d2fe}.sp-form-template-picker__card--active{background:#eef2ff;border-color:#6366f1}.sp-form-template-picker__thumb{background:#f8fafc;line-height:0;padding:4px}.sp-form-template-picker__name{color:#374151;display:block;font-size:10px;font-weight:600;line-height:1.2;padding:4px 6px 5px}.sp-form-template-picker__card--active .sp-form-template-picker__name{color:#4f46e5}.sp-sidebar-field{display:flex;flex-direction:column;gap:4px}.sp-sidebar-field--indent{border-left:2px solid #e5e7eb;padding-left:8px}.sp-goal-panel{display:flex;flex-direction:column;gap:12px}.sp-label{color:#6b7280;display:block;font-size:11px;font-weight:500;letter-spacing:.04em;margin-bottom:2px;text-transform:uppercase}.sp-input{width:100%}.edit-post-header-toolbar__back,.editor-header__back{display:none!important}.sp-dashboard-btn{align-items:center;display:flex;justify-content:center;padding:4px 6px;text-decoration:none}.sp-dashboard-logo{display:block;height:24px;margin:0;-o-object-fit:contain;object-fit:contain;width:24px}
+/* SmartPay Pro — Form Editor Sidebar panels */
+
+/* ── Pricing panel ────────────────────────────────────────── */
+.sp-pricing-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sp-pricing-panel .components-button {
+	align-self: flex-start;
+	margin-top: 4px;
+}
+
+/* Amount card */
+.sp-amount-card {
+	background: #f9fafb;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.sp-amount-card .card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 2px;
+}
+
+.sp-amount-card .card-row {
+	display: flex;
+	gap: 8px;
+}
+
+.sp-amount-card .card-col {
+	flex: 1;
+	min-width: 0;
+}
+
+.sp-amount-card .subscription-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding-top: 8px;
+	border-top: 1px solid #e5e7eb;
+}
+
+.sp-amount-card .remove-btn {
+	font-size: 11px;
+	padding: 0;
+}
+
+/* ── Options panel (sidebar variant) ─────────────────────── */
+.sp-options-panel--sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* ── Form template picker ─────────────────────────────────── */
+.sp-form-template-picker {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #e5e7eb;
+}
+
+.sp-form-template-picker__label {
+	font-size: 11px;
+	font-weight: 600;
+	color: #374151;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.sp-form-template-picker__grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+}
+
+.sp-form-template-picker__card {
+	border: 2px solid #e5e7eb;
+	border-radius: 6px;
+	background: #fff;
+	cursor: pointer;
+	overflow: hidden;
+	transition: border-color 0.15s, background 0.15s;
+	text-align: left;
+	padding: 0;
+}
+
+.sp-form-template-picker__card:hover {
+	border-color: #c7d2fe;
+}
+
+.sp-form-template-picker__card--active {
+	border-color: #6366f1;
+	background: #eef2ff;
+}
+
+.sp-form-template-picker__thumb {
+	background: #f8fafc;
+	padding: 4px;
+	line-height: 0;
+}
+
+.sp-form-template-picker__name {
+	display: block;
+	font-size: 10px;
+	font-weight: 600;
+	color: #374151;
+	padding: 4px 6px 5px;
+	line-height: 1.2;
+}
+
+.sp-form-template-picker__card--active .sp-form-template-picker__name {
+	color: #4f46e5;
+}
+
+.sp-sidebar-field {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.sp-sidebar-field--indent {
+	padding-left: 8px;
+	border-left: 2px solid #e5e7eb;
+}
+
+/* ── Goal panel ────────────────────────────────────────────── */
+.sp-goal-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.sp-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 500;
+	color: #6b7280;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	margin-bottom: 2px;
+}
+
+.sp-input {
+	width: 100%;
+}
+
+/* ── SmartPay dashboard button (replaces WP logo) ─────────── */
+
+/*
+ * WP 6.6+ renders a separate `.editor-header__back` arrow button next to our
+ * custom logo slot. On hover it overlays and replaces our icon with a back
+ * arrow. Hide it — our `<a>` logo IS the back link.
+ */
+.editor-header__back,
+.edit-post-header-toolbar__back {
+	display: none !important;
+}
+
+.sp-dashboard-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px 6px;
+	text-decoration: none;
+}
+
+.sp-dashboard-logo {
+	display: block;
+	-o-object-fit: contain;
+	   object-fit: contain;
+	width: 24px;
+	height: 24px;
+	margin: 0;
+}
+
