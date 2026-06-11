@@ -14,6 +14,7 @@ $post    = get_queried_object();
 $post_id = $post instanceof WP_Post ? $post->ID : 0;
 
 $body          = $post instanceof WP_Post ? $post->post_content : '';
+$form_title    = $post instanceof WP_Post ? $post->post_title : '';
 $amounts_json  = $post_id ? get_post_meta( $post_id, '_smartpay_amounts', true ) : '';
 $settings_json = $post_id ? get_post_meta( $post_id, '_smartpay_settings', true ) : '';
 
@@ -21,6 +22,12 @@ if ( $post_id && is_preview() ) {
 	$autosave = wp_get_post_autosave( $post_id, get_current_user_id() );
 	if ( $autosave instanceof WP_Post ) {
 		$body = $autosave->post_content;
+
+		// Title lives on the autosave too — without this, a just-typed (not yet
+		// saved) form title is missing from the preview even with "Show Form Title".
+		if ( '' !== $autosave->post_title ) {
+			$form_title = $autosave->post_title;
+		}
 
 		$as_amounts = get_post_meta( $autosave->ID, '_smartpay_amounts', true );
 		if ( $as_amounts ) {
@@ -60,8 +67,9 @@ if ( $settings_json ) {
 	}
 }
 
-$show_title = ! empty( $settings['show_title'] );
-$form_title = $post instanceof WP_Post ? get_the_title( $post ) : '';
+// Default-on: the toggle only hides the title when explicitly set to false,
+// matching the editor sidebar ( settings.show_title !== false ).
+$show_title = ! isset( $settings['show_title'] ) || false !== $settings['show_title'];
 $is_preview = is_preview();
 ?>
 <!DOCTYPE html>

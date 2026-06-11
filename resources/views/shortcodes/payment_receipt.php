@@ -3,8 +3,10 @@ defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Frontend\Utilities\Downloader;
 
-$additional_charge = $payment->data['additional_info']['additional_charge'] ?? 0;
-$total_count = $payment->data['additional_info']['total_billing_cycle'] ?? 0;
+$payment = $smartpay_view_data['payment'];
+
+$smartpay_additional_charge = $payment->data['additional_info']['additional_charge'] ?? 0;
+$smartpay_total_count = $payment->data['additional_info']['total_billing_cycle'] ?? 0;
 
 if ($payment) : ?>
 
@@ -52,18 +54,18 @@ if ($payment) : ?>
 				<td style="padding:10px 0;font-weight:600;font-size:16px;"><?php echo esc_html( smartpay_amount_format( $payment->amount ) ); ?></td>
 			</tr>
 
-			<?php if ( isset( $payment->data['additional_info'] ) && $payment->data['additional_info'] && ( $additional_charge > 0 || $total_count > 0 ) ) : ?>
+			<?php if ( isset( $payment->data['additional_info'] ) && $payment->data['additional_info'] && ( $smartpay_additional_charge > 0 || $smartpay_total_count > 0 ) ) : ?>
 				<tr style="border-bottom:1px solid #f3f4f6;">
 					<td style="padding:10px 0;color:#6b7280;"><?php esc_html_e( 'Subscription', 'smartpay' ); ?></td>
 					<td style="padding:10px 0;font-weight:500;">
 						<?php
-						if ( $additional_charge > 0 ) {
+						if ( $smartpay_additional_charge > 0 ) {
 							/* translators: %s: formatted charge amount */
-							echo esc_html( sprintf( __( 'Additional charge %s', 'smartpay' ), smartpay_amount_format( $additional_charge ) ) . ', ' );
+							echo esc_html( sprintf( __( 'Additional charge %s', 'smartpay' ), smartpay_amount_format( $smartpay_additional_charge ) ) . ', ' );
 						}
-						if ( $total_count > 0 ) {
+						if ( $smartpay_total_count > 0 ) {
 							/* translators: %d: number of billing cycles */
-							echo esc_html( sprintf( __( 'Billed %d times', 'smartpay' ), $total_count ) );
+							echo esc_html( sprintf( __( 'Billed %d times', 'smartpay' ), $smartpay_total_count ) );
 						}
 						?>
 					</td>
@@ -74,8 +76,8 @@ if ($payment) : ?>
 				<td style="padding:10px 0;color:#6b7280;"><?php esc_html_e( 'Gateway', 'smartpay' ); ?></td>
 				<td style="padding:10px 0;font-weight:500;">
 					<?php
-					$gateway_label = smartpay_payment_gateways()[ $payment->gateway ]['checkout_label'] ?? ucfirst( $payment->gateway );
-					echo esc_html( 'Free' === $gateway_label ? __( 'Free', 'smartpay' ) : $gateway_label );
+					$smartpay_gateway_label = smartpay_payment_gateways()[ $payment->gateway ]['checkout_label'] ?? ucfirst( $payment->gateway );
+					echo esc_html( 'Free' === $smartpay_gateway_label ? __( 'Free', 'smartpay' ) : $smartpay_gateway_label );
 					?>
 				</td>
 			</tr>
@@ -95,24 +97,24 @@ if ($payment) : ?>
 		<?php if ( strtolower( $payment->status ) === \SmartPay\Models\Payment::COMPLETED ) : ?>
 
 			<?php if ( $payment->type === 'Product Purchase' ) : ?>
-				<?php $product = \SmartPay\Models\Product::find( intval( $payment['data']['product_id'] ) ) ?? null; ?>
-				<?php $external_link = $product['settings']['externalLink'] ?? null; ?>
-				<?php if ( $product && $external_link && $external_link['allowExternalLink'] ) : ?>
+				<?php $smartpay_product = \SmartPay\Models\Product::find( intval( $payment['data']['product_id'] ) ) ?? null; ?>
+				<?php $smartpay_external_link = $smartpay_product['settings']['externalLink'] ?? null; ?>
+				<?php if ( $smartpay_product && $smartpay_external_link && $smartpay_external_link['allowExternalLink'] ) : ?>
 					<div style="margin-top:20px;">
-						<a href="<?php echo esc_url( $product['settings']['externalLink']['link'] ); ?>" target="_blank"
+						<a href="<?php echo esc_url( $smartpay_product['settings']['externalLink']['link'] ); ?>" target="_blank"
 							style="display:inline-block;background:#4f46e5;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:600;">
-							<?php echo esc_html( $product['settings']['externalLink']['label'] ); ?>
+							<?php echo esc_html( $smartpay_product['settings']['externalLink']['label'] ); ?>
 						</a>
 					</div>
 				<?php endif; ?>
 			<?php else : ?>
-				<?php $form = \SmartPay\Models\Form::find( intval( $payment['data']['form_id'] ) ) ?? null; ?>
-				<?php $external_link = $form['settings']['externalLink'] ?? null; ?>
-				<?php if ( $form && $external_link && $external_link['allowExternalLink'] ) : ?>
+				<?php $smartpay_form = \SmartPay\Models\Form::find( intval( $payment['data']['form_id'] ) ) ?? null; ?>
+				<?php $smartpay_external_link = $smartpay_form['settings']['externalLink'] ?? null; ?>
+				<?php if ( $smartpay_form && $smartpay_external_link && $smartpay_external_link['allowExternalLink'] ) : ?>
 					<div style="margin-top:20px;">
-						<a href="<?php echo esc_url( $form['settings']['externalLink']['link'] ); ?>" target="_blank"
+						<a href="<?php echo esc_url( $smartpay_form['settings']['externalLink']['link'] ); ?>" target="_blank"
 							style="display:inline-block;background:#4f46e5;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:600;">
-							<?php echo esc_html( $form['settings']['externalLink']['label'] ); ?>
+							<?php echo esc_html( $smartpay_form['settings']['externalLink']['label'] ); ?>
 						</a>
 					</div>
 				<?php endif; ?>
@@ -120,9 +122,9 @@ if ($payment) : ?>
 
 		<?php endif; ?>
 
-		<?php $productId = $payment->data['product_id'] ?? 0; ?>
-		<?php $product = \SmartPay\Models\Product::with( ['parent'] )->find( $productId ); ?>
-		<?php if ( strtolower( $payment->status ) === \SmartPay\Models\Payment::COMPLETED && $product && count( $product->files ) > 0 ) : ?>
+		<?php $smartpay_product_id = $payment->data['product_id'] ?? 0; ?>
+		<?php $smartpay_product = \SmartPay\Models\Product::with( ['parent'] )->find( $smartpay_product_id ); ?>
+		<?php if ( strtolower( $payment->status ) === \SmartPay\Models\Payment::COMPLETED && $smartpay_product && count( $smartpay_product->files ) > 0 ) : ?>
 			<div style="margin-top:24px;">
 				<h3 style="font-size:14px;font-weight:700;margin:0 0 12px;color:#111827;"><?php esc_html_e( 'Downloads', 'smartpay' ); ?></h3>
 				<table style="width:100%;border-collapse:collapse;font-size:14px;">
@@ -133,11 +135,11 @@ if ($payment) : ?>
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach ( $product->files as $file ) : ?>
+						<?php foreach ( $smartpay_product->files as $smartpay_file ) : ?>
 							<tr style="border-bottom:1px solid #f3f4f6;">
-								<td style="padding:10px 0;"><?php echo esc_html( $file['name'] ); ?></td>
+								<td style="padding:10px 0;"><?php echo esc_html( $smartpay_file['name'] ); ?></td>
 								<td style="padding:10px 0;text-align:right;">
-									<a href="<?php echo esc_url( smartpay()->make( Downloader::class )->getDownloadUrl( $file['id'], $payment->id, $product->id ) ); ?>"
+									<a href="<?php echo esc_url( smartpay()->make( Downloader::class )->getDownloadUrl( $smartpay_file['id'], $payment->id, $smartpay_product->id ) ); ?>"
 										style="color:#4f46e5;text-decoration:none;font-weight:600;">
 										<?php esc_html_e( 'Download', 'smartpay' ); ?>
 									</a>
@@ -158,10 +160,10 @@ if ($payment) : ?>
 				← <?php esc_html_e( 'Return to Home', 'smartpay' ); ?>
 			</a>
 			<?php
-			$dashboard_page_id = smartpay_get_option( 'customer_dashboard_page' );
-			if ( $dashboard_page_id ) :
+			$smartpay_dashboard_page_id = smartpay_get_option( 'customer_dashboard_page' );
+			if ( $smartpay_dashboard_page_id ) :
 			?>
-				<a href="<?php echo esc_url( get_permalink( $dashboard_page_id ) ); ?>"
+				<a href="<?php echo esc_url( get_permalink( $smartpay_dashboard_page_id ) ); ?>"
 					style="display:inline-block;background:#4f46e5;color:#fff;padding:9px 18px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:600;">
 					<?php esc_html_e( 'View Dashboard', 'smartpay' ); ?>
 				</a>

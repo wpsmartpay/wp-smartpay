@@ -109,10 +109,9 @@ class View
         $this->callComposerCallbacks();
 
         $renderOutput = function ($app) {
-            ob_start() && extract(
-                $this->gatherData(),
-                EXTR_SKIP
-            );
+            $smartpay_view_data = $this->gatherData();
+
+            ob_start();
 
             include $this->path;
 
