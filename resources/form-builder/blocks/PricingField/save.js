@@ -14,6 +14,9 @@ import { gridJustifyStyle } from './layout'
 export const save = ({ attributes }) => {
     const {
         preset,
+        labelAlign,
+        selectedBorderColor,
+        tickerColor,
         showPlanName,
         showDescription,
         allowCustomAmount,
@@ -28,16 +31,20 @@ export const save = ({ attributes }) => {
         '--sp-currency': `'${currencySymbol}'`,
     }
     if (gap) wrapperStyle['--sp-plan-gap'] = gap
+    if (selectedBorderColor) wrapperStyle['--sp-selected-border'] = selectedBorderColor
+    if (tickerColor) wrapperStyle['--sp-ticker'] = tickerColor
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
-    // Only add `is-hide-desc` when explicitly turned off — keeping the default-on
-    // markup byte-identical to previously-saved blocks (no validation breakage).
+    // Only add `is-hide-desc` / `is-label-*` when explicitly set — keeping the
+    // default markup byte-identical to previously-saved blocks (no validation
+    // breakage).
     const presetClass = `is-style-${preset || 'grid'}`
+    const alignClass = labelAlign ? ` is-label-${labelAlign}` : ''
     const nameClass = showPlanName === false ? ' is-hide-name' : ''
     const descClass = showDescription === false ? ' is-hide-desc' : ''
     const blockProps = useBlockProps.save({
-        className: `form--amount-section smartpay-pricing ${presetClass}${nameClass}${descClass}`,
+        className: `form--amount-section smartpay-pricing ${presetClass}${alignClass}${nameClass}${descClass}`,
         style: wrapperStyle,
     })
     // Native Layout justification lands on .smartpay-pricing; forward it to the

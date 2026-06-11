@@ -29,5 +29,19 @@
 // Keep selection legible: the active option gets a clean ring on the card.
 .smartpay-pricing .form-plan-grid > .is-selected .form-plan-card,
 .smartpay-pricing .form-plan-grid > .has-child-selected .form-plan-card {
-    box-shadow: 0 0 0 2px var(--color-green, rgb(40, 167, 69));
+    box-shadow: 0 0 0 2px var(--sp-accent, #2563eb);
+}
+
+// Editor-only: the description is display:none in Grid/Compact (frontend shows
+// it in List only), which made the inline RichText invisible → "edits don't
+// stick". Reveal it while its option block is selected so it can be edited.
+.smartpay-pricing .form-plan-grid > .is-selected .plan-desc,
+.smartpay-pricing .form-plan-grid > .has-child-selected .plan-desc {
+    display: block;
+}
+
+// Size the inline amount editor to its content so the editor card reads like
+// the frontend's plain-text amount (with the fixed width as fallback).
+.smartpay-pricing .plan-amount-input {
+    field-sizing: content;
 }

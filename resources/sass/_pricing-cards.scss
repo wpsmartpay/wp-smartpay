@@ -8,6 +8,13 @@
 // it self-contained inside the editor iframe.
 
 .smartpay-pricing {
+    // Unified selected-state accent (all presets). The block's "Colors" panel
+    // writes --sp-selected-border / --sp-ticker inline on the wrapper; when
+    // unset, both fall back to the shared blue accent.
+    --sp-accent: #2563eb;
+    --sp-sel-border: var(--sp-selected-border, var(--sp-accent));
+    --sp-tick: var(--sp-ticker, var(--sp-accent));
+
     // ── Grid layout (default) ───────────────────────────────────────────────
     .form-plan-grid {
         display: flex;
@@ -23,13 +30,14 @@
     .form-plan-card {
         position: relative;
         margin: 0; // spacing handled by grid gap
-        // Grid default: stack the name group over the price, centered tile.
-        // List / Compact reset direction + alignment below.
+        // Grid default: stack the name group over the price, left-aligned tile
+        // (the is-label-* classes override). List / Compact reset direction +
+        // alignment below.
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         gap: 0.25em;
-        text-align: center;
+        text-align: left;
         // Default internal padding — kept tight; the option's native
         // Dimensions → Padding writes an inline style here and overrides it.
         padding: var(--sp-card-pad, 0.85em 1em);
@@ -45,20 +53,20 @@
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.12);
         }
 
-        // Selected = teal fill + green border + green check badge (see .radio).
+        // Selected = light fill + accent border + accent check badge (see .radio).
         &.selected {
-            border-color: var(--color-green, rgb(40, 167, 69));
+            border-color: var(--sp-sel-border);
             background-color: var(--color-teal, #f0f8ff);
         }
     }
 
-    // Left group = radio + name/desc. Grid: stacked & centered (radio is an
-    // absolute corner badge, so this just centers the label). List/Compact make
-    // it an inline row with the radio beside the text.
+    // Left group = radio + name/desc. Grid: stacked, left-aligned (radio is an
+    // absolute corner badge). List/Compact make it an inline row with the radio
+    // beside the text.
     .plan-name {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         min-width: 0;
     }
 
@@ -103,8 +111,8 @@
 
         &:checked {
             opacity: 1;
-            background: var(--color-green, rgb(40, 167, 69));
-            border-color: var(--color-green, rgb(40, 167, 69));
+            background: var(--sp-tick);
+            border-color: var(--sp-tick);
         }
     }
 
@@ -125,7 +133,7 @@
     }
 
     .plan-type {
-        color: var(--color-green, rgb(40, 167, 69));
+        color: #0f172a; // neutral dark — matches the List preset
         font-size: 1.1em; // relative → native fontSize scales it
         font-weight: bold;
         line-height: 1.15;
@@ -160,13 +168,16 @@
         margin-right: 1px;
     }
 
+    // Billing-period suffix ("/ month") — muted in every preset.
     .plan-cycle {
+        color: var(--color-muted, #6b7280);
         font-size: 0.7em;
         font-weight: normal;
         margin-left: 2px;
     }
 
     .slash {
+        color: var(--color-muted, #6b7280);
         font-weight: normal;
     }
 
@@ -250,7 +261,7 @@
 
             &:focus {
                 outline: none;
-                border-color: var(--color-green, rgb(40, 167, 69));
+                border-color: var(--sp-accent);
                 box-shadow: none;
             }
         }
@@ -262,8 +273,6 @@
     // Classic radio on the left, label + description stacked, price pinned right.
     // Selected = accent border + filled radio (the "Choose A Plan" look).
     &.is-style-list {
-        --sp-accent: #2563eb; // Vibrant blue accent color
-
         .form-plan-grid {
             flex-direction: column;
             gap: var(--sp-plan-gap, 16px);
@@ -289,7 +298,7 @@
             }
 
             &.selected {
-                border-color: var(--sp-accent);
+                border-color: var(--sp-sel-border);
                 background-color: #ffffff;
                 box-shadow: 0 4px 12px rgba(37, 99, 235, 0.06);
             }
@@ -314,14 +323,14 @@
                 height: 0.55em;
                 border: 0;
                 border-radius: 50%;
-                background: var(--sp-accent);
+                background: var(--sp-tick);
                 transform: translate(-50%, -50%) scale(0);
                 transition: transform 0.15s ease-out;
             }
 
             &:checked {
                 background: #ffffff !important;
-                border-color: var(--sp-accent) !important;
+                border-color: var(--sp-tick) !important;
 
                 &::after {
                     transform: translate(-50%, -50%) scale(1);
@@ -437,5 +446,62 @@
             position: static;
             display: none;
         }
+    }
+
+    // ── Label alignment overrides ("Label alignment" block control) ─────────
+    // Grid/Compact: realign the card's stacked content.
+    &.is-label-left {
+        .form-plan-card {
+            align-items: flex-start;
+            text-align: left;
+        }
+        .plan-name {
+            align-items: flex-start;
+        }
+    }
+    &.is-label-center {
+        .form-plan-card {
+            align-items: center;
+            text-align: center;
+        }
+        .plan-name {
+            align-items: center;
+        }
+    }
+    &.is-label-right {
+        .form-plan-card {
+            align-items: flex-end;
+            text-align: right;
+        }
+        .plan-name {
+            align-items: flex-end;
+        }
+    }
+
+    // List rows: never disturb the [radio | text | price] row — realign only
+    // the text column. Higher specificity (3 classes) beats the generic rules.
+    &.is-style-list.is-label-left,
+    &.is-style-list.is-label-center,
+    &.is-style-list.is-label-right {
+        .form-plan-card {
+            flex-direction: row;
+            align-items: center;
+        }
+        .plan-name {
+            flex-direction: row;
+            align-items: center;
+        }
+    }
+    &.is-style-list.is-label-left .plan-info {
+        align-items: flex-start;
+        text-align: left;
+    }
+    &.is-style-list.is-label-center .plan-info {
+        align-items: center;
+        text-align: center;
+    }
+    &.is-style-list.is-label-right .plan-info {
+        align-items: flex-end;
+        text-align: right;
     }
 }

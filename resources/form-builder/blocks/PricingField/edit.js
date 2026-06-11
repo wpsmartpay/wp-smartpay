@@ -23,6 +23,9 @@ const DEFAULT_OPTION = {
 export const edit = ({ attributes, setAttributes }) => {
     const {
         preset,
+        labelAlign,
+        selectedBorderColor,
+        tickerColor,
         showPlanName,
         showDescription,
         allowCustomAmount,
@@ -38,13 +41,17 @@ export const edit = ({ attributes, setAttributes }) => {
         '--sp-currency': `'${currencySymbol}'`,
     }
     if (gap) wrapperStyle['--sp-plan-gap'] = gap
+    if (selectedBorderColor) wrapperStyle['--sp-selected-border'] = selectedBorderColor
+    if (tickerColor) wrapperStyle['--sp-ticker'] = tickerColor
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
 
     const blockProps = useBlockProps({
         className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}${
-            showPlanName === false ? ' is-hide-name' : ''
-        }${showDescription === false ? ' is-hide-desc' : ''}`,
+            labelAlign ? ` is-label-${labelAlign}` : ''
+        }${showPlanName === false ? ' is-hide-name' : ''}${
+            showDescription === false ? ' is-hide-desc' : ''
+        }`,
         style: wrapperStyle,
     })
 
@@ -123,6 +130,34 @@ export const edit = ({ attributes, setAttributes }) => {
                             'smartpay'
                         )}
                     </p>
+                    <ToggleGroupControl
+                        label={__('Label alignment', 'smartpay')}
+                        value={labelAlign || ''}
+                        isBlock
+                        onChange={(v) => setAttributes({ labelAlign: v || '' })}
+                        help={__(
+                            'Aligns each option’s label inside its card. Default follows the preset.',
+                            'smartpay'
+                        )}
+                        __nextHasNoMarginBottom
+                    >
+                        <ToggleGroupControlOption
+                            value=""
+                            label={__('Default', 'smartpay')}
+                        />
+                        <ToggleGroupControlOption
+                            value="left"
+                            label={__('Left', 'smartpay')}
+                        />
+                        <ToggleGroupControlOption
+                            value="center"
+                            label={__('Center', 'smartpay')}
+                        />
+                        <ToggleGroupControlOption
+                            value="right"
+                            label={__('Right', 'smartpay')}
+                        />
+                    </ToggleGroupControl>
                     <ToggleControl
                         label={__('Show Plan name', 'smartpay')}
                         help={__(
@@ -180,6 +215,25 @@ export const edit = ({ attributes, setAttributes }) => {
                         />
                     )}
                 </PanelBody>
+
+                <PanelColorSettings
+                    title={__('Colors', 'smartpay')}
+                    initialOpen={false}
+                    colorSettings={[
+                        {
+                            value: selectedBorderColor,
+                            onChange: (v) =>
+                                setAttributes({ selectedBorderColor: v || '' }),
+                            label: __('Selected border', 'smartpay'),
+                        },
+                        {
+                            value: tickerColor,
+                            onChange: (v) =>
+                                setAttributes({ tickerColor: v || '' }),
+                            label: __('Ticker', 'smartpay'),
+                        },
+                    ]}
+                />
 
                 {allowCustomAmount && (
                     <PanelColorSettings

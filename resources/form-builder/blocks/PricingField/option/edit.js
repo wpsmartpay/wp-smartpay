@@ -66,11 +66,14 @@ export const edit = ({ attributes, setAttributes }) => {
 
     return (
         <>
-            <label {...blockProps}>
+            {/* `div`, not `label`: a real <label> forwards every click to the
+                inner amount <input>, stealing focus from the RichText fields
+                and making them feel uneditable. save.js keeps the <label>. */}
+            <div {...blockProps}>
                 {/* Left group: visual-only radio + name/desc. The real radio is
                     rendered by save.js; hidden in Grid/Compact via CSS. */}
-                <span className="plan-name" aria-hidden="true">
-                    <span className="radio" />
+                <span className="plan-name">
+                    <span className="radio" aria-hidden="true" />
                     <span className="plan-info">
                         <RichText
                             tagName="span"
@@ -102,11 +105,14 @@ export const edit = ({ attributes, setAttributes }) => {
                             onChange={(e) => setAttributes({ amount: e.target.value })}
                         />
                         {isSub && billing_period && (
-                            <span className="plan-cycle"> / {billing_period}</span>
+                            <>
+                                <span className="slash"> / </span>
+                                <span className="plan-cycle">{billing_period}</span>
+                            </>
                         )}
                     </span>
                 </span>
-            </label>
+            </div>
 
             <InspectorControls>
                 <PanelBody title={__('Option', 'smartpay')} initialOpen={true}>
