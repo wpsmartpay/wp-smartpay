@@ -99,6 +99,8 @@ ob_start();
 <div class="smartpay settings-<?php echo esc_attr( $smartpay_active_tab ); ?>">
 	<div class="wrap" style="display:none"><h1 class="wp-heading-inline"></h1></div>
 
+	<?php settings_errors( 'smartpay-notices' ); ?>
+
 	<div class="smartpay-page-header">
 		<div class="smartpay-page-header__inner">
 			<div class="smartpay-page-header__logo">
