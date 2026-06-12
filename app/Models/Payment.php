@@ -168,7 +168,7 @@ class Payment extends Model
 
     public function getDataAttribute($data)
     {
-        return json_decode($data, true);
+        return json_decode((string) $data, true);
     }
 
     public function setExtraAttribute($extra)
@@ -188,7 +188,7 @@ class Payment extends Model
 
     public function getExtraAttribute($extra)
     {
-        return json_decode($extra, true);
+        return json_decode((string) $extra, true);
     }
 
     //FIXME

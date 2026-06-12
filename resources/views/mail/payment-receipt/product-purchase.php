@@ -186,7 +186,7 @@ $smartpay_product       = Product::with('parent')->find($smartpay_product_id);
                                             </tr>
                                         </table>
 
-                                        <?php if (count($smartpay_product->files)) : ?>
+                                        <?php if (count((array) $smartpay_product->files)) : ?>
                                             <div class="sm-leading-40" style="line-height: 24px">&zwnj;</div>
                                             <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                 <tr>

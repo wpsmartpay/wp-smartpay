@@ -5,7 +5,7 @@
         <div class="card product">
             <?php
             $smartpay_product = $smartpay_view_data['product'] ?? null;
-            if (count($smartpay_product->covers)) : ?>
+            if (count((array) $smartpay_product->covers)) : ?>
                 <div class="bg-light product--image border-bottom">
                     <img src="<?php echo esc_url($smartpay_product->covers[0]['url']); ?>" class="card-img-top">
                 </div>

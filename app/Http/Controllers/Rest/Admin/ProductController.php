@@ -119,7 +119,8 @@ class ProductController extends RestController
             $result = $product->save();
 
             if ($result && $product->id) {
-                array_walk($data['variations'] ?? [], function ($variationData) use ($product) {
+                $variations = (array) ($data['variations'] ?? []);
+                array_walk($variations, function ($variationData) use ($product) {
                     $this->createVariation($variationData, $product->id);
                 });
 
@@ -188,7 +189,8 @@ class ProductController extends RestController
             $product->status      = Product::PUBLISH;
             $product->save();
 
-            array_walk($data['variations'] ?? [], function ($variationData) use ($product) {
+            $variations = (array) ($data['variations'] ?? []);
+            array_walk($variations, function ($variationData) use ($product) {
                 $variationData = (array) $variationData;
                 if (empty($variationData['id'])) {
                     return $this->createVariation($variationData, $product->id);

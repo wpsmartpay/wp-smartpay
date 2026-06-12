@@ -124,7 +124,7 @@ if ($payment) : ?>
 
 		<?php $smartpay_product_id = $payment->data['product_id'] ?? 0; ?>
 		<?php $smartpay_product = \SmartPay\Models\Product::with( ['parent'] )->find( $smartpay_product_id ); ?>
-		<?php if ( strtolower( $payment->status ) === \SmartPay\Models\Payment::COMPLETED && $smartpay_product && count( $smartpay_product->files ) > 0 ) : ?>
+		<?php if ( strtolower( $payment->status ) === \SmartPay\Models\Payment::COMPLETED && $smartpay_product && count( (array) $smartpay_product->files ) > 0 ) : ?>
 			<div style="margin-top:24px;">
 				<h3 style="font-size:14px;font-weight:700;margin:0 0 12px;color:#111827;"><?php esc_html_e( 'Downloads', 'smartpay' ); ?></h3>
 				<table style="width:100%;border-collapse:collapse;font-size:14px;">

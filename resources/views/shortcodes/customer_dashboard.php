@@ -115,7 +115,7 @@ $smartpay_active_payments = $smartpay_customer->payments()->where('status', 'com
                                                     <div class="p-3 product--header">
                                                         <div class="d-flex align-items-center" data-toggle="collapse" data-target="#collapse-payment-<?php echo esc_attr($smartpay_index); ?>">
                                                             <?php $smartpay_covers = $smartpay_product->isParent() ? $smartpay_product->covers : $smartpay_product->parent->covers; ?>
-                                                            <?php if (count($smartpay_covers)) : ?>
+                                                            <?php if (count((array) $smartpay_covers)) : ?>
                                                                 <div class="product--image mr-3">
                                                                     <img src="<?php echo esc_url($smartpay_covers[0]['icon']); ?>" class="border" alt="">
                                                                 </div>
