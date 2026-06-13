@@ -72,6 +72,43 @@
             color: #e02b2b;
             font-weight: 600;
         }
+
+        // Radio / checkbox option rows. The blocks output Bootstrap's
+        // `.custom-control` markup, but app.css only ships the Bootstrap grid —
+        // not the custom-control component — so without this each option's input
+        // and label stack and the `.ml-4` utility pushes the label away. Lay each
+        // option out as a single inline row.
+        .custom-control {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 8px;
+            padding: 0;
+
+            .custom-control-input {
+                position: static;
+                width: auto;
+                min-height: 0;
+                margin: 0;
+                flex: 0 0 auto;
+            }
+
+            .custom-control-label {
+                margin: 0;
+                font-weight: 400;
+                line-height: 1.4;
+                cursor: pointer;
+
+                // A Bootstrap-style `.ml-4` utility (margin-left:1.5rem) leaks in
+                // from another stylesheet on the page; the `.custom-control` gap
+                // already spaces the label, so force it off. !important is needed
+                // to beat the leaking utility regardless of load order.
+                &.ml-4 {
+                    margin-left: 0 !important;
+                }
+            }
+        }
     }
 
     .form {

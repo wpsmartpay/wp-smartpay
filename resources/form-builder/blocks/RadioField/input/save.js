@@ -15,7 +15,7 @@ export const save = ({ attributes }) => {
                         value={option.value}
                         checked={option.value === defaultValue ? true : undefined}
                     />
-                    <label className="custom-control-label ml-4" for={`${fieldName}-${index}`}>
+                    <label className="custom-control-label ml-4" htmlFor={`${fieldName}-${index}`}>
                         {option.label}
                     </label>
                 </div>
