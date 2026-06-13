@@ -8,17 +8,44 @@ $payment = $smartpay_view_data['payment'];
 $smartpay_additional_charge = $payment->data['additional_info']['additional_charge'] ?? 0;
 $smartpay_total_count = $payment->data['additional_info']['total_billing_cycle'] ?? 0;
 
-if ($payment) : ?>
+if ($payment) :
+
+	// Status-aware banner + badge. The receipt must reflect the payment's real
+	// status — never claim "Payment Successful" for a pending/failed payment.
+	$smartpay_status = strtolower( (string) $payment->status );
+
+	$smartpay_status_styles = array(
+		\SmartPay\Models\Payment::COMPLETED  => array( 'icon' => '✓', 'bg' => '#f0fdf4', 'border' => '#bbf7d0', 'title_color' => '#166534', 'text_color' => '#15803d', 'badge_bg' => '#dcfce7', 'badge_color' => '#166534', 'title' => __( 'Payment Successful', 'smartpay' ), 'note' => __( 'Thank you! Your payment has been received.', 'smartpay' ) ),
+		\SmartPay\Models\Payment::PROCESSING => array( 'icon' => '⟳', 'bg' => '#eff6ff', 'border' => '#bfdbfe', 'title_color' => '#1e40af', 'text_color' => '#1d4ed8', 'badge_bg' => '#dbeafe', 'badge_color' => '#1e40af', 'title' => __( 'Payment Processing', 'smartpay' ), 'note' => __( 'Your payment is being processed. This page will update once it completes.', 'smartpay' ) ),
+		\SmartPay\Models\Payment::PENDING    => array( 'icon' => '⏳', 'bg' => '#fffbeb', 'border' => '#fde68a', 'title_color' => '#92400e', 'text_color' => '#b45309', 'badge_bg' => '#fef3c7', 'badge_color' => '#92400e', 'title' => __( 'Payment Pending', 'smartpay' ), 'note' => __( 'Your payment is awaiting confirmation. We will email you once it is confirmed.', 'smartpay' ) ),
+		\SmartPay\Models\Payment::FAILED     => array( 'icon' => '✕', 'bg' => '#fef2f2', 'border' => '#fecaca', 'title_color' => '#991b1b', 'text_color' => '#b91c1c', 'badge_bg' => '#fee2e2', 'badge_color' => '#991b1b', 'title' => __( 'Payment Failed', 'smartpay' ), 'note' => __( 'This payment did not go through. Please try again or contact support.', 'smartpay' ) ),
+		\SmartPay\Models\Payment::REFUNDED   => array( 'icon' => '↩', 'bg' => '#f9fafb', 'border' => '#e5e7eb', 'title_color' => '#374151', 'text_color' => '#6b7280', 'badge_bg' => '#f3f4f6', 'badge_color' => '#374151', 'title' => __( 'Payment Refunded', 'smartpay' ), 'note' => __( 'This payment has been refunded.', 'smartpay' ) ),
+	);
+
+	// Abandoned/revoked and any unknown status share the neutral "failed-ish" look.
+	$smartpay_status_ui = $smartpay_status_styles[ $smartpay_status ] ?? array(
+		'icon'        => '•',
+		'bg'          => '#f9fafb',
+		'border'      => '#e5e7eb',
+		'title_color' => '#374151',
+		'text_color'  => '#6b7280',
+		'badge_bg'    => '#f3f4f6',
+		'badge_color' => '#374151',
+		/* translators: %s: payment status label */
+		'title'       => sprintf( __( 'Payment %s', 'smartpay' ), ucfirst( $smartpay_status ) ),
+		'note'        => __( 'Here are your payment details.', 'smartpay' ),
+	);
+	?>
 
 	<?php do_action('smartpay_before_payment_receipt', $payment); ?>
 
 	<div style="max-width:560px;margin:0 auto;font-family:sans-serif;">
 
-		<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
-			<span style="font-size:22px;">✓</span>
+		<div style="background:<?php echo esc_attr( $smartpay_status_ui['bg'] ); ?>;border:1px solid <?php echo esc_attr( $smartpay_status_ui['border'] ); ?>;border-radius:8px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
+			<span style="font-size:22px;color:<?php echo esc_attr( $smartpay_status_ui['title_color'] ); ?>;"><?php echo esc_html( $smartpay_status_ui['icon'] ); ?></span>
 			<div>
-				<p style="margin:0;font-weight:700;font-size:15px;color:#166534;"><?php esc_html_e( 'Payment Successful', 'smartpay' ); ?></p>
-				<p style="margin:4px 0 0;font-size:13px;color:#15803d;"><?php esc_html_e( 'Thank you! Your payment has been received.', 'smartpay' ); ?></p>
+				<p style="margin:0;font-weight:700;font-size:15px;color:<?php echo esc_attr( $smartpay_status_ui['title_color'] ); ?>;"><?php echo esc_html( $smartpay_status_ui['title'] ); ?></p>
+				<p style="margin:4px 0 0;font-size:13px;color:<?php echo esc_attr( $smartpay_status_ui['text_color'] ); ?>;"><?php echo esc_html( $smartpay_status_ui['note'] ); ?></p>
 			</div>
 		</div>
 
@@ -85,7 +112,7 @@ if ($payment) : ?>
 			<tr>
 				<td style="padding:10px 0;color:#6b7280;"><?php esc_html_e( 'Status', 'smartpay' ); ?></td>
 				<td style="padding:10px 0;">
-					<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;background:#dcfce7;color:#166534;">
+					<span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:600;background:<?php echo esc_attr( $smartpay_status_ui['badge_bg'] ); ?>;color:<?php echo esc_attr( $smartpay_status_ui['badge_color'] ); ?>;">
 						<?php echo esc_html( ucfirst( $payment->status ) ); ?>
 					</span>
 				</td>
