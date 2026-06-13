@@ -40,6 +40,12 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 // so the pay action always sits last. Null → fall back to the legacy button.
 $submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/submit-pay' );
 
+// Reset the per-render flag for the #payment-response error container. Pro's
+// Frontend module renders the canonical container inside the form (and sets
+// this flag); the legacy fallback below only renders when no one else did —
+// otherwise the page ends up with two elements sharing the same id.
+$GLOBALS['smartpay_payment_response_rendered'] = false;
+
 ?>
 
 <div class="smartpay">
@@ -307,6 +313,8 @@ $submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/su
 				<?php do_action( 'after_smartpay_payment_form', (object) array( 'id' => $post_id ) ); ?>
 			</div>
 		</div>
-		<div id="payment-response" class="p-4 bg-light" style="display: none;"></div>
+		<?php if ( empty( $GLOBALS['smartpay_payment_response_rendered'] ) ) : ?>
+			<div id="payment-response" class="p-4 bg-light" style="display: none;"></div>
+		<?php endif; ?>
 	</div>
 </div>

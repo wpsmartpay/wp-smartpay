@@ -164,12 +164,13 @@ class Coupon
             wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
-        // expiry date check
-        if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(gmdate('Y-m-d H:i:s'));
-            $expiryDate = date_create($coupon->expiry_date);
-            $diff = date_diff($currentDate,  $expiryDate);
-            if ($diff->format("%R%a") < 0) {
+        // Expiry check. The column is a timestamp ('Y-m-d H:i:s'), so the previous
+        // 'Y-m-d'-only format gate never matched and expired coupons were accepted.
+        // A bare date expires at the end of that day.
+        if (!empty($coupon->expiry_date)) {
+            $expiry_raw = (string) $coupon->expiry_date;
+            $expiry_ts  = strtotime(strlen($expiry_raw) <= 10 ? $expiry_raw . ' 23:59:59' : $expiry_raw);
+            if ($expiry_ts && $expiry_ts < time()) {
                 wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }
@@ -309,12 +310,13 @@ class Coupon
             wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
-        // expiry date check
-        if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(gmdate('Y-m-d H:i:s'));
-            $expiryDate = date_create($coupon->expiry_date);
-            $diff = date_diff($currentDate,  $expiryDate);
-            if ($diff->format("%R%a") < 0) {
+        // Expiry check. The column is a timestamp ('Y-m-d H:i:s'), so the previous
+        // 'Y-m-d'-only format gate never matched and expired coupons were accepted.
+        // A bare date expires at the end of that day.
+        if (!empty($coupon->expiry_date)) {
+            $expiry_raw = (string) $coupon->expiry_date;
+            $expiry_ts  = strtotime(strlen($expiry_raw) <= 10 ? $expiry_raw . ' 23:59:59' : $expiry_raw);
+            if ($expiry_ts && $expiry_ts < time()) {
                 wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }
