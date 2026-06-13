@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\NativeForm;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -626,86 +627,685 @@ class NativeForm {
 	/**
 	 * Inject window.spTemplateBlocks + window.spTemplateMeta for template import.
 	 *
+	 * The blocks payload is a nested tree of { name, attrs, innerBlocks } objects
+	 * consumed by the recursive builder in form-editor-sidebar/index.js, so each
+	 * composite field (parent → label + input/options children) carries its attrs.
+	 *
 	 * @param int $template_id Template ID from the UI template library.
 	 */
 	private function inject_template_blocks( int $template_id ): void {
-		$template = $this->get_template_definition( $template_id );
-		if ( ! $template ) {
+		$definition = $this->get_template_definition( $template_id );
+		if ( ! $definition ) {
 			return;
 		}
 
-		$field_to_block = array(
-			'name'     => 'smartpay-form/name',
-			'email'    => 'smartpay-form/email',
-			'text'     => 'smartpay-form/text-input',
-			'textarea' => 'smartpay-form/textarea-input',
-			'select'   => 'smartpay-form/select-input',
-			'radio'    => 'smartpay-form/radio-input',
-			'checkbox' => 'smartpay-form/checkbox-input',
-			'address'  => 'smartpay-form/address-input',
-		);
-
-		$blocks = array();
-		foreach ( $template['fields'] as $field ) {
-			if ( 'submit' === $field ) {
-				continue;
-			}
-			if ( isset( $field_to_block[ $field ] ) ) {
-				$blocks[] = array(
-					'name'  => $field_to_block[ $field ],
-					'attrs' => new \stdClass(),
-				);
-			}
-		}
-
-		$meta = array(
-			'amounts' => array(
-				array(
-					'key'          => 'default',
-					'label'        => '',
-					'amount'       => '0.00',
-					'billing_type' => 'One Time',
-				),
-			),
-		);
+		$meta = array( 'amounts' => $definition['amounts'] );
 
 		wp_add_inline_script(
 			'smartpay-form-editor-sidebar',
-			'window.spTemplateBlocks = ' . wp_json_encode( $blocks ) . ';' .
+			'window.spTemplateBlocks = ' . wp_json_encode( $definition['blocks'] ) . ';' .
 			'window.spTemplateMeta = ' . wp_json_encode( $meta ) . ';',
 			'before'
 		);
 	}
 
+	// ── Template block-tree builders ────────────────────────────────────────
+
 	/**
-	 * Return a template definition by ID, or null if not found.
+	 * Build a single block node for the template tree.
 	 *
-	 * @param int $id
+	 * @param string $name  Block name.
+	 * @param array  $attrs Block attributes (empty → JSON object, not array).
+	 * @param array  $inner Child block nodes.
+	 * @return array
+	 */
+	private function tpl_block( string $name, array $attrs = array(), array $inner = array() ): array {
+		return array(
+			'name'        => $name,
+			'attrs'       => empty( $attrs ) ? new \stdClass() : $attrs,
+			'innerBlocks' => $inner,
+		);
+	}
+
+	/**
+	 * Name field. Inner sub-fields are auto-generated from the locked template;
+	 * the parent attrs toggle which parts show.
+	 *
+	 * @param bool $middle Whether to show the middle-name sub-field.
+	 * @return array
+	 */
+	private function tpl_name( bool $middle = false ): array {
+		return $this->tpl_block(
+			'smartpay-form/name',
+			array(
+				'showFirstName'  => true,
+				'showMiddleName' => $middle,
+				'showLastName'   => true,
+			)
+		);
+	}
+
+	/**
+	 * Email field (label + input).
+	 *
+	 * @param string $label Label text.
+	 * @return array
+	 */
+	private function tpl_email( string $label = 'Email Address' ): array {
+		return $this->tpl_block(
+			'smartpay-form/email',
+			array(),
+			array(
+				$this->tpl_block( 'smartpay-form/email-label', array( 'text' => $label ) ),
+				$this->tpl_block(
+					'smartpay-form/email-input',
+					array(
+						'fieldName'   => 'email',
+						'placeholder' => 'you@example.com',
+						'isRequired'  => true,
+					)
+				),
+			)
+		);
+	}
+
+	/**
+	 * Single-line text input (label + input). inputType drives the real HTML
+	 * input type on the frontend (text|number|email|tel|date|time|url).
+	 *
+	 * @param string $label       Field label text.
+	 * @param string $field       Unique submission field name.
+	 * @param string $type        HTML input type.
+	 * @param string $placeholder Placeholder text.
+	 * @param bool   $required    Whether the field is required.
+	 * @return array
+	 */
+	private function tpl_text( string $label, string $field, string $type = 'text', string $placeholder = '', bool $required = false ): array {
+		return $this->tpl_block(
+			'smartpay-form/text-input',
+			array(),
+			array(
+				$this->tpl_block( 'smartpay-form/text-input-label', array( 'text' => $label ) ),
+				$this->tpl_block(
+					'smartpay-form/text-input-input',
+					array(
+						'fieldName'   => $field,
+						'inputType'   => $type,
+						'placeholder' => $placeholder,
+						'isRequired'  => $required,
+					)
+				),
+			)
+		);
+	}
+
+	/**
+	 * Multi-line textarea (label + input).
+	 *
+	 * @param string $label       Field label text.
+	 * @param string $field       Unique submission field name.
+	 * @param string $placeholder Placeholder text.
+	 * @param int    $rows        Visible rows.
+	 * @param bool   $required    Whether the field is required.
+	 * @return array
+	 */
+	private function tpl_textarea( string $label, string $field, string $placeholder = '', int $rows = 4, bool $required = false ): array {
+		return $this->tpl_block(
+			'smartpay-form/textarea-input',
+			array(),
+			array(
+				$this->tpl_block( 'smartpay-form/textarea-input-label', array( 'text' => $label ) ),
+				$this->tpl_block(
+					'smartpay-form/textarea-input-input',
+					array(
+						'fieldName'   => $field,
+						'placeholder' => $placeholder,
+						'isRequired'  => $required,
+						'rows'        => $rows,
+					)
+				),
+			)
+		);
+	}
+
+	/**
+	 * Choice field: select | radio | checkbox (label + options input).
+	 *
+	 * @param string $type     'select' | 'radio' | 'checkbox'.
+	 * @param string $label    Field label text.
+	 * @param string $field    Unique submission field name.
+	 * @param array  $options  Plain label strings (value auto-slugged).
+	 * @param string $selected Default selected value.
+	 * @return array
+	 */
+	private function tpl_choice( string $type, string $label, string $field, array $options, string $selected = '' ): array {
+		$parent = 'smartpay-form/' . $type . '-input';
+
+		return $this->tpl_block(
+			$parent,
+			array(),
+			array(
+				$this->tpl_block( $parent . '-label', array( 'text' => $label ) ),
+				$this->tpl_block(
+					$parent . '-input',
+					array(
+						'fieldName'    => $field,
+						'defaultValue' => $selected,
+						'options'      => $this->tpl_options( $options ),
+					)
+				),
+			)
+		);
+	}
+
+	/**
+	 * Normalise option labels into [{ value, label }] pairs.
+	 *
+	 * @param array $options Plain option label strings.
+	 * @return array
+	 */
+	private function tpl_options( array $options ): array {
+		$out = array();
+		foreach ( $options as $label ) {
+			$out[] = array(
+				'value' => sanitize_title( $label ),
+				'label' => $label,
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Full mailing-address field (all lines on).
+	 *
+	 * @return array
+	 */
+	private function tpl_address(): array {
+		return $this->tpl_block(
+			'smartpay-form/address-input',
+			array(
+				'showLine1'   => true,
+				'showLine2'   => true,
+				'showCity'    => true,
+				'showState'   => true,
+				'showZip'     => true,
+				'showCountry' => true,
+			)
+		);
+	}
+
+	/**
+	 * Pricing block with one option per price entry.
+	 *
+	 * @param array  $prices Each: [ 'label', 'amount', 'description'? ].
+	 * @param string $preset 'grid' | 'list'.
+	 * @return array
+	 */
+	private function tpl_pricing( array $prices, string $preset = 'grid' ): array {
+		$options = array();
+		foreach ( $prices as $i => $p ) {
+			$options[] = $this->tpl_block(
+				'smartpay-form/pricing-option',
+				array(
+					'key'          => 'opt_' . ( $i + 1 ),
+					'label'        => $p['label'],
+					'description'  => $p['description'] ?? '',
+					'amount'       => (string) $p['amount'],
+					'billing_type' => 'One Time',
+				)
+			);
+		}
+
+		return $this->tpl_block( 'smartpay-form/pricing', array( 'preset' => $preset ), $options );
+	}
+
+	/**
+	 * Submit (pay) button with coupon + pay children.
+	 *
+	 * @param string $label Pay button label.
+	 * @return array
+	 */
+	private function tpl_pay( string $label = 'Pay Now' ): array {
+		return $this->tpl_block(
+			'smartpay-form/submit-button',
+			array(),
+			array(
+				$this->tpl_block( 'smartpay-form/submit-coupon' ),
+				$this->tpl_block( 'smartpay-form/submit-pay', array( 'label' => $label ) ),
+			)
+		);
+	}
+
+	/**
+	 * Derive the `_smartpay_amounts` meta payload from a price list (kept in sync
+	 * with the pricing-option blocks built by tpl_pricing()).
+	 *
+	 * @param array $prices Price list (each: label, amount).
+	 * @return array
+	 */
+	private function pricing_amounts( array $prices ): array {
+		$amounts = array();
+		foreach ( $prices as $i => $p ) {
+			$amounts[] = array(
+				'key'          => 'opt_' . ( $i + 1 ),
+				'label'        => $p['label'],
+				'amount'       => number_format( (float) $p['amount'], 2, '.', '' ),
+				'billing_type' => 'One Time',
+			);
+		}
+		return $amounts;
+	}
+
+	/**
+	 * Assemble a template definition: field blocks + pricing + pay button, with
+	 * matching amounts meta.
+	 *
+	 * @param string $name   Template name.
+	 * @param array  $fields Field block nodes (in order).
+	 * @param array  $prices Price list for the pricing block.
+	 * @param string $pay    Pay button label.
+	 * @param string $preset Pricing preset ('grid' | 'list').
+	 * @return array
+	 */
+	private function tpl_assemble( string $name, array $fields, array $prices, string $pay = 'Pay Now', string $preset = 'grid' ): array {
+		$blocks   = $fields;
+		$blocks[] = $this->tpl_pricing( $prices, $preset );
+		$blocks[] = $this->tpl_pay( $pay );
+
+		return array(
+			'name'    => $name,
+			'blocks'  => $blocks,
+			'amounts' => $this->pricing_amounts( $prices ),
+		);
+	}
+
+	/**
+	 * Return a template definition (nested block tree + amounts) by ID, or null.
+	 *
+	 * IDs map 1:1 to resources/js/admin/native-forms/templates.js. Categories:
+	 * payment (1xxx), donation (2xxx), registration (3xxx), event (4xxx),
+	 * survey (5xxx), contact (6xxx), booking (7xxx).
+	 *
+	 * @param int $id Template ID.
 	 * @return array|null
 	 */
 	private function get_template_definition( int $id ): ?array {
-		$templates = array(
-			1001 => array( 'name' => 'Simple Payment Form',         'fields' => array( 'name', 'email', 'submit' ) ),
-			1002 => array( 'name' => 'Product Order Form',          'fields' => array( 'name', 'email', 'text', 'text', 'textarea', 'submit' ) ),
-			1003 => array( 'name' => 'Invoice Payment Form',        'fields' => array( 'name', 'email', 'text', 'textarea', 'submit' ) ),
-			1004 => array( 'name' => 'Subscription Signup',         'fields' => array( 'name', 'email', 'select', 'textarea', 'submit' ) ),
-			2001 => array( 'name' => 'Simple Donation Form',        'fields' => array( 'name', 'email', 'select', 'radio', 'checkbox', 'textarea', 'submit' ) ),
-			2002 => array( 'name' => 'Charity Donation',            'fields' => array( 'name', 'email', 'text', 'select', 'radio', 'textarea', 'submit' ) ),
-			2003 => array( 'name' => 'Nonprofit Donation',          'fields' => array( 'name', 'email', 'address', 'select', 'checkbox', 'submit' ) ),
-			3001 => array( 'name' => 'Event Registration',          'fields' => array( 'name', 'email', 'text', 'select', 'text', 'submit' ) ),
-			3002 => array( 'name' => 'Newsletter Signup',           'fields' => array( 'name', 'email', 'select', 'checkbox', 'submit' ) ),
-			3003 => array( 'name' => 'Course Enrollment',           'fields' => array( 'name', 'email', 'text', 'select', 'select', 'textarea', 'submit' ) ),
-			3004 => array( 'name' => 'Membership Application',      'fields' => array( 'name', 'email', 'text', 'select', 'address', 'textarea', 'submit' ) ),
-			4001 => array( 'name' => 'Conference Registration',     'fields' => array( 'name', 'email', 'text', 'text', 'select', 'radio', 'submit' ) ),
-			4002 => array( 'name' => 'Workshop Registration',       'fields' => array( 'name', 'email', 'select', 'text', 'checkbox', 'submit' ) ),
-			4003 => array( 'name' => 'Webinar Registration',        'fields' => array( 'name', 'email', 'text', 'select', 'checkbox', 'submit' ) ),
-			5001 => array( 'name' => 'Customer Satisfaction Survey','fields' => array( 'name', 'email', 'radio', 'radio', 'textarea', 'submit' ) ),
-			5002 => array( 'name' => 'Product Feedback Form',       'fields' => array( 'name', 'email', 'radio', 'radio', 'checkbox', 'textarea', 'submit' ) ),
-			6001 => array( 'name' => 'Contact & Payment Form',      'fields' => array( 'name', 'email', 'text', 'radio', 'textarea', 'submit' ) ),
-			6002 => array( 'name' => 'Service Request Form',        'fields' => array( 'name', 'email', 'select', 'text', 'text', 'textarea', 'submit' ) ),
-		);
+		switch ( $id ) {
+			// ── Payment ──────────────────────────────────────────────
+			case 1001:
+				return $this->tpl_assemble(
+					'Simple Payment Form',
+					array( $this->tpl_name(), $this->tpl_email() ),
+					array(
+						array(
+							'label'  => 'Payment',
+							'amount' => 25,
+						),
+					),
+					'Pay Now'
+				);
 
-		return $templates[ $id ] ?? null;
+			case 1002:
+				return $this->tpl_assemble(
+					'Product Order Form',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_text( 'Quantity', 'quantity', 'number', '1' ),
+						$this->tpl_address(),
+						$this->tpl_textarea( 'Order Notes', 'order_notes', 'Anything we should know about your order?', 3 ),
+					),
+					array(
+						array(
+							'label'       => 'Basic',
+							'amount'      => 19,
+							'description' => 'Essential package',
+						),
+						array(
+							'label'       => 'Standard',
+							'amount'      => 39,
+							'description' => 'Most popular',
+						),
+						array(
+							'label'       => 'Premium',
+							'amount'      => 59,
+							'description' => 'Everything included',
+						),
+					),
+					'Place Order'
+				);
+
+			case 1003:
+				return $this->tpl_assemble(
+					'Subscription Plans',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_choice( 'select', 'How did you hear about us?', 'referral_source', array( 'Search engine', 'Friend or colleague', 'Social media', 'Advertisement', 'Other' ) ),
+					),
+					array(
+						array(
+							'label'       => 'Monthly',
+							'amount'      => 9,
+							'description' => 'Billed monthly',
+						),
+						array(
+							'label'       => 'Annual',
+							'amount'      => 90,
+							'description' => 'Save 16%',
+						),
+						array(
+							'label'       => 'Lifetime',
+							'amount'      => 249,
+							'description' => 'One-time payment',
+						),
+					),
+					'Subscribe',
+					'list'
+				);
+
+			// ── Donation ─────────────────────────────────────────────
+			case 2001:
+				return $this->tpl_assemble(
+					'Quick Donation',
+					array( $this->tpl_name(), $this->tpl_email() ),
+					array(
+						array(
+							'label'  => '$10',
+							'amount' => 10,
+						),
+						array(
+							'label'  => '$25',
+							'amount' => 25,
+						),
+						array(
+							'label'  => '$50',
+							'amount' => 50,
+						),
+						array(
+							'label'  => '$100',
+							'amount' => 100,
+						),
+					),
+					'Donate Now'
+				);
+
+			case 2002:
+				return $this->tpl_assemble(
+					'Charity Donation',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_choice( 'radio', 'Donation Frequency', 'frequency', array( 'One-time', 'Monthly', 'Annually' ), 'one-time' ),
+						$this->tpl_textarea( 'Dedication Message', 'dedication', 'In honor or memory of…', 3 ),
+						$this->tpl_choice( 'checkbox', 'Options', 'donation_options', array( 'Make my donation anonymous', 'Email me a receipt' ) ),
+					),
+					array(
+						array(
+							'label'  => '$25',
+							'amount' => 25,
+						),
+						array(
+							'label'  => '$50',
+							'amount' => 50,
+						),
+						array(
+							'label'  => '$100',
+							'amount' => 100,
+						),
+						array(
+							'label'  => '$250',
+							'amount' => 250,
+						),
+					),
+					'Give Now'
+				);
+
+			// ── Registration ─────────────────────────────────────────
+			case 3001:
+				return $this->tpl_assemble(
+					'Newsletter Signup',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_choice( 'checkbox', 'Interests', 'interests', array( 'Product updates', 'Promotions', 'Events', 'Blog posts' ) ),
+						$this->tpl_choice( 'checkbox', 'Consent', 'consent', array( 'I agree to receive marketing emails' ) ),
+					),
+					array(
+						array(
+							'label'  => 'Free',
+							'amount' => 0,
+						),
+					),
+					'Subscribe'
+				);
+
+			case 3002:
+				return $this->tpl_assemble(
+					'Membership Application',
+					array(
+						$this->tpl_name( true ),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_choice( 'select', 'Membership Level', 'level', array( 'Individual', 'Family', 'Student', 'Corporate' ) ),
+						$this->tpl_address(),
+						$this->tpl_textarea( 'Tell us about yourself', 'bio', 'A short introduction…', 4 ),
+					),
+					array(
+						array(
+							'label'  => 'Individual',
+							'amount' => 49,
+						),
+						array(
+							'label'  => 'Family',
+							'amount' => 99,
+						),
+						array(
+							'label'  => 'Student',
+							'amount' => 25,
+						),
+						array(
+							'label'  => 'Corporate',
+							'amount' => 299,
+						),
+					),
+					'Submit Application',
+					'list'
+				);
+
+			// ── Event ────────────────────────────────────────────────
+			case 4001:
+				return $this->tpl_assemble(
+					'Event Registration',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_text( 'Preferred Date', 'event_date', 'date' ),
+						$this->tpl_choice( 'select', 'Ticket Type', 'ticket_type', array( 'General Admission', 'VIP', 'Group' ) ),
+						$this->tpl_choice( 'checkbox', 'Dietary Requirements', 'dietary', array( 'Vegetarian', 'Vegan', 'Gluten-free', 'No restrictions' ) ),
+					),
+					array(
+						array(
+							'label'  => 'General',
+							'amount' => 30,
+						),
+						array(
+							'label'  => 'VIP',
+							'amount' => 75,
+						),
+						array(
+							'label'  => 'Group (4)',
+							'amount' => 100,
+						),
+					),
+					'Register'
+				);
+
+			case 4002:
+				return $this->tpl_assemble(
+					'Conference Registration',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Company', 'company' ),
+						$this->tpl_text( 'Job Title', 'job_title' ),
+						$this->tpl_text( 'Attendance Date', 'attend_date', 'date' ),
+						$this->tpl_choice( 'radio', 'Primary Track', 'track', array( 'Engineering', 'Design', 'Product', 'Marketing' ) ),
+						$this->tpl_choice( 'checkbox', 'Add-on Workshops', 'workshops', array( 'AI Workshop', 'UX Workshop', 'Leadership Workshop' ) ),
+					),
+					array(
+						array(
+							'label'       => 'Early Bird',
+							'amount'      => 199,
+							'description' => 'Limited time',
+						),
+						array(
+							'label'  => 'Regular',
+							'amount' => 299,
+						),
+						array(
+							'label'       => 'Student',
+							'amount'      => 99,
+							'description' => 'Valid ID required',
+						),
+					),
+					'Complete Registration'
+				);
+
+			// ── Survey ───────────────────────────────────────────────
+			case 5001:
+				return $this->tpl_assemble(
+					'Customer Satisfaction Survey',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_choice( 'radio', 'How satisfied are you?', 'satisfaction', array( 'Very satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very dissatisfied' ) ),
+						$this->tpl_choice( 'radio', 'Would you recommend us?', 'recommend', array( 'Definitely', 'Maybe', 'No' ) ),
+						$this->tpl_textarea( 'Additional Comments', 'comments', 'What can we do better?', 4 ),
+					),
+					array(
+						array(
+							'label'  => 'Free',
+							'amount' => 0,
+						),
+					),
+					'Submit Survey'
+				);
+
+			case 5002:
+				return $this->tpl_assemble(
+					'Product Feedback Form',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_choice( 'radio', 'Product Quality', 'quality', array( 'Excellent', 'Good', 'Average', 'Poor' ) ),
+						$this->tpl_choice( 'checkbox', 'Favorite Features', 'features', array( 'Ease of use', 'Design', 'Performance', 'Support', 'Price' ) ),
+						$this->tpl_choice( 'radio', 'Likelihood to recommend', 'nps', array( 'High', 'Medium', 'Low' ) ),
+						$this->tpl_textarea( 'Suggestions for improvement', 'suggestions', '', 4 ),
+					),
+					array(
+						array(
+							'label'  => 'Free',
+							'amount' => 0,
+						),
+					),
+					'Send Feedback'
+				);
+
+			// ── Contact ──────────────────────────────────────────────
+			case 6001:
+				return $this->tpl_assemble(
+					'Contact & Payment Form',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_choice( 'radio', 'Inquiry Type', 'inquiry_type', array( 'General', 'Sales', 'Support', 'Billing' ) ),
+						$this->tpl_textarea( 'Message', 'message', 'How can we help you?', 4 ),
+					),
+					array(
+						array(
+							'label'  => 'Consultation',
+							'amount' => 50,
+						),
+					),
+					'Submit'
+				);
+
+			case 6002:
+				return $this->tpl_assemble(
+					'Service Request Form',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Company', 'company' ),
+						$this->tpl_choice( 'select', 'Service Needed', 'service', array( 'Web Design', 'Development', 'SEO', 'Branding', 'Consulting' ) ),
+						$this->tpl_choice( 'select', 'Budget Range', 'budget', array( 'Under $1,000', '$1,000 – $5,000', '$5,000 – $10,000', '$10,000+' ) ),
+						$this->tpl_text( 'Desired Start Date', 'start_date', 'date' ),
+						$this->tpl_textarea( 'Project Requirements', 'requirements', 'Describe your project…', 5 ),
+					),
+					array(
+						array(
+							'label'  => 'Project Deposit',
+							'amount' => 100,
+						),
+					),
+					'Request Quote'
+				);
+
+			// ── Booking ──────────────────────────────────────────────
+			case 7001:
+				return $this->tpl_assemble(
+					'Appointment Booking',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_choice( 'select', 'Service', 'service', array( 'Consultation', 'Checkup', 'Treatment', 'Follow-up' ) ),
+						$this->tpl_text( 'Preferred Date', 'appt_date', 'date' ),
+						$this->tpl_choice( 'select', 'Preferred Time', 'appt_time', array( 'Morning', 'Afternoon', 'Evening' ) ),
+						$this->tpl_textarea( 'Notes', 'notes', 'Anything we should prepare for?', 3 ),
+					),
+					array(
+						array(
+							'label'  => 'Standard (30 min)',
+							'amount' => 40,
+						),
+						array(
+							'label'  => 'Extended (60 min)',
+							'amount' => 80,
+						),
+					),
+					'Book Appointment'
+				);
+
+			case 7002:
+				return $this->tpl_assemble(
+					'Table Reservation',
+					array(
+						$this->tpl_name(),
+						$this->tpl_email(),
+						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
+						$this->tpl_text( 'Reservation Date', 'res_date', 'date' ),
+						$this->tpl_text( 'Party Size', 'party_size', 'number', '2' ),
+						$this->tpl_choice( 'radio', 'Seating Preference', 'seating', array( 'Indoor', 'Outdoor', 'Bar', 'No preference' ), 'no-preference' ),
+						$this->tpl_textarea( 'Special Requests', 'requests', 'Allergies, occasions, accessibility…', 3 ),
+					),
+					array(
+						array(
+							'label'  => 'Reservation Deposit',
+							'amount' => 20,
+						),
+					),
+					'Reserve Table'
+				);
+
+			default:
+				return null;
+		}
 	}
 
 	/**
@@ -852,7 +1452,7 @@ class NativeForm {
 				FILTER_VALIDATE_BOOLEAN
 			),
 		);
-		$data['amount'] = $amount;
+		$data['amount']       = $amount;
 
 		return $data;
 	}

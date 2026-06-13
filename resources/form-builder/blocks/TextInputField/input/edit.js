@@ -12,7 +12,15 @@ const TYPES = [
     { label: __('Text', 'smartpay'), value: 'text' },
     { label: __('Number', 'smartpay'), value: 'number' },
     { label: __('Email', 'smartpay'), value: 'email' },
+    { label: __('Phone', 'smartpay'), value: 'tel' },
+    { label: __('Date', 'smartpay'), value: 'date' },
+    { label: __('Time', 'smartpay'), value: 'time' },
+    { label: __('URL', 'smartpay'), value: 'url' },
 ]
+
+// Types the editor canvas can preview natively; others fall back to a text box
+// in the editor but still render their true type on the frontend (save.js).
+const PREVIEWABLE = ['number', 'date', 'time']
 
 export const edit = ({ attributes, setAttributes }) => {
     const { fieldName, inputType, placeholder, isRequired } = attributes
@@ -29,7 +37,7 @@ export const edit = ({ attributes, setAttributes }) => {
         <>
             <input
                 {...blockProps}
-                type={inputType === 'number' ? 'number' : 'text'}
+                type={PREVIEWABLE.includes(inputType) ? inputType : 'text'}
                 placeholder={placeholder}
                 readOnly
             />

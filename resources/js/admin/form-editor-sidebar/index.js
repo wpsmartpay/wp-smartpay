@@ -617,9 +617,16 @@ wp.domReady( () => {
 				return;
 			}
 
-			const blocks = defs.map( ( { name, attrs } ) =>
-				wp.blocks.createBlock( name, attrs || {} )
-			);
+			// Recursively build nested block trees so composite fields
+			// (parent → label + input/options children) carry their attrs.
+			const buildBlock = ( { name, attrs, innerBlocks } ) =>
+				wp.blocks.createBlock(
+					name,
+					attrs || {},
+					Array.isArray( innerBlocks ) ? innerBlocks.map( buildBlock ) : []
+				);
+
+			const blocks = defs.map( buildBlock );
 
 			wp.data.dispatch( 'core/block-editor' ).resetBlocks( blocks );
 			delete window.spTemplateBlocks;

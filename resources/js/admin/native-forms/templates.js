@@ -6,113 +6,82 @@ export const CATEGORIES = [
 	{ slug: 'event',        label: 'Event Forms' },
 	{ slug: 'survey',       label: 'Survey & Feedback' },
 	{ slug: 'contact',      label: 'Contact Forms' },
+	{ slug: 'booking',      label: 'Booking & Appointments' },
 ]
 
+// `fields` lists the input field types (excluding pricing/pay) and drives the
+// card preview: icon strip + field count. The real, fully-configured block tree
+// for each id is built server-side in NativeForm::get_template_definition().
 export const TEMPLATES = [
 	// ── Payment ────────────────────────────────────────────────
 	{
 		id: 1001,
 		name: 'Simple Payment Form',
 		category: 'payment',
-		description: 'Minimal payment form with name and email. Perfect starting point.',
+		description: 'Minimal payment form — name, email and a single amount. The perfect starting point.',
 		fields: [ 'name', 'email', 'submit' ],
 	},
 	{
 		id: 1002,
 		name: 'Product Order Form',
 		category: 'payment',
-		description: 'Collect customer details, phone, company and order notes before payment.',
-		fields: [ 'name', 'email', 'text', 'text', 'textarea', 'submit' ],
+		description: 'Collect contact, phone, quantity, shipping address and order notes, then choose a product tier (Basic / Standard / Premium).',
+		fields: [ 'name', 'email', 'text', 'text', 'address', 'textarea', 'submit' ],
 	},
 	{
 		id: 1003,
-		name: 'Invoice Payment Form',
+		name: 'Subscription Plans',
 		category: 'payment',
-		description: 'Allow customers to pay a specific invoice by entering their invoice number.',
-		fields: [ 'name', 'email', 'text', 'textarea', 'submit' ],
-	},
-	{
-		id: 1004,
-		name: 'Subscription Signup',
-		category: 'payment',
-		description: 'Let visitors choose a subscription plan — monthly, annual or lifetime.',
-		fields: [ 'name', 'email', 'select', 'textarea', 'submit' ],
+		description: 'Let visitors pick a Monthly, Annual or Lifetime plan from a list layout, with a referral-source dropdown.',
+		fields: [ 'name', 'email', 'select', 'submit' ],
 	},
 
 	// ── Donation ───────────────────────────────────────────────
 	{
 		id: 2001,
-		name: 'Simple Donation Form',
+		name: 'Quick Donation',
 		category: 'donation',
-		description: 'Choose donation amount, frequency (one-time or recurring), optional anonymous donation and a personal message.',
-		fields: [ 'name', 'email', 'select', 'radio', 'checkbox', 'textarea', 'submit' ],
+		description: 'Fast one-screen donation with preset amount tiers ($10–$100). Just name and email.',
+		fields: [ 'name', 'email', 'submit' ],
 	},
 	{
 		id: 2002,
 		name: 'Charity Donation',
 		category: 'donation',
-		description: 'Full-featured charity donation form with phone, tiered amounts, frequency option and purpose message.',
-		fields: [ 'name', 'email', 'text', 'select', 'radio', 'textarea', 'submit' ],
-	},
-	{
-		id: 2003,
-		name: 'Nonprofit Donation',
-		category: 'donation',
-		description: 'Collect full mailing address for donation receipts, select amount, and allow anonymous donations.',
-		fields: [ 'name', 'email', 'address', 'select', 'checkbox', 'submit' ],
+		description: 'Full donation form — phone, giving frequency, a dedication message, anonymous + receipt options, and tiered amounts.',
+		fields: [ 'name', 'email', 'text', 'radio', 'textarea', 'checkbox', 'submit' ],
 	},
 
 	// ── Registration ───────────────────────────────────────────
 	{
 		id: 3001,
-		name: 'Event Registration',
+		name: 'Newsletter Signup',
 		category: 'registration',
-		description: 'Register attendees for an event — name, email, phone, ticket type and dietary requirements.',
-		fields: [ 'name', 'email', 'text', 'select', 'text', 'submit' ],
+		description: 'Free opt-in with interest checkboxes and a GDPR marketing-consent checkbox.',
+		fields: [ 'name', 'email', 'checkbox', 'checkbox', 'submit' ],
 	},
 	{
 		id: 3002,
-		name: 'Newsletter Signup',
-		category: 'registration',
-		description: 'Simple newsletter opt-in with interest selection and GDPR consent checkbox.',
-		fields: [ 'name', 'email', 'select', 'checkbox', 'submit' ],
-	},
-	{
-		id: 3003,
-		name: 'Course Enrollment',
-		category: 'registration',
-		description: 'Enroll students in a course — select track, experience level and motivational message.',
-		fields: [ 'name', 'email', 'text', 'select', 'select', 'textarea', 'submit' ],
-	},
-	{
-		id: 3004,
 		name: 'Membership Application',
 		category: 'registration',
-		description: 'Full membership application with contact details, plan selection, address and introduction.',
+		description: 'Detailed application — full name (incl. middle), phone, membership level, mailing address, introduction, and tiered dues.',
 		fields: [ 'name', 'email', 'text', 'select', 'address', 'textarea', 'submit' ],
 	},
 
 	// ── Event ──────────────────────────────────────────────────
 	{
 		id: 4001,
-		name: 'Conference Registration',
+		name: 'Event Registration',
 		category: 'event',
-		description: 'Register conference attendees — company, job title, ticket type and preferred session.',
-		fields: [ 'name', 'email', 'text', 'text', 'select', 'radio', 'submit' ],
+		description: 'Register attendees — phone, preferred date, ticket type and dietary requirements, with General / VIP / Group pricing.',
+		fields: [ 'name', 'email', 'text', 'text', 'select', 'checkbox', 'submit' ],
 	},
 	{
 		id: 4002,
-		name: 'Workshop Registration',
+		name: 'Conference Registration',
 		category: 'event',
-		description: 'Register participants for a workshop with session choice, dietary requirements and t-shirt opt-in.',
-		fields: [ 'name', 'email', 'select', 'text', 'checkbox', 'submit' ],
-	},
-	{
-		id: 4003,
-		name: 'Webinar Registration',
-		category: 'event',
-		description: 'Sign up for a webinar — company, topic selection and email reminder preferences.',
-		fields: [ 'name', 'email', 'text', 'select', 'checkbox', 'submit' ],
+		description: 'In-depth conference signup — company, job title, date, primary track, add-on workshops, and Early Bird / Regular / Student tiers.',
+		fields: [ 'name', 'email', 'text', 'text', 'text', 'radio', 'checkbox', 'submit' ],
 	},
 
 	// ── Survey ─────────────────────────────────────────────────
@@ -120,15 +89,15 @@ export const TEMPLATES = [
 		id: 5001,
 		name: 'Customer Satisfaction Survey',
 		category: 'survey',
-		description: 'Measure satisfaction, likelihood to recommend and gather improvement suggestions.',
+		description: 'Measure satisfaction and recommendation likelihood with rating scales and an open comments box. Free to submit.',
 		fields: [ 'name', 'email', 'radio', 'radio', 'textarea', 'submit' ],
 	},
 	{
 		id: 5002,
 		name: 'Product Feedback Form',
 		category: 'survey',
-		description: 'Rate product quality, recommendation likelihood, highlight favourite aspects and add comments.',
-		fields: [ 'name', 'email', 'radio', 'radio', 'checkbox', 'textarea', 'submit' ],
+		description: 'Rate product quality, pick favourite features, give an NPS-style score and detailed suggestions. Free to submit.',
+		fields: [ 'name', 'email', 'radio', 'checkbox', 'radio', 'textarea', 'submit' ],
 	},
 
 	// ── Contact ────────────────────────────────────────────────
@@ -136,14 +105,30 @@ export const TEMPLATES = [
 		id: 6001,
 		name: 'Contact & Payment Form',
 		category: 'contact',
-		description: 'Combined contact and payment — phone, inquiry type and message before the payment step.',
+		description: 'Combined contact + payment — phone, inquiry type and message before a consultation fee.',
 		fields: [ 'name', 'email', 'text', 'radio', 'textarea', 'submit' ],
 	},
 	{
 		id: 6002,
 		name: 'Service Request Form',
 		category: 'contact',
-		description: 'Capture project scope — service type, budget, timeline and detailed requirements.',
-		fields: [ 'name', 'email', 'select', 'text', 'text', 'textarea', 'submit' ],
+		description: 'Capture project scope — company, service, budget range, desired start date and detailed requirements, with a project deposit.',
+		fields: [ 'name', 'email', 'text', 'select', 'select', 'text', 'textarea', 'submit' ],
+	},
+
+	// ── Booking ────────────────────────────────────────────────
+	{
+		id: 7001,
+		name: 'Appointment Booking',
+		category: 'booking',
+		description: 'Book an appointment — phone, service, preferred date and time, notes, and Standard / Extended duration pricing.',
+		fields: [ 'name', 'email', 'text', 'select', 'text', 'select', 'textarea', 'submit' ],
+	},
+	{
+		id: 7002,
+		name: 'Table Reservation',
+		category: 'booking',
+		description: 'Reserve a table — phone, date, party size, seating preference and special requests, secured with a small deposit.',
+		fields: [ 'name', 'email', 'text', 'text', 'text', 'radio', 'textarea', 'submit' ],
 	},
 ]
