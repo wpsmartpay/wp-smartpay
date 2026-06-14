@@ -1069,6 +1069,18 @@ function smartpay_get_customer_by_user_id($userId) {
 	return $customer;
 }
 
+if (!function_exists('is_smartpay_customer')) {
+	/**
+	 * Whether the current user may access the SmartPay account dashboard.
+	 *
+	 * Gated by the `access_smartpay_dashboard` capability granted to the
+	 * `smartpay_customer` role (see Modules\Role\Roles).
+	 */
+	function is_smartpay_customer(): bool {
+		return current_user_can('access_smartpay_dashboard');
+	}
+}
+
 /**
  * Calculate goal progress for a form.
  *

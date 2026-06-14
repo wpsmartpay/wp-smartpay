@@ -1,7 +1,8 @@
 <?php
 
 namespace SmartPay\Providers;
-defined('ABSPATH') || exit;
+
+defined( 'ABSPATH' ) || exit;
 
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Product\Product;
@@ -16,77 +17,129 @@ use SmartPay\Modules\Integration\Integration;
 use SmartPay\Modules\Email\Email;
 use SmartPay\Modules\Frontend\Utilities\Downloader;
 use SmartPay\Modules\NativeForm\NativeForm;
+use SmartPay\Modules\User\User;
+use SmartPay\Modules\Role\Roles;
 
-class AppServiceProvider extends ServiceProvider
-{
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        $this->app->singleton(Email::class, function ($app) {
-            return new Email($app);
-        });
+class AppServiceProvider extends ServiceProvider {
 
-        $this->app->singleton(Product::class, function ($app) {
-            return new Product($app);
-        });
+	/**
+	 * Register any application services.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		$this->app->singleton(
+			Email::class,
+			function ( $app ) {
+				return new Email( $app );
+			}
+		);
 
-        $this->app->singleton(Form::class, function ($app) {
-            return new Form($app);
-        });
+		$this->app->singleton(
+			Product::class,
+			function ( $app ) {
+				return new Product( $app );
+			}
+		);
 
-        $this->app->singleton(Coupon::class, function ($app) {
-            return new Coupon($app);
-        });
+		$this->app->singleton(
+			Form::class,
+			function ( $app ) {
+				return new Form( $app );
+			}
+		);
 
-        $this->app->singleton(Customer::class, function ($app) {
-            return new Customer($app);
-        });
+		$this->app->singleton(
+			Coupon::class,
+			function ( $app ) {
+				return new Coupon( $app );
+			}
+		);
 
-        $this->app->singleton(Payment::class, function ($app) {
-            return new Payment($app);
-        });
+		$this->app->singleton(
+			Customer::class,
+			function ( $app ) {
+				return new Customer( $app );
+			}
+		);
 
-        $this->app->singleton(Gateway::class, function ($app) {
-            return new Gateway($app);
-        });
+		$this->app->singleton(
+			Payment::class,
+			function ( $app ) {
+				return new Payment( $app );
+			}
+		);
 
-        $this->app->singleton(Common::class, function ($app) {
-            return new Common($app);
-        });
+		$this->app->singleton(
+			Gateway::class,
+			function ( $app ) {
+				return new Gateway( $app );
+			}
+		);
 
-        $this->app->singleton(Shortcode::class, function ($app) {
-            return new Shortcode($app);
-        });
+		$this->app->singleton(
+			Common::class,
+			function ( $app ) {
+				return new Common( $app );
+			}
+		);
 
-        $this->app->singleton(Integration::class, function ($app) {
-            return new Integration($app);
-        });
+		$this->app->singleton(
+			Shortcode::class,
+			function ( $app ) {
+				return new Shortcode( $app );
+			}
+		);
 
-        $this->app->singleton(Downloader::class, function ($app) {
-            return new Downloader($app);
-        });
+		$this->app->singleton(
+			Integration::class,
+			function ( $app ) {
+				return new Integration( $app );
+			}
+		);
 
-        $this->app->singleton(NativeForm::class, function ($app) {
-            return new NativeForm($app);
-        });
-    }
+		$this->app->singleton(
+			Downloader::class,
+			function ( $app ) {
+				return new Downloader( $app );
+			}
+		);
 
-    public function boot()
-    {
-        $this->app->make(Email::class);
-        $this->app->make(Product::class);
-        $this->app->make(Form::class);
-        $this->app->make(Coupon::class);
-        $this->app->make(Customer::class);
-        $this->app->make(Payment::class);
-        $this->app->make(Gateway::class);
-        $this->app->make(Common::class);
-        $this->app->make(Shortcode::class);
-        $this->app->make(Integration::class);
-        $this->app->make(NativeForm::class);
-    }
+		$this->app->singleton(
+			NativeForm::class,
+			function ( $app ) {
+				return new NativeForm( $app );
+			}
+		);
+
+		$this->app->singleton(
+			Roles::class,
+			function () {
+				return new Roles();
+			}
+		);
+
+		$this->app->singleton(
+			User::class,
+			function () {
+				return new User();
+			}
+		);
+	}
+
+	public function boot() {
+		$this->app->make( Email::class );
+		$this->app->make( Product::class );
+		$this->app->make( Form::class );
+		$this->app->make( Coupon::class );
+		$this->app->make( Customer::class );
+		$this->app->make( Payment::class );
+		$this->app->make( Gateway::class );
+		$this->app->make( Common::class );
+		$this->app->make( Shortcode::class );
+		$this->app->make( Integration::class );
+		$this->app->make( NativeForm::class );
+		$this->app->make( Roles::class );
+		$this->app->make( User::class );
+	}
 }
