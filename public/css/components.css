@@ -2671,14 +2671,9 @@
       }
     }
   }
-  .sm\:max-w-2xl {
+  .sm\:max-w-7xl {
     @media (width >= 40rem) {
-      max-width: var(--container-2xl);
-    }
-  }
-  .sm\:max-w-5xl {
-    @media (width >= 40rem) {
-      max-width: var(--container-5xl);
+      max-width: var(--container-7xl);
     }
   }
   .sm\:max-w-lg {
