@@ -8,6 +8,27 @@ class UserDashboard {
 
 	public function __construct() {
 		add_filter( 'template_include', array( $this, 'render_layout' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+	}
+
+	/**
+	 * Enqueue dashboard styles on the dashboard page.
+	 *
+	 * Must run on wp_enqueue_scripts (before wp_head) — enqueuing inside the
+	 * shortcode callback is too late, the <link> never reaches <head> and the
+	 * full-width flex layout fails to apply.
+	 */
+	public function enqueue_assets() {
+		if ( ! $this->is_smartpay_dashboard_page() ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'smartpay-user-dashboard-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/dashboard.css',
+			array(),
+			SMARTPAY_VERSION
+		);
 	}
 
 	public function render_layout( $template ) {
