@@ -6,79 +6,71 @@ const { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } = 
 
 /* ─── Blank/New Option Card (soft gradient layout) ───────────────── */
 const BlankTemplateCard = ( { onUse } ) => {
-	const [ hov, setHov ] = useState( false )
 	return (
 		<div
-			onMouseEnter={ () => setHov( true ) }
-			onMouseLeave={ () => setHov( false ) }
+			className="sp-integ-card"
 			onClick={ onUse }
 			role="button"
 			tabIndex={ 0 }
 			onKeyDown={ ( e ) => { if ( e.key === 'Enter' || e.key === ' ' ) onUse() } }
 			style={ {
-				borderRadius:  '16px',
-				background:    'linear-gradient(135deg, var(--sp-brand-light, #eef0f9) 0%, #e0f2fe 100%)', // Soft brand-blue gradient
-				padding:       '24px',
-				display:       'flex',
-				flexDirection: 'column',
-				justifyContent: 'space-between',
-				minHeight:     '250px',
 				cursor:        'pointer',
-				border:        'none',
-				boxShadow:     hov ? '0 8px 30px rgba(41, 60, 129, 0.12)' : '0 2px 8px rgba(0,0,0,0.02)',
-				transform:     hov ? 'translateY(-2px)' : 'none',
-				transition:    'all 0.2s ease',
+				minHeight:     '250px',
+				borderStyle:   'dashed',
 			} }
 		>
-			{/* Icon with Blue background */}
-			<div style={ {
-				width:          '36px',
-				height:         '36px',
-				borderRadius:   '50%',
-				background:     'var(--sp-brand, #293c81)',
-				display:        'flex',
-				alignItems:     'center',
-				justifyContent: 'center',
-				color:          '#ffffff',
-				marginBottom:   '16px',
-			} }>
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-					<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-				</svg>
+			<div className="sp-integ-card__logo" style={ { justifyContent: 'flex-start', padding: '16px 16px 0' } }>
+				<div style={ {
+					width:          '36px',
+					height:         '36px',
+					borderRadius:   '50%',
+					background:     'var(--sp-brand-light, #eef0f9)',
+					display:        'flex',
+					alignItems:     'center',
+					justifyContent: 'center',
+					color:          'var(--sp-brand, #293c81)',
+				} }>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+						<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+					</svg>
+				</div>
 			</div>
 
-			{/* Info */}
-			<div style={ { flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' } }>
-				<h3 style={ { margin: 0, fontSize: '16px', fontWeight: 700, color: 'var(--sp-brand-dark, #1e2f6e)', lineHeight: 1.3 } }>
+			<div className="sp-integ-card__body">
+				<h3 className="sp-integ-card__name" style={ { margin: '0 0 4px' } }>
 					{ __( 'Create Your Template', 'smartpay' ) }
 				</h3>
-				<p style={ { margin: 0, fontSize: '12.5px', color: 'var(--sp-brand, #293c81)', lineHeight: 1.4 } }>
+				<p className="sp-integ-card__desc" style={ {
+					display:         '-webkit-box',
+					WebkitLineClamp: 3,
+					WebkitBoxOrient: 'vertical',
+					overflow:        'hidden',
+				} }>
 					{ __( 'A structured guide to help educators deliver effective and engaging lessons. Tailor your teaching moments with precision and purpose.', 'smartpay' ) }
 				</p>
 			</div>
 
-			{/* Action Footer */}
-			<div style={ { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px' } }>
+			<div className="sp-integ-card__footer" style={ { justifyContent: 'space-between', padding: '10px 16px', borderTopStyle: 'dashed' } }>
 				<button
 					onClick={ (e) => { e.stopPropagation(); onUse() } }
+					className="sp-btn sp-btn--primary"
 					style={ {
-						background:   '#111827',
-						color:        '#ffffff',
+						height:       '28px',
+						padding:      '0 12px',
+						fontSize:     '12px',
+						fontWeight:   500,
+						borderRadius: 'var(--sp-radius-sm, 6px)',
 						border:       'none',
-						borderRadius: '9999px',
-						padding:      '8px 20px',
-						fontSize:     '13px',
-						fontWeight:   600,
 						cursor:       'pointer',
 					} }
 				>
 					{ __( 'Create One', 'smartpay' ) }
 				</button>
 				<div style={ {
-					width:          '32px',
-					height:         '32px',
+					width:          '24px',
+					height:         '24px',
 					borderRadius:   '50%',
-					background:     'rgba(255, 255, 255, 0.4)',
+					background:     'transparent',
 					display:        'flex',
 					alignItems:     'center',
 					justifyContent: 'center',
@@ -95,7 +87,6 @@ const BlankTemplateCard = ( { onUse } ) => {
 
 /* ─── Premium Template Card ───────────────────────────────────────── */
 const TemplateCard = ( { template, onUse } ) => {
-	const [ hov, setHov ] = useState( false )
 	const fieldCount      = template.fields.filter( ( f ) => f !== 'submit' ).length
 
 	// Category specific symbols matching reference icons
@@ -113,44 +104,32 @@ const TemplateCard = ( { template, onUse } ) => {
 
 	return (
 		<div
-			onMouseEnter={ () => setHov( true ) }
-			onMouseLeave={ () => setHov( false ) }
+			className="sp-integ-card"
 			onClick={ () => onUse( template ) }
 			role="button"
 			tabIndex={ 0 }
 			onKeyDown={ ( e ) => { if ( e.key === 'Enter' || e.key === ' ' ) onUse( template ) } }
 			style={ {
-				borderRadius:  '16px',
-				background:    '#ffffff',
-				border:        `1px solid ${ hov ? 'var(--sp-brand, #293c81)' : '#e5e7eb' }`,
-				padding:       '24px',
-				display:       'flex',
-				flexDirection: 'column',
-				justifyContent: 'space-between',
-				minHeight:     '250px',
 				cursor:        'pointer',
-				boxShadow:     hov ? '0 8px 30px rgba(0,0,0,0.06)' : '0 2px 8px rgba(0,0,0,0.02)',
-				transform:     hov ? 'translateY(-2px)' : 'none',
-				transition:    'all 0.2s ease',
+				minHeight:     '250px',
 			} }
 		>
-			{/* Icon container */}
-			<div style={ {
-				width:          '36px',
-				height:         '36px',
-				borderRadius:   '50%',
-				background:     '#f3f4f6',
-				display:        'flex',
-				alignItems:     'center',
-				justifyContent: 'center',
-				marginBottom:   '16px',
-			} }>
-				<span style={ { fontSize: '18px' } }>{ getCategorySymbol(template.category) }</span>
+			<div className="sp-integ-card__logo" style={ { justifyContent: 'flex-start', padding: '16px 16px 0' } }>
+				<div style={ {
+					width:          '36px',
+					height:         '36px',
+					borderRadius:   '50%',
+					background:     'var(--sp-brand-light, #eef0f9)',
+					display:        'flex',
+					alignItems:     'center',
+					justifyContent: 'center',
+				} }>
+					<span style={ { fontSize: '18px' } }>{ getCategorySymbol(template.category) }</span>
+				</div>
 			</div>
 
-			{/* Details */}
-			<div style={ { flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' } }>
-				<div style={ { display: 'flex', alignItems: 'center', justifyContent: 'space-between' } }>
+			<div className="sp-integ-card__body">
+				<div style={ { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' } }>
 					<span style={ {
 						fontSize:      '10px',
 						fontWeight:    600,
@@ -167,15 +146,11 @@ const TemplateCard = ( { template, onUse } ) => {
 					</span>
 				</div>
 
-				<h3 style={ { margin: '6px 0 0', fontSize: '15px', fontWeight: 700, color: '#111827', lineHeight: 1.3 } }>
+				<h3 className="sp-integ-card__name" style={ { margin: '0 0 4px' } }>
 					{ template.name }
 				</h3>
 
-				<p style={ {
-					margin:          '6px 0 0',
-					fontSize:        '12px',
-					color:           '#6b7280',
-					lineHeight:      1.5,
+				<p className="sp-integ-card__desc" style={ {
 					display:         '-webkit-box',
 					WebkitLineClamp: 3,
 					WebkitBoxOrient: 'vertical',
@@ -185,33 +160,31 @@ const TemplateCard = ( { template, onUse } ) => {
 				</p>
 			</div>
 
-			{/* Action Footer */}
-			<div style={ { display: 'flex', alignItems: 'center', gap: '10px', marginTop: '16px' } }>
+			<div className="sp-integ-card__footer" style={ { justifyContent: 'space-between', padding: '10px 16px' } }>
 				<button
 					onClick={ (e) => { e.stopPropagation(); onUse(template) } }
+					className="sp-btn sp-btn--primary"
 					style={ {
-						background:   '#111827',
-						color:        '#ffffff',
+						height:       '28px',
+						padding:      '0 12px',
+						fontSize:     '12px',
+						fontWeight:   500,
+						borderRadius: 'var(--sp-radius-sm, 6px)',
 						border:       'none',
-						borderRadius: '9999px',
-						padding:      '8px 20px',
-						fontSize:     '13px',
-						fontWeight:   600,
 						cursor:       'pointer',
 					} }
 				>
 					{ __( 'Use Template', 'smartpay' ) }
 				</button>
 				<div style={ {
-					width:          '32px',
-					height:         '32px',
+					width:          '24px',
+					height:         '24px',
 					borderRadius:   '50%',
-					background:     '#ffffff',
-					border:         '1px solid #e5e7eb',
+					background:     'transparent',
 					display:        'flex',
 					alignItems:     'center',
 					justifyContent: 'center',
-					color:          '#9ca3af',
+					color:          'var(--sp-brand, #293c81)',
 				} }>
 					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
 						<line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
