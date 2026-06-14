@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: SmartPay for WordPress - WPSmartPay
+ * Plugin Name: SmartPay - Invoice, Form and Donation Payment Plugin for WordPress
  * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, ecommerce, digital product, payment gateways, donations,
@@ -35,6 +35,7 @@ defined('ABSPATH') || exit;
 
 define('SMARTPAY_VERSION', '3.0.0');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
+define('SMARTPAY_DIR', plugin_dir_path(__FILE__));
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
 
