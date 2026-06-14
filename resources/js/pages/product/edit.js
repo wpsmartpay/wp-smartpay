@@ -5,6 +5,7 @@ import Swal from 'sweetalert2/dist/sweetalert2'
 import { UpdateProduct } from '../../http/product'
 import { ProductForm, CoverImageCard } from './components/form'
 import { productDefaultData } from '../../utils/constant'
+import { DeprecatedBanner } from '../../components/DeprecatedBanner'
 
 const { useSelect, dispatch } = wp.data
 
@@ -65,6 +66,8 @@ export const EditProduct = () => {
                         subtitle={product.id ? `#${product.id}` : ''}
                     />
                     <div className="sp-layout">
+
+                        <DeprecatedBanner feature={__('Products', 'smartpay')} />
 
                         {/* Page action bar */}
                         <div className="sp-page-head">

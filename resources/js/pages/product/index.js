@@ -3,6 +3,7 @@ import { ChevronDown, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { createHooks } from '@wordpress/hooks'
 import { DeleteProduct, GetProducts } from '../../http/product'
+import { DeprecatedBanner } from '../../components/DeprecatedBanner'
 
 const { useState, useEffect, useCallback, useRef } = wp.element
 
@@ -316,6 +317,8 @@ export const ProductList = () => {
 			/>
 
 			<div className="sp-layout">
+
+				<DeprecatedBanner feature={__('Products', 'smartpay')} />
 
 				<div className="sp-page-title__inner">
 					<h1 className="sp-page-title__heading">{__('Products', 'smartpay')}</h1>
