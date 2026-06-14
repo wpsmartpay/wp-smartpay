@@ -12,7 +12,7 @@ if ( ! file_exists( $sp_view_file ) ) {
 }
 ?>
 
-<div class="smartpay-dashboard">
+<div class="smartpay-dashboard alignfull">
 	<div class="dashboard-container">
 		<div class="dashboard-layout">
 			<!-- Sidebar Navigation -->

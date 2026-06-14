@@ -1,26 +1,31 @@
+/* ========================================
+   Variables (Monochrome/Gray theme)
+   ======================================== */
+
 :root {
-	--primary-gradient: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%);
-	--primary-color: #3b82f6;
-	--primary-dark: #4338ca;
-	--error-color: #ef4444;
-	--text-primary: #1f2937;
-	--text-secondary: #6b7280;
+	--primary-color: #374151; /* Dark gray primary */
+	--primary-dark: #111827;  /* Near black hover */
+	--error-color: #dc2626;   /* Red for alert/errors */
+	--text-primary: #111827;
+	--text-secondary: #4b5563;
 	--text-muted: #9ca3af;
-	--border-color: #e5e7eb;
+	--border-color: #d1d5db;
 	--bg-white: #ffffff;
-	--radius-md: 8px;
-	--radius-xl: 16px;
-	--registration-max-height: 78vh;
+	--radius-md: 6px;
 }
+
+/* ========================================
+   Base Layout & Wrapper Constraints (No border, shadow, fixed width, overflow)
+   ======================================== */
 
 .smartpay-registration-page {
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 20px;
-	border-radius: 28px;
-	max-width: max-content;
+	width: 100%;
+	max-width: 100%;
+	padding: 0;
 }
 
 .smartpay-registration-page * {
@@ -29,76 +34,53 @@
 
 .smartpay-registration-page .registration-container {
 	width: 100%;
-	max-width: 580px;
+	max-width: 100%;
 	min-width: 0;
 }
 
-
 .smartpay-registration-page .registration-form-wrapper {
-	background: var(--bg-white);
-	border-radius: var(--radius-xl);
-	padding: 30px;
-	border-top: 1px solid #efefef;
-	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-	max-height: var(--registration-max-height);
-	overflow-y: auto;
-	overflow-x: hidden;
-	scrollbar-width: thin;
-	scrollbar-color: transparent transparent;
-}
-
-.smartpay-registration-page .registration-form-wrapper:hover {
-	scrollbar-color: var(--border-color) transparent;
-}
-
-.smartpay-registration-page .registration-form-wrapper::-webkit-scrollbar {
-	width: 6px;
-}
-
-.smartpay-registration-page .registration-form-wrapper::-webkit-scrollbar-track {
 	background: transparent;
-}
-
-.smartpay-registration-page .registration-form-wrapper::-webkit-scrollbar-thumb {
-	background: transparent;
-	border-radius: 3px;
-	transition: background 0.2s ease;
-}
-
-.smartpay-registration-page .registration-form-wrapper:hover::-webkit-scrollbar-thumb {
-	background: var(--border-color);
-}
-
-.smartpay-registration-page .registration-form-wrapper::-webkit-scrollbar-thumb:hover {
-	background: var(--text-muted);
+	border-radius: 0;
+	padding: 24px 0;
+	border: none;
+	box-shadow: none;
+	width: 100%;
+	max-width: 100%;
+	max-height: none;
+	overflow: visible;
 }
 
 .smartpay-registration-page .registration-form-container {
 	width: 100%;
-	max-width: 520px;
-	margin: 0 auto;
-	min-width: 0;
+	max-width: 100%;
+	margin: 0;
 }
 
-/* Form Header */
+/* ========================================
+   Form Header
+   ======================================== */
+
 .smartpay-registration-page .form-header {
-	margin-bottom: 32px;
+	margin-bottom: 24px;
 }
 
 .smartpay-registration-page .form-title {
-	font-size: 2rem;
-	font-weight: 800;
+	font-size: 1.75rem;
+	font-weight: 700;
 	color: var(--text-primary);
 	margin: 0 0 8px;
 }
 
 .smartpay-registration-page .form-subtitle {
-	font-size: 1rem;
+	font-size: 0.95rem;
 	color: var(--text-secondary);
 	margin: 0;
 }
 
-/* Form Groups & Controls */
+/* ========================================
+   Form Groups & Controls (Inputs/Dropdowns)
+   ======================================== */
+
 .smartpay-registration-page .form-group {
 	margin-bottom: 20px;
 }
@@ -114,17 +96,19 @@
 .smartpay-registration-page .form-control {
 	width: 100%;
 	padding: 12px 16px;
-	border: 2px solid var(--border-color);
+	border: 1px solid var(--border-color);
 	border-radius: var(--radius-md);
 	font-size: 1rem;
-	transition: all 0.3s ease;
+	background-color: var(--bg-white);
+	color: var(--text-primary);
+	transition: border-color 0.2s ease;
 	font-family: inherit;
 }
 
 .smartpay-registration-page .form-control:focus {
 	outline: none;
 	border-color: var(--primary-color);
-	box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+	box-shadow: none;
 }
 
 .smartpay-registration-page .form-control.error {
@@ -144,61 +128,14 @@
 	padding-left: 44px;
 }
 
+/* Perfect Positioning - Grid rows */
 .smartpay-registration-page .form-row {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 16px;
 }
 
-/* Buttons */
-.smartpay-registration-page .btn {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-	padding: 12px 24px;
-	font-size: 1rem;
-	font-weight: 700;
-	text-align: center;
-	border: none;
-	border-radius: var(--radius-md);
-	cursor: pointer;
-	transition: all 0.3s ease;
-	font-family: inherit;
-	text-decoration: none;
-	white-space: nowrap;
-}
-
-.smartpay-registration-page .btn-primary {
-	background: var(--primary-gradient);
-	color: white;
-	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.smartpay-registration-page .btn-primary:hover:not(:disabled) {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-.smartpay-registration-page .btn-full {
-	width: 100%;
-}
-
-.smartpay-registration-page .btn:disabled {
-	opacity: 0.6;
-	cursor: not-allowed;
-	transform: none;
-}
-
-.smartpay-registration-page .btn-arrow {
-	transition: transform 0.3s ease;
-}
-
-.smartpay-registration-page .btn:hover:not(:disabled) .btn-arrow {
-	transform: translateX(4px);
-}
-
-/* Input Icons */
+/* Icons styling */
 .smartpay-registration-page .input-with-icon {
 	position: relative;
 }
@@ -206,7 +143,7 @@
 .smartpay-registration-page .input-icon {
 	position: absolute;
 	left: 14px;
-	top: 25px;
+	top: 50%;
 	transform: translateY(-50%);
 	color: var(--text-muted);
 	pointer-events: none;
@@ -221,7 +158,7 @@
 .smartpay-registration-page .password-toggle {
 	position: absolute;
 	right: 12px;
-	top: 25px;
+	top: 50%;
 	transform: translateY(-50%);
 	background: none;
 	border: none;
@@ -243,7 +180,7 @@
 	outline: none;
 }
 
-/* Password Strength Indicator */
+/* Password Strength Indicator - Clean flat gray indicators */
 .smartpay-registration-page .password-strength {
 	height: 4px;
 	background: var(--border-color);
@@ -263,7 +200,7 @@
 	height: 100%;
 	width: 0;
 	border-radius: 2px;
-	transition: all 0.3s ease;
+	transition: all 0.2s ease;
 }
 
 .smartpay-registration-page .password-strength.weak::after {
@@ -281,7 +218,10 @@
 	background: #10b981;
 }
 
-/* Checkboxes */
+/* ========================================
+   Checkboxes & Links
+   ======================================== */
+
 .smartpay-registration-page .checkbox-group {
 	margin-bottom: 16px;
 }
@@ -289,7 +229,7 @@
 .smartpay-registration-page .checkbox-label {
 	display: flex;
 	align-items: flex-start;
-	gap: 12px;
+	gap: 10px;
 	cursor: pointer;
 	user-select: none;
 	font-size: 0.938rem;
@@ -302,9 +242,9 @@
 }
 
 .smartpay-registration-page .checkbox-custom {
-	width: 20px;
-	height: 20px;
-	border: 2px solid var(--border-color);
+	width: 18px;
+	height: 18px;
+	border: 1px solid var(--border-color);
 	border-radius: 4px;
 	background: var(--bg-white);
 	flex-shrink: 0;
@@ -326,16 +266,16 @@
 	content: '';
 	position: absolute;
 	left: 5px;
-	top: 1px;
+	top: 2px;
 	width: 5px;
-	height: 10px;
+	height: 9px;
 	border: solid white;
 	border-width: 0 2px 2px 0;
 	transform: rotate(45deg);
 }
 
 .smartpay-registration-page .checkbox-text {
-	color: var(--text-primary);
+	color: var(--text-secondary);
 	line-height: 1.5;
 }
 
@@ -346,6 +286,7 @@
 }
 
 .smartpay-registration-page .checkbox-text a:hover {
+	color: var(--primary-dark);
 	text-decoration: underline;
 }
 
@@ -366,13 +307,67 @@
 .smartpay-registration-page .help-text {
 	display: block;
 	color: var(--text-secondary);
-	font-size: 0.875rem;
+	font-size: 0.825rem;
 	margin-top: 6px;
 }
 
-/* Alerts */
+/* ========================================
+   Buttons (No Gradient, No Shadow, Static hover)
+   ======================================== */
+
+.smartpay-registration-page .btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 12px 24px;
+	font-size: 1rem;
+	font-weight: 600;
+	text-align: center;
+	border: none;
+	border-radius: var(--radius-md);
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	font-family: inherit;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.smartpay-registration-page .btn-primary {
+	background: var(--primary-color);
+	color: white;
+	box-shadow: none;
+}
+
+.smartpay-registration-page .btn-primary:hover:not(:disabled) {
+	background: var(--primary-dark);
+	transform: none;
+	box-shadow: none;
+}
+
+.smartpay-registration-page .btn-full {
+	width: 100%;
+}
+
+.smartpay-registration-page .btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.smartpay-registration-page .btn-arrow {
+	transition: transform 0.2s ease;
+}
+
+.smartpay-registration-page .btn:hover:not(:disabled) .btn-arrow {
+	transform: translateX(3px);
+}
+
+/* ========================================
+   Alerts
+   ======================================== */
+
 .smartpay-registration-page .alert {
-	padding: 16px 20px;
+	padding: 14px 18px;
 	border-radius: var(--radius-md);
 	font-size: 0.938rem;
 	font-weight: 500;
@@ -383,18 +378,21 @@
 }
 
 .smartpay-registration-page .alert-success {
-	background: #d1fae5;
-	color: #065f46;
-	border: 1px solid #6ee7b7;
+	background: #f0fdf4;
+	color: #166534;
+	border: 1px solid #bbf7d0;
 }
 
 .smartpay-registration-page .alert-error {
-	background: #fee2e2;
+	background: #fef2f2;
 	color: #991b1b;
 	border: 1px solid #fca5a5;
 }
 
-/* Form Footer */
+/* ========================================
+   Footer
+   ======================================== */
+
 .smartpay-registration-page .form-footer {
 	text-align: center;
 	margin-top: 24px;
@@ -411,8 +409,7 @@
 .smartpay-registration-page .form-footer a {
 	color: var(--primary-color);
 	text-decoration: none;
-	font-weight: 700;
-	transition: color 0.2s ease;
+	font-weight: 600;
 }
 
 .smartpay-registration-page .form-footer a:hover {
@@ -426,55 +423,15 @@
 
 @media (max-width: 768px) {
 	.smartpay-registration-page {
-		padding: 20px 10px;
-		max-width: 100%;
-	}
-
-	.smartpay-registration-page .registration-container {
-		max-width: 100%;
+		padding: 0;
 	}
 
 	.smartpay-registration-page .registration-form-wrapper {
-		padding: 40px 20px;
-		/* No scrollbar on responsive: full height, page scrolls */
-		max-height: none;
-		overflow: visible;
-		scrollbar-color: unset;
-	}
-
-	.smartpay-registration-page .registration-form-wrapper:hover {
-		scrollbar-color: unset;
-	}
-
-	.smartpay-registration-page .registration-form-wrapper::-webkit-scrollbar {
-		display: none;
-		width: 0;
+		padding: 24px 0;
 	}
 
 	.smartpay-registration-page .form-row {
 		grid-template-columns: 1fr;
-	}
-
-	.smartpay-registration-page .form-title {
-		font-size: 1.75rem;
-	}
-}
-
-@media (max-width: 480px) {
-	.smartpay-registration-page {
-		padding: 16px 12px;
-	}
-
-	.smartpay-registration-page .registration-form-wrapper {
-		padding: 24px 16px;
-	}
-
-	.smartpay-registration-page .registration-form-container {
-		padding: 0;
-	}
-
-	.smartpay-registration-page .btn {
-		padding: 12px 20px;
-		font-size: 0.938rem;
+		gap: 0;
 	}
 }

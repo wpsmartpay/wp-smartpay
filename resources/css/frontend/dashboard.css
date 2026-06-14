@@ -179,8 +179,8 @@
 }
 
 .smartpay-dashboard .sidebar-nav .nav-item.active {
-	background: var(--primary-gradient);
-	color: white;
+	background: #e5e7eb;
+	color: var(--text-primary);
 }
 
 .smartpay-dashboard .sidebar-nav .nav-item svg {

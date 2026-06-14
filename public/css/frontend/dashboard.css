@@ -45,10 +45,10 @@
 	position: sticky;
 	top: 40px;
 	background: var(--bg-white);
-	border-radius: var(--radius-xl);
+	/* border-radius: var(--radius-xl); */
 	padding: 0;
-	box-shadow: var(--shadow-md);
-	border: 1px solid var(--border-color);
+	/* box-shadow: var(--shadow-md); */
+	border-right: 1px solid var(--border-color);
 	overflow: hidden;
 	min-height: calc( 100vh - 80px );
 	display: flex;
@@ -180,8 +180,8 @@
 }
 
 .smartpay-dashboard .sidebar-nav .nav-item.active {
-	background: var(--primary-gradient);
-	color: white;
+	background: #e5e7eb;
+	color: var(--text-primary);
 }
 
 .smartpay-dashboard .sidebar-nav .nav-item svg {
