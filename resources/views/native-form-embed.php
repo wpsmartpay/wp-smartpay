@@ -162,6 +162,7 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 						<input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway"
 							value="<?php echo esc_attr( reset( $gw_keys ) ); ?>" checked />
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
+						<?php ob_start(); ?>
 						<label class="payment-gateway--label">
 							<?php esc_html_e( 'Select a payment method', 'smartpay' ); ?>
 						</label>
@@ -228,6 +229,11 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 								<?php endforeach; ?>
 							</div>
 						</div>
+						<?php
+						$smartpay_gateway_html = ob_get_clean();
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped inside
+						echo apply_filters( 'smartpay_form_gateway_layout_html', $smartpay_gateway_html, $gateways, $chosen_gw, $post_id );
+						?>
 					<?php else : ?>
 						<?php $has_payment_error = true; ?>
 						<div class="alert alert-danger">
