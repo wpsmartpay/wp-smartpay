@@ -249,7 +249,8 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 						// cast; colours pass through sanitize + esc_attr; the icon SVG is
 						// from a fixed server-side whitelist (no user input).
 						$btn_full   = ! empty( $submit_btn['fullWidth'] );
-						$btn_align  = in_array( $submit_btn['align'] ?? 'left', array( 'left', 'center', 'right' ), true ) ? $submit_btn['align'] : 'left';
+						$align_raw  = $submit_btn['align'] ?? 'left';
+						$btn_align  = in_array( $align_raw, array( 'left', 'center', 'right' ), true ) ? $align_raw : 'left';
 						$btn_width  = absint( $submit_btn['width'] ?? 0 );
 						$btn_bg     = sanitize_text_field( $submit_btn['bgColor'] ?? '#28a745' );
 						$btn_text   = sanitize_text_field( $submit_btn['textColor'] ?? '#ffffff' );
