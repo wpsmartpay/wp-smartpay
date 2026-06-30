@@ -8,6 +8,7 @@ use SmartPay\Models\Payment;
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
 use SmartPay\Models\Customer;
+use SmartPay\Modules\NativeForm\LegacyFormMigrator;
 
 class Shortcode {
 
@@ -46,6 +47,22 @@ class Shortcode {
 
 		if ( ! isset( $id ) ) {
 			return;
+		}
+
+		// If this legacy form was migrated to a native CPT form, delegate to [sp_form].
+		$migrated = get_posts(
+			array(
+				'post_type'      => 'smartpay_form',
+				'post_status'    => 'publish',
+				'numberposts'    => 1,
+				'fields'         => 'ids',
+				'meta_key'       => LegacyFormMigrator::SOURCE_META,
+				'meta_value'     => (string) $id,
+				'no_found_rows'  => true,
+			)
+		);
+		if ( ! empty( $migrated ) ) {
+			return do_shortcode( '[sp_form id="' . (int) $migrated[0] . '"]' );
 		}
 
 		// TODO: Add message if no payment method setup

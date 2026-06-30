@@ -316,6 +316,70 @@ class NativeForm {
 				),
 			)
 		);
+
+		register_rest_route(
+			'smartpay/v1',
+			'migrate-legacy-form',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'rest_migrate_legacy_form' ),
+				'permission_callback' => fn() => current_user_can( 'manage_options' ),
+				'args'                => array(
+					'form_id' => array(
+						'required'          => false,
+						'sanitize_callback' => 'absint',
+					),
+					'migrate_all' => array(
+						'required'          => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					),
+					'dry_run' => array(
+						'required'          => false,
+						'default'           => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST handler: migrate one or all legacy forms to CPT posts.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function rest_migrate_legacy_form( \WP_REST_Request $request ) {
+		if ( ! class_exists( '\\SmartPay\\Models\\Form' ) ) {
+			return new \WP_Error( 'smartpay_no_legacy_model', __( 'Legacy Form model not available.', 'smartpay' ), array( 'status' => 500 ) );
+		}
+
+		$migrator = new LegacyFormMigrator();
+		$dry_run  = (bool) $request->get_param( 'dry_run' );
+		$form_id  = (int) $request->get_param( 'form_id' );
+		$all      = (bool) $request->get_param( 'migrate_all' );
+
+		if ( ! $form_id && ! $all ) {
+			return new \WP_Error( 'smartpay_missing_param', __( 'Provide form_id or migrate_all=true.', 'smartpay' ), array( 'status' => 400 ) );
+		}
+
+		$forms = $all
+			? \SmartPay\Models\Form::all()
+			: \SmartPay\Models\Form::where( 'id', $form_id )->get();
+
+		$results = array();
+		foreach ( $forms as $form ) {
+			$result = $migrator->migrate( $form, $dry_run );
+			$results[] = array(
+				'legacy_id' => $form->id,
+				'title'     => $form->title,
+				'post_id'   => is_wp_error( $result ) ? null : $result,
+				'error'     => is_wp_error( $result ) ? $result->get_error_message() : null,
+				'dry_run'   => $dry_run,
+			);
+		}
+
+		return new \WP_REST_Response( array( 'results' => $results ), 200 );
 	}
 
 	/**
