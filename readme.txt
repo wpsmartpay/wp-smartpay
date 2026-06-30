@@ -1,10 +1,10 @@
-=== SmartPay for WordPress - WPSmartPay ===
+=== WPSmartPay – Payment Forms, Donations & Subscriptions | Stripe, Authorize.net & Multi-Gateway ===
 Contributors: converswp
 Tags: download manager, ecommerce, digital product, payment gateways, donations,
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.0.0
+Stable Tag: 4.0.0
 License: GPL-3.0-or-later
 
 Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
@@ -112,6 +112,14 @@ The easiest way to install WP SmartPay is to search for it via your site’s Das
 7. Seamless one click checkout
 
 == Changelog ==
+= [4.0.0] =
+* New - Legacy form migrator: recovers pre-3.0 forms with stale block markup into valid native forms
+* New - Payment gateways now managed from a dedicated Settings → Payment Gateways screen with instant enable/disable
+* Update - Plugin renamed to "WPSmartPay – Payment Forms, Donations & Subscriptions"
+* Update - Payment gateways removed from the Integrations page (managed under Settings instead)
+* Fix - Legacy form builder no longer shows "invalid content" for migrated forms
+* Fix - Pricing and submit blocks rebuilt to match the current native form save format
+
 = [3.0.0] =
 * New - Native payment form builder (Gutenberg-based) included
 * New - Form template library with 18 ready-made templates across 6 categories

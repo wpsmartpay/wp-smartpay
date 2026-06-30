@@ -206,7 +206,10 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 													<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>" alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
 												</span>
 												<span class="smartpay-gateway-card__hint-title-text">
-													<?php printf( esc_html__( '%s selected.', 'smartpay' ), esc_html( $gateway['checkout_label'] ) ); ?>
+													<?php
+														/* translators: %s: selected payment gateway label (e.g. "Stripe"). */
+														printf( esc_html__( '%s selected.', 'smartpay' ), esc_html( $gateway['checkout_label'] ) );
+													?>
 												</span>
 											</div>
 											<div class="smartpay-gateway-card__hint-divider"></div>
