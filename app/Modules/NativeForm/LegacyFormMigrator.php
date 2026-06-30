@@ -48,12 +48,14 @@ final class LegacyFormMigrator {
 			return $post_id ?: 0;
 		}
 
-		$post_status = ( 'publish' === $form->status ) ? 'publish' : 'draft';
-		$postarr     = array(
+		$post_status    = ( 'publish' === $form->status ) ? 'publish' : 'draft';
+		$normalized_body = $this->normalize_body( (string) $form->body, $amounts );
+
+		$postarr = array(
 			'ID'           => $post_id,
 			'post_type'    => 'smartpay_form',
 			'post_title'   => sanitize_text_field( (string) $form->title ),
-			'post_content' => $this->normalize_body( (string) $form->body, $amounts ),
+			'post_content' => $normalized_body,
 			'post_status'  => $post_status,
 			'post_author'  => (int) ( isset( $form->created_by ) ? $form->created_by : get_current_user_id() ),
 		);
@@ -66,6 +68,17 @@ final class LegacyFormMigrator {
 		update_post_meta( $post_id, '_smartpay_amounts', wp_json_encode( $amounts ) );
 		update_post_meta( $post_id, '_smartpay_settings', wp_json_encode( (array) ( $form->settings ?? array() ) ) );
 		update_post_meta( $post_id, self::SOURCE_META, (string) $form->id );
+
+		// Also patch the source legacy row body with the normalized markup so the
+		// legacy form builder (#/N/edit) shows valid blocks instead of "invalid content".
+		global $wpdb;
+		$wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prefix . 'smartpay_forms',
+			array( 'body' => $normalized_body ),
+			array( 'id'   => (int) $form->id ),
+			array( '%s' ),
+			array( '%d' )
+		);
 
 		/**
 		 * Fires after a legacy form is successfully migrated to a CPT post.
