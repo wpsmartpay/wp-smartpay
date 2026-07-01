@@ -1,9 +1,9 @@
-=== WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions | Stripe, Authorize.net & Multi-Gateway ===
+=== WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions ===
 Contributors: converswp
 Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
-Requires PHP: 8.1
+Requires PHP: 8.0
 Stable Tag: 3.0.0
 License: GPL-3.0-or-later
 
@@ -15,7 +15,7 @@ Accept payments, send invoices, and collect donations on WordPress. Connect Stri
 
 No complex store setup. No bloated cart plugin. Just create a payment form, connect a gateway, and start getting paid — in minutes.
 
-Use it to invoice clients, accept one-time or recurring donations, sell digital products, or charge for services. WP SmartPay handles the money side so you can focus on the work.
+Use it to invoice clients, accept one-time or recurring donations or charge for services. WPSmartPay handles the money side so you can focus on the work.
 
 [youtube http://www.youtube.com/watch?v=PdqA7XNH60Q]
 
@@ -25,7 +25,7 @@ Use it to invoice clients, accept one-time or recurring donations, sell digital 
 
 **New:**
 
-* **Native Gutenberg Form Builder** — Design payment forms visually using the WordPress block editor. No shortcodes, no page builders required.
+* **New - Rebuilt Gutenberg payment form builder** — Design payment forms visually using the WordPress block editor. No page builders required.
 * **Invoice Management** — Create, send, and track professional invoices directly from your WordPress dashboard.
 * **Advanced Reports** — Revenue charts, payment trends, and subscription metrics with date-range filters.
 * **Anti-Spam Control System** — Protect payment forms with 3 built-in integrations: **Cloudflare Turnstile**, **hCaptcha**, and **reCAPTCHA v3**.
@@ -44,7 +44,7 @@ Use it to invoice clients, accept one-time or recurring donations, sell digital 
 
 ### Invoicing Built Into WordPress
 
-Stop switching between tools. WP SmartPay lets you create and send professional invoices without leaving the WordPress admin.
+Stop switching between tools. WPSmartPay lets you create and send professional invoices without leaving the WordPress admin.
 
 * Generate invoices for one-time or recurring payments
 * Send to customers by email in one click
@@ -57,15 +57,15 @@ Stop switching between tools. WP SmartPay lets you create and send professional 
 
 Connect the gateway that fits your business and start accepting payments immediately:
 
+* **Stripe** *(Pro — most popular)* — Cards, Apple Pay, Google Pay, Link
 * **PayPal Standard** — Free, trusted, works out of the box
-* **Stripe** *(Pro)* — Cards, Apple Pay, Google Pay, Link
 * **Authorize.net** *(Pro)* — Industry-standard gateway for US businesses
+* **Mollie** *(Pro)* — Ideal for European businesses
 * **Paddle** *(Pro)* — Global merchant of record; handles tax automatically
 * **Razorpay** *(Pro)* — Best for India-based businesses
-* **Mollie** *(Pro)* — Ideal for European businesses
-* **bKash** *(Pro)* — Mobile banking payments in Bangladesh
 * **toyyibPay** *(Pro)* — Malaysian online banking gateway
 * **Paytm** *(Pro)* — Popular Indian payment gateway
+* **bKash** *(Pro)* — Mobile banking payments in Bangladesh
 
 ---
 
@@ -120,15 +120,14 @@ Stay compliant without extra plugins:
 
 ---
 
-### Who Is WP SmartPay For?
+### Who Is WPSmartPay For?
 
 * **Freelancers & Agencies** — Invoice clients and accept one-time or recurring service payments
-* **Coaches & Consultants** — Charge for sessions, courses, and memberships
+* **Coaches & Consultants** — Charge for sessions, courses
 * **Nonprofits & Charities** — Accept one-time and recurring donations
 * **Content Creators** — Sell eBooks, templates, audio, and digital files
 * **Event Organizers** — Ticket sales and event registrations
-* **SaaS Startups** — Collect payments before your billing system is built
-* **Fitness & Wellness Studios** — Sell memberships and class packages
+* **Fitness & Wellness Studios** — Sell subscription and class packages
 
 ---
 
@@ -142,19 +141,18 @@ Stay compliant without extra plugins:
 * Customizable email templates
 * Guided onboarding wizard
 * Support & system info page
-* Digital products & file downloads
 * Customer management
 * Coupon codes
-* PayPal Standard + Manual/free payment gateway
+* PayPal Standard + manual/free payment gateway
 * Test mode for safe development
 * GDPR-friendly
 * Developer hooks and filters
 
 ---
 
-### WP SmartPay Pro
+### WPSmartPay Pro
 
-Unlock more with [WP SmartPay Pro](https://wpsmartpay.com/pricing/):
+Unlock more with [WPSmartPay Pro](https://wpsmartpay.com/pricing/):
 
 **Pro Payment Gateways:**
 Stripe · Authorize.net · Paddle · Razorpay · Mollie · bKash · toyyibPay · Paytm
@@ -177,21 +175,21 @@ Stripe · Authorize.net · Paddle · Razorpay · Mollie · bKash · toyyibPay ·
 **Marketing & Automation Integrations:**
 Mailchimp · MailerLite · FluentCRM · AffiliateWP · Pabbly · Zapier
 
-[**Get WP SmartPay Pro →**](https://wpsmartpay.com/pricing/)
+[**Get WPSmartPay Pro →**](https://wpsmartpay.com/pricing/)
 
 ---
 
 #### Gateway Coverage
 
+* **Stripe (Pro — most popular)** — 47+ countries, 135+ currencies
 * **PayPal** — 200+ countries, 25 currencies
-* **Stripe** — 47+ countries, 135+ currencies
-* **Authorize.net** — US-focused; USD, CAD, GBP, EUR and more
-* **Paddle** — Global merchant of record; handles VAT and sales tax worldwide
-* **Mollie** — European Economic Area (EEA)
-* **Razorpay** — India, 100+ currencies
-* **toyyibPay** — Malaysia (MYR)
-* **Paytm** — India (INR)
-* **bKash** — Bangladesh (BDT)
+* **Authorize.net (Pro)** — US-focused; USD, CAD, GBP, EUR and more
+* **Mollie (Pro)** — European Economic Area (EEA)
+* **Paddle (Pro)** — Global merchant of record; handles VAT and sales tax worldwide
+* **Razorpay (Pro)** — India, 100+ currencies
+* **toyyibPay (Pro)** — Malaysia (MYR)
+* **Paytm (Pro)** — India (INR)
+* **bKash (Pro)** — Bangladesh (BDT)
 
 ---
 
@@ -201,32 +199,32 @@ Mailchimp · MailerLite · FluentCRM · AffiliateWP · Pabbly · Zapier
 * Built-in System Info & Debug Log (WPSmartPay → Support)
 * Priority email support for Pro users
  
-[Purchase WP SmartPay Pro](https://wpsmartpay.com/pricing/) for priority support.
+[Purchase WPSmartPay Pro](https://wpsmartpay.com/pricing/) for priority support.
 
 == Installation ==
 
 1. Go to **Plugins → Add New** in your WordPress dashboard.
-2. Search for **"WP SmartPay"**.
+2. Search for **"WPSmartPay"**.
 3. Click **Install Now**, then **Activate Plugin**.
 4. Follow the **Setup Wizard** to configure your currency, pages, and first payment gateway.
 5. Go to **WPSmartPay → Forms** to create your first payment form.
 
 == Frequently Asked Questions ==
 
-= Is WP SmartPay free? =
+= Is WPSmartPay free? =
 Yes. The core plugin is completely free and includes the Gutenberg form builder, invoice management, tax control, anti-spam protection, reports, email templates, and PayPal Standard gateway.
 
 = Which payment gateways are supported? =
 Free: PayPal Standard and Manual/Free gateway. Pro: Stripe, Authorize.net, Paddle, Razorpay, Mollie, bKash, toyyibPay, Paytm.
 
 = Can I send invoices from WordPress? =
-Yes. WP SmartPay includes a built-in invoice management system. Create invoices, send them to customers by email, and track their status — all from the WordPress admin.
+Yes. WPSmartPay includes a built-in invoice management system. Create invoices, send them to customers by email, and track their status — all from the WordPress admin.
 
-= Does WP SmartPay support recurring donations? =
-Yes — recurring subscription billing is available with WP SmartPay Pro.
+= Does WPSmartPay support recurring donations? =
+Yes — recurring subscription billing is available with WPSmartPay Pro.
 
 = Is it GDPR compliant? =
-Yes. Payment card data is never stored on your server — all sensitive data is handled directly by the payment gateway. Anti-spam integrations like Cloudflare Turnstile and hCaptcha are privacy-first alternatives to Google reCAPTCHA.
+Yes. Payment card data is never stored on your server — all sensitive data is handled directly by the payment gateway. Turnstile and hCaptcha are privacy-first options; reCAPTCHA v3 is also supported for teams already using Google's ecosystem.
 
 = Can I accept donations? =
 Yes. Enable the custom amount field on any payment form to accept one-time donations. Recurring donations are available with Pro.
@@ -246,8 +244,8 @@ Yes — the form builder is built entirely on Gutenberg blocks and integrates na
 
 == Changelog ==
 
-= [3.0.0] =
-* New - Native Gutenberg payment form builder with live block preview
+= 3.0.0 = 
+* New - Rebuilt Gutenberg payment form builder with live block preview
 * New - Form template library with ready-made templates across categories
 * New - Invoice management: create, send, and track invoices from WP admin
 * New - Advanced reports dashboard with revenue charts and date-range filters
@@ -261,69 +259,68 @@ Yes — the form builder is built entirely on Gutenberg blocks and integrates na
 * New - Legacy form migrator: recovers pre-3.0 forms with stale block markup
 * Improved - Entire admin UI redesigned with a modern, accessible interface
 * Improved - Subscriptions, Payments, Customers, Coupons, Integrations, and Settings pages redesigned for speed and usability
-* Update - Plugin renamed to "WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions"
 * Fix - Legacy form builder no longer shows "invalid content" for migrated forms
 * Fix - Pricing and submit blocks rebuilt to match current native form format
 
-= [2.8.3] =
+= 2.8.3 = 
 * Security - Direct file access protection added to all PHP files
 * Fix - PHP 8.1 nullable parameter compatibility in framework classes
 * Fix - WordPress Plugin Check compliance: escaping, i18n, sanitization
 * Update - Tested up to WordPress 6.9
 
-= [2.8.2] =
+= 2.8.2 = 
 * Fix - Broken form issue
 
-= [2.8.1] =
+= 2.8.1 = 
 * Feature - Coupon validation (frontend & backend)
 * Fix - Compatibility issue with Pro version
 * Fix - Deprecation issues
 * Update - Coupon list UI & UX
 * Update - Documentation link
 
-= [2.8.0] =
+= 2.8.0 = 
 * Fix - Major security issues (nonces, escaping, sanitization)
 * Fix - Deprecation issues
 * Fix - Text domain warnings
 
-= [2.7.13] =
+= 2.7.13 = 
 * Fix - Input sanitization for form submission
 * Fix - Text domain warning
 
-= [2.7.12] =
+= 2.7.12 = 
 * Fix - Add instructions to enable payment gateways in Pro version
 
-= [2.7.0] =
+= 2.7.0 = 
 * Add - Paytm payment gateway
 
-= [2.6.7] =
+= 2.6.7 = 
 * Add - toyyibPay payment gateway
 
-= [2.6.1] =
+= 2.6.1 = 
 * New - Mollie payment gateway
 * New - Register custom payment gateway hook
 
-= [2.5.0] =
+= 2.5.0 = 
 * Add - Razorpay payment gateway
 
-= [2.4.0] =
+= 2.4.0 = 
 * New - Coupon system
 * New - MailerLite integration
 * New - Onboarding welcome flow
 
-= [2.0.0] =
+= 2.0.0 = 
 * New - Debug log settings
 * New - Customer details page
 * New - Monthly report page
 
-= [1.1.0] =
+= 1.1.0 = 
 * New - ReactJS admin SPA
 * New - Gutenberg form builder
 * New - Dashboard
 
-= [1.0.0] =
+= 1.0.0 = 
 * Initial stable release
 
 == Upgrade Notice ==
 = 3.0.0 =
-Major release. New Gutenberg form builder, invoice management, anti-spam, tax control, redesigned UI, and more. After upgrading, run the legacy form migrator (Integrations → Legacy Forms) if you have forms created before v3.0.
+Major release.
