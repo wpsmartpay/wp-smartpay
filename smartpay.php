@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions | Stripe, Authorize.net & Multi-Gateway
+ * Plugin Name: WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions
  * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, ecommerce, digital product, payment gateways, donations,
