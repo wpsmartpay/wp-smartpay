@@ -11,7 +11,7 @@ Accept payments, send invoices, and collect donations on WordPress. Connect Stri
 
 == Description ==
 
-**WP SmartPay** is the simplest way to accept payments, send professional invoices, and collect donations on WordPress.
+**WPSmartPay** is the simplest way to accept payments, send professional invoices, and collect donations on WordPress.
 
 No complex store setup. No bloated cart plugin. Just create a payment form, connect a gateway, and start getting paid — in minutes.
 
