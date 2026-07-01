@@ -45,7 +45,7 @@ class UserProfile {
 				} else {
 					wp_safe_redirect( home_url() );
 				}
-			} elseif ( ! is_smartpay_customer() ) {
+			} elseif ( ! smartpay_is_customer() ) {
 				wp_safe_redirect( home_url() );
 			}
 			$shortcode = 'smartpay_user_profile';

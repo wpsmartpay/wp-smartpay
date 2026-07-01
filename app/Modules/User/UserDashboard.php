@@ -41,7 +41,7 @@ class UserDashboard {
 				} else {
 					wp_safe_redirect( home_url() );
 				}
-			} elseif ( ! is_smartpay_customer() ) {
+			} elseif ( ! smartpay_is_customer() ) {
 				wp_safe_redirect( home_url() );
 			}
 			$shortcode = 'smartpay_dashboard';

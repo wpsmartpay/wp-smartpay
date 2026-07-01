@@ -56,8 +56,8 @@ class Shortcode {
 				'post_status'    => 'publish',
 				'numberposts'    => 1,
 				'fields'         => 'ids',
-				'meta_key'       => LegacyFormMigrator::SOURCE_META,
-				'meta_value'     => (string) $id,
+				'meta_key'       => LegacyFormMigrator::SOURCE_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- migration-link lookup, runs only for legacy shortcodes.
+				'meta_value'     => (string) $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- migration-link lookup, runs only for legacy shortcodes.
 				'no_found_rows'  => true,
 			)
 		);

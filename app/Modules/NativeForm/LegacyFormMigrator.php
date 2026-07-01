@@ -36,8 +36,8 @@ final class LegacyFormMigrator {
 				'post_status' => 'any',
 				'numberposts' => 1,
 				'fields'      => 'ids',
-				'meta_key'    => self::SOURCE_META,
-				'meta_value'  => (string) $form->id,
+				'meta_key'    => self::SOURCE_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- migration-link lookup, runs only during migration.
+				'meta_value'  => (string) $form->id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- migration-link lookup, runs only during migration.
 			)
 		);
 		$post_id = $existing[0] ?? 0;

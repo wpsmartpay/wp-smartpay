@@ -1,4 +1,4 @@
-=== WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions ===
+=== WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions | Stripe, Authorize.net & Multi-Gateway ===
 Contributors: converswp
 Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
