@@ -12,6 +12,36 @@ class Setting
         // die();
         add_action('admin_init', [$this, 'register_settings']);
         add_action('wp_ajax_smartpay_toggle_gateway', [$this, 'toggle_gateway_activation']);
+        add_action('wp_ajax_smartpay_set_test_mode', [$this, 'set_test_mode']);
+    }
+
+    /**
+     * AJAX: set the global Test Mode (Sandbox / Live) and persist immediately.
+     */
+    public function set_test_mode()
+    {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Permission denied.', 'smartpay' ) ], 403 );
+        }
+
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'smartpay_set_test_mode' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid request.', 'smartpay' ) ], 403 );
+        }
+
+        $mode      = isset( $_POST['mode'] ) ? sanitize_key( wp_unslash( $_POST['mode'] ) ) : '';
+        $test_mode = ( 'sandbox' === $mode ) ? 1 : 0;
+
+        global $smartpay_options;
+        $smartpay_options['test_mode'] = $test_mode;
+        smartpay_update_settings( $smartpay_options );
+
+        wp_send_json_success( [
+            'test_mode' => $test_mode,
+            'message'   => ( 1 === $test_mode )
+                ? __( 'Sandbox (test) mode enabled.', 'smartpay' )
+                : __( 'Live mode enabled.', 'smartpay' ),
+        ] );
     }
 
     public function toggle_gateway_activation()
@@ -400,7 +430,17 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
-        $tabs['debug_log']   = __('Debug Log', 'smartpay');
+
+        // Pro-only tabs. Shown as upgrade placeholders when Pro is inactive;
+        // Pro registers the real tabs via the `smartpay_settings_tabs` filter.
+        if ( ! smartpay_is_pro_active() ) {
+            $tabs['invoice']  = __('Invoice', 'smartpay');
+            $tabs['antispam'] = __('Anti-Spam', 'smartpay');
+            $tabs['tax']      = __('Tax', 'smartpay');
+        }
+
+        // Debug log lives on the Support page (Settings → Support), not here.
+        // $tabs['debug_log']   = __('Debug Log', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
@@ -775,6 +815,63 @@ class Setting
 
             $html .= '</div>'; // .sp-integ-card__footer
             $html .= '</div>'; // .sp-integ-card
+        }
+
+        // Locked pro gateway cards — shown only when pro plugin is not active.
+        if ( ! smartpay_is_pro_active() ) {
+            $locked_gateways = apply_filters(
+                'smartpay_locked_pro_gateways',
+                array(
+                    'stripe'       => array( 'admin_label' => 'Stripe',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png' ),
+                    'paddle'       => array( 'admin_label' => 'Paddle',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png' ),
+                    'razorpay'     => array( 'admin_label' => 'Razorpay',     'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png' ),
+                    'mollie'       => array( 'admin_label' => 'Mollie',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png' ),
+                    'bkash'        => array( 'admin_label' => 'bKash',        'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/bkash.png' ),
+                    'toyyibpay'    => array( 'admin_label' => 'toyyibPay',    'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/toyyibpay.png' ),
+                    'paytm'        => array( 'admin_label' => 'Paytm',        'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paytm.png' ),
+                    'authorizenet' => array( 'admin_label' => 'Authorize.Net', 'gateway_icon' => '' ),
+                )
+            );
+
+            $lock_icon  = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>';
+            $upgrade_url = esc_url( 'https://wpsmartpay.com/pricing' );
+
+            foreach ( $locked_gateways as $gw_key => $gw_option ) {
+                // Skip if already registered as an active gateway (pro installed partially, etc).
+                if ( isset( $args['options'][ $gw_key ] ) ) {
+                    continue;
+                }
+
+                $gw_name     = esc_html( $gw_option['admin_label'] );
+                $gw_icon_url = ! empty( $gw_option['gateway_icon'] ) ? esc_url( $gw_option['gateway_icon'] ) : '';
+
+                $html .= '<div class="sp-integ-card sp-integ-card--pro-locked">';
+
+                $html .= '<div class="sp-integ-card__logo">';
+                if ( $gw_icon_url ) {
+                    $html .= '<img src="' . $gw_icon_url . '" alt="' . esc_attr( $gw_option['admin_label'] ) . '" loading="lazy" style="opacity:.55;" />';
+                }
+                $html .= '</div>';
+
+                $html .= '<div class="sp-integ-card__body">';
+                $html .= '<p class="sp-integ-card__name">' . $gw_name . '</p>';
+                $html .= '</div>';
+
+                $html .= '<div class="sp-integ-card__footer">';
+                $html .= '<div class="custom-control custom-switch custom-switch-lg">';
+                $html .= '<input type="checkbox" class="custom-control-input" disabled style="cursor:not-allowed;" />';
+                $html .= '<label class="custom-control-label"></label>';
+                $html .= '</div>';
+                $html .= '<span class="sp-badge sp-badge--trial">' . esc_html__( 'Pro Only', 'smartpay' ) . '</span>';
+                $html .= '<a href="' . $upgrade_url . '" target="_blank" rel="noopener noreferrer"'
+                    . ' class="sp-integ-card__settings"'
+                    . ' title="' . esc_attr__( 'Upgrade to Pro', 'smartpay' ) . '">'
+                    . $lock_icon
+                    . '</a>';
+                $html .= '</div>'; // .sp-integ-card__footer
+
+                $html .= '</div>'; // .sp-integ-card
+            }
         }
 
         $html .= '</div>'; // .sp-integ-grid

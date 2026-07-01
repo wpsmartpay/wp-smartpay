@@ -68,6 +68,7 @@ class UserRegistration {
 				wp_delete_user( $user_id );
 			}
 
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 			error_log( 'Smartpay Customer creation failed: ' . $e->getMessage() );
 			wp_send_json_error(
 				array(

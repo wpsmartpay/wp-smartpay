@@ -4,23 +4,24 @@ import { Header } from './header'
 const LockIcon = () => (
     <div
         style={{
-            width: 56,
-            height: 56,
-            borderRadius: 12,
-            border: '2px solid #f97316',
+            width: 52,
+            height: 52,
+            borderRadius: 14,
+            background: 'var(--sp-surface-muted)',
+            border: '1px solid var(--sp-border)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            margin: '0 auto 20px',
+            flexShrink: 0,
         }}
     >
         <svg
-            width="24"
-            height="24"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#f97316"
-            strokeWidth="2"
+            stroke="var(--sp-text)"
+            strokeWidth="1.75"
             strokeLinecap="round"
             strokeLinejoin="round"
         >
@@ -79,11 +80,11 @@ const TablePlaceholder = () => (
             >
                 <div style={{ height: 12, background: '#e5e7eb', borderRadius: 2, width: `${w}%` }} />
                 <div style={{ height: 12, background: '#e5e7eb', borderRadius: 2, width: '82%' }} />
-                <div style={{ height: 12, background: '#d1fae5', borderRadius: 2, width: '55%' }} />
+                <div style={{ height: 12, background: '#eceef1', borderRadius: 2, width: '55%' }} />
                 <div
                     style={{
                         height: 20,
-                        background: i % 3 === 0 ? '#fef3c7' : '#d1fae5',
+                        background: '#eceef1',
                         borderRadius: 10,
                         width: '58%',
                     }}
@@ -141,27 +142,41 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: 'rgba(255,255,255,0.15)',
+                        padding: 24,
+                        background:
+                            'linear-gradient(180deg, rgba(249,250,251,0.4) 0%, rgba(249,250,251,0.8) 100%)',
                     }}
                 >
                     <div
                         style={{
-                            background: 'white',
-                            borderRadius: 12,
-                            padding: '2.5rem 2rem',
-                            maxWidth: 440,
+                            background: '#fff',
+                            borderRadius: 16,
+                            padding: '30px 30px 26px',
+                            maxWidth: 400,
                             width: '100%',
-                            textAlign: 'center',
-                            boxShadow: '0 8px 48px rgba(0,0,0,0.18)',
+                            border: '1px solid var(--sp-border)',
+                            boxShadow: 'var(--sp-shadow-md)',
                         }}
                     >
                         <LockIcon />
-                        <h3 style={{ margin: '0 0 10px', fontSize: '1.1rem', fontWeight: 700 }}>
+                        <h3
+                            style={{
+                                margin: '20px 0 8px',
+                                fontSize: '1.2rem',
+                                fontWeight: 700,
+                                letterSpacing: '-0.01em',
+                                color: 'var(--sp-text)',
+                            }}
+                        >
                             {modalTitle}
                         </h3>
                         <p
-                            className="text-sm text-muted-foreground"
-                            style={{ margin: '0 0 24px', lineHeight: 1.6 }}
+                            style={{
+                                margin: '0 0 22px',
+                                fontSize: 13.5,
+                                lineHeight: 1.65,
+                                color: 'var(--sp-text-muted)',
+                            }}
                         >
                             {modalDesc}
                         </p>
@@ -170,7 +185,14 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
                             target={isInstalled ? '_self' : '_blank'}
                             rel="noreferrer"
                             className="sp-btn sp-btn--primary"
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 6,
+                                height: 42,
+                                textDecoration: 'none',
+                            }}
                         >
                             {ctaLabel} →
                         </a>

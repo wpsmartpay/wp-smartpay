@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Search, Eye } from 'lucide-react'
 import { NewFormModal } from './NewFormModal'
 
 const { __ } = wp.i18n
@@ -90,10 +90,21 @@ const NativeFormRow = ({ form, onDelete, openId, setOpenId, checked, onCheck }) 
 						{initials}
 					</div>
 					<div className="sp-customer__info">
-						<a href={form.edit_url} className="sp-customer__name"
-							style={{ textDecoration: 'none', color: 'inherit' }}>
-							{form.title || __('(Untitled)', 'smartpay')}
-						</a>
+						<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+							<a href={form.edit_url} className="sp-customer__name"
+								style={{ textDecoration: 'none', color: 'inherit' }}>
+								{form.title || __('(Untitled)', 'smartpay')}
+							</a>
+							{form.preview_url && (
+								<a href={form.preview_url} target="_blank" rel="noopener noreferrer"
+									className="sp-form-preview-icon"
+									title={__('Preview form', 'smartpay')}
+									aria-label={__('Preview form', 'smartpay')}
+									style={{ display: 'inline-flex', color: 'var(--sp-text-subtle)', flexShrink: 0 }}>
+									<Eye style={{ width: 14, height: 14 }} />
+								</a>
+							)}
+						</span>
 						<div className="sp-customer__email">#{form.id}</div>
 					</div>
 				</div>

@@ -629,7 +629,7 @@ function smartpay_get_user_payments( int $customer_id, int $limit = 0 ): array {
 
 	$prefix = $wpdb->prefix;
 
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 	$sql  = "SELECT id, uuid, type, amount, currency, gateway, status, created_at, completed_at
              FROM {$prefix}smartpay_payments
              WHERE customer_id = %d
@@ -641,7 +641,7 @@ function smartpay_get_user_payments( int $customer_id, int $limit = 0 ): array {
 		$args[] = $limit;
 	}
 
-	$rows = $wpdb->get_results( $wpdb->prepare( $sql, $args ) );
+	$rows = $wpdb->get_results( $wpdb->prepare( $sql, $args ) ); // phpcs:ignore PluginCheck.Security.DirectDB.UnescapedDBParameter
     // phpcs:enable
 
 	return is_array( $rows ) ? $rows : array();

@@ -20,10 +20,11 @@ $custom_amount_label = $settings['custom_amount_label'] ?? __( 'Enter custom amo
 
 $gateways   = smartpay_get_enabled_payment_gateways( true );
 $default_gw = smartpay_get_default_gateway();
-// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+// phpcs:disable WordPress.Security.NonceVerification.Recommended
 $chosen_gw = isset( $_REQUEST['gateway'] ) && smartpay_is_gateway_active( sanitize_text_field( wp_unslash( $_REQUEST['gateway'] ) ) )
 	? sanitize_text_field( wp_unslash( $_REQUEST['gateway'] ) )
 	: $default_gw;
+// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 $goal              = $settings['goal'] ?? array();
 $has_payment_error = empty( $gateways );

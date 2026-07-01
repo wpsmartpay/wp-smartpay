@@ -27,6 +27,10 @@
         $smartpay_all_integ  = smartpay_integrations();
         $smartpay_categories = [];
         foreach ($smartpay_all_integ as $smartpay_integ) {
+            // Skip gateway integrations when building category tabs — gateways live in Settings.
+            if ( in_array( 'Payment Gateway', $smartpay_integ['categories'] ?? [], true ) ) {
+                continue;
+            }
             foreach ($smartpay_integ['categories'] ?? [] as $smartpay_c) {
                 if (!in_array($smartpay_c, $smartpay_categories, true)) {
                     $smartpay_categories[] = $smartpay_c;
@@ -67,6 +71,11 @@
                 $smartpay_type      = $smartpay_integration['type'] ?? 'pro';
                 $smartpay_cat_attr  = implode(',', $smartpay_cats);
                 $smartpay_activated = in_array($smartpay_namespace, smartpay_get_activated_integrations());
+
+                // Gateways belong in Settings > Payment Gateways, not here.
+                if ( in_array( 'Payment Gateway', $smartpay_cats, true ) ) {
+                    continue;
+                }
             ?>
                 <div class="sp-integ-card"
                     data-categories="<?php echo esc_attr($smartpay_cat_attr); ?>"
