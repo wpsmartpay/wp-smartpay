@@ -17,7 +17,7 @@ $customer = smartpay_get_customer_by_user_id($current_user->ID);
 				<div class="profile-header">
 					<div class="header-content">
 						<h1>Profile Settings</h1>
-						<p class="subtitle">Manage your account information and preferences</p>
+						<p class="subtitle">Manage your account information and security</p>
 					</div>
 				</div>
 
@@ -43,13 +43,6 @@ $customer = smartpay_get_customer_by_user_id($current_user->ID);
 						</svg>
 						Security
 					</a>
-					<a href="#preferences" class="tab-item" data-tab="preferences">
-						<svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-							<circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.5"/>
-							<path d="M15 9C15 9.93 14.8 10.82 14.46 11.64L16.37 13.55C16.73 12.79 16.93 11.93 16.93 11C16.93 10.07 16.73 9.21 16.37 8.45L14.46 10.36C14.8 9.18 15 9.93 15 9Z" stroke="currentColor" stroke-width="1.5"/>
-						</svg>
-						Preferences
-					</a>
 				</div>
 
 				<!-- Profile Forms -->
@@ -67,11 +60,6 @@ $customer = smartpay_get_customer_by_user_id($current_user->ID);
 					<!-- Security -->
 					<div id="security" class="form-section">
 						<?php include SMARTPAY_DIR . 'resources/views/shortcodes/partials/profile/security.php'; ?>
-					</div>
-
-					<!-- Preferences -->
-					<div id="preferences" class="form-section">
-						<?php include SMARTPAY_DIR . 'resources/views/shortcodes/partials/profile/preferences.php'; ?>
 					</div>
 				</div>
 			</div>
