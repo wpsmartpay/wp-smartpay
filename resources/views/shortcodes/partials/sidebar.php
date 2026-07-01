@@ -84,14 +84,16 @@ $sp_icon_kses = array(
 				<?php endforeach; ?>
 			<?php else : ?>
 				<?php foreach ( $sp_nav_items as $sp_item ) : ?>
-					<a href="<?php echo esc_url( $sp_item['url'] ); ?>" class="nav-item <?php echo $sp_current_view === $sp_item['view'] ? 'active' : ''; ?>">
+					<?php $sp_is_active = $sp_item['url'] && untrailingslashit( $sp_item['url'] ) === untrailingslashit( $sp_current_url ); ?>
+					<a href="<?php echo esc_url( $sp_item['url'] ); ?>" class="nav-item <?php echo $sp_is_active ? 'active' : ''; ?>">
 						<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><?php echo wp_kses( $sp_item['icon'], $sp_icon_kses ); ?></svg>
 						<span><?php echo esc_html( $sp_item['label'] ); ?></span>
 					</a>
 				<?php endforeach; ?>
 
 				<?php if ( $profile_page_id ) : ?>
-					<a href="<?php echo esc_url( get_permalink( $profile_page_id ) ); ?>" class="nav-item <?php echo is_page( $profile_page_id ) ? 'active' : ''; ?>">
+					<?php $sp_profile_url = get_permalink( $profile_page_id ); ?>
+					<a href="<?php echo esc_url( $sp_profile_url ); ?>" class="nav-item <?php echo ( $sp_profile_url && untrailingslashit( $sp_profile_url ) === untrailingslashit( $sp_current_url ) ) ? 'active' : ''; ?>">
 						<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
 							<path d="M17 19V17C17 15.9391 16.5786 14.9217 15.8284 14.1716C15.0783 13.4214 14.0609 13 13 13H7C5.93913 13 4.92172 13.4214 3.17157 14.1716C2.42143 14.9217 2 15.9391 2 17V19" stroke="currentColor" stroke-width="1.5"/>
 							<circle cx="10" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>

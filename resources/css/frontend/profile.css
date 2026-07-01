@@ -61,8 +61,8 @@
 .smartpay-profile-edit .sidebar-profile {
 	padding: 30px 24px;
 	text-align: center;
-	background: var(--primary-gradient);
-	color: white;
+	background: var(--bg-white);
+	color: var(--text-primary);
 	position: relative;
 	overflow: hidden;
 }
@@ -182,8 +182,8 @@
 }
 
 .smartpay-profile-edit .sidebar-nav .nav-item.active {
-	background: var(--primary-gradient);
-	color: white;
+	background: #e5e7eb;
+	color: var(--text-primary);
 }
 
 .smartpay-profile-edit .sidebar-nav .nav-item svg {
@@ -282,8 +282,8 @@
 }
 
 .smartpay-profile-edit .tab-item.active {
-	background: var(--primary-gradient);
-	color: white;
+	background: #e5e7eb;
+	color: var(--text-primary);
 	border-color: transparent;
 }
 
@@ -354,7 +354,7 @@
 .smartpay-profile-edit .profile-form .form-control:focus {
 	outline: none;
 	border-color: var(--primary-color);
-	box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+	box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .smartpay-profile-edit .profile-form .form-control.error {
@@ -546,12 +546,12 @@
 .smartpay-profile-edit .btn-primary {
 	background: var(--primary-gradient);
 	color: white;
-	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .smartpay-profile-edit .btn-primary:hover:not(:disabled) {
 	transform: translateY(-2px);
-	box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+	box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
 }
 
 .smartpay-profile-edit .btn-secondary {
@@ -707,7 +707,7 @@
 
 .smartpay-profile-edit .avatar-upload-section.has-preview {
 	border-color: var(--primary-color);
-	background: linear-gradient(135deg, #667eea05 0%, #764ba205 100%);
+	background: var(--bg-gray);
 }
 
 .smartpay-profile-edit .avatar-preview-container {

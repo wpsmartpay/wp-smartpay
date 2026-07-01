@@ -4,6 +4,7 @@ import { Header } from '../../components/header'
 import { GettingStartedBanner } from '../../components/GettingStartedBanner'
 import { SystemInfo } from './SystemInfo'
 import { DebugLog } from './DebugLog'
+import { Shortcodes } from './Shortcodes'
 
 // ── Icons ─────────────────────────────────────────────────────
 
@@ -52,9 +53,10 @@ const ExternalIcon = () => (
 // ── Data ──────────────────────────────────────────────────────
 
 const TABS = [
-    { key: 'support',  label: __('Support & Docs', 'smartpay') },
-    { key: 'sysinfo',  label: __('System Info', 'smartpay') },
-    { key: 'debuglog', label: __('Debug Log', 'smartpay') },
+    { key: 'support',   label: __('Support & Docs', 'smartpay') },
+    { key: 'sysinfo',   label: __('System Info', 'smartpay') },
+    { key: 'debuglog',  label: __('Debug Log', 'smartpay') },
+    { key: 'shortcodes', label: __('Shortcodes', 'smartpay') },
 ]
 
 const DOC_LINKS = [
@@ -213,9 +215,10 @@ export function SupportPage() {
                     ))}
                 </div>
 
-                {tab === 'support'  && <SupportTab />}
-                {tab === 'sysinfo'  && <SystemInfo />}
-                {tab === 'debuglog' && <DebugLog />}
+                {tab === 'support'   && <SupportTab />}
+                {tab === 'sysinfo'   && <SystemInfo />}
+                {tab === 'debuglog'  && <DebugLog />}
+                {tab === 'shortcodes' && <Shortcodes />}
             </div>
         </>
     )

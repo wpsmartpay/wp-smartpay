@@ -1,1 +1,967 @@
-:root{--primary-gradient:linear-gradient(135deg,#3b82f6,#4338ca);--primary-color:#3b82f6;--primary-dark:#4338ca;--success-color:#10b981;--warning-color:#f59e0b;--error-color:#ef4444;--info-color:#3b82f6;--text-primary:#1f2937;--text-secondary:#6b7280;--text-muted:#9ca3af;--border-color:#e5e7eb;--bg-gray:#f9fafb;--bg-white:#fff;--shadow-sm:0 1px 2px 0 rgba(0,0,0,.05);--shadow-md:0 4px 6px -1px rgba(0,0,0,.1);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.1);--shadow-xl:0 20px 25px -5px rgba(0,0,0,.1);--radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px}.smartpay-profile-edit{flex-grow:1;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;padding:40px 20px}.smartpay-profile-edit *{box-sizing:border-box}.smartpay-profile-edit .profile-container{margin:0 auto;max-width:1400px}.smartpay-profile-edit .dashboard-layout{align-items:start;display:grid;gap:30px;grid-template-columns:280px 1fr}.smartpay-profile-edit .dashboard-sidebar{background:var(--bg-white);border:1px solid var(--border-color);border-radius:var(--radius-xl);box-shadow:var(--shadow-md);display:flex;flex-direction:column;min-height:calc(100vh - 80px);overflow:hidden;padding:0;position:sticky;top:40px}.smartpay-profile-edit .sidebar-profile{background:var(--primary-gradient);color:#fff;overflow:hidden;padding:30px 24px;position:relative;text-align:center}.smartpay-profile-edit .sidebar-profile:before{right:-30%;top:-50%}.smartpay-profile-edit .sidebar-profile:after,.smartpay-profile-edit .sidebar-profile:before{background:hsla(0,0%,100%,.1);border-radius:50%;content:"";height:200px;position:absolute;width:200px}.smartpay-profile-edit .sidebar-profile:after{bottom:-50%;left:-30%}.smartpay-profile-edit .profile-avatar-wrapper{height:80px;margin:0 auto 16px;position:relative;width:80px;z-index:1}.smartpay-profile-edit .sidebar-avatar{border:3px solid hsla(0,0%,100%,.3);border-radius:50%;height:100%;-o-object-fit:cover;object-fit:cover;width:100%}.smartpay-profile-edit .profile-status{background:var(--success-color);border:3px solid #fff;border-radius:50%;bottom:5px;height:16px;position:absolute;right:5px;width:16px}.smartpay-profile-edit .profile-name{font-size:1.125rem;font-weight:700;margin:0 0 4px;position:relative;z-index:1}.smartpay-profile-edit .sidebar-profile .profile-email{font-size:.875rem;margin:0 0 16px;opacity:.9;position:relative;word-break:break-word;z-index:1}.smartpay-profile-edit .sidebar-profile .profile-badge{align-items:center;backdrop-filter:blur(10px);background:hsla(0,0%,100%,.2);border:1px solid hsla(0,0%,100%,.3);border-radius:20px;display:inline-flex;font-size:.813rem;font-weight:600;gap:6px;padding:6px 14px;position:relative;z-index:1}.smartpay-profile-edit .sidebar-nav{display:flex;flex:1;flex-direction:column;gap:4px;justify-content:space-between;padding:12px}.smartpay-profile-edit .sidebar-block{display:flex;flex-direction:column;gap:4px}.smartpay-profile-edit .sidebar-nav .nav-item{align-items:center;border-radius:var(--radius-md);color:var(--text-secondary);display:flex;font-size:.938rem;font-weight:600;gap:12px;padding:12px 14px;position:relative;text-decoration:none;transition:all .2s ease}.smartpay-profile-edit .sidebar-nav .nav-item:hover{background:var(--bg-gray);color:var(--text-primary)}.smartpay-profile-edit .sidebar-nav .nav-item.active{background:var(--primary-gradient);color:#fff}.smartpay-profile-edit .sidebar-nav .nav-item svg{flex-shrink:0}.smartpay-profile-edit .sidebar-nav .nav-divider{background:var(--border-color);height:1px;margin:8px 0}.smartpay-profile-edit .sidebar-nav .nav-logout{color:var(--error-color)}.smartpay-profile-edit .sidebar-nav .nav-logout:hover{background:#fee2e2;color:var(--error-color)}.smartpay-profile-edit .profile-main{min-width:0}.smartpay-profile-edit .profile-header{margin-bottom:20px;padding:4px 0 20px}.smartpay-profile-edit .profile-header .header-content{align-items:center;display:flex;gap:20px;justify-content:space-between}.smartpay-profile-edit .profile-header h1{color:var(--text-primary);font-size:2rem;font-weight:800;line-height:1.2;margin:0 0 8px}.smartpay-profile-edit .profile-header .subtitle{color:var(--text-secondary);font-size:1rem;margin:0}.smartpay-profile-edit .section-header{align-items:center;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;margin-bottom:24px;padding-bottom:16px}.smartpay-profile-edit .section-header h2{align-items:center;color:var(--text-primary);display:flex;font-size:1.25rem;font-weight:700;gap:10px;margin:0}.smartpay-profile-edit .profile-tabs{display:flex;gap:8px;margin-bottom:24px;overflow-x:auto;padding:0}.smartpay-profile-edit .tab-item{align-items:center;border-radius:var(--radius-md);color:var(--text-secondary);display:flex;font-size:.938rem;font-weight:600;gap:8px;padding:12px 24px;text-decoration:none;transition:all .2s ease;white-space:nowrap}.smartpay-profile-edit .tab-item:hover{background:var(--bg-gray);color:var(--text-primary)}.smartpay-profile-edit .tab-item.active{background:var(--primary-gradient);border-color:transparent;color:#fff}.smartpay-profile-edit .profile-content{background:var(--bg-white);border:1px solid var(--border-color);border-radius:var(--radius-lg);padding:32px}.smartpay-profile-edit .form-section{display:none}.smartpay-profile-edit .form-section.active{display:block}.smartpay-profile-edit .form-section .section-header{border-bottom:2px solid var(--border-color);margin-bottom:30px;padding-bottom:20px}.smartpay-profile-edit .form-section .section-header h2{color:var(--text-primary);font-size:1.5rem;font-weight:700;margin:0 0 8px}.smartpay-profile-edit .form-section .section-header p{color:var(--text-secondary);font-size:1rem;margin:0}.smartpay-profile-edit .profile-form .form-group-row{display:grid;gap:20px;grid-template-columns:1fr 1fr}.smartpay-profile-edit .profile-form .form-group{margin-bottom:24px}.smartpay-profile-edit .profile-form .form-group label{color:var(--text-primary);display:block;font-size:.938rem;font-weight:600;margin-bottom:8px}.smartpay-profile-edit .profile-form .form-control{background:var(--bg-white);border:2px solid var(--border-color);border-radius:var(--radius-md);color:var(--text-primary);font-family:inherit;font-size:1rem;padding:12px 16px;transition:all .2s ease;width:100%}.smartpay-profile-edit .profile-form .form-control:focus{border-color:var(--primary-color);box-shadow:0 0 0 4px rgba(102,126,234,.1);outline:none}.smartpay-profile-edit .profile-form .form-control.error{background:#fef2f2;border-color:var(--error-color)}.smartpay-profile-edit .password-strength-wrapper{display:none;margin-top:8px}.smartpay-profile-edit .password-strength-wrapper.show{display:block}.smartpay-profile-edit .password-strength{background:var(--border-color);border-radius:2px;display:none;height:4px;margin-bottom:6px;margin-top:8px;overflow:hidden}.smartpay-profile-edit .password-strength.show{display:block}.smartpay-profile-edit .password-strength:after{content:"";display:block;height:100%;transition:width .3s ease,background .3s ease}.smartpay-profile-edit .password-strength.weak:after{background:var(--error-color);width:33%}.smartpay-profile-edit .password-strength.medium:after{background:var(--warning-color);width:66%}.smartpay-profile-edit .password-strength.strong:after{background:var(--success-color);width:100%}.smartpay-profile-edit .strength-text{font-size:.813rem;font-weight:600}.smartpay-profile-edit .strength-text.weak{color:var(--error-color)}.smartpay-profile-edit .strength-text.medium{color:var(--warning-color)}.smartpay-profile-edit .strength-text.strong{color:var(--success-color)}.smartpay-profile-edit .security-notice{align-items:center;background:#eff6ff;border:1px solid #bfdbfe;border-radius:var(--radius-md);display:flex;gap:12px;padding:16px}.smartpay-profile-edit .security-notice svg{color:var(--info-color);flex-shrink:0}.smartpay-profile-edit .security-notice span{color:#1e40af;font-size:.938rem}.smartpay-profile-edit .preference-item{align-items:center;background:var(--bg-gray);border:1px solid var(--border-color);border-radius:var(--radius-lg);display:flex;justify-content:space-between;margin-bottom:16px;padding:20px}.smartpay-profile-edit .preference-info h3{color:var(--text-primary);font-size:1rem;font-weight:700;margin:0 0 4px}.smartpay-profile-edit .preference-info p{color:var(--text-secondary);font-size:.875rem;margin:0}.smartpay-profile-edit .preference-note{color:var(--text-secondary);font-size:.813rem;font-style:italic;margin-left:12px}.smartpay-profile-edit .switch{display:inline-block;flex-shrink:0;height:28px;position:relative;width:52px}.smartpay-profile-edit .switch input{height:0;opacity:0;width:0}.smartpay-profile-edit .slider{background-color:#cbd5e1;border-radius:28px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0;transition:.3s}.smartpay-profile-edit .slider:before{background-color:#fff;border-radius:50%;bottom:3px;content:"";height:22px;left:3px;position:absolute;transition:.3s;width:22px}.smartpay-profile-edit input:checked+.slider{background-color:var(--primary-color)}.smartpay-profile-edit input:checked+.slider:before{transform:translateX(24px)}.smartpay-profile-edit input:disabled+.slider{cursor:not-allowed;opacity:.5}.smartpay-profile-edit .btn{align-items:center;border:none;border-radius:var(--radius-md);cursor:pointer;display:inline-flex;font-family:inherit;font-size:1rem;font-weight:700;gap:10px;justify-content:center;padding:12px 24px;text-align:center;text-decoration:none;transition:all .3s ease;white-space:nowrap}.smartpay-profile-edit .btn-primary{background:var(--primary-gradient);box-shadow:0 4px 12px rgba(102,126,234,.3);color:#fff}.smartpay-profile-edit .btn-primary:hover:not(:disabled){box-shadow:0 6px 20px rgba(102,126,234,.4);transform:translateY(-2px)}.smartpay-profile-edit .btn-secondary{background:var(--bg-gray);border:2px solid var(--border-color);color:var(--text-primary)}.smartpay-profile-edit .btn-secondary:hover:not(:disabled){background:#f3f4f6;border-color:var(--text-secondary)}.smartpay-profile-edit .btn-sm{font-size:.875rem;padding:8px 16px}.smartpay-profile-edit .btn:disabled{cursor:not-allowed;opacity:.6;transform:none}.smartpay-profile-edit .btn-arrow{transition:transform .3s ease}.smartpay-profile-edit .btn:hover:not(:disabled) .btn-arrow{transform:translateX(4px)}.smartpay-profile-edit .input-with-icon{position:relative}.smartpay-profile-edit .input-icon{color:var(--text-muted);left:14px;pointer-events:none;position:absolute;top:24px;transform:translateY(-50%);z-index:1}.smartpay-profile-edit .form-control.with-icon{padding-left:44px}.smartpay-profile-edit .password-input-wrapper{position:relative}.smartpay-profile-edit .password-toggle{align-items:center;background:none;border:none;color:var(--text-muted);cursor:pointer;display:flex;justify-content:center;padding:4px;position:absolute;right:12px;top:25px;transform:translateY(-50%);transition:color .2s ease;z-index:2}.smartpay-profile-edit .password-toggle:hover{color:var(--text-primary)}.smartpay-profile-edit .password-toggle:focus{outline:none}.smartpay-profile-edit .required{color:var(--error-color);margin-left:2px}.smartpay-profile-edit .help-text{color:var(--text-secondary);display:block;font-size:.875rem;margin-top:6px}.smartpay-profile-edit .error-message{color:var(--error-color);display:none;font-size:.875rem;font-weight:500;margin-top:6px}.smartpay-profile-edit .form-group select.form-control{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='12' height='8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m1 1.5 5 5 5-5' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-position:right 16px center;background-repeat:no-repeat;cursor:pointer;padding-right:40px}.smartpay-profile-edit .alert{align-items:center;border-radius:var(--radius-md);display:flex;font-size:.938rem;font-weight:500;gap:12px;margin:16px 0;padding:16px 20px}.smartpay-profile-edit .alert-success{background:#d1fae5;border:1px solid #6ee7b7;color:#065f46}.smartpay-profile-edit .alert-error{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}.smartpay-profile-edit .form-actions{display:flex;gap:12px;margin-top:24px}.smartpay-profile-edit .form-actions.margin-0{margin:0}.smartpay-profile-edit .avatar-upload-section{align-items:flex-start;background:var(--bg-gray);border:2px dashed var(--border-color);border-radius:var(--radius-lg);display:flex;gap:32px;margin-bottom:32px;padding:32px;transition:all .3s ease}.smartpay-profile-edit .avatar-upload-section.has-preview{background:linear-gradient(135deg,#667eea05,#764ba205);border-color:var(--primary-color)}.smartpay-profile-edit .avatar-preview-container{display:flex;flex-shrink:0;gap:20px}.smartpay-profile-edit .avatar-current,.smartpay-profile-edit .avatar-preview{align-items:center;display:flex;flex-direction:column;gap:8px}.smartpay-profile-edit .avatar-current .avatar-img,.smartpay-profile-edit .avatar-preview .avatar-img{border:4px solid var(--bg-white);border-radius:50%;box-shadow:var(--shadow-md);height:100px;-o-object-fit:cover;object-fit:cover;transition:all .3s ease;width:100px}.smartpay-profile-edit .avatar-preview{position:relative}.smartpay-profile-edit .avatar-preview .avatar-img{border-color:var(--primary-color);box-shadow:0 0 0 2px var(--primary-color),var(--shadow-lg)}.smartpay-profile-edit .avatar-preview:after{background:var(--primary-gradient);border-radius:12px;box-shadow:var(--shadow-md);color:#fff;content:"NEW";font-size:.688rem;font-weight:700;letter-spacing:.5px;padding:4px 10px;position:absolute;right:-8px;top:-8px}.smartpay-profile-edit .avatar-actions{flex:1;min-width:0}.smartpay-profile-edit .avatar-actions h3{color:var(--text-primary);font-size:1.125rem;font-weight:700;margin:0 0 4px}.smartpay-profile-edit .avatar-actions p{color:var(--text-secondary);font-size:.875rem;margin:0 0 20px}.smartpay-profile-edit .avatar-buttons{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:16px}.smartpay-profile-edit .avatar-buttons .btn{animation:fadeIn .3s ease}.smartpay-profile-edit .upload-progress{animation:fadeIn .3s ease;margin-top:16px}.smartpay-profile-edit .progress-bar{background:#e5e7eb;border-radius:4px;height:8px;margin-bottom:8px;overflow:hidden}.smartpay-profile-edit .progress-fill{animation:progressPulse 1.5s ease-in-out infinite;background:var(--primary-gradient);border-radius:4px;height:100%;transition:width .3s ease;width:0}.smartpay-profile-edit .progress-text{align-items:center;color:var(--text-secondary);display:flex;font-size:.875rem;font-weight:600;gap:8px}.smartpay-profile-edit .progress-text:after{animation:spin .6s linear infinite;border:2px solid var(--primary-color);border-radius:50%;border-top:2px solid transparent;content:"";height:16px;width:16px}.smartpay-profile-edit .avatar-message{animation:slideDown .3s ease;border-radius:var(--radius-md);display:none;font-size:.875rem;font-weight:500;margin-top:12px;padding:12px 16px}.smartpay-profile-edit .avatar-message.show{display:block}.smartpay-profile-edit .avatar-message.success{background:#d1fae5;border:1px solid #6ee7b7;color:#065f46}.smartpay-profile-edit .avatar-message.error{background:#fee2e2;border:1px solid #fca5a5;color:#991b1b}.smartpay-profile-edit .avatar-message.info{background:#dbeafe;border:1px solid #93c5fd;color:#1e40af}@keyframes progressPulse{0%,to{opacity:1}50%{opacity:.7}}@keyframes spin{to{transform:rotate(1turn)}}@keyframes fadeIn{0%{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}@keyframes slideDown{0%{max-height:0;opacity:0;transform:translateY(-10px)}to{max-height:100px;opacity:1;transform:translateY(0)}}@media (max-width:1024px){.smartpay-profile-edit .dashboard-layout{grid-template-columns:240px 1fr}}@media (max-width:768px){.smartpay-profile-edit{padding:20px 10px}.smartpay-profile-edit .dashboard-layout{gap:20px;grid-template-columns:1fr}.smartpay-profile-edit .dashboard-sidebar{position:static}.smartpay-profile-edit .profile-header{padding:24px 20px}.smartpay-profile-edit .profile-header .header-content{align-items:flex-start;flex-direction:column}.smartpay-profile-edit .profile-content{padding:24px 20px}.smartpay-profile-edit .profile-form .form-group-row{grid-template-columns:1fr}.smartpay-profile-edit .form-actions{flex-direction:column}.smartpay-profile-edit .form-actions .btn{width:100%}.smartpay-profile-edit .profile-tabs{overflow-x:auto}.smartpay-profile-edit .avatar-upload-section{align-items:center;flex-direction:column;text-align:center}.smartpay-profile-edit .avatar-buttons,.smartpay-profile-edit .avatar-preview-container{justify-content:center}}@media (max-width:480px){.smartpay-profile-edit .profile-header h1{font-size:1.5rem}}
+:root {
+	--primary-gradient: linear-gradient(135deg, #3b82f6 0%, #4338ca 100%);
+	--primary-color: #3b82f6;
+	--primary-dark: #4338ca;
+	--success-color: #10b981;
+	--warning-color: #f59e0b;
+	--error-color: #ef4444;
+	--info-color: #3b82f6;
+	--text-primary: #1f2937;
+	--text-secondary: #6b7280;
+	--text-muted: #9ca3af;
+	--border-color: #e5e7eb;
+	--bg-gray: #f9fafb;
+	--bg-white: #ffffff;
+	--shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+	--radius-sm: 6px;
+	--radius-md: 8px;
+	--radius-lg: 12px;
+	--radius-xl: 16px;
+}
+
+.smartpay-profile-edit {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	padding: 40px 20px;
+	flex-grow: 1;
+}
+
+.smartpay-profile-edit * {
+	box-sizing: border-box;
+}
+
+.smartpay-profile-edit .profile-container {
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
+.smartpay-profile-edit .dashboard-layout {
+	display: grid;
+	grid-template-columns: 280px 1fr;
+	gap: 30px;
+	align-items: start;
+}
+
+.smartpay-profile-edit .dashboard-sidebar {
+	position: sticky;
+	top: 40px;
+	background: var(--bg-white);
+	border-radius: var(--radius-xl);
+	padding: 0;
+	box-shadow: var(--shadow-md);
+	border: 1px solid var(--border-color);
+	overflow: hidden;
+	min-height: calc( 100vh - 80px );
+	display: flex;
+	flex-direction: column;
+}
+
+.smartpay-profile-edit .sidebar-profile {
+	padding: 30px 24px;
+	text-align: center;
+	background: var(--bg-white);
+	color: var(--text-primary);
+	position: relative;
+	overflow: hidden;
+}
+
+.smartpay-profile-edit .sidebar-profile::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	right: -30%;
+	width: 200px;
+	height: 200px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 50%;
+}
+
+.smartpay-profile-edit .sidebar-profile::after {
+	content: '';
+	position: absolute;
+	bottom: -50%;
+	left: -30%;
+	width: 200px;
+	height: 200px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 50%;
+}
+
+.smartpay-profile-edit .profile-avatar-wrapper {
+	position: relative;
+	width: 80px;
+	height: 80px;
+	margin: 0 auto 16px;
+	z-index: 1;
+}
+
+.smartpay-profile-edit .sidebar-avatar {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	border: 3px solid rgba(255, 255, 255, 0.3);
+	-o-object-fit: cover;
+	   object-fit: cover;
+}
+
+.smartpay-profile-edit .profile-status {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	width: 16px;
+	height: 16px;
+	background: var(--success-color);
+	border-radius: 50%;
+	border: 3px solid white;
+}
+
+.smartpay-profile-edit .profile-name {
+	font-size: 1.125rem;
+	font-weight: 700;
+	margin: 0 0 4px;
+	position: relative;
+	z-index: 1;
+}
+
+.smartpay-profile-edit .sidebar-profile .profile-email {
+	font-size: 0.875rem;
+	margin: 0 0 16px;
+	opacity: 0.9;
+	position: relative;
+	z-index: 1;
+	word-break: break-word;
+}
+
+.smartpay-profile-edit .sidebar-profile .profile-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(10px);
+	border-radius: 20px;
+	font-size: 0.813rem;
+	font-weight: 600;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	position: relative;
+	z-index: 1;
+}
+
+.smartpay-profile-edit .sidebar-nav {
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
+	justify-content: space-between;
+}
+.smartpay-profile-edit .sidebar-block {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-item {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	border-radius: var(--radius-md);
+	color: var(--text-secondary);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.938rem;
+	transition: all 0.2s ease;
+	position: relative;
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-item:hover {
+	background: var(--bg-gray);
+	color: var(--text-primary);
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-item.active {
+	background: #e5e7eb;
+	color: var(--text-primary);
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-item svg {
+	flex-shrink: 0;
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-divider {
+	height: 1px;
+	background: var(--border-color);
+	margin: 8px 0;
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-logout {
+	color: var(--error-color);
+}
+
+.smartpay-profile-edit .sidebar-nav .nav-logout:hover {
+	background: #fee2e2;
+	color: var(--error-color);
+}
+
+.smartpay-profile-edit .profile-main {
+	min-width: 0;
+}
+
+.smartpay-profile-edit .profile-header {
+	padding: 4px 0 20px;
+	margin-bottom: 20px;
+}
+
+.smartpay-profile-edit .profile-header .header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+}
+
+.smartpay-profile-edit .profile-header h1 {
+	font-size: 2rem;
+	font-weight: 800;
+	color: var(--text-primary);
+	margin: 0 0 8px;
+	line-height: 1.2;
+}
+
+.smartpay-profile-edit .profile-header .subtitle {
+	font-size: 1rem;
+	color: var(--text-secondary);
+	margin: 0;
+}
+
+.smartpay-profile-edit .section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 24px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.smartpay-profile-edit .section-header h2 {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--text-primary);
+	margin: 0;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.smartpay-profile-edit .profile-tabs {
+	padding: 0;
+	margin-bottom: 24px;
+	display: flex;
+	gap: 8px;
+	overflow-x: auto;
+}
+
+.smartpay-profile-edit .tab-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 24px;
+	border-radius: var(--radius-md);
+	color: var(--text-secondary);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.938rem;
+	transition: all 0.2s ease;
+	white-space: nowrap;
+}
+
+.smartpay-profile-edit .tab-item:hover {
+	background: var(--bg-gray);
+	color: var(--text-primary);
+}
+
+.smartpay-profile-edit .tab-item.active {
+	background: #e5e7eb;
+	color: var(--text-primary);
+	border-color: transparent;
+}
+
+.smartpay-profile-edit .profile-content {
+	background: var(--bg-white);
+	border-radius: var(--radius-lg);
+	padding: 32px;
+	border: 1px solid var(--border-color);
+}
+
+.smartpay-profile-edit .form-section {
+	display: none;
+}
+
+.smartpay-profile-edit .form-section.active {
+	display: block;
+}
+
+.smartpay-profile-edit .form-section .section-header {
+	margin-bottom: 30px;
+	border-bottom: 2px solid var(--border-color);
+	padding-bottom: 20px;
+}
+
+.smartpay-profile-edit .form-section .section-header h2 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--text-primary);
+	margin: 0 0 8px;
+}
+
+.smartpay-profile-edit .form-section .section-header p {
+	font-size: 1rem;
+	color: var(--text-secondary);
+	margin: 0;
+}
+
+.smartpay-profile-edit .profile-form .form-group-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+}
+
+.smartpay-profile-edit .profile-form .form-group {
+	margin-bottom: 24px;
+}
+
+.smartpay-profile-edit .profile-form .form-group label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 600;
+	color: var(--text-primary);
+	font-size: 0.938rem;
+}
+
+.smartpay-profile-edit .profile-form .form-control {
+	width: 100%;
+	padding: 12px 16px;
+	border: 2px solid var(--border-color);
+	border-radius: var(--radius-md);
+	font-size: 1rem;
+	color: var(--text-primary);
+	background: var(--bg-white);
+	transition: all 0.2s ease;
+	font-family: inherit;
+}
+
+.smartpay-profile-edit .profile-form .form-control:focus {
+	outline: none;
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.smartpay-profile-edit .profile-form .form-control.error {
+	border-color: var(--error-color);
+	background: #fef2f2;
+}
+
+.smartpay-profile-edit .password-strength-wrapper {
+	margin-top: 8px;
+	display: none;
+}
+
+.smartpay-profile-edit .password-strength-wrapper.show {
+	display: block;
+}
+
+.smartpay-profile-edit .password-strength {
+	height: 4px;
+	background: var(--border-color);
+	border-radius: 2px;
+	display: none;
+	overflow: hidden;
+	margin-bottom: 6px;
+	margin-top: 8px;
+}
+.smartpay-profile-edit .password-strength.show {
+	display: block;
+}
+
+.smartpay-profile-edit .password-strength::after {
+	content: '';
+	display: block;
+	height: 100%;
+	transition: width 0.3s ease, background 0.3s ease;
+}
+
+.smartpay-profile-edit .password-strength.weak::after {
+	width: 33%;
+	background: var(--error-color);
+}
+
+.smartpay-profile-edit .password-strength.medium::after {
+	width: 66%;
+	background: var(--warning-color);
+}
+
+.smartpay-profile-edit .password-strength.strong::after {
+	width: 100%;
+	background: var(--success-color);
+}
+
+.smartpay-profile-edit .strength-text {
+	font-size: 0.813rem;
+	font-weight: 600;
+}
+
+.smartpay-profile-edit .strength-text.weak {
+	color: var(--error-color);
+}
+
+.smartpay-profile-edit .strength-text.medium {
+	color: var(--warning-color);
+}
+
+.smartpay-profile-edit .strength-text.strong {
+	color: var(--success-color);
+}
+
+.smartpay-profile-edit .security-notice {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 16px;
+	background: #eff6ff;
+	border-radius: var(--radius-md);
+	border: 1px solid #bfdbfe;
+}
+
+.smartpay-profile-edit .security-notice svg {
+	flex-shrink: 0;
+	color: var(--info-color);
+}
+
+.smartpay-profile-edit .security-notice span {
+	font-size: 0.938rem;
+	color: #1e40af;
+}
+
+.smartpay-profile-edit .preference-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
+	background: var(--bg-gray);
+	border-radius: var(--radius-lg);
+	margin-bottom: 16px;
+	border: 1px solid var(--border-color);
+}
+
+.smartpay-profile-edit .preference-info h3 {
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--text-primary);
+	margin: 0 0 4px;
+}
+
+.smartpay-profile-edit .preference-info p {
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+	margin: 0;
+}
+
+.smartpay-profile-edit .preference-note {
+	font-size: 0.813rem;
+	color: var(--text-secondary);
+	font-style: italic;
+	margin-left: 12px;
+}
+
+.smartpay-profile-edit .switch {
+	position: relative;
+	display: inline-block;
+	width: 52px;
+	height: 28px;
+	flex-shrink: 0;
+}
+
+.smartpay-profile-edit .switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.smartpay-profile-edit .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #cbd5e1;
+	transition: 0.3s;
+	border-radius: 28px;
+}
+
+.smartpay-profile-edit .slider:before {
+	position: absolute;
+	content: "";
+	height: 22px;
+	width: 22px;
+	left: 3px;
+	bottom: 3px;
+	background-color: white;
+	transition: 0.3s;
+	border-radius: 50%;
+}
+
+.smartpay-profile-edit input:checked + .slider {
+	background-color: var(--primary-color);
+}
+
+.smartpay-profile-edit input:checked + .slider:before {
+	transform: translateX(24px);
+}
+
+.smartpay-profile-edit input:disabled + .slider {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.smartpay-profile-edit .btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 12px 24px;
+	font-size: 1rem;
+	font-weight: 700;
+	text-align: center;
+	border: none;
+	border-radius: var(--radius-md);
+	cursor: pointer;
+	transition: all 0.3s ease;
+	font-family: inherit;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.smartpay-profile-edit .btn-primary {
+	background: var(--primary-gradient);
+	color: white;
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.smartpay-profile-edit .btn-primary:hover:not(:disabled) {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.smartpay-profile-edit .btn-secondary {
+	background: var(--bg-gray);
+	color: var(--text-primary);
+	border: 2px solid var(--border-color);
+}
+
+.smartpay-profile-edit .btn-secondary:hover:not(:disabled) {
+	background: #f3f4f6;
+	border-color: var(--text-secondary);
+}
+
+.smartpay-profile-edit .btn-sm {
+	padding: 8px 16px;
+	font-size: 0.875rem;
+}
+
+.smartpay-profile-edit .btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.smartpay-profile-edit .btn-arrow {
+	transition: transform 0.3s ease;
+}
+
+.smartpay-profile-edit .btn:hover:not(:disabled) .btn-arrow {
+	transform: translateX(4px);
+}
+
+.smartpay-profile-edit .input-with-icon {
+	position: relative;
+}
+
+.smartpay-profile-edit .input-icon {
+	position: absolute;
+	left: 14px;
+	top: 24px;
+	transform: translateY(-50%);
+	color: var(--text-muted);
+	pointer-events: none;
+	z-index: 1;
+}
+
+.smartpay-profile-edit .form-control.with-icon {
+	padding-left: 44px;
+}
+
+.smartpay-profile-edit .password-input-wrapper {
+	position: relative;
+}
+
+.smartpay-profile-edit .password-toggle {
+	position: absolute;
+	right: 12px;
+	top: 25px;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	padding: 4px;
+	cursor: pointer;
+	color: var(--text-muted);
+	transition: color 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 2;
+}
+
+.smartpay-profile-edit .password-toggle:hover {
+	color: var(--text-primary);
+}
+
+.smartpay-profile-edit .password-toggle:focus {
+	outline: none;
+}
+
+.smartpay-profile-edit .required {
+	color: var(--error-color);
+	margin-left: 2px;
+}
+
+.smartpay-profile-edit .help-text {
+	display: block;
+	margin-top: 6px;
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+}
+
+.smartpay-profile-edit .error-message {
+	display: none;
+	color: var(--error-color);
+	font-size: 0.875rem;
+	margin-top: 6px;
+	font-weight: 500;
+}
+
+.smartpay-profile-edit .form-group select.form-control {
+	cursor: pointer;
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 16px center;
+	padding-right: 40px;
+}
+
+.smartpay-profile-edit .alert {
+	padding: 16px 20px;
+	border-radius: var(--radius-md);
+	font-size: 0.938rem;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin: 16px 0;
+}
+
+.smartpay-profile-edit .alert-success {
+	background: #d1fae5;
+	color: #065f46;
+	border: 1px solid #6ee7b7;
+}
+
+.smartpay-profile-edit .alert-error {
+	background: #fee2e2;
+	color: #991b1b;
+	border: 1px solid #fca5a5;
+}
+
+.smartpay-profile-edit .form-actions {
+	display: flex;
+	gap: 12px;
+	margin-top: 24px;
+}
+
+.smartpay-profile-edit .form-actions.margin-0 {
+	margin: 0;
+}
+
+.smartpay-profile-edit .avatar-upload-section {
+	display: flex;
+	align-items: flex-start;
+	gap: 32px;
+	padding: 32px;
+	background: var(--bg-gray);
+	border-radius: var(--radius-lg);
+	border: 2px dashed var(--border-color);
+	margin-bottom: 32px;
+	transition: all 0.3s ease;
+}
+
+.smartpay-profile-edit .avatar-upload-section.has-preview {
+	border-color: var(--primary-color);
+	background: var(--bg-gray);
+}
+
+.smartpay-profile-edit .avatar-preview-container {
+	display: flex;
+	gap: 20px;
+	flex-shrink: 0;
+}
+
+.smartpay-profile-edit .avatar-current,
+.smartpay-profile-edit .avatar-preview {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+}
+
+.smartpay-profile-edit .avatar-current .avatar-img,
+.smartpay-profile-edit .avatar-preview .avatar-img {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	-o-object-fit: cover;
+	   object-fit: cover;
+	border: 4px solid var(--bg-white);
+	box-shadow: var(--shadow-md);
+	transition: all 0.3s ease;
+}
+
+.smartpay-profile-edit .avatar-preview {
+	position: relative;
+}
+
+.smartpay-profile-edit .avatar-preview .avatar-img {
+	border-color: var(--primary-color);
+	box-shadow: 0 0 0 2px var(--primary-color), var(--shadow-lg);
+}
+
+.smartpay-profile-edit .avatar-preview::after {
+	content: 'NEW';
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	padding: 4px 10px;
+	background: var(--primary-gradient);
+	color: white;
+	font-size: 0.688rem;
+	font-weight: 700;
+	border-radius: 12px;
+	letter-spacing: 0.5px;
+	box-shadow: var(--shadow-md);
+}
+
+.smartpay-profile-edit .avatar-actions {
+	flex: 1;
+	min-width: 0;
+}
+
+.smartpay-profile-edit .avatar-actions h3 {
+	font-size: 1.125rem;
+	font-weight: 700;
+	color: var(--text-primary);
+	margin: 0 0 4px;
+}
+
+.smartpay-profile-edit .avatar-actions p {
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+	margin: 0 0 20px;
+}
+
+.smartpay-profile-edit .avatar-buttons {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 16px;
+}
+
+.smartpay-profile-edit .avatar-buttons .btn {
+	animation: fadeIn 0.3s ease;
+}
+
+.smartpay-profile-edit .upload-progress {
+	margin-top: 16px;
+	animation: fadeIn 0.3s ease;
+}
+
+.smartpay-profile-edit .progress-bar {
+	height: 8px;
+	background: #e5e7eb;
+	border-radius: 4px;
+	overflow: hidden;
+	margin-bottom: 8px;
+}
+
+.smartpay-profile-edit .progress-fill {
+	height: 100%;
+	background: var(--primary-gradient);
+	border-radius: 4px;
+	width: 0%;
+	transition: width 0.3s ease;
+	animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+.smartpay-profile-edit .progress-text {
+	font-size: 0.875rem;
+	color: var(--text-secondary);
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.smartpay-profile-edit .progress-text::after {
+	content: '';
+	width: 16px;
+	height: 16px;
+	border: 2px solid var(--primary-color);
+	border-top-color: transparent;
+	border-radius: 50%;
+	animation: spin 0.6s linear infinite;
+}
+
+.smartpay-profile-edit .avatar-message {
+	margin-top: 12px;
+	padding: 12px 16px;
+	border-radius: var(--radius-md);
+	font-size: 0.875rem;
+	font-weight: 500;
+	display: none;
+	animation: slideDown 0.3s ease;
+}
+
+.smartpay-profile-edit .avatar-message.show {
+	display: block;
+}
+
+.smartpay-profile-edit .avatar-message.success {
+	background: #d1fae5;
+	color: #065f46;
+	border: 1px solid #6ee7b7;
+}
+
+.smartpay-profile-edit .avatar-message.error {
+	background: #fee2e2;
+	color: #991b1b;
+	border: 1px solid #fca5a5;
+}
+
+.smartpay-profile-edit .avatar-message.info {
+	background: #dbeafe;
+	color: #1e40af;
+	border: 1px solid #93c5fd;
+}
+
+@keyframes progressPulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+		max-height: 0;
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+		max-height: 100px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.smartpay-profile-edit .dashboard-layout {
+		grid-template-columns: 240px 1fr;
+	}
+}
+
+@media (max-width: 768px) {
+	.smartpay-profile-edit {
+		padding: 20px 10px;
+	}
+	.smartpay-profile-edit .dashboard-layout {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+	.smartpay-profile-edit .dashboard-sidebar {
+		position: static;
+	}
+	.smartpay-profile-edit .profile-header {
+		padding: 24px 20px;
+	}
+	.smartpay-profile-edit .profile-header .header-content {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.smartpay-profile-edit .profile-content {
+		padding: 24px 20px;
+	}
+	.smartpay-profile-edit .profile-form .form-group-row {
+		grid-template-columns: 1fr;
+	}
+	.smartpay-profile-edit .form-actions {
+		flex-direction: column;
+	}
+	.smartpay-profile-edit .form-actions .btn {
+		width: 100%;
+	}
+	.smartpay-profile-edit .profile-tabs {
+		overflow-x: auto;
+	}
+	.smartpay-profile-edit .avatar-upload-section {
+		flex-direction: column;
+		text-align: center;
+	}
+	.smartpay-profile-edit .avatar-upload-section {
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+	}
+	.smartpay-profile-edit .avatar-preview-container {
+		justify-content: center;
+	}
+	.smartpay-profile-edit .avatar-buttons {
+		justify-content: center;
+	}
+}
+@media (max-width: 480px) {
+	.smartpay-profile-edit .profile-header h1 {
+		font-size: 1.5rem;
+	}
+}
+
