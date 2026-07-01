@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Email;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Application;
 use SmartPay\Models\Payment;

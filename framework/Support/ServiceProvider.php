@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Support;
+defined('ABSPATH') || exit;
 
 use Closure;
 use SmartPay\Framework\Console\Application as Artisan;

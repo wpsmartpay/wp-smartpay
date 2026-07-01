@@ -1,14 +1,15 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Payment;
 
-class CreateSmartpayPaymentsTable
+class Smartpay_CreateSmartpayPaymentsTable
 {
     public static function up()
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_payments';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
 
         $defaultType = Payment::PRODUCT_PURCHASE;
         $defaultStatus = Payment::PENDING;

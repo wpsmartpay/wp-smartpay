@@ -1,23 +1,26 @@
 import { __ } from '@wordpress/i18n'
-import { Button, Container } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
-import { useReducer } from '@wordpress/element'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { useReducer, useState } from '@wordpress/element'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { SaveProduct } from '../../http/product'
-import { ProductForm } from './components/form'
+import { ProductForm, CoverImageCard } from './components/form'
 import { productDefaultData } from '../../utils/constant'
 
 const { dispatch } = wp.data
 
-const reducer = (state, data) => {
-    return {
-        ...state,
-        ...data,
-    }
-}
+const { Header } = window.WPSmartPayUI
+
+const reducer = (state, data) => ({ ...state, ...data })
+
+const TABS = [
+    { key: 'details',  label: __('Product Details', 'smartpay') },
+    { key: 'pricing',  label: __('Pricing',         'smartpay') },
+    { key: 'checkout', label: __('Checkout',         'smartpay') },
+]
 
 export const CreateProduct = () => {
     const [product, setProductData] = useReducer(reducer, productDefaultData)
+    const [activeTab, setActiveTab] = useState('details')
     const navigate = useNavigate()
 
     const createProduct = () => {
@@ -34,12 +37,8 @@ export const CreateProduct = () => {
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 2000,
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                    },
-                    hideClass: {
-                        popup: '',
-                    },
+                    showClass: { popup: 'swal2-noanimation' },
+                    hideClass: { popup: '' },
                 })
 
                 navigate(`/products/${response.product.id}/edit`)
@@ -52,43 +51,66 @@ export const CreateProduct = () => {
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 2000,
-                    showClass: {
-                        popup: 'swal2-noanimation',
-                    },
-                    hideClass: {
-                        popup: '',
-                    },
+                    showClass: { popup: 'swal2-noanimation' },
+                    hideClass: { popup: '' },
                 })
             })
     }
 
     return (
         <>
-            <div className="text-black bg-white border-bottom d-fixed">
-                <Container>
-                    <div className="d-flex align-items-center justify-content-between">
-                        <h2 className="text-black">
-                            {__('Create Product', 'smartpay')}
-                        </h2>
-                        <div className="ml-auto">
-                            <Button
-                                type="button"
-                                className="btn btn-sm btn-primary px-3"
-                                onClick={createProduct}
-                            >
-                                {__('Publish', 'smartpay')}
-                            </Button>
-                        </div>
-                    </div>
-                </Container>
-            </div>
+            <Header title={__('Create Product', 'smartpay')} />
+            <div className="sp-layout">
 
-            <Container>
-                <ProductForm
-                    product={product}
-                    setProductData={setProductData}
-                />
-            </Container>
+                {/* Page action bar */}
+                <div className="sp-page-head">
+                    <div>
+                        <p className="sp-page-head__breadcrumb">
+                            <span>{__('Products', 'smartpay')}</span>
+                            <span>{__('New Product', 'smartpay')}</span>
+                        </p>
+                    </div>
+                    <div className="sp-page-head__actions">
+                        <button
+                            type="button"
+                            className="sp-btn sp-btn--primary"
+                            onClick={createProduct}
+                        >
+                            {__('Publish', 'smartpay')}
+                        </button>
+                    </div>
+                </div>
+
+                <div className="sp-filter-tabs" style={{ marginBottom: 20 }}>
+                    {TABS.map((tab) => (
+                        <button
+                            key={tab.key}
+                            type="button"
+                            className={`sp-filter-tab${activeTab === tab.key ? ' sp-filter-tab--active' : ''}`}
+                            onClick={() => setActiveTab(tab.key)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="sp-detail-grid">
+                    <div>
+                        <ProductForm
+                            product={product}
+                            setProductData={setProductData}
+                            activeTab={activeTab}
+                        />
+                    </div>
+
+                    <div className="sp-detail-sidebar">
+                        <CoverImageCard
+                            product={product}
+                            setProductData={setProductData}
+                        />
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

@@ -1,0 +1,47 @@
+// Editor canvas for the Pricing block.
+// Reuse the exact frontend card + preset styles so editor === frontend.
+@import '../../../sass/pricing-cards';
+
+// Editor-only: keep the default small "+" appender (like core/buttons) from
+// stretching to full card height inside the flex grid — center it instead.
+.smartpay-pricing .form-plan-grid > .block-list-appender {
+    align-self: center;
+}
+
+// In the editor each option is a selected block; show a subtle pointer.
+// NB: don't force `display` here — the preset (Grid flex-column / List flex-row
+// / Compact flex-row) owns the card layout; overriding it flattens the cards.
+.smartpay-pricing .form-plan-card {
+    cursor: default;
+    box-sizing: border-box;
+}
+
+// The `.form-plan-card` border IS the visible box. Suppress WordPress' own
+// block-boundary outline on the option blocks so it doesn't draw a second,
+// overlapping bracket around each card (only the selected one keeps a hint).
+.smartpay-pricing .form-plan-grid > [data-block] {
+    &::before,
+    &::after {
+        display: none !important;
+    }
+}
+
+// Keep selection legible: the active option gets a clean ring on the card.
+.smartpay-pricing .form-plan-grid > .is-selected .form-plan-card,
+.smartpay-pricing .form-plan-grid > .has-child-selected .form-plan-card {
+    box-shadow: 0 0 0 2px var(--sp-accent, #2563eb);
+}
+
+// Editor-only: the description is display:none in Grid/Compact (frontend shows
+// it in List only), which made the inline RichText invisible → "edits don't
+// stick". Reveal it while its option block is selected so it can be edited.
+.smartpay-pricing .form-plan-grid > .is-selected .plan-desc,
+.smartpay-pricing .form-plan-grid > .has-child-selected .plan-desc {
+    display: block;
+}
+
+// Size the inline amount editor to its content so the editor card reads like
+// the frontend's plain-text amount (with the fixed width as fallback).
+.smartpay-pricing .plan-amount-input {
+    field-sizing: content;
+}

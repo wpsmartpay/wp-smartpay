@@ -1,14 +1,14 @@
 <?php
-$form_action = smartpay_get_payment_page_uri();
-$gateways = smartpay_get_enabled_payment_gateways(true);
-// phpcs:ignore: WordPress.Security.NonceVerification.Recommended
-$_gateway = isset($_REQUEST['gateway']) ? sanitize_text_field(wp_unslash($_REQUEST['gateway'])) : '';
+defined('ABSPATH') || exit;
+$smartpay_form_action = smartpay_get_payment_page_uri();
+$smartpay_gateways = smartpay_get_enabled_payment_gateways(true);
+$smartpay_gateway_id = isset($_REQUEST['gateway']) ? sanitize_text_field(wp_unslash($_REQUEST['gateway'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-$chosen_gateway = isset($_gateway) && smartpay_is_gateway_active($_gateway) ? $_gateway : smartpay_get_default_gateway();
-$has_payment_error = false;
+$smartpay_chosen_gateway = isset($smartpay_gateway_id) && smartpay_is_gateway_active($smartpay_gateway_id) ? $smartpay_gateway_id : smartpay_get_default_gateway();
+$smartpay_has_payment_error = false;
 ?>
 
-<?php if ('embedded' == $behavior) : ?>
+<?php if ('embedded' == ($smartpay_view_data['behavior'] ?? '')) : ?>
 <?php include __DIR__ . '/shared/form_details.php';
     ?>
 <?php else : ?>
@@ -34,7 +34,7 @@ $has_payment_error = false;
             </div>
         </div>
         <button type="button" class="btn btn-success open-product-modal m-1">
-            <?php echo esc_html($label ?: __('Pay now', 'smartpay')); ?>
+            <?php echo esc_html(($smartpay_view_data['label'] ?? '') ?: __('Pay now', 'smartpay')); ?>
         </button>
     </div>
 </div>

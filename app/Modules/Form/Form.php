@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Form;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Application;
 use SmartPay\Http\Controllers\Rest\Admin\FormController;
@@ -101,7 +102,7 @@ class Form
         wp_enqueue_script(
             'smartpay-form',
             SMARTPAY_PLUGIN_ASSETS . '/form-builder/index.js',
-            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives'],
+            ['lodash', 'wp-block-editor', 'wp-block-library', 'wp-blocks', 'wp-components', 'wp-data', 'wp-dom-ready', 'wp-editor', 'wp-element', 'wp-format-library', 'wp-i18n', 'wp-media-utils', 'wp-plugins', 'wp-polyfill', 'wp-primitives', 'smartpay-ui'],
             SMARTPAY_VERSION,
 	        false
         );
@@ -110,7 +111,11 @@ class Form
             'smartpay-form',
             'smartpay',
             [
-                'apiNonce' => wp_create_nonce('wp_rest')
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'apiNonce' => wp_create_nonce('wp_rest'),
+                'logo'     => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
             ]
         );
 

@@ -1,6 +1,6 @@
-import { __ } from '@wordpress/i18n'
-import { Eye, Trash2 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { __ } from '@wordpress/i18n';
+import { Eye, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 const { Button } = window.WPSmartPayUI;
 
 export const createColumns = (deleteCustomer) => [
@@ -53,7 +53,7 @@ export const createColumns = (deleteCustomer) => [
 							variant="outline"
 							size="icon"
 							title={__('Details', 'smartpay')}
-							className="hover:bg-gray-100"
+							className="hover:bg-gray-100 cursor-pointer"
 						>
 							<Eye className="w-4 h-4 text-gray-700" />
 						</Button>
@@ -63,7 +63,7 @@ export const createColumns = (deleteCustomer) => [
 						size="icon"
 						title={__('Delete', 'smartpay')}
 						onClick={() => deleteCustomer(customer.id)}
-						className="hover:bg-red-50"
+						className="hover:bg-red-50 cursor-pointer border-red-200!"
 					>
 						<Trash2 className="w-4 h-4 text-red-600" />
 					</Button>

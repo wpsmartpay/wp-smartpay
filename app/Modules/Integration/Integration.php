@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Integration;
+defined('ABSPATH') || exit;
 
 class Integration
 {
@@ -20,37 +21,21 @@ class Integration
     public static function getIntegrations()
     {
         return [
-            'paddle'    =>  [
-                'name'       => 'Paddle',
-                'excerpt'    => 'Paddle provides financial services for SaaS and Digital services.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
+            'products'  => [
+                'name'       => __( 'Products', 'smartpay' ),
+                'excerpt'    => __( 'Sell digital products and downloads directly from your WordPress site.', 'smartpay' ),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/products.png',
+                'manager'    => Products::class,
+                'type'       => 'free',
+                'categories' => [ 'Core' ],
             ],
-            'stripe'    => [
-                'name'       => 'Stripe',
-                'excerpt'    => 'Stripe is an American financial services providing company.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-            'bkash' => [
-                'name'       => 'bKash',
-                'excerpt'    => 'bKash is a mobile financial service in Bangladesh.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/bkash.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-            'razorpay' => [
-                'name'       => 'Razorpay',
-                'excerpt'    => 'Razorpay provides financial services for SaaS and Digital services in India.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
+            'legacy_forms' => [
+                'name'       => __( 'Legacy Forms', 'smartpay' ),
+                'excerpt'    => __( 'Enable the legacy form builder for forms created before the native form builder.', 'smartpay' ),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/legacy-forms.png',
+                'manager'    => LegacyForms::class,
+                'type'       => 'free',
+                'categories' => [ 'Core' ],
             ],
             'mailchimp' => [
                 'name'       => 'MailChimp',
@@ -100,33 +85,6 @@ class Integration
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
             ],
-
-            'mollie' => [
-                'name'       => 'Mollie',
-                'excerpt'    => 'Mollie is a payments platform that offers an easy-to-implement process for integrating payments.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-
-            'toyyibpay' => [
-	            'name'       => 'toyyibPay',
-	            'excerpt'    => 'Quickest & easiest Malaysian online payment solution.',
-	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/toyyibpay.png',
-	            'manager'    => null,
-	            'type'       => 'pro',
-	            'categories' => ['Payment Gateway'],
-            ],
-
-            'paytm' => [
-	            'name'       => 'Paytm',
-	            'excerpt'    => 'Indian digital payments and financial services company.',
-	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paytm.png',
-	            'manager'    => null,
-	            'type'       => 'pro',
-	            'categories' => ['Payment Gateway'],
-            ],
         ];
     }
 
@@ -171,18 +129,23 @@ class Integration
 
     public function toggleIntegrationActivation()
     {
-		$nonce = isset($_POST['payload']['nonce']) ? sanitize_text_field(wp_unslash($_POST['payload']['nonce'])): '';
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => __('You do not have permission to perform this action.', 'smartpay')], 403);
+            return;
+        }
+
+		$nonce = isset($_POST['payload']['nonce']) ? sanitize_text_field(wp_unslash($_POST['payload']['nonce'])) : '';
         if (!$nonce || !wp_verify_nonce($nonce, 'smartpay_integrations_toggle_activation')) {
-            echo 'Invlid request';
-            die();
+            wp_send_json_error(['message' => __('Invalid request.', 'smartpay')], 403);
+            return;
         }
 
         $action    = isset($_POST['payload']['action']) ? sanitize_text_field(wp_unslash($_POST['payload']['action'])) : '';
         $namespace = isset($_POST['payload']['namespace']) ? sanitize_text_field(wp_unslash($_POST['payload']['namespace'])) : '';
 
-        if (!in_array($namespace, array_keys(smartpay_integrations()))) {
-            echo 'Requested for invalid integration';
-            die();
+        if (!in_array($namespace, array_keys(smartpay_integrations()), true)) {
+            wp_send_json_error(['message' => __('Invalid integration.', 'smartpay')], 400);
+            return;
         }
 
         if ('activate' === $action) {
@@ -190,8 +153,6 @@ class Integration
         } else {
             $this->deactivateIntegration($namespace);
         }
-
-        die(); // Must terminate the api/ajax request
     }
 
     private function activateIntegration(string $integration)
@@ -212,14 +173,14 @@ class Integration
         }
 
         smartpay_update_settings($smartpay_options);
-        echo 'Activated';
+        wp_send_json_success(['message' => __('Integration activated.', 'smartpay')]);
     }
 
     private function deactivateIntegration(string $integration)
     {
         global $smartpay_options;
 
-        if (!in_array($integration, array_keys($smartpay_options['integrations']))) {
+        if (!in_array($integration, array_keys($smartpay_options['integrations']), true)) {
             $smartpay_options['integrations'][$integration] = [
                 'active'   => false,
                 'settings' => []
@@ -229,6 +190,6 @@ class Integration
         }
 
         smartpay_update_settings($smartpay_options);
-        echo 'Disabled';
+        wp_send_json_success(['message' => __('Integration deactivated.', 'smartpay')]);
     }
 }

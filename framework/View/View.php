@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\View;
+defined('ABSPATH') || exit;
 
 use InvalidArgumentException;
 use SmartPay\Framework\Application;
@@ -85,12 +86,16 @@ class View
 
         if (strpos($path, '::') !== false) {
             list($namespace, $path) = explode('::', $path);
-            $viewName = $this->app['path.view.extras'][$namespace] . DIRECTORY_SEPARATOR . $path;
-        } else {
-            $viewName = $this->app->viewPath($path);
+            return $this->app['path.view.extras'][$namespace] . DIRECTORY_SEPARATOR . $path . '.php';
         }
 
-        return $viewName . '.php';
+        // Theme override: place file at {theme}/smartpay/{path}.php to override.
+        $theme_file = locate_template( 'smartpay' . DIRECTORY_SEPARATOR . $path . '.php' );
+        if ( $theme_file ) {
+            return $theme_file;
+        }
+
+        return $this->app->viewPath($path) . '.php';
     }
 
     /**
@@ -104,10 +109,9 @@ class View
         $this->callComposerCallbacks();
 
         $renderOutput = function ($app) {
-            ob_start() && extract(
-                $this->gatherData(),
-                EXTR_SKIP
-            );
+            $smartpay_view_data = $this->gatherData();
+
+            ob_start();
 
             include $this->path;
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Container;
+defined('ABSPATH') || exit;
 
 use Closure;
 use ReflectionNamedType;

@@ -256,8 +256,8 @@
         }
 
         &:checked {
-            background: var(--color-green) !important;
-            border-color: var(--color-green) !important;
+            background: var(--color-green);
+            border-color: var(--color-green);
             opacity: 1;
         }
     }
@@ -324,3 +324,7 @@
 .plan-additional-info {
     font-size: 0.7rem;
 }
+
+// Pricing block — var-driven card styling + Grid/List/Compact presets.
+// Imported last so it layers over the legacy rules above.
+@import 'pricing-cards';

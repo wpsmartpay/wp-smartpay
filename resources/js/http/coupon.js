@@ -2,25 +2,31 @@ import apiFetch from '@wordpress/api-fetch'
 import { __ } from '@wordpress/i18n'
 import Swal from 'sweetalert2/dist/sweetalert2'
 
-export const Save = (body) => {
+// NOTE: use apiFetch `url` (full URL), not `path`. On admin pages wp.apiFetch
+// has the rootURL middleware active, which prepends the REST root to `path` —
+// a full-URL `path` would double to .../wp-json/http://.../wp-json/... (404,
+// "No route was found"). `url` bypasses that middleware and works whether or
+// not it is registered. `data` (object) lets apiFetch JSON-encode + set the
+// Content-Type header so WP REST parses the body into params.
+export const Save = (data) => {
     return apiFetch({
-        path: `${smartpay.restUrl}/v1/coupons`,
+        url: `${smartpay.restUrl}/v1/coupons`,
         method: 'POST',
         headers: {
             'X-WP-Nonce': smartpay.apiNonce,
         },
-        body: body,
+        data,
     })
 }
 
-export const Update = (id, body) => {
+export const Update = (id, data) => {
     return apiFetch({
-        path: `${smartpay.restUrl}/v1/coupons/${id}`,
+        url: `${smartpay.restUrl}/v1/coupons/${id}`,
         method: 'PUT',
         headers: {
             'X-WP-Nonce': smartpay.apiNonce,
         },
-        body: body,
+        data,
     })
 }
 
@@ -37,7 +43,7 @@ export const DeleteCoupon = async (couponId) => {
 
 	try {
 		await apiFetch({
-			path: `${smartpay.restUrl}/v1/coupons/${couponId}`,
+			url: `${smartpay.restUrl}/v1/coupons/${couponId}`,
 			method: 'DELETE',
 			headers: {
 				'X-WP-Nonce': smartpay.apiNonce,
@@ -78,8 +84,11 @@ export const GetCoupons = async ({ page = 1, perPage = 10, search = '', type = '
         ...(search && { search })
 	})
 
+	const url = `${smartpay.restUrl}/v1/coupons`;
+    const separator = url.includes('?') ? '&' : '?';
+
 	const response = await apiFetch({
-		path: `${smartpay.restUrl}/v1/coupons?${queryParams.toString()}`,
+		url: `${url}${separator}${queryParams.toString()}`,
 		headers: {
 			'X-WP-Nonce': smartpay.apiNonce,
 		},

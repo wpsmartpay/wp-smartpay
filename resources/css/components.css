@@ -1,5 +1,12 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+@import "./sp-layout.css";
 @import "tw-animate-css";
+@source "../js";
+@source "../views";
+@source "../blocks";
+@source "../form-builder";
+@source "../../app";
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -49,7 +56,7 @@
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
+  --primary: oklch(46.00% 0.144 269.45);
   --primary-foreground: oklch(0.984 0.003 247.858);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
@@ -117,4 +124,184 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ── Integrations page ─────────────────────────────────── */
+
+.sp-integrations-toolbar {
+  gap: 0.75rem;
+}
+
+.sp-period-selector {
+  @apply inline-flex items-center gap-1 rounded-lg border border-border bg-muted/40 p-1;
+}
+
+.sp-period-selector__item {
+  @apply inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors cursor-pointer;
+}
+
+.sp-period-selector__item:hover {
+  @apply bg-background text-foreground;
+}
+
+.sp-period-selector__item--active {
+  @apply bg-background shadow-sm text-foreground;
+}
+
+.sp-badge {
+  @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium;
+}
+
+.sp-badge--neutral {
+  @apply border-slate-200 bg-slate-50 text-slate-600;
+}
+
+/* ── Page layout ───────────────────────────────────────── */
+
+.sp-page-content {
+  @apply p-4 max-w-7xl mx-auto flex flex-col gap-5;
+}
+
+.sp-page-content--sm {
+  max-width: 760px;
+}
+
+.sp-content-wide {
+  @apply p-4 max-w-7xl mx-auto;
+}
+
+.sp-content-narrow {
+  @apply p-4 max-w-5xl mx-auto;
+}
+
+.sp-stack {
+  @apply flex flex-col gap-4;
+}
+
+/* ── Grids ─────────────────────────────────────────────── */
+
+.sp-grid {
+  @apply grid gap-4;
+}
+
+.sp-grid--2 {
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+.sp-grid--3 {
+  @apply grid-cols-1 md:grid-cols-3;
+}
+
+.sp-grid--4 {
+  @apply grid-cols-2 lg:grid-cols-4;
+}
+
+.sp-grid--sidebar {
+  @apply grid-cols-1 lg:grid-cols-3;
+}
+
+/* ── Tabs (underline style) ────────────────────────────── */
+
+.sp-tabs__nav {
+  @apply border-b border-border;
+}
+
+.sp-tabs__item {
+  @apply inline-flex items-center px-5 py-2.5 text-sm font-medium border-b-2 border-transparent text-muted-foreground transition-colors cursor-pointer bg-transparent;
+  margin-bottom: -1px;
+}
+
+.sp-tabs__item:hover {
+  @apply text-foreground;
+}
+
+.sp-tabs__item--active {
+  @apply border-primary text-primary font-semibold;
+}
+
+.sp-card--tab-connected {
+  @apply rounded-t-none border-t-0;
+}
+
+/* ── Quick links ───────────────────────────────────────── */
+
+.sp-quick-links {
+  @apply flex flex-col gap-0.5;
+}
+
+.sp-quick-links__item {
+  @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors no-underline;
+}
+
+.sp-quick-links__item:hover {
+  @apply bg-muted/50 text-foreground;
+}
+
+/* ── Metrics list ──────────────────────────────────────── */
+
+.sp-metrics-list {
+  @apply flex flex-col divide-y divide-border;
+}
+
+.sp-metrics-list__item {
+  @apply flex items-center justify-between py-3;
+}
+
+.sp-metrics-list__label {
+  @apply flex items-center gap-2 text-sm text-muted-foreground;
+}
+
+.sp-metrics-list__value {
+  @apply text-sm font-semibold tabular-nums text-card-foreground;
+}
+
+/* ── States ────────────────────────────────────────────── */
+
+.sp-state-loading,
+.sp-state-empty {
+  @apply p-8 text-center text-muted-foreground text-sm;
+}
+
+.sp-state-error {
+  @apply p-8 text-center text-destructive text-sm;
+}
+
+/* ── Date badge ────────────────────────────────────────── */
+
+.sp-date-badge {
+  @apply flex items-center gap-2 text-sm text-muted-foreground border border-border rounded-lg px-3 py-1.5 bg-background;
+}
+
+/* ── Buttons (raw, outside WPSmartPayUI) ───────────────── */
+
+.sp-btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors cursor-pointer border;
+}
+
+.sp-btn--primary {
+  @apply bg-primary text-primary-foreground border-primary hover:opacity-90 px-4 py-2;
+}
+
+.sp-btn--outline {
+  @apply bg-background text-foreground border-border hover:bg-muted px-4 py-2;
+}
+
+.sp-btn--ghost {
+  @apply bg-transparent border-transparent text-muted-foreground hover:bg-muted hover:text-foreground px-4 py-2;
+}
+
+.sp-btn--destructive {
+  @apply bg-destructive text-white border-destructive hover:opacity-90 px-4 py-2;
+}
+
+.sp-btn--sm {
+  @apply px-3 py-1.5 text-xs;
+}
+
+.sp-btn--icon {
+  @apply p-2 w-9 h-9;
+}
+
+.sp-btn:disabled {
+  @apply opacity-40 cursor-not-allowed pointer-events-none;
 }

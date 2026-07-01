@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Concerns;
+defined('ABSPATH') || exit;
 
 trait WordPressAction
 {

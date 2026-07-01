@@ -26,10 +26,13 @@ jQuery(document.body).on(
         }
 
         apiFetch({
-            path: `${smartpay.restUrl}/v1/public/customers/${customerId}`,
+            // `url` (not `path`) so the REST rootURL middleware, when active,
+            // does not double-prepend the root onto this full URL.
+            url: `${smartpay.restUrl}/v1/public/customers/${customerId}`,
             method: 'PUT',
             headers: {
                 'X-WP-Nonce': smartpay.apiNonce,
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         })

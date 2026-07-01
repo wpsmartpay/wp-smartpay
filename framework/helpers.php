@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Container\Container;
 
@@ -20,14 +21,14 @@ if (!function_exists('smartpay')) {
     }
 }
 
-if (!function_exists('base_path')) {
+if (!function_exists('smartpay_base_path')) {
     /**
      * Get the path to the base of the install.
      *
      * @param  string  $path
      * @return string
      */
-    function base_path($path = '')
+    function smartpay_base_path($path = '')
     {
         return smartpay()->basePath() . ($path ? '/' . $path : $path);
     }
@@ -54,7 +55,7 @@ if (!function_exists('smartpay_view')) {
     }
 }
 
-if (!function_exists('validator')) {
+if (!function_exists('smartpay_validator')) {
     /**
      * Create a new Validator instance.
      *
@@ -64,7 +65,7 @@ if (!function_exists('validator')) {
      * @param  array  $customAttributes
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    function validator($data = [], array $rules = [], array $messages = [], array $customAttributes = [])
+    function smartpay_validator($data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {
         $factory = smartpay('validator');
 
@@ -76,8 +77,8 @@ if (!function_exists('validator')) {
     }
 }
 
-if (!function_exists('dd')) {
-    function dd($data)
+if (!function_exists('smartpay_dd')) {
+    function smartpay_dd($data)
     {
 		if (defined('WP_DEBUG') && WP_DEBUG) {
 	        foreach (func_get_args() as $arg) {

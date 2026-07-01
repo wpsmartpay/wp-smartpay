@@ -106,7 +106,7 @@ registerStore('smartpay/coupons', {
     controls: {
         GET_COUPONS(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
@@ -114,7 +114,7 @@ registerStore('smartpay/coupons', {
         },
         GET_COUPON(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },

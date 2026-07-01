@@ -1,0 +1,63 @@
+name: Plugin Check (PCP)
+
+on:
+  pull_request:
+  push:
+    branches: [main, develop]
+
+jobs:
+  plugin-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: Install production Composer dependencies
+        run: composer install --no-dev --no-progress --prefer-dist --optimize-autoloader
+
+      # Plugin Check must run against what actually ships, not the source tree.
+      # Building a clean dist (mirroring .distignore) drops dev-only files that
+      # would otherwise raise blocking errors: hidden_files, application_detected,
+      # github_directory, ai_instruction_directory, unexpected_markdown_file, and
+      # the NoStrategy/EnqueuedScope warnings from non-shipped resources/ sources.
+      - name: Build distributable (strip dev files via .distignore)
+        run: |
+          mkdir -p dist/smartpay
+          rsync -a \
+            --exclude-from='.distignore' \
+            --exclude='.git' --exclude='.github' --exclude='.claude' --exclude='.agent' \
+            --exclude='.wordpress-org' --exclude='node_modules' --exclude='dist' \
+            --exclude='phpcs-bootstrap.php' \
+            ./ dist/smartpay/
+          # Ship composer.json alongside the production vendor/ dir so Plugin Check
+          # does not raise missing_composer_json_file.
+          cp composer.json dist/smartpay/composer.json
+
+      - name: Run Plugin Check
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: 'dist/smartpay'
+          # vendor/ is third-party code, not ours — exclude from scanning.
+          exclude-directories: vendor
+          categories: |
+            plugin_repo
+            security
+            performance
+            accessibility
+          # Consciously accepted warnings (maintainer decision):
+          # - trademarked_term: brand name "WPSmartPay" retained.
+          # - NonPrefixedHooknameFound: public before_/after_smartpay_payment_form*
+          #   hooks kept for backward compatibility with existing integrations, plus
+          #   the external fluent_url_validator hook.
+          # - NonPrefixedVariableFound: template-scope view variables and the $app
+          #   DI container bootstrap variable.
+          ignore-codes: |
+            trademarked_term
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+            WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound

@@ -1,14 +1,15 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Form;
 
-class CreateSmartpayFormsTable
+class Smartpay_CreateSmartpayFormsTable
 {
     public static function up()
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_forms';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_forms' );
 
         $defaultStatus = Form::PUBLISH;
 

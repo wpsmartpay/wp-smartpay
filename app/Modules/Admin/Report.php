@@ -1,7 +1,9 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+defined('ABSPATH') || exit;
 
+use SmartPay\Http\Controllers\Rest\Admin\DashboardController;
 use SmartPay\Http\Controllers\Rest\Admin\ReportController;
 use WP_REST_Server;
 
@@ -17,13 +19,22 @@ class Report
 
     public function registerRestRoutes()
     {
-        $reportController = $this->app->make(ReportController::class);
+        $reportController    = $this->app->make(ReportController::class);
+        $dashboardController = $this->app->make(DashboardController::class);
 
         register_rest_route('smartpay/v1', 'reports', [
             [
-                'methods'   => WP_REST_Server::READABLE,
-                'callback'  => [$reportController, 'index'],
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$reportController, 'index'],
                 'permission_callback' => [$reportController, 'middleware'],
+            ],
+        ]);
+
+        register_rest_route('smartpay/v1', 'dashboard', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$dashboardController, 'index'],
+                'permission_callback' => [$dashboardController, 'middleware'],
             ],
         ]);
     }

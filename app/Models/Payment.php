@@ -1,8 +1,10 @@
 <?php
 
 namespace SmartPay\Models;
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Customer;
+use SmartPay\Models\PaymentLog;
 use SmartPay\Framework\Database\Eloquent\Model;
 use SmartPay\Framework\Database\Eloquent\Relation\HasMany;
 use SmartPay\Framework\Database\Eloquent\Relation\HasOne;
@@ -54,18 +56,36 @@ class Payment extends Model
 
     public static function boot()
     {
-        static::creating(function ($product) {
-            $product->status = $product->status ?: self::PENDING;
+        static::creating(function ($payment) {
+            // Work on the raw attribute, not $payment->status — the status
+            // accessor capitalises the value ('completed' → 'Completed'), and
+            // assigning that back would persist the capitalised form, which then
+            // fails to match the lowercase status constants on read (every case
+            // falls through to the default 'Pending'). Only default when unset.
+            if ( empty( $payment->attributes['status'] ) ) {
+                $payment->attributes['status'] = self::PENDING;
+            }
         });
 
         static::saving(function ($payment) {
             if ($payment->isDirty('status')) {
+                $old_status = $payment->original['status'] ?? self::PENDING;
+                $new_status = $payment->attributes['status'];
+
                 do_action(
                     'smartpay_update_payment_status',
                     $payment,
-                    $payment->attributes['status'],
-                    $payment->original['status'] ?? self::PENDING
+                    $new_status,
+                    $old_status
                 );
+
+                if ( $payment->id && function_exists( 'smartpay_record_payment_log' ) ) {
+                    smartpay_record_payment_log(
+                        (int) $payment->id,
+                        'status_changed',
+                        sprintf( '%s → %s', $old_status, $new_status )
+                    );
+                }
             }
         });
     }
@@ -73,6 +93,11 @@ class Payment extends Model
     public function customer()
     {
         return $this->hasOne(Customer::class, 'id', 'customer_id');
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(PaymentLog::class, 'payment_id', 'id');
     }
 
     /**
@@ -150,7 +175,7 @@ class Payment extends Model
 
     public function getDataAttribute($data)
     {
-        return json_decode($data, true);
+        return json_decode((string) $data, true);
     }
 
     public function setExtraAttribute($extra)
@@ -170,7 +195,7 @@ class Payment extends Model
 
     public function getExtraAttribute($extra)
     {
-        return json_decode($extra, true);
+        return json_decode((string) $extra, true);
     }
 
     //FIXME
@@ -201,5 +226,34 @@ class Payment extends Model
     {
         $this->transaction_id = $transactionId;
         return $this->save();
+    }
+
+    /**
+     * Get formatted payment number
+     *
+     * @return string
+     */
+    public function get_payment_number(): string
+    {
+        if (!$this->id) {
+            return '';
+        }
+
+        $id = (int) $this->id;
+        
+        $starting_number = smartpay_get_option('payment_number_starting', '');
+        if (!empty($starting_number) && is_numeric($starting_number)) {
+            $id += (int) $starting_number;
+        }
+
+        $id = (string) $id;
+
+        $padding = smartpay_get_option('payment_number_padding', '');
+        
+        if (!empty($padding) && is_numeric($padding)) {
+            $id = str_pad($id, (int)$padding, '0', STR_PAD_LEFT);
+        }
+
+        return $id;
     }
 }

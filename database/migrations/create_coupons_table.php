@@ -1,14 +1,15 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Coupon;
 
-class CreateSmartpayCouponsTable
+class Smartpay_CreateSmartpayCouponsTable
 {
     public static function up()
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_coupons';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_coupons' );
 
         $defaultStatus = Coupon::PUBLISH;
 

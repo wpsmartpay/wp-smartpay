@@ -1,5 +1,6 @@
 <?php
 namespace SmartPay\Modules\Customer;
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Payment;
 
@@ -36,7 +37,7 @@ class CreateUser {
                     do_action('smartpay_customer_user_created', $user, $payment);
                     //send notification to only new user
                     // check the new user notification
-                    $enable_user_notification = (bool) smartpay_get_settings()['new_user_notification'] ?? false;
+                    $enable_user_notification = (bool) ( smartpay_get_settings()['new_user_notification'] ?? false );
                     if ($enable_user_notification){
                         wp_new_user_notification($user, null, 'user');
                     }
@@ -44,7 +45,7 @@ class CreateUser {
             }catch (\Exception $e){
                 smartpay_debug_log(sprintf(
 					/* translators: 1: Error Message */
-					__('SmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage())
+					__('WPSmartPay: User could not create, due to %s', 'smartpay'), $e->getMessage())
                 );
             }
             return true;

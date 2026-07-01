@@ -1,7 +1,15 @@
 import { __ } from '@wordpress/i18n';
-import { Box, Eye, FilePenLine, LinkIcon, Trash2 } from 'lucide-react';
+import { Eye, RefreshCw, ScanSearch, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 const { Badge, Button, StatusBadge } = window.WPSmartPayUI;
+
+const isSubscription = ( billingType ) =>
+	typeof billingType === 'string' && billingType.toLowerCase() === 'subscription'
+
+const periodLabel = ( period ) => {
+	const map = { day: 'day', week: 'wk', month: 'mo', year: 'yr' }
+	return map[ ( period || '' ).toLowerCase() ] || period || ''
+}
 
 export const createColumns = (deletePayment, onViewPayment) => [
     {
@@ -16,38 +24,64 @@ export const createColumns = (deletePayment, onViewPayment) => [
 	},
 	{
 		accessorKey: 'type',
-		header: () => <div className="text-center">{ __('Item & Type', 'smartpay') }</div>,
+		header: () => <div className="text-center">{ __('Type', 'smartpay') }</div>,
 		enableSorting: false,
 		cell: ({ row }) => {
-			const type = row.getValue('type');
-			const payment = row.original
-			const productId = payment?.data?.product_id
-			const formId = payment?.data?.form_id
+			const payment      = row.original
+			const billingType  = payment?.data?.billing_type
 
-			if (type === 'Product Purchase') {
+			if ( isSubscription( billingType ) ) {
 				return (
-					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-slate-100 min-w-20"><Box className='size-3'/> Product</Badge>
-						<Badge variant="default" className="bg-slate-100 min-w-8">
-							<Link
-								to={`/products/${productId}/edit`}
-								className="text-slate-800! font-bold flex items-center justify-center hover:underline"
-							>
-								<LinkIcon className='size-3.5'/>
-							</Link>
-						</Badge>
-					</div>
-				)
-			} else if(type === 'Form Payment') {
-				return (
-					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-slate-100 min-w-20"><FilePenLine className='size-3'/> Form</Badge>
-						<Badge variant="default" className="bg-slate-100 min-w-8">
-							<span className='text-slate-700'>{`#${formId}`}</span>
+					<div className='flex justify-center'>
+						<Badge variant="secondary" style={{ background: '#ede9fe', color: '#6d28d9', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+							<RefreshCw className='size-3' /> { __( 'Subscription', 'smartpay' ) }
 						</Badge>
 					</div>
 				)
 			}
+			return (
+				<div className='flex justify-center'>
+					<Badge variant="secondary" style={{ background: '#f0fdf4', color: '#166534', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+						{ __( 'One-time', 'smartpay' ) }
+					</Badge>
+				</div>
+			)
+		}
+	},
+	{
+		accessorKey: 'source_name',
+		header: () => <div className="text-center">{ __('Product / Form', 'smartpay') }</div>,
+		enableSorting: false,
+		cell: ({ row }) => {
+			const payment = row.original
+			const type    = payment.type
+			const data    = payment.data || {}
+
+			if (type === 'Product Purchase') {
+				return (
+					<div className='flex justify-center items-center gap-1.5'>
+						<span className='text-sm text-gray-700'>
+							#{ data?.product_id || '—' }
+						</span>
+						<span className='inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200 capitalize'>
+							product
+						</span>
+					</div>
+				)
+			}
+			if (type === 'Form Payment') {
+				return (
+					<div className='flex justify-center items-center gap-1.5'>
+						<span className='text-sm text-gray-700'>
+							#{ data?.form_id || '—' }
+						</span>
+						<span className='inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200 capitalize'>
+							form
+						</span>
+					</div>
+				)
+			}
+			return <span className="text-muted-foreground">—</span>
 		}
 	},
 	{
@@ -85,14 +119,25 @@ export const createColumns = (deletePayment, onViewPayment) => [
 		accessorKey: 'amount',
 		header: __('Amount', 'smartpay'),
 		cell: ({ row }) => {
-			const amount = parseFloat( row.getValue('amount') || 0 )
+			const payment     = row.original
+			const amount      = parseFloat( row.getValue('amount') || 0 )
+			const currency    = payment?.currency || 'USD'
+			const billingType = payment?.data?.billing_type
+			const period      = periodLabel( payment?.data?.billing_period )
+
 			const formatted = new Intl.NumberFormat('en-US', {
 				style: 'currency',
-				currency: 'USD'
+				currency: currency,
 			}).format(amount)
+
 			return (
-                <div className='text-right pr-2'>
-					{formatted}
+				<div className='text-right pr-2'>
+					<span>{ formatted }</span>
+					{ isSubscription( billingType ) && period && (
+						<span style={{ color: '#6b7280', fontSize: 11, marginLeft: 3 }}>
+							/ { period }
+						</span>
+					) }
 				</div>
 			)
 		},
@@ -105,21 +150,31 @@ export const createColumns = (deletePayment, onViewPayment) => [
 
 			return (
 				<div className="flex items-center justify-end gap-2">
+					<Link to={`/payments/${payment.id}`}>
+						<Button
+							variant="outline"
+							size="icon"
+							title={__('View Details', 'smartpay')}
+							className="hover:bg-gray-100 cursor-pointer"
+						>
+							<Eye className="w-4 h-4 text-gray-700" />
+						</Button>
+					</Link>
 					<Button
 						variant="outline"
 						size="icon"
-						title={__('View', 'smartpay')}
+						title={__('Quick View', 'smartpay')}
 						onClick={() => onViewPayment(payment.id)}
-						className="hover:bg-gray-100"
+						className="hover:bg-gray-100 cursor-pointer"
 					>
-						<Eye className="w-4 h-4 text-gray-700" />
+						<ScanSearch className="w-4 h-4 text-gray-700" />
 					</Button>
 					<Button
 						variant="outline"
 						size="icon"
 						title={__('Delete', 'smartpay')}
 						onClick={() => deletePayment(payment.id)}
-						className="hover:bg-red-50"
+						className="hover:bg-red-50 cursor-pointer border-red-200!"
 					>
 						<Trash2 className="w-4 h-4 text-red-600" />
 					</Button>

@@ -1,24 +1,27 @@
 import { __ } from '@wordpress/i18n'
-import { useParams } from 'react-router-dom'
-import { useReducer, useEffect } from '@wordpress/element'
-import { Container, Form, Button, Alert } from 'react-bootstrap'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { Link, useParams } from 'react-router-dom'
+import { useReducer, useEffect, useState } from '@wordpress/element'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { UpdateProduct } from '../../http/product'
-import { ProductForm } from './components/form'
+import { ProductForm, CoverImageCard } from './components/form'
 import { productDefaultData } from '../../utils/constant'
 
 const { useSelect, dispatch } = wp.data
 
-const reducer = (state, data) => {
-    return {
-        ...state,
-        ...data,
-    }
-}
+const { Header } = window.WPSmartPayUI
+
+const reducer = (state, data) => ({ ...state, ...data })
+
+const TABS = [
+    { key: 'details',  label: __('Product Details', 'smartpay') },
+    { key: 'pricing',  label: __('Pricing',         'smartpay') },
+    { key: 'checkout', label: __('Checkout',         'smartpay') },
+]
 
 export const EditProduct = () => {
     const { productId } = useParams()
     const [product, setProductData] = useReducer(reducer, productDefaultData)
+    const [activeTab, setActiveTab] = useState('details')
 
     const productData = useSelect(
         (select) => select('smartpay/products').getProduct(productId),
@@ -29,9 +32,10 @@ export const EditProduct = () => {
         if (productData && productData.hasOwnProperty('variations')) {
             setProductData({
                 ...productData,
-                variations: productData.variations.map((variation) => {
-                    return { ...variation, key: `old-${variation.id}` }
-                }),
+                variations: productData.variations.map((variation) => ({
+                    ...variation,
+                    key: `old-${variation.id}`,
+                })),
             })
         }
     }, [productData])
@@ -46,12 +50,8 @@ export const EditProduct = () => {
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 2000,
-                showClass: {
-                    popup: 'swal2-noanimation',
-                },
-                hideClass: {
-                    popup: '',
-                },
+                showClass: { popup: 'swal2-noanimation' },
+                hideClass: { popup: '' },
             })
         })
     }
@@ -60,57 +60,102 @@ export const EditProduct = () => {
         <>
             {product && (
                 <>
-                    <div className="text-black bg-white border-bottom d-fixed">
-                        <Container>
-                            <div className="d-flex align-items-center justify-content-between">
-                                <h2 className="text-black">
-                                    {__('Edit Product', 'smartpay')}
-                                </h2>
-                                <div className="ml-auto">
-                                    <div className="d-flex flex-row">
-                                        <Form.Control
-                                            size="sm"
-                                            type="text"
-                                            value={`[smartpay_product id="${product.id}"]`}
-                                            readOnly
-                                            className="mr-2"
-                                        />
-                                        {
-                                            product.id && product.extra?.product_preview_page_permalink && (
-                                                <>
-                                                    <Button
-                                                        variant="link"
-                                                        href={product.extra.product_preview_page_permalink}
-                                                        target="_blank"
-                                                        className="btn btn-sm text-decoration-none px-3 mr-2"
-                                                    >
-                                                        {__(
-                                                            'Preview',
-                                                            'smartpay'
-                                                        )}
-                                                    </Button>
-                                                </>
-                                            )
-                                        }
-                                        <Button
-                                            type="button"
-                                            className="btn btn-sm btn-primary px-3"
-                                            onClick={Save}
-                                        >
-                                            {__('Save', 'smartpay')}
-                                        </Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Container>
-                    </div>
+                    <Header
+                        title={__('Edit Product', 'smartpay')}
+                        subtitle={product.id ? `#${product.id}` : ''}
+                    />
+                    <div className="sp-layout">
 
-                    <Container>
-                        <ProductForm
-                            product={product}
-                            setProductData={setProductData}
-                        />
-                    </Container>
+                        {/* Page action bar */}
+                        <div className="sp-page-head">
+                            <div>
+                                <p className="sp-page-head__breadcrumb">
+                                    <span>{__('Products', 'smartpay')}</span>
+                                    <span>
+                                        {__('Edit Product', 'smartpay')}
+                                        {product.id ? ` #${product.id}` : ''}
+                                    </span>
+                                </p>
+                            </div>
+                            <div className="sp-page-head__actions">
+                                {product.id && product.extra?.product_preview_page_permalink && (
+                                    <a
+                                        href={product.extra.product_preview_page_permalink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="sp-btn sp-btn--outline"
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        {__('Preview', 'smartpay')} ↗
+                                    </a>
+                                )}
+                                <button
+                                    type="button"
+                                    className="sp-btn sp-btn--primary"
+                                    onClick={Save}
+                                >
+                                    {__('Save Changes', 'smartpay')}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="sp-filter-tabs" style={{ marginBottom: 20 }}>
+                            {TABS.map((tab) => (
+                                <button
+                                    key={tab.key}
+                                    type="button"
+                                    className={`sp-filter-tab${activeTab === tab.key ? ' sp-filter-tab--active' : ''}`}
+                                    onClick={() => setActiveTab(tab.key)}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div className="sp-detail-grid">
+                            <div>
+                                <ProductForm
+                                    product={product}
+                                    setProductData={setProductData}
+                                    activeTab={activeTab}
+                                />
+                            </div>
+
+                            <div className="sp-detail-sidebar">
+                                <CoverImageCard
+                                    product={product}
+                                    setProductData={setProductData}
+                                />
+
+                                {product.id && (
+                                    <div className="sp-detail-card">
+                                        <div className="sp-detail-card__header">
+                                            <span className="sp-detail-card__title">
+                                                {__('Shortcode', 'smartpay')}
+                                            </span>
+                                        </div>
+                                        <div className="sp-detail-card__body">
+                                            <code
+                                                style={{
+                                                    display: 'block',
+                                                    background: 'var(--sp-surface-muted)',
+                                                    border: '1px solid var(--sp-border)',
+                                                    borderRadius: 'var(--sp-radius-sm)',
+                                                    padding: '8px 12px',
+                                                    fontSize: 12,
+                                                    fontFamily: 'monospace',
+                                                    color: 'var(--sp-text-muted)',
+                                                    wordBreak: 'break-all',
+                                                }}
+                                            >
+                                                {`[smartpay_product id="${product.id}"]`}
+                                            </code>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </>
             )}
         </>

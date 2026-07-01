@@ -3,36 +3,20 @@ import { page } from '@wordpress/icons'
 import { edit } from './edit'
 import { save } from './save'
 
+/**
+ * Checkbox field (parent container) — holds a Label + Input (options) child.
+ */
 export const CheckboxField = {
     namespace: 'smartpay-form/checkbox-input',
     settings: {
         title: __('Checkbox Fields', 'smartpay'),
-        description: __('Checkbox fields', 'smartpay'),
+        description: __('Checkbox field — label + options.', 'smartpay'),
         icon: page,
-        keywords: ['input', 'radio'],
-        attributes: {
-            attributes: {
-                type: Object,
-                default: {
-                    name: '',
-                    class: '',
-                    defaultValue: '',
-                    options: [{ value: '', label: 'Option 1' }],
-                },
-            },
-            settings: {
-                type: Object,
-                default: {
-                    visible: true,
-                    label: 'Checkbox Input',
-                    helpMessage: '',
-                    labelPosition: 'top',
-                },
-            },
-            validationRules: {
-                type: Array,
-                default: [],
-            },
+        keywords: ['input', 'checkbox'],
+        supports: {
+            html: false,
+            reusable: false,
+            customClassName: false,
         },
         edit,
         save,

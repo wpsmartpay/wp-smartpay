@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent;
+defined('ABSPATH') || exit;
 
 use ArrayAccess;
 use JsonSerializable;
@@ -550,7 +551,9 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
             return false;
         }
 
-        $this->updateTimestamps();
+        if ($this->timestamps) {
+            $this->updateTimestamps();
+        }
 
         $this->setAttribute($this->getKeyName(), $query->insert($this->attributes));
 
@@ -902,6 +905,16 @@ abstract class Model implements Arrayable, ArrayAccess, Jsonable, JsonSerializab
     public function __call($method, $params)
     {
         return $this->forwardCallToModelQueryBuilder($method, $params);
+    }
+
+    /**
+     * Begin querying the model.
+     *
+     * @return \SmartPay\Framework\Database\Eloquent\ModelQueryBuilder
+     */
+    public static function query()
+    {
+        return (new static)->newQuery();
     }
 
     public static function __callStatic($method, $params)

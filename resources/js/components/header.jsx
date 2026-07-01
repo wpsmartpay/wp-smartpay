@@ -1,21 +1,41 @@
-import { Container } from "react-bootstrap";
+import { useState, useEffect } from '@wordpress/element'
+import { __ } from '@wordpress/i18n'
+import { HelpCircle } from 'lucide-react'
+import { HelpDrawer } from './HelpDrawer'
 
-export function Header({title, subtitle}){
-	return (
-		<div className="text-black bg-white border-bottom shadow-xs">
-			<Container>
-				<div className="d-flex align-items-center justify-content-between py-3">
-					<div className='-mt-1.5'>
-						<h2 className="text-slate-700! mb-1! mt-0! text-2xl! font-bold!">
-						{ title }
-						</h2>
-						<p className='text-slate-500 font-medium text-sm! m-0'>{ subtitle }</p>
-					</div>
-					<div className=''>
-						<img className='w-full h-7' src={smartpay.logo} alt="SmartPay Logo"/>
-					</div>
-				</div>
-			</Container>
-		</div>
-	);
+const BASE_TITLE = 'SmartPay'
+
+export function Header({ title, subtitle }) {
+    const [helpOpen, setHelpOpen] = useState(false)
+
+    useEffect(() => {
+        document.title = title ? `${title} — ${BASE_TITLE}` : BASE_TITLE
+    }, [title])
+
+    return (
+        <>
+            {/* Compact nav bar — logo left, actions + help right */}
+            <div className="smartpay-page-header">
+                <div className="smartpay-page-header__inner">
+                    <div className="smartpay-page-header__logo">
+                        <img src={smartpay.logo} alt="WPSmartPay" />
+                    </div>
+                    <div className="smartpay-page-header__actions">
+                        <button
+                            type="button"
+                            className="smartpay-page-header__help-btn"
+                            onClick={() => setHelpOpen(true)}
+                            title={__('Help & Documentation', 'smartpay')}
+                            aria-label={__('Open help documentation', 'smartpay')}
+                        >
+                            <HelpCircle style={{ width: 14, height: 14, opacity: 0.7 }} />
+                            {__('Help', 'smartpay')}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <HelpDrawer open={helpOpen} onOpenChange={setHelpOpen} />
+        </>
+    )
 }

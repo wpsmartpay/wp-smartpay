@@ -14,35 +14,27 @@ export const createPaymentColumns = (deletePayment, onViewPayment) => [
 		header: () => <div className="text-center">{ __('Item & Type', 'smartpay') }</div>,
 		enableSorting: false,
 		cell: ({ row }) => {
-			const type = row.getValue('type');
 			const payment = row.original
-			const productId = payment?.data?.product_id
-			const formId = payment?.data?.form_id
+			const type    = row.getValue('type')
+			const data    = payment.data || {}
 
 			if (type === 'Product Purchase') {
 				return (
 					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-slate-100 min-w-20"><Box className='size-3'/> Product</Badge>
-						<Badge variant="default" className="bg-slate-100 min-w-8">
-							<Link
-								to={`/products/${productId}/edit`}
-								className="text-slate-800! font-bold flex items-center justify-center hover:underline"
-							>
-								<LinkIcon className='size-3.5'/>
-							</Link>
-						</Badge>
-					</div>
-				)
-			} else if(type === 'Form Payment') {
-				return (
-					<div className='flex justify-center gap-2 items-center'>
-						<Badge variant="secondary" className="bg-slate-100 min-w-20"><FilePenLine className='size-3'/> Form</Badge>
-						<Badge variant="default" className="bg-slate-100 min-w-8">
-							<span className='text-slate-700'>{`#${formId}`}</span>
-						</Badge>
+						<Badge variant="secondary" className="bg-slate-100 min-w-20"><Box className='size-3'/> {__( 'Product', 'smartpay' )}</Badge>
+						<span className='text-sm font-medium text-gray-700'>#{ data?.product_id || '—' }</span>
 					</div>
 				)
 			}
+			if (type === 'Form Payment') {
+				return (
+					<div className='flex justify-center gap-2 items-center'>
+						<Badge variant="secondary" className="bg-slate-100 min-w-20"><FilePenLine className='size-3'/> {__( 'Form', 'smartpay' )}</Badge>
+						<span className='text-sm font-medium text-gray-700'>#{ data?.form_id || '—' }</span>
+					</div>
+				)
+			}
+			return <span className="text-muted-foreground">—</span>
 		}
 	},
 	{
@@ -105,7 +97,7 @@ export const createPaymentColumns = (deletePayment, onViewPayment) => [
 						size="icon"
 						title={__('View', 'smartpay')}
 						onClick={() => onViewPayment(payment.id)}
-						className="hover:bg-gray-100"
+						className="hover:bg-gray-100 cursor-pointer"
 					>
 						<Eye className="w-4 h-4 text-gray-700" />
 					</Button>
@@ -114,7 +106,7 @@ export const createPaymentColumns = (deletePayment, onViewPayment) => [
 						size="icon"
 						title={__('Delete', 'smartpay')}
 						onClick={() => deletePayment(payment.id)}
-						className="hover:bg-red-50"
+						className="hover:bg-red-50 cursor-pointer border-red-200!"
 					>
 						<Trash2 className="w-4 h-4 text-red-600" />
 					</Button>

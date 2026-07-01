@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Models;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Eloquent\Model;
 
@@ -45,7 +46,7 @@ class Form extends Model
 
     public function getAmountsAttribute($amounts)
     {
-        return \json_decode($amounts, true);
+        return \json_decode((string) $amounts, true);
     }
 
     public function setAmountsAttribute($amounts)
@@ -55,7 +56,7 @@ class Form extends Model
 
     public function getFieldsAttribute($fields)
     {
-        return \json_decode($fields, true);
+        return \json_decode((string) $fields, true);
     }
 
     public function setFieldsAttribute($fields)
@@ -65,7 +66,7 @@ class Form extends Model
 
     public function getSettingsAttribute($settings)
     {
-        return \json_decode($settings, true);
+        return \json_decode((string) $settings, true);
     }
 
     public function setSettingsAttribute($settings)
@@ -75,7 +76,7 @@ class Form extends Model
 
     public function getExtraAttribute($settings)
     {
-        return \json_decode($settings, true);
+        return \json_decode((string) $settings, true);
     }
 
     public function setExtraAttribute($settings)

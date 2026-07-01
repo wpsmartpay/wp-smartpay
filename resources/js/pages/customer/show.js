@@ -1,9 +1,7 @@
 import { DeletePayment, GetPayments } from '@/http/payment'
 import { __ } from '@wordpress/i18n'
-import { Container } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
-import { Loading } from '../../components/Loading'
+import { Link, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { PaymentDetailsDialog } from '../payment/PaymentDetailsDialog'
 import CustomerStats from './customer-stats'
 import { createPaymentColumns } from './payment-columns'
@@ -150,62 +148,99 @@ export const ShowCustomer = () => {
     return (
         <>
 			<Header
-				title={__('Customer Details', 'smartpay')}
-				subtitle={__('View and manage customer information', 'smartpay')}
+				title={__('Member Details', 'smartpay')}
+				subtitle={__('View and manage member information', 'smartpay')}
 			/>
 
-            <Container className="mt-4">
-                {isLoading ? (
-                    <Loading />
-                ) : (
+			<div className="sp-layout">
+				<Link to="/customers" className="sp-back-btn">
+					<span className="sp-back-btn__arrow">←</span>
+					{__('All Customers', 'smartpay')}
+				</Link>
+
+				{isLoading ? (
+					<div className="sp-detail-card" style={{ padding: 40, textAlign: 'center' }}>
+						<div style={{ width: 120, height: 14, background: '#f3f4f6', borderRadius: 4, margin: '0 auto' }} />
+					</div>
+				) : (
 					<>
 						<CustomerStats customer={customer} paymentStats={paymentStats} />
 
-						<div className="bg-white p-4 rounded-lg shadow-md mt-4">
-							<h3 className="m-0! text-xl!">{__('Recent Payments', 'smartpay')}</h3>
-							<DataTable
-								columns={columns}
-								data={payments}
-								pagination={pagination}
-								onPaginationChange={handlePaginationChange}
-								onSearchChange={handleSearchChange}
-								enableSorting={true}
-								onSortChange={handleSort}
-								isLoading={isPaymentsLoading}
-								searchPlaceholder='Search by Transaction ID'
-								enableFilters={true}
-								filters={[
-									<Select key="status-filter" onValueChange={handleStatusFilter}>
-										<SelectTrigger className="w-[180px]">
-											<SelectValue placeholder="Filter by status" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="all">All</SelectItem>
-											<SelectItem value="refunded">Refunded</SelectItem>
-											<SelectItem value="completed">Completed</SelectItem>
-											<SelectItem value="pending">Pending</SelectItem>
-											<SelectItem value="failed">Failed</SelectItem>
-											<SelectItem value="processing">Processing</SelectItem>
-											<SelectItem value="revoked">Revoked</SelectItem>
-											<SelectItem value="abandoned">Abandoned</SelectItem>
-										</SelectContent>
-									</Select>,
-									<Select key="type-filter" onValueChange={handleTypeFilter}>
-										<SelectTrigger className="w-[180px]">
-											<SelectValue placeholder="Filter by Type" />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="all">All</SelectItem>
-											<SelectItem value="form_payment">Form</SelectItem>
-											<SelectItem value="product_purchase">Product</SelectItem>
-										</SelectContent>
-									</Select>
-								]}
-							/>
+						<div className="sp-detail-card" style={{ marginTop: 16 }}>
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Address & Contact', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body" style={{ padding: '16px 20px' }}>
+								<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+									{[
+										[__('Phone', 'smartpay'), customer?.phone],
+										[__('Email', 'smartpay'), customer?.email],
+										[__('Address Line 1', 'smartpay'), customer?.address_line_1],
+										[__('Address Line 2', 'smartpay'), customer?.address_line_2],
+										[__('City', 'smartpay'), customer?.city],
+										[__('State', 'smartpay'), customer?.state],
+										[__('Postal Code', 'smartpay'), customer?.postal_code],
+										[__('Country', 'smartpay'), customer?.country],
+										[__('Newsletter', 'smartpay'), customer?.subscribe_newsletter ? __('Subscribed', 'smartpay') : __('Not subscribed', 'smartpay')],
+									].map(([label, value], i) => (
+										<div key={i}>
+											<div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--sp-text-muted)', marginBottom: 4 }}>{label}</div>
+											<div style={{ fontSize: 14, color: 'var(--sp-text)' }}>{value || '—'}</div>
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
+
+						<div className="sp-detail-card" style={{ marginTop: 16 }}>
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Recent Payments', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body" style={{ padding: '16px 20px' }}>
+								<DataTable
+									columns={columns}
+									data={payments}
+									pagination={pagination}
+									onPaginationChange={handlePaginationChange}
+									onSearchChange={handleSearchChange}
+									enableSorting={true}
+									onSortChange={handleSort}
+									isLoading={isPaymentsLoading}
+									searchPlaceholder='Search by Transaction ID'
+									enableFilters={true}
+									filters={[
+										<Select key="status-filter" onValueChange={handleStatusFilter}>
+											<SelectTrigger className="w-[180px]">
+												<SelectValue placeholder="Filter by status" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="all">All</SelectItem>
+												<SelectItem value="refunded">Refunded</SelectItem>
+												<SelectItem value="completed">Completed</SelectItem>
+												<SelectItem value="pending">Pending</SelectItem>
+												<SelectItem value="failed">Failed</SelectItem>
+												<SelectItem value="processing">Processing</SelectItem>
+												<SelectItem value="revoked">Revoked</SelectItem>
+												<SelectItem value="abandoned">Abandoned</SelectItem>
+											</SelectContent>
+										</Select>,
+										<Select key="type-filter" onValueChange={handleTypeFilter}>
+											<SelectTrigger className="w-[180px]">
+												<SelectValue placeholder="Filter by Type" />
+											</SelectTrigger>
+											<SelectContent>
+												<SelectItem value="all">All</SelectItem>
+												<SelectItem value="form_payment">Form</SelectItem>
+												<SelectItem value="product_purchase">Product</SelectItem>
+											</SelectContent>
+										</Select>
+									]}
+								/>
+							</div>
 						</div>
 					</>
-                )}
-            </Container>
+				)}
+			</div>
 			<PaymentDetailsDialog
 				paymentId={selectedPaymentId}
 				open={isDialogOpen}

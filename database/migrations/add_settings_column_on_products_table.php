@@ -1,6 +1,7 @@
 <?php
+defined('ABSPATH') || exit;
 
-class AddSettingsColumnOnProductTable
+class Smartpay_AddSettingsColumnOnProductTable
 {
 
     public static function up()
@@ -15,8 +16,14 @@ class AddSettingsColumnOnProductTable
          * get the prefix
          * smartpay product table name
          */
-        $table = $wpdb->prefix . 'smartpay_products';
-        $dbName = $wpdb->dbname;
+        $table = esc_sql( $wpdb->prefix . 'smartpay_products' );
+        $dbName = esc_sql( $wpdb->dbname );
+
+        // Bail early if the table doesn't exist yet (e.g. during activation sandbox scrape).
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
+            return;
+        }
 
         // check the settings column exist on products table and safe prepare
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

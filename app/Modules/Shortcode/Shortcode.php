@@ -2,169 +2,218 @@
 
 namespace SmartPay\Modules\Shortcode;
 
+defined( 'ABSPATH' ) || exit;
+
 use SmartPay\Models\Payment;
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
 use SmartPay\Models\Customer;
+use SmartPay\Modules\NativeForm\LegacyFormMigrator;
 
-class Shortcode
-{
-    public function __construct()
-    {
-        // Form shortcode
-        add_shortcode('smartpay_form', [$this, 'form_shortcode']);
+class Shortcode {
 
-        // Product shortcode
-        add_shortcode('smartpay_product', [$this, 'product_shortcode']);
+	public function __construct() {
+		// Form shortcode
+		add_shortcode( 'smartpay_form', array( $this, 'form_shortcode' ) );
 
-        // Payment receipt shortcode
-        add_shortcode('smartpay_payment_receipt', [$this, 'payment_receipt_shortcode']);
+		// Product shortcode
+		add_shortcode( 'smartpay_product', array( $this, 'product_shortcode' ) );
 
-        // Customer dashboard shortcode
-        add_shortcode('smartpay_dashboard', [$this, 'dashboard_shortcode']);
-    }
+		// Payment receipt shortcode
+		add_shortcode( 'smartpay_payment_receipt', array( $this, 'payment_receipt_shortcode' ) );
 
-    /**
-     * Form shortcode.
-     *
-     * @return bool|string
-     * @since 0.0.1
-     */
-    public function form_shortcode($atts)
-    {
-        extract(shortcode_atts([
-            'id' => null,
-            'behavior'  => 'popup',
-            'label'     => '',
-        ], $atts));
+		// Customer dashboard shortcode
+		add_shortcode( 'smartpay_dashboard', array( $this, 'dashboard_shortcode' ) );
+	}
 
-        if (!isset($id)) return;
+	/**
+	 * Form shortcode.
+	 *
+	 * @return bool|string
+	 * @since 0.0.1
+	 */
+	public function form_shortcode( $atts ) {
+		extract(
+			shortcode_atts(
+				array(
+					'id'         => null,
+					'behavior'   => 'popup',
+					'label'      => '',
+					'show_title' => 'true',
+				),
+				$atts
+			)
+		);
 
-        // TODO: Add message if no payment method setup
+		if ( ! isset( $id ) ) {
+			return;
+		}
 
-        // TODO: need to remove
-        // $form = smartpay_get_form($id);
-        $form = Form::where('id', $id)->first();
+		// If this legacy form was migrated to a native CPT form, delegate to [sp_form].
+		$migrated = get_posts(
+			array(
+				'post_type'      => 'smartpay_form',
+				'post_status'    => 'publish',
+				'numberposts'    => 1,
+				'fields'         => 'ids',
+				'meta_key'       => LegacyFormMigrator::SOURCE_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- migration-link lookup, runs only for legacy shortcodes.
+				'meta_value'     => (string) $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- migration-link lookup, runs only for legacy shortcodes.
+				'no_found_rows'  => true,
+			)
+		);
+		if ( ! empty( $migrated ) ) {
+			return do_shortcode( '[sp_form id="' . (int) $migrated[0] . '"]' );
+		}
 
-        if (!isset($form)) return;
+		// TODO: Add message if no payment method setup
 
-        // TODO: need to implement this function
-        // if (!$form->can_pay()) {
-        //     echo 'You can\'t pay on this form.';
-        //     return;
-        // }
+		// TODO: need to remove
+		// $form = smartpay_get_form($id);
+		$form = Form::where( 'id', $id )->first();
 
-        try {
-            ob_start();
+		if ( ! isset( $form ) ) {
+			return;
+		}
+
+		// TODO: need to implement this function
+		// if (!$form->can_pay()) {
+		// echo 'You can\'t pay on this form.';
+		// return;
+		// }
+
+		try {
+			ob_start();
 
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-            echo smartpay_view('shortcodes.form', ['form' => $form, 'behavior' => $behavior, 'label' => $label]);
+			echo smartpay_view(
+				'shortcodes.form',
+				array(
+					'form'       => $form,
+					'behavior'   => $behavior,
+					'label'      => $label,
+					'show_title' => 'false' !== $show_title,
+				)
+			);
 
-            return ob_get_clean();
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
+			return ob_get_clean();
+		} catch ( \Exception $e ) {
+			return $e->getMessage();
+		}
+	}
 
-    /**
-     * Product shortcode.
-     *
-     * @return bool|string
-     * @since 0.0.1
-     */
-    public function product_shortcode($atts)
-    {
-        extract(shortcode_atts([
-            'id' => null,
-            'behavior'  => 'popup',
-            'label'     => '',
-        ], $atts));
+	/**
+	 * Product shortcode.
+	 *
+	 * @return bool|string
+	 * @since 0.0.1
+	 */
+	public function product_shortcode( $atts ) {
+		extract(
+			shortcode_atts(
+				array(
+					'id'       => null,
+					'behavior' => 'popup',
+					'label'    => '',
+				),
+				$atts
+			)
+		);
 
-        if (!isset($id)) return;
+		if ( ! isset( $id ) ) {
+			return;
+		}
 
-        $product = Product::where('id', $id)->first();
+		$product = Product::where( 'id', $id )->first();
 
-        if (!isset($product)) return;
+		if ( ! isset( $product ) ) {
+			return;
+		}
 
-        // if (!$product->can_purchase()) {
-        //     echo 'You can\'t buy this product';
-        //     return;
-        // }
+		// if (!$product->can_purchase()) {
+		// echo 'You can\'t buy this product';
+		// return;
+		// }
 
-        try {
-            ob_start();
+		try {
+			ob_start();
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-            echo smartpay_view('shortcodes.product', ['product' => $product, 'behavior' => $behavior, 'label' => $label]);
+			echo smartpay_view(
+				'shortcodes.product',
+				array(
+					'product'  => $product,
+					'behavior' => $behavior,
+					'label'    => $label,
+				)
+			);
 
-            return ob_get_clean();
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
+			return ob_get_clean();
+		} catch ( \Exception $e ) {
+			return $e->getMessage();
+		}
+	}
 
 	/**
 	 * Payment receipt shortcode.
+	 *
 	 * @param $atts
 	 *
 	 * @return bool|string|void
 	 */
-    public function payment_receipt_shortcode($atts)
-    {
+	public function payment_receipt_shortcode( $atts ) {
 	    // phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce need
-        $payment_uuid = isset($_GET['smartpay-payment']) ? sanitize_text_field(wp_unslash($_GET['smartpay-payment'])) : null;
+		$payment_uuid = isset( $_GET['smartpay-payment'] ) ? sanitize_text_field( wp_unslash( $_GET['smartpay-payment'] ) ) : null;
 
-        if (!$payment_uuid) {
-            return;
-        }
+		if ( ! $payment_uuid ) {
+			return;
+		}
 
-        // Sometimes payment gateway need more time to complete a payment
-        sleep(3);
+		// Sometimes payment gateway need more time to complete a payment
+		sleep( 3 );
 
-//        $payment = smartpay_get_payment($payment_id);
-	    // fetch the payment regrading to payment uuid
-	    $payment = Payment::where('uuid', $payment_uuid)->first();
+		// $payment = smartpay_get_payment($payment_id);
+		// fetch the payment regrading to payment uuid
+		$payment = Payment::where( 'uuid', $payment_uuid )->first();
 
-        if (!$payment) {
-            return;
-        }
+		if ( ! $payment ) {
+			return;
+		}
 
-        try {
-            ob_start();
+		try {
+			ob_start();
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-            echo smartpay_view('shortcodes.payment_receipt', ['payment' => $payment]);
+			echo smartpay_view( 'shortcodes.payment_receipt', array( 'payment' => $payment ) );
 
-            return ob_get_clean();
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
+			return ob_get_clean();
+		} catch ( \Exception $e ) {
+			return $e->getMessage();
+		}
+	}
 
-    /**
-     * Customer dashboard shortcode.
-     *
-     * @since 0.0.2
-     * @return void|string
-     */
-    public function dashboard_shortcode($atts)
-    {
-        // If not logged in or id not found, then return
-        if (!is_user_logged_in() || get_current_user_id() <= 0) {
-            echo '<p>You must log in to access the dashboard!</p>';
-            return;
-        }
+	/**
+	 * Customer dashboard shortcode.
+	 *
+	 * @since 0.0.2
+	 * @return void|string
+	 */
+	public function dashboard_shortcode( $atts ) {
+		// If not logged in, prompt to log in.
+		if ( ! is_user_logged_in() || get_current_user_id() <= 0 ) {
+			return '<p>' . esc_html__( 'You must log in to access the dashboard!', 'smartpay' ) . '</p>';
+		}
 
-        $customer = Customer::with('payments')->where('user_id', get_current_user_id())
-                                              ->orWhere('email', wp_get_current_user()->user_email)->first();
+		// WooCommerce-style multi-page account dashboard. The view resolves the
+		// current customer + sub-view via the smartpay_dashboard_* helpers and
+		// pulls the sidebar plus the active sub-view partial.
+		wp_enqueue_style(
+			'smartpay-user-dashboard-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/dashboard.css',
+			array(),
+			SMARTPAY_VERSION
+		);
 
-        if (!$customer) {
-            echo '<p>We don\'t find any account, please register or contact to admin, or you did not make any order yet!</p>';
-            return;
-        }
+		ob_start();
+		include SMARTPAY_DIR . 'resources/views/shortcodes/dashboard.php';
 
-        ob_start();
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-        echo smartpay_view('shortcodes.customer_dashboard', ['customer' => $customer]);
-
-        return ob_get_clean();
-    }
+		return ob_get_clean();
+	}
 }

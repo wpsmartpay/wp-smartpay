@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent;
+defined('ABSPATH') || exit;
 
 use Countable;
 use ArrayAccess;

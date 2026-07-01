@@ -2,10 +2,15 @@ const { src, dest, series } = require('gulp')
 const fs = require('fs')
 const del = require('del')
 const zip = require('gulp-zip')
+const { execSync } = require('child_process')
 
 const removeTemp = (cb) => {
     del.sync(['temp/'])
+    cb()
+}
 
+const composerProd = (cb) => {
+    execSync('composer install --no-dev --no-ansi --no-cache --no-interaction', { stdio: 'inherit' })
     cb()
 }
 
@@ -20,7 +25,12 @@ const copy = () => {
         '!./node_modules/**',
         '!./scripts/**',
         '!./temp/**',
+        '!./test-results/**',
+        '!./docs/**',
         '!gulpfile.js',
+        '!CLAUDE.md',
+        '!UI_GUIDELINES.md',
+        '!phpcs-bootstrap.php',
         '!webpack.mix.js',
         '!*.json',
         '!*.yml',
@@ -30,7 +40,12 @@ const copy = () => {
         '!*.lock',
         '!*.log',
         '!*.gitignore',
-		'composer.json',
+        '!.DS_Store',
+        '!.prettierrc',
+        '!.wp-env.json',
+        '!phpcs.xml.dist',
+        '!.claude/**',
+        'composer.json',
     ]).pipe(dest('temp/smartpay'))
 }
 
@@ -61,5 +76,5 @@ const bundle = () => {
         .pipe(dest('./temp'))
 }
 
-exports.release = series(removeTemp, copy, bundle)
+exports.release = series(removeTemp, composerProd, copy, bundle)
 // exports.default = build

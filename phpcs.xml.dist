@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<ruleset name="WP SmartPay">
+    <description>PHPCS ruleset for WP SmartPay plugin.</description>
+
+    <file>.</file>
+
+    <arg name="extensions" value="php"/>
+    <arg value="ps"/>
+
+    <!-- Exclude generated/vendor files -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/public/*</exclude-pattern>
+    <exclude-pattern>*/tests/*</exclude-pattern>
+    <exclude-pattern>*/framework/*</exclude-pattern>
+    <exclude-pattern>*/database/*</exclude-pattern>
+    <exclude-pattern>*/temp/*</exclude-pattern>
+
+    <!-- WordPress Standards -->
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+    </rule>
+
+    <rule ref="WordPress-Extra"/>
+    <rule ref="WordPress-Docs"/>
+
+    <!-- WP.org specific checks -->
+    <rule ref="WordPress.Security.EscapeOutput"/>
+    <rule ref="WordPress.Security.NonceVerification"/>
+    <rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+    <rule ref="WordPress.DB.PreparedSQL"/>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="smartpay"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- PHP Compatibility -->
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="8.1-"/>
+    <config name="minimum_wp_version" value="6.0"/>
+
+    <!-- WPCS installed_paths — relative to phpcs.xml.dist location (project root) -->
+    <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/phpcompatibility/php-compatibility,vendor/phpcompatibility/phpcompatibility-paragonie,vendor/phpcompatibility/phpcompatibility-wp,vendor/phpcsstandards/phpcsextra,vendor/phpcsstandards/phpcsutils"/>
+</ruleset>

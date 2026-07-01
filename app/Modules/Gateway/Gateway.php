@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Gateway;
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Gateway\Gateways\PaypalStandard;
 use SmartPay\Modules\Gateway\Gateways\ManualPurchase\FreePurchase;

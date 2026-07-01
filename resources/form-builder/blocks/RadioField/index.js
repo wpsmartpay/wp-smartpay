@@ -3,36 +3,20 @@ import { page } from '@wordpress/icons'
 import { edit } from './edit'
 import { save } from './save'
 
+/**
+ * Radio field (parent container) — holds a Label + Input (options) child.
+ */
 export const RadioField = {
     namespace: 'smartpay-form/radio-input',
     settings: {
         title: __('Radio Fields', 'smartpay'),
-        description: __('Radio fields', 'smartpay'),
+        description: __('Radio field — label + options.', 'smartpay'),
         icon: page,
         keywords: ['input', 'radio'],
-        attributes: {
-            attributes: {
-                type: Object,
-                default: {
-                    name: '',
-                    class: '',
-                    defaultValue: '',
-                    options: [{ value: '', label: 'Option 1' }],
-                },
-            },
-            settings: {
-                type: Object,
-                default: {
-                    visible: true,
-                    label: 'Radio Input',
-                    helpMessage: '',
-                    labelPosition: 'top',
-                },
-            },
-            validationRules: {
-                type: Array,
-                default: [],
-            },
+        supports: {
+            html: false,
+            reusable: false,
+            customClassName: false,
         },
         edit,
         save,

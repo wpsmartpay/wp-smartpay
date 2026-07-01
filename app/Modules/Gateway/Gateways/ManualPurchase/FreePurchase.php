@@ -46,65 +46,63 @@ final class FreePurchase extends PaymentGateway
     {
         global $smartpay_options;
 
-        // check payment type is product purchase and should not provide for form payment
-        if (Payment::PRODUCT_PURCHASE !== $payment_data['payment_type']) {
-            die('Free Purchase only available for products only.');
-        }
-
-        $product = Product::where('id', $payment_data['payment_data']['product_id'])->first();
-        if ($product) {
-            if ($product->sale_price == $payment_data['amount']) {
-                $payment = smartpay_insert_payment($payment_data);
-                if ($payment) {
-                    smartpay_debug_log(
-	                    sprintf(
-							/* translators: 1: Payment id */
-							__('SmartPay-FreePurchase: Payment #%s status changed to Pending.', 'smartpay' ),
-							$payment->id
-	                    )
-                    );
-                }
-
-                if (!$payment->id) {
-                    wp_redirect(get_permalink($smartpay_options['payment_failure_page']), 302);
-                    smartpay_debug_log(
-						sprintf(
-							/* translators: 1: Payment id */
-							__( 'SmartPay-FreePurchase: Payment #%s Can\'t insert payment.', 'smartpay' ),
-							$payment->id
-						)
-                    );
-                    die('Can\'t insert payment.');
-                }
-                // Process the subscription
-                if (Payment::BILLING_TYPE_SUBSCRIPTION === $payment_data['payment_data']['billing_type']) {
-                    do_action('smartpay_free_subscription_process_payment', $payment, $payment_data);
-                }
-                if ($payment->updateStatus(Payment::COMPLETED)) {
-                    $payment->setTransactionId('Manual-Payment');
-                    smartpay_debug_log(
-						sprintf(
-							/* translators: 1: payment id */
-							__( 'SmartPay-FreePurchase: Payment #%s status changed to Completed.', 'smartpay' ),
-							$payment->id
-						)
-                    );
-                }
-                $return_url = add_query_arg('smartpay-payment', $payment->uuid, smartpay_get_payment_success_page_uri());
-                echo 'Please be patient. Your payment is being processed';
-                $content = '<script type="text/javascript">';
-//                $content .= 'window.location.replace("'.$return_url.'");';
-                $content .= 'window.location.href = "'.$return_url.'";';
-                $content .= '</script>';
-
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo $content;
-            } else {
-                smartpay_debug_log(__('SmartPay-FreePurchase: Sale price could not matched', 'smartpay'));
-                die('Are you cheating?.');
+        // For product purchases verify the product price is genuinely 0.
+        if ( Payment::PRODUCT_PURCHASE === $payment_data['payment_type'] ) {
+            $product = Product::where('id', $payment_data['payment_data']['product_id'])->first();
+            if ( ! $product || floatval( $product->sale_price ) != 0 ) {
+                smartpay_debug_log( __( 'WPSmartPay-FreePurchase: product not found or price is not zero.', 'smartpay' ) );
+                die( 'Free gateway is only allowed for zero-price products.' );
             }
         }
-        die();
+
+        // For any payment type: amount must be 0.
+        if ( floatval( $payment_data['amount'] ) != 0 ) {
+            smartpay_debug_log( __( 'WPSmartPay-FreePurchase: amount is not zero.', 'smartpay' ) );
+            die( 'Free gateway is only allowed for zero-amount orders.' );
+        }
+
+        $payment = smartpay_insert_payment($payment_data);
+
+        if ( ! $payment || ! $payment->id ) {
+            wp_safe_redirect( get_permalink( $smartpay_options['payment_failure_page'] ), 302 );
+            smartpay_debug_log(
+                sprintf(
+                    /* translators: 1: Payment id */
+                    __( 'WPSmartPay-FreePurchase: Payment #%s Can\'t insert payment.', 'smartpay' ),
+                    $payment->id ?? 0
+                )
+            );
+            die( "Can't insert payment." );
+        }
+
+        smartpay_debug_log(
+            sprintf(
+                /* translators: 1: Payment id */
+                __( 'WPSmartPay-FreePurchase: Payment #%s status changed to Pending.', 'smartpay' ),
+                $payment->id
+            )
+        );
+
+        // Allow subscription hook to run before marking completed.
+        $billing_type = $payment_data['payment_data']['billing_type'] ?? '';
+        if ( Payment::BILLING_TYPE_SUBSCRIPTION === $billing_type ) {
+            do_action( 'smartpay_free_subscription_process_payment', $payment, $payment_data );
+        }
+
+        if ( $payment->updateStatus( Payment::COMPLETED ) ) {
+            $payment->setTransactionId( 'Free-Purchase' );
+            smartpay_debug_log(
+                sprintf(
+                    /* translators: 1: Payment id */
+                    __( 'WPSmartPay-FreePurchase: Payment #%s status changed to Completed.', 'smartpay' ),
+                    $payment->id
+                )
+            );
+        }
+
+        $return_url = add_query_arg( 'smartpay-payment', $payment->uuid, smartpay_get_payment_success_page_uri() );
+
+        wp_send_json_success( array( 'redirect' => $return_url ) );
     }
 
     /**

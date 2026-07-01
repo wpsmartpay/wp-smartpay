@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay;
+defined('ABSPATH') || exit;
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 class Updater
@@ -26,7 +27,9 @@ class Updater
      */
     public function _update_database_if_available()
     {
-        \AddSettingsColumnOnProductTable::up();
-		\AddUuidColumnOnPaymentTable::up();
+        \Smartpay_AddSettingsColumnOnProductTable::up();
+		\Smartpay_AddUuidColumnOnPaymentTable::up();
+		\Smartpay_CreateSmartpayPaymentLogsTable::up();
+		\Smartpay_AddUserIdToPaymentLogsTable::up();
     }
 }

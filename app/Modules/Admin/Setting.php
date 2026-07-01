@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Admin\Logger;
 
@@ -10,6 +11,71 @@ class Setting
     {
         // die();
         add_action('admin_init', [$this, 'register_settings']);
+        add_action('wp_ajax_smartpay_toggle_gateway', [$this, 'toggle_gateway_activation']);
+        add_action('wp_ajax_smartpay_set_test_mode', [$this, 'set_test_mode']);
+    }
+
+    /**
+     * AJAX: set the global Test Mode (Sandbox / Live) and persist immediately.
+     */
+    public function set_test_mode()
+    {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Permission denied.', 'smartpay' ) ], 403 );
+        }
+
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'smartpay_set_test_mode' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid request.', 'smartpay' ) ], 403 );
+        }
+
+        $mode      = isset( $_POST['mode'] ) ? sanitize_key( wp_unslash( $_POST['mode'] ) ) : '';
+        $test_mode = ( 'sandbox' === $mode ) ? 1 : 0;
+
+        global $smartpay_options;
+        $smartpay_options['test_mode'] = $test_mode;
+        smartpay_update_settings( $smartpay_options );
+
+        wp_send_json_success( [
+            'test_mode' => $test_mode,
+            'message'   => ( 1 === $test_mode )
+                ? __( 'Sandbox (test) mode enabled.', 'smartpay' )
+                : __( 'Live mode enabled.', 'smartpay' ),
+        ] );
+    }
+
+    public function toggle_gateway_activation()
+    {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Permission denied.', 'smartpay' ) ], 403 );
+        }
+
+        $nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'smartpay_toggle_gateway' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid request.', 'smartpay' ) ], 403 );
+        }
+
+        $activate = isset( $_POST['activate'] ) ? (bool) $_POST['activate'] : false;
+        $gateway  = isset( $_POST['gateway'] ) ? sanitize_key( wp_unslash( $_POST['gateway'] ) ) : '';
+
+        if ( empty( $gateway ) ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid gateway.', 'smartpay' ) ] );
+        }
+
+        global $smartpay_options;
+
+        if ( ! isset( $smartpay_options['gateways'] ) || ! is_array( $smartpay_options['gateways'] ) ) {
+            $smartpay_options['gateways'] = [];
+        }
+
+        if ( $activate ) {
+            $smartpay_options['gateways'][ $gateway ] = 1;
+        } else {
+            unset( $smartpay_options['gateways'][ $gateway ] );
+        }
+
+        smartpay_update_settings( $smartpay_options );
+        wp_send_json_success( [ 'message' => __( 'Gateway updated.', 'smartpay' ) ] );
     }
 
     public function register_settings()
@@ -98,7 +164,7 @@ class Setting
                         'general_settings' => array(
                             'id'   => 'general_settings',
                             'name' => '<h4 class="text-uppercase text-info my-1">' . __('General Settings', 'smartpay') . '</h4>',
-                            'desc' => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'desc' => __('WPSmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                             'type' => 'header',
                         ),
                         'user_creation' => array(
@@ -110,7 +176,7 @@ class Setting
                         'page_settings' => array(
                             'id'   => 'page_settings',
                             'name' => '<h4 class="text-uppercase text-info my-1">' . __('Pages Settings', 'smartpay') . '</h4>',
-                            'desc' => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'desc' => __('WPSmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                             'type' => 'header',
                         ),
                         // 'payment_page' => array(
@@ -143,7 +209,7 @@ class Setting
                             'desc' => '',
                             'type' => 'header',
                             'tooltip_title' => __('Page Settings', 'smartpay'),
-                            'tooltip_desc'  => __('SmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
+                            'tooltip_desc'  => __('WPSmartPay products uses the pages below for handling the display of checkout, payment confirmation, payment history, and payment failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'smartpay'),
                         ),
                         'currency' => array(
                             'id'      => 'currency',
@@ -161,6 +227,23 @@ class Setting
                                 'before' => __('Before - $10', 'smartpay'),
                                 'after'  => __('After - 10$', 'smartpay'),
                             ),
+                        ),
+                        'order_number_settings' => array(
+                            'id'   => 'order_number_settings',
+                            'name' => '<h4 class="text-uppercase text-info my-1">' . __('Order Number Options', 'smartpay') . '</h4>',
+                            'type' => 'header',
+                        ),
+                        'payment_number_starting' => array(
+                            'id'    => 'payment_number_starting',
+                            'name'  => __('Starting Order Number', 'smartpay'),
+                            'desc'  => __('The starting number for new orders if you do not want to start from 1. Must be numeric. Existing payment IDs will have this number added to them.', 'smartpay'),
+                            'type'  => 'text'
+                        ),
+                        'payment_number_padding' => array(
+                            'id'    => 'payment_number_padding',
+                            'name'  => __('Order Number Zero Padding', 'smartpay'),
+                            'desc'  => __('Number of zeros to pad the payment ID with (e.g., 5 will output 00012). Leave blank to disable.', 'smartpay'),
+                            'type'  => 'text'
                         ),
                     ),
                 )
@@ -242,6 +325,12 @@ class Setting
                             'name'  => __('Purchase Email Heading', 'smartpay'),
                             'desc'  => __('Enter the heading for the purchase receipt email.', 'smartpay'),
                             'type'  => 'text'
+                        ),
+                        'hide_payment_number_in_email' => array(
+                            'id'    => 'hide_payment_number_in_email',
+                            'name'  => __('Hide Payment Number', 'smartpay'),
+                            'desc'  => __('Hide the payment/order number from the customer email receipt.', 'smartpay'),
+                            'type'  => 'checkbox'
                         ),
                     ),
                 )
@@ -341,7 +430,17 @@ class Setting
         $tabs['general']  = __('General', 'smartpay');
         $tabs['gateways'] = __('Payment Gateways', 'smartpay');
         $tabs['emails']   = __('Emails', 'smartpay');
-        $tabs['debug_log']   = __('Debug Log', 'smartpay');
+
+        // Pro-only tabs. Shown as upgrade placeholders when Pro is inactive;
+        // Pro registers the real tabs via the `smartpay_settings_tabs` filter.
+        if ( ! smartpay_is_pro_active() ) {
+            $tabs['invoice']  = __('Invoice', 'smartpay');
+            $tabs['antispam'] = __('Anti-Spam', 'smartpay');
+            $tabs['tax']      = __('Tax', 'smartpay');
+        }
+
+        // Debug log lives on the Support page (Settings → Support), not here.
+        // $tabs['debug_log']   = __('Debug Log', 'smartpay');
         // $tabs['licenses']   = __('Licenses', 'smartpay');
 
         return apply_filters('smartpay_settings_tabs', $tabs);
@@ -647,87 +746,171 @@ class Setting
 
     public function settings_gateways_callback($args)
     {
-        $smartpay_option = smartpay_get_option($args['id']);
-        $availableGateways = [
-            'paypal' => [
-                'label' => 'PayPal Standard'
-            ],
-            'paddle' => [
-                'label' => 'Paddle'
-            ],
-            'stripe' => [
-                'label' => 'Stripe'
-            ],
-            'bkash' => [
-                'label' => 'bKash'
-            ],
-            'razorpay' => [
-                'label' => 'Razorpay'
-            ],
-            'mollie' => [
-                'label' => 'Mollie'
-            ],
-	        'toyyibpay' => [
-				'label' => 'Toyyibpay'
-	        ],
-	        'paytm' => [
-				'label' => 'PayTM'
-	        ]
-        ];
+        $smartpay_option = smartpay_get_option( $args['id'] );
 
-        // add filter to load up the all registered gateway label to show the available gateways on setting
-        $availableGateways = smartpay_get_available_payment_gateways($availableGateways);
+        // Determine which gateway slugs have a dedicated settings sub-tab.
+        $sections   = self::settings_tab_sections( 'gateways' );
+        $has_subtab = array_diff_key( $sections, array( 'main' => true ) );
 
-        $enableGateways = [];
+        // Sentinel: ensures the option key exists even when all boxes are unchecked.
+        $html  = '<input type="hidden" name="smartpay_settings[' . smartpay_sanitize_key( $args['id'] ) . ']" value="-1" />';
+        $html .= '<input type="hidden" id="smartpay_toggle_gateway_nonce" value="' . esc_attr( wp_create_nonce( 'smartpay_toggle_gateway' ) ) . '" />';
+        $html .= '<div class="sp-integ-grid">';
 
-        $class = sanitize_html_class($args['field_class']);
-
-        $html = '<input type="hidden" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="-1" />';
-
-        foreach ($args['options'] as $key => $option) :
-            if (isset($smartpay_option[$key])) {
-                $enabled = '1';
-            } else {
-                $enabled = null;
+        foreach ( $args['options'] as $key => $option ) {
+            if ( 'free' === $key ) {
+                continue;
             }
 
-            if (array_key_exists($key, $availableGateways)) {
-                $enableGateways[] = $key;
-                $html .= '<div class="mb-2">';
-                $html .= '<input name="smartpay_settings[' . esc_attr($args['id']) . '][' . smartpay_sanitize_key($key) . ']" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked('1', $enabled, false) . '/>&nbsp;';
-                $html .= '<label for="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][' . smartpay_sanitize_key($key) . ']" style="font-style: italic;">' . esc_html($option['admin_label']) . '</label>';
-                $html .= '</div>';
+            $raw_label    = $option['admin_label'] ?? $key;
+            $display_name = esc_html( preg_replace( '/\s*\(deprecated\)/i', '', $raw_label ) );
+            $icon_url     = ! empty( $option['gateway_icon'] ) ? esc_url( $option['gateway_icon'] ) : '';
+            $enabled      = isset( $smartpay_option[ $key ] ) && $smartpay_option[ $key ];
+            $input_id     = 'sp_gw_' . sanitize_html_class( $key );
+            $input_name   = 'smartpay_settings[' . smartpay_sanitize_key( $args['id'] ) . '][' . smartpay_sanitize_key( $key ) . ']';
+            $has_config   = array_key_exists( $key, $has_subtab );
+            $config_url   = $has_config
+                ? esc_url( add_query_arg( array( 'tab' => 'gateways', 'section' => rawurlencode( $key ) ), admin_url( 'admin.php?page=smartpay-setting' ) ) )
+                : '';
+
+            $html .= '<div class="sp-integ-card">';
+
+            // Logo.
+            $html .= '<div class="sp-integ-card__logo">';
+            if ( $icon_url ) {
+                $html .= '<img src="' . $icon_url . '" alt="' . esc_attr( $display_name ) . '" loading="lazy" />';
+            }
+            $html .= '</div>';
+
+            // Body: name only (no description, no tags per design).
+            $html .= '<div class="sp-integ-card__body">';
+            $html .= '<p class="sp-integ-card__name">' . $display_name . '</p>';
+            $html .= '</div>';
+
+            // Footer: toggle + status text + optional settings link.
+            $html .= '<div class="sp-integ-card__footer">';
+            $html .= '<div class="custom-control custom-switch custom-switch-lg">';
+            $html .= '<input type="checkbox"'
+                . ' class="custom-control-input"'
+                . ' id="' . esc_attr( $input_id ) . '"'
+                . ' name="' . esc_attr( $input_name ) . '"'
+                . ' value="1"'
+                . checked( true, $enabled, false )
+                . ' />';
+            $html .= '<label class="custom-control-label" for="' . esc_attr( $input_id ) . '"></label>';
+            $html .= '</div>';
+
+            // Status text — two spans toggled via CSS :has().
+            $html .= '<span class="sp-integ-card__status sp-gw-status-off">' . esc_html__( 'Disabled', 'smartpay' ) . '</span>';
+            $html .= '<span class="sp-integ-card__status sp-gw-status-on">'  . esc_html__( 'Activated', 'smartpay' ) . '</span>';
+
+            // Settings gear link (only for gateways that have a sub-tab).
+            if ( $has_config ) {
+                $html .= '<a href="' . $config_url . '" class="sp-integ-card__settings" title="' . esc_attr__( 'Settings', 'smartpay' ) . '">';
+                $html .= '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">'
+                    . '<path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>'
+                    . '</svg>';
+                $html .= '</a>';
             }
 
-        endforeach;
-
-        if (!defined('SMARTPAY_PRO_VERSION')) {
-            foreach ($availableGateways as $gatewayKey => $gatewayOption) {
-                if (!in_array($gatewayKey, $enableGateways)) {
-                    $html .= '<div class="mb-2">';
-                    $html .= '<div class="tooltip">';
-                    $html .= '<input type="checkbox" disabled />';
-                    $html .= '<label class="text-muted mr-2"><b>' . $gatewayOption['label'] . '</b></label>';
-                    $html .= '<span class="badge text-uppercase">' . __('pro', 'smartpay') . '</span>';
-                    $html .= '<span class="tooltiptext">' . __('Available in Pro Version', 'smartpay') . '</span>';
-                    $html .= '</div>';
-                    $html .= '</div>';
-                }
-            }
-        } else {
-            $html .= '<small class="form-text text-muted">' . __( 'Add more payment gateways from the Integrations panel.', 'smartpay' ) . '</small>';
+            $html .= '</div>'; // .sp-integ-card__footer
+            $html .= '</div>'; // .sp-integ-card
         }
 
-        $url   = esc_url('https://wpsmartpay.com');
-        $html .= '<small class="form-text text-muted">' .
-                 sprintf(
-					 /* translators: 1: Url */
-					 __('Don\'t see what you need? More Payment Gateway options are available <a href="%s">here</a>.', 'smartpay'),
-					 $url
-                 ) . '</small>';
+        // Locked pro gateway cards — shown only when pro plugin is not active.
+        if ( ! smartpay_is_pro_active() ) {
+            $locked_gateways = apply_filters(
+                'smartpay_locked_pro_gateways',
+                array(
+                    'stripe'       => array( 'admin_label' => 'Stripe',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png' ),
+                    'paddle'       => array( 'admin_label' => 'Paddle',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png' ),
+                    'razorpay'     => array( 'admin_label' => 'Razorpay',     'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png' ),
+                    'mollie'       => array( 'admin_label' => 'Mollie',       'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png' ),
+                    'bkash'        => array( 'admin_label' => 'bKash',        'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/bkash.png' ),
+                    'toyyibpay'    => array( 'admin_label' => 'toyyibPay',    'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/toyyibpay.png' ),
+                    'paytm'        => array( 'admin_label' => 'Paytm',        'gateway_icon' => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paytm.png' ),
+                    'authorizenet' => array( 'admin_label' => 'Authorize.Net', 'gateway_icon' => '' ),
+                )
+            );
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-        echo  $html;
+            $lock_icon  = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>';
+            $upgrade_url = esc_url( 'https://wpsmartpay.com/pricing' );
+
+            foreach ( $locked_gateways as $gw_key => $gw_option ) {
+                // Skip if already registered as an active gateway (pro installed partially, etc).
+                if ( isset( $args['options'][ $gw_key ] ) ) {
+                    continue;
+                }
+
+                $gw_name     = esc_html( $gw_option['admin_label'] );
+                $gw_icon_url = ! empty( $gw_option['gateway_icon'] ) ? esc_url( $gw_option['gateway_icon'] ) : '';
+
+                $html .= '<div class="sp-integ-card sp-integ-card--pro-locked">';
+
+                $html .= '<div class="sp-integ-card__logo">';
+                if ( $gw_icon_url ) {
+                    $html .= '<img src="' . $gw_icon_url . '" alt="' . esc_attr( $gw_option['admin_label'] ) . '" loading="lazy" style="opacity:.55;" />';
+                }
+                $html .= '</div>';
+
+                $html .= '<div class="sp-integ-card__body">';
+                $html .= '<p class="sp-integ-card__name">' . $gw_name . '</p>';
+                $html .= '</div>';
+
+                $html .= '<div class="sp-integ-card__footer">';
+                $html .= '<div class="custom-control custom-switch custom-switch-lg">';
+                $html .= '<input type="checkbox" class="custom-control-input" disabled style="cursor:not-allowed;" />';
+                $html .= '<label class="custom-control-label"></label>';
+                $html .= '</div>';
+                $html .= '<span class="sp-badge sp-badge--trial">' . esc_html__( 'Pro Only', 'smartpay' ) . '</span>';
+                $html .= '<a href="' . $upgrade_url . '" target="_blank" rel="noopener noreferrer"'
+                    . ' class="sp-integ-card__settings"'
+                    . ' title="' . esc_attr__( 'Upgrade to Pro', 'smartpay' ) . '">'
+                    . $lock_icon
+                    . '</a>';
+                $html .= '</div>'; // .sp-integ-card__footer
+
+                $html .= '</div>'; // .sp-integ-card
+            }
+        }
+
+        $html .= '</div>'; // .sp-integ-grid
+
+        // Footer note.
+        $url   = esc_url( 'https://wpsmartpay.com' );
+        $html .= '<p class="sp-gw-footer-note">' . sprintf(
+            /* translators: %s: URL to gateway marketplace */
+            __( 'Don\'t see what you need? More gateways are available <a href="%s">here</a>.', 'smartpay' ),
+            $url
+        ) . '</p>';
+
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- All parts escaped above.
+        echo $html;
+
+        // Inline JS: AJAX toggle (fires immediately on click, reloads like integrations page).
+        ?>
+        <script>
+        jQuery(function($){
+            $(document.body).on('change','input[id^="sp_gw_"]',function(){
+                var $cb      = $(this);
+                var gateway  = $cb.attr('id').replace('sp_gw_','');
+                var activate = $cb.is(':checked') ? 1 : 0;
+                var nonce    = $('#smartpay_toggle_gateway_nonce').val();
+                $.post(
+                    smartpay.ajax_url,
+                    { action: 'smartpay_toggle_gateway', gateway: gateway, activate: activate, nonce: nonce },
+                    function(res){
+                        if(res.success){ window.location.reload(); }
+                        else{
+                            $cb.prop('checked', !$cb.is(':checked'));
+                            console.error('Gateway toggle failed:', res.data && res.data.message);
+                        }
+                    }
+                );
+            });
+        });
+        </script>
+        <?php
     }
 
     public function settings_sanitize_html_class($class = '')

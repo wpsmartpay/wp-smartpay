@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\QueryBuilder;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Connection;
 use SmartPay\Framework\Database\Exception;
@@ -563,6 +564,16 @@ class QueryBuilderHandler
     }
 
     /**
+     * @param $limit
+     *
+     * @return $this
+     */
+    public function take($limit)
+    {
+        return $this->limit($limit);
+    }
+
+    /**
      * @param $offset
      *
      * @return $this
@@ -572,6 +583,16 @@ class QueryBuilderHandler
         $this->statements['offset'] = $offset;
 
         return $this;
+    }
+
+    /**
+     * @param $offset
+     *
+     * @return $this
+     */
+    public function skip($offset)
+    {
+        return $this->offset($offset);
     }
 
     /**

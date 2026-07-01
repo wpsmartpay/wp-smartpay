@@ -1,12 +1,13 @@
 <?php
+defined('ABSPATH') || exit;
 
-class CreateSmartpayCustomersTable
+class Smartpay_CreateSmartpayCustomersTable
 {
     public static function up()
     {
         global $wpdb;
 
-        $table = $wpdb->prefix . 'smartpay_customers';
+        $table = esc_sql( $wpdb->prefix . 'smartpay_customers' );
 
         $charsetCollate = $wpdb->get_charset_collate();
 

@@ -1,8 +1,8 @@
 <?php
 
 namespace SmartPay\Modules\Payment;
+defined('ABSPATH') || exit;
 
-use Ramsey\Uuid\Uuid;
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
 
@@ -62,6 +62,19 @@ class Payment
                 'permission_callback' => [$paymentController, 'middleware'],
             ],
         ]);
+
+        register_rest_route('smartpay/v1', 'payments/(?P<id>[\d]+)/logs', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$paymentController, 'logs'],
+                'permission_callback' => [$paymentController, 'middleware'],
+            ],
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [$paymentController, 'addLog'],
+                'permission_callback' => [$paymentController, 'middleware'],
+            ],
+        ]);
     }
 
     function ajax_process_payment()
@@ -101,6 +114,43 @@ class Payment
         // Fire action before processing payment
         do_action('smartpay_before_payment_processing', $payment_data);
 
+        // Goal gate — block payment if form goal is met and stop_orders is active
+        $form_id = $payment_data['payment_data']['form_id'] ?? 0;
+        if ( $form_id > 0 ) {
+            $progress = smartpay_calculate_goal_progress( $form_id );
+            $settings = get_post_meta( $form_id, '_smartpay_settings', true );
+            $settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
+            $goal     = $settings['goal'] ?? [];
+
+            if ( ! empty( $goal['enabled'] ) ) {
+                $blocked = false;
+                $stop_message = '';
+
+                // Block if goal reached and stop_orders behavior is set
+                if ( ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
+                    && ( $progress['goal_reached'] ?? false )
+                ) {
+                    $blocked     = true;
+                    $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
+                }
+
+                // Block if stop collection date is set and today is past that date
+                if ( ! $blocked && ! empty( $goal['stopCollectionDate'] ) ) {
+                    $today      = gmdate( 'Y-m-d' );
+                    $cutoff     = $goal['stopCollectionDate'];
+                    if ( $cutoff && $today > $cutoff ) {
+                        $blocked     = true;
+                        $stop_message = $goal['goalMetMessage'] ?: __( 'This form is no longer accepting payments.', 'smartpay' );
+                    }
+                }
+
+                if ( $blocked ) {
+                    echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
+                    die();
+                }
+            }
+        }
+
         // Send payment data toprocess gateway payment
         $this->_process_gateway_payment($payment_data);
 
@@ -111,6 +161,12 @@ class Payment
     {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
         $gateway = isset($_POST['data']['smartpay_gateway']) ? sanitize_text_field(wp_unslash($_POST['data']['smartpay_gateway'])) : '';
+
+        // Zero-amount payments must always use the free gateway regardless of what
+        // the frontend sent — no payment processor should be called for free orders.
+        if ( isset( $paymentData['amount'] ) && floatval( $paymentData['amount'] ) == 0 ) {
+            $gateway = 'free';
+        }
 
         if ('free'!==$gateway && (!is_string($gateway) || !smartpay_is_gateway_active($gateway))) {
             echo '<p class="text-danger">Gateway is not active or not exist!</p>';
@@ -144,7 +200,7 @@ class Payment
         $extra = [];
         if ('form_payment' === $_data['smartpay_payment_type']) {
             $extra['form_data'] = $_data['smartpay_form_data'] ?? [];
-            $extra['form_fields'] = Form::find($_data['smartpay_form_id'])->fields ?? [];
+            $extra['form_fields'] = Form::find($_data['smartpay_form_id'])?->fields ?? [];
         }
 
         return apply_filters('smartpay_prepare_payment_data', array(
@@ -211,6 +267,8 @@ class Payment
 
                 $form = Form::where('id', $formId)->first();
 
+                if (empty($formId) || empty($form)) return [];
+
                 foreach ($form->amounts as $amount) {
                     if ($amount['key'] === $_data['smartpay_amount_key']) {
                         $additional_amount = $amount['additional_charge'];
@@ -218,8 +276,6 @@ class Payment
                         break;
                     }
                 }
-
-                if (empty($formId) || empty($form)) return [];
 
                 $payment_data = [
                     'form_id'           => $form->id,
@@ -286,7 +342,7 @@ class Payment
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->uuid            = Uuid::uuid4()->toString();
+        $payment->uuid            = wp_generate_uuid4();
         $payment->extra          = apply_filters('smartpay_payment_extra_data', $paymentData['extra']);
         $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
         $payment->parent_id      = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : 0;
@@ -323,8 +379,26 @@ class Payment
             return;
         }
 
-        $payment->completed_at = current_time('mysql');
-        $payment->save();
+        $completed_at = current_time('mysql');
+
+        // Direct DB update avoids re-triggering the model's saving() lifecycle,
+        // which would fire a duplicate status_changed log entry.
+        global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $wpdb->update(
+            $wpdb->prefix . 'smartpay_payments',
+            array( 'completed_at' => $completed_at ),
+            array( 'id'           => (int) $payment->id ),
+            array( '%s' ),
+            array( '%d' )
+        );
+
+        // Invalidate goal cache so progress bar reflects new completed payment.
+        $form_id = $payment->data['form_id'] ?? 0;
+        if ( $form_id > 0 && function_exists( 'smartpay_invalidate_goal_cache' ) ) {
+            smartpay_invalidate_goal_cache( (int) $form_id );
+        }
+        $payment->completed_at = $completed_at;
 
         do_action('smartpay_payment_completed', $payment);
     }
