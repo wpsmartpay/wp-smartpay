@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 class Roles {
 
 	public function __construct() {
-		$this->add_roles();
+		add_action( 'init', [ $this, 'add_roles' ] );
 		$this->restrict_access();
 	}
 
