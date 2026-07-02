@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.0.0
+Stable Tag: 3.0.1
 License: GPL-3.0-or-later
 
 Accept payments, send invoices, and collect donations on WordPress. Connect Stripe, PayPal, Authorize.net, and more — no store or cart required.
@@ -243,6 +243,9 @@ Yes — the form builder is built entirely on Gutenberg blocks and integrates na
 8. Support page — system info, docs, and debug log.
 
 == Changelog ==
+
+= 3.0.1 = 
+* New - Logo and Banners
 
 = 3.0.0 = 
 * New - Rebuilt Gutenberg payment form builder with live block preview
