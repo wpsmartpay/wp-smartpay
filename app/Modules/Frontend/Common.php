@@ -69,6 +69,12 @@ class Common
         $post  = get_queried_object();
 
         if ($post instanceof \WP_Post) {
+            // A smartpay_form singular (including draft previews) always renders
+            // form content, so always needs assets regardless of post_content.
+            if ('smartpay_form' === $post->post_type) {
+                return true;
+            }
+
             $content = (string) $post->post_content;
 
             $shortcodes = [
