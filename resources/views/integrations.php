@@ -7,7 +7,7 @@
     <div class="smartpay-page-header">
         <div class="smartpay-page-header__inner">
             <div class="smartpay-page-header__logo">
-                <img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
+                <img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png' ); ?>" alt="SmartPay" />
             </div>
             <div class="smartpay-page-header__actions">
                 <a href="https://wpsmartpay.com/docs/" target="_blank" rel="noopener noreferrer"
