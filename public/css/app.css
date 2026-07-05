@@ -9457,6 +9457,24 @@
   outline: 0;
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
 }
+.smartpay .smartpay-form-shortcode--split .smartpay_form_builder_wrapper > form {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+.smartpay .smartpay-form-shortcode--split .smartpay-form-col--pay {
+  position: sticky;
+  top: 24px;
+}
+@media (max-width: 768px) {
+  .smartpay .smartpay-form-shortcode--split .smartpay_form_builder_wrapper > form {
+    display: block;
+  }
+  .smartpay .smartpay-form-shortcode--split .smartpay-form-col--pay {
+    position: static;
+  }
+}
 .smartpay .smartpay-custom-control-label {
   display: flex;
   flex-direction: column;
