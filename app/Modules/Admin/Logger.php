@@ -39,8 +39,7 @@ class Logger
         $this->filename   = wp_hash(home_url('/')) . '-smartpay-debug.log';
         $this->file       = trailingslashit($upload_dir['basedir']) . $this->filename;
 
-		$file_system = $this->get_filesystem();
-		if(!$file_system || $file_system->is_writable($upload_dir['basedir'])) {
+		if (!$this->path_is_writable($upload_dir['basedir'])) {
 			$this->is_writable = false;
 		}
     }
@@ -66,18 +65,17 @@ class Logger
     protected function get_file()
     {
         $file = '';
-		$file_system = $this->get_filesystem();
 
         if (@file_exists($this->file)) {
 
-            if (!$file_system->is_writable($this->file)) {
+            if (!$this->path_is_writable($this->file)) {
                 $this->is_writable = false;
             }
 
             $file = @file_get_contents($this->file);
         } else {
             @file_put_contents($this->file, '');
-	        $file_system->chmod($this->file, 0664);
+	        $this->chmod_path($this->file, 0664);
         }
 
         return $file;
@@ -85,7 +83,6 @@ class Logger
 
     public function clear_log_file()
     {
-		$file_system = $this->get_filesystem();
 		wp_delete_file($this->file);
 
         if (
@@ -93,7 +90,7 @@ class Logger
         ) {
 
             // it's still there, so maybe server doesn't have delete rights
-            $file_system->chmod($this->file, 0664); // Try to give the server delete rights
+            $this->chmod_path($this->file, 0664); // Try to give the server delete rights
             wp_delete_file($this->file);
 
             // See if it's still there
@@ -104,7 +101,7 @@ class Logger
                 /*
 				 * Remove all contents of the log file if we cannot delete it
 				 */
-                if ($file_system->is_writable($this->file)) {
+                if ($this->path_is_writable($this->file)) {
 
                     file_put_contents($this->file, '');
                 } else {
@@ -130,5 +127,27 @@ class Logger
 			return $wp_filesystem;
 		}
 		return false;
+	}
+
+	/**
+	 * is_writable() via WP_Filesystem when available, falling back to native
+	 * PHP so a failed WP_Filesystem init (e.g. under WP-CLI/cron on some
+	 * hosts) reports "not writable" instead of fataling.
+	 */
+	protected function path_is_writable( $path ) {
+		$file_system = $this->get_filesystem();
+		return $file_system ? $file_system->is_writable( $path ) : @is_writable( $path );
+	}
+
+	/**
+	 * chmod() via WP_Filesystem when available, same native fallback as above.
+	 */
+	protected function chmod_path( $path, $mode ) {
+		$file_system = $this->get_filesystem();
+		if ( $file_system ) {
+			$file_system->chmod( $path, $mode );
+		} else {
+			@chmod( $path, $mode );
+		}
 	}
 }
