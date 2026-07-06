@@ -202,12 +202,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_amounts',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '[]',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '[]',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
@@ -215,12 +214,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_settings',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '{}',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '{}',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
