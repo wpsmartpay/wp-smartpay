@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.0.1
+Stable Tag: 3.1.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -87,6 +87,7 @@ Build payment forms the WordPress way — with blocks. Live preview as you desig
 * Flexible pricing: fixed price, custom amount, or pricing tiers
 * Start from the **template library** or build from scratch
 * Embed anywhere with the SmartPay block, shortcode, or popup overlay
+* Stacked or split checkout layout, and an optional "require login to checkout" toggle - per form
 
 ---
 
@@ -308,16 +309,23 @@ Yes, with WPSmartPay Pro. The plugin ships a built-in Model Context Protocol (MC
 PHP 8.1 or higher. WordPress 6.0 or higher.
 
 == Screenshots ==
-1. Payment form builder with native Gutenberg blocks and live preview.
-2. Form template library - pick a template or start from scratch.
-3. Invoice management - create, send, and track invoices.
-4. Gateway settings page showing active and Pro-locked gateway cards.
-5. Reports dashboard with revenue charts and payment metrics.
-6. Anti-spam settings for Turnstile, hCaptcha, and reCAPTCHA v3.
-7. Guided onboarding wizard for new users.
-8. Support page with system info, docs, and debug log.
+1. Dashboard - revenue overview, payment stats, and a quick-start checklist.
+2. Payment form builder with native Gutenberg blocks and a checkout layout picker.
+3. Form template library - pick a template or start from scratch.
+4. Invoice management - create, send, and track invoices.
+5. Payment gateway settings - connect PayPal, Stripe, Authorize.net, and more.
+6. Reports dashboard with revenue charts and payment metrics.
+7. Anti-spam settings for Turnstile, hCaptcha, and reCAPTCHA v3.
+8. Guided onboarding wizard for new users.
+9. Support page with system info, docs, and debug log.
+10. Payment form preview
 
 == Changelog ==
+
+= 3.1.0 =
+* New - Per-form Checkout Layout setting (stacked or split) and a "Require Login to Checkout" toggle
+* Fix - Prevent a fatal error when WP_Filesystem fails to initialize while writing to the debug log
+* Update - Refreshed readme and plugin screenshots
 
 = 3.0.1 =
 * New - Logo and banners added to plugin assets
@@ -400,6 +408,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.1.0 =
+Adds a split checkout layout and require-login option for payment forms, plus a fix for a rare fatal error in debug logging. No database changes.
 
 = 3.0.1 =
 Minor update: adds plugin logo and banners. No database changes.
