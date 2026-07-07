@@ -325,6 +325,8 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 = 3.1.0 =
 * New - Per-form Checkout Layout setting (stacked or split) and a "Require Login to Checkout" toggle
 * Fix - Prevent a fatal error when WP_Filesystem fails to initialize while writing to the debug log
+* Fix - Single-gateway checkout no longer shows a bare "Pay Now" button with no payment fields
+* Fix - Payment form preview no longer shows stale settings from an incomplete autosave
 * Update - Refreshed readme and plugin screenshots
 
 = 3.0.1 =
