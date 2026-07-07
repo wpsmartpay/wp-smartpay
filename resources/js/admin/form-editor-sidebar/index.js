@@ -591,6 +591,28 @@ const OptionsPanel = () => {
 					onChange={ ( val ) => updateSettings( { form_max_width: val } ) }
 				/>
 			</div>
+
+			<div className="sp-sidebar-field">
+				<SelectControl
+					__nextHasNoMarginBottom
+					label={ __( 'Checkout Layout', 'smartpay' ) }
+					help={ __( 'Split places the payment method next to the form fields on wide screens.', 'smartpay' ) }
+					value={ settings.checkout_layout || 'stacked' }
+					options={ [
+						{ value: 'stacked', label: __( 'Stacked (default)', 'smartpay' ) },
+						{ value: 'split',   label: __( 'Split — fields left, payment right', 'smartpay' ) },
+					] }
+					onChange={ ( val ) => updateSettings( { checkout_layout: val } ) }
+				/>
+			</div>
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Require Login to Checkout', 'smartpay' ) }
+				help={ __( 'Visitors must log in before they can see and submit this payment form.', 'smartpay' ) }
+				checked={ !! settings.require_login }
+				onChange={ ( val ) => updateSettings( { require_login: val } ) }
+			/>
 		</div>
 	);
 };

@@ -11,7 +11,7 @@ class Integration
     {
         $this->app = $app;
 
-        $this->app->addAction('plugins_loaded', [$this, 'bootIntegrations'], 99);
+        $this->app->addAction('init', [$this, 'bootIntegrations'], 10);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
 

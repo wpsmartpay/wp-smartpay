@@ -15,6 +15,7 @@
     <exclude-pattern>*/framework/*</exclude-pattern>
     <exclude-pattern>*/database/*</exclude-pattern>
     <exclude-pattern>*/temp/*</exclude-pattern>
+    <exclude-pattern>*/releases/*</exclude-pattern>
 
     <!-- WordPress Standards -->
     <rule ref="WordPress">

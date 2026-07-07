@@ -16,7 +16,7 @@ class RegisterShortcode {
 		// from Appearance → Menus. When no menu is assigned, the sidebar falls
 		// back to its built-in items.
 		add_action(
-			'after_setup_theme',
+			'init',
 			static function () {
 				register_nav_menu( 'smartpay_dashboard_sidebar', __( 'SmartPay Dashboard Sidebar', 'smartpay' ) );
 			}

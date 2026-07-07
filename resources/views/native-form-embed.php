@@ -17,6 +17,34 @@ defined( 'ABSPATH' ) || exit;
 $pay_button_label    = $settings['pay_button_label'] ?? __( 'Pay Now', 'smartpay' );
 $allow_custom_amount = ! empty( $settings['allow_custom_amount'] );
 $custom_amount_label = $settings['custom_amount_label'] ?? __( 'Enter custom amount', 'smartpay' );
+$checkout_layout     = ( 'split' === ( $settings['checkout_layout'] ?? '' ) ) ? 'split' : 'stacked';
+$require_login       = ! empty( $settings['require_login'] );
+
+// A form gated behind login renders the login form in place of the payment
+// form entirely — nothing below (amounts, gateways, fields) is relevant until
+// the visitor is authenticated.
+if ( $require_login && ! is_user_logged_in() && class_exists( '\SmartPay\Modules\Shortcodes\CustomerLoginShortcode' ) ) {
+	wp_enqueue_style( 'smartpay-login-frontend' );
+	wp_enqueue_script( 'smartpay-login-frontend' );
+	?>
+	<div class="smartpay">
+		<div class="smartpay-form-shortcode smartpay-payment smartpay-form-login-gate">
+			<div class="card form bg-transparent border-0">
+				<div class="card-body">
+					<p class="smartpay-form-login-gate__notice">
+						<?php esc_html_e( 'Please log in to continue to checkout.', 'smartpay' ); ?>
+					</p>
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- shortcode renders its own escaped view.
+					echo \SmartPay\Modules\Shortcodes\CustomerLoginShortcode::render();
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
+	return;
+}
 
 $gateways   = smartpay_get_enabled_payment_gateways( true );
 $default_gw = smartpay_get_default_gateway();
@@ -50,7 +78,7 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 ?>
 
 <div class="smartpay">
-	<div class="smartpay-form-shortcode smartpay-payment">
+	<div class="smartpay-form-shortcode smartpay-payment<?php echo 'split' === $checkout_layout ? ' smartpay-form-shortcode--split' : ''; ?>">
 		<div class="card form bg-transparent border-0">
 			<div class="card-body smartpay_form_builder_wrapper">
 				<?php do_action( 'before_smartpay_payment_form', (object) array( 'id' => $post_id ) ); ?>
@@ -58,6 +86,10 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 					action="<?php echo esc_url( smartpay_get_payment_page_uri() ); ?>"
 					method="POST"
 					enctype="multipart/form-data">
+
+					<?php if ( 'split' === $checkout_layout ) : ?>
+					<div class="smartpay-form-col smartpay-form-col--fields">
+					<?php endif; ?>
 
 					<div id="form-response" class="mb-3"></div>
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>
@@ -158,10 +190,29 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 					<input type="hidden" name="smartpay_is_custom_payment" id="smartpay_is_custom_payment"
 						value="false" />
 
+					<?php if ( 'split' === $checkout_layout ) : ?>
+					</div>
+					<div class="smartpay-form-col smartpay-form-col--pay">
+					<?php endif; ?>
+
 					<?php if ( count( $gateways ) === 1 ) : ?>
-						<?php $gw_keys = array_keys( $gateways ); ?>
+						<?php
+						$gw_keys      = array_keys( $gateways );
+						$only_gw_id   = reset( $gw_keys );
+						$only_gateway = reset( $gateways );
+						?>
 						<input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway"
-							value="<?php echo esc_attr( reset( $gw_keys ) ); ?>" checked />
+							value="<?php echo esc_attr( $only_gw_id ); ?>" checked />
+						<?php
+						// A lone gateway skips the picker UI entirely, but it can still inject
+						// its own inline checkout fields (e.g. Authorize.Net's embedded card
+						// form) — those must render regardless of how many gateways exist.
+						ob_start();
+						do_action( 'smartpay_native_gateway_checkout_fields', $only_gw_id, $only_gateway, $post_id );
+						$smartpay_only_gateway_inline_content = ob_get_clean();
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
+						echo $smartpay_only_gateway_inline_content;
+						?>
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
 						<?php ob_start(); ?>
 						<label class="payment-gateway--label">
@@ -197,10 +248,17 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 										<?php
 										// Let gateways / add-ons inject inline checkout content
 										// (instructions, fields, notices) under the selected gateway.
-										// When nothing is injected, the default hint below explains
-										// the redirect-style flow.
+										// Captured (not echoed directly) so we can tell whether the
+										// gateway rendered its own inline UI — if it did, the generic
+										// "you'll be redirected" hint below would be inaccurate for an
+										// embedded flow, so it's only shown when nothing was injected.
+										ob_start();
 										do_action( 'smartpay_native_gateway_checkout_fields', $gw_id, $gateway, $post_id );
+										$smartpay_gateway_inline_content = ob_get_clean();
+										// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
+										echo $smartpay_gateway_inline_content;
 										?>
+										<?php if ( '' === trim( $smartpay_gateway_inline_content ) ) : ?>
 										<div class="smartpay-gateway-card__hint-box">
 											<div class="smartpay-gateway-card__hint-title-row">
 												<span class="smartpay-gateway-card__hint-logo">
@@ -227,6 +285,7 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 												</span>
 											</div>
 										</div>
+										<?php endif; ?>
 									</div>
 								</div>
 								</div>
@@ -319,6 +378,10 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 					<?php endif; ?>
 
 					<?php do_action( 'after_smartpay_payment_form_button', (object) array( 'id' => $post_id ) ); ?>
+
+					<?php if ( 'split' === $checkout_layout ) : ?>
+					</div>
+					<?php endif; ?>
 
 				</form>
 				<?php do_action( 'after_smartpay_payment_form', (object) array( 'id' => $post_id ) ); ?>

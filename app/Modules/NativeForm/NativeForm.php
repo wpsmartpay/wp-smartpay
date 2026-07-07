@@ -202,12 +202,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_amounts',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '[]',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '[]',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
@@ -215,12 +214,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_settings',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '{}',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '{}',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
@@ -612,7 +610,7 @@ class NativeForm {
 				'adminUrl' => admin_url( 'admin.php' ),
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'apiNonce' => wp_create_nonce( 'wp_rest' ),
-				'logo'     => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
+				'logo'     => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
 				'isPro'    => smartpay_is_pro_active(),
 			)
 		);

@@ -5,7 +5,7 @@ const zip = require('gulp-zip')
 const { execSync } = require('child_process')
 
 const removeTemp = (cb) => {
-    del.sync(['temp/'])
+    del.sync(['releases/'])
     cb()
 }
 
@@ -24,7 +24,7 @@ const copy = () => {
         '!./resources/js/**',
         '!./node_modules/**',
         '!./scripts/**',
-        '!./temp/**',
+        '!./releases/**',
         '!./test-results/**',
         '!./docs/**',
         '!gulpfile.js',
@@ -46,7 +46,7 @@ const copy = () => {
         '!phpcs.xml.dist',
         '!.claude/**',
         'composer.json',
-    ]).pipe(dest('temp/smartpay'))
+    ]).pipe(dest('releases/smartpay'))
 }
 
 const getPluginVersion = () => {
@@ -71,9 +71,9 @@ const bundle = () => {
         return
     }
 
-    return src(['./temp/**', './temp/*/**'])
+    return src(['./releases/**', './releases/*/**'])
         .pipe(zip(`smartpay-${version}.zip`))
-        .pipe(dest('./temp'))
+        .pipe(dest('./releases'))
 }
 
 exports.release = series(removeTemp, composerProd, copy, bundle)
