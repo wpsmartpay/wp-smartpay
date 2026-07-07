@@ -196,9 +196,23 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 					<?php endif; ?>
 
 					<?php if ( count( $gateways ) === 1 ) : ?>
-						<?php $gw_keys = array_keys( $gateways ); ?>
+						<?php
+						$gw_keys      = array_keys( $gateways );
+						$only_gw_id   = reset( $gw_keys );
+						$only_gateway = reset( $gateways );
+						?>
 						<input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway"
-							value="<?php echo esc_attr( reset( $gw_keys ) ); ?>" checked />
+							value="<?php echo esc_attr( $only_gw_id ); ?>" checked />
+						<?php
+						// A lone gateway skips the picker UI entirely, but it can still inject
+						// its own inline checkout fields (e.g. Authorize.Net's embedded card
+						// form) — those must render regardless of how many gateways exist.
+						ob_start();
+						do_action( 'smartpay_native_gateway_checkout_fields', $only_gw_id, $only_gateway, $post_id );
+						$smartpay_only_gateway_inline_content = ob_get_clean();
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
+						echo $smartpay_only_gateway_inline_content;
+						?>
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
 						<?php ob_start(); ?>
 						<label class="payment-gateway--label">
