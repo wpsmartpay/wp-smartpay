@@ -130,24 +130,23 @@ class Logger
 	}
 
 	/**
-	 * is_writable() via WP_Filesystem when available, falling back to native
-	 * PHP so a failed WP_Filesystem init (e.g. under WP-CLI/cron on some
-	 * hosts) reports "not writable" instead of fataling.
+	 * is_writable() via WP_Filesystem. If WP_Filesystem fails to init
+	 * (e.g. under WP-CLI/cron on some hosts), report "not writable"
+	 * instead of falling back to a raw filesystem call.
 	 */
 	protected function path_is_writable( $path ) {
 		$file_system = $this->get_filesystem();
-		return $file_system ? $file_system->is_writable( $path ) : @is_writable( $path );
+		return $file_system ? $file_system->is_writable( $path ) : false;
 	}
 
 	/**
-	 * chmod() via WP_Filesystem when available, same native fallback as above.
+	 * chmod() via WP_Filesystem. No-op if WP_Filesystem fails to init,
+	 * same reasoning as path_is_writable().
 	 */
 	protected function chmod_path( $path, $mode ) {
 		$file_system = $this->get_filesystem();
 		if ( $file_system ) {
 			$file_system->chmod( $path, $mode );
-		} else {
-			@chmod( $path, $mode );
 		}
 	}
 }
