@@ -24,17 +24,24 @@
     <div class="sp-layout smartpay-integrations">
 
         <?php
-        $smartpay_all_integ  = smartpay_integrations();
-        $smartpay_categories = [];
+        $smartpay_all_integ   = smartpay_integrations();
+        $smartpay_categories  = [];
+        $smartpay_cat_counts  = [];
+        $smartpay_tier_counts = [ 'free' => 0, 'pro' => 0 ];
         foreach ($smartpay_all_integ as $smartpay_integ) {
             // Skip gateway integrations when building category tabs — gateways live in Settings.
             if ( in_array( 'Payment Gateway', $smartpay_integ['categories'] ?? [], true ) ) {
                 continue;
             }
+            $smartpay_tier = $smartpay_integ['type'] ?? 'pro';
+            if ( isset( $smartpay_tier_counts[ $smartpay_tier ] ) ) {
+                ++$smartpay_tier_counts[ $smartpay_tier ];
+            }
             foreach ($smartpay_integ['categories'] ?? [] as $smartpay_c) {
                 if (!in_array($smartpay_c, $smartpay_categories, true)) {
                     $smartpay_categories[] = $smartpay_c;
                 }
+                $smartpay_cat_counts[ $smartpay_c ] = ( $smartpay_cat_counts[ $smartpay_c ] ?? 0 ) + 1;
             }
         }
         ?>
@@ -44,33 +51,57 @@
             <div class="sp-filter-tabs">
                 <button type="button" class="sp-filter-tab sp-filter-tab--active" data-filter-category="all">
                     <?php esc_html_e( 'All', 'smartpay' ); ?>
+                    <span class="sp-filter-tab__count"><?php echo esc_html( array_sum( $smartpay_cat_counts ) ); ?></span>
                 </button>
                 <?php foreach ($smartpay_categories as $smartpay_cat) : ?>
                 <button type="button" class="sp-filter-tab" data-filter-category="<?php echo esc_attr($smartpay_cat); ?>">
                     <?php echo esc_html($smartpay_cat); ?>
+                    <span class="sp-filter-tab__count"><?php echo esc_html( $smartpay_cat_counts[ $smartpay_cat ] ?? 0 ); ?></span>
                 </button>
                 <?php endforeach; ?>
             </div>
-            <div class="sp-filter-tabs" style="display:none;">
+            <div class="sp-filter-tabs">
                 <button type="button" class="sp-filter-tab sp-filter-tab--active" data-filter-tier="all">
                     <?php esc_html_e( 'All Tiers', 'smartpay' ); ?>
                 </button>
                 <button type="button" class="sp-filter-tab" data-filter-tier="free">
                     <?php esc_html_e( 'Free', 'smartpay' ); ?>
+                    <span class="sp-filter-tab__count"><?php echo esc_html( $smartpay_tier_counts['free'] ); ?></span>
                 </button>
                 <button type="button" class="sp-filter-tab" data-filter-tier="pro">
                     <?php esc_html_e( 'Pro', 'smartpay' ); ?>
+                    <span class="sp-filter-tab__count"><?php echo esc_html( $smartpay_tier_counts['pro'] ); ?></span>
                 </button>
             </div>
         </div>
         <?php endif; ?>
 
         <div class="sp-integ-grid" id="integration-grid">
+            <?php
+            // Map: integration namespace → option key(s) that must be non-empty for "configured" state.
+            $smartpay_setup_keys = [
+                'mailchimp'      => 'mailchimp_api_key',
+                'mailerlite'     => 'mailerlite_api_key',
+                'slack'          => 'slack_webhook_url',
+                'telegram'       => 'telegram_bot_token',
+                'twilio'         => 'twilio_account_sid',
+                'google_sheets'  => 'google_sheets_url',
+                'zapier'         => 'zapier_webhook_url',
+                'pabbly'         => 'pabbly_webhook_url',
+                'fluent_support' => 'fs_mailbox_id',
+            ];
+            ?>
             <?php foreach ($smartpay_all_integ as $smartpay_namespace => $smartpay_integration) :
                 $smartpay_cats      = $smartpay_integration['categories'] ?? [];
                 $smartpay_type      = $smartpay_integration['type'] ?? 'pro';
                 $smartpay_cat_attr  = implode(',', $smartpay_cats);
                 $smartpay_activated = in_array($smartpay_namespace, smartpay_get_activated_integrations());
+
+                // "Needs setup": activated but required credential is missing.
+                $smartpay_needs_setup = false;
+                if ( $smartpay_activated && isset( $smartpay_setup_keys[ $smartpay_namespace ] ) ) {
+                    $smartpay_needs_setup = empty( smartpay_get_option( $smartpay_setup_keys[ $smartpay_namespace ] ) );
+                }
 
                 // Gateways belong in Settings > Payment Gateways, not here.
                 if ( in_array( 'Payment Gateway', $smartpay_cats, true ) ) {
@@ -111,9 +142,18 @@
                                 </label>
                             </div>
                             <span class="sp-integ-card__status">
-                                <?php echo $smartpay_activated ? esc_html__('Activated', 'smartpay') : esc_html__('Disabled', 'smartpay'); ?>
+                                <?php if ( $smartpay_needs_setup ) : ?>
+                                    <span class="sp-badge sp-badge--pastdue" style="font-size:11px;">
+                                        <?php esc_html_e( 'Needs setup', 'smartpay' ); ?>
+                                    </span>
+                                <?php elseif ( $smartpay_activated ) : ?>
+                                    <?php esc_html_e( 'Activated', 'smartpay' ); ?>
+                                <?php else : ?>
+                                    <?php esc_html_e( 'Disabled', 'smartpay' ); ?>
+                                <?php endif; ?>
                             </span>
-                            <?php if (!empty($smartpay_integration['setting_link']) && $smartpay_activated) : ?>
+                            <?php if (!empty($smartpay_integration['setting_link'])) : ?>
+                                <?php if ($smartpay_activated) : ?>
                                 <a href="<?php echo esc_url(admin_url('admin.php?page=smartpay-setting&' . $smartpay_integration['setting_link'])); ?>"
                                     class="sp-integ-card__settings"
                                     title="<?php esc_attr_e('Settings', 'smartpay'); ?>">
@@ -121,6 +161,16 @@
                                         <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
                                     </svg>
                                 </a>
+                                <?php else : ?>
+                                <span class="sp-integ-card__settings"
+                                    style="opacity:.35;cursor:default;"
+                                    title="<?php esc_attr_e('Activate this integration to access its settings', 'smartpay'); ?>"
+                                    aria-disabled="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
+                                    </svg>
+                                </span>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
                             <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
