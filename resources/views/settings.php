@@ -5,39 +5,40 @@ use SmartPay\Modules\Admin\Setting;
 
 /* ── Bootstrap ──────────────────────────────────────────────── */
 
-$setting_instance = new Setting();
-$settings_tabs    = Setting::settings_tabs();
-$all_settings     = Setting::get_registered_settings_sections();
+$smartpay_setting_instance = new Setting();
+$smartpay_settings_tabs    = Setting::settings_tabs();
+$smartpay_all_settings     = Setting::get_registered_settings_sections();
 
-// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
-$active_tab = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only settings navigation, no state change.
+$smartpay_active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
+$smartpay_active_tab = array_key_exists( $smartpay_active_tab, $smartpay_settings_tabs ) ? $smartpay_active_tab : 'general';
 
-$sections       = Setting::settings_tab_sections( $active_tab );
-$key            = ! empty( $sections ) ? key( $sections ) : 'main';
+$smartpay_sections       = Setting::settings_tab_sections( $smartpay_active_tab );
+$smartpay_key            = ! empty( $smartpay_sections ) ? key( $smartpay_sections ) : 'main';
 
-// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-$active_section = isset( $_GET['section'] )
-	&& ! empty( $sections )
-	&& array_key_exists( sanitize_text_field( wp_unslash( $_GET['section'] ) ), $sections )
-		? sanitize_text_field( wp_unslash( $_GET['section'] ) )
-		: $key;
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only settings navigation, no state change.
+$smartpay_requested_section = isset( $_GET['section'] ) ? sanitize_text_field( wp_unslash( $_GET['section'] ) ) : '';
+$smartpay_active_section    = ( '' !== $smartpay_requested_section
+	&& ! empty( $smartpay_sections )
+	&& array_key_exists( $smartpay_requested_section, $smartpay_sections ) )
+		? $smartpay_requested_section
+		: $smartpay_key;
 
 /* ── Field extraction ───────────────────────────────────────── */
 
-$registered  = Setting::registered_settings();
-$tab_data    = $registered[ $active_tab ] ?? [];
-$raw_fields  = [];
+$smartpay_registered  = Setting::registered_settings();
+$smartpay_tab_data    = $smartpay_registered[ $smartpay_active_tab ] ?? [];
+$smartpay_raw_fields  = [];
 
-if ( isset( $tab_data[ $active_section ] ) && is_array( $tab_data[ $active_section ] ) ) {
-	$raw_fields = array_values( $tab_data[ $active_section ] );
-} elseif ( isset( $tab_data['main'] ) && is_array( $tab_data['main'] ) ) {
-	$raw_fields = array_values( $tab_data['main'] );
+if ( isset( $smartpay_tab_data[ $smartpay_active_section ] ) && is_array( $smartpay_tab_data[ $smartpay_active_section ] ) ) {
+	$smartpay_raw_fields = array_values( $smartpay_tab_data[ $smartpay_active_section ] );
+} elseif ( isset( $smartpay_tab_data['main'] ) && is_array( $smartpay_tab_data['main'] ) ) {
+	$smartpay_raw_fields = array_values( $smartpay_tab_data['main'] );
 } else {
 	// Extensions: tab > section_id > fields array (no 'main' wrapper)
-	foreach ( $tab_data as $s_id => $s_fields ) {
-		if ( $s_id === $active_section && is_array( $s_fields ) ) {
-			$raw_fields = array_values( $s_fields );
+	foreach ( $smartpay_tab_data as $smartpay_s_id => $smartpay_s_fields ) {
+		if ( $smartpay_s_id === $smartpay_active_section && is_array( $smartpay_s_fields ) ) {
+			$smartpay_raw_fields = array_values( $smartpay_s_fields );
 			break;
 		}
 	}
@@ -45,8 +46,8 @@ if ( isset( $tab_data[ $active_section ] ) && is_array( $tab_data[ $active_secti
 
 /* ── Group fields by `header` type → each group becomes a card ─ */
 
-$field_defaults = [
-	'section'       => $active_section,
+$smartpay_field_defaults = [
+	'section'       => $smartpay_active_section,
 	'id'            => null,
 	'desc'          => '',
 	'name'          => '',
@@ -69,34 +70,36 @@ $field_defaults = [
 	'style'         => '',
 ];
 
-$groups    = [];
-$cur_group = [ 'title' => '', 'fields' => [] ];
+$smartpay_groups    = [];
+$smartpay_cur_group = [ 'title' => '', 'fields' => [] ];
 
-foreach ( $raw_fields as $field ) {
-	if ( empty( $field['id'] ) ) {
+foreach ( $smartpay_raw_fields as $smartpay_field ) {
+	if ( empty( $smartpay_field['id'] ) ) {
 		continue;
 	}
-	$field = wp_parse_args( $field, $field_defaults );
+	$smartpay_field = wp_parse_args( $smartpay_field, $smartpay_field_defaults );
 
-	if ( 'header' === $field['type'] ) {
-		if ( ! empty( $cur_group['fields'] ) ) {
-			$groups[] = $cur_group;
+	if ( 'header' === $smartpay_field['type'] ) {
+		if ( ! empty( $smartpay_cur_group['fields'] ) ) {
+			$smartpay_groups[] = $smartpay_cur_group;
 		}
-		$cur_group = [ 'title' => wp_strip_all_tags( $field['name'] ), 'fields' => [] ];
+		$smartpay_cur_group = [ 'title' => wp_strip_all_tags( $smartpay_field['name'] ), 'fields' => [] ];
 	} else {
-		$cur_group['fields'][] = $field;
+		$smartpay_cur_group['fields'][] = $smartpay_field;
 	}
 }
-if ( ! empty( $cur_group['fields'] ) ) {
-	$groups[] = $cur_group;
+if ( ! empty( $smartpay_cur_group['fields'] ) ) {
+	$smartpay_groups[] = $smartpay_cur_group;
 }
 
 /* ── Render ─────────────────────────────────────────────────── */
 
 ob_start();
 ?>
-<div class="smartpay settings-<?php echo esc_attr( $active_tab ); ?>">
+<div class="smartpay settings-<?php echo esc_attr( $smartpay_active_tab ); ?>">
 	<div class="wrap" style="display:none"><h1 class="wp-heading-inline"></h1></div>
+
+	<?php settings_errors( 'smartpay-notices' ); ?>
 
 	<div class="smartpay-page-header">
 		<div class="smartpay-page-header__inner">
@@ -119,33 +122,33 @@ ob_start();
 
 		<!-- Primary tab navigation -->
 		<div class="sp-filter-tabs sp-settings-tabs">
-			<?php foreach ( $settings_tabs as $tab_id => $tab_name ) :
-				$tab_url   = esc_url( add_query_arg( [ 'tab' => $tab_id, 'settings-updated' => false ], remove_query_arg( 'section' ) ) );
-				$is_active = ( $active_tab === $tab_id );
+			<?php foreach ( $smartpay_settings_tabs as $smartpay_tab_id => $smartpay_tab_name ) :
+				$smartpay_tab_url   = esc_url( add_query_arg( [ 'tab' => $smartpay_tab_id, 'settings-updated' => false ], remove_query_arg( 'section' ) ) );
+				$smartpay_is_active = ( $smartpay_active_tab === $smartpay_tab_id );
 			?>
-				<a href="<?php echo $tab_url; ?>"
-					class="sp-filter-tab<?php echo $is_active ? ' sp-filter-tab--active' : ''; ?>">
-					<?php echo esc_html( $tab_name ); ?>
+				<a href="<?php echo esc_url( $smartpay_tab_url ); ?>"
+					class="sp-filter-tab<?php echo $smartpay_is_active ? ' sp-filter-tab--active' : ''; ?>">
+					<?php echo esc_html( $smartpay_tab_name ); ?>
 				</a>
 			<?php endforeach; ?>
 		</div>
 
-		<?php if ( count( $sections ) > 1 && 'emails' !== $active_tab ) : ?>
+		<?php if ( count( $smartpay_sections ) > 1 && 'emails' !== $smartpay_active_tab ) : ?>
 		<!-- Sub-section navigation (e.g. Extensions → Stripe, Paddle…) -->
 		<div class="sp-filter-tabs sp-settings-subtabs">
-			<?php foreach ( $sections as $section_id => $section_name ) :
-				$sec_url    = esc_url( add_query_arg( [ 'tab' => $active_tab, 'section' => $section_id, 'settings-updated' => false ] ) );
-				$sec_active = ( $active_section === $section_id );
+			<?php foreach ( $smartpay_sections as $smartpay_section_id => $smartpay_section_name ) :
+				$smartpay_sec_url    = esc_url( add_query_arg( [ 'tab' => $smartpay_active_tab, 'section' => $smartpay_section_id, 'settings-updated' => false ] ) );
+				$smartpay_sec_active = ( $smartpay_active_section === $smartpay_section_id );
 			?>
-				<a href="<?php echo $sec_url; ?>"
-					class="sp-filter-tab sp-filter-tab--sm<?php echo $sec_active ? ' sp-filter-tab--active' : ''; ?>">
-					<?php echo esc_html( $section_name ); ?>
+				<a href="<?php echo esc_url( $smartpay_sec_url ); ?>"
+					class="sp-filter-tab sp-filter-tab--sm<?php echo $smartpay_sec_active ? ' sp-filter-tab--active' : ''; ?>">
+					<?php echo esc_html( $smartpay_section_name ); ?>
 				</a>
 			<?php endforeach; ?>
 		</div>
 		<?php endif; ?>
 
-		<?php if ( 'emails' === $active_tab ) : ?>
+		<?php if ( 'emails' === $smartpay_active_tab ) : ?>
 
 			<div id="sp-email-templates">
 				<p style="font-size:13px;color:var(--sp-text-muted);margin:0;padding:20px 0;">
@@ -153,29 +156,29 @@ ob_start();
 				</p>
 			</div>
 
-		<?php elseif ( 'antispam' === $active_tab ) : ?>
+		<?php elseif ( 'antispam' === $smartpay_active_tab ) : ?>
 
 			<form method="POST" action="options.php">
 				<?php settings_fields( 'smartpay_settings' ); ?>
 
 				<table class="form-table"><tbody>
-					<?php foreach ( $groups as $group ) : ?>
-						<?php foreach ( $group['fields'] as $field ) :
-							if ( empty( $field['id'] ) ) {
+					<?php foreach ( $smartpay_groups as $smartpay_group ) : ?>
+						<?php foreach ( $smartpay_group['fields'] as $smartpay_field ) :
+							if ( empty( $smartpay_field['id'] ) ) {
 								continue;
 							}
-							$callback = 'settings_' . $field['type'] . '_callback';
-							if ( ! method_exists( $setting_instance, $callback ) ) {
+							$smartpay_callback = 'settings_' . $smartpay_field['type'] . '_callback';
+							if ( ! method_exists( $smartpay_setting_instance, $smartpay_callback ) ) {
 								continue;
 							}
 						?>
 						<tr>
 							<th scope="row">
-								<label for="smartpay_settings[<?php echo esc_attr( $field['id'] ); ?>]">
-									<?php echo esc_html( $field['name'] ); ?>
+								<label for="smartpay_settings[<?php echo esc_attr( $smartpay_field['id'] ); ?>]">
+									<?php echo esc_html( $smartpay_field['name'] ); ?>
 								</label>
 							</th>
-							<td><?php $setting_instance->$callback( $field ); ?></td>
+							<td><?php $smartpay_setting_instance->$smartpay_callback( $smartpay_field ); ?></td>
 						</tr>
 						<?php endforeach; ?>
 					<?php endforeach; ?>
@@ -194,13 +197,13 @@ ob_start();
 		<form method="POST" action="options.php">
 			<?php settings_fields( 'smartpay_settings' ); ?>
 
-			<?php if ( $active_section !== $key ) : ?>
-				<input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr( $active_section ); ?>" />
+			<?php if ( $smartpay_active_section !== $smartpay_key ) : ?>
+				<input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr( $smartpay_active_section ); ?>" />
 			<?php endif; ?>
 
 			<div class="sp-settings-cards">
 
-				<?php if ( empty( $groups ) ) : ?>
+				<?php if ( empty( $smartpay_groups ) ) : ?>
 					<div class="sp-detail-card">
 						<div class="sp-detail-card__body">
 							<p style="font-size:13px;color:var(--sp-text-muted);margin:0;">
@@ -210,44 +213,44 @@ ob_start();
 					</div>
 
 				<?php else : ?>
-					<?php foreach ( $groups as $group ) : ?>
+					<?php foreach ( $smartpay_groups as $smartpay_group ) : ?>
 					<div class="sp-detail-card sp-settings-card">
 
-						<?php if ( ! empty( $group['title'] ) ) : ?>
+						<?php if ( ! empty( $smartpay_group['title'] ) ) : ?>
 						<div class="sp-detail-card__header">
-							<span class="sp-detail-card__title"><?php echo esc_html( $group['title'] ); ?></span>
+							<span class="sp-detail-card__title"><?php echo esc_html( $smartpay_group['title'] ); ?></span>
 						</div>
 						<?php endif; ?>
 
 						<div class="sp-detail-card__body sp-settings-card__body">
 							<?php
-							$total = count( $group['fields'] );
-							foreach ( $group['fields'] as $i => $field ) :
-								if ( empty( $field['id'] ) ) {
+							$smartpay_total = count( $smartpay_group['fields'] );
+							foreach ( $smartpay_group['fields'] as $smartpay_i => $smartpay_field ) :
+								if ( empty( $smartpay_field['id'] ) ) {
 									continue;
 								}
-								$callback     = 'settings_' . $field['type'] . '_callback';
-								if ( ! method_exists( $setting_instance, $callback ) ) {
+								$smartpay_callback     = 'settings_' . $smartpay_field['type'] . '_callback';
+								if ( ! method_exists( $smartpay_setting_instance, $smartpay_callback ) ) {
 									continue;
 								}
-								$is_last      = ( $i === $total - 1 );
-								$is_fullwidth = in_array( $field['type'], [ 'textarea', 'descriptive_text', 'gateways' ], true );
+								$smartpay_is_last      = ( $smartpay_i === $smartpay_total - 1 );
+								$smartpay_is_fullwidth = in_array( $smartpay_field['type'], [ 'textarea', 'descriptive_text', 'gateways' ], true );
 							?>
 							<div class="sp-settings-row<?php
-								echo $is_last     ? ' sp-settings-row--last'      : '';
-								echo $is_fullwidth ? ' sp-settings-row--fullwidth' : '';
+								echo $smartpay_is_last     ? ' sp-settings-row--last'      : '';
+								echo $smartpay_is_fullwidth ? ' sp-settings-row--fullwidth' : '';
 							?>">
 								<div class="sp-settings-row__left">
 									<label class="sp-settings-row__label"
-										for="smartpay_settings[<?php echo esc_attr( $field['id'] ); ?>]">
-										<?php echo esc_html( $field['name'] ); ?>
+										for="smartpay_settings[<?php echo esc_attr( $smartpay_field['id'] ); ?>]">
+										<?php echo esc_html( $smartpay_field['name'] ); ?>
 									</label>
-									<?php if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], [ 'text', 'textarea', 'select', 'select_currency', 'gateway_select', 'page_select', 'checkbox', 'switch', 'gateways' ], true ) ) : ?>
-										<p class="sp-settings-row__desc"><?php echo wp_kses_post( $field['desc'] ); ?></p>
+									<?php if ( ! empty( $smartpay_field['desc'] ) && ! in_array( $smartpay_field['type'], [ 'text', 'textarea', 'select', 'select_currency', 'gateway_select', 'page_select', 'checkbox', 'switch', 'gateways' ], true ) ) : ?>
+										<p class="sp-settings-row__desc"><?php echo wp_kses_post( $smartpay_field['desc'] ); ?></p>
 									<?php endif; ?>
 								</div>
 								<div class="sp-settings-row__control">
-									<?php $setting_instance->$callback( $field ); ?>
+									<?php $smartpay_setting_instance->$smartpay_callback( $smartpay_field ); ?>
 								</div>
 							</div>
 							<?php endforeach; ?>
@@ -260,7 +263,7 @@ ob_start();
 			</div><!-- .sp-settings-cards -->
 
 			<div class="sp-settings-actions">
-				<?php if ( 'debug_log' === $active_tab ) : ?>
+				<?php if ( 'debug_log' === $smartpay_active_tab ) : ?>
 					<button type="button" class="sp-btn sp-btn--outline smartpay-clear-debug-log">
 						<?php esc_html_e( 'Clear Log', 'smartpay' ); ?>
 					</button>

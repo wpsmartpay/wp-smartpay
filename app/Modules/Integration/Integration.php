@@ -29,6 +29,14 @@ class Integration
                 'type'       => 'free',
                 'categories' => [ 'Core' ],
             ],
+            'legacy_forms' => [
+                'name'       => __( 'Legacy Forms', 'smartpay' ),
+                'excerpt'    => __( 'Enable the legacy form builder for forms created before the native form builder.', 'smartpay' ),
+                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/legacy-forms.png',
+                'manager'    => LegacyForms::class,
+                'type'       => 'free',
+                'categories' => [ 'Core' ],
+            ],
             'paddle'    =>  [
                 'name'       => 'Paddle',
                 'excerpt'    => 'Paddle provides financial services for SaaS and Digital services.',

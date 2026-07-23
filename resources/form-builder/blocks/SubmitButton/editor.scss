@@ -1,0 +1,126 @@
+// Editor canvas for the Pay Button block. The frontend button is rendered by
+// native-form-embed.php from this block's attributes; here we mirror it so the
+// editor preview is WYSIWYG.
+.smartpay-submit-button-block {
+    .smartpay-submit-preview {
+        // The RichText label sits inside an inline-flex button preview; keep its
+        // editable span from collapsing and strip the default field chrome.
+        > [contenteditable],
+        > .rich-text {
+            outline: none;
+            min-width: 1ch;
+        }
+
+        svg {
+            flex: 0 0 auto;
+        }
+    }
+}
+
+// Submit area container — a little breathing room between coupon + button.
+.smartpay-submit-area > .block-editor-inner-blocks > .block-editor-block-list__layout > * + * {
+    margin-top: 14px;
+}
+
+// Editor preview of the Coupon child (frontend renders the real one with AJAX).
+.smartpay-submit-coupon-block {
+    .smartpay-coupon-preview__toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 2px 0;
+        background: none;
+        border: 0;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+
+        span {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+    }
+
+    .smartpay-coupon-preview__row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .smartpay-coupon-preview__input {
+        flex: 1 1 auto;
+        padding: 11px 14px;
+        border: 1.5px solid #e2e6ea;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 14px;
+        color: #9aa5b1;
+    }
+
+    .smartpay-coupon-preview__apply {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 20px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .smartpay-coupon-preview__close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        border: 1.5px solid #e2e6ea;
+        border-radius: 8px;
+        background: #fff;
+        color: #6b7280;
+        cursor: pointer;
+
+        &:hover {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #ef4444;
+        }
+    }
+}
+
+// Inspector icon picker — a small grid of icon buttons.
+.smartpay-submit-icon-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    &__btn.components-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        min-width: 40px;
+        padding: 0 8px;
+        border: 1px solid #e0e0e0;
+
+        &.is-pressed {
+            border-color: var(--wp-admin-theme-color, #3858e9);
+        }
+    }
+}
+
+// Custom (media library / SVG) icon control.
+.smartpay-submit-custom-icon {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    &__preview {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 2px;
+        background: #fff;
+    }
+}

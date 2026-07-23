@@ -3,13 +3,14 @@ defined('ABSPATH') || exit;
 
 use SmartPay\Models\Form;
 
-if (!property_exists($payment, 'customer')) {
-    $payment->load('customer');
+$smartpay_payment = $smartpay_view_data['payment'] ?? null;
+
+if ($smartpay_payment && !property_exists($smartpay_payment, 'customer')) {
+    $smartpay_payment->load('customer');
 }
 
-$formId  = absint($payment->data['form_id'] ?? 0);
-$form    = Form::find($formId);
-// dd($form);
+$smartpay_form_id  = absint($smartpay_payment->data['form_id'] ?? 0);
+$smartpay_form    = Form::find($smartpay_form_id);
 ?>
 
 <!DOCTYPE html>
@@ -138,7 +139,7 @@ $form    = Form::find($formId);
                                             <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
                                             <?php if ( ! smartpay_get_option('hide_payment_number_in_email', false) ) : ?>
                                                 <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
-                                                    <?php echo esc_html__('Order/Payment Number ', 'smartpay') . ': ' . esc_html($payment->get_payment_number()); ?>
+                                                    <?php echo esc_html__('Order/Payment Number ', 'smartpay') . ': ' . esc_html($smartpay_payment->get_payment_number()); ?>
                                                 </p>
                                             <?php endif; ?>
                                             <div class="sm-leading-40" style="line-height: 48px">&zwnj;</div>
@@ -148,7 +149,7 @@ $form    = Form::find($formId);
                                                 <tr>
                                                     <th class="sm-w-full sm-block sm-pb-16" style="font-weight: 400; text-align: left; width: 50%" align="left">
                                                         <p class="sm-text-32px sm-leading-36" style="font-weight: 700; font-size: 28px; line-height: 44px; margin: 0px; color: #4f5a68">
-                                                            <?php echo esc_html(smartpay_amount_format($payment->amount)); ?>
+                                                            <?php echo esc_html(smartpay_amount_format($smartpay_payment->amount)); ?>
                                                         </p>
                                                     </th>
                                                     <th class="sm-w-full sm-block" style="font-weight: 400; vertical-align: center; width: 50%" valign="center">
@@ -167,8 +168,8 @@ $form    = Form::find($formId);
                                                         <div style="line-height: 24px">&zwnj;</div>
                                                         <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                             <tr>
-                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($form->title); ?></td>
-                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($payment->data['total_amount'])); ?></td>
+                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($smartpay_form->title); ?></td>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($smartpay_payment->data['total_amount'])); ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
@@ -177,7 +178,7 @@ $form    = Form::find($formId);
                                                             </tr>
                                                             <tr>
                                                                 <td style="font-weight: 700; font-size: 16px; line-height: 24px; vertical-align: top; width: 50%" valign="top"><?php esc_html_e('Total', 'smartpay'); ?></td>
-                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($payment->data['total_amount'])); ?></td>
+                                                                <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($smartpay_payment->data['total_amount'])); ?></td>
                                                             </tr>
                                                         </table>
                                                     </td>
@@ -192,9 +193,9 @@ $form    = Form::find($formId);
                                                     <td class="sm-w-full sm-block sm-pb-32" style="font-weight: 400; text-align: left; vertical-align: top; width: 50%" align="left" valign="top">
                                                         <h4 style="font-size: 16px; line-height: 24px; margin: 0 0 8px; color: #4f5a68">Customer details</h4>
                                                         <p style="font-size: 16px; line-height: 24px; margin: 0; color: #4f5a68">
-                                                            <?php echo esc_html__('Name:', 'smartpay') . ' ' . esc_html($payment->customer->full_name); ?>
+                                                            <?php echo esc_html__('Name:', 'smartpay') . ' ' . esc_html($smartpay_payment->customer->full_name); ?>
                                                             <br>
-                                                            <?php echo esc_html__('Email:', 'smartpay') . ' ' . esc_html($payment->customer->email); ?>
+                                                            <?php echo esc_html__('Email:', 'smartpay') . ' ' . esc_html($smartpay_payment->customer->email); ?>
                                                             <br>
                                                         </p>
                                                     </td>

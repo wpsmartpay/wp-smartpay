@@ -22,7 +22,8 @@ class Coupon
         $this->app->addAction('rest_api_init', [$this, 'registerRestRoutes']);
         $this->app->addFilter('smartpay_settings_general', [$this, 'couponSettings']);
         $this->app->addAction('before_smartpay_payment_form', [$this, 'showAlert'], 10, 1);
-        $this->app->addAction('before_smartpay_payment_form', [$this, 'smartpayCouponPaymentForm'], 20, 1);
+        // Render the coupon section just before the submit button (not at the top of the form).
+        $this->app->addAction('before_smartpay_payment_form_button', [$this, 'smartpayCouponPaymentForm'], 10, 1);
         $this->app->addAction('before_smartpay_payment_form_button', [$this, 'showAppliedCouponData'], 20, 1);
         $this->app->addAction('smartpay_before_product_payment_form_button', [$this, 'showAppliedCouponData']);
         $this->app->addAction('smartpay_product_modal_popup_content', [$this, 'productPaymentModalContent'], 20, 1);
@@ -98,26 +99,54 @@ class Coupon
 
     public function smartpayCouponPaymentForm($form)
     {
-        $enable_coupon_settings = smartpay_get_option('coupon_settings_for_form');
+        $form_id = isset($form->id) ? (int) $form->id : 0;
 
-        if (!$enable_coupon_settings) {
+        // Coupon visibility is controlled solely by the per-form setting
+        // (Form Settings → Enable Coupon). Default off; the global option no
+        // longer forces it on, so turning it off here always hides the coupon.
+        $settings = $form_id ? get_post_meta($form_id, '_smartpay_settings', true) : '';
+        $settings = is_string($settings) ? json_decode($settings, true) : (is_array($settings) ? $settings : []);
+
+        if (empty($settings['enable_coupon'])) {
             return;
         }
+
+        // Text + colors come from the Submit Button's Coupon child block (styling
+        // only); defaults are used when the child is absent.
+        $toggle_label = __('Have a coupon?', 'smartpay');
+        $placeholder  = __('Coupon code', 'smartpay');
+        $apply_label  = __('Apply', 'smartpay');
+        $accent       = '#28a745';
+
+        $coupon = function_exists('smartpay_get_submit_child_attrs')
+            ? smartpay_get_submit_child_attrs($form_id, 'smartpay-form/submit-coupon')
+            : null;
+
+        if (is_array($coupon)) {
+            $toggle_label = isset($coupon['toggleLabel']) && '' !== $coupon['toggleLabel'] ? $coupon['toggleLabel'] : $toggle_label;
+            $placeholder  = isset($coupon['placeholder']) && '' !== $coupon['placeholder'] ? $coupon['placeholder'] : $placeholder;
+            $apply_label  = isset($coupon['applyLabel']) && '' !== $coupon['applyLabel'] ? $coupon['applyLabel'] : $apply_label;
+            $accent       = isset($coupon['accentColor']) && '' !== $coupon['accentColor'] ? $coupon['accentColor'] : $accent;
+        }
+
+        $accent = sanitize_text_field($accent);
         ?>
-        <div class="smartpay-coupon-form-toggle">
-            <div class="coupon-info mb-4 p-4 bg-light">
-                <?php esc_html_e('Have a coupon?', 'smartpay'); ?>
-                <a href="#" class="smartpayshowcoupon"><?php esc_html_e('Click here to enter your code', 'smartpay'); ?></a>
+        <div class="smartpay-coupon" style="--sp-coupon-accent:<?php echo esc_attr($accent); ?>;">
+            <a href="#" class="smartpayshowcoupon">
+                <?php echo esc_html($toggle_label); ?>
+            </a>
+            <?php // NOTE: a <div>, not a <form> — this renders inside the main payment
+            // <form>, and the HTML parser drops nested <form> elements. The Apply
+            // button is type="button" so it never submits the outer payment form. ?>
+            <div class="smartpay-coupon-form" style="display:none;">
+                <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
+                <div class="smartpay-coupon-row">
+                    <input type="text" name="coupon_code" id="coupon_code" class="form-control smartpay-coupon-input" placeholder="<?php echo esc_attr($placeholder); ?>" autocomplete="off" />
+                    <button type="button" name="submitcoupon" class="btn smartpay-coupon-apply"><?php echo esc_html($apply_label); ?></button>
+                    <button type="button" class="btn smartpay-coupon-form-close" aria-label="<?php esc_attr_e('Cancel', 'smartpay'); ?>" title="<?php esc_attr_e('Cancel', 'smartpay'); ?>">&times;</button>
+                </div>
             </div>
         </div>
-        <form class="smartpay-coupon-form px-4 py-5 bg-light d-none position-relative">
-	        <?php wp_nonce_field('smartpay_form_coupon_action'); ?>
-            <span class="d-inline-block smartpay-coupon-form-close position-absolute bg-danger text-white p-2">X</span>
-            <div class="d-flex">
-                <input type="text" name="coupon_code" class="m-0 form-control" placeholder="<?php esc_attr_e('Coupon code', 'smartpay'); ?>" id=" coupon_code" style="flex: 1;" />
-                <button class="rounded btn btn-outline-success" type="submit" name="submitcoupon"><?php esc_html_e('Apply coupon', 'smartpay'); ?></button>
-            </div>
-        </form>
         <?php
     }
 
@@ -135,12 +164,13 @@ class Coupon
             wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
-        // expiry date check
-        if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(gmdate('Y-m-d H:i:s'));
-            $expiryDate = date_create($coupon->expiry_date);
-            $diff = date_diff($currentDate,  $expiryDate);
-            if ($diff->format("%R%a") < 0) {
+        // Expiry check. The column is a timestamp ('Y-m-d H:i:s'), so the previous
+        // 'Y-m-d'-only format gate never matched and expired coupons were accepted.
+        // A bare date expires at the end of that day.
+        if (!empty($coupon->expiry_date)) {
+            $expiry_raw = (string) $coupon->expiry_date;
+            $expiry_ts  = strtotime(strlen($expiry_raw) <= 10 ? $expiry_raw . ' 23:59:59' : $expiry_raw);
+            if ($expiry_ts && $expiry_ts < time()) {
                 wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }
@@ -148,20 +178,37 @@ class Coupon
         $couponDiscountAmount = $coupon->discount_amount;
         $couponDiscountType = $coupon->discount_type;
 
+        // Resolve the form's amounts. Legacy forms live in the Form table; native
+        // (block) forms store amounts in post meta. Fall back to meta so coupons
+        // work on both — otherwise couponData is empty and the frontend errors.
         $form = Form::where('id', $formId)->first();
-        $formAmounts = $form->amounts;
+        $formAmounts = $form ? $form->amounts : null;
+
+        if (empty($formAmounts)) {
+            $meta = get_post_meta((int) $formId, '_smartpay_amounts', true);
+            $formAmounts = is_string($meta) ? json_decode($meta, true) : (is_array($meta) ? $meta : []);
+        }
+
+        if (empty($formAmounts) || !is_array($formAmounts)) {
+            wp_send_json_error(['message' => __('No amounts found for this form', 'smartpay')]);
+        }
+
         $couponData = [];
 
         foreach ($formAmounts as $singleAmount) {
+            $amount = (float) ($singleAmount['amount'] ?? 0);
+
             if ($couponDiscountType == 'fixed') {
-                $discountAmount = $singleAmount['amount'] - $couponDiscountAmount;
-                $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
-                $couponAmount = $couponDiscountAmount;
+                $couponAmount   = $couponDiscountAmount;
+                $discountAmount = max($amount - $couponDiscountAmount, 0);
             } elseif ($couponDiscountType == 'percent') {
-                $discountAmount = $singleAmount['amount'] - ($singleAmount['amount'] * $couponDiscountAmount) / 100;
-                $discountAmount = $discountAmount > 0 ? $discountAmount : 0;
-                $couponAmount = ($singleAmount['amount'] * $couponDiscountAmount) / 100;
+                $couponAmount   = ($amount * $couponDiscountAmount) / 100;
+                $discountAmount = max($amount - $couponAmount, 0);
+            } else {
+                $couponAmount   = 0;
+                $discountAmount = $amount;
             }
+
             $couponData['_form_amount_' . $singleAmount['key']] = [
                 'mainAmount'        => $singleAmount['amount'],
                 'discountAmount'    =>  $discountAmount,
@@ -263,12 +310,13 @@ class Coupon
             wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
-        // expiry date check
-        if ($this->validateDate($coupon->expiry_date)) {
-            $currentDate = date_create(gmdate('Y-m-d H:i:s'));
-            $expiryDate = date_create($coupon->expiry_date);
-            $diff = date_diff($currentDate,  $expiryDate);
-            if ($diff->format("%R%a") < 0) {
+        // Expiry check. The column is a timestamp ('Y-m-d H:i:s'), so the previous
+        // 'Y-m-d'-only format gate never matched and expired coupons were accepted.
+        // A bare date expires at the end of that day.
+        if (!empty($coupon->expiry_date)) {
+            $expiry_raw = (string) $coupon->expiry_date;
+            $expiry_ts  = strtotime(strlen($expiry_raw) <= 10 ? $expiry_raw . ' 23:59:59' : $expiry_raw);
+            if ($expiry_ts && $expiry_ts < time()) {
                 wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }

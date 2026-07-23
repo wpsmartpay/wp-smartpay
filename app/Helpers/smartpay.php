@@ -1160,6 +1160,258 @@ function smartpay_recalculate_goal_cache_on_payment( int $form_id ): void {
 }
 
 /**
+ * Get/set the form ID currently being rendered by the [sp_form] embed.
+ *
+ * Inside the shortcode, do_blocks() runs while the global post is the HOST
+ * page, so get_the_ID() does not return the form CPT ID. The embed template
+ * sets this context around do_blocks() so dynamic blocks (e.g. Goal Progress)
+ * can resolve their owning form. Pass an int to set; call with no argument to
+ * read. Returns 0 when not set.
+ *
+ * @param int|null $form_id Form post ID to set, or null to read.
+ * @return int
+ */
+function smartpay_current_form_render_id( ?int $form_id = null ): int {
+	static $current = 0;
+	if ( null !== $form_id ) {
+		$current = $form_id;
+	}
+	return $current;
+}
+
+/**
+ * Render the Goal Progress block (smartpay-form/goal-progress) on the frontend.
+ *
+ * Dynamic: the live counts come from smartpay_calculate_goal_progress(), so the
+ * block's save() is empty and this filter builds the markup from the block's
+ * style attributes. Returns '' when the goal is disabled or no form context is
+ * available. Hooked on `render_block_smartpay-form/goal-progress`.
+ *
+ * @param string $block_content Existing rendered content (empty for this block).
+ * @param array  $block         Parsed block (name + attrs).
+ * @return string
+ */
+function smartpay_render_goal_progress_block( string $block_content, array $block ): string {
+	$form_id = smartpay_current_form_render_id();
+	if ( ! $form_id ) {
+		$form_id = (int) get_the_ID();
+	}
+	if ( ! $form_id || ! function_exists( 'smartpay_calculate_goal_progress' ) ) {
+		return '';
+	}
+
+	$settings = get_post_meta( $form_id, '_smartpay_settings', true );
+	$settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: array() );
+	$raw_goal = $settings['goal'] ?? array();
+	$goal     = is_string( $raw_goal ) ? json_decode( $raw_goal, true ) : $raw_goal;
+	$goal     = is_array( $goal ) ? $goal : array();
+
+	if ( empty( $goal['enabled'] ) ) {
+		return '';
+	}
+
+	$progress    = smartpay_calculate_goal_progress( $form_id );
+	$current     = (float) $progress['current'];
+	$target      = (float) $progress['target'];
+	$percentage  = (float) $progress['percentage'];
+	$reached     = ! empty( $progress['goal_reached'] );
+	$type        = $goal['type'] ?? 'quantity';
+	$unit        = 'quantity' === $type ? _n( 'sold', 'sold', (int) floor( $current ), 'smartpay' ) : __( 'raised', 'smartpay' );
+	$met_message = $goal['goalMetMessage'] ?? __( 'Goal reached!', 'smartpay' );
+
+	$a = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
+
+	$show_bar   = ! isset( $a['showBar'] ) || $a['showBar'];
+	$show_count = ! isset( $a['showCounts'] ) || $a['showCounts'];
+	$show_pct   = ! isset( $a['showPercentage'] ) || $a['showPercentage'];
+	$show_msg   = ! isset( $a['showMessage'] ) || $a['showMessage'];
+	$tpl        = isset( $a['messageTemplate'] ) ? (string) $a['messageTemplate'] : '';
+
+	$bg     = sanitize_text_field( $a['bgColor'] ?? '#f8f9fa' );
+	$bar    = sanitize_text_field( $a['barColor'] ?? '#28a745' );
+	$track  = sanitize_text_field( $a['trackColor'] ?? '#e9ecef' );
+	$text   = sanitize_text_field( $a['textColor'] ?? '#555555' );
+	$bar_h  = absint( $a['barHeight'] ?? 12 );
+	$bar_r  = absint( $a['barRadius'] ?? 4 );
+	$card_r = absint( $a['cardRadius'] ?? 8 );
+	$pad    = absint( $a['padding'] ?? 16 );
+	$fs     = absint( $a['fontSize'] ?? 14 );
+
+	$card_style = sprintf(
+		'margin-bottom:20px;padding:%dpx;background:%s;border-radius:%dpx;text-align:left;color:%s;font-size:%dpx;',
+		$pad,
+		$bg,
+		$card_r,
+		$text,
+		$fs
+	);
+
+	ob_start();
+	?>
+	<div class="smartpay-goal-progress" style="<?php echo esc_attr( $card_style ); ?>">
+		<?php if ( $reached && $show_msg ) : ?>
+			<p style="margin:0 0 12px;font-weight:600;color:<?php echo esc_attr( $bar ); ?>;">
+				<?php echo esc_html( $met_message ); ?>
+			</p>
+		<?php elseif ( $show_count ) : ?>
+			<?php if ( '' !== $tpl ) : ?>
+				<p style="margin:0 0 8px;">
+					<?php
+					echo esc_html(
+						strtr(
+							$tpl,
+							array(
+								'{current}' => number_format( $current ),
+								'{target}'  => number_format( $target ),
+								'{percent}' => (string) $percentage,
+								'{unit}'    => $unit,
+							)
+						)
+					);
+					?>
+				</p>
+			<?php else : ?>
+				<p style="margin:0 0 8px;">
+					<strong><?php echo esc_html( number_format( $current ) ); ?></strong>
+					/ <?php echo esc_html( number_format( $target ) ); ?> <?php echo esc_html( $unit ); ?>
+				</p>
+			<?php endif; ?>
+		<?php endif; ?>
+
+		<?php if ( $show_bar ) : ?>
+			<div style="background:<?php echo esc_attr( $track ); ?>;border-radius:<?php echo esc_attr( $bar_r ); ?>px;height:<?php echo esc_attr( $bar_h ); ?>px;overflow:hidden;">
+				<div style="width:<?php echo esc_attr( $percentage ); ?>%;background:<?php echo esc_attr( $bar ); ?>;height:100%;border-radius:<?php echo esc_attr( $bar_r ); ?>px;transition:width 0.3s ease;"></div>
+			</div>
+		<?php endif; ?>
+
+		<?php if ( $show_pct && ! $reached ) : ?>
+			<p style="margin:8px 0 0;font-size:0.85em;text-align:right;opacity:0.7;"><?php echo esc_html( $percentage ); ?>%</p>
+		<?php endif; ?>
+	</div>
+	<?php
+	return (string) ob_get_clean();
+}
+
+/**
+ * Read the Submit Button block's attributes from a form's content.
+ *
+ * The Submit Button block (smartpay-form/submit-button) renders nothing inline;
+ * its attributes drive the button + related options (e.g. coupon visibility).
+ * Returns the attributes array, or null when the form has no submit button block.
+ *
+ * @param int $form_id Form post ID.
+ * @return array|null
+ */
+function smartpay_get_submit_button_attrs( int $form_id ): ?array {
+	if ( $form_id <= 0 || ! has_block( 'smartpay-form/submit-button', $form_id ) ) {
+		return null;
+	}
+
+	$post = get_post( $form_id );
+	if ( ! $post instanceof \WP_Post ) {
+		return null;
+	}
+
+	foreach ( parse_blocks( $post->post_content ) as $block ) {
+		if ( 'smartpay-form/submit-button' === ( $block['blockName'] ?? '' ) ) {
+			return is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Read a Submit Button child block's attributes (Coupon or Pay Button).
+ *
+ * The Submit Button block (smartpay-form/submit-button) is an InnerBlocks
+ * container holding a Coupon child (smartpay-form/submit-coupon) and a Pay
+ * Button child (smartpay-form/submit-pay). Returns the named child's attributes,
+ * or null when the parent or that child is absent (e.g. the coupon child was
+ * removed to hide the coupon section).
+ *
+ * @param int    $form_id    Form post ID.
+ * @param string $child_name Child block name.
+ * @return array|null
+ */
+function smartpay_get_submit_child_attrs( int $form_id, string $child_name ): ?array {
+	if ( $form_id <= 0 || ! has_block( 'smartpay-form/submit-button', $form_id ) ) {
+		return null;
+	}
+
+	$post = get_post( $form_id );
+	if ( ! $post instanceof \WP_Post ) {
+		return null;
+	}
+
+	// Find the submit-button block anywhere in the tree (it may be nested inside
+	// a Group/Columns), then return the requested child's attributes.
+	$submit_button = smartpay_find_block_recursive( parse_blocks( $post->post_content ), 'smartpay-form/submit-button' );
+	if ( null === $submit_button ) {
+		return null;
+	}
+
+	foreach ( (array) ( $submit_button['innerBlocks'] ?? array() ) as $child ) {
+		if ( $child_name === ( $child['blockName'] ?? '' ) ) {
+			return is_array( $child['attrs'] ?? null ) ? $child['attrs'] : array();
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Depth-first search a parsed-block tree for the first block of a given name.
+ *
+ * @param array  $blocks Parsed blocks (from parse_blocks()).
+ * @param string $name   Block name to find.
+ * @return array|null The matching block array, or null when not found.
+ */
+function smartpay_find_block_recursive( array $blocks, string $name ): ?array {
+	foreach ( $blocks as $block ) {
+		$block_name = $block['blockName'] ?? '';
+		if ( $name === $block_name ) {
+			return $block;
+		}
+		if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
+			$found = smartpay_find_block_recursive( $block['innerBlocks'], $name );
+			if ( null !== $found ) {
+				return $found;
+			}
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Inline SVG markup for a Pay Button icon slug.
+ *
+ * Slugs mirror resources/form-builder/blocks/SubmitButton/icons.js so the
+ * editor preview and the rendered frontend button use the same icon set.
+ * Returns an empty string for an unknown or empty slug. Inherits the button
+ * text colour via `currentColor`.
+ *
+ * @param string $slug Icon slug (e.g. 'arrow-right', 'lock', 'cart').
+ * @return string SVG markup, or '' when there is no matching icon.
+ */
+function smartpay_submit_button_icon_svg( string $slug ): string {
+	$paths = [
+		'arrow-right' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+		'lock'        => '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+		'cart'        => '<circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 12.4a1 1 0 0 0 1 .6h8.2a1 1 0 0 0 1-.8L21 8H6"/>',
+		'check'       => '<path d="M5 12l5 5L20 6"/>',
+		'dollar'      => '<path d="M12 2v20M17 6H10a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6H7"/>',
+	];
+
+	if ( empty( $slug ) || ! isset( $paths[ $slug ] ) ) {
+		return '';
+	}
+
+	return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $slug ] . '</svg>';
+}
+
+/**
  * Record a payment activity log entry.
  *
  * @param int    $payment_id Payment ID.

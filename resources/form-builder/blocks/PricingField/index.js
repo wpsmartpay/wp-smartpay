@@ -65,6 +65,13 @@ export const PricingField = {
         // Block styles registered explicitly in blocks/index.js (Grid default).
         attributes: {
             preset: { type: 'string', default: 'grid' },
+            // '' = preset default; left|center|right override per-card label alignment.
+            labelAlign: { type: 'string', default: '' },
+            // Selected-state theming ('' = preset default --sp-accent).
+            selectedBorderColor: { type: 'string', default: '' },
+            tickerColor: { type: 'string', default: '' },
+            showPlanName: { type: 'boolean', default: true },
+            showDescription: { type: 'boolean', default: true },
             gap: { type: 'string', default: '' },
             allowCustomAmount: { type: 'boolean', default: false },
             customAmountLabel: { type: 'string', default: 'Enter custom amount' },

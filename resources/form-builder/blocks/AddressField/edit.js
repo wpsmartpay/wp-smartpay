@@ -1,229 +1,83 @@
-import {
-    __experimentalInputControl as InputControl,
-    PanelBody,
-    Flex,
-    FlexBlock,
-    FlexItem,
-    TextControl,
-    CheckboxControl,
-    Button,
-    ToggleControl,
-} from '@wordpress/components'
-
-import { InspectorControls } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
-import { useEffect, useState } from '@wordpress/element'
+import {
+    InspectorControls,
+    useBlockProps,
+    useInnerBlocksProps,
+} from '@wordpress/block-editor'
+import { PanelBody, ToggleControl } from '@wordpress/components'
 
-const chunk = (arr, size) => {
-    return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-        arr.slice(i * size, i * size + size)
-    )
-}
+const line = (label, fieldName, fieldType) => [
+    'smartpay-form/address-field',
+    { label, fieldType },
+    [
+        ['smartpay-form/address-label', { text: label, htmlFor: fieldName }],
+        ['smartpay-form/address-input-field', { fieldName, placeholder: label, fieldType }],
+    ],
+]
 
 export const edit = ({ attributes, setAttributes }) => {
-    useEffect(() => {
-        if (attributes.attributes.name) {
-            return
-        }
+    const {
+        showLine1,
+        showLine2,
+        showCity,
+        showState,
+        showZip,
+        showCountry,
+    } = attributes
 
-        setAttributesData({
-            name: Math.random().toString(36).substr(2, 11),
-        })
-    }, [])
+    // Country first so the State options can depend on it (frontend cascade).
+    const TEMPLATE = []
+    if (showLine1)   TEMPLATE.push(line(__('Address Line 1', 'smartpay'), 'line_1', 'text'))
+    if (showLine2)   TEMPLATE.push(line(__('Address Line 2', 'smartpay'), 'line_2', 'text'))
+    if (showCity)    TEMPLATE.push(line(__('City', 'smartpay'),           'city',   'text'))
+    if (showCountry) TEMPLATE.push(line(__('Country', 'smartpay'),        'country','country'))
+    if (showState)   TEMPLATE.push(line(__('State', 'smartpay'),          'state',  'state'))
+    if (showZip)     TEMPLATE.push(line(__('Zip Code', 'smartpay'),       'zip',    'text'))
 
-    const setSettingsData = (data) => {
-        setAttributes({
-            settings: {
-                ...attributes.settings,
-                ...data,
-            },
-        })
-    }
-
-    const setAttributesData = (data) => {
-        setAttributes({
-            attributes: {
-                ...attributes.attributes,
-                ...data,
-            },
-        })
-    }
-
-    const setFieldsItem = (field) => {
-        setAttributes({
-            fields: [
-                ...attributes.fields.map((f) => {
-                    return f.attributes.name === field.attributes.name
-                        ? field
-                        : f
-                }),
-            ],
-        })
-    }
-
-    const toggleFieldValidationRule = (field, isRequired) => {
-        let validationRules = [...field.validationRules]
-
-        if (isRequired) {
-            validationRules.push({
-                required: {
-                    value: true,
-                    message: __('This field is required', 'smartpay'),
-                },
-            })
-        } else {
-            validationRules = field.validationRules.filter((rule) => {
-                return 'required' !== Object.keys(rule)[0]
-            })
-        }
-
-        setFieldsItem({
-            ...field,
-            attributes: {
-                ...field.attributes,
-                isRequired: isRequired,
-            },
-            validationRules,
-        })
-    }
+    const blockProps = useBlockProps({ className: 'smartpay-address' })
+    const innerBlocksProps = useInnerBlocksProps(blockProps, {
+        template: TEMPLATE,
+        allowedBlocks: ['smartpay-form/address-field'],
+        templateLock: 'all',
+    })
 
     return (
         <>
-            <div className="form-element">
-                {chunk(attributes.fields, 2).map((items, index) => {
-                    return (
-                        <Flex key={index}>
-                            {items.map((item, i) => {
-                                return (
-                                    !!item.settings.visible && (
-                                        <FlexBlock key={i}>
-                                            <TextControl
-                                                type="text"
-                                                label={item.settings.label}
-                                                placeholder={
-                                                    item.attributes.placeholder
-                                                }
-                                                value=""
-                                                onChange={() => {}}
-                                            />
-                                        </FlexBlock>
-                                    )
-                                )
-                            })}
-                        </Flex>
-                    )
-                })}
-            </div>
-
             <InspectorControls>
-                <PanelBody
-                    title={__('Settings', 'smartpay')}
-                    initialOpen={true}
-                >
-                    {attributes.fields.map((field, index) => {
-                        return (
-                            <div key={index}>
-                                <Accordion
-                                    header={
-                                        <>
-                                            <CheckboxControl
-                                                label={__(
-                                                    field.settings.label,
-                                                    'smartpay'
-                                                )}
-                                                checked={field.settings.visible}
-                                                onChange={(value) => {
-                                                    setFieldsItem({
-                                                        ...field,
-                                                        settings: {
-                                                            ...field.settings,
-                                                            visible: value,
-                                                        },
-                                                    })
-                                                }}
-                                            />
-                                        </>
-                                    }
-                                    body={
-                                        <>
-                                            <FieldSettings
-                                                field={field}
-                                                setFieldsItem={setFieldsItem}
-                                                toggleFieldValidationRule={
-                                                    toggleFieldValidationRule
-                                                }
-                                            />
-                                        </>
-                                    }
-                                ></Accordion>
-                            </div>
-                        )
-                    })}
+                <PanelBody title={__('Address Settings', 'smartpay')}>
+                    <ToggleControl
+                        label={__('Show Address Line 1', 'smartpay')}
+                        checked={showLine1}
+                        onChange={(val) => setAttributes({ showLine1: val })}
+                    />
+                    <ToggleControl
+                        label={__('Show Address Line 2', 'smartpay')}
+                        checked={showLine2}
+                        onChange={(val) => setAttributes({ showLine2: val })}
+                    />
+                    <ToggleControl
+                        label={__('Show City', 'smartpay')}
+                        checked={showCity}
+                        onChange={(val) => setAttributes({ showCity: val })}
+                    />
+                    <ToggleControl
+                        label={__('Show State', 'smartpay')}
+                        checked={showState}
+                        onChange={(val) => setAttributes({ showState: val })}
+                    />
+                    <ToggleControl
+                        label={__('Show Zip Code', 'smartpay')}
+                        checked={showZip}
+                        onChange={(val) => setAttributes({ showZip: val })}
+                    />
+                    <ToggleControl
+                        label={__('Show Country', 'smartpay')}
+                        checked={showCountry}
+                        onChange={(val) => setAttributes({ showCountry: val })}
+                    />
                 </PanelBody>
             </InspectorControls>
+            <div {...innerBlocksProps} />
         </>
-    )
-}
-
-const Accordion = ({ header, body, opened = false }) => {
-    const [isOpen, toggleOpen] = useState(opened)
-    return (
-        <div className="mt-3 accordion">
-            <Flex>
-                <FlexItem>{header}</FlexItem>
-                <FlexItem>
-                    <Button
-                        icon={isOpen ? 'arrow-up-alt2' : 'arrow-down-alt2'}
-                        label="More"
-                        isSmall
-                        onClick={() => {
-                            toggleOpen(!isOpen)
-                        }}
-                    />
-                </FlexItem>
-            </Flex>
-
-            {isOpen && <div className="bg-light p-3">{body}</div>}
-        </div>
-    )
-}
-
-const FieldSettings = ({ field, setFieldsItem, toggleFieldValidationRule }) => {
-    return (
-        <div>
-            <InputControl
-                type="text"
-                label={__('Label', 'smartpay')}
-                value={field.settings.label}
-                onChange={(value) => {
-                    setFieldsItem({
-                        ...field,
-                        settings: { ...field.settings, label: value },
-                    })
-                }}
-            />
-            <InputControl
-                type="text"
-                label={__('Placeholder', 'smartpay')}
-                value={field.attributes.placeholder}
-                className="mt-3"
-                onChange={(value) => {
-                    setFieldsItem({
-                        ...field,
-                        attributes: { ...field.attributes, placeholder: value },
-                    })
-                }}
-            />
-
-            <ToggleControl
-                label={__('Is required', 'smartpay')}
-                checked={field.attributes.isRequired}
-                value={true}
-                className="mt-3"
-                onChange={(value) => {
-                    toggleFieldValidationRule(field, value)
-                }}
-            />
-        </div>
     )
 }

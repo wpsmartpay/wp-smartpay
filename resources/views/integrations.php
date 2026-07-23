@@ -24,26 +24,26 @@
     <div class="sp-layout smartpay-integrations">
 
         <?php
-        $all_integ  = smartpay_integrations();
-        $categories = [];
-        foreach ($all_integ as $integ) {
-            foreach ($integ['categories'] ?? [] as $c) {
-                if (!in_array($c, $categories, true)) {
-                    $categories[] = $c;
+        $smartpay_all_integ  = smartpay_integrations();
+        $smartpay_categories = [];
+        foreach ($smartpay_all_integ as $smartpay_integ) {
+            foreach ($smartpay_integ['categories'] ?? [] as $smartpay_c) {
+                if (!in_array($smartpay_c, $smartpay_categories, true)) {
+                    $smartpay_categories[] = $smartpay_c;
                 }
             }
         }
         ?>
 
-        <?php if (!empty($categories)) : ?>
+        <?php if (!empty($smartpay_categories)) : ?>
         <div class="sp-integ-toolbar">
             <div class="sp-filter-tabs">
                 <button type="button" class="sp-filter-tab sp-filter-tab--active" data-filter-category="all">
                     <?php esc_html_e( 'All', 'smartpay' ); ?>
                 </button>
-                <?php foreach ($categories as $cat) : ?>
-                <button type="button" class="sp-filter-tab" data-filter-category="<?php echo esc_attr($cat); ?>">
-                    <?php echo esc_html($cat); ?>
+                <?php foreach ($smartpay_categories as $smartpay_cat) : ?>
+                <button type="button" class="sp-filter-tab" data-filter-category="<?php echo esc_attr($smartpay_cat); ?>">
+                    <?php echo esc_html($smartpay_cat); ?>
                 </button>
                 <?php endforeach; ?>
             </div>
@@ -62,50 +62,50 @@
         <?php endif; ?>
 
         <div class="sp-integ-grid" id="integration-grid">
-            <?php foreach ($all_integ as $namespace => $integration) :
-                $cats      = $integration['categories'] ?? [];
-                $type      = $integration['type'] ?? 'pro';
-                $cat_attr  = implode(',', $cats);
-                $activated = in_array($namespace, smartpay_get_activated_integrations());
+            <?php foreach ($smartpay_all_integ as $smartpay_namespace => $smartpay_integration) :
+                $smartpay_cats      = $smartpay_integration['categories'] ?? [];
+                $smartpay_type      = $smartpay_integration['type'] ?? 'pro';
+                $smartpay_cat_attr  = implode(',', $smartpay_cats);
+                $smartpay_activated = in_array($smartpay_namespace, smartpay_get_activated_integrations());
             ?>
                 <div class="sp-integ-card"
-                    data-categories="<?php echo esc_attr($cat_attr); ?>"
-                    data-tier="<?php echo esc_attr($type); ?>">
+                    data-categories="<?php echo esc_attr($smartpay_cat_attr); ?>"
+                    data-tier="<?php echo esc_attr($smartpay_type); ?>">
 
                     <div class="sp-integ-card__logo">
-                        <img src="<?php echo esc_url($integration['cover']); ?>" alt="">
+                        <img src="<?php echo esc_url($smartpay_integration['cover']); ?>" alt="">
                     </div>
 
                     <div class="sp-integ-card__body">
-                        <p class="sp-integ-card__name"><?php echo esc_html($integration['name']); ?></p>
-                        <p class="sp-integ-card__desc"><?php echo wp_kses_post($integration['excerpt']); ?></p>
+                        <p class="sp-integ-card__name"><?php echo esc_html($smartpay_integration['name']); ?></p>
+                        <p class="sp-integ-card__desc"><?php echo wp_kses_post($smartpay_integration['excerpt']); ?></p>
                     </div>
 
-                    <?php if (!empty($cats)) : ?>
+                    <?php if (!empty($smartpay_cats)) : ?>
                     <div class="sp-integ-card__tags">
-                        <?php foreach ($cats as $cat) : ?>
-                        <span class="sp-badge sp-badge--neutral"><?php echo esc_html($cat); ?></span>
+                        <?php foreach ($smartpay_cats as $smartpay_cat) : ?>
+                        <span class="sp-badge sp-badge--neutral"><?php echo esc_html($smartpay_cat); ?></span>
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
 
                     <div class="sp-integ-card__footer">
-                        <?php if (smartpay_integration_is_installed($integration)) : ?>
+                        <?php if (smartpay_integration_is_installed($smartpay_integration)) : ?>
                             <div class="custom-control custom-switch custom-switch-lg">
                                 <input type="checkbox"
                                     class="custom-control-input"
-                                    id="<?php echo 'integration_' . esc_attr($namespace); ?>"
-                                    data-namespace="<?php echo esc_attr($namespace); ?>"
-                                    <?php echo $activated ? 'checked' : ''; ?>>
+                                    id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"
+                                    data-namespace="<?php echo esc_attr($smartpay_namespace); ?>"
+                                    <?php echo $smartpay_activated ? 'checked' : ''; ?>>
                                 <label class="custom-control-label"
-                                    for="<?php echo 'integration_' . esc_attr($namespace); ?>">
+                                    for="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>">
                                 </label>
                             </div>
                             <span class="sp-integ-card__status">
-                                <?php echo $activated ? esc_html__('Activated', 'smartpay') : esc_html__('Disabled', 'smartpay'); ?>
+                                <?php echo $smartpay_activated ? esc_html__('Activated', 'smartpay') : esc_html__('Disabled', 'smartpay'); ?>
                             </span>
-                            <?php if (!empty($integration['setting_link']) && $activated) : ?>
-                                <a href="<?php echo esc_url(admin_url('admin.php?page=smartpay-setting&' . $integration['setting_link'])); ?>"
+                            <?php if (!empty($smartpay_integration['setting_link']) && $smartpay_activated) : ?>
+                                <a href="<?php echo esc_url(admin_url('admin.php?page=smartpay-setting&' . $smartpay_integration['setting_link'])); ?>"
                                     class="sp-integ-card__settings"
                                     title="<?php esc_attr_e('Settings', 'smartpay'); ?>">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -114,7 +114,7 @@
                                 </a>
                             <?php endif; ?>
                         <?php else : ?>
-                            <?php smartpay_integration_get_not_installed_message($type); ?>
+                            <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
                         <?php endif; ?>
                     </div>
 

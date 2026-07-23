@@ -3,38 +3,20 @@ import { page } from '@wordpress/icons'
 import { edit } from './edit'
 import { save } from './save'
 
+/**
+ * Text Area field (parent container) — holds a Label + Input child.
+ */
 export const TextAreaField = {
     namespace: 'smartpay-form/textarea-input',
     settings: {
         title: __('Text Area Fields', 'smartpay'),
-        description: __('Text Area fields', 'smartpay'),
+        description: __('Text area field — label + input.', 'smartpay'),
         icon: page,
         keywords: ['input', 'text', 'textarea'],
-        attributes: {
-            attributes: {
-                type: Object,
-                default: {
-                    name: '',
-                    value: '',
-                    class: '',
-                    placeholder: '',
-                    rows: 3,
-                    isRequired: false,
-                },
-            },
-            settings: {
-                type: Object,
-                default: {
-                    visible: true,
-                    label: 'Text Area',
-                    helpMessage: '',
-                    labelPosition: 'top',
-                },
-            },
-            validationRules: {
-                type: Array,
-                default: [],
-            },
+        supports: {
+            html: false,
+            reusable: false,
+            customClassName: false,
         },
         edit,
         save,

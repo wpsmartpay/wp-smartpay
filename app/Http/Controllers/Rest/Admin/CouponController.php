@@ -83,7 +83,7 @@ class CouponController extends RestController
             $errors['discount_amount'] = __('Discount amount must be greater than 0.', 'smartpay');
         }
 
-        if ('percent' === $discount_type && $discount_amount >= 100) {
+        if ('percent' === $discount_type && $discount_amount > 100) {
             $errors['discount_amount'] = __('Percentage discount cannot exceed 100%.', 'smartpay');
         }
 
@@ -158,7 +158,7 @@ class CouponController extends RestController
             $errors['discount_amount'] = __('Discount amount must be greater than 0.', 'smartpay');
         }
 
-        if ('percent' === $discount_type && $discount_amount >= 100) {
+        if ('percent' === $discount_type && $discount_amount > 100) {
             $errors['discount_amount'] = __('Percentage discount cannot exceed 100%.', 'smartpay');
         }
 

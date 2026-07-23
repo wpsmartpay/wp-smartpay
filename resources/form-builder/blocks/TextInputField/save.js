@@ -1,19 +1,7 @@
-import { __ } from '@wordpress/i18n'
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 
-export const save = ({ attributes }) => {
-    return (
-        <div className="form-element">
-            <label for={attributes.attributes.name}>
-                {attributes.settings.label}
-            </label>
-            <input
-                className="form-control"
-                type={attributes.attributes.type}
-                id={attributes.attributes.name}
-                name={`smartpay_form[${attributes.attributes.name}]`}
-                placeholder={attributes.attributes.placeholder}
-                required={attributes.attributes.isRequired}
-            />
-        </div>
-    )
+export const save = () => {
+    const blockProps = useBlockProps.save({ className: 'form-element' })
+    const innerBlocksProps = useInnerBlocksProps.save(blockProps)
+    return <div {...innerBlocksProps} />
 }

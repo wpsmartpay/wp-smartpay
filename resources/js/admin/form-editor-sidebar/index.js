@@ -265,19 +265,15 @@ const FormGuide = () => {
 	const { openGeneralSidebar } = useDispatch( 'core/edit-post' );
 	const [ isOpen, setIsOpen ]     = useState( false );
 	const [ btnTick, setBtnTick ]   = useState( 0 );
-	const autoOpened = useRef( false );
 	const btnRef     = useRef( null );
 
 	// Open the existing form settings panels (Pricing, Form Settings, Goal),
 	// which live in the editor's Document settings sidebar.
 	const openSettings = () => openGeneralSidebar?.( 'edit-post/document' );
 
-	// Auto-open once when the editor opens — for both empty and populated forms.
-	useEffect( () => {
-		if ( autoOpened.current ) return;
-		autoOpened.current = true;
-		setIsOpen( true );
-	}, [] );
+	// Note: the guide modal is NOT auto-opened on editor load — it gets in the
+	// way. Users open it on demand via the "Guide" button portaled into the
+	// editor header (below); the slim quick-add toolbar stays available too.
 
 	// Portal a "Guide" button into the editor header settings area.
 	useEffect( () => {
@@ -577,62 +573,8 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			<div className="sp-sidebar-field">
-				<span className="sp-label">{ __( 'Pay Button Label', 'smartpay' ) }</span>
-				<TextControl
-					__nextHasNoMarginBottom
-					className="sp-input"
-					value={ settings.pay_button_label || '' }
-					onChange={ ( val ) => updateSettings( { pay_button_label: val } ) }
-					placeholder={ __( 'Pay Now', 'smartpay' ) }
-				/>
-			</div>
-
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Allow Custom Amount', 'smartpay' ) }
-				checked={ !! settings.allow_custom_amount }
-				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
-			/>
-			{ settings.allow_custom_amount && (
-				<div className="sp-sidebar-field sp-sidebar-field--indent">
-					<span className="sp-label">{ __( 'Custom Amount Label', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.custom_amount_label || '' }
-						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
-						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
-					/>
-				</div>
-			) }
-
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Allow External Link', 'smartpay' ) }
-				checked={ !! settings.allow_external_link }
-				onChange={ ( val ) => updateSettings( { allow_external_link: val } ) }
-			/>
-			{ settings.allow_external_link && (
-				<div className="sp-sidebar-field sp-sidebar-field--indent">
-					<span className="sp-label">{ __( 'External Link URL', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.external_link_url || '' }
-						onChange={ ( val ) => updateSettings( { external_link_url: val } ) }
-						placeholder="https://"
-					/>
-					<span className="sp-label">{ __( 'External Link Label', 'smartpay' ) }</span>
-					<TextControl
-						__nextHasNoMarginBottom
-						className="sp-input"
-						value={ settings.external_link_label || '' }
-						onChange={ ( val ) => updateSettings( { external_link_label: val } ) }
-						placeholder={ __( 'Buy Now', 'smartpay' ) }
-					/>
-				</div>
-			) }
+			{ /* Pay Button Label → Submit Button block · Allow Custom Amount → Pricing
+			     block · Allow External Link → removed. These now live on the blocks. */ }
 
 			<div className="sp-sidebar-field">
 				<SelectControl
@@ -675,9 +617,16 @@ wp.domReady( () => {
 				return;
 			}
 
-			const blocks = defs.map( ( { name, attrs } ) =>
-				wp.blocks.createBlock( name, attrs || {} )
-			);
+			// Recursively build nested block trees so composite fields
+			// (parent → label + input/options children) carry their attrs.
+			const buildBlock = ( { name, attrs, innerBlocks } ) =>
+				wp.blocks.createBlock(
+					name,
+					attrs || {},
+					Array.isArray( innerBlocks ) ? innerBlocks.map( buildBlock ) : []
+				);
+
+			const blocks = defs.map( buildBlock );
 
 			wp.data.dispatch( 'core/block-editor' ).resetBlocks( blocks );
 			delete window.spTemplateBlocks;

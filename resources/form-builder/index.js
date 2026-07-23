@@ -40,5 +40,10 @@ domReady(function () {
         )
     }
 
-    render(<SmartPayForm />, document.getElementById('smartpay-form'))
+    // This bundle is also loaded inside the Gutenberg form editor (for its
+    // blocks); the legacy SPA container only exists on the Forms (Legacy) page.
+    const smartPayFormRoot = document.getElementById('smartpay-form')
+    if (smartPayFormRoot) {
+        render(<SmartPayForm />, smartPayFormRoot)
+    }
 })

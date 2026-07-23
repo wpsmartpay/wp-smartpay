@@ -2,6 +2,8 @@
 /.wordpress-org
 /.git
 /.github
+/.claude
+/.agent
 /node_modules
 
 /resources/blocks
@@ -10,6 +12,7 @@
 /resources/js
 /scripts
 /temp
+/dist
 /test-results
 
 # Files
@@ -20,6 +23,8 @@
 .eslintignore
 .eslintrc.js
 .prettierrc.js
+.DS_Store
+.wp-env.json
 babel.config.json
 composer.json
 composer.lock
@@ -29,6 +34,7 @@ package-lock.json
 package.json
 webpack.mix.js
 phpcs.xml.dist
+phpcs-bootstrap.php
 CLAUDE.md
 UI_GUIDELINES.md
 *.lock

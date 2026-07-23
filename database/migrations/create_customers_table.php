@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') || exit;
 
-class CreateSmartpayCustomersTable
+class Smartpay_CreateSmartpayCustomersTable
 {
     public static function up()
     {

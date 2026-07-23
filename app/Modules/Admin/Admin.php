@@ -84,6 +84,20 @@ class Admin
             }
         );
 
+        if ( in_array( 'legacy_forms', smartpay_get_activated_integrations(), true ) ) {
+            add_submenu_page(
+                'smartpay',
+                __('WPSmartPay - Forms (Legacy)', 'smartpay'),
+                __('Forms (Legacy)', 'smartpay'),
+                'manage_options',
+                'smartpay-form',
+                function () {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                    echo smartpay_view('form-builder');
+                }
+            );
+        }
+
         do_action('smartpay_admin_add_menu_items');
 
         add_submenu_page(
@@ -353,6 +367,18 @@ class Admin
                     'options' => $this->getOptionsScriptsData(),
 					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
 					'version' => SMARTPAY_VERSION,
+                )
+            );
+
+            // Canonical Pro state for locked-feature screens. Detected server-side so it
+            // works even when Pro is installed but unlicensed (Pro's own JS does not load then).
+            wp_localize_script(
+                'smartpay-admin',
+                'smartpayProData',
+                array(
+                    'isInstalled' => defined( 'SMARTPAY_PRO_VERSION' ),
+                    'isActive'    => smartpay_is_pro_active(),
+                    'licenseUrl'  => admin_url( 'admin.php?page=smartpay-setting&tab=licenses' ),
                 )
             );
 

@@ -1,17 +1,11 @@
-export const save = ({ attributes }) => {
-    return (
-        <div className="form-element">
-            <label for={attributes.attributes.name}>
-                {attributes.settings.label}
-            </label>
-            <input
-                type="email"
-                className="form-control"
-                id={attributes.attributes.name}
-                name={`smartpay_form[${attributes.attributes.name}]`}
-                placeholder={attributes.attributes.placeholder}
-                required={attributes.attributes.isRequired}
-            />
-        </div>
-    )
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
+
+/**
+ * Wraps the Label + Input children in the `.form-element` div the frontend
+ * form CSS expects. The children render the real label + input markup.
+ */
+export const save = () => {
+    const blockProps = useBlockProps.save({ className: 'form-element' })
+    const innerBlocksProps = useInnerBlocksProps.save(blockProps)
+    return <div {...innerBlocksProps} />
 }

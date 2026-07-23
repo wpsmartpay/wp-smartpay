@@ -1,6 +1,10 @@
-<?php if ('embedded' == $behavior) : ?>
+<?php
 defined('ABSPATH') || exit;
 
+$smartpay_behavior = $smartpay_view_data['behavior'] ?? '';
+$smartpay_label    = $smartpay_view_data['label'] ?? '';
+
+if ('embedded' == $smartpay_behavior) : ?>
 <?php include __DIR__ . '/shared/product_details.php'; ?>
 
 <?php else : ?>
@@ -27,7 +31,7 @@ defined('ABSPATH') || exit;
             </div>
         </div>
         <button type="button" class="btn btn-success open-product-modal m-1">
-            <?php echo esc_html($label ?: __('Buy now', 'smartpay')); ?>
+            <?php echo esc_html($smartpay_label ?: __('Buy now', 'smartpay')); ?>
         </button>
     </div>
 </div>

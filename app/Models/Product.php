@@ -48,7 +48,7 @@ class Product extends Model
 
     public function getFilesAttribute($files)
     {
-        return \json_decode($files, true);
+        return \json_decode((string) $files, true);
     }
 
     public function setFilesAttribute($files)
@@ -58,7 +58,7 @@ class Product extends Model
 
     public function getCoversAttribute($covers)
     {
-        return \json_decode($covers, true);
+        return \json_decode((string) $covers, true);
     }
 
     public function setCoversAttribute($covers)
@@ -147,7 +147,7 @@ class Product extends Model
 
     public function getExtraAttribute($settings)
     {
-        return \json_decode($settings, true);
+        return \json_decode((string) $settings, true);
     }
 
     public function setExtraAttribute($settings)
@@ -157,7 +157,7 @@ class Product extends Model
 
     public function getSettingsAttribute($settings)
     {
-        return \json_decode($settings, true);
+        return \json_decode((string) $settings, true);
     }
 
     public function setSettingsAttribute($settings)

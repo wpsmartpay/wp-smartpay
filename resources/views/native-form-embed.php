@@ -33,37 +33,20 @@ $default_amount    = reset( $amounts );
 // block's position in the body), so the template skips its own amount section to
 // avoid duplicate cards. The block emits the same markup + field names.
 $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
+
+// Submit Button block — the Pay Button child owns the button's appearance. All
+// children render nothing inline (save() returns null); we read the pay child's
+// attributes here and render the real button after the gateway selector below,
+// so the pay action always sits last. Null → fall back to the legacy button.
+$submit_btn = smartpay_get_submit_child_attrs( (int) $post_id, 'smartpay-form/submit-pay' );
+
+// Reset the per-render flag for the #payment-response error container. Pro's
+// Frontend module renders the canonical container inside the form (and sets
+// this flag); the legacy fallback below only renders when no one else did —
+// otherwise the page ends up with two elements sharing the same id.
+$GLOBALS['smartpay_payment_response_rendered'] = false;
+
 ?>
-<?php if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) : ?>
-	<?php
-	$progress    = smartpay_calculate_goal_progress( (int) $post_id );
-	$show_public = $goal['showToPublic'] ?? true;
-	if ( $show_public ) :
-		$current      = $progress['current'];
-		$target       = $progress['target'];
-		$percentage   = $progress['percentage'];
-		$goal_reached = $progress['goal_reached'];
-		?>
-	<div class="smartpay-goal-progress" style="margin-bottom: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; text-align: left;">
-		<?php if ( $goal_reached ) : ?>
-			<p style="margin: 0 0 12px; font-weight: 600; color: #28a745;">
-				<?php echo esc_html( $goal['goalMetMessage'] ?? __( 'Goal reached!', 'smartpay' ) ); ?>
-			</p>
-		<?php else : ?>
-			<?php $type_label = ( $goal['type'] ?? 'quantity' ) === 'quantity' ? _n( 'sold', 'sold', floor( $current ), 'smartpay' ) : __( 'raised', 'smartpay' ); ?>
-			<p style="margin: 0 0 8px; font-size: 14px; color: #555;">
-				<strong><?php echo esc_html( number_format( $current ) ); ?></strong> / <?php echo esc_html( number_format( $target ) ); ?> <?php echo esc_html( $type_label ); ?>
-			</p>
-		<?php endif; ?>
-		<div style="background: #e9ecef; border-radius: 4px; height: 12px; overflow: hidden;">
-			<div style="width: <?php echo esc_attr( $percentage ); ?>%; background: #28a745; height: 100%; border-radius: 4px; transition: width 0.3s ease;"></div>
-		</div>
-		<?php if ( ! $goal_reached ) : ?>
-			<p style="margin: 8px 0 0; font-size: 12px; color: #888; text-align: right;"><?php echo esc_html( $percentage ); ?>%</p>
-		<?php endif; ?>
-	</div>
-	<?php endif; ?>
-<?php endif; ?>
 
 <div class="smartpay">
 	<div class="smartpay-form-shortcode smartpay-payment">
@@ -79,9 +62,13 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>
 
 					<?php
-					// Render Gutenberg blocks (form fields).
+					// Render Gutenberg blocks (form fields). Set the form-render
+					// context so dynamic blocks (Goal Progress) can resolve their
+					// owning form, since the global post here is the host page.
+					smartpay_current_form_render_id( (int) $post_id );
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					echo do_blocks( $body );
+					smartpay_current_form_render_id( 0 );
 					?>
 
 					<div id="mobile-field"></div>
@@ -179,20 +166,64 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 							<?php esc_html_e( 'Select a payment method', 'smartpay' ); ?>
 						</label>
 						<div class="mb-4">
-							<div class="gateways m-0 justify-content-left d-flex">
+							<div class="smartpay-gateways-accordion">
 								<?php foreach ( $gateways as $gw_id => $gateway ) : ?>
-								<div class="gateway custom-control custom-radio <?php echo $gw_id === $chosen_gw ? 'selected' : ''; ?>">
+								<div class="smartpay-gateway-card<?php echo $gw_id === $chosen_gw ? ' selected' : ''; ?>"
+									data-gateway="<?php echo esc_attr( $gw_id ); ?>">
 									<input type="radio"
 										name="smartpay_gateway"
 										id="<?php echo 'smartpay_gateway_' . esc_attr( $gw_id ); ?>"
 										value="<?php echo esc_attr( $gw_id ); ?>"
 										<?php checked( $gw_id, $chosen_gw ); ?>
-										class="radio" />
+										class="radio smartpay-gateway-card__radio" />
 									<label for="<?php echo 'smartpay_gateway_' . esc_attr( $gw_id ); ?>"
-										class="gateway--label custom-control-label">
-										<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>"
-											alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+										class="smartpay-gateway-card__head">
+										<span class="smartpay-gateway-card__radiomark" aria-hidden="true"></span>
+										<span class="smartpay-gateway-card__icon">
+											<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>"
+												alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+										</span>
+										<span class="smartpay-gateway-card__label">
+											<?php echo esc_html( $gateway['checkout_label'] ); ?>
+										</span>
+										<span class="smartpay-gateway-card__chevron" aria-hidden="true">
+											<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+										</span>
 									</label>
+									<div class="smartpay-gateway-card__body">
+										<div class="smartpay-gateway-card__body-inner">
+										<?php
+										// Let gateways / add-ons inject inline checkout content
+										// (instructions, fields, notices) under the selected gateway.
+										// When nothing is injected, the default hint below explains
+										// the redirect-style flow.
+										do_action( 'smartpay_native_gateway_checkout_fields', $gw_id, $gateway, $post_id );
+										?>
+										<div class="smartpay-gateway-card__hint-box">
+											<div class="smartpay-gateway-card__hint-title-row">
+												<span class="smartpay-gateway-card__hint-logo">
+													<img src="<?php echo esc_url( $gateway['gateway_icon'] ); ?>" alt="<?php echo esc_attr( $gateway['checkout_label'] ); ?>" />
+												</span>
+												<span class="smartpay-gateway-card__hint-title-text">
+													<?php printf( esc_html__( '%s selected.', 'smartpay' ), esc_html( $gateway['checkout_label'] ) ); ?>
+												</span>
+											</div>
+											<div class="smartpay-gateway-card__hint-divider"></div>
+											<div class="smartpay-gateway-card__hint-redirect-row">
+												<span class="smartpay-gateway-card__hint-redirect-icon" aria-hidden="true">
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+														<rect x="2" y="4" width="16" height="15" rx="2" stroke="#94a3b8"></rect>
+														<line x1="2" y1="9" x2="18" y2="9" stroke="#cbd5e1"></line>
+														<path d="M14 14h6m0 0v-6m0 6l-6-6" stroke="#64748b" stroke-width="2"></path>
+													</svg>
+												</span>
+												<span class="smartpay-gateway-card__hint-redirect-text">
+													<?php esc_html_e( 'After submission, you will be redirected to securely complete next steps.', 'smartpay' ); ?>
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
 								</div>
 								<?php endforeach; ?>
 							</div>
@@ -206,11 +237,75 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 
 					<?php do_action( 'before_smartpay_payment_form_button', (object) array( 'id' => $post_id ) ); ?>
 
-					<button type="button"
-						class="btn btn-success btn-block btn-lg smartpay-form-pay-now"
-						<?php echo $has_payment_error ? 'disabled' : ''; ?>>
-						<?php echo esc_html( $pay_button_label ); ?>
-					</button>
+					<?php if ( is_array( $submit_btn ) ) : ?>
+						<?php
+						// Render the Pay Button block's configured button. Numerics are
+						// cast; colours pass through sanitize + esc_attr; the icon SVG is
+						// from a fixed server-side whitelist (no user input).
+						$btn_full   = ! empty( $submit_btn['fullWidth'] );
+						$btn_align  = in_array( $submit_btn['align'] ?? 'left', array( 'left', 'center', 'right' ), true ) ? $submit_btn['align'] : 'left';
+						$btn_width  = absint( $submit_btn['width'] ?? 0 );
+						$btn_bg     = sanitize_text_field( $submit_btn['bgColor'] ?? '#28a745' );
+						$btn_text   = sanitize_text_field( $submit_btn['textColor'] ?? '#ffffff' );
+						$btn_border = sanitize_text_field( $submit_btn['borderColor'] ?? '' );
+						$btn_bw     = absint( $submit_btn['borderWidth'] ?? 0 );
+						$btn_radius = absint( $submit_btn['borderRadius'] ?? 6 );
+						$btn_fs     = absint( $submit_btn['fontSize'] ?? 16 );
+						$btn_fw     = preg_replace( '/[^0-9a-z]/', '', (string) ( $submit_btn['fontWeight'] ?? '600' ) );
+						$btn_py     = absint( $submit_btn['paddingY'] ?? 14 );
+						$btn_px     = absint( $submit_btn['paddingX'] ?? 24 );
+
+						// Icon: a custom media image/SVG, or a preset whitelist SVG.
+						$btn_icon = '';
+						if ( 'custom' === ( $submit_btn['iconType'] ?? 'preset' ) ) {
+							$custom_icon_url = esc_url_raw( $submit_btn['customIconUrl'] ?? '' );
+							if ( $custom_icon_url ) {
+								$btn_icon = '<img src="' . esc_url( $custom_icon_url ) . '" alt="" class="smartpay-submit-icon-img" style="height:1.25em;width:auto;display:inline-block;" />';
+							}
+						} else {
+							$btn_icon = smartpay_submit_button_icon_svg( sanitize_key( $submit_btn['icon'] ?? '' ) );
+						}
+
+						$btn_ipos   = 'right' === ( $submit_btn['iconPosition'] ?? 'left' ) ? 'right' : 'left';
+						$btn_label  = $submit_btn['label'] ?? $pay_button_label;
+
+						$btn_style  = 'display:inline-flex;align-items:center;justify-content:center;';
+						$btn_style .= 'gap:' . ( $btn_icon ? '8px' : '0' ) . ';';
+						$btn_style .= 'background:' . $btn_bg . ';color:' . $btn_text . ';';
+						$btn_style .= 'border-radius:' . $btn_radius . 'px;';
+						$btn_style .= 'font-size:' . $btn_fs . 'px;font-weight:' . $btn_fw . ';';
+						$btn_style .= 'padding:' . $btn_py . 'px ' . $btn_px . 'px;line-height:1.2;cursor:pointer;';
+						$btn_style .= $btn_bw > 0 ? 'border:' . $btn_bw . 'px solid ' . $btn_border . ';' : 'border:none;';
+						if ( $btn_full ) {
+							$btn_style .= 'width:100%;';
+						} elseif ( $btn_width ) {
+							$btn_style .= 'width:' . $btn_width . '%;';
+						}
+						$wrap_style = 'text-align:' . ( $btn_full ? 'left' : $btn_align ) . ';';
+						?>
+						<div class="smartpay-submit-button-wrap" style="<?php echo esc_attr( $wrap_style ); ?>">
+							<button type="button"
+								class="smartpay-form-pay-now"
+								style="<?php echo esc_attr( $btn_style ); ?>"
+								<?php echo $has_payment_error ? 'disabled' : ''; ?>>
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preset SVG is a fixed server-side whitelist; custom icon URL is esc_url()d at build above.
+								echo 'left' === $btn_ipos ? $btn_icon : '';
+								?>
+								<span><?php echo esc_html( $btn_label ); ?></span>
+								<?php
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Preset SVG is a fixed server-side whitelist; custom icon URL is esc_url()d at build above.
+								echo 'right' === $btn_ipos ? $btn_icon : '';
+								?>
+							</button>
+						</div>
+					<?php else : ?>
+						<button type="button"
+							class="btn btn-success btn-block btn-lg smartpay-form-pay-now"
+							<?php echo $has_payment_error ? 'disabled' : ''; ?>>
+							<?php echo esc_html( $pay_button_label ); ?>
+						</button>
+					<?php endif; ?>
 
 					<?php do_action( 'after_smartpay_payment_form_button', (object) array( 'id' => $post_id ) ); ?>
 
@@ -218,6 +313,8 @@ $has_pricing_block = has_block( 'smartpay-form/pricing', $post_id );
 				<?php do_action( 'after_smartpay_payment_form', (object) array( 'id' => $post_id ) ); ?>
 			</div>
 		</div>
-		<div id="payment-response" class="p-4 bg-light" style="display: none;"></div>
+		<?php if ( empty( $GLOBALS['smartpay_payment_response_rendered'] ) ) : ?>
+			<div id="payment-response" class="p-4 bg-light" style="display: none;"></div>
+		<?php endif; ?>
 	</div>
 </div>

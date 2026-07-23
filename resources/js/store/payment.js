@@ -107,7 +107,7 @@ registerStore('smartpay/payments', {
     controls: {
         GET_PAYMENTS(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
@@ -115,7 +115,7 @@ registerStore('smartpay/payments', {
         },
         GET_PAYMENT(action) {
             return apiFetch({
-                path: action.path,
+                url: action.path,
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },

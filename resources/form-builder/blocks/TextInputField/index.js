@@ -3,38 +3,20 @@ import { page } from '@wordpress/icons'
 import { edit } from './edit'
 import { save } from './save'
 
+/**
+ * Text Input field (parent container) — holds a Label + Input child.
+ */
 export const TextInputField = {
     namespace: 'smartpay-form/text-input',
     settings: {
         title: __('Text Input Fields', 'smartpay'),
-        description: __('Text Input fields', 'smartpay'),
+        description: __('Text input field — label + input.', 'smartpay'),
         icon: page,
         keywords: ['input', 'text', 'number', 'email'],
-        attributes: {
-            attributes: {
-                type: Object,
-                default: {
-                    type: 'text',
-                    name: '',
-                    value: '',
-                    class: '',
-                    placeholder: '',
-                    isRequired: false,
-                },
-            },
-            settings: {
-                type: Object,
-                default: {
-                    visible: true,
-                    label: 'Text Input',
-                    helpMessage: '',
-                    labelPosition: 'top',
-                },
-            },
-            validationRules: {
-                type: Array,
-                default: [],
-            },
+        supports: {
+            html: false,
+            reusable: false,
+            customClassName: false,
         },
         edit,
         save,

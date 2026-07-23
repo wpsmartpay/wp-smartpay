@@ -1,65 +1,23 @@
-import { TextControl, PanelBody } from '@wordpress/components'
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 
-import { InspectorControls } from '@wordpress/block-editor'
-import { __ } from '@wordpress/i18n'
+const TEMPLATE = [
+    ['smartpay-form/email-label'],
+    ['smartpay-form/email-input'],
+]
 
-export const edit = ({ attributes, setAttributes }) => {
-    const setSettingsData = (data) => {
-        setAttributes({
-            settings: {
-                ...attributes.settings,
-                ...data,
-            },
-        })
-    }
+const ALLOWED = ['smartpay-form/email-label', 'smartpay-form/email-input']
 
-    const setAttributesData = (data) => {
-        setAttributes({
-            attributes: {
-                ...attributes.attributes,
-                ...data,
-            },
-        })
-    }
-
-    return (
-        <>
-            <div className="form-element">
-                <TextControl
-                    type="text"
-                    label={attributes.settings.label}
-                    placeholder={attributes.attributes.placeholder}
-                />
-            </div>
-
-            <InspectorControls>
-                <PanelBody
-                    title={__('Settings', 'smartpay')}
-                    initialOpen={true}
-                >
-                    <TextControl
-                        type="text"
-                        label={__('Label', 'smartpay')}
-                        value={attributes.settings.label}
-                        onChange={(value) => {
-                            setSettingsData({
-                                label: value,
-                            })
-                        }}
-                    />
-                    <TextControl
-                        type="text"
-                        label={__('Placeholder', 'smartpay')}
-                        value={attributes.attributes.placeholder}
-                        className="mt-3"
-                        onChange={(value) => {
-                            setAttributesData({
-                                placeholder: value,
-                            })
-                        }}
-                    />
-                </PanelBody>
-            </InspectorControls>
-        </>
-    )
+/**
+ * Container edit — hosts the Label + Input children. Structure is locked so the
+ * field always has exactly one label and one input; both stay individually
+ * editable + stylable.
+ */
+export const edit = () => {
+    const blockProps = useBlockProps({ className: 'form-element' })
+    const innerBlocksProps = useInnerBlocksProps(blockProps, {
+        template: TEMPLATE,
+        allowedBlocks: ALLOWED,
+        templateLock: 'all',
+    })
+    return <div {...innerBlocksProps} />
 }

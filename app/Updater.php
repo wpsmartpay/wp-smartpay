@@ -27,9 +27,9 @@ class Updater
      */
     public function _update_database_if_available()
     {
-        \AddSettingsColumnOnProductTable::up();
-		\AddUuidColumnOnPaymentTable::up();
-		\CreateSmartpayPaymentLogsTable::up();
-		\AddUserIdToPaymentLogsTable::up();
+        \Smartpay_AddSettingsColumnOnProductTable::up();
+		\Smartpay_AddUuidColumnOnPaymentTable::up();
+		\Smartpay_CreateSmartpayPaymentLogsTable::up();
+		\Smartpay_AddUserIdToPaymentLogsTable::up();
     }
 }

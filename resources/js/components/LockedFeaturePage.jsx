@@ -95,9 +95,11 @@ const TablePlaceholder = () => (
 )
 
 const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
-    const proData = window.smartpayProData
-    const isInstalled = proData?.isInstalled ?? false
+    const proData = window.smartpayProData || {}
+    const isInstalled = proData.isInstalled ?? false
+    // Prefer the server-built URL (avoids the site domain being added twice).
     const licenseUrl =
+        proData.licenseUrl ||
         (window.smartpay?.adminUrl ?? '') + '?page=smartpay-setting&tab=licenses'
     const upgradeUrl = 'https://wpsmartpay.com/pricing'
 

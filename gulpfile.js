@@ -35,7 +35,12 @@ const copy = () => {
         '!*.lock',
         '!*.log',
         '!*.gitignore',
-		'composer.json',
+        '!.DS_Store',
+        '!.prettierrc',
+        '!.wp-env.json',
+        '!phpcs.xml.dist',
+        '!.claude/**',
+        'composer.json',
     ]).pipe(dest('temp/smartpay'))
 }
 

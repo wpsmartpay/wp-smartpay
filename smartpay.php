@@ -1,20 +1,21 @@
 <?php
 /**
- * Plugin Name: WPSmartPay
+ * Plugin Name: SmartPay for WordPress - WPSmartPay
  * Description: Sell digital downloads and accept payments including donations easily with Stripe, PayPal, Paddle etc. - simple, fast, and secure.
  * Plugin URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Tags: download manager, ecommerce, digital product, payment gateways, donations,
  *
- * Version: 3.0.0
+ * Version: 3.0.4
  * Requires PHP: 8.1
  * Requires at least: 6.0
- * Tested up to: 6.9
+ * Tested up to: 7.0
  *
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * Text Domain: smartpay
  * Domain Path: /languages
  * License: GPLv3+
+ * License URI: https://www.gnu.org/licenses/gpl-3.0-or-later.html
  *
  * @package WPSmartPay
  * @category Core
@@ -32,7 +33,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '3.0.0');
+define('SMARTPAY_VERSION', '3.0.4');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));
 define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');

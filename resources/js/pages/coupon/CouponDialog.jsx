@@ -100,10 +100,10 @@ export const CouponDialog = ({ couponId, open, onOpenChange }) => {
 
             let response
             if (isEditMode) {
-                response = await Update(couponId, JSON.stringify(couponPayload))
+                response = await Update(couponId, couponPayload)
                 dispatch('smartpay/coupons').updateCoupon(response.coupon)
             } else {
-                response = await Save(JSON.stringify(couponPayload))
+                response = await Save(couponPayload)
                 dispatch('smartpay/coupons').setCoupon(response.coupon)
             }
 
@@ -122,19 +122,32 @@ export const CouponDialog = ({ couponId, open, onOpenChange }) => {
                 },
             })
             onOpenChange(false)
+            setCoupon(initialState)
+            setSelectedDate(null)
         } catch (error) {
+            // The REST controller returns { error, errors: { field: msg } } on a
+            // 400; apiFetch rejects with that object (no `.message`). Surface the
+            // real field errors inline and in the toast, and keep the form values
+            // so the user can correct them.
+            const fieldErrors = error?.errors || {}
+            if (Object.keys(fieldErrors).length) {
+                setErrors(fieldErrors)
+            }
+            const message =
+                Object.values(fieldErrors).join(' ') ||
+                error?.error ||
+                error?.message ||
+                __('Failed to save coupon', 'smartpay')
             Swal.fire({
                 toast: true,
                 icon: 'error',
-                title: error.message || __('Failed to save coupon', 'smartpay'),
+                title: message,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 2000,
+                timer: 3000,
             })
         } finally {
             setIsSaving(false)
-			setCoupon(initialState)
-			setSelectedDate(null)
         }
     }
 

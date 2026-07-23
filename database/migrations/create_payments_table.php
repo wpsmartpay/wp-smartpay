@@ -3,7 +3,7 @@ defined('ABSPATH') || exit;
 
 use SmartPay\Models\Payment;
 
-class CreateSmartpayPaymentsTable
+class Smartpay_CreateSmartpayPaymentsTable
 {
     public static function up()
     {

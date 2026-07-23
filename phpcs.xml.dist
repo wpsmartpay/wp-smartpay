@@ -14,6 +14,7 @@
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/framework/*</exclude-pattern>
     <exclude-pattern>*/database/*</exclude-pattern>
+    <exclude-pattern>*/temp/*</exclude-pattern>
 
     <!-- WordPress Standards -->
     <rule ref="WordPress">
@@ -40,4 +41,7 @@
     <rule ref="PHPCompatibilityWP"/>
     <config name="testVersion" value="8.1-"/>
     <config name="minimum_wp_version" value="6.0"/>
+
+    <!-- WPCS installed_paths — relative to phpcs.xml.dist location (project root) -->
+    <config name="installed_paths" value="vendor/wp-coding-standards/wpcs,vendor/phpcompatibility/php-compatibility,vendor/phpcompatibility/phpcompatibility-paragonie,vendor/phpcompatibility/phpcompatibility-wp,vendor/phpcsstandards/phpcsextra,vendor/phpcsstandards/phpcsutils"/>
 </ruleset>

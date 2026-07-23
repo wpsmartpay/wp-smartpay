@@ -1,7 +1,7 @@
 <?php
 defined('ABSPATH') || exit;
 
-class AddUuidColumnOnPaymentTable
+class Smartpay_AddUuidColumnOnPaymentTable
 {
 
     public static function up()

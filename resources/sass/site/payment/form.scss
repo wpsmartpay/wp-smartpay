@@ -1,6 +1,116 @@
 .smartpay-form-shortcode {
     position: relative;
 
+    // ── Default field styling for block-built fields ────────────────────────
+    // SCOPED to the field wrappers (.form-element / .smartpay-address) and the
+    // .form-control input class — never the bare wrapper — so it does NOT bleed
+    // into the Pricing block (whose option is itself a <label>) or the gateway
+    // selector. Low specificity → native block Style settings still win.
+    .smartpay_form_builder_wrapper {
+        .form-element {
+            margin-bottom: 18px;
+
+            label {
+                display: block;
+                margin: 0 0 6px;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 1.3;
+                color: #1a202c;
+            }
+        }
+
+        .form-control,
+        .smartpay-address input,
+        .smartpay-address select,
+        .smartpay-address textarea {
+            display: block;
+            width: 100%;
+            min-height: 44px;
+            margin: 0;
+            padding: 0 14px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: #1a202c;
+            background: #fff;
+            border: 1px solid #d7dde5;
+            border-radius: 8px;
+            box-shadow: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+            &::placeholder {
+                color: #9aa5b1;
+            }
+
+            &:focus {
+                outline: 0;
+                border-color: var(--color-green, #28a745);
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.12);
+            }
+        }
+
+        textarea.form-control {
+            min-height: 110px;
+            padding: 10px 14px;
+        }
+
+        // Address: stack its inner fields with consistent spacing.
+        .smartpay-address {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        // Required-field asterisk — driven purely by the input's `required`
+        // attribute via :has(), so no per-block markup is needed. Scoped to each
+        // field's own wrapper (.col for name sub-fields, .form-element line for
+        // address) so only the required field's label is flagged, never siblings.
+        .col:has(:required) label::after,
+        .form-element:not(.row):has(:required) label::after {
+            content: ' *';
+            color: #e02b2b;
+            font-weight: 600;
+        }
+
+        // Radio / checkbox option rows. The blocks output Bootstrap's
+        // `.custom-control` markup, but app.css only ships the Bootstrap grid —
+        // not the custom-control component — so without this each option's input
+        // and label stack and the `.ml-4` utility pushes the label away. Lay each
+        // option out as a single inline row.
+        .custom-control {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 8px;
+            padding: 0;
+
+            .custom-control-input {
+                position: static;
+                width: auto;
+                min-height: 0;
+                margin: 0;
+                flex: 0 0 auto;
+            }
+
+            .custom-control-label {
+                margin: 0;
+                font-weight: 400;
+                line-height: 1.4;
+                cursor: pointer;
+
+                // A Bootstrap-style `.ml-4` utility (margin-left:1.5rem) leaks in
+                // from another stylesheet on the page; the `.custom-control` gap
+                // already spaces the label, so force it off. !important is needed
+                // to beat the leaking utility regardless of load order.
+                &.ml-4 {
+                    margin-left: 0 !important;
+                }
+            }
+        }
+    }
+
     .form {
         .form-element {
             margin-bottom: 16px;
@@ -98,6 +208,189 @@
                 }
             }
         }
+
+        // ── Stacked gateway accordion ───────────────────────────────
+        // Full-width selectable cards, one per gateway, stacked vertically.
+        // The selected card (its hidden radio :checked) expands to reveal its
+        // content. Pure CSS — the radio drives both the highlight and the
+        // expand/collapse, so it works without JavaScript.
+        .smartpay-gateways-accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px !important;
+
+            .smartpay-gateway-card {
+                position: relative;
+                border: 1px solid #e3e8ee;
+                border-radius: 12px;
+                background: #fff;
+                overflow: hidden;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+                &:hover {
+                    border-color: #cbd5e1;
+                }
+
+                // Initial (server-rendered) highlight; the :has() rule below
+                // keeps it in sync as the user switches gateways.
+                &.selected {
+                    border-color: #cbd5e1;
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+                }
+            }
+
+            // Visually hide the radio but keep it focusable & submittable.
+            .smartpay-gateway-card__radio {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                margin: 0;
+                pointer-events: none;
+            }
+
+            .smartpay-gateway-card__head {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 0;
+                padding: 14px 16px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .smartpay-gateway-card__radiomark {
+                display: none;
+            }
+
+            .smartpay-gateway-card__icon {
+                display: inline-flex;
+                align-items: center;
+                flex-shrink: 0;
+
+                img {
+                    max-height: 26px;
+                    width: auto;
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__label {
+                flex: 1 1 auto;
+                min-width: 0;
+                font-size: 15px;
+                font-weight: 600;
+                color: #1a202c;
+            }
+
+            .smartpay-gateway-card__chevron {
+                flex-shrink: 0;
+                display: inline-flex;
+                color: #94a3b8;
+                transition: transform 0.2s ease;
+            }
+
+            // Smooth height transition via grid-template-rows 0fr → 1fr.
+            .smartpay-gateway-card__body {
+                display: grid;
+                grid-template-rows: 0fr;
+                transition: grid-template-rows 0.22s ease;
+            }
+
+            .smartpay-gateway-card__body-inner {
+                overflow: hidden;
+                min-height: 0;
+            }
+
+            // Redirect Hint Box to match mockup styles perfectly
+            .smartpay-gateway-card__hint-box {
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 16px;
+                margin: 0 16px 16px 16px;
+                background: #f8fafc;
+            }
+
+            .smartpay-gateway-card__hint-title-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .smartpay-gateway-card__hint-logo {
+                display: inline-flex;
+                align-items: center;
+
+                img {
+                    max-height: 20px;
+                    width: auto;
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__hint-title-text {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1e293b;
+            }
+
+            .smartpay-gateway-card__hint-divider {
+                height: 1px;
+                background: #e2e8f0;
+                margin: 12px 0;
+            }
+
+            .smartpay-gateway-card__hint-redirect-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .smartpay-gateway-card__hint-redirect-icon {
+                display: inline-flex;
+                color: #94a3b8;
+                flex-shrink: 0;
+
+                svg {
+                    display: block;
+                }
+            }
+
+            .smartpay-gateway-card__hint-redirect-text {
+                font-size: 13px;
+                line-height: 1.5;
+                color: #64748b;
+            }
+
+            .smartpay-gateway-card__hint {
+                margin: 0;
+                padding: 0 16px 16px 16px;
+                font-size: 13px;
+                line-height: 1.5;
+                color: #64748b;
+            }
+
+            // ── Expanded / selected state (driven by :checked) ──────
+            .smartpay-gateway-card__radio:checked
+                ~ .smartpay-gateway-card__head {
+                .smartpay-gateway-card__chevron {
+                    transform: rotate(180deg);
+                }
+            }
+
+            .smartpay-gateway-card__radio:checked
+                ~ .smartpay-gateway-card__body {
+                grid-template-rows: 1fr;
+            }
+
+            // Card-level highlight that tracks the checked radio dynamically.
+            .smartpay-gateway-card:has(.smartpay-gateway-card__radio:checked) {
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            }
+        }
     }
 
     .btn {
@@ -119,12 +412,133 @@
         z-index: 1;
     }
 
-    .smartpay-coupon-form {
-        padding-top: 70px !important;
-        .smartpay-coupon-form-close {
-            top: 20px;
-            right: 20px;
+    // ── Coupon section ──────────────────────────────────────────────
+    // Refined, minimal: a quiet "Have a coupon?" link that reveals a single
+    // aligned row (input · Apply · dismiss). No floating boxes; the × is a
+    // clear ghost icon-button at the end of the row. Fully self-contained:
+    // does NOT borrow the theme's .btn / .form-control look (those are often
+    // unstyled), so the coupon always renders correctly on any theme. The
+    // accent flows in from PHP via the --sp-coupon-accent custom property.
+    .smartpay-coupon {
+        --sp-coupon-accent: #28a745;
+        margin-bottom: 18px;
+        text-align: left;
+
+        .smartpayshowcoupon {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--sp-coupon-accent);
+            text-decoration: none;
+            border-bottom: 1px dashed currentColor;
+            padding-bottom: 1px;
             cursor: pointer;
+            transition: opacity 0.15s ease;
+
+            &:hover,
+            &:focus {
+                opacity: 0.75;
+                text-decoration: none;
+                outline: 0;
+            }
+        }
+    }
+
+    .smartpay-coupon-form {
+        margin-top: 12px;
+
+        .smartpay-coupon-row {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+        }
+
+        .smartpay-coupon-input {
+            flex: 1 1 auto;
+            min-width: 0;
+            height: 44px;
+            margin: 0;
+            padding: 0 14px;
+            font-size: 15px;
+            color: #1a202c;
+            background: #fff;
+            border: 1px solid #d7dde5;
+            border-radius: 8px;
+            box-shadow: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+            &::placeholder {
+                color: #9aa5b1;
+            }
+
+            &:focus {
+                outline: 0;
+                border-color: var(--sp-coupon-accent);
+                box-shadow: 0 0 0 3px
+                    color-mix(in srgb, var(--sp-coupon-accent) 18%, transparent);
+            }
+        }
+
+        .smartpay-coupon-apply {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
+            padding: 0 20px;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1;
+            color: #fff;
+            white-space: nowrap;
+            background: var(--sp-coupon-accent);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: filter 0.15s ease, transform 0.05s ease;
+
+            &:hover {
+                filter: brightness(0.93);
+            }
+            &:active {
+                transform: translateY(1px);
+            }
+            &:focus-visible {
+                outline: 0;
+                box-shadow: 0 0 0 3px
+                    color-mix(in srgb, var(--sp-coupon-accent) 30%, transparent);
+            }
+        }
+
+        .smartpay-coupon-form-close {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            font-size: 20px;
+            line-height: 1;
+            color: #6b7280;
+            background: transparent;
+            border: 1px solid #d7dde5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: color 0.15s ease, border-color 0.15s ease,
+                background 0.15s ease;
+
+            &:hover {
+                color: #ef4444;
+                border-color: #ef4444;
+                background: #fef2f2;
+            }
+            &:focus-visible {
+                outline: 0;
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
+            }
         }
     }
 }

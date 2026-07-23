@@ -56,8 +56,15 @@ class Payment extends Model
 
     public static function boot()
     {
-        static::creating(function ($product) {
-            $product->status = $product->status ?: self::PENDING;
+        static::creating(function ($payment) {
+            // Work on the raw attribute, not $payment->status — the status
+            // accessor capitalises the value ('completed' → 'Completed'), and
+            // assigning that back would persist the capitalised form, which then
+            // fails to match the lowercase status constants on read (every case
+            // falls through to the default 'Pending'). Only default when unset.
+            if ( empty( $payment->attributes['status'] ) ) {
+                $payment->attributes['status'] = self::PENDING;
+            }
         });
 
         static::saving(function ($payment) {
@@ -168,7 +175,7 @@ class Payment extends Model
 
     public function getDataAttribute($data)
     {
-        return json_decode($data, true);
+        return json_decode((string) $data, true);
     }
 
     public function setExtraAttribute($extra)
@@ -188,7 +195,7 @@ class Payment extends Model
 
     public function getExtraAttribute($extra)
     {
-        return json_decode($extra, true);
+        return json_decode((string) $extra, true);
     }
 
     //FIXME
