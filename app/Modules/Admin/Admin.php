@@ -102,6 +102,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Invoices', 'smartpay'),
+            __('Invoices', 'smartpay'),
+            'manage_options',
+            'smartpay#/invoices',
+            function () {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Payments', 'smartpay'),
             __('Payments', 'smartpay'),
             'manage_options',
@@ -118,18 +130,6 @@ class Admin
             __('Subscriptions', 'smartpay'),
             'manage_options',
             'smartpay#/subscriptions',
-            function () {
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('WPSmartPay - Invoices', 'smartpay'),
-            __('Invoices', 'smartpay'),
-            'manage_options',
-            'smartpay#/invoices',
             function () {
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');

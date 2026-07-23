@@ -703,6 +703,9 @@ class NativeForm {
 		}
 
 		$meta = array( 'amounts' => $definition['amounts'] );
+		if ( ! empty( $definition['settings'] ) ) {
+			$meta['settings'] = $definition['settings'];
+		}
 
 		wp_add_inline_script(
 			'smartpay-form-editor-sidebar',
@@ -970,16 +973,24 @@ class NativeForm {
 	 * @param string $preset Pricing preset ('grid' | 'list').
 	 * @return array
 	 */
-	private function tpl_assemble( string $name, array $fields, array $prices, string $pay = 'Pay Now', string $preset = 'grid' ): array {
+	private function tpl_goal_progress(): array {
+		return $this->tpl_block( 'smartpay-form/goal-progress', array() );
+	}
+
+	private function tpl_assemble( string $name, array $fields, array $prices, string $pay = 'Pay Now', string $preset = 'grid', array $settings = array() ): array {
 		$blocks   = $fields;
 		$blocks[] = $this->tpl_pricing( $prices, $preset );
 		$blocks[] = $this->tpl_pay( $pay );
 
-		return array(
+		$result = array(
 			'name'    => $name,
 			'blocks'  => $blocks,
 			'amounts' => $this->pricing_amounts( $prices ),
 		);
+		if ( ! empty( $settings ) ) {
+			$result['settings'] = $settings;
+		}
+		return $result;
 	}
 
 	/**
@@ -1098,6 +1109,7 @@ class NativeForm {
 				return $this->tpl_assemble(
 					'Charity Donation',
 					array(
+						$this->tpl_goal_progress(),
 						$this->tpl_name(),
 						$this->tpl_email(),
 						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
@@ -1123,7 +1135,17 @@ class NativeForm {
 							'amount' => 250,
 						),
 					),
-					'Give Now'
+					'Give Now',
+					'grid',
+					array(
+						'goal' => array(
+							'enabled'             => true,
+							'type'                => 'amount',
+							'target'              => 1000,
+							'showToPublic'        => true,
+							'behaviorWhenGoalMet' => 'allow_orders',
+						),
+					)
 				);
 
 			// ── Registration ─────────────────────────────────────────
