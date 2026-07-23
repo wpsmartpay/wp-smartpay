@@ -196,3 +196,14 @@ export const InvoicesLockedPage = () => (
         previewImage="invoice-preview.jpg"
     />
 )
+
+export const WebhooksLockedPage = () => (
+    <LockedFeaturePage
+        title={__('Webhooks', 'smartpay')}
+        subtitle={__('Send real-time event notifications to external services', 'smartpay')}
+        excerpt={__(
+            'Deliver payment, subscription, and invoice events instantly to n8n, Zapier, Make.com, or any HTTP endpoint — no polling needed.',
+            'smartpay'
+        )}
+    />
+)
