@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.0
+Stable Tag: 3.2.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -321,6 +321,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.1 =
+* New - Subscriptions, Reports, and Invoices locked pages now show blurred real screenshots as upgrade preview background
 
 = 3.2.0 =
 * New - Gateway settings tab redesigned as a visual card grid with instant AJAX enable/disable toggle
