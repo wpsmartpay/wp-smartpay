@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,12 +16,12 @@ function smartpay_dashboard_get_totals(): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-    $total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    $total_products  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_products" );  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    $total_forms     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_forms" );     // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    $total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" );
+    $total_products  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_products" );
+    $total_forms     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_forms" );
     // phpcs:enable
 
     return [
@@ -43,11 +44,11 @@ function smartpay_dashboard_get_period_stats( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
     $start  = $date_range['start'];
     $end    = $date_range['end'];
 
-    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $revenue = (float) $wpdb->get_var(
         $wpdb->prepare(
             "SELECT COALESCE( SUM( amount ), 0 )
@@ -153,9 +154,9 @@ function smartpay_dashboard_get_top_products( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT
@@ -176,6 +177,7 @@ function smartpay_dashboard_get_top_products( array $date_range ): array
             $date_range['end']
         )
     );
+    // phpcs:enable
 
     if ( empty( $rows ) ) {
         return [];
@@ -213,9 +215,9 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
 {
     global $wpdb;
 
-    $prefix = $wpdb->prefix;
+    $prefix = esc_sql( $wpdb->prefix );
 
-    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     $rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT
@@ -236,6 +238,7 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
             $date_range['end']
         )
     );
+    // phpcs:enable
 
     if ( empty( $rows ) ) {
         return [];
@@ -264,6 +267,107 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
 }
 
 /**
+ * Get time-series chart data for Revenue and Orders grouped by the given period.
+ *
+ * today → 24 hourly buckets (00–23)
+ * week  → 7 daily buckets (Mon–Sun)
+ * month → one bucket per calendar day up to today
+ *
+ * @param array  $date_range { start: string, end: string } in site local time.
+ * @param string $period     'today' | 'week' | 'month'.
+ * @return array<array{ label: string, revenue: float, orders: int }>
+ */
+function smartpay_dashboard_get_chart_data( array $date_range, string $period ): array {
+    global $wpdb;
+
+    $prefix = esc_sql( $wpdb->prefix );
+    $start  = $date_range['start'];
+    $end    = $date_range['end'];
+    $now_ts = current_time( 'timestamp' );
+
+    // ── Build empty bucket map ────────────────────────────────────────────────
+    $buckets = [];
+
+    if ( 'today' === $period ) {
+        for ( $h = 0; $h <= 23; $h++ ) {
+            $key             = sprintf( '%02d', $h );
+            $buckets[ $key ] = [
+                'label'   => sprintf( '%dh', $h ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+        }
+    } elseif ( 'week' === $period ) {
+        $start_ts = strtotime( $start );
+        for ( $d = 0; $d < 7; $d++ ) {
+            $day_ts          = strtotime( "+{$d} days", $start_ts );
+            $key             = gmdate( 'Y-m-d', $day_ts );
+            $buckets[ $key ] = [
+                'label'   => gmdate( 'D', $day_ts ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+        }
+    } else {
+        // month: one bucket per day from the 1st up through today.
+        $ts     = strtotime( $start );
+        $end_ts = min( strtotime( $end ), $now_ts );
+        while ( $ts <= $end_ts ) {
+            $key             = gmdate( 'Y-m-d', $ts );
+            $buckets[ $key ] = [
+                'label'   => gmdate( 'M d', $ts ),
+                'revenue' => 0.0,
+                'orders'  => 0,
+            ];
+            $ts = strtotime( '+1 day', $ts );
+        }
+    }
+
+    // ── Query completed payments and fill buckets ─────────────────────────────
+    // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+    if ( 'today' === $period ) {
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT DATE_FORMAT( completed_at, '%%H' ) AS bucket,
+                        COALESCE( SUM( amount ), 0 )        AS revenue,
+                        COUNT(*)                             AS orders
+                 FROM {$prefix}smartpay_payments
+                 WHERE status = %s AND completed_at BETWEEN %s AND %s
+                 GROUP BY bucket",
+                Payment::COMPLETED,
+                $start,
+                $end
+            )
+        );
+    } else {
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT DATE( completed_at )                AS bucket,
+                        COALESCE( SUM( amount ), 0 )        AS revenue,
+                        COUNT(*)                             AS orders
+                 FROM {$prefix}smartpay_payments
+                 WHERE status = %s AND completed_at BETWEEN %s AND %s
+                 GROUP BY bucket",
+                Payment::COMPLETED,
+                $start,
+                $end
+            )
+        );
+    }
+    // phpcs:enable
+
+    foreach ( $rows as $row ) {
+        $key = (string) $row->bucket;
+        if ( isset( $buckets[ $key ] ) ) {
+            $buckets[ $key ]['revenue'] = (float) $row->revenue;
+            $buckets[ $key ]['orders']  = (int) $row->orders;
+        }
+    }
+
+    return array_values( $buckets );
+}
+
+/**
  * Get the 10 most recent completed payments, enriched with source name and admin URL.
  *
  * Each row includes:
@@ -275,7 +379,11 @@ function smartpay_dashboard_get_top_forms( array $date_range ): array
  */
 function smartpay_dashboard_get_recent_payments(): array
 {
+    $month_start = gmdate( 'Y-m-01 00:00:00' );
+    $month_end   = current_time( 'mysql' );
+
     $payments = Payment::where( 'status', Payment::COMPLETED )
+        ->whereBetween( 'completed_at', $month_start, $month_end )
         ->orderBy( 'id', 'DESC' )
         ->limit( 10 )
         ->get();
@@ -304,9 +412,21 @@ function smartpay_dashboard_get_recent_payments(): array
 
     $form_titles = [];
     if ( ! empty( $form_ids ) ) {
+        // Legacy forms (smartpay_forms DB table).
         $forms = Form::whereIn( 'id', array_unique( $form_ids ) )->get();
         foreach ( $forms as $f ) {
             $form_titles[ (int) $f->id ] = $f->title;
+        }
+
+        // Native forms (smartpay_form CPT) — fallback for IDs not in legacy table.
+        foreach ( array_unique( $form_ids ) as $form_id ) {
+            if ( isset( $form_titles[ $form_id ] ) ) {
+                continue;
+            }
+            $post = get_post( $form_id );
+            if ( $post && 'smartpay_form' === $post->post_type ) {
+                $form_titles[ $form_id ] = $post->post_title;
+            }
         }
     }
 

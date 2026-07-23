@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Foundation;
+defined('ABSPATH') || exit;
 
 abstract class Integration
 {

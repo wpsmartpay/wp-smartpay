@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Eloquent\Relation\Relation;
 use SmartPay\Framework\Database\QueryBuilder\QueryBuilderHandler;
@@ -319,7 +320,7 @@ class ModelQueryBuilder
     {
         $wpdb = $this->query->db();
 
-        $tableName = $this->model->getTable();
+        $tableName = esc_sql( $this->model->getTable() );
 
 		// Custom Query, caching not applicable.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared

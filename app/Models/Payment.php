@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Models;
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Customer;
 use SmartPay\Models\PaymentLog;

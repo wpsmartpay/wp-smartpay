@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Coupon;
+defined('ABSPATH') || exit;
 
 use SmartPay\Http\Controllers\Rest\Admin\CouponController;
 use SmartPay\Models\Coupon as ModelsCoupon;
@@ -124,14 +125,14 @@ class Coupon
     {
         $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
         if (!wp_verify_nonce($nonce, 'smartpay_form_coupon_action')) {
-            wp_send_json_error(['message' => 'Invalid request']);
+            wp_send_json_error(['message' => __('Invalid request', 'smartpay')]);
         }
 
         $couponCode = isset($_POST['couponCode']) ? sanitize_text_field(wp_unslash($_POST['couponCode'])) : null;
         $formId = isset($_POST['formId']) ? sanitize_text_field(wp_unslash($_POST['formId'])) : null;
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
-            wp_send_json_error(['message' => 'Coupon Not Found']);
+            wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
         // expiry date check
@@ -140,7 +141,7 @@ class Coupon
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {
-                wp_send_json_error(['message' => 'Coupon expires']);
+                wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }
 
@@ -246,7 +247,7 @@ class Coupon
     {
         $nonce = isset($_POST['_wpnonce']) ? sanitize_text_field(wp_unslash($_POST['_wpnonce'])) : '';
         if (!wp_verify_nonce($nonce, 'smartpay_product_coupon_action')) {
-	        wp_send_json_error(['message' => 'Invalid request']);
+	        wp_send_json_error(['message' => __('Invalid request', 'smartpay')]);
         }
 
         $productId = isset($_POST['productID']) ? sanitize_text_field(wp_unslash($_POST['productID'])) : null;
@@ -259,7 +260,7 @@ class Coupon
         $productPrice =  str_replace('$', '', $productPrice);
         $coupon = ModelsCoupon::where('title', $couponCode)->first();
         if (!$coupon) {
-            wp_send_json_error(['message' => 'Coupon Not Found']);
+            wp_send_json_error(['message' => __('Coupon Not Found', 'smartpay')]);
         }
 
         // expiry date check
@@ -268,7 +269,7 @@ class Coupon
             $expiryDate = date_create($coupon->expiry_date);
             $diff = date_diff($currentDate,  $expiryDate);
             if ($diff->format("%R%a") < 0) {
-                wp_send_json_error(['message' => 'Coupon expires']);
+                wp_send_json_error(['message' => __('Coupon has expired', 'smartpay')]);
             }
         }
 

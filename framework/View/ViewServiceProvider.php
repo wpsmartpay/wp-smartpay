@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\View;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Support\ServiceProvider;
 

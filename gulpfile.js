@@ -2,10 +2,15 @@ const { src, dest, series } = require('gulp')
 const fs = require('fs')
 const del = require('del')
 const zip = require('gulp-zip')
+const { execSync } = require('child_process')
 
 const removeTemp = (cb) => {
     del.sync(['temp/'])
+    cb()
+}
 
+const composerProd = (cb) => {
+    execSync('composer install --no-dev --no-ansi --no-cache --no-interaction', { stdio: 'inherit' })
     cb()
 }
 
@@ -61,5 +66,5 @@ const bundle = () => {
         .pipe(dest('./temp'))
 }
 
-exports.release = series(removeTemp, copy, bundle)
+exports.release = series(removeTemp, composerProd, copy, bundle)
 // exports.default = build

@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Gateway\Gateways;
+defined('ABSPATH') || exit;
 
 use SmartPay\Foundation\PaymentGateway;
 use SmartPay\Models\Payment;
@@ -234,7 +235,7 @@ class PaypalStandard extends PaymentGateway
                     'connection'   => 'close',
                     'content-type' => 'application/x-www-form-urlencoded',
                     'post'         => '/cgi-bin/webscr HTTP/1.1',
-                    'user-agent'   => 'SmartPay IPN Verification/' . SMARTPAY_VERSION . '; ' . get_bloginfo('url')
+                    'user-agent'   => 'WPSmartPay IPN Verification/' . SMARTPAY_VERSION . '; ' . get_bloginfo('url')
                 ),
                 'sslverify'   => false,
                 'body'        => $encoded_data_array
@@ -271,7 +272,7 @@ class PaypalStandard extends PaymentGateway
             if (!$payment) {
                 echo sprintf(
 					/* translators: 1: payment id */
-					esc_html__( 'SmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.','smartpay' ), esc_html($payment_id));
+					esc_html__( 'WPSmartPay-Paypal: Webhook requested; Smartpay payment not found for #%s.','smartpay' ), esc_html($payment_id));
                 die('Error.');
             }
 
@@ -307,7 +308,7 @@ class PaypalStandard extends PaymentGateway
         if (!$payment) {
             smartpay_debug_log(sprintf(
 				/* translators: 1: payment id */
-				__( 'SmartPay-PayPal: Payment #%s no found.', 'smartpay' ), $payment_id)
+				__( 'WPSmartPay-PayPal: Payment #%s no found.', 'smartpay' ), $payment_id)
             );
         }
 
@@ -329,7 +330,7 @@ class PaypalStandard extends PaymentGateway
 
                 smartpay_debug_log(sprintf(
 					/* translators: 1: payment id */
-					__( 'SmartPay-PayPal: Payment #%s completed.', 'smartpay' ), $payment->id
+					__( 'WPSmartPay-PayPal: Payment #%s completed.', 'smartpay' ), $payment->id
 	                ) );
             }
         }
@@ -391,7 +392,7 @@ class PaypalStandard extends PaymentGateway
 
             array(
                 'id'    => 'paypal_smartpay_doc_link',
-                'name'  => __('SmartPay Documentation', 'smartpay'),
+                'name'  => __('WPSmartPay Documentation', 'smartpay'),
                 'desc'  => sprintf(__('Please see our', 'smartpay').' <a href="%s" target="_blank">'.__('documentation', 'smartpay').'</a>'. __(' to set up PayPal properly.', 'smartpay'),
                  esc_url('https://docs.wpsmartpay.com/en/how-to-setup-paypal')
                 ),
@@ -420,7 +421,7 @@ class PaypalStandard extends PaymentGateway
         if (empty($paypal_email)) {
             // TODO: Add smartpay payment error notice
 
-            die('SmartPay-PayPal: Set credentials; You must enter your business email for PayPal in gateway settings.');
+            die('WPSmartPay-PayPal: Set credentials; You must enter your business email for PayPal in gateway settings.');
         }
 
         return true;

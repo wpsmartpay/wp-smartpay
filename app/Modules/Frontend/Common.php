@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Frontend;
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Frontend\Utilities\Downloader;
 use SmartPay\Http\Controllers\Rest\CustomerController;

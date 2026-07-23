@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 class AddUuidColumnOnPaymentTable
 {
@@ -15,8 +16,8 @@ class AddUuidColumnOnPaymentTable
          * get the prefix
          * smartpay product table name
          */
-        $table = $wpdb->prefix . 'smartpay_payments';
-        $dbName = $wpdb->dbname;
+        $table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
+        $dbName = esc_sql( $wpdb->dbname );
 
         // Bail early if the table doesn't exist yet (e.g. during activation sandbox scrape).
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared

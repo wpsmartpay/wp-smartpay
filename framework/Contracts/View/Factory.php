@@ -1,6 +1,7 @@
 <?php
 
 namespace Illuminate\Contracts\View;
+defined('ABSPATH') || exit;
 
 interface Factory
 {

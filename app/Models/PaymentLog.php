@@ -1,10 +1,9 @@
 <?php
 
 namespace SmartPay\Models;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Database\Eloquent\Model;
-
-defined( 'ABSPATH' ) || exit;
 
 class PaymentLog extends Model {
 

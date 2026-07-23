@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@import "./sp-layout.css";
 @import "tw-animate-css";
 @source "../js";
 @source "../views";
@@ -299,4 +300,8 @@
 
 .sp-btn--icon {
   @apply p-2 w-9 h-9;
+}
+
+.sp-btn:disabled {
+  @apply opacity-40 cursor-not-allowed pointer-events-none;
 }

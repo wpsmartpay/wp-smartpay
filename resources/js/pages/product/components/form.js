@@ -1,13 +1,126 @@
-import * as Feather from 'react-feather'
+import { Trash2, HardDrive, Package, Image } from 'react-feather'
 import { __ } from '@wordpress/i18n'
-import { Tabs, Tab, Form, Button, Row, Col, Card } from 'react-bootstrap'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { DeleteProduct } from '../../../http/product'
 import { variationDefaultData } from '../../../utils/constant'
-import {OptionComponent} from "./option";
-const { useEffect, useState } = wp.element
+import { OptionComponent } from './option'
 
-export const ProductForm = ({ product, setProductData }) => {
+const { useEffect } = wp.element
+
+const labelStyle = {
+    display: 'block',
+    fontSize: 11,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.07em',
+    color: 'var(--sp-text-muted)',
+    marginBottom: 6,
+}
+
+const inputStyle = {
+    width: '100%',
+    height: 36,
+    padding: '0 12px',
+    border: '1px solid var(--sp-border)',
+    borderRadius: 'var(--sp-radius-sm)',
+    background: 'var(--sp-surface)',
+    fontSize: 13,
+    color: 'var(--sp-text)',
+    boxSizing: 'border-box',
+    outline: 'none',
+}
+
+const DetailCard = ({ title, children }) => (
+    <div className="sp-detail-card" style={{ marginBottom: 16 }}>
+        <div className="sp-detail-card__header">
+            <span className="sp-detail-card__title">{title}</span>
+        </div>
+        <div className="sp-detail-card__body">{children}</div>
+    </div>
+)
+
+/* ── Cover Image — exported for sidebar use ───────────────── */
+
+export const CoverImageCard = ({ product, setProductData }) => {
+    const selectCover = () => {
+        const mediaWindow = wp.media({ multiple: false })
+        mediaWindow.open()
+        mediaWindow.on('select', function () {
+            const selection = mediaWindow.state().get('selection')
+            const covers = selection.toJSON().map((cover) => ({
+                attachment_id: cover.id,
+                icon: cover.sizes?.thumbnail?.url || cover.icon,
+                url: cover.url,
+            }))
+            setProductData({ covers: [covers[0]] })
+        })
+    }
+
+    return (
+        <div className="sp-detail-card" style={{ marginBottom: 16 }}>
+            <div className="sp-detail-card__header">
+                <span className="sp-detail-card__title">{__('Cover Image', 'smartpay')}</span>
+            </div>
+            <div className="sp-detail-card__body">
+                {product.covers.length > 0 ? (
+                    <div style={{ textAlign: 'center' }}>
+                        <img
+                            src={product.covers[0].url}
+                            alt=""
+                            style={{
+                                width: '100%',
+                                maxHeight: 160,
+                                objectFit: 'cover',
+                                borderRadius: 'var(--sp-radius-sm)',
+                                border: '1px solid var(--sp-border)',
+                                display: 'block',
+                                marginBottom: 10,
+                            }}
+                        />
+                        <button
+                            type="button"
+                            className="sp-btn sp-btn--outline"
+                            onClick={selectCover}
+                            style={{ width: '100%', justifyContent: 'center' }}
+                        >
+                            {__('Change Image', 'smartpay')}
+                        </button>
+                    </div>
+                ) : (
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            padding: '24px 12px',
+                            border: '2px dashed var(--sp-border)',
+                            borderRadius: 'var(--sp-radius)',
+                            background: 'var(--sp-surface-muted)',
+                            textAlign: 'center',
+                        }}
+                    >
+                        <Image size={28} color="var(--sp-text-subtle)" style={{ marginBottom: 8 }} />
+                        <p style={{ margin: '0 0 10px', color: 'var(--sp-text-muted)', fontSize: 12.5 }}>
+                            {__('Featured image', 'smartpay')}
+                        </p>
+                        <button
+                            type="button"
+                            className="sp-btn sp-btn--outline"
+                            onClick={selectCover}
+                            style={{ width: '100%', justifyContent: 'center' }}
+                        >
+                            {__('Choose Image', 'smartpay')}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
+}
+
+/* ── Main product form ────────────────────────────────────── */
+
+export const ProductForm = ({ product, setProductData, activeTab }) => {
     useEffect(() => {
         tinymce.execCommand('mceRemoveEditor', true, 'description')
         wp.oldEditor.initialize('description', {
@@ -33,9 +146,7 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const _setVariationData = (variation, event) => {
-        setVariationData(variation, {
-            [event.target.name]: event.target.value,
-        })
+        setVariationData(variation, { [event.target.name]: event.target.value })
     }
 
     const setVariationData = (variation, data) => {
@@ -45,72 +156,28 @@ export const ProductForm = ({ product, setProductData }) => {
         setProductData({ variations })
     }
 
-    const selectCover = () => {
-        const mediaWindow = wp.media({ multiple: true })
-
-        mediaWindow.open()
-        mediaWindow.on('select', function () {
-            const selection = mediaWindow.state().get('selection')
-
-            const covers = selection.toJSON().map((cover) => {
-                return {
-                    attachment_id: cover.id,
-                    icon: cover.sizes?.thumbnail?.url || cover.icon,
-                    url: cover.url,
-                }
-            })
-
-            setProductData({ covers: [covers[0]] })
-            // setProductData({ covers: [...product.covers, ...covers] })
-        })
-    }
-
     const addProductFile = (variation = false) => {
         const mediaWindow = wp.media({ multiple: true })
-
         mediaWindow.open()
         mediaWindow.on('select', function () {
             const selection = mediaWindow.state().get('selection')
-
-            const files = selection.toJSON().map((file) => {
-                return {
-                    id: file.id,
-                    name: file.filename,
-                    icon: file.sizes?.thumbnail?.url || file.icon,
-                    mime: file.mime,
-                    size: file.filesizeHumanReadable,
-                    url: file.url,
-                }
-            })
-
+            const files = selection.toJSON().map((file) => ({
+                id: file.id,
+                name: file.filename,
+                icon: file.sizes?.thumbnail?.url || file.icon,
+                mime: file.mime,
+                size: file.filesizeHumanReadable,
+                url: file.url,
+            }))
             setProductData({ files: [...product.files, ...files] })
-
             if (!!variation) {
-                setVariationData(variation, {
-                    files: [...variation.files, ...files],
-                })
+                setVariationData(variation, { files: [...variation.files, ...files] })
             }
         })
     }
 
-    const removeProductFile = (file, variation = false) => {
-        if (!!variation) {
-            variation.files = [
-                ...variation.files.filter((variationFile) => {
-                    return variationFile.id !== file.id
-                }),
-            ]
-
-            return
-        }
-
-        setProductData({
-            files: [
-                ...product.files.filter((productFile) => {
-                    return productFile.id !== file.id
-                }),
-            ],
-        })
+    const removeProductFile = (file) => {
+        setProductData({ files: product.files.filter((f) => f.id !== file.id) })
     }
 
     const addNewVariation = () => {
@@ -132,9 +199,7 @@ export const ProductForm = ({ product, setProductData }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setProductData({
-                    variations: product.variations.filter((item) => {
-                        return item.key !== variation.key
-                    }),
+                    variations: product.variations.filter((item) => item.key !== variation.key),
                 })
                 if (variation?.id) {
                     DeleteProduct(variation.id).then((response) => {
@@ -145,12 +210,8 @@ export const ProductForm = ({ product, setProductData }) => {
                             position: 'top-end',
                             showConfirmButton: false,
                             timer: 2000,
-                            showClass: {
-                                popup: 'swal2-noanimation',
-                            },
-                            hideClass: {
-                                popup: '',
-                            },
+                            showClass: { popup: 'swal2-noanimation' },
+                            hideClass: { popup: '' },
                         })
                     })
                 }
@@ -159,606 +220,365 @@ export const ProductForm = ({ product, setProductData }) => {
     }
 
     const toggleVariationFile = (variation, file, shouldInclude = true) => {
-        let files = {}
+        let files
         if (shouldInclude) {
             variation.files.push(file)
             files = variation.files
         } else {
             files = variation.files.filter((vFile) => vFile.id != file.id)
         }
-
-        setVariationData(variation, { files: files })
+        setVariationData(variation, { files })
     }
 
     return (
-        <Form className="my-3">
-            <Card className="mb-4">
-                <Card.Body className="bg-white">
-                    <Row>
-                        <Col md={8}>
-                            <Form.Group controlId="title">
-                                <Form.Label className="text-sm font-medium text-gray-700">{__('Product Title', 'smartpay')}</Form.Label>
-                                <Form.Control
+        <>
+            {/* ── Details tab ─────────────────────────────────── */}
+            <div style={{ display: activeTab === 'details' ? 'block' : 'none' }}>
+                <DetailCard title={__('Product Details', 'smartpay')}>
+                    <div style={{ marginBottom: 16 }}>
+                        <label style={labelStyle} htmlFor="title">
+                            {__('Title', 'smartpay')}
+                        </label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            value={product?.title || ''}
+                            placeholder={__('Your awesome product title here', 'smartpay')}
+                            onChange={_setProductData}
+                            style={inputStyle}
+                        />
+                    </div>
+                    <div>
+                        <label style={labelStyle} htmlFor="description">
+                            {__('Description', 'smartpay')}
+                        </label>
+                        <textarea
+                            name="description"
+                            id="description"
+                            value={product.description}
+                            onChange={_setProductData}
+                        />
+                    </div>
+                </DetailCard>
+
+                <DetailCard title={__('Files', 'smartpay')}>
+                    {product?.files?.length > 0 ? (
+                        <>
+                            <div style={{ marginBottom: 14 }}>
+                                {product.files.map((file, index) => (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 10,
+                                            padding: '9px 0',
+                                            borderBottom:
+                                                index < product.files.length - 1
+                                                    ? '1px solid var(--sp-border)'
+                                                    : 'none',
+                                        }}
+                                    >
+                                        <img src={file.icon || ''} alt="" width={24} height={24} style={{ flexShrink: 0 }} />
+                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                            <div
+                                                style={{
+                                                    fontSize: 13,
+                                                    fontWeight: 500,
+                                                    color: 'var(--sp-text)',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                }}
+                                            >
+                                                {file.name}
+                                            </div>
+                                            <div style={{ fontSize: 11.5, color: 'var(--sp-text-muted)' }}>
+                                                {file.size}
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeProductFile(file)}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                color: 'var(--sp-text-subtle)',
+                                                padding: 4,
+                                                display: 'flex',
+                                                flexShrink: 0,
+                                            }}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                type="button"
+                                className="sp-btn sp-btn--outline"
+                                onClick={() => addProductFile()}
+                            >
+                                {__('Upload More Files', 'smartpay')}
+                            </button>
+                        </>
+                    ) : (
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '32px 16px',
+                                border: '2px dashed var(--sp-border)',
+                                borderRadius: 'var(--sp-radius)',
+                                background: 'var(--sp-surface-muted)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <HardDrive size={32} color="var(--sp-text-subtle)" style={{ marginBottom: 10 }} />
+                            <p style={{ margin: '0 0 12px', color: 'var(--sp-text-muted)', fontSize: 13 }}>
+                                {__('Upload or select files for this product', 'smartpay')}
+                            </p>
+                            <button
+                                type="button"
+                                className="sp-btn sp-btn--outline"
+                                onClick={() => addProductFile()}
+                            >
+                                {__('Upload Files', 'smartpay')}
+                            </button>
+                        </div>
+                    )}
+                </DetailCard>
+            </div>
+
+            {/* ── Pricing tab ─────────────────────────────────── */}
+            <div style={{ display: activeTab === 'pricing' ? 'block' : 'none' }}>
+
+                {/* Base price / sale price — hidden once variations exist */}
+                {!product.variations.length && (
+                    <DetailCard title={__('Pricing', 'smartpay')}>
+                        {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                            'smartpay.product.price.section',
+                            [],
+                            product,
+                            setProductData
+                        )}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                            <div>
+                                <label style={labelStyle} htmlFor="base_price">
+                                    {__('Base Price', 'smartpay')}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="base_price"
+                                    name="base_price"
+                                    value={product.base_price || ''}
+                                    placeholder={__('eg. 100', 'smartpay')}
+                                    onChange={_setProductData}
+                                    style={inputStyle}
+                                />
+                            </div>
+                            <div>
+                                <label style={labelStyle} htmlFor="sale_price">
+                                    {__('Sale Price', 'smartpay')}
+                                </label>
+                                <input
+                                    type="text"
+                                    id="sale_price"
+                                    name="sale_price"
+                                    value={product?.sale_price || ''}
+                                    placeholder={__('eg. 90', 'smartpay')}
+                                    onChange={_setProductData}
+                                    style={inputStyle}
+                                />
+                            </div>
+                        </div>
+                    </DetailCard>
+                )}
+
+                {/* One card per variation */}
+                {product.variations.map((variation, vIdx) => (
+                    <div
+                        key={variation.key}
+                        className="sp-detail-card"
+                        style={{ marginBottom: 16 }}
+                    >
+                        <div className="sp-detail-card__header">
+                            <span className="sp-detail-card__title">
+                                {variation.title || `${__('Option', 'smartpay')} ${vIdx + 1}`}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => removeVariation(variation)}
+                                title={__('Remove', 'smartpay')}
+                                style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: 'var(--sp-text-subtle)',
+                                    padding: 0,
+                                    display: 'flex',
+                                    lineHeight: 1,
+                                }}
+                            >
+                                <Trash2 size={14} />
+                            </button>
+                        </div>
+
+                        <div className="sp-detail-card__body">
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={labelStyle}>{__('Option Name', 'smartpay')}</label>
+                                <input
                                     type="text"
                                     name="title"
-                                    value={product?.title || ''}
-                                    placeholder={__(
-                                        'Your awesome product title here',
-                                        'smartpay'
-                                    )}
-                                    onChange={_setProductData}
+                                    value={variation.title}
+                                    placeholder={__('eg. Standard, Premium…', 'smartpay')}
+                                    onChange={(e) => _setVariationData(variation, e)}
+                                    style={inputStyle}
                                 />
-                            </Form.Group>
-                            <Form.Group controlId="description" className="mt-3">
-                                <Form.Label className="text-sm font-medium text-gray-700">{__('Description', 'smartpay')}</Form.Label>
-                                <Form.Control
-                                    as="textarea"
+                            </div>
+
+                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                                'smartpay.product.variation.price.section',
+                                [],
+                                variation,
+                                setVariationData
+                            )}
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
+                                <div>
+                                    <label style={labelStyle}>{__('Base Price', 'smartpay')}</label>
+                                    <input
+                                        type="text"
+                                        name="base_price"
+                                        value={variation.base_price}
+                                        placeholder={__('eg. 100', 'smartpay')}
+                                        onChange={(e) => _setVariationData(variation, e)}
+                                        style={inputStyle}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={labelStyle}>{__('Sale Price', 'smartpay')}</label>
+                                    <input
+                                        type="text"
+                                        name="sale_price"
+                                        value={variation.sale_price}
+                                        placeholder={__('eg. 90', 'smartpay')}
+                                        onChange={(e) => _setVariationData(variation, e)}
+                                        style={inputStyle}
+                                    />
+                                </div>
+                            </div>
+
+                            <div style={{ marginBottom: 16 }}>
+                                <label style={labelStyle}>{__('Description', 'smartpay')}</label>
+                                <textarea
                                     name="description"
-                                    id="description"
-                                    value={product.description}
-                                    onChange={_setProductData}
+                                    value={variation.description}
+                                    onChange={(e) => _setVariationData(variation, e)}
+                                    rows={2}
+                                    style={{ ...inputStyle, height: 'auto', padding: '8px 12px', resize: 'vertical' }}
                                 />
-                            </Form.Group>
-                        </Col>
-                        <Col md={4}>
-                            <div className="border rounded bg-light text-center p-4 select-image-box d-flex flex-column align-items-center">
-                                {product.covers.length > 0 && (
-                                    <div className="mb-3 preview text-center">
-                                        <div>
-                                            <img
-                                                src={product.covers[0].url}
-                                                className="img-fluid"
-                                            />
-                                        </div>
-                                        <Button
-                                            type="button"
-                                            onClick={() => selectCover()}
-                                            className="btn btn-light border mt-3 px-3 select-image"
-                                        >
-                                            {__('Choose File', 'smartpay')}
-                                        </Button>
-                                    </div>
-                                )}
-                                {product.covers.length === 0 && (
-                                    <div className="no-image">
-                                        <Feather.Image size={40} />
-                                        <h3 className="mt-1">
-                                            {__('Cover Image', 'smartpay')}
-                                        </h3>
-                                        <p className="text-muted">
-                                            {__(
-                                                'Select a featured image for this product',
-                                                'smartpay'
-                                            )}
-                                        </p>
-                                        <Button
-                                            type="button"
-                                            onClick={() => selectCover()}
-                                            className="btn btn-light border px-3 select-image"
-                                        >
-                                            {__('Choose File', 'smartpay')}
-                                        </Button>
-                                    </div>
-                                )}
                             </div>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
 
-            <Tabs fill defaultActiveKey="files" className="mt-4 smartpay-product-tabs">
-                <Tab
-                    eventKey="files"
-                    className="text-decoration-none pt-3"
-                    title={__('Files', 'smartpay')}
-                >
-                    <div className="product-files-section">
-                        {product?.files?.length ? (
-                            <>
-                                <ul
-                                    className="list-group product-files"
-                                    id="product-files"
-                                >
-                                    {product?.files?.map((file, index) => {
-                                        return (
-                                            <li
-                                                className="list-group-item list-group-item-action mb-0 files-item"
-                                                key={index}
-                                            >
-                                                <div className="d-flex">
-                                                    <div className="file-type">
-                                                        <img
-                                                            src={
-                                                                file.icon || ''
-                                                            }
-                                                            alt={
-                                                                file.name || ''
-                                                            }
-                                                            width="28"
-                                                            height="28"
-                                                        />
-                                                    </div>
-                                                    <div className="d-flex justify-content-between w-100">
-                                                        <div className="d-flex flex-column ml-3">
-                                                            <h5 className="file-name m-0">
-                                                                {file.name}
-                                                            </h5>
-                                                            <p className="file-size text-muted m-0">
-                                                                {file.size}
-                                                            </p>
-                                                        </div>
-                                                        <div className="">
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-light btn-sm pb-0 border remove-file"
-                                                                onClick={() =>
-                                                                    removeProductFile(
-                                                                        file
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Feather.Trash />
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-
-                                <div className="border rounded bg-light text-center p-3 mt-3">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary upload-product-file"
-                                        onClick={() => addProductFile()}
-                                    >
-                                        {__('Upload your files', 'smartpay')}
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="border border-top-0 rounded bg-light text-center p-5 no-product-file-box">
-                                <Feather.HardDrive size={42} />
-                                <h3 className="text-muted">
-                                    {__(
-                                        'Upload or select files for this product',
-                                        'smartpay'
-                                    )}
-                                </h3>
-                                <Button
-                                    type="button"
-                                    className="btn btn-light border shadow-sm upload-product-file"
-                                    onClick={() => addProductFile()}
-                                >
-                                    {__('Upload files', 'smartpay')}
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                </Tab>
-                <Tab
-                    eventKey="pricing"
-                    className="text-decoration-none pt-3"
-                    title={__('Pricing & Variation', 'smartpay')}
-                >
-                    {!product.variations.length && (
-                        <Card className="mt-3">
-                            <Card.Body>
-                                <div className="form-row">
-                                    {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                        'smartpay.product.price.section',
-                                        [],
-                                        product,
-                                        setProductData
-                                    )}
-                                    <div className="col-6">
-                                        <div className="form-group">
-                                            <label
-                                                htmlFor="base_price"
-                                                className="text-muted my-2 d-block"
-                                            >
-                                                {__('Base price', 'smartpay')}
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="base_price"
-                                                name="base_price"
-                                                value={product.base_price || ''}
-                                                placeholder={__('eg. 100', 'smartpay')}
-                                                onChange={_setProductData}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className="form-group">
-                                            <label
-                                                htmlFor="sale_price"
-                                                className="text-muted my-2 d-block"
-                                            >
-                                                {__('Sales price', 'smartpay')}
-                                            </label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                id="sale_price"
-                                                name="sale_price"
-                                                value={product?.sale_price || ''}
-                                                placeholder={__('eg. 90', 'smartpay')}
-                                                onChange={_setProductData}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card.Body>
-                        </Card>
-                    )}
-
-                    <div className="smartpay-variations">
-                        {/* Has no variation */}
-                        {!product.variations.length && (
-                            <div className="border rounded bg-light text-center p-5 no-variations-box">
-                                <Feather.Layers size={42} />
-                                <h3>
-                                    {__(
-                                        'Offer variations of this product',
-                                        'smartpay'
-                                    )}
-                                </h3>
-                                <p className="text-muted">
-                                    {__(
-                                        'Sweeten the deal for your customers with different options for format, version, etc',
-                                        'smartpay'
-                                    )}
-                                </p>
-                                <Button
-                                    type="button"
-                                    className="btn btn-light border shadow-sm add-variation"
-                                    onClick={addNewVariation}
-                                >
-                                    {__('Add Variations', 'smartpay')}
-                                </Button>
-                            </div>
-                        )}
-
-                        {/* Show variation */}
-                        {product.variations.length > 0 && (
-                            <div className="card p-0 mt-0 variations-secion">
-                                <div className="card-header bg-white p-0">
-                                    <div className="d-flex px-3 py-2 align-items-center">
-                                        <h3 className="m-0 pt-1 d-flex">
-                                            {__('Variations', 'smartpay')}
-                                        </h3>
-                                        {/* <button
-                                            type="button"
-                                            className="btn btn-light border btn-sm my-1 ml-auto pb-0 shadow-sm remove-variation"
-                                        >
-                                            <Feather.Trash />
-                                        </button> */}
-                                    </div>
-                                </div>
-                                {product.variations.map((variation) => {
-                                    return (
-                                        <div
-                                            className="variation-option bg-light"
-                                            key={variation.key}
-                                        >
-                                            <div className="variation-option__header p-3">
-                                                <div className="form-row">
-                                                    <div className="col-11">
-                                                        <div className="form-group m-0">
-                                                            <label
-                                                                htmlFor={`variation-${variation.key}`}
-                                                                className="text-muted my-2 d-block"
-                                                            >
-                                                                {__(
-                                                                    'Option name',
-                                                                    'smartpay'
-                                                                )}
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                id={`variation-${variation.key}`}
-                                                                name="title"
-                                                                value={
-                                                                    variation.title
-                                                                }
-                                                                placeholder="Option name"
-                                                                onChange={(
-                                                                    event
-                                                                ) =>
-                                                                    _setVariationData(
-                                                                        variation,
-                                                                        event
-                                                                    )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col d-flex align-items-center">
-                                                        <div className="mt-4">
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-light btn-sm border shadow-sm pb-0 ml-2 remove-variation-option"
-                                                                onClick={() =>
-                                                                    removeVariation(
-                                                                        variation
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Feather.Trash />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                                    'smartpay.product.variation.price.section',
-                                                    [],
-                                                    variation,
-                                                    setVariationData
-                                                )}
-                                                <div className="form-row">
-                                                    <div className="col-6">
-                                                        <div className="form-group">
-                                                            <label
-                                                                htmlFor={`variation-${variation.key}-base_price`}
-                                                                className="text-muted my-2 d-block"
-                                                            >
-                                                                {__(
-                                                                    'Base price',
-                                                                    'smartpay'
-                                                                )}
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                name="base_price"
-                                                                id={`variation-${variation.key}-base_price`}
-                                                                value={
-                                                                    variation.base_price
-                                                                }
-                                                                placeholder={__(
-                                                                    'eg. 100',
-                                                                    'smartpay'
-                                                                )}
-                                                                onChange={(
-                                                                    event
-                                                                ) =>
-                                                                    _setVariationData(
-                                                                        variation,
-                                                                        event
-                                                                    )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <div className="form-group">
-                                                            <label
-                                                                htmlFor={`variation-${variation.key}-sale_price`}
-                                                                className="text-muted my-2 d-block"
-                                                            >
-                                                                {__(
-                                                                    'Sales price',
-                                                                    'smartpay'
-                                                                )}
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                name="sale_price"
-                                                                id={`variation-${variation.key}-sale_price`}
-                                                                value={
-                                                                    variation.sale_price
-                                                                }
-                                                                placeholder={__(
-                                                                    'eg. 90',
-                                                                    'smartpay'
-                                                                )}
-                                                                onChange={(
-                                                                    event
-                                                                ) =>
-                                                                    _setVariationData(
-                                                                        variation,
-                                                                        event
-                                                                    )
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="variation-option-body bg-light px-3">
-                                                <div className="form-group">
-                                                    <label
-                                                        htmlFor={`variation-${variation.key}-description`}
-                                                        className="text-muted my-2 d-block"
-                                                    >
-                                                        {__(
-                                                            'Description',
-                                                            'smartpay'
-                                                        )}
-                                                    </label>
-                                                    <textarea
-                                                        className="form-control"
-                                                        name="description"
-                                                        id={`variation-${variation.key}-description`}
-                                                        value={
-                                                            variation.description
+                            <div>
+                                <label style={{ ...labelStyle, marginBottom: 8 }}>
+                                    {__('Files', 'smartpay')}
+                                </label>
+                                {product.files.length > 0 ? (
+                                    <div>
+                                        {product.files.map((file, fIdx) => {
+                                            const isFileExist =
+                                                variation.files.findIndex((vFile) => vFile.id === file.id) >= 0
+                                            return (
+                                                <label
+                                                    key={fIdx}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: 8,
+                                                        padding: '5px 0',
+                                                        cursor: 'pointer',
+                                                        fontSize: 13,
+                                                        color: 'var(--sp-text)',
+                                                        borderBottom:
+                                                            fIdx < product.files.length - 1
+                                                                ? '1px solid var(--sp-border)'
+                                                                : 'none',
+                                                    }}
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isFileExist}
+                                                        onChange={(e) =>
+                                                            toggleVariationFile(variation, file, e.target.checked)
                                                         }
-                                                        onChange={(event) =>
-                                                            _setVariationData(
-                                                                variation,
-                                                                event
-                                                            )
-                                                        }
-                                                        rows="3"
-                                                    ></textarea>
-                                                    <small className="form-text text-muted">
-                                                        {__(
-                                                            'Do not write HTML code here.',
-                                                            'smartpay'
-                                                        )}
-                                                    </small>
-                                                </div>
-
-                                                {/* Variation Files */}
-                                                <label className="text-muted my-2 d-block">
-                                                    <strong>
-                                                        {__(
-                                                            'Files',
-                                                            'smartpay'
-                                                        )}
-                                                    </strong>
+                                                        style={{ accentColor: 'var(--sp-brand)' }}
+                                                    />
+                                                    {file.name}
                                                 </label>
-
-                                                {product.files.length > 0 && (
-                                                    <div>
-                                                        <ul className="list-group variation-files">
-                                                            {product?.files?.map(
-                                                                (
-                                                                    file,
-                                                                    index
-                                                                ) => {
-                                                                    const isFileExist =
-                                                                        variation.files.findIndex(
-                                                                            (
-                                                                                vFile
-                                                                            ) => {
-                                                                                return file.id ===
-                                                                                vFile.id
-                                                                                    ? true
-                                                                                    : false
-                                                                            }
-                                                                        ) >= 0
-                                                                            ? true
-                                                                            : false
-
-                                                                    return (
-                                                                        <li
-                                                                            className="list-group-item m-0 d-flex justify-content-between files-item"
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                        >
-                                                                            <div className="custom-checkbox custom-checkbox-round">
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    className="custom-control-input variation-file"
-                                                                                    id={`variation-${variation.key}-file-${file.id}`}
-                                                                                    name="file"
-                                                                                    onChange={(
-                                                                                        event
-                                                                                    ) =>
-                                                                                        toggleVariationFile(
-                                                                                            variation,
-                                                                                            file,
-                                                                                            event
-                                                                                                .target
-                                                                                                .checked
-                                                                                        )
-                                                                                    }
-                                                                                    value={
-                                                                                        file.id
-                                                                                    }
-                                                                                    checked={
-                                                                                        isFileExist
-                                                                                    }
-                                                                                />
-                                                                                <label
-                                                                                    className="custom-control-label"
-                                                                                    htmlFor={`variation-${variation.key}-file-${file.id}`}
-                                                                                >
-                                                                                    {
-                                                                                        file.name
-                                                                                    }
-                                                                                </label>
-                                                                            </div>
-                                                                        </li>
-                                                                    )
-                                                                }
-                                                            )}
-                                                        </ul>
-
-                                                        <div className="border rounded bg-light text-center p-3 mt-3">
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-sm btn-light border upload-product-file"
-                                                                onClick={() =>
-                                                                    addProductFile(
-                                                                        variation
-                                                                    )
-                                                                }
-                                                            >
-                                                                {__(
-                                                                    'Upload more file',
-                                                                    'smartpay'
-                                                                )}
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                )}
-
-                                                {!product.files.length && (
-                                                    <div className="form-group no-variation-file-box">
-                                                        <div className="border rounded text-center p-5">
-                                                            <Feather.Package
-                                                                size={42}
-                                                            />
-                                                            <h3 className="text-muted">
-                                                                {__(
-                                                                    'Associate files with this variant',
-                                                                    'smartpay'
-                                                                )}
-                                                            </h3>
-                                                            <Button
-                                                                type="button"
-                                                                className="btn btn-light border shadow-sm select-variation-files"
-                                                                onClick={() =>
-                                                                    addProductFile(
-                                                                        variation
-                                                                    )
-                                                                }
-                                                            >
-                                                                {__(
-                                                                    'Select files',
-                                                                    'smartpay'
-                                                                )}
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
+                                            )
+                                        })}
+                                        <div style={{ marginTop: 10 }}>
+                                            <button
+                                                type="button"
+                                                className="sp-btn sp-btn--outline"
+                                                style={{ fontSize: 12, height: 30, padding: '0 10px' }}
+                                                onClick={() => addProductFile(variation)}
+                                            >
+                                                {__('Upload More Files', 'smartpay')}
+                                            </button>
                                         </div>
-                                    )
-                                })}
-                                <div className="card-footer bg-white p3 mt-3">
-                                    <Button
-                                        type="button"
-                                        className="btn btn-secondary add-variation-option"
-                                        onClick={addNewVariation}
+                                    </div>
+                                ) : (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 10,
+                                            padding: '10px 14px',
+                                            borderRadius: 'var(--sp-radius-sm)',
+                                            border: '1px dashed var(--sp-border)',
+                                            background: 'var(--sp-surface-muted)',
+                                        }}
                                     >
-                                        {__('Add Option', 'smartpay')}
-                                    </Button>
-                                </div>
+                                        <Package size={16} color="var(--sp-text-subtle)" style={{ flexShrink: 0 }} />
+                                        <span style={{ fontSize: 12.5, color: 'var(--sp-text-muted)', flex: 1 }}>
+                                            {__('Associate files with this variant', 'smartpay')}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            className="sp-btn sp-btn--outline"
+                                            style={{ fontSize: 12, padding: '0 10px', flexShrink: 0 }}
+                                            onClick={() => addProductFile(variation)}
+                                        >
+                                            {__('Select Files', 'smartpay')}
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </div>
                     </div>
-                </Tab>
-                <Tab
-                    eventKey="options"
-                    className="text-decoration-none pt-3"
-                    title={__('Options', 'smartpay')}
+                ))}
+
+                {/* Add Option — always at the bottom */}
+                <button
+                    type="button"
+                    className="sp-btn sp-btn--outline"
+                    onClick={addNewVariation}
+                    style={{ width: '100%', justifyContent: 'center' }}
                 >
-                    <OptionComponent
-                        product={product}
-                        setProductData={setProductData}
-                    />
-                </Tab>
-            </Tabs>
-        </Form>
+                    {__('+ Add Option', 'smartpay')}
+                </button>
+            </div>
+
+            {/* ── Checkout tab ────────────────────────────────── */}
+            <div style={{ display: activeTab === 'checkout' ? 'block' : 'none' }}>
+                <OptionComponent product={product} setProductData={setProductData} unwrapped={false} />
+            </div>
+        </>
     )
 }

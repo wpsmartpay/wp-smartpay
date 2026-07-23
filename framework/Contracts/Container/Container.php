@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Contracts\Container;
+defined('ABSPATH') || exit;
 
 use Closure;
 use Psr\Container\ContainerInterface;

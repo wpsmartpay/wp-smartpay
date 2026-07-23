@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/integration.php';
 
@@ -1099,9 +1100,10 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 		$current = floatval( $cached );
 	} else {
 		global $wpdb;
-		$table = $wpdb->prefix . 'smartpay_payments';
+		$table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
 
 		// Filter by form_id stored in payment data JSON
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$row = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT COUNT(*) as cnt, COALESCE(SUM(amount),0) as total_amount FROM {$table} WHERE status = %s AND data LIKE %s",
@@ -1110,6 +1112,7 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 			),
 			ARRAY_A
 		);
+		// phpcs:enable
 
 		$current = (float) ( $type === 'quantity' ? ( $row['cnt'] ?? 0 ) : ( $row['total_amount'] ?? 0 ) );
 
@@ -1178,5 +1181,31 @@ function smartpay_record_payment_log( int $payment_id, string $action, string $n
 	$log->save();
 
 	return $log;
+}
+
+if ( ! function_exists( 'smartpay_is_pro_active' ) ) {
+	/**
+	 * Whether SmartPay Pro is active and licensed.
+	 *
+	 * Defaults to false. The Pro plugin hooks `smartpay_is_pro_active` to return
+	 * true once installed, active, and licensed (valid or in grace period).
+	 *
+	 * @return bool
+	 */
+	function smartpay_is_pro_active(): bool {
+		return (bool) apply_filters( 'smartpay_is_pro_active', false );
+	}
+}
+
+if ( ! function_exists( 'smartpay_pro_feature_available' ) ) {
+	/**
+	 * Whether a specific Pro feature is available.
+	 *
+	 * @param string $feature Feature slug (e.g. 'subscription').
+	 * @return bool
+	 */
+	function smartpay_pro_feature_available( string $feature ): bool {
+		return (bool) apply_filters( 'smartpay_pro_feature_available', false, $feature );
+	}
 }
 

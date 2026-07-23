@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay;
+defined('ABSPATH') || exit;
 require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
 class Updater

@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database\Eloquent\Relation;
+defined('ABSPATH') || exit;
 
 use Closure;
 use SmartPay\Framework\Database\Eloquent\Model;

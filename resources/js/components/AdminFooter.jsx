@@ -28,7 +28,7 @@ export function AdminFooter() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-amber-400 hover:text-amber-500 transition-colors no-underline tracking-tight"
-                        aria-label={__( 'Rate WP SmartPay on WordPress.org', 'smartpay' )}
+                        aria-label={__( 'Rate WPSmartPay on WordPress.org', 'smartpay' )}
                     >
                         ★★★★★
                     </a>{' '}

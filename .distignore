@@ -10,6 +10,7 @@
 /resources/js
 /scripts
 /temp
+/test-results
 
 # Files
 .distignore
@@ -27,5 +28,8 @@ mix-manifest.json
 package-lock.json
 package.json
 webpack.mix.js
+phpcs.xml.dist
+CLAUDE.md
+UI_GUIDELINES.md
 *.lock
 *.log

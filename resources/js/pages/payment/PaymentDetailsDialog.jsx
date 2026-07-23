@@ -1,7 +1,7 @@
 import { Update } from '@/http/payment';
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Swal from 'sweetalert2/dist/sweetalert2';
 const { Button, Card, CardContent, Dialog, DialogContent, DialogHeader, DialogTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } = window.WPSmartPayUI;
 const { useSelect, dispatch } = wp.data
 

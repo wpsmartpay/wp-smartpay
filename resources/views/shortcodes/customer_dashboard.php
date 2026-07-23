@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Models\Product;
 use SmartPay\Modules\Frontend\Utilities\Downloader;
@@ -131,7 +132,7 @@ $activePayments = $customer->payments()->where('status', 'completed')->get();
                                                                             <div class="d-flex flex-grow-1 flex-column ml-3">
                                                                                 <p class="m-0"><?php echo esc_html($file['name'] ?? ''); ?></p>
                                                                                 <div class="d-flex flex-row justify-content-between text-muted m-0">
-                                                                                    <small><?php echo esc_html(sprintf(__('Size: ', 'smartpay')) . $file['size'] ?? ''); ?></small>
+                                                                                    <small><?php echo esc_html( sprintf( __( 'Size: %s', 'smartpay' ), $file['size'] ?? '' ) ); ?></small>
                                                                                 </div>
                                                                             </div>
                                                                             <a href="<?php echo esc_url(smartpay()->make(Downloader::class)->getDownloadUrl($file['id'], $payment->id, $product->id)); ?>" class="btn btn-sm btn-primary btn--download"><?php esc_html_e('Download', 'smartpay'); ?></a>

@@ -1,3 +1,4 @@
+<?php defined('ABSPATH') || exit; ?>
 <div class="smartpay" style="margin: 0 auto;">
     <div class="smartpay-product-shortcode smartpay-payment">
         <!-- Product details -->

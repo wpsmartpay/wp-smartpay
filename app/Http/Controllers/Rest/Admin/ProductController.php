@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Http\Controllers\Rest\Admin;
+defined('ABSPATH') || exit;
 
 use SmartPay\Http\Controllers\RestController;
 use SmartPay\Models\Product;
@@ -34,10 +35,11 @@ class ProductController extends RestController
      */
     public function index(WP_REST_Request $request): WP_REST_Response
     {
-        $page     = (int) $request->get_param('page') ?: 1;
-        $per_page = (int) $request->get_param('per_page') ?: 10;
-        $search   = sanitize_text_field($request->get_param('search') ?? '');
-        $sort_by  = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
+        $page         = (int) $request->get_param('page') ?: 1;
+        $per_page     = (int) $request->get_param('per_page') ?: 10;
+        $search       = sanitize_text_field($request->get_param('search') ?? '');
+        $sort_by      = sanitize_text_field($request->get_param('sort_by') ?? 'id:desc');
+        $billing_type = sanitize_text_field($request->get_param('billing_type') ?? '');
 
         $query = Product::where(function ($q) {
             $q->where('parent_id', 0)->orWhereNull('parent_id');
@@ -46,6 +48,17 @@ class ProductController extends RestController
         // Search
         if (!empty($search)) {
             $query->where('title', 'LIKE', '%' . $search . '%');
+        }
+
+        // Billing type filter — matches on parent extra OR any variation extra
+        if (!empty($billing_type)) {
+            $like = '%"billing_type":"' . $billing_type . '"%';
+            $query->where(function ($q) use ($like) {
+                $q->where('extra', 'LIKE', $like)
+                  ->orWhereHas('variations', function ($vq) use ($like) {
+                      $vq->where('extra', 'LIKE', $like);
+                  });
+            });
         }
 
         // Sorting
@@ -91,45 +104,44 @@ class ProductController extends RestController
         $wpdb->query('START TRANSACTION');
 
         try {
-            $request = json_decode($request->get_body());
+            $data = json_decode($request->get_body(), true);
 
             $product = new Product();
-            $product->title = $request->title ?? 'Untitled product';
-            $product->description = $request->description;
-            $product->base_price = $request->base_price;
-            $product->sale_price = $request->sale_price;
-            $product->files = $request->files ?? [];
-            $product->covers = $request->covers ?? [];
-            $product->status = Product::PUBLISH;
-            $product->extra = $request->extra ?? [];
-            $product->settings = $request->settings ?? [];
-            $result = $product->save(); // response true
-            if($result && $product->id){
+            $product->title       = sanitize_text_field($data['title'] ?? 'Untitled product');
+            $product->description = sanitize_textarea_field($data['description'] ?? '');
+            $product->base_price  = max(0, (float) ($data['base_price'] ?? 0));
+            $product->sale_price  = max(0, (float) ($data['sale_price'] ?? 0));
+            $product->files       = $this->sanitize_files((array) ($data['files'] ?? []));
+            $product->covers      = $this->sanitize_covers((array) ($data['covers'] ?? []));
+            $product->status      = Product::PUBLISH;
+            $product->extra       = $this->sanitize_recursive((array) ($data['extra'] ?? []));
+            $product->settings    = $this->sanitize_recursive((array) ($data['settings'] ?? []));
+            $result = $product->save();
 
-                array_walk($request->variations, function ($variationData) use ($product) {
+            if ($result && $product->id) {
+                array_walk($data['variations'] ?? [], function ($variationData) use ($product) {
                     $this->createVariation($variationData, $product->id);
                 });
 
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->query('COMMIT');
 
-                // get the currently stored product
-                $product = Product::find($product->id); // response product object
+                $product = Product::find($product->id);
 
                 return new WP_REST_Response(['product' => $product, 'message' => __('Product created', 'smartpay')]);
-            }else{
+            } else {
 				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->query('ROLLBACK');
-	            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-                error_log('Failed to create product.');
+		        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                error_log('SmartPay: Failed to create product.');
                 return new WP_REST_Response(['message' => __('Failed to create product.', 'smartpay')], 500);
             }
         } catch (\Exception $e) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
 	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log($e->getMessage());
-            return new WP_REST_Response(['message' => $e->getMessage()], 500);
+            error_log('SmartPay: Product create error — ' . $e->getMessage());
+            return new WP_REST_Response(['message' => esc_html__('An error occurred. Please try again.', 'smartpay')], 500);
         }
     }
 
@@ -163,48 +175,49 @@ class ProductController extends RestController
                 return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
             }
 
-            $request = json_decode($request->get_body());
+            $data = json_decode($request->get_body(), true);
 
-            // Update product
-            $product->title = $request->title;
-            $product->description = $request->description;
-            $product->base_price = $request->base_price;
-            $product->sale_price = $request->sale_price;
-            $product->files = $request->files ?? [];
-            $product->covers = $request->covers ?? [];
-            $product->extra = $request->extra;
-            $product->settings = $request->settings;
-            $product->status = Product::PUBLISH;
+            $product->title       = sanitize_text_field($data['title'] ?? 'Untitled product');
+            $product->description = sanitize_textarea_field($data['description'] ?? '');
+            $product->base_price  = max(0, (float) ($data['base_price'] ?? 0));
+            $product->sale_price  = max(0, (float) ($data['sale_price'] ?? 0));
+            $product->files       = $this->sanitize_files((array) ($data['files'] ?? []));
+            $product->covers      = $this->sanitize_covers((array) ($data['covers'] ?? []));
+            $product->extra       = $this->sanitize_recursive((array) ($data['extra'] ?? []));
+            $product->settings    = $this->sanitize_recursive((array) ($data['settings'] ?? []));
+            $product->status      = Product::PUBLISH;
             $product->save();
 
-            array_walk($request->variations, function ($variationData) use ($product) {
-                if (!$variationData->id) {
+            array_walk($data['variations'] ?? [], function ($variationData) use ($product) {
+                $variationData = (array) $variationData;
+                if (empty($variationData['id'])) {
                     return $this->createVariation($variationData, $product->id);
                 }
 
-                // Update variation
-                $variation = Product::find($variationData->id);
-                $variation->title = $variationData->title;
-                $variation->description = $variationData->description;
-                $variation->base_price = $variationData->base_price;
-                $variation->sale_price = $variationData->sale_price;
-                $variation->files = $variationData->files ?? [];
-                $variation->status = Product::PUBLISH;
-                $variation->extra = $variationData->extra ?? [];
+                $variation = Product::find($variationData['id']);
+                if (!$variation) {
+                    return;
+                }
+                $variation->title       = sanitize_text_field($variationData['title'] ?? '');
+                $variation->description = sanitize_textarea_field($variationData['description'] ?? '');
+                $variation->base_price  = max(0, (float) ($variationData['base_price'] ?? 0));
+                $variation->sale_price  = max(0, (float) ($variationData['sale_price'] ?? 0));
+                $variation->files       = $this->sanitize_files((array) ($variationData['files'] ?? []));
+                $variation->status      = Product::PUBLISH;
+                $variation->extra       = $this->sanitize_recursive((array) ($variationData['extra'] ?? []));
                 $variation->save();
             });
 
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('COMMIT');
-            //            $product->refresh();
             $product->load('variations');
             return new WP_REST_Response(['product' => $product, 'message' => __('Product updated', 'smartpay')]);
         } catch (\Exception $e) {
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
 	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log($e->getMessage());
-            return new WP_REST_Response($e->getMessage(), 500);
+            error_log('SmartPay: Product update error — ' . $e->getMessage());
+            return new WP_REST_Response(['message' => esc_html__('An error occurred. Please try again.', 'smartpay')], 500);
         }
     }
 
@@ -239,30 +252,93 @@ class ProductController extends RestController
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query('ROLLBACK');
 	        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-            error_log($e->getMessage());
-            return new WP_REST_Response($e->getMessage(), 500);
+            error_log('SmartPay: Product delete error — ' . $e->getMessage());
+            return new WP_REST_Response(['message' => esc_html__('An error occurred. Please try again.', 'smartpay')], 500);
         }
     }
 
     /**
      * Create variation
      *
-     * @param object $data
-     * @param int $parentId
+     * @param array $data
+     * @param int   $parentId
      * @return Product
      */
-    private function createVariation($data, $parentId): Product
+    private function createVariation(array $data, int $parentId): Product
     {
         return Product::create([
-            'title' => $data->title,
-            'description' => $data->description,
-            'base_price' => $data->base_price,
-            'sale_price' => $data->sale_price,
-            'covers' => [],
-            'files' => $data->files ?? [],
-            'parent_id' => $parentId,
-            'status' => Product::PUBLISH,
-            'extra' => $data->extra ?? [],
+            'title'       => sanitize_text_field($data['title'] ?? ''),
+            'description' => sanitize_textarea_field($data['description'] ?? ''),
+            'base_price'  => max(0, (float) ($data['base_price'] ?? 0)),
+            'sale_price'  => max(0, (float) ($data['sale_price'] ?? 0)),
+            'covers'      => [],
+            'files'       => $this->sanitize_files((array) ($data['files'] ?? [])),
+            'parent_id'   => $parentId,
+            'status'      => Product::PUBLISH,
+            'extra'       => $this->sanitize_recursive((array) ($data['extra'] ?? [])),
         ]);
+    }
+
+    /**
+     * Sanitize a files array: name (sanitize_text_field), url/icon/src (esc_url_raw).
+     *
+     * @param array $files
+     * @return array
+     */
+    private function sanitize_files(array $files): array
+    {
+        return array_map(function ($file) {
+            if (!is_array($file)) {
+                return [];
+            }
+            $clean = [];
+            foreach ($file as $key => $value) {
+                if (in_array($key, ['url', 'icon', 'src'], true)) {
+                    $clean[sanitize_text_field($key)] = esc_url_raw((string) $value);
+                } elseif (is_array($value)) {
+                    $clean[sanitize_text_field($key)] = $this->sanitize_recursive($value);
+                } else {
+                    $clean[sanitize_text_field($key)] = sanitize_text_field((string) $value);
+                }
+            }
+            return $clean;
+        }, array_values($files));
+    }
+
+    /**
+     * Sanitize a covers array: url/icon/src (esc_url_raw), other keys (sanitize_text_field).
+     *
+     * @param array $covers
+     * @return array
+     */
+    private function sanitize_covers(array $covers): array
+    {
+        return $this->sanitize_files($covers);
+    }
+
+    /**
+     * Recursively sanitize an array.
+     *
+     * @param array $data
+     * @return array
+     */
+    private function sanitize_recursive(array $data): array
+    {
+        $clean = [];
+        foreach ($data as $key => $value) {
+            $clean_key = sanitize_text_field((string) $key);
+            if (is_array($value)) {
+                $clean[$clean_key] = $this->sanitize_recursive($value);
+            } elseif (is_bool($value)) {
+                $clean[$clean_key] = $value;
+            } elseif (is_int($value)) {
+                $clean[$clean_key] = (int) $value;
+            } elseif (is_float($value)) {
+                $clean[$clean_key] = (float) $value;
+            } else {
+                $clean[$clean_key] = sanitize_text_field((string) $value);
+            }
+        }
+        return $clean;
     }
 }

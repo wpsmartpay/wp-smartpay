@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Frontend\Utilities;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Application;
 use SmartPay\Models\Payment;
@@ -36,7 +37,7 @@ class Downloader
 	    if (headers_sent()) {
 		    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		        error_log('SmartPay: Headers already sent, cannot download');
+		        error_log('WPSmartPay: Headers already sent, cannot download');
 		    }
 		    return;
 	    }

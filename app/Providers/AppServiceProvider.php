@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Providers;
+defined('ABSPATH') || exit;
 
 use SmartPay\Framework\Support\ServiceProvider;
 use SmartPay\Modules\Product\Product;
@@ -14,6 +15,7 @@ use SmartPay\Modules\Shortcode\Shortcode;
 use SmartPay\Modules\Integration\Integration;
 use SmartPay\Modules\Email\Email;
 use SmartPay\Modules\Frontend\Utilities\Downloader;
+use SmartPay\Modules\NativeForm\NativeForm;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -67,6 +69,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Downloader::class, function ($app) {
             return new Downloader($app);
         });
+
+        $this->app->singleton(NativeForm::class, function ($app) {
+            return new NativeForm($app);
+        });
     }
 
     public function boot()
@@ -81,5 +87,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->make(Common::class);
         $this->app->make(Shortcode::class);
         $this->app->make(Integration::class);
+        $this->app->make(NativeForm::class);
     }
 }

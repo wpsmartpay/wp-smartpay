@@ -1,1 +1,2 @@
 <?php
+defined('ABSPATH') || exit;

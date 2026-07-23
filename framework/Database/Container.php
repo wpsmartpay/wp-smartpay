@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Framework\Database;
+defined('ABSPATH') || exit;
 
 class Container
 {

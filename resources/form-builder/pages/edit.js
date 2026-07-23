@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n'
 import { useParams } from 'react-router-dom'
 import { useEffect, useReducer } from '@wordpress/element'
 import { useSelect, dispatch } from '@wordpress/data'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { Update } from '../http/form'
 import { FormForm } from './components/Form'
 

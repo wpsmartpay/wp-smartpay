@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') || exit;
 $form_action = smartpay_get_payment_page_uri();
 $gateways = smartpay_get_enabled_payment_gateways(true);
 // phpcs:ignore: WordPress.Security.NonceVerification.Recommended

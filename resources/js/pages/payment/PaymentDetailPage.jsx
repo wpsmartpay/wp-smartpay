@@ -1,495 +1,479 @@
 import { useEffect, useState } from '@wordpress/element'
 import { __ } from '@wordpress/i18n'
-import { applyFilters } from '@wordpress/hooks'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { GetPayment, Update } from '@/http/payment'
 import { ActivityLogSection } from './ActivityLogSection'
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2'
 
-const {
-	Button,
-	Card,
-	CardContent,
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-	StatusBadge,
-	Header,
-} = window.WPSmartPayUI
+const { Header } = window.WPSmartPayUI
 
-const InfoField = ( { label, children } ) => (
-	<div>
-		<dt className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">{ label }</dt>
-		<dd className="text-sm font-medium text-gray-800">{ children || '—' }</dd>
+/* ── Helpers ──────────────────────────────────────────────── */
+
+const decodeHtmlEntity = (str) => {
+	if (!str) return ''
+	const txt = document.createElement('textarea')
+	txt.innerHTML = str
+	return txt.value
+}
+const currencySymbol = decodeHtmlEntity(window.smartpay?.options?.currencySymbol) || '$'
+
+const fmtAmount = (amount, currency) => {
+	try {
+		return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(parseFloat(amount) || 0)
+	} catch {
+		return currencySymbol + (parseFloat(amount) || 0).toFixed(2)
+	}
+}
+
+const statusClass = (status) => {
+	const map = {
+		completed:  'sp-badge--active',
+		pending:    'sp-badge--pending',
+		processing: 'sp-badge--pending',
+		failed:     'sp-badge--failed',
+		refunded:   'sp-badge--expired',
+		revoked:    'sp-badge--expired',
+		abandoned:  'sp-badge--expired',
+	}
+	return map[(status || '').toLowerCase()] || 'sp-badge--expired'
+}
+
+const STATUS_OPTIONS = [
+	{ value: 'pending',    label: __('Pending',    'smartpay') },
+	{ value: 'completed',  label: __('Completed',  'smartpay') },
+	{ value: 'refunded',   label: __('Refunded',   'smartpay') },
+	{ value: 'failed',     label: __('Failed',     'smartpay') },
+	{ value: 'abandoned',  label: __('Abandoned',  'smartpay') },
+	{ value: 'revoked',    label: __('Revoked',    'smartpay') },
+	{ value: 'processing', label: __('Processing', 'smartpay') },
+]
+
+/* ── Sub-components ───────────────────────────────────────── */
+
+const DetailCard = ({ title, badge, children }) => (
+	<div className="sp-detail-card">
+		<div className="sp-detail-card__header">
+			<span className="sp-detail-card__title">{title}</span>
+			{badge && <span className="sp-detail-card__badge">{badge}</span>}
+		</div>
+		<div className="sp-detail-card__body">{children}</div>
 	</div>
 )
 
-const SectionCard = ( { title, children } ) => (
-	<Card>
-		<CardContent className="pt-0 pb-5">
-			<div className="border-b px-6 py-3 -mx-6 mb-4">
-				<h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider m-0">
-					{ title }
-				</h3>
-			</div>
-			{ children }
-		</CardContent>
-	</Card>
+const Field = ({ label, children }) => (
+	<div>
+		<div className="sp-detail-field__label">{label}</div>
+		<div className="sp-detail-field__value">{children || '—'}</div>
+	</div>
 )
 
-const SkeletonBlock = ( { className } ) => (
-	<div className={ `animate-pulse bg-gray-100 rounded ${ className }` } />
-)
+/* ── Skeleton ─────────────────────────────────────────────── */
 
 const SkeletonLoader = () => (
 	<>
-		<Header
-			title={ __( 'Payment Details', 'smartpay' ) }
-			subtitle={ __( 'Loading…', 'smartpay' ) }
-		/>
-		<div className="p-4 max-w-7xl mx-auto">
-			<div className="grid gap-6" style={ { gridTemplateColumns: '1fr 280px' } }>
-				<div className="space-y-4">
-					<Card>
-						<CardContent className="pt-6">
-							<div className="flex items-center gap-4 mb-6">
-								<SkeletonBlock className="h-9 w-32" />
-								<SkeletonBlock className="h-6 w-20" />
+		<Header title={__('Payment Details', 'smartpay')} subtitle={__('Loading…', 'smartpay')} />
+		<div className="sp-layout">
+			<div style={{ width: 100, height: 16, background: '#f3f4f6', borderRadius: 4, marginBottom: 18 }} />
+			<div className="sp-detail-grid">
+				<div>
+					{[1, 2].map((i) => (
+						<div key={i} className="sp-detail-card" style={{ marginBottom: 16 }}>
+							<div className="sp-detail-card__header">
+								<div style={{ width: 80, height: 12, background: '#f3f4f6', borderRadius: 3 }} />
 							</div>
-							<div className="grid grid-cols-4 gap-4">
-								{ [ 1, 2, 3, 4 ].map( ( i ) => (
-									<div key={ i }>
-										<SkeletonBlock className="h-3 w-16 mb-2" />
-										<SkeletonBlock className="h-4 w-24" />
-									</div>
-								) ) }
-							</div>
-						</CardContent>
-					</Card>
-					<Card>
-						<CardContent className="pt-6 space-y-3">
-							<SkeletonBlock className="h-4 w-1/3" />
-							<SkeletonBlock className="h-4 w-2/3" />
-							<SkeletonBlock className="h-4 w-1/2" />
-						</CardContent>
-					</Card>
-				</div>
-				<div className="space-y-4">
-					<Card>
-						<CardContent className="pt-6 space-y-3">
-							<SkeletonBlock className="h-3 w-24 mb-2" />
-							<SkeletonBlock className="h-9 w-full" />
-							<SkeletonBlock className="h-9 w-full" />
-							<SkeletonBlock className="h-9 w-full" />
-						</CardContent>
-					</Card>
-					<Card>
-						<CardContent className="pt-6 space-y-4">
-							{ [ 1, 2, 3, 4 ].map( ( i ) => (
-								<div key={ i }>
-									<SkeletonBlock className="h-3 w-16 mb-1" />
-									<SkeletonBlock className="h-4 w-24" />
+							<div className="sp-detail-card__body">
+								<div style={{ display: 'flex', gap: 32 }}>
+									{[1, 2, 3, 4].map((j) => (
+										<div key={j}>
+											<div style={{ width: 48, height: 9, background: '#f3f4f6', borderRadius: 3, marginBottom: 6 }} />
+											<div style={{ width: 72, height: 14, background: '#f3f4f6', borderRadius: 3 }} />
+										</div>
+									))}
 								</div>
-							) ) }
-						</CardContent>
-					</Card>
+							</div>
+						</div>
+					))}
+				</div>
+				<div>
+					<div className="sp-detail-card">
+						<div className="sp-detail-card__header">
+							<div style={{ width: 60, height: 12, background: '#f3f4f6', borderRadius: 3 }} />
+						</div>
+						<div className="sp-detail-card__body">
+							{[1, 2, 3].map((i) => (
+								<div key={i} style={{ width: '100%', height: 34, background: '#f3f4f6', borderRadius: 5, marginBottom: 8 }} />
+							))}
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	</>
 )
 
+/* ── Form data section ────────────────────────────────────── */
+
+const FormDataSection = ({ formData, formFields }) => {
+	const build = (fields) => {
+		if (!Array.isArray(fields)) return {}
+		let tempFields = {}
+		fields.forEach((item) => {
+			const data = item[Object.keys(item)[0]]
+			if (data?.attributes) item = data
+			const key = item['attributes']?.['name']
+			if (!key) return
+			tempFields[key] = item.fields ? build(item.fields) : item.settings?.label
+		})
+		return tempFields
+	}
+
+	const humanize = (str) => String(str).replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+
+	const flatRows = (data, labels) => {
+		const rows = []
+		const hasLabels = labels && Object.keys(labels).length > 0
+		const entries = Object.entries(data || {})
+		for (const [key, val] of entries) {
+			if (val === null || val === undefined || val === '') continue
+			if (typeof val === 'object' && !Array.isArray(val)) {
+				const sub = hasLabels && typeof labels[key] === 'object' ? labels[key] : null
+				rows.push(...flatRows(val, sub))
+			} else {
+				const label = hasLabels && typeof labels[key] === 'string' ? labels[key] : humanize(key)
+				rows.push({ label, value: String(val) })
+			}
+		}
+		return rows
+	}
+
+	const labels = build(formFields || [])
+	const rows = flatRows(formData, labels)
+
+	if (!rows.length) return null
+
+	return (
+		<DetailCard title={__('Form Data', 'smartpay')}>
+			<table className="sp-kv-table">
+				<tbody>
+					{rows.map(({ label, value }, i) => (
+						<tr key={i}>
+							<td>{label}</td>
+							<td>{value}</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</DetailCard>
+	)
+}
+
+/* ── Main page ────────────────────────────────────────────── */
+
 export const PaymentDetailPage = () => {
 	const { paymentId } = useParams()
 	const navigate = useNavigate()
 
-	const [ payment, setPayment ] = useState( null )
-	const [ paymentStatus, setPaymentStatus ] = useState( 'pending' )
-	const [ loading, setLoading ] = useState( true )
-	const [ saving, setSaving ] = useState( false )
+	const [payment,       setPayment]       = useState(null)
+	const [paymentStatus, setPaymentStatus] = useState('pending')
+	const [loading,       setLoading]       = useState(true)
+	const [saving,        setSaving]        = useState(false)
 
-	useEffect( () => {
-		if ( ! paymentId ) return
-		setLoading( true )
-		GetPayment( paymentId )
-			.then( ( data ) => {
-				if ( data ) {
-					setPayment( data )
-					setPaymentStatus( data.status?.toLowerCase() || 'pending' )
+	useEffect(() => {
+		if (!paymentId) return
+		setLoading(true)
+		GetPayment(paymentId)
+			.then((data) => {
+				if (data) {
+					setPayment(data)
+					setPaymentStatus(data.status?.toLowerCase() || 'pending')
 				}
-			} )
-			.catch( () => {
-				Swal.fire( {
-					icon: 'error',
-					title: __( 'Error', 'smartpay' ),
-					text: __( 'Failed to load payment.', 'smartpay' ),
-				} )
-			} )
-			.finally( () => setLoading( false ) )
-	}, [ paymentId ] )
+			})
+			.catch(() => {
+				Swal.fire({ icon: 'error', title: __('Error', 'smartpay'), text: __('Failed to load payment.', 'smartpay') })
+			})
+			.finally(() => setLoading(false))
+	}, [paymentId])
 
 	const handleSave = async () => {
-		setSaving( true )
+		setSaving(true)
 		try {
-			const response = await Update(
-				paymentId,
-				JSON.stringify( { ...payment, status: paymentStatus } )
-			)
-			setPayment( response.payment )
-			Swal.fire( {
-				toast: true,
-				icon: 'success',
-				title: __( response.message || 'Updated', 'smartpay' ),
-				position: 'top-end',
-				showConfirmButton: false,
-				timer: 2000,
-				showClass: { popup: 'swal2-noanimation' },
-				hideClass: { popup: '' },
-			} )
+			const response = await Update(paymentId, JSON.stringify({ ...payment, status: paymentStatus }))
+			setPayment(response.payment)
+			Swal.fire({
+				toast: true, icon: 'success',
+				title: __(response.message || 'Updated', 'smartpay'),
+				position: 'top-end', showConfirmButton: false, timer: 2000,
+				showClass: { popup: 'swal2-noanimation' }, hideClass: { popup: '' },
+			})
 		} catch {
-			Swal.fire( {
-				icon: 'error',
-				title: __( 'Error', 'smartpay' ),
-				text: __( 'Failed to update payment.', 'smartpay' ),
-			} )
+			Swal.fire({ icon: 'error', title: __('Error', 'smartpay'), text: __('Failed to update payment.', 'smartpay') })
 		} finally {
-			setSaving( false )
+			setSaving(false)
 		}
 	}
 
-	if ( loading ) return <SkeletonLoader />
+	if (loading) return <SkeletonLoader />
 
-	if ( ! payment ) {
+	if (!payment) {
 		return (
 			<>
-				<Header
-					title={ __( 'Payment Details', 'smartpay' ) }
-					subtitle={ __( 'Payment not found', 'smartpay' ) }
-				/>
-				<div className="p-4 max-w-7xl mx-auto">
-					<Card>
-						<CardContent className="py-16 text-center">
-							<p className="text-gray-500 mb-4">
-								{ __( 'Payment not found.', 'smartpay' ) }
-							</p>
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={ () => navigate( '/payments' ) }
-							>
-								{ __( '← Back to Payments', 'smartpay' ) }
-							</Button>
-						</CardContent>
-					</Card>
+				<Header title={__('Payment Details', 'smartpay')} subtitle={__('Payment not found', 'smartpay')} />
+				<div className="sp-layout">
+					<div className="sp-detail-card" style={{ textAlign: 'center', padding: 40 }}>
+						<p style={{ color: 'var(--sp-text-muted)', marginBottom: 16 }}>
+							{__('Payment not found.', 'smartpay')}
+						</p>
+						<button className="sp-btn sp-btn--outline" onClick={() => navigate('/payments')}>
+							← {__('Back to Payments', 'smartpay')}
+						</button>
+					</div>
 				</div>
 			</>
 		)
 	}
 
 	const isProductPurchase = payment.type === 'Product Purchase'
-	const isFormPayment = payment.type === 'Form Payment'
+	const isFormPayment     = payment.type === 'Form Payment'
 
+	/* Collect main sections — pro plugin can splice via applyFilters */
 	let mainSections = []
 
-	mainSections.push( {
-		id: 'summary',
-		component: (
-			<Card key="summary">
-				<CardContent className="pt-6">
-					<div className="flex items-center justify-between mb-6">
-						<div className="flex items-center gap-3">
-							<span className="text-3xl font-bold text-gray-900">
-								{ payment.currency } { payment.amount }
-							</span>
-							<StatusBadge status={ payment.status } />
-						</div>
-						<span className="text-sm font-medium text-gray-400 bg-gray-100 px-3 py-1 rounded">
-							{ payment.type }
-						</span>
-					</div>
-
-					<dl className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 pt-4 border-t">
-						<InfoField label={ __( 'Date', 'smartpay' ) }>{ payment.created_at }</InfoField>
-						<InfoField label={ __( 'Customer', 'smartpay' ) }>{ payment.email }</InfoField>
-						<InfoField label={ __( 'Gateway', 'smartpay' ) }>{ payment.gateway }</InfoField>
-						{ payment.transaction_id && (
-							<InfoField label={ __( 'Transaction ID', 'smartpay' ) }>
-								{ payment.transaction_id }
-							</InfoField>
-						) }
-						{ payment.subscription_id && (
-							<InfoField label={ __( 'Subscription', 'smartpay' ) }>
-								<a
-									href={ `#/subscriptions/${ payment.subscription_id }` }
-									className="text-blue-600 hover:underline"
-								>
-									#{ payment.subscription_id }
-								</a>
-							</InfoField>
-						) }
-					</dl>
-				</CardContent>
-			</Card>
-		),
-	} )
-
-	if ( isProductPurchase ) {
-		mainSections.push( {
+	/* Product details */
+	if (isProductPurchase) {
+		mainSections.push({
 			id: 'product_details',
 			component: (
-				<SectionCard key="product_details" title={ __( 'Product Details', 'smartpay' ) }>
-					<dl className="grid grid-cols-2 gap-x-6 gap-y-4">
-						<InfoField label={ __( 'Product', 'smartpay' ) }>
-							{ payment.data?.product_edit_url ? (
-								<a
-									href={ payment.data.product_edit_url }
-									className="text-blue-600 hover:underline"
-								>
-									{ payment.data.product_title || `#${ payment.data.product_id }` }
-								</a>
-							) : (
-								payment.data?.product_title || `#${ payment.data?.product_id }`
-							) }
-						</InfoField>
-						<InfoField label={ __( 'Price', 'smartpay' ) }>
-							{ payment.currency } { payment.data?.product_price }
-						</InfoField>
-						<InfoField label={ __( 'Total Amount', 'smartpay' ) }>
-							{ payment.currency } { payment.data?.total_amount }
-						</InfoField>
-						<InfoField label={ __( 'Billing Type', 'smartpay' ) }>
-							{ payment.data?.billing_type }
-						</InfoField>
-					</dl>
-				</SectionCard>
+				<DetailCard key="product_details" title={__('Product Details', 'smartpay')}>
+					<table className="sp-kv-table">
+						<tbody>
+							<tr>
+								<td>{__('Product', 'smartpay')}</td>
+								<td>
+									{payment.data?.product_edit_url
+										? <a href={payment.data.product_edit_url}>{payment.data.product_title || `#${payment.data.product_id}`}</a>
+										: (payment.data?.product_title || `#${payment.data?.product_id}`)
+									}
+								</td>
+							</tr>
+							<tr><td>{__('Price', 'smartpay')}</td><td>{payment.currency} {payment.data?.product_price}</td></tr>
+							<tr><td>{__('Total Amount', 'smartpay')}</td><td>{payment.currency} {payment.data?.total_amount}</td></tr>
+							<tr><td>{__('Billing Type', 'smartpay')}</td><td>{payment.data?.billing_type || '—'}</td></tr>
+						</tbody>
+					</table>
+				</DetailCard>
 			),
-		} )
+		})
 	}
 
-	if ( isFormPayment ) {
-		mainSections.push( {
+	/* Form details */
+	if (isFormPayment) {
+		mainSections.push({
 			id: 'form_details',
 			component: (
-				<SectionCard key="form_details" title={ __( 'Form Details', 'smartpay' ) }>
-					<dl className="grid grid-cols-2 gap-x-6 gap-y-4">
-						<InfoField label={ __( 'Form', 'smartpay' ) }>
-							{ payment.data?.form_edit_url ? (
-								<div className="flex items-center gap-2">
-									<a
-										href={ payment.data.form_edit_url }
-										className="text-blue-600 hover:underline"
-									>
-										{ payment.data?.form_title || `#${ payment.data?.form_id }` }
-									</a>
-									{ payment.data?.form_type && (
-										<span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200 capitalize">
-											{ payment.data.form_type }
+				<DetailCard key="form_details" title={__('Form Details', 'smartpay')}>
+					<table className="sp-kv-table">
+						<tbody>
+							<tr>
+								<td>{__('Form', 'smartpay')}</td>
+								<td>
+									{payment.data?.form_edit_url
+										? <a href={payment.data.form_edit_url}>{payment.data?.form_title || `#${payment.data?.form_id}`}</a>
+										: (payment.data?.form_title || `#${payment.data?.form_id}`)
+									}
+									{payment.data?.form_type && (
+										<span className="sp-badge sp-badge--expired" style={{ marginLeft: 8, fontSize: 10 }}>
+											{payment.data.form_type}
 										</span>
-									) }
-								</div>
-							) : (
-								payment.data?.form_title || `#${ payment.data?.form_id }`
-							) }
-						</InfoField>
-						<InfoField label={ __( 'Total Amount', 'smartpay' ) }>
-							{ payment.data?.total_amount }
-						</InfoField>
-						<InfoField label={ __( 'Billing Type', 'smartpay' ) }>
-							{ payment.data?.billing_type }
-						</InfoField>
-					</dl>
-				</SectionCard>
+									)}
+								</td>
+							</tr>
+							<tr><td>{__('Total Amount', 'smartpay')}</td><td>{payment.data?.total_amount || '—'}</td></tr>
+							<tr><td>{__('Billing Type', 'smartpay')}</td><td>{payment.data?.billing_type || '—'}</td></tr>
+						</tbody>
+					</table>
+				</DetailCard>
 			),
-		} )
+		})
 	}
 
-	if ( payment.customer ) {
-		mainSections.push( {
+	/* Customer details */
+	if (payment.customer) {
+		mainSections.push({
 			id: 'customer_details',
 			component: (
-				<SectionCard key="customer_details" title={ __( 'Customer Details', 'smartpay' ) }>
-					<dl className="grid grid-cols-3 gap-x-6 gap-y-4">
-						<InfoField label={ __( 'First Name', 'smartpay' ) }>
-							{ payment.customer.first_name }
-						</InfoField>
-						<InfoField label={ __( 'Last Name', 'smartpay' ) }>
-							{ payment.customer.last_name }
-						</InfoField>
-						<InfoField label={ __( 'Email', 'smartpay' ) }>
-							{ payment.customer.email }
-						</InfoField>
-					</dl>
-				</SectionCard>
+				<DetailCard key="customer_details" title={__('Customer', 'smartpay')}>
+					<div className="sp-detail-fields">
+						<Field label={__('First Name', 'smartpay')}>{payment.customer.first_name}</Field>
+						<Field label={__('Last Name', 'smartpay')}>{payment.customer.last_name}</Field>
+						<Field label={__('Email', 'smartpay')}>{payment.customer.email}</Field>
+					</div>
+				</DetailCard>
 			),
-		} )
+		})
 	}
 
-	if ( payment.extra?.form_data ) {
-		mainSections.push( {
+	/* Form data */
+	if (payment.extra?.form_data) {
+		mainSections.push({
 			id: 'form_data',
 			component: (
 				<FormDataSection
 					key="form_data"
-					formData={ payment.extra.form_data }
-					formFields={ payment.extra.form_fields }
+					formData={payment.extra.form_data}
+					formFields={payment.extra.form_fields}
 				/>
 			),
-		} )
+		})
 	}
 
-	mainSections.push( {
+	/* Activity log */
+	mainSections.push({
 		id: 'activity_log',
-		component: <ActivityLogSection key="activity_log" paymentId={ paymentId } />,
-	} )
+		component: <ActivityLogSection key="activity_log" paymentId={paymentId} />,
+	})
 
-	const sections = applyFilters( 'smartpay_payment_details_sections', mainSections, payment )
+	const sections = window.wp?.hooks?.applyFilters('smartpay_payment_details_sections', mainSections, payment) || mainSections
 
 	return (
 		<>
 			<Header
-				title={ __( 'Payment Details', 'smartpay' ) }
-				subtitle={ `#${ payment.id } · ${ payment.email }` }
+				title={__('Payment Details', 'smartpay')}
+				subtitle={`#${payment.id} · ${payment.email}`}
 			/>
 
-			<div className="p-4 max-w-7xl mx-auto">
-				<div className="grid gap-6" style={ { gridTemplateColumns: '1fr 280px' } }>
-					<div className="space-y-4 min-w-0">
-						{ sections.map( ( s ) => s.component ) }
+			<div className="sp-layout">
+
+				{/* Back */}
+				<Link to="/payments" className="sp-back-btn">
+					<span className="sp-back-btn__arrow">←</span>
+					{__('Payments', 'smartpay')}
+				</Link>
+
+				<div className="sp-detail-grid">
+
+					{/* ── Main column ── */}
+					<div>
+
+						{/* Summary card */}
+						<div className="sp-detail-card">
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Payment', 'smartpay')}</span>
+								<span className="sp-detail-card__badge">#{payment.id}</span>
+							</div>
+							<div className="sp-detail-card__body">
+
+								{/* Amount + status hero */}
+								<div className="sp-detail-hero">
+									<span className="sp-detail-amount">
+										{fmtAmount(payment.amount, payment.currency)}
+									</span>
+									<span className={`sp-badge sp-badge--dot ${statusClass(payment.status)}`}>
+										{payment.status || 'pending'}
+									</span>
+									{payment.type && (
+										<span className="sp-badge sp-badge--expired" style={{ fontSize: 11 }}>
+											{payment.type}
+										</span>
+									)}
+								</div>
+
+								{/* Horizontal fields */}
+								<div className="sp-detail-fields">
+									<Field label={__('Date', 'smartpay')}>
+										{payment.created_at
+											? new Date(payment.created_at).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+											: '—'}
+									</Field>
+									<Field label={__('Customer', 'smartpay')}>
+										{payment.customer?.id
+											? <Link to={`/customers/${payment.customer.id}`} style={{ color: 'var(--sp-brand)', textDecoration: 'none' }}>{payment.email}</Link>
+											: payment.email
+										}
+									</Field>
+									<Field label={__('Gateway', 'smartpay')}>{payment.gateway}</Field>
+									{payment.transaction_id && (
+										<Field label={__('Transaction ID', 'smartpay')}>
+											<span style={{ fontFamily: 'monospace', fontSize: 12 }}>{payment.transaction_id}</span>
+										</Field>
+									)}
+									{payment.subscription_id && (
+										<Field label={__('Subscription', 'smartpay')}>
+											<Link to={`/subscriptions/${payment.subscription_id}`} style={{ color: 'var(--sp-brand)', textDecoration: 'none' }}>
+												#{payment.subscription_id}
+											</Link>
+										</Field>
+									)}
+									<Field label={__('Mode', 'smartpay')}>
+										<span className={`sp-badge ${payment.mode === 'test' ? 'sp-badge--pending' : 'sp-badge--expired'}`} style={{ fontSize: 11 }}>
+											{payment.mode || 'live'}
+										</span>
+									</Field>
+								</div>
+							</div>
+						</div>
+
+						{/* Dynamic sections (product/form/customer/form-data/activity) */}
+						{sections.map((s) => s.component)}
 					</div>
 
-					<div className="space-y-4">
-						<SectionCard title={ __( 'Actions', 'smartpay' ) }>
-							<div className="space-y-3">
-								<div>
-									<label className="text-xs text-gray-500 uppercase tracking-wide block mb-1.5">
-										{ __( 'Payment Status', 'smartpay' ) }
-									</label>
-									<Select value={ paymentStatus } onValueChange={ setPaymentStatus }>
-										<SelectTrigger className="w-full">
-											<SelectValue placeholder={ __( 'Select Status', 'smartpay' ) } />
-										</SelectTrigger>
-										<SelectContent>
-											<SelectItem value="pending">{ __( 'Pending', 'smartpay' ) }</SelectItem>
-											<SelectItem value="completed">{ __( 'Completed', 'smartpay' ) }</SelectItem>
-											<SelectItem value="refunded">{ __( 'Refunded', 'smartpay' ) }</SelectItem>
-											<SelectItem value="failed">{ __( 'Failed', 'smartpay' ) }</SelectItem>
-											<SelectItem value="abandoned">{ __( 'Abandoned', 'smartpay' ) }</SelectItem>
-											<SelectItem value="revoked">{ __( 'Revoked', 'smartpay' ) }</SelectItem>
-											<SelectItem value="processing">{ __( 'Processing', 'smartpay' ) }</SelectItem>
-										</SelectContent>
-									</Select>
-								</div>
-								<Button
-									className="w-full"
-									onClick={ handleSave }
-									disabled={ saving }
-								>
-									{ saving
-										? __( 'Updating…', 'smartpay' )
-										: __( 'Update Status', 'smartpay' ) }
-								</Button>
-								<Button
-									variant="outline"
-									className="w-full"
-									onClick={ () => navigate( '/payments' ) }
-								>
-									{ __( '← Back to Payments', 'smartpay' ) }
-								</Button>
-							</div>
-						</SectionCard>
+					{/* ── Sidebar ── */}
+					<div className="sp-detail-sidebar">
 
-						<SectionCard title={ __( 'Transaction Info', 'smartpay' ) }>
-							<dl className="space-y-3">
-								<InfoField label={ __( 'Payment ID', 'smartpay' ) }>
-									#{ payment.id }
-								</InfoField>
-								<InfoField label={ __( 'Gateway', 'smartpay' ) }>
-									{ payment.gateway }
-								</InfoField>
-								{ payment.transaction_id && (
-									<InfoField label={ __( 'Transaction ID', 'smartpay' ) }>
-										{ payment.transaction_id }
-									</InfoField>
-								) }
-								<InfoField label={ __( 'Mode', 'smartpay' ) }>
-									{ payment.mode || __( 'live', 'smartpay' ) }
-								</InfoField>
-								<InfoField label={ __( 'Currency', 'smartpay' ) }>
-									{ payment.currency }
-								</InfoField>
-							</dl>
-						</SectionCard>
+						{/* Status update */}
+						<div className="sp-detail-card">
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Actions', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body">
+								<label className="sp-detail-field__label" style={{ display: 'block', marginBottom: 6 }}>
+									{__('Payment Status', 'smartpay')}
+								</label>
+								<select className="sp-filter-select"
+									value={paymentStatus}
+									onChange={(e) => setPaymentStatus(e.target.value)}>
+									{STATUS_OPTIONS.map((o) => (
+										<option key={o.value} value={o.value}>{o.label}</option>
+									))}
+								</select>
+								<button className="sp-btn sp-btn--primary"
+									onClick={handleSave} disabled={saving}>
+									{saving ? __('Updating…', 'smartpay') : __('Update Status', 'smartpay')}
+								</button>
+							</div>
+						</div>
+
+						{/* Transaction info */}
+						<div className="sp-detail-card">
+							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Transaction Info', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body">
+								<table className="sp-kv-table">
+									<tbody>
+										<tr><td>{__('Payment ID', 'smartpay')}</td><td>#{payment.id}</td></tr>
+										<tr><td>{__('Gateway', 'smartpay')}</td><td>{payment.gateway || '—'}</td></tr>
+										{payment.transaction_id && (
+											<tr>
+												<td>{__('Txn ID', 'smartpay')}</td>
+												<td style={{ fontFamily: 'monospace', fontSize: 11, wordBreak: 'break-all' }}>{payment.transaction_id}</td>
+											</tr>
+										)}
+										<tr>
+											<td>{__('Mode', 'smartpay')}</td>
+											<td>
+												<span className={`sp-badge ${payment.mode === 'test' ? 'sp-badge--pending' : 'sp-badge--expired'}`} style={{ fontSize: 10 }}>
+													{payment.mode || 'live'}
+												</span>
+											</td>
+										</tr>
+										<tr><td>{__('Currency', 'smartpay')}</td><td>{payment.currency || '—'}</td></tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</>
-	)
-}
-
-const FormDataSection = ( { formData, formFields } ) => {
-	const build = ( fields ) => {
-		if ( ! Array.isArray( fields ) ) return {}
-		let tempFields = {}
-		fields.forEach( ( item ) => {
-			const data = item[ Object.keys( item )[ 0 ] ]
-			if ( data?.attributes ) item = data
-			const key = item[ 'attributes' ]?.[ 'name' ]
-			if ( ! key ) return
-			tempFields[ key ] = item.fields
-				? build( item.fields )
-				: item.settings?.label
-		} )
-		return tempFields
-	}
-
-	const humanize = ( str ) =>
-		String( str ).replace( /_/g, ' ' ).replace( /\b\w/g, ( c ) => c.toUpperCase() )
-
-	const renderRaw = ( data, depth = 0 ) =>
-		Object.entries( data || {} ).flatMap( ( [ key, val ] ) => {
-			if ( val === null || val === undefined || val === '' ) return []
-			if ( typeof val === 'object' && ! Array.isArray( val ) ) {
-				return renderRaw( val, depth + 1 )
-			}
-			return (
-				<div key={ key } className="mb-3">
-					<dt className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">
-						{ humanize( key ) }
-					</dt>
-					<dd className="text-sm font-medium text-gray-800">{ String( val ) }</dd>
-				</div>
-			)
-		} )
-
-	const renderFields = ( labels, data ) => (
-		<div key={ Math.random().toString( 36 ).substr( 2, 9 ) }>
-			{ Object.keys( labels ).map( ( key ) =>
-				typeof labels[ key ] === 'object'
-					? renderFields( labels[ key ], data?.[ key ] )
-					: data?.[ key ] && (
-						<div key={ key } className="mb-3">
-							<dt className="text-xs text-gray-500 uppercase tracking-wide mb-0.5">
-								{ labels[ key ] }
-							</dt>
-							<dd className="text-sm font-medium text-gray-800">{ data[ key ] }</dd>
-						</div>
-					)
-			) }
-		</div>
-	)
-
-	const labels = build( formFields || [] )
-	const hasLabels = Object.keys( labels ).length > 0
-
-	return (
-		<SectionCard title={ __( 'Form Data', 'smartpay' ) }>
-			<dl>
-				{ hasLabels
-					? renderFields( labels, formData )
-					: renderRaw( formData ) }
-			</dl>
-		</SectionCard>
 	)
 }

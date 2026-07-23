@@ -1,6 +1,7 @@
 <?php
 
 namespace SmartPay\Modules\Admin;
+defined('ABSPATH') || exit;
 
 use SmartPay\Http\Controllers\Rest\Admin\DashboardController;
 use SmartPay\Http\Controllers\Rest\Admin\ReportController;

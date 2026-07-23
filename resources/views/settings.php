@@ -1,147 +1,282 @@
 <?php
+defined('ABSPATH') || exit;
 
 use SmartPay\Modules\Admin\Setting;
 
-$settings_tabs  = Setting::settings_tabs();
-$all_settings   = Setting::get_registered_settings_sections();
-// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-$active_tab     = isset($_GET['tab']) ? sanitize_text_field(wp_unslash($_GET['tab'])) : null;
-$active_tab     = array_key_exists($active_tab, $settings_tabs) ? $active_tab : 'general';
-$sections       = Setting::settings_tab_sections($active_tab);
-$key            = !empty($sections) ? key($sections) : 'main';
-// phpcs:ignore: WordPress.Security.NonceVerification.Recommended -- Get Request, No nonce needed
-$section        = isset($_GET['section']) && !empty($sections) && array_key_exists(sanitize_text_field(wp_unslash($_GET['section'])), $sections) ? sanitize_text_field(wp_unslash($_GET['section'])) : $key;
+/* ── Bootstrap ──────────────────────────────────────────────── */
 
-$has_main_settings = isset($all_settings[$active_tab]) && !empty($all_settings[$active_tab]['main']); // true if not empty, else false
+$setting_instance = new Setting();
+$settings_tabs    = Setting::settings_tabs();
+$all_settings     = Setting::get_registered_settings_sections();
 
-if (!$has_main_settings) {
-    foreach ($all_settings[$active_tab] as $s_id => $s_title) {
-        if (is_string($s_id) && is_array($sections) && array_key_exists($s_id, $sections)) {
-            continue;
-        } else {
-            $has_main_settings = true;
-            break;
-        }
-    }
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( wp_unslash( $_GET['tab'] ) ) : 'general';
+$active_tab = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
+
+$sections       = Setting::settings_tab_sections( $active_tab );
+$key            = ! empty( $sections ) ? key( $sections ) : 'main';
+
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+$active_section = isset( $_GET['section'] )
+	&& ! empty( $sections )
+	&& array_key_exists( sanitize_text_field( wp_unslash( $_GET['section'] ) ), $sections )
+		? sanitize_text_field( wp_unslash( $_GET['section'] ) )
+		: $key;
+
+/* ── Field extraction ───────────────────────────────────────── */
+
+$registered  = Setting::registered_settings();
+$tab_data    = $registered[ $active_tab ] ?? [];
+$raw_fields  = [];
+
+if ( isset( $tab_data[ $active_section ] ) && is_array( $tab_data[ $active_section ] ) ) {
+	$raw_fields = array_values( $tab_data[ $active_section ] );
+} elseif ( isset( $tab_data['main'] ) && is_array( $tab_data['main'] ) ) {
+	$raw_fields = array_values( $tab_data['main'] );
+} else {
+	// Extensions: tab > section_id > fields array (no 'main' wrapper)
+	foreach ( $tab_data as $s_id => $s_fields ) {
+		if ( $s_id === $active_section && is_array( $s_fields ) ) {
+			$raw_fields = array_values( $s_fields );
+			break;
+		}
+	}
 }
 
-$override = false;
-if (false === $has_main_settings) {
-    unset($sections['main']);
+/* ── Group fields by `header` type → each group becomes a card ─ */
 
-    if ('main' === $section) {
-        foreach ($sections as $section_key => $section_title) {
-            if (!empty($all_settings[$active_tab][$section_key])) {
-                $section  = $section_key;
-                $override = true;
-                break;
-            }
-        }
-    }
+$field_defaults = [
+	'section'       => $active_section,
+	'id'            => null,
+	'desc'          => '',
+	'name'          => '',
+	'size'          => null,
+	'options'       => '',
+	'std'           => '',
+	'min'           => null,
+	'max'           => null,
+	'step'          => null,
+	'chosen'        => null,
+	'multiple'      => null,
+	'placeholder'   => null,
+	'allow_blank'   => true,
+	'readonly'      => false,
+	'faux'          => false,
+	'tooltip_title' => false,
+	'tooltip_desc'  => false,
+	'field_class'   => '',
+	'data'          => [],
+	'style'         => '',
+];
+
+$groups    = [];
+$cur_group = [ 'title' => '', 'fields' => [] ];
+
+foreach ( $raw_fields as $field ) {
+	if ( empty( $field['id'] ) ) {
+		continue;
+	}
+	$field = wp_parse_args( $field, $field_defaults );
+
+	if ( 'header' === $field['type'] ) {
+		if ( ! empty( $cur_group['fields'] ) ) {
+			$groups[] = $cur_group;
+		}
+		$cur_group = [ 'title' => wp_strip_all_tags( $field['name'] ), 'fields' => [] ];
+	} else {
+		$cur_group['fields'][] = $field;
+	}
 }
+if ( ! empty( $cur_group['fields'] ) ) {
+	$groups[] = $cur_group;
+}
+
+/* ── Render ─────────────────────────────────────────────────── */
 
 ob_start();
 ?>
-<div class="smartpay <?php echo 'settings-' . esc_attr($active_tab); ?>">
-    <div class="wrap container">
-        <h1 class="wp-heading-inline"></h1>
-    </div>
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between py-1 px-4 mt-3 text-white bg-dark rounded-top">
-            <div class="lh-100">
-                <h2 class="text-white"><?php esc_html_e('SmartPay Settings', 'smartpay'); ?></h2>
-            </div>
-            <div>
-                <a class="btn btn-dark btn-sm" href="https://wpsmartpay.com/changelog/" target="_blank">v<?php echo esc_html(SMARTPAY_VERSION); ?></a>
-            </div>
-        </div>
+<div class="smartpay settings-<?php echo esc_attr( $active_tab ); ?>">
+	<div class="wrap" style="display:none"><h1 class="wp-heading-inline"></h1></div>
 
-        
-        <div class="p-4 max-w-7xl mx-auto">
-            <div class="card border-light shadow-sm mt-0">
-                <div class="card-header rounded-0">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <?php
-                        foreach ($settings_tabs as $tab_id => $tab_name) {
-                            $tab_url = add_query_arg(array(
-                                'settings-updated' => false,
-                                'tab'              => $tab_id,
-                            ));
+	<div class="smartpay-page-header">
+		<div class="smartpay-page-header__inner">
+			<div class="smartpay-page-header__logo">
+				<img src="<?php echo esc_url( SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ); ?>" alt="SmartPay" />
+			</div>
+			<div class="smartpay-page-header__actions">
+				<a href="https://wpsmartpay.com/docs/" target="_blank" rel="noopener noreferrer"
+					class="smartpay-page-header__help-btn"
+					title="<?php esc_attr_e( 'Help &amp; Documentation', 'smartpay' ); ?>"
+					aria-label="<?php esc_attr_e( 'Open help documentation', 'smartpay' ); ?>">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="opacity:.7" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+					<?php esc_html_e( 'Help', 'smartpay' ); ?>
+				</a>
+			</div>
+		</div>
+	</div>
 
-                            // Remove the section from the tabs so we always end up at the main section
-                            $tab_url = remove_query_arg('section', $tab_url);
+	<div class="sp-layout">
 
-                            $active = $active_tab == $tab_id ? ' active' : '';
-                            echo '<li class="nav-item">';
-                            echo '<a href="' . esc_url($tab_url) . '" class="nav-link' . esc_attr($active) . '">';
-                            echo esc_html($tab_name);
-                            echo '</a>';
-                            echo '</li>';
-                        }
-                        ?>
-                    </ul>
-                </div>
+		<!-- Primary tab navigation -->
+		<div class="sp-filter-tabs sp-settings-tabs">
+			<?php foreach ( $settings_tabs as $tab_id => $tab_name ) :
+				$tab_url   = esc_url( add_query_arg( [ 'tab' => $tab_id, 'settings-updated' => false ], remove_query_arg( 'section' ) ) );
+				$is_active = ( $active_tab === $tab_id );
+			?>
+				<a href="<?php echo $tab_url; ?>"
+					class="sp-filter-tab<?php echo $is_active ? ' sp-filter-tab--active' : ''; ?>">
+					<?php echo esc_html( $tab_name ); ?>
+				</a>
+			<?php endforeach; ?>
+		</div>
 
-                <div class="card-body">
-                    <?php
-                    $number_of_sections = count($sections);
-                    $number = 0;
-                    if ($number_of_sections > 1) {
-                        echo '<ul class="d-flex bd-highlight nav nav-pills border-bottom px-3 pb-2 mt-n2 mx-n4">';
-                        foreach ($sections as $section_id => $section_name) {
-                            echo '<li class="bd-highlight nav-item m-0">';
-                            $number++;
-                            $tab_url = add_query_arg(array(
-                                'settings-updated' => false,
-                                'tab' => $active_tab,
-                                'section' => $section_id
-                            ));
-                            $class = 'nav-link text-decoration-none py-1';
-                            if ($section == $section_id) {
-                                $class .= ' active bg-secondary';
-                            }
-                            echo '<a class="' . esc_attr($class) . '" href="' . esc_url($tab_url) . '">' . esc_html($section_name) . '</a>';
+		<?php if ( count( $sections ) > 1 && 'emails' !== $active_tab ) : ?>
+		<!-- Sub-section navigation (e.g. Extensions → Stripe, Paddle…) -->
+		<div class="sp-filter-tabs sp-settings-subtabs">
+			<?php foreach ( $sections as $section_id => $section_name ) :
+				$sec_url    = esc_url( add_query_arg( [ 'tab' => $active_tab, 'section' => $section_id, 'settings-updated' => false ] ) );
+				$sec_active = ( $active_section === $section_id );
+			?>
+				<a href="<?php echo $sec_url; ?>"
+					class="sp-filter-tab sp-filter-tab--sm<?php echo $sec_active ? ' sp-filter-tab--active' : ''; ?>">
+					<?php echo esc_html( $section_name ); ?>
+				</a>
+			<?php endforeach; ?>
+		</div>
+		<?php endif; ?>
 
-                            echo '</li>';
-                        }
+		<?php if ( 'emails' === $active_tab ) : ?>
 
-                        $payment_mode = smartpay_is_test_mode() ? __('Test Mode', 'smartpay') : __('Live Mode', 'smartpay');
+			<div id="sp-email-templates">
+				<p style="font-size:13px;color:var(--sp-text-muted);margin:0;padding:20px 0;">
+					<?php esc_html_e( 'Loading email notifications…', 'smartpay' ); ?>
+				</p>
+			</div>
 
-                        $test_mode_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
-                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
-                                            </svg>';
-                        echo '<li class="ml-auto bd-highlight nav-item m-0">';
-                        echo '<span class="btn-sm btn-secondary disabled">' . wp_kses_post($test_mode_svg) . wp_kses_post($payment_mode) . '</span>';
-                        echo '</li>';
-                        echo '</ul>';
-                    }
-                    ?>
-                    <form method="POST" action="options.php">
-                        <table class="form-table">
-                            <?php
-                            settings_fields('smartpay_settings');
-                            do_settings_sections('smartpay_settings_' . $active_tab . '_' . $section);
+		<?php elseif ( 'antispam' === $active_tab ) : ?>
 
-                            // If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
-                            if (true === $override) :
-                            ?>
-                                <input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr($section); ?>" />
-                            <?php endif; ?>
-                        </table>
-                        <?php if ($active_tab !== 'debug_log') : ?>
-                            <?php submit_button(__('Save Changes', 'smartpay'), 'btn btn-primary'); ?>
-                        <?php endif; ?>
-                        <?php if ($active_tab === 'debug_log') : ?>
-                            <button class="btn btn-primary smartpay-clear-debug-log"><?php echo esc_html__('Clear Log', 'smartpay') ?></button>
-                        <?php endif; ?>
-                    </form>
-                </div>
-            </div>
-        </div>
+			<form method="POST" action="options.php">
+				<?php settings_fields( 'smartpay_settings' ); ?>
 
-    </div>
-    <!-- container end -->
+				<table class="form-table"><tbody>
+					<?php foreach ( $groups as $group ) : ?>
+						<?php foreach ( $group['fields'] as $field ) :
+							if ( empty( $field['id'] ) ) {
+								continue;
+							}
+							$callback = 'settings_' . $field['type'] . '_callback';
+							if ( ! method_exists( $setting_instance, $callback ) ) {
+								continue;
+							}
+						?>
+						<tr>
+							<th scope="row">
+								<label for="smartpay_settings[<?php echo esc_attr( $field['id'] ); ?>]">
+									<?php echo esc_html( $field['name'] ); ?>
+								</label>
+							</th>
+							<td><?php $setting_instance->$callback( $field ); ?></td>
+						</tr>
+						<?php endforeach; ?>
+					<?php endforeach; ?>
+				</tbody></table>
+
+				<div class="sp-settings-actions">
+					<input type="submit" name="submit" id="submit"
+						class="sp-btn sp-btn--primary"
+						value="<?php echo esc_attr__( 'Save Changes', 'smartpay' ); ?>" />
+				</div>
+
+			</form>
+
+		<?php else : ?>
+
+		<form method="POST" action="options.php">
+			<?php settings_fields( 'smartpay_settings' ); ?>
+
+			<?php if ( $active_section !== $key ) : ?>
+				<input type="hidden" name="smartpay_section_override" value="<?php echo esc_attr( $active_section ); ?>" />
+			<?php endif; ?>
+
+			<div class="sp-settings-cards">
+
+				<?php if ( empty( $groups ) ) : ?>
+					<div class="sp-detail-card">
+						<div class="sp-detail-card__body">
+							<p style="font-size:13px;color:var(--sp-text-muted);margin:0;">
+								<?php esc_html_e( 'No settings available for this section.', 'smartpay' ); ?>
+							</p>
+						</div>
+					</div>
+
+				<?php else : ?>
+					<?php foreach ( $groups as $group ) : ?>
+					<div class="sp-detail-card sp-settings-card">
+
+						<?php if ( ! empty( $group['title'] ) ) : ?>
+						<div class="sp-detail-card__header">
+							<span class="sp-detail-card__title"><?php echo esc_html( $group['title'] ); ?></span>
+						</div>
+						<?php endif; ?>
+
+						<div class="sp-detail-card__body sp-settings-card__body">
+							<?php
+							$total = count( $group['fields'] );
+							foreach ( $group['fields'] as $i => $field ) :
+								if ( empty( $field['id'] ) ) {
+									continue;
+								}
+								$callback     = 'settings_' . $field['type'] . '_callback';
+								if ( ! method_exists( $setting_instance, $callback ) ) {
+									continue;
+								}
+								$is_last      = ( $i === $total - 1 );
+								$is_fullwidth = in_array( $field['type'], [ 'textarea', 'descriptive_text', 'gateways' ], true );
+							?>
+							<div class="sp-settings-row<?php
+								echo $is_last     ? ' sp-settings-row--last'      : '';
+								echo $is_fullwidth ? ' sp-settings-row--fullwidth' : '';
+							?>">
+								<div class="sp-settings-row__left">
+									<label class="sp-settings-row__label"
+										for="smartpay_settings[<?php echo esc_attr( $field['id'] ); ?>]">
+										<?php echo esc_html( $field['name'] ); ?>
+									</label>
+									<?php if ( ! empty( $field['desc'] ) && ! in_array( $field['type'], [ 'text', 'textarea', 'select', 'select_currency', 'gateway_select', 'page_select', 'checkbox', 'switch', 'gateways' ], true ) ) : ?>
+										<p class="sp-settings-row__desc"><?php echo wp_kses_post( $field['desc'] ); ?></p>
+									<?php endif; ?>
+								</div>
+								<div class="sp-settings-row__control">
+									<?php $setting_instance->$callback( $field ); ?>
+								</div>
+							</div>
+							<?php endforeach; ?>
+						</div>
+
+					</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+
+			</div><!-- .sp-settings-cards -->
+
+			<div class="sp-settings-actions">
+				<?php if ( 'debug_log' === $active_tab ) : ?>
+					<button type="button" class="sp-btn sp-btn--outline smartpay-clear-debug-log">
+						<?php esc_html_e( 'Clear Log', 'smartpay' ); ?>
+					</button>
+				<?php else : ?>
+					<input type="submit" name="submit" id="submit"
+						class="sp-btn sp-btn--primary"
+						value="<?php echo esc_attr__( 'Save Changes', 'smartpay' ); ?>" />
+				<?php endif; ?>
+			</div>
+
+		</form>
+
+		<?php endif; ?>
+
+	</div><!-- .sp-layout -->
 </div>
 <?php
-// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 echo ob_get_clean();

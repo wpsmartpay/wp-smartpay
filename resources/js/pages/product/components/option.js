@@ -1,140 +1,169 @@
-import {Card, Form} from "react-bootstrap";
-import {__} from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n'
 
-export const OptionComponent = ({product, setProductData}) => {
+const labelStyle = {
+    display: 'block',
+    fontSize: 11,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.07em',
+    color: 'var(--sp-text-muted)',
+    marginBottom: 6,
+}
+
+const inputStyle = {
+    width: '100%',
+    height: 36,
+    padding: '0 12px',
+    border: '1px solid var(--sp-border)',
+    borderRadius: 'var(--sp-radius-sm)',
+    background: 'var(--sp-surface)',
+    fontSize: 13,
+    color: 'var(--sp-text)',
+    boxSizing: 'border-box',
+    outline: 'none',
+}
+
+/* unwrapped=true → render bare content (for use inside a tab body) */
+export const OptionComponent = ({ product, setProductData, unwrapped = false }) => {
     const _setSettingsData = (settings) => {
-        setProductData({
-            ...product,
-            settings,
-        })
+        setProductData({ ...product, settings })
     }
-    return (
-                <Card>
-                    <Card.Body>
-                        <h2 className="m-0">{__('Checkout Options', 'smartpay')}</h2>
-                        <hr/>
-                        <div className="col-md-10 mt-4 mx-auto">
 
-                            {/* Hook: inject content before built-in option cards */}
-                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                'smartpay.product.options.before',
-                                null,
-                                product,
-                                setProductData
-                            )}
-                            <Card className="bg-light">
-                                <div className="p-3">
-                                    <div className="form-group mb-0">
-                                        <label>
-                                            {__('Checkout Label', 'smartpay')}
-                                        </label>
-                                        <Form.Control
-                                            className="mt-2"
-                                            type="text"
-                                            size="sm"
-                                            value={product?.settings?.payButtonLabel}
-                                            placeholder={__(
-                                                'ex. Get it now',
-                                                'smartpay'
-                                            )}
-                                            onChange={(e) => {
-                                                _setSettingsData({
-                                                    ...product.settings,
-                                                    payButtonLabel: e.target.value,
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </Card>
+    const content = (
+        <>
+            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                'smartpay.product.options.before',
+                null,
+                product,
+                setProductData
+            )}
 
-                            <Card className="my-3 bg-light">
-                                <div className="p-3">
-                                    <div className="custom-control custom-checkbox py-1">
-                                        <input
-                                            type="checkbox"
-                                            className="custom-control-input"
-                                            id="allowExternalResourceLinkOnPaymentSuccessPage"
-                                            value="true"
-                                            checked={product.settings?.externalLink?.allowExternalLink}
-                                            onChange={(e) => {
-                                                _setSettingsData({
-                                                    ...product?.settings,
-                                                    externalLink:{
-                                                        ...product.settings?.externalLink,
-                                                        allowExternalLink: e.target.checked,
-                                                    },
-                                                })
-                                            }}
-                                        />
-                                        <label
-                                            className="custom-control-label pt-1"
-                                            htmlFor="allowExternalResourceLinkOnPaymentSuccessPage"
-                                        >
-                                            {__('Add resource link on Payment Success Page', 'smartpay')}
-                                        </label>
-                                    </div>
-                                    {product.settings?.externalLink?.allowExternalLink &&
-                                        <div className="form-group mt-4 mb-0">
-                                            <div className="d-flex">
-                                                <div className="w-75 mr-4">
-                                                    <label>
-                                                        {__('External Resource Link', 'smartpay')}
-                                                    </label>
-                                                    <Form.Control
-                                                        className="mt-2"
-                                                        type="text"
-                                                        size="sm"
-                                                        defaultValue={product.settings?.externalLink?.link}
-                                                        onChange={(e) => {
-                                                            _setSettingsData({
-                                                                ...product.settings,
-                                                                externalLink:{
-                                                                    ...product.settings?.externalLink,
-                                                                    link: e.target.value,
-                                                                }
-                                                            })
-                                                        }}
-                                                        placeholder={__('ex. https://resourcelink.com', 'smartpay')}
-                                                    />
-                                                </div>
-                                                <div className="w-25">
-                                                    <label>
-                                                        {__('Link Label', 'smartpay')}
-                                                    </label>
-                                                    <Form.Control
-                                                        className="mt-2"
-                                                        type="text"
-                                                        defaultValue={product.settings?.externalLink?.label}
-                                                        onChange={(e) => {
-                                                            _setSettingsData({
-                                                                ...product?.settings,
-                                                                externalLink:{
-                                                                    ...product?.settings?.externalLink,
-                                                                    label: e.target.value,
-                                                                }
-                                                            })
-                                                        }}
-                                                        placeholder={__('ex. Show link', 'smartpay')}
-                                                    />
-                                                </div>
-                                            </div>
-                                            {/*<p className="text-muted">* {__('It will show on payment receipt page.', 'smartpay')}</p>*/}
-                                        </div>
-                                    }
-                                </div>
-                            </Card>
+            <div style={{ marginBottom: 20 }}>
+                <label style={labelStyle} htmlFor="payButtonLabel">
+                    {__('Checkout Label', 'smartpay')}
+                </label>
+                <input
+                    type="text"
+                    id="payButtonLabel"
+                    value={product?.settings?.payButtonLabel || ''}
+                    placeholder={__('ex. Get it now', 'smartpay')}
+                    onChange={(e) =>
+                        _setSettingsData({
+                            ...product.settings,
+                            payButtonLabel: e.target.value,
+                        })
+                    }
+                    style={inputStyle}
+                />
+            </div>
 
-                            {/* Hook: inject content after built-in option cards */}
-                            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
-                                'smartpay.product.options.after',
-                                null,
-                                product,
-                                setProductData
-                            )}
+            <div
+                style={{
+                    padding: '14px 16px',
+                    border: '1px solid var(--sp-border)',
+                    borderRadius: 'var(--sp-radius)',
+                    background: 'var(--sp-surface-muted)',
+                }}
+            >
+                <label
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        cursor: 'pointer',
+                        fontSize: 13,
+                        fontWeight: 500,
+                        color: 'var(--sp-text)',
+                        marginBottom: 0,
+                    }}
+                >
+                    <input
+                        type="checkbox"
+                        checked={product.settings?.externalLink?.allowExternalLink || false}
+                        onChange={(e) =>
+                            _setSettingsData({
+                                ...product?.settings,
+                                externalLink: {
+                                    ...product.settings?.externalLink,
+                                    allowExternalLink: e.target.checked,
+                                },
+                            })
+                        }
+                        style={{ accentColor: 'var(--sp-brand)' }}
+                    />
+                    {__('Add resource link on Payment Success Page', 'smartpay')}
+                </label>
 
+                {product.settings?.externalLink?.allowExternalLink && (
+                    <div
+                        style={{
+                            marginTop: 16,
+                            display: 'grid',
+                            gridTemplateColumns: '2fr 1fr',
+                            gap: 12,
+                        }}
+                    >
+                        <div>
+                            <label style={labelStyle}>
+                                {__('Resource URL', 'smartpay')}
+                            </label>
+                            <input
+                                type="text"
+                                defaultValue={product.settings?.externalLink?.link}
+                                placeholder={__('ex. https://resourcelink.com', 'smartpay')}
+                                onChange={(e) =>
+                                    _setSettingsData({
+                                        ...product.settings,
+                                        externalLink: {
+                                            ...product.settings?.externalLink,
+                                            link: e.target.value,
+                                        },
+                                    })
+                                }
+                                style={inputStyle}
+                            />
                         </div>
-                    </Card.Body>
-                </Card>
+                        <div>
+                            <label style={labelStyle}>
+                                {__('Link Label', 'smartpay')}
+                            </label>
+                            <input
+                                type="text"
+                                defaultValue={product.settings?.externalLink?.label}
+                                placeholder={__('ex. Show link', 'smartpay')}
+                                onChange={(e) =>
+                                    _setSettingsData({
+                                        ...product?.settings,
+                                        externalLink: {
+                                            ...product?.settings?.externalLink,
+                                            label: e.target.value,
+                                        },
+                                    })
+                                }
+                                style={inputStyle}
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {window.SMARTPAY_PRODUCT_HOOKS.applyFilters(
+                'smartpay.product.options.after',
+                null,
+                product,
+                setProductData
+            )}
+        </>
+    )
+
+    if (unwrapped) return content
+
+    return (
+        <div className="sp-detail-card" style={{ marginBottom: 16 }}>
+            <div className="sp-detail-card__header">
+                <span className="sp-detail-card__title">{__('Checkout Options', 'smartpay')}</span>
+            </div>
+            <div className="sp-detail-card__body">{content}</div>
+        </div>
     )
 }
