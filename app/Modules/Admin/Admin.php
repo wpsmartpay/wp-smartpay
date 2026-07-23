@@ -364,9 +364,10 @@ class Admin
                     'adminUrl'  => admin_url('admin.php'),
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'apiNonce' => wp_create_nonce('wp_rest'),
-                    'options' => $this->getOptionsScriptsData(),
-					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
-					'version' => SMARTPAY_VERSION,
+                    'options'    => $this->getOptionsScriptsData(),
+					'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
+					'pluginUrl'  => SMARTPAY_PLUGIN_ASSETS,
+					'version'    => SMARTPAY_VERSION,
                 )
             );
 

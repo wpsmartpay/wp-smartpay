@@ -31,78 +31,31 @@ const LockIcon = () => (
     </div>
 )
 
-const TablePlaceholder = () => (
+const ScreenshotPreview = ({ src }) => (
     <div
         style={{
-            background: 'white',
             borderRadius: 8,
             border: '1px solid #e5e7eb',
             overflow: 'hidden',
+            lineHeight: 0,
         }}
     >
-        <div
-            style={{
-                padding: '12px 16px',
-                borderBottom: '1px solid #e5e7eb',
-                display: 'flex',
-                gap: 8,
-                alignItems: 'center',
-            }}
-        >
-            <div style={{ width: 180, height: 32, background: '#f3f4f6', borderRadius: 4 }} />
-            <div style={{ width: 120, height: 32, background: '#f3f4f6', borderRadius: 4 }} />
-            <div style={{ marginLeft: 'auto', width: 100, height: 32, background: '#e5e7eb', borderRadius: 4 }} />
-        </div>
-        <div
-            style={{
-                display: 'grid',
-                gridTemplateColumns: '2fr 1.5fr 1fr 1fr 1fr',
-                padding: '10px 16px',
-                background: '#f9fafb',
-                gap: 8,
-            }}
-        >
-            {[70, 75, 50, 60, 65].map((w, i) => (
-                <div key={i} style={{ height: 13, background: '#d1d5db', borderRadius: 2, width: `${w}%` }} />
-            ))}
-        </div>
-        {[62, 78, 55, 80, 68, 72].map((w, i) => (
-            <div
-                key={i}
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 1.5fr 1fr 1fr 1fr',
-                    padding: '13px 16px',
-                    borderBottom: '1px solid #f3f4f6',
-                    gap: 8,
-                    alignItems: 'center',
-                }}
-            >
-                <div style={{ height: 12, background: '#e5e7eb', borderRadius: 2, width: `${w}%` }} />
-                <div style={{ height: 12, background: '#e5e7eb', borderRadius: 2, width: '82%' }} />
-                <div style={{ height: 12, background: '#eceef1', borderRadius: 2, width: '55%' }} />
-                <div
-                    style={{
-                        height: 20,
-                        background: '#eceef1',
-                        borderRadius: 10,
-                        width: '58%',
-                    }}
-                />
-                <div style={{ height: 12, background: '#e5e7eb', borderRadius: 2, width: '70%' }} />
-            </div>
-        ))}
+        <img
+            src={src}
+            alt=""
+            aria-hidden="true"
+            style={{ width: '100%', display: 'block', userSelect: 'none', pointerEvents: 'none' }}
+        />
     </div>
 )
 
-const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
+const LockedFeaturePage = ({ title, subtitle, excerpt, previewImage }) => {
     const proData = window.smartpayProData || {}
     const isInstalled = proData.isInstalled ?? false
-    // Prefer the server-built URL (avoids the site domain being added twice).
     const licenseUrl =
         proData.licenseUrl ||
         (window.smartpay?.adminUrl ?? '') + '?page=smartpay-setting&tab=licenses'
-    const upgradeUrl = 'https://wpsmartpay.com/pricing'
+    const upgradeUrl = 'https://wpsmartpay.com/pricing?utm_source=plugin&utm_medium=locked-page&utm_campaign=upgrade'
 
     const ctaUrl = isInstalled ? licenseUrl : upgradeUrl
     const ctaLabel = isInstalled
@@ -110,7 +63,7 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
         : __('Upgrade to WPSmartPay Pro', 'smartpay')
     const modalTitle = isInstalled
         ? __('License activation required', 'smartpay')
-        : /* translators: %s feature name */ __('Unlock', 'smartpay') + ' ' + title
+        : __('Unlock', 'smartpay') + ' ' + title
     const modalDesc = isInstalled
         ? __(
               'Your WPSmartPay Pro license needs to be activated to access this feature.',
@@ -118,20 +71,25 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
           )
         : excerpt
 
+    const pluginUrl = window.smartpay?.pluginUrl ?? ''
+    const imgSrc = previewImage ? `${pluginUrl}/img/${previewImage}` : null
+
     return (
         <>
             <Header title={title} subtitle={subtitle} />
             <div className="sp-content-wide" style={{ position: 'relative' }}>
-                {/* Blurred placeholder */}
+                {/* Blurred screenshot preview */}
                 <div
                     style={{
-                        filter: 'blur(5px)',
+                        filter: 'blur(3px)',
                         pointerEvents: 'none',
                         userSelect: 'none',
-                        opacity: 0.65,
+                        opacity: 0.9,
+                        transform: 'scale(1.02)',
+                        transformOrigin: 'top center',
                     }}
                 >
-                    <TablePlaceholder />
+                    {imgSrc ? <ScreenshotPreview src={imgSrc} /> : null}
                 </div>
 
                 {/* Overlay */}
@@ -144,7 +102,7 @@ const LockedFeaturePage = ({ title, subtitle, excerpt }) => {
                         justifyContent: 'center',
                         padding: 24,
                         background:
-                            'linear-gradient(180deg, rgba(249,250,251,0.4) 0%, rgba(249,250,251,0.8) 100%)',
+                            'linear-gradient(180deg, rgba(249,250,251,0.1) 0%, rgba(249,250,251,0.55) 100%)',
                     }}
                 >
                     <div
@@ -211,6 +169,7 @@ export const SubscriptionsLockedPage = () => (
             'Create subscription plans, manage billing cycles, and let customers self-manage — all in one place.',
             'smartpay'
         )}
+        previewImage="subscription-preview.jpg"
     />
 )
 
@@ -222,6 +181,7 @@ export const ReportsLockedPage = () => (
             'Track revenue, monitor growth, and analyze customer behavior with detailed, filterable reports.',
             'smartpay'
         )}
+        previewImage="report-preview.jpg"
     />
 )
 
@@ -233,5 +193,6 @@ export const InvoicesLockedPage = () => (
             'Create and send professional invoice payment links to customers directly from your dashboard.',
             'smartpay'
         )}
+        previewImage="invoice-preview.jpg"
     />
 )
