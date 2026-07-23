@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.1.0
+Stable Tag: 3.2.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -321,6 +321,28 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.0 =
+* New - User account area: login, registration, and profile pages (WooCommerce-style) with order history and subscription management
+* New - Gateway settings tab: visual card grid with instant AJAX enable/disable toggle — no page reload needed
+* New - Integration cards show category, tier, and "needs setup" badge; inactive gear icon is now dimmed
+* New - LegacyFormMigrator: automatically recovers forms with stale or corrupt block bodies
+* New - Customer detail page now includes address and contact info card
+* New - Deprecation banners on Products and Legacy Forms pages guide users to the new native form builder
+* New - Redesigned New Form modal and template library with fully-configured ready-made forms
+* New - Pricing block: grid/list/compact presets, gap control, custom amount, list-view tab
+* New - Form builder: Goal Progress block, Submit Button block with preset and custom icons, coupon redesign
+* New - Form builder: name, address, checkbox, radio, select, and textarea fields completed with label/input sub-blocks
+* New - `smartpay_coupon_list_actions` filter hook for extending coupon list row actions
+* New - Support page now lists all registered plugin shortcodes
+* Fix - Payment gateways removed from the Integrations list (shown in Gateway settings instead)
+* Fix - 100% discount coupons now work correctly
+* Fix - Product page shows real gateways when parent has sale_price=0 but paid variations exist
+* Fix - Undefined array key "align" PHP warning on form pages resolved
+* Fix - Radio and checkbox options now align correctly on the frontend
+* Fix - REST controllers: all inputs sanitized; AJAX handlers hardened
+* Fix - Plugin Check CI warnings cleared; plugin name and PHP requirement aligned with wp.org guidelines
+* Fix - Form assets always load on smartpay_form post type pages
 
 = 3.1.0 =
 * New - Per-form Checkout Layout setting (stacked or split) and a "Require Login to Checkout" toggle
