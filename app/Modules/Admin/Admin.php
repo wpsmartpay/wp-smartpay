@@ -567,7 +567,7 @@ class Admin
 
         $settings                       = get_option( 'smartpay_settings', array() );
         $settings['smartpay_debug_log'] = null;
-        update_option( 'smartpay_settings', $settings );
+        update_option( 'smartpay_settings', $settings, false );
 
         return new \WP_REST_Response( array( 'cleared' => true ) );
     }
@@ -599,7 +599,7 @@ class Admin
             $settings['business_name'] = mb_substr( $business_name, 0, 200 );
         }
 
-        update_option( 'smartpay_settings', $settings );
+        update_option( 'smartpay_settings', $settings, false );
 
         return new \WP_REST_Response( array( 'saved' => true ) );
     }

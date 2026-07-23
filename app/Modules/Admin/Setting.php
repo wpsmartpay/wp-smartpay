@@ -81,7 +81,9 @@ class Setting
     public function register_settings()
     {
         if (false == get_option('smartpay_settings')) {
-            add_option('smartpay_settings');
+            // 3rd arg = deprecated, 4th arg = autoload. 'no' keeps the option
+            // out of alloptions so it is not fetched on every page load.
+            add_option('smartpay_settings', '', '', 'no');
         }
 
         foreach ($this->registered_settings() as $tab => $sections) {

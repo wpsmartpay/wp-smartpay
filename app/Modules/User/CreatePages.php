@@ -37,7 +37,7 @@ class CreatePages {
 			'user_login_page' => $user_login_page,
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 	}
 
 	public function create_registration_page() {
@@ -64,7 +64,7 @@ class CreatePages {
 			'user_registration_page' => $user_registration_page,
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 	}
 
 	public function create_profile_page() {
@@ -91,6 +91,6 @@ class CreatePages {
 			'user_profile_page' => $user_profile_page,
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 	}
 }
