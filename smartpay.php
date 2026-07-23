@@ -42,15 +42,17 @@ define('SMARTPAY_STORE_URL', 'https://wpsmartpay.com/');
 // Create The Application
 $app = require __DIR__ . '/bootstrap.php';
 
-global $smartpay_options;
-
-$smartpay_options = smartpay_get_settings();
-
 add_action('plugins_loaded', function () use ($app) {
+    // Populate the global settings cache only after plugins_loaded so that
+    // Pro and other add-ons can register their 'smartpay_get_settings'
+    // filters before the global is built.
+    global $smartpay_options;
+    $smartpay_options = smartpay_get_settings();
+
     do_action('smartpay_loaded');
 
     // Run The Application
-     $app->boot();
+    $app->boot();
 });
 
 add_action('init', function () use ($app) {

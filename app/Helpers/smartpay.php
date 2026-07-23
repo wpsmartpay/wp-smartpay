@@ -864,7 +864,7 @@ function smartpay_get_settings()
         $extension_settings = get_option('smartpay_settings_extensions') ? get_option('smartpay_settings_extensions') : [];
 
         $settings = array_merge($general_settings, $gateway_settings, $email_settings, $license_settings, $extension_settings);
-        update_option('smartpay_settings', $settings);
+        update_option('smartpay_settings', $settings, false);
     }
     return apply_filters('smartpay_get_settings', $settings);
 }
@@ -917,7 +917,9 @@ function smartpay_update_settings(array $settings)
     $old_settings = get_option('smartpay_settings');
 
     if (!($old_settings === $settings)) {
-        update_option('smartpay_settings', $settings);
+        // autoload = false keeps smartpay_settings out of wp_options alloptions
+        // so it is only fetched when explicitly requested, not on every page load.
+        update_option('smartpay_settings', $settings, false);
     }
 }
 
