@@ -102,6 +102,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Invoices', 'smartpay'),
+            __('Invoices', 'smartpay'),
+            'manage_options',
+            'smartpay#/invoices',
+            function () {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Payments', 'smartpay'),
             __('Payments', 'smartpay'),
             'manage_options',
@@ -118,18 +130,6 @@ class Admin
             __('Subscriptions', 'smartpay'),
             'manage_options',
             'smartpay#/subscriptions',
-            function () {
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('WPSmartPay - Invoices', 'smartpay'),
-            __('Invoices', 'smartpay'),
-            'manage_options',
-            'smartpay#/invoices',
             function () {
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
@@ -364,9 +364,10 @@ class Admin
                     'adminUrl'  => admin_url('admin.php'),
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'apiNonce' => wp_create_nonce('wp_rest'),
-                    'options' => $this->getOptionsScriptsData(),
-					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
-					'version' => SMARTPAY_VERSION,
+                    'options'    => $this->getOptionsScriptsData(),
+					'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
+					'pluginUrl'  => SMARTPAY_PLUGIN_ASSETS,
+					'version'    => SMARTPAY_VERSION,
                 )
             );
 
@@ -411,7 +412,7 @@ class Admin
                 true
             );
             wp_localize_script('smartpay-support', 'smartpaySupport', $this->getSupportData());
-            wp_localize_script( 'smartpay-support', 'smartpay', array( 'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ) );
+            wp_localize_script( 'smartpay-support', 'smartpay', array( 'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png' ) );
         }
 
         $this->registerBlocks($hook);
@@ -496,7 +497,7 @@ class Admin
         return array(
             'nonce'      => wp_create_nonce( 'wp_rest' ),
             'restUrl'    => get_rest_url( null, 'smartpay/v1' ),
-            'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
+            'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
             'version'    => SMARTPAY_VERSION,
             'debugLog'   => $logger->get_file_contents(),
             'systemInfo' => array(

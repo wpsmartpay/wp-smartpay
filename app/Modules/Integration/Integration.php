@@ -11,7 +11,7 @@ class Integration
     {
         $this->app = $app;
 
-        $this->app->addAction('plugins_loaded', [$this, 'bootIntegrations'], 99);
+        $this->app->addAction('init', [$this, 'bootIntegrations'], 10);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
 
@@ -36,38 +36,6 @@ class Integration
                 'manager'    => LegacyForms::class,
                 'type'       => 'free',
                 'categories' => [ 'Core' ],
-            ],
-            'paddle'    =>  [
-                'name'       => 'Paddle',
-                'excerpt'    => 'Paddle provides financial services for SaaS and Digital services.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paddle.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-            'stripe'    => [
-                'name'       => 'Stripe',
-                'excerpt'    => 'Stripe is an American financial services providing company.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/stripe.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-            'bkash' => [
-                'name'       => 'bKash',
-                'excerpt'    => 'bKash is a mobile financial service in Bangladesh.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/bkash.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-            'razorpay' => [
-                'name'       => 'Razorpay',
-                'excerpt'    => 'Razorpay provides financial services for SaaS and Digital services in India.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/razorpay.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
             ],
             'mailchimp' => [
                 'name'       => 'MailChimp',
@@ -116,33 +84,6 @@ class Integration
                 'manager'    => null,
                 'type'       => 'pro',
                 'categories' => ['Marketing'],
-            ],
-
-            'mollie' => [
-                'name'       => 'Mollie',
-                'excerpt'    => 'Mollie is a payments platform that offers an easy-to-implement process for integrating payments.',
-                'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/mollie.png',
-                'manager'    => null,
-                'type'       => 'pro',
-                'categories' => ['Payment Gateway'],
-            ],
-
-            'toyyibpay' => [
-	            'name'       => 'toyyibPay',
-	            'excerpt'    => 'Quickest & easiest Malaysian online payment solution.',
-	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/toyyibpay.png',
-	            'manager'    => null,
-	            'type'       => 'pro',
-	            'categories' => ['Payment Gateway'],
-            ],
-
-            'paytm' => [
-	            'name'       => 'Paytm',
-	            'excerpt'    => 'Indian digital payments and financial services company.',
-	            'cover'      => SMARTPAY_PLUGIN_ASSETS . '/img/integrations/paytm.png',
-	            'manager'    => null,
-	            'type'       => 'pro',
-	            'categories' => ['Payment Gateway'],
             ],
         ];
     }
