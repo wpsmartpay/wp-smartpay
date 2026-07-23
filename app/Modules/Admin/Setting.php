@@ -421,7 +421,8 @@ class Setting
             ])
         );
 
-        return apply_filters('smartpay_settings_sections', $sections);
+        $sections = apply_filters('smartpay_settings_sections', $sections);
+        return $sections;
     }
 
     public static function settings_tabs()

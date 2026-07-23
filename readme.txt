@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.1.0
+Stable Tag: 3.2.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -321,6 +321,22 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.0 =
+* New - Gateway settings tab redesigned as a visual card grid with instant AJAX enable/disable toggle
+* New - Integration cards now show category, tier label, and a "needs setup" badge; gear icon dims when integration is inactive
+* New - Deprecation banners on Products and Legacy Forms admin pages to guide users to the native form builder
+* New - New Form modal and template library fully redesigned with ready-to-use templates
+* New - Native form pricing block: Grid, List, and Compact layout presets; custom amount input; list-view tab; gap control
+* New - Onboarding checklist and setup wizard improved: correct step order and clickable checklist items
+* Fix - Payment gateways no longer appear in the Integrations list (they are in Gateway settings instead)
+* Fix - 100% discount coupons now apply correctly at checkout
+* Fix - Product page correctly shows available gateways when the parent product has a sale price of zero
+* Fix - Undefined array key "align" PHP warning on form pages resolved
+* Fix - Radio and checkbox options now align correctly on the frontend
+* Fix - All REST controller inputs are sanitized and AJAX handlers hardened against unexpected input
+* Fix - Plugin Check compatibility issues cleared; plugin name and PHP requirement updated to match wp.org guidelines
+* Fix - Payment form assets now always load correctly on smartpay_form post type pages
 
 = 3.1.0 =
 * New - Per-form Checkout Layout setting (stacked or split) and a "Require Login to Checkout" toggle
