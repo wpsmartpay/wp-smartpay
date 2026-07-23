@@ -58,6 +58,17 @@ $goal              = $settings['goal'] ?? array();
 $has_payment_error = empty( $gateways );
 $default_amount    = reset( $amounts );
 
+// Auto-inject the goal-progress block when the sidebar has "Show progress bar on
+// frontend" enabled but the block was never explicitly added to the form content
+// (e.g. forms created before the Charity template existed, or plain donation forms).
+if (
+	! empty( $goal['enabled'] ) &&
+	false !== ( $goal['showToPublic'] ?? true ) &&
+	! has_block( 'smartpay-form/goal-progress', $body )
+) {
+	$body = '<!-- wp:smartpay-form/goal-progress /-->' . $body;
+}
+
 // When a Pricing block is present it renders its own amount cards inline (at the
 // block's position in the body), so the template skips its own amount section to
 // avoid duplicate cards. The block emits the same markup + field names.
@@ -215,7 +226,7 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 						?>
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
 						<?php ob_start(); ?>
-						<label class="payment-gateway--label">
+						<label class="payment-gateway--label mt-3">
 							<?php esc_html_e( 'Select a payment method', 'smartpay' ); ?>
 						</label>
 						<div class="mb-4">
