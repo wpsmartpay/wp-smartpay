@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.1
+Stable Tag: 3.2.2
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,14 +22,12 @@ Use it to invoice clients, accept one-time or recurring donations, or charge for
 
 ---
 
-### What's New in Version 3.0
+### ✅ What's New in Version 3.2.2
 
-* **Rebuilt Gutenberg payment form builder** — Design payment forms visually using the WordPress block editor. No page builders required.
-* **Invoice Management** — Create, send, and track professional invoices directly from your WordPress dashboard.
-* **Anti-Spam Control System** — Protect payment forms with 3 built-in integrations: Cloudflare Turnstile, hCaptcha, and reCAPTCHA v3.
-* **Tax Control System** — Define tax rates (percentage or fixed) and apply them globally or per form.
-* **Redesigned Dashboard and Reports** — Real-time revenue overview, charts, and date-range filters.
-* **Guided Onboarding Wizard** — Step-by-step setup for currency, pages, and gateway in minutes.
+* **WPSmartPay Form block** — The Gutenberg block is renamed, now lists native CPT forms, and renders the full embedded payment form (no more popup-only limitation).
+* **Charity template improved** — Automatically includes the goal progress bar block and pre-configures a funding goal — ready to publish in one click.
+* **Admin sidebar grouping fixed** — Invoices now appears correctly before Payments in the WordPress admin menu, grouped with Dashboard and Forms.
+* **Form UX polish** — Spacing added above "Select a payment method" label; shortcode column uses a dedicated copy icon button instead of a clickable code element.
 
 ---
 
@@ -322,6 +320,13 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 
 == Changelog ==
 
+= 3.2.2 =
+* Fix - WPSmartPay Form Gutenberg block renamed and updated to list native CPT forms; renders the full embedded payment form instead of a popup button
+* Fix - Invoices now appear before Payments in the WordPress admin sidebar (correct visual grouping with Dashboard and Forms)
+* Fix - Added top spacing before "Select a payment method" label on native payment forms
+* Fix - Shortcode column on the Forms list page now uses a dedicated copy icon button instead of a clickable code element
+* New - Charity donation template auto-includes the goal progress bar block and pre-configures a funding goal
+
 = 3.2.1 =
 * New - Subscriptions, Reports, and Invoices locked pages now show blurred real screenshots as upgrade preview background
 
@@ -429,6 +434,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.2.2 =
+Renames the WPSmartPay Form Gutenberg block to correctly list native forms and render the full embedded form; fixes admin sidebar grouping for Invoices; improves payment form UX. No database changes.
 
 = 3.1.0 =
 Adds a split checkout layout and require-login option for payment forms, plus a fix for a rare fatal error in debug logging. No database changes.
