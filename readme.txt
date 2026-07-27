@@ -4,7 +4,7 @@ Tags: payment forms, stripe, paypal, invoices, donations
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.2
+Stable Tag: 3.2.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,12 +22,12 @@ Use it to invoice clients, accept one-time or recurring donations, or charge for
 
 ---
 
-### ✅ What's New in Version 3.2.2
+### ✅ What's New in Version 3.2.3
 
-* **WPSmartPay Form block** — The Gutenberg block is renamed, now lists native CPT forms, and renders the full embedded payment form (no more popup-only limitation).
-* **Charity template improved** — Automatically includes the goal progress bar block and pre-configures a funding goal — ready to publish in one click.
-* **Admin sidebar grouping fixed** — Invoices now appears correctly before Payments in the WordPress admin menu, grouped with Dashboard and Forms.
-* **Form UX polish** — Spacing added above "Select a payment method" label; shortcode column uses a dedicated copy icon button instead of a clickable code element.
+* **Zero frontend DB overhead** — Migrations now run only in wp-admin, WP-CLI, and cron — not on every visitor page load. A version sentinel means they're skipped entirely once the schema is current.
+* **Settings removed from global alloptions** — `smartpay_settings` is no longer autoloaded on every WordPress page, reducing the alloptions cache size site-wide.
+* **Settings global fixed** — `$smartpay_options` is now populated after `plugins_loaded` so Pro and other add-on filters apply before the global is frozen.
+* **Cleaner bootstrap** — `wp-admin/includes/plugin.php` is no longer loaded on frontend requests.
 
 ---
 
@@ -320,6 +320,12 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 
 == Changelog ==
 
+= 3.2.3 =
+* Fix - Database migrations now only run in wp-admin, WP-CLI, and cron; a version sentinel prevents re-running when the schema is already current
+* Fix - smartpay_settings option removed from WordPress alloptions autoload cache — no longer loaded on every frontend page
+* Fix - Plugin settings global ($smartpay_options) now populated inside plugins_loaded so Pro and add-on filters apply correctly
+* Fix - wp-admin/includes/plugin.php no longer loaded on frontend requests
+
 = 3.2.2 =
 * Fix - WPSmartPay Form Gutenberg block renamed and updated to list native CPT forms; renders the full embedded payment form instead of a popup button
 * Fix - Invoices now appear before Payments in the WordPress admin sidebar (correct visual grouping with Dashboard and Forms)
@@ -434,6 +440,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.2.3 =
+Performance update: eliminates database queries on every frontend page load, removes smartpay_settings from the alloptions autoload cache, and fixes settings initialisation order. No database changes.
 
 = 3.2.2 =
 Renames the WPSmartPay Form Gutenberg block to correctly list native forms and render the full embedded form; fixes admin sidebar grouping for Invoices; improves payment form UX. No database changes.
