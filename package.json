@@ -20,7 +20,7 @@
     "watch:form": "wp-scripts start resources/form-builder/index.js --output-path=public/form-builder",
     "build:form": "wp-scripts build resources/form-builder/index.js --output-path=public/form-builder",
     "watch:blocks": "wp-scripts start resources/blocks/index.js --output-path=public/blocks",
-    "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks",
+    "build:blocks": "wp-scripts build resources/blocks/index.js --output-path=public/blocks && cp resources/blocks/form/block.json public/blocks/form/block.json && cp resources/blocks/product/block.json public/blocks/product/block.json",
     "dev:watch": "npm run watch & npm run watch:form & npm run watch:blocks",
     "release": "npm run build && gulp release",
     "commit": "git-cz"

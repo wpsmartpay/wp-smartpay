@@ -428,15 +428,8 @@ class Admin
         // Global
         wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
 
-        // Product
-        register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-editor-blocks',
-        ));
-
-        // Form
-        register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-editor-blocks',
-        ));
+        register_block_type( SMARTPAY_DIR . 'public/blocks/product' );
+        register_block_type( SMARTPAY_DIR . 'public/blocks/form' );
 
         wp_localize_script(
             'smartpay-editor-blocks',
