@@ -110,7 +110,7 @@ class Activator {
 			'customer_dashboard_page' => $customer_dashboard_page,
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 	}
 
 	/**
@@ -142,13 +142,14 @@ class Activator {
 			'integrations'          => array(),
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		// autoload = false: settings are only fetched on demand, not pre-loaded on every page.
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 
-		// set the db version to option table
+		// set the db version to option table (also non-autoloaded).
 		if ( is_null( get_option( 'smartpay_db_version' ) ) ) {
-			add_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION );
+			add_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION, '', false );
 		} else {
-			update_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION );
+			update_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION, false );
 		}
 	}
 

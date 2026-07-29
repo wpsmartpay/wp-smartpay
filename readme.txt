@@ -1,33 +1,33 @@
 === WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions ===
 Contributors: converswp
-Tags: payment forms, stripe, paypal, invoices, donations
+Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.2
+Stable Tag: 3.2.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Accept payments, send invoices, and collect donations on WordPress. Connect Stripe, PayPal, Authorize.net, and more — no store or cart required.
+Accept payments, subscriptions, and donations on WordPress with Stripe, PayPal, and more — invoices included, no store or cart required.
 
 == Description ==
 
-**WPSmartPay** is the simplest way to accept payments, send professional invoices, and collect donations on WordPress.
+Need to charge for something on WordPress — a service, a subscription, a donation — but don't want to set up a whole online store just to do it?
 
-No complex store setup. No bloated cart plugin. Just create a payment form, connect a gateway, and start getting paid — in minutes.
+**WPSmartPay** accepts payments, subscriptions, and donations without WooCommerce, cart plugins, or custom code. Create a payment form, connect a gateway, share the link — start getting paid in minutes.
 
-Use it to invoice clients, accept one-time or recurring donations, or charge for services. WPSmartPay handles the money side so you can focus on the work.
+Invoice clients, bill recurring subscriptions, or collect one-time and recurring donations. No store to configure, no products to manage — just a form and a gateway.
 
 [youtube https://www.youtube.com/watch?v=PdqA7XNH60Q]
 
 ---
 
-### ✅ What's New in Version 3.2.2
+### ✅ What's New in Version 3.2.3
 
-* **WPSmartPay Form block** — The Gutenberg block is renamed, now lists native CPT forms, and renders the full embedded payment form (no more popup-only limitation).
-* **Charity template improved** — Automatically includes the goal progress bar block and pre-configures a funding goal — ready to publish in one click.
-* **Admin sidebar grouping fixed** — Invoices now appears correctly before Payments in the WordPress admin menu, grouped with Dashboard and Forms.
-* **Form UX polish** — Spacing added above "Select a payment method" label; shortcode column uses a dedicated copy icon button instead of a clickable code element.
+* **Zero frontend DB overhead** — Migrations now run only in wp-admin, WP-CLI, and cron — not on every visitor page load. A version sentinel means they're skipped entirely once the schema is current.
+* **Settings removed from global alloptions** — `smartpay_settings` is no longer autoloaded on every WordPress page, reducing the alloptions cache size site-wide.
+* **Settings global fixed** — `$smartpay_options` is now populated after `plugins_loaded` so Pro and other add-on filters apply before the global is frozen.
+* **Cleaner bootstrap** — `wp-admin/includes/plugin.php` is no longer loaded on frontend requests.
 
 ---
 
@@ -135,14 +135,24 @@ Stay compliant without extra plugins:
 
 Connect WPSmartPay to your marketing stack and automate post-payment workflows.
 
-* **Mailchimp** — Add customers to lists and tags on payment
-* **MailerLite** — Sync subscribers and trigger automations
-* **FluentCRM** — Tag contacts and trigger sequences in your WordPress CRM
-* **AffiliateWP** — Track affiliate referrals on every payment
-* **Zapier** — Connect to 6,000+ apps with no code
-* **Pabbly Connect** — Automate workflows with multi-step triggers
+* **[Mailchimp](https://mailchimp.com/)** — Add customers to lists and tags on payment
+* **[MailerLite](https://www.mailerlite.com/)** — Sync subscribers and trigger automations
+* **[FluentCRM](https://wordpress.org/plugins/fluent-crm/)** — Tag contacts and trigger sequences in your WordPress CRM
+* **[AffiliateWP](https://affiliatewp.com/)** — Track affiliate referrals on every payment
+* **[Zapier](https://zapier.com/)** — Connect to 6,000+ apps with no code
+* **[Pabbly Connect](https://www.pabbly.com/connect/)** — Automate workflows with multi-step triggers
 
 [See all integrations](https://wpsmartpay.com/features/integrations/?utm_source=readme&utm_medium=link&utm_campaign=plugin-readme&utm_content=integrations-section)
+
+---
+
+### Course and Membership Integrations *(Pro)*
+
+Sell courses and memberships without a separate checkout — payment and enrollment happen in one step.
+
+* **[LearnDash](https://www.learndash.com/)** — Enroll students in a course the moment payment clears
+* **[Tutor LMS](https://wordpress.org/plugins/tutor/)** — Grant course access automatically on successful payment
+* **[LifterLMS](https://wordpress.org/plugins/lifterlms/)** — Unlock memberships and courses after checkout
 
 ---
 
@@ -158,7 +168,7 @@ Agents can take real actions inside your site using the built-in Model Context P
 * **Generate coupon codes** — bulk-create codes with custom prefixes, limits, and expiry from a single instruction
 * **Manage subscriptions** — list active subscriptions or cancel one by customer email
 
-Use Claude, Cursor, or any tool that speaks Model Context Protocol. No webhooks or custom scripts needed — the MCP endpoint is built into the plugin.
+Use Claude, ChatGPT, Codex, Cursor, or any tool that speaks Model Context Protocol. No webhooks or custom scripts needed — the MCP endpoint is built into the plugin.
 
 [Learn how to connect an AI agent](https://docs.wpsmartpay.com/en/mcp?utm_source=readme&utm_medium=link&utm_campaign=plugin-readme&utm_content=mcp-section)
 
@@ -226,6 +236,9 @@ Stripe - Authorize.net - Paddle - Razorpay - Mollie - bKash - toyyibPay - Paytm
 **Marketing and Automation Integrations:**
 Mailchimp - MailerLite - FluentCRM - AffiliateWP - Pabbly - Zapier
 
+**Course and Membership Integrations:**
+LearnDash - Tutor LMS - LifterLMS
+
 **AI Agent Integration (MCP):**
 * Built-in Model Context Protocol server
 * AI agents can create forms, query payments, send invoices, manage coupons and subscriptions
@@ -267,6 +280,9 @@ For Pro features: upload WP SmartPay Pro, activate, and enter your license key a
 = Is WPSmartPay free? =
 Yes. The core plugin is completely free and includes the Gutenberg form builder, invoice management, tax control, anti-spam protection, dashboard reports, email templates, and the PayPal Standard gateway — no credit card required to install.
 
+= How is WPSmartPay different from other WordPress payment plugins? =
+Most payment plugins are either a full store (WooCommerce and its cart, products, and shipping) or a single-purpose donation button. WPSmartPay is neither — it's a standalone form-and-gateway tool built for anyone who needs to get paid without running a store: invoicing built into the same admin screen as your forms, three anti-spam options out of the box, and a free tier that includes invoicing and donation forms, which most competing free plugins don't.
+
 = Do I need WooCommerce to accept payments? =
 No. WPSmartPay is a fully standalone payment plugin. There is no cart, no store setup, and no WooCommerce required. Install, connect a gateway, and start getting paid in minutes.
 
@@ -292,7 +308,7 @@ Yes. PayPal Standard is built into the free plugin. Connect your PayPal account 
 Yes. Create percentage or fixed-amount coupon codes, set expiry dates, and apply them at checkout. Basic coupon management is included in the free plugin. Pro adds bulk generation, per-customer limits, and CSV export.
 
 = What is the difference between free and Pro? =
-The free plugin includes PayPal, manual payment, payment forms, invoices, coupons, customer management, and dashboard reports. Pro adds premium gateways (Stripe, Authorize.net, Mollie, Paddle, etc.), subscription billing, advanced tabbed reports, CRM/marketing integrations, bulk coupons, and outgoing webhooks. [Compare plans](https://wpsmartpay.com/pricing/?utm_source=readme&utm_medium=link&utm_campaign=plugin-readme&utm_content=faq-upgrade)
+The free plugin includes PayPal, manual payment, payment forms, invoices, coupons, customer management, and dashboard reports. Pro adds premium gateways (Stripe, Authorize.net, Mollie, Paddle, etc.), subscription billing, advanced tabbed reports, CRM/marketing integrations, LMS integrations (LearnDash, Tutor LMS, LifterLMS), bulk coupons, and outgoing webhooks. [Compare plans](https://wpsmartpay.com/pricing/?utm_source=readme&utm_medium=link&utm_campaign=plugin-readme&utm_content=faq-upgrade)
 
 = Does it work with the Gutenberg block editor? =
 Yes — the form builder is built entirely on Gutenberg blocks and integrates natively with the WordPress editor. Embed forms anywhere using the SmartPay block or the `[smartpay_form]` shortcode.
@@ -300,7 +316,7 @@ Yes — the form builder is built entirely on Gutenberg blocks and integrates na
 = Is WPSmartPay GDPR compliant? =
 Yes. Payment card data is never stored on your server — all sensitive data is handled directly by the payment gateway (Stripe, PayPal, etc.). Turnstile and hCaptcha are privacy-first anti-spam options; reCAPTCHA v3 is also supported.
 
-= Can AI agents like Claude or Cursor manage my payment forms and store? =
+= Can AI agents like Claude, ChatGPT, or Cursor manage my payment forms and store? =
 Yes, with WPSmartPay Pro. The plugin ships a built-in Model Context Protocol (MCP) server that exposes 15 abilities to any MCP-compatible AI agent. Agents can create payment forms from a natural-language prompt, query payments and customers, create and send invoices, bulk-generate coupon codes, and manage subscriptions — all without writing custom code. [Learn more](https://docs.wpsmartpay.com/en/mcp?utm_source=readme&utm_medium=link&utm_campaign=plugin-readme&utm_content=faq-mcp)
 
 = What PHP version is required? =
@@ -319,6 +335,12 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.3 =
+* Fix - Database migrations now only run in wp-admin, WP-CLI, and cron; a version sentinel prevents re-running when the schema is already current
+* Fix - smartpay_settings option removed from WordPress alloptions autoload cache — no longer loaded on every frontend page
+* Fix - Plugin settings global ($smartpay_options) now populated inside plugins_loaded so Pro and add-on filters apply correctly
+* Fix - wp-admin/includes/plugin.php no longer loaded on frontend requests
 
 = 3.2.2 =
 * Fix - WPSmartPay Form Gutenberg block renamed and updated to list native CPT forms; renders the full embedded payment form instead of a popup button
@@ -434,6 +456,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.2.3 =
+Performance update: eliminates database queries on every frontend page load, removes smartpay_settings from the alloptions autoload cache, and fixes settings initialisation order. No database changes.
 
 = 3.2.2 =
 Renames the WPSmartPay Form Gutenberg block to correctly list native forms and render the full embedded form; fixes admin sidebar grouping for Invoices; improves payment form UX. No database changes.
