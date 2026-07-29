@@ -8,7 +8,7 @@
  * Version: 3.2.3
  * Requires PHP: 8.1
  * Requires at least: 6.0
- * Tested up to: 7.0.2
+ * Tested up to: 7.0
  *
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
