@@ -8,7 +8,8 @@ class UserLogin {
 
 	public function __construct() {
 		add_action( 'wp_ajax_nopriv_smartpay_user_login', array( $this, 'handle_user_login' ) );
-		add_filter( 'template_include', array( $this, 'render_layout' ) );
+		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
+		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
 	}
 
 	public function handle_user_login() {
@@ -62,23 +63,23 @@ class UserLogin {
 		);
 	}
 
-	public function render_layout( $template ) {
-		if ( $this->is_smartpay_login_page() ) {
-			if ( is_user_logged_in() ) {
-				$settings = get_option( 'smartpay_settings', array() );
-				$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
-				if ( $page_id ) {
-					wp_safe_redirect( get_permalink( $page_id ) );
-				} else {
-					wp_safe_redirect( home_url() );
-				}
-			}
-			$shortcode = 'smartpay_user_login';
-			include SMARTPAY_DIR . 'resources/views/templates/layout.php';
+	public function inject_shortcode( $content ) {
+		if ( $this->is_smartpay_login_page() && in_the_loop() && is_main_query() ) {
+			return do_shortcode( '[smartpay_user_login]' );
+		}
+		return $content;
+	}
+
+	public function maybe_redirect() {
+		if ( ! $this->is_smartpay_login_page() ) {
 			return;
 		}
-
-		return $template;
+		if ( is_user_logged_in() ) {
+			$settings = get_option( 'smartpay_settings', array() );
+			$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
+			wp_safe_redirect( $page_id ? get_permalink( $page_id ) : home_url() );
+			exit;
+		}
 	}
 
 	protected function is_smartpay_login_page() {
