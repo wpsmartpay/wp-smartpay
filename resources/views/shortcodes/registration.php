@@ -6,7 +6,7 @@ $smartpay_login_page_url = $settings['user_login_page'] ? get_permalink( $settin
 
 ?>
 
-<div class="smartpay-registration-page">
+<div class="smartpay-registration-page alignfull">
 	<div class="registration-container">
 		<div class="registration-form-wrapper">
 			<div class="registration-form-container">

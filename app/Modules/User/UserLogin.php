@@ -10,6 +10,7 @@ class UserLogin {
 		add_action( 'wp_ajax_nopriv_smartpay_user_login', array( $this, 'handle_user_login' ) );
 		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
 		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
+		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 	}
 
 	public function handle_user_login() {
@@ -61,6 +62,12 @@ class UserLogin {
 				'redirect' => $this->get_redirect_url( $user ),
 			)
 		);
+	}
+
+	public function hide_page_title() {
+		if ( $this->is_smartpay_login_page() ) {
+			echo '<style>.wp-block-post-title,.entry-title,.page-title{display:none!important}</style>';
+		}
 	}
 
 	public function inject_shortcode( $content ) {

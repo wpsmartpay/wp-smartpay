@@ -25,6 +25,7 @@ class UserProfile {
 
 		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
 		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
+		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 
 		add_action( 'wp_ajax_smartpay_upload_avatar', array( $this, 'handle_avatar_upload' ) );
 		add_filter( 'get_avatar_url', array( $this, 'custom_avatar_url' ), 10, 3 );
@@ -34,6 +35,12 @@ class UserProfile {
 		add_action( 'wp_ajax_smartpay_update_address', array( $this, 'handle_address_update' ) );
 		add_action( 'wp_ajax_smartpay_update_password', array( $this, 'handle_password_update' ) );
 		add_action( 'wp_ajax_smartpay_update_preferences', array( $this, 'handle_preferences_update' ) );
+	}
+
+	public function hide_page_title() {
+		if ( $this->is_smartpay_profile_page() ) {
+			echo '<style>.wp-block-post-title,.entry-title,.page-title{display:none!important}</style>';
+		}
 	}
 
 	public function inject_shortcode( $content ) {
