@@ -6,7 +6,7 @@ $smartpay_registration_page_url = $settings['user_registration_page'] ? get_perm
 
 ?>
 
-<div class="smartpay-login-page alignfull">
+<div class="smartpay-login-page">
 	<div class="login-container">
 		<div class="login-form-wrapper">
 			<div class="login-form-container">
