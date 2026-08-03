@@ -9,6 +9,7 @@ class UserLogin {
 	public function __construct() {
 		add_action( 'wp_ajax_nopriv_smartpay_user_login', array( $this, 'handle_user_login' ) );
 		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
 		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 	}
@@ -60,6 +61,37 @@ class UserLogin {
 			array(
 				'message'  => 'Login successful! Redirecting...',
 				'redirect' => $this->get_redirect_url( $user ),
+			)
+		);
+	}
+
+	public function enqueue_assets() {
+		if ( ! $this->is_smartpay_login_page() ) {
+			return;
+		}
+		wp_enqueue_style(
+			'smartpay-login-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/login.css',
+			array(),
+			SMARTPAY_VERSION
+		);
+		wp_enqueue_script(
+			'smartpay-login-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/js/frontend/login.js',
+			array(),
+			SMARTPAY_VERSION,
+			true
+		);
+		wp_localize_script(
+			'smartpay-login-frontend',
+			'smartpayData',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'smartpay_frontend_nonce' ),
+				'strings' => array(
+					'processing' => __( 'Processing...', 'smartpay' ),
+					'error'      => __( 'An error occurred. Please try again.', 'smartpay' ),
+				),
 			)
 		);
 	}

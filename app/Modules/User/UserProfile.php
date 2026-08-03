@@ -24,6 +24,7 @@ class UserProfile {
 		$this->customerService = new CustomerService();
 
 		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
 		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 
@@ -35,6 +36,37 @@ class UserProfile {
 		add_action( 'wp_ajax_smartpay_update_address', array( $this, 'handle_address_update' ) );
 		add_action( 'wp_ajax_smartpay_update_password', array( $this, 'handle_password_update' ) );
 		add_action( 'wp_ajax_smartpay_update_preferences', array( $this, 'handle_preferences_update' ) );
+	}
+
+	public function enqueue_assets() {
+		if ( ! $this->is_smartpay_profile_page() ) {
+			return;
+		}
+		wp_enqueue_style(
+			'smartpay-user-profile-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/profile.css',
+			array(),
+			SMARTPAY_VERSION
+		);
+		wp_enqueue_script(
+			'smartpay-user-profile-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/js/frontend/profile.js',
+			array(),
+			SMARTPAY_VERSION,
+			true
+		);
+		wp_localize_script(
+			'smartpay-user-profile-frontend',
+			'smartpayData',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'smartpay_frontend_nonce' ),
+				'strings' => array(
+					'processing' => __( 'Processing...', 'smartpay' ),
+					'error'      => __( 'An error occurred. Please try again.', 'smartpay' ),
+				),
+			)
+		);
 	}
 
 	public function hide_page_title() {
