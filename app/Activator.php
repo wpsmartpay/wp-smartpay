@@ -1,17 +1,20 @@
 <?php
 
 namespace SmartPay;
-defined('ABSPATH') || exit;
+
+defined( 'ABSPATH' ) || exit;
 
 use SmartPay\Modules\Admin\Utilities\Upload;
+use SmartPay\Modules\User\CreatePages;
 
-require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 class Activator {
 	public $upload;
 	/**
 	 * if any changes/updates on database
 	 * update the database version
+	 *
 	 * @var $db_version
 	 */
 	private const SMARTPAY_DB_VERSION = '2.0';
@@ -19,6 +22,7 @@ class Activator {
 	public function __construct() {
 		$this->migrate();
 		$this->_create_pages();
+		new CreatePages(); // Login / registration / profile pages for the account area.
 		$this->_set_default_settings();
 
 		smartpay()->make( Upload::class )->protectDirectory( true );
@@ -46,7 +50,7 @@ class Activator {
 	 * @access private
 	 */
 	private function _create_pages() {
-		$smartpay_settings = get_option( 'smartpay_settings', [] );
+		$smartpay_settings = get_option( 'smartpay_settings', array() );
 
 		// Setup payment success page
 		$payment_success_page = array_key_exists( 'payment_success_page', $smartpay_settings ) ? $smartpay_settings['payment_success_page'] : false;
@@ -56,11 +60,11 @@ class Activator {
 				array(
 					'post_title'     => __( 'Payment Confirmation', 'smartpay' ),
 					'post_name'      => 'smartpay-payment-confirmation',
-					'post_content'   => "<!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->",
+					'post_content'   => '<!-- wp:shortcode -->[smartpay_payment_receipt]<!-- /wp:shortcode -->',
 					'post_status'    => 'publish',
 					'post_author'    => get_current_user_id(),
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				)
 			);
 		}
@@ -77,7 +81,7 @@ class Activator {
 					'post_status'    => 'publish',
 					'post_author'    => get_current_user_id(),
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				)
 			);
 		}
@@ -90,11 +94,11 @@ class Activator {
 				array(
 					'post_title'     => __( 'Dashboard', 'smartpay' ),
 					'post_name'      => 'smartpay-customer-dashboard',
-					'post_content'   => sprintf( "<!-- wp:shortcode -->%s<!-- /wp:shortcode -->", '[smartpay_dashboard]' ),
+					'post_content'   => sprintf( '<!-- wp:shortcode -->%s<!-- /wp:shortcode -->', '[smartpay_dashboard]' ),
 					'post_status'    => 'publish',
 					'post_author'    => get_current_user_id(),
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				)
 			);
 		}
@@ -106,7 +110,7 @@ class Activator {
 			'customer_dashboard_page' => $customer_dashboard_page,
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 	}
 
 	/**
@@ -117,36 +121,36 @@ class Activator {
 	 * @access private
 	 */
 	private function _set_default_settings() {
-		$smartpay_settings = get_option( 'smartpay_settings', [] );
+		$smartpay_settings = get_option( 'smartpay_settings', array() );
 
 		$options = array(
 			// General
-			'currency'        => 'USD',
+			'currency'              => 'USD',
 
 			// Gateway
-			'test_mode'       => 0,
-			'gateways'        => [ 'paypal' => 1 ],
-			'default_gateway' => 'paypal',
+			'test_mode'             => 0,
+			'gateways'              => array( 'paypal' => 1 ),
+			'default_gateway'       => 'paypal',
 
 			// Email
-			'from_name'       => get_bloginfo( 'name' ),
-			'from_email'      => get_bloginfo( 'admin_email' ),
+			'from_name'             => get_bloginfo( 'name' ),
+			'from_email'            => get_bloginfo( 'admin_email' ),
 
 			'payment_email_subject' => 'Payment Receipt - ' . get_bloginfo( 'name' ),
 			'payment_email_heading' => 'Payment Receipt - ' . get_bloginfo( 'name' ),
 
-			'integrations' => [],
+			'integrations'          => array(),
 		);
 
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ) );
+		// autoload = false: settings are only fetched on demand, not pre-loaded on every page.
+		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
 
-		// set the db version to option table
+		// set the db version to option table (also non-autoloaded).
 		if ( is_null( get_option( 'smartpay_db_version' ) ) ) {
-			add_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION );
+			add_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION, '', false );
 		} else {
-			update_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION );
+			update_option( 'smartpay_db_version', self::SMARTPAY_DB_VERSION, false );
 		}
-
 	}
 
 	public static function activatePlugin() {

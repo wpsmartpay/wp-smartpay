@@ -8,9 +8,16 @@
     "/public/js/ui.js": "/public/js/ui.js",
     "/public/js/admin/form-editor-sidebar.js": "/public/js/admin/form-editor-sidebar.js",
     "/public/js/support.js": "/public/js/support.js",
-    "/public/css/components.css": "/public/css/components.css",
+    "/public/js/frontend/login.js": "/public/js/frontend/login.js",
+    "/public/js/frontend/profile.js": "/public/js/frontend/profile.js",
+    "/public/js/frontend/registration.js": "/public/js/frontend/registration.js",
+    "/public/css/frontend/login.css": "/public/css/frontend/login.css",
     "/public/css/admin/form-editor-sidebar.css": "/public/css/admin/form-editor-sidebar.css",
     "/public/css/dashboard.css": "/public/css/dashboard.css",
     "/public/css/admin.css": "/public/css/admin.css",
-    "/public/css/app.css": "/public/css/app.css"
+    "/public/css/app.css": "/public/css/app.css",
+    "/public/css/components.css": "/public/css/components.css",
+    "/public/css/frontend/dashboard.css": "/public/css/frontend/dashboard.css",
+    "/public/css/frontend/registration.css": "/public/css/frontend/registration.css",
+    "/public/css/frontend/profile.css": "/public/css/frontend/profile.css"
 }

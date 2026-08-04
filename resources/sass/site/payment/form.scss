@@ -543,6 +543,34 @@
     }
 }
 
+// ── Split checkout layout ────────────────────────────────────────────────
+// Opt-in per-form ("Checkout Layout" setting): fields on the left, gateway
+// selector + pay button on the right, instead of the default single-column
+// stack. The two columns are siblings of the same <form> element.
+.smartpay-form-shortcode--split {
+    .smartpay_form_builder_wrapper > form {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 32px;
+        align-items: start;
+    }
+
+    .smartpay-form-col--pay {
+        position: sticky;
+        top: 24px;
+    }
+
+    @media (max-width: 768px) {
+        .smartpay_form_builder_wrapper > form {
+            display: block;
+        }
+
+        .smartpay-form-col--pay {
+            position: static;
+        }
+    }
+}
+
 .smartpay-custom-control-label {
     display: flex;
     flex-direction: column;

@@ -102,6 +102,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Invoices', 'smartpay'),
+            __('Invoices', 'smartpay'),
+            'manage_options',
+            'smartpay#/invoices',
+            function () {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Payments', 'smartpay'),
             __('Payments', 'smartpay'),
             'manage_options',
@@ -118,18 +130,6 @@ class Admin
             __('Subscriptions', 'smartpay'),
             'manage_options',
             'smartpay#/subscriptions',
-            function () {
-                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
-
-        add_submenu_page(
-            'smartpay',
-            __('WPSmartPay - Invoices', 'smartpay'),
-            __('Invoices', 'smartpay'),
-            'manage_options',
-            'smartpay#/invoices',
             function () {
                 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
@@ -364,9 +364,10 @@ class Admin
                     'adminUrl'  => admin_url('admin.php'),
                     'ajax_url' => admin_url('admin-ajax.php'),
                     'apiNonce' => wp_create_nonce('wp_rest'),
-                    'options' => $this->getOptionsScriptsData(),
-					'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
-					'version' => SMARTPAY_VERSION,
+                    'options'    => $this->getOptionsScriptsData(),
+					'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
+					'pluginUrl'  => SMARTPAY_PLUGIN_ASSETS,
+					'version'    => SMARTPAY_VERSION,
                 )
             );
 
@@ -411,7 +412,7 @@ class Admin
                 true
             );
             wp_localize_script('smartpay-support', 'smartpaySupport', $this->getSupportData());
-            wp_localize_script( 'smartpay-support', 'smartpay', array( 'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png' ) );
+            wp_localize_script( 'smartpay-support', 'smartpay', array( 'logo' => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png' ) );
         }
 
         $this->registerBlocks($hook);
@@ -427,15 +428,8 @@ class Admin
         // Global
         wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
 
-        // Product
-        register_block_type('smartpay/product', array(
-            'editor_script' => 'smartpay-editor-blocks',
-        ));
-
-        // Form
-        register_block_type('smartpay/form', array(
-            'editor_script' => 'smartpay-editor-blocks',
-        ));
+        register_block_type( SMARTPAY_DIR . 'public/blocks/product' );
+        register_block_type( SMARTPAY_DIR . 'public/blocks/form' );
 
         wp_localize_script(
             'smartpay-editor-blocks',
@@ -496,7 +490,7 @@ class Admin
         return array(
             'nonce'      => wp_create_nonce( 'wp_rest' ),
             'restUrl'    => get_rest_url( null, 'smartpay/v1' ),
-            'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo.png',
+            'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
             'version'    => SMARTPAY_VERSION,
             'debugLog'   => $logger->get_file_contents(),
             'systemInfo' => array(
@@ -566,7 +560,7 @@ class Admin
 
         $settings                       = get_option( 'smartpay_settings', array() );
         $settings['smartpay_debug_log'] = null;
-        update_option( 'smartpay_settings', $settings );
+        update_option( 'smartpay_settings', $settings, false );
 
         return new \WP_REST_Response( array( 'cleared' => true ) );
     }
@@ -598,7 +592,7 @@ class Admin
             $settings['business_name'] = mb_substr( $business_name, 0, 200 );
         }
 
-        update_option( 'smartpay_settings', $settings );
+        update_option( 'smartpay_settings', $settings, false );
 
         return new \WP_REST_Response( array( 'saved' => true ) );
     }

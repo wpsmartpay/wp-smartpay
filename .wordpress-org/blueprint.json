@@ -1,0 +1,40 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/wp-admin/admin.php?page=smartpay",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "wp-smartpay"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; $s = get_option('smartpay_settings', []); $s['default_gateway'] = 'manual'; $s['gateways'] = ['manual' => 1]; $s['currency'] = 'USD'; $s['currency_position'] = 'before'; $s['decimal_separator'] = '.'; $s['thousands_separator'] = ','; update_option('smartpay_settings', $s, false); echo 'Settings updated';"
+		},
+		{
+			"step": "wp-cli",
+			"command": "post create --post_type=page --post_title='Donate' --post_status=publish --post_content='<!-- wp:shortcode -->[sp_form id=\"1\"]<!-- /wp:shortcode -->' --allow-root"
+		},
+		{
+			"step": "wp-cli",
+			"command": "post create --post_type=smartpay_form --post_title='Support WPSmartPay' --post_status=publish --allow-root"
+		}
+	]
+}

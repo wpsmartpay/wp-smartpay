@@ -573,8 +573,27 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			{ /* Pay Button Label → Submit Button block · Allow Custom Amount → Pricing
-			     block · Allow External Link → removed. These now live on the blocks. */ }
+			{ /* Pay Button Label → Submit Button block · Allow External Link → removed. */ }
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Allow Custom Amount', 'smartpay' ) }
+				help={ __( 'Let visitors enter any amount — ideal for donations.', 'smartpay' ) }
+				checked={ !! settings.allow_custom_amount }
+				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
+			/>
+
+			{ settings.allow_custom_amount && (
+				<div className="sp-sidebar-field">
+					<TextControl
+						__nextHasNoMarginBottom
+						label={ __( 'Custom Amount Label', 'smartpay' ) }
+						value={ settings.custom_amount_label || '' }
+						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
+						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
+					/>
+				</div>
+			) }
 
 			<div className="sp-sidebar-field">
 				<SelectControl
@@ -591,6 +610,28 @@ const OptionsPanel = () => {
 					onChange={ ( val ) => updateSettings( { form_max_width: val } ) }
 				/>
 			</div>
+
+			<div className="sp-sidebar-field">
+				<SelectControl
+					__nextHasNoMarginBottom
+					label={ __( 'Checkout Layout', 'smartpay' ) }
+					help={ __( 'Split places the payment method next to the form fields on wide screens.', 'smartpay' ) }
+					value={ settings.checkout_layout || 'stacked' }
+					options={ [
+						{ value: 'stacked', label: __( 'Stacked (default)', 'smartpay' ) },
+						{ value: 'split',   label: __( 'Split — fields left, payment right', 'smartpay' ) },
+					] }
+					onChange={ ( val ) => updateSettings( { checkout_layout: val } ) }
+				/>
+			</div>
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Require Login to Checkout', 'smartpay' ) }
+				help={ __( 'Visitors must log in before they can see and submit this payment form.', 'smartpay' ) }
+				checked={ !! settings.require_login }
+				onChange={ ( val ) => updateSettings( { require_login: val } ) }
+			/>
 		</div>
 	);
 };

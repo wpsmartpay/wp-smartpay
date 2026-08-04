@@ -36,7 +36,20 @@ if ( $post_id && is_preview() ) {
 
 		$as_settings = get_post_meta( $autosave->ID, '_smartpay_settings', true );
 		if ( $as_settings ) {
-			$settings_json = $as_settings;
+			// Shallow-merge instead of replacing outright: an autosave request that
+			// was already in flight when the editor's "Update" button was clicked
+			// can land AFTER the update completes, persisting an autosave revision
+			// that is newer by timestamp but reflects an older in-memory settings
+			// snapshot (missing keys added moments earlier). Autosave values still
+			// win per-key — this only stops a stale/incomplete autosave from
+			// silently dropping settings that are already live and published.
+			$live_settings     = json_decode( $settings_json, true );
+			$autosave_settings = json_decode( $as_settings, true );
+			if ( is_array( $live_settings ) && is_array( $autosave_settings ) ) {
+				$settings_json = wp_json_encode( array_merge( $live_settings, $autosave_settings ) );
+			} else {
+				$settings_json = $as_settings;
+			}
 		}
 	}
 }
