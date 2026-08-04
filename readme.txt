@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.3
+Stable Tag: 3.2.4
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,12 +22,12 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.3
+### ✅ What's New in Version 3.2.4
 
-* **Zero frontend DB overhead** — Migrations now run only in wp-admin, WP-CLI, and cron — not on every visitor page load. A version sentinel means they're skipped entirely once the schema is current.
-* **Settings removed from global alloptions** — `smartpay_settings` is no longer autoloaded on every WordPress page, reducing the alloptions cache size site-wide.
-* **Settings global fixed** — `$smartpay_options` is now populated after `plugins_loaded` so Pro and other add-on filters apply before the global is frozen.
-* **Cleaner bootstrap** — `wp-admin/includes/plugin.php` is no longer loaded on frontend requests.
+* **Multiple payment forms on one page** — Place as many forms on a page as you like. Previously only the first one responded to clicks and submissions.
+* **Allow Custom Amount is back in the sidebar** — The toggle returns to the form editor's Document sidebar, with an optional label field, so donation-style forms are straightforward to set up again.
+* **Donation-only forms render correctly** — A form with no preset amounts now shows the custom amount input on its own instead of hiding the amount section entirely.
+* **Customer dashboard no longer redirects away** — Logged-in users who have not paid yet can open the dashboard and profile pages and see an empty state.
 
 ---
 
@@ -336,6 +336,13 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 
 == Changelog ==
 
+= 3.2.4 =
+* Fix - Multiple payment forms on a single page now work independently; form scripts are scoped to the surrounding form instead of a page-wide element ID
+* Fix - Allow Custom Amount toggle restored to the form editor Document sidebar, with an optional Custom Amount Label field
+* Fix - Forms with no preset amounts now render the custom amount input instead of hiding the amount section
+* Fix - Customer dashboard and profile pages no longer redirect logged-in users who have no payment history
+* Fix - Dashboard and profile redirects now stop execution, so page content is no longer rendered behind the redirect header
+
 = 3.2.3 =
 * Fix - Database migrations now only run in wp-admin, WP-CLI, and cron; a version sentinel prevents re-running when the schema is already current
 * Fix - smartpay_settings option removed from WordPress alloptions autoload cache — no longer loaded on every frontend page
@@ -456,6 +463,9 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.2.4 =
+Fixes multiple payment forms on one page, restores the Allow Custom Amount toggle to the form editor sidebar, renders donation-only forms correctly, and stops the customer dashboard redirecting users who have no payments yet. No database changes.
 
 = 3.2.3 =
 Performance update: eliminates database queries on every frontend page load, removes smartpay_settings from the alloptions autoload cache, and fixes settings initialisation order. No database changes.
