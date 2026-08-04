@@ -8,7 +8,10 @@ class UserLogin {
 
 	public function __construct() {
 		add_action( 'wp_ajax_nopriv_smartpay_user_login', array( $this, 'handle_user_login' ) );
-		add_filter( 'template_include', array( $this, 'render_layout' ) );
+		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
+		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 	}
 
 	public function handle_user_login() {
@@ -21,7 +24,7 @@ class UserLogin {
 		if ( is_user_logged_in() ) {
 			wp_send_json_error(
 				array(
-					'message' => 'You are already logged in.',
+					'message' => __( 'You are already logged in.', 'smartpay' ),
 				)
 			);
 		}
@@ -35,7 +38,7 @@ class UserLogin {
 		}
 
 		$user_login    = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
-		$user_password = isset( $_POST['password'] ) ? sanitize_text_field( wp_unslash( $_POST['password'] ) ) : '';
+		$user_password = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
 		$remember      = ! empty( $_POST['remember'] );
 
 		$credentials = array(
@@ -47,38 +50,78 @@ class UserLogin {
 		$user = wp_signon( $credentials, is_ssl() );
 
 		if ( is_wp_error( $user ) ) {
+			$this->record_login_failure();
 			wp_send_json_error(
 				array(
-					'message' => 'Invalid credentials. Please check your username/email and password.',
+					'message' => __( 'Invalid credentials. Please check your username/email and password.', 'smartpay' ),
 				)
 			);
 		}
 
+		do_action( 'smartpay_user_logged_in', $user );
+
 		wp_send_json_success(
 			array(
-				'message'  => 'Login successful! Redirecting...',
+				'message'  => __( 'Login successful! Redirecting...', 'smartpay' ),
 				'redirect' => $this->get_redirect_url( $user ),
 			)
 		);
 	}
 
-	public function render_layout( $template ) {
-		if ( $this->is_smartpay_login_page() ) {
-			if ( is_user_logged_in() ) {
-				$settings = get_option( 'smartpay_settings', array() );
-				$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
-				if ( $page_id ) {
-					wp_safe_redirect( get_permalink( $page_id ) );
-				} else {
-					wp_safe_redirect( home_url() );
-				}
-			}
-			$shortcode = 'smartpay_user_login';
-			include SMARTPAY_DIR . 'resources/views/templates/layout.php';
+	public function enqueue_assets() {
+		if ( ! $this->is_smartpay_login_page() ) {
 			return;
 		}
+		wp_enqueue_style(
+			'smartpay-login-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/login.css',
+			array(),
+			SMARTPAY_VERSION
+		);
+		wp_enqueue_script(
+			'smartpay-login-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/js/frontend/login.js',
+			array(),
+			SMARTPAY_VERSION,
+			true
+		);
+		wp_localize_script(
+			'smartpay-login-frontend',
+			'smartpayData',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'smartpay_frontend_nonce' ),
+				'strings' => array(
+					'processing' => __( 'Processing...', 'smartpay' ),
+					'error'      => __( 'An error occurred. Please try again.', 'smartpay' ),
+				),
+			)
+		);
+	}
 
-		return $template;
+	public function hide_page_title() {
+		if ( $this->is_smartpay_login_page() ) {
+			echo '<style>.wp-block-post-title,.entry-title,.page-title{display:none!important}</style>';
+		}
+	}
+
+	public function inject_shortcode( $content ) {
+		if ( $this->is_smartpay_login_page() && in_the_loop() && is_main_query() ) {
+			return do_shortcode( '[smartpay_user_login]' );
+		}
+		return $content;
+	}
+
+	public function maybe_redirect() {
+		if ( ! $this->is_smartpay_login_page() ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			$settings = get_option( 'smartpay_settings', array() );
+			$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
+			wp_safe_redirect( $page_id ? get_permalink( $page_id ) : home_url() );
+			exit;
+		}
 	}
 
 	protected function is_smartpay_login_page() {
@@ -89,16 +132,15 @@ class UserLogin {
 	protected function is_login_rate_limited(): bool {
 		$ip            = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 		$transient_key = 'smartpay_login_attempt_' . md5( $ip );
+		$attempts      = get_transient( $transient_key );
+		return $attempts && $attempts >= 5;
+	}
 
-		$attempts = get_transient( $transient_key );
-
-		if ( $attempts && $attempts >= 3 ) {
-			return true;
-		}
-
-		set_transient( $transient_key, $attempts ? $attempts + 1 : 1, MINUTE_IN_SECONDS );
-
-		return false;
+	protected function record_login_failure(): void {
+		$ip            = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+		$transient_key = 'smartpay_login_attempt_' . md5( $ip );
+		$attempts      = (int) get_transient( $transient_key );
+		set_transient( $transient_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 	}
 
 	private function get_redirect_url( $user ) {

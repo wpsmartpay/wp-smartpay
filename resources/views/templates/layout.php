@@ -1,22 +1,12 @@
 <?php
-defined('ABSPATH') || exit;?>
-<!doctype html>
-<html <?php language_attributes(); ?>>
-<head>
-    <?php wp_head(); ?>
-	<style>
-		.smartpay-layout {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			min-height: 100vh;
-		}
-	</style>
-</head>
-<body class="smartpay-layout">
-
-    <?php echo do_shortcode( "[{$shortcode}]" ); ?>
-
-    <?php wp_footer(); ?>
-</body>
-</html>
+defined( 'ABSPATH' ) || exit;
+get_header();
+?>
+<div class="smartpay-layout">
+	<?php
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- shortcode output is already escaped.
+	echo do_shortcode( "[{$shortcode}]" );
+	?>
+</div>
+<?php
+get_footer();

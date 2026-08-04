@@ -7,8 +7,10 @@ defined( 'ABSPATH' ) || exit;
 class UserDashboard {
 
 	public function __construct() {
-		add_filter( 'template_include', array( $this, 'render_layout' ) );
+		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
+		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 	}
 
 	/**
@@ -31,24 +33,29 @@ class UserDashboard {
 		);
 	}
 
-	public function render_layout( $template ) {
+	public function hide_page_title() {
 		if ( $this->is_smartpay_dashboard_page() ) {
-			if ( ! is_user_logged_in() ) {
-				$settings = get_option( 'smartpay_settings', array() );
-				$page_id  = (int) ( $settings['user_login_page'] ?? 0 );
-				if ( $page_id ) {
-					wp_safe_redirect( get_permalink( $page_id ) );
-				} else {
-					wp_safe_redirect( home_url() );
-				}
-				exit;
-			}
-			$shortcode = 'smartpay_dashboard';
-			include SMARTPAY_DIR . 'resources/views/templates/layout.php';
+			echo '<style>.wp-block-post-title,.entry-title,.page-title{display:none!important}</style>';
+		}
+	}
+
+	public function inject_shortcode( $content ) {
+		if ( $this->is_smartpay_dashboard_page() && in_the_loop() && is_main_query() ) {
+			return do_shortcode( '[smartpay_dashboard]' );
+		}
+		return $content;
+	}
+
+	public function maybe_redirect() {
+		if ( ! $this->is_smartpay_dashboard_page() ) {
 			return;
 		}
-
-		return $template;
+		if ( ! is_user_logged_in() ) {
+			$settings = get_option( 'smartpay_settings', array() );
+			$page_id  = (int) ( $settings['user_login_page'] ?? 0 );
+			wp_safe_redirect( $page_id ? get_permalink( $page_id ) : home_url() );
+			exit;
+		}
 	}
 
 	protected function is_smartpay_dashboard_page() {
