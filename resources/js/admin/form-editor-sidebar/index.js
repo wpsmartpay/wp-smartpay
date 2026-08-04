@@ -573,8 +573,27 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			{ /* Pay Button Label → Submit Button block · Allow Custom Amount → Pricing
-			     block · Allow External Link → removed. These now live on the blocks. */ }
+			{ /* Pay Button Label → Submit Button block · Allow External Link → removed. */ }
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Allow Custom Amount', 'smartpay' ) }
+				help={ __( 'Let visitors enter any amount — ideal for donations.', 'smartpay' ) }
+				checked={ !! settings.allow_custom_amount }
+				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
+			/>
+
+			{ settings.allow_custom_amount && (
+				<div className="sp-sidebar-field">
+					<TextControl
+						__nextHasNoMarginBottom
+						label={ __( 'Custom Amount Label', 'smartpay' ) }
+						value={ settings.custom_amount_label || '' }
+						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
+						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
+					/>
+				</div>
+			) }
 
 			<div className="sp-sidebar-field">
 				<SelectControl
