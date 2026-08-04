@@ -339,9 +339,9 @@ class UserProfile {
 		}
 
 		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce verified via verify_ajax_request() → check_ajax_referer()
-		$current_password     = sanitize_text_field( wp_unslash( $_POST['current_password'] ?? '' ) );
-		$new_password         = sanitize_text_field( wp_unslash( $_POST['new_password'] ?? '' ) );
-		$confirm_new_password = sanitize_text_field( wp_unslash( $_POST['confirm_new_password'] ?? '' ) );
+		$current_password     = wp_unslash( $_POST['current_password'] ?? '' );
+		$new_password         = wp_unslash( $_POST['new_password'] ?? '' );
+		$confirm_new_password = wp_unslash( $_POST['confirm_new_password'] ?? '' );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		$errors = new WP_Error();

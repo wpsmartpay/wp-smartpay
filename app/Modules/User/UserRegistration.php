@@ -64,7 +64,16 @@ class UserRegistration {
 
 			$this->userService->authenticate_user( $user_id );
 
-			wp_send_json_success( array( 'message' => __( 'Registration successful!', 'smartpay' ) ) );
+			$settings    = get_option( 'smartpay_settings', array() );
+			$dashboard   = (int) ( $settings['customer_dashboard_page'] ?? 0 );
+			$redirect    = $dashboard ? get_permalink( $dashboard ) : home_url();
+
+			wp_send_json_success(
+				array(
+					'message'  => __( 'Registration successful!', 'smartpay' ),
+					'redirect' => esc_url( $redirect ),
+				)
+			);
 
 		} catch ( Exception $e ) {
 			if ( isset( $user_id ) && ! is_wp_error( $user_id ) ) {

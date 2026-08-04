@@ -24,7 +24,7 @@ class UserLogin {
 		if ( is_user_logged_in() ) {
 			wp_send_json_error(
 				array(
-					'message' => 'You are already logged in.',
+					'message' => __( 'You are already logged in.', 'smartpay' ),
 				)
 			);
 		}
@@ -38,7 +38,7 @@ class UserLogin {
 		}
 
 		$user_login    = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
-		$user_password = isset( $_POST['password'] ) ? sanitize_text_field( wp_unslash( $_POST['password'] ) ) : '';
+		$user_password = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
 		$remember      = ! empty( $_POST['remember'] );
 
 		$credentials = array(
@@ -50,16 +50,19 @@ class UserLogin {
 		$user = wp_signon( $credentials, is_ssl() );
 
 		if ( is_wp_error( $user ) ) {
+			$this->record_login_failure();
 			wp_send_json_error(
 				array(
-					'message' => 'Invalid credentials. Please check your username/email and password.',
+					'message' => __( 'Invalid credentials. Please check your username/email and password.', 'smartpay' ),
 				)
 			);
 		}
 
+		do_action( 'smartpay_user_logged_in', $user );
+
 		wp_send_json_success(
 			array(
-				'message'  => 'Login successful! Redirecting...',
+				'message'  => __( 'Login successful! Redirecting...', 'smartpay' ),
 				'redirect' => $this->get_redirect_url( $user ),
 			)
 		);
@@ -129,16 +132,15 @@ class UserLogin {
 	protected function is_login_rate_limited(): bool {
 		$ip            = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
 		$transient_key = 'smartpay_login_attempt_' . md5( $ip );
+		$attempts      = get_transient( $transient_key );
+		return $attempts && $attempts >= 5;
+	}
 
-		$attempts = get_transient( $transient_key );
-
-		if ( $attempts && $attempts >= 3 ) {
-			return true;
-		}
-
-		set_transient( $transient_key, $attempts ? $attempts + 1 : 1, MINUTE_IN_SECONDS );
-
-		return false;
+	protected function record_login_failure(): void {
+		$ip            = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '' ) );
+		$transient_key = 'smartpay_login_attempt_' . md5( $ip );
+		$attempts      = (int) get_transient( $transient_key );
+		set_transient( $transient_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 	}
 
 	private function get_redirect_url( $user ) {
