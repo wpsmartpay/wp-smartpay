@@ -117,11 +117,13 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 
 					<div id="mobile-field"></div>
 
-					<?php if ( ! empty( $amounts ) && ! $has_pricing_block ) : ?>
+					<?php if ( ! $has_pricing_block && ( ! empty( $amounts ) || $allow_custom_amount ) ) : ?>
 					<div class="form--amount-section mb-3">
+						<?php if ( ! empty( $amounts ) ) : ?>
 						<label class="form-amounts--label d-block m-0 mb-2">
 							<?php esc_html_e( 'Select an amount', 'smartpay' ); ?>
 						</label>
+						<?php endif; ?>
 						<div class="form-amounts">
 							<div class="form-plan-grid">
 								<?php foreach ( $amounts as $index => $amount ) : ?>
