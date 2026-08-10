@@ -337,6 +337,8 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 == Changelog ==
 
 = 3.2.4 =
+* New - Live Preview on WordPress.org — try WPSmartPay in a working demo site straight from the plugin listing, no install required
+* Update - Payment Form and Product blocks now ship block.json metadata, improving block registration and editor performance
 * Fix - Multiple payment forms on a single page now work independently; form scripts are scoped to the surrounding form instead of a page-wide element ID
 * Fix - Allow Custom Amount toggle restored to the form editor Document sidebar, with an optional Custom Amount Label field
 * Fix - Forms with no preset amounts now render the custom amount input instead of hiding the amount section
