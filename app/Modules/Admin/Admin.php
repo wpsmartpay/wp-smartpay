@@ -20,6 +20,10 @@ class Admin
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
+        // Priority 999: run after every item is registered — core, add-ons, and
+        // anything hooked to `smartpay_admin_add_menu_items`.
+        $this->app->addAction('admin_menu', [$this, 'injectMenuSeparators'], 999);
+        $this->app->addAction('admin_head', [$this, 'injectMenuStyles']);
         $this->app->addAction('admin_bar_menu', [$this, 'adminToolbarMenu'], 999);
         $this->app->addAction('rest_api_init', [$this, 'registerAdminRestRoutes']);
         $this->app->addFilter('admin_footer_text', [$this, 'adminFooterText']);
@@ -283,6 +287,101 @@ class Admin
                 'href'   => esc_url( admin_url( 'admin.php?page=smartpay-setting' ) ),
             )
         );
+    }
+
+    /**
+     * Slugs that a visual separator is inserted *before*.
+     *
+     * Groups the SmartPay submenu into: build (Products / Forms) → money
+     * (Invoices / Payments / Subscriptions) → people & config (Customers,
+     * Coupons, Reports, Integrations, Settings, Support).
+     *
+     * This grouping is core's, so the menu reads the same whether or not an
+     * add-on is active. Add-ons should add an anchor through this filter
+     * instead of rebuilding `$submenu` themselves.
+     *
+     * @return string[] Menu slugs.
+     */
+    private function menuSeparatorAnchors(): array
+    {
+        return (array) apply_filters(
+            'smartpay_admin_menu_separators',
+            [ 'smartpay#/payments', 'smartpay#/customers' ]
+        );
+    }
+
+    /**
+     * Inject visual separators into the SmartPay submenu after registration.
+     *
+     * Rebuilds the submenu array in place. Order is preserved, so items pinned
+     * to an explicit index (e.g. the free-plugin "Upgrade to pro" entry at 99)
+     * keep their position — WordPress renders `$submenu` in array order.
+     *
+     * @return void
+     */
+    public function injectMenuSeparators(): void
+    {
+        global $submenu;
+
+        if ( empty( $submenu['smartpay'] ) ) {
+            return;
+        }
+
+        $anchors = $this->menuSeparatorAnchors();
+
+        if ( empty( $anchors ) ) {
+            return;
+        }
+
+        $separator_index = 1;
+        $items           = [];
+
+        foreach ( $submenu['smartpay'] as $item ) {
+            $slug = $item[2] ?? '';
+
+            // `$items` emptiness check keeps the menu from opening on a rule.
+            if ( in_array( $slug, $anchors, true ) && ! empty( $items ) ) {
+                $items[] = [
+                    '<span class="sp-menu-sep" aria-hidden="true"></span>',
+                    'manage_options',
+                    'smartpay-sep-' . ( $separator_index++ ),
+                    '',
+                ];
+            }
+
+            $items[] = $item;
+        }
+
+        // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intentional submenu regroup.
+        $submenu['smartpay'] = $items;
+    }
+
+    /**
+     * Inline admin CSS rendering separator items as thin horizontal rules.
+     *
+     * Lives on `admin_head` rather than in the bundled admin stylesheet: the
+     * sidebar renders on every admin screen, not only SmartPay's own pages.
+     *
+     * @return void
+     */
+    public function injectMenuStyles(): void
+    {
+        ?>
+        <style id="sp-menu-sep-styles">
+            #adminmenu .wp-submenu li a:has(.sp-menu-sep) {
+                padding: 0;
+                margin: 3px 0;
+                pointer-events: none;
+                cursor: default;
+            }
+            #adminmenu .wp-submenu li .sp-menu-sep {
+                display: block;
+                height: 1px;
+                background: rgba( 255, 255, 255, 0.12 );
+                margin: 0 8px;
+            }
+        </style>
+        <?php
     }
 
     private function smartpayProMenu()

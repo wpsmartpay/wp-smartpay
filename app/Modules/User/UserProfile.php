@@ -338,11 +338,16 @@ class UserProfile {
 			wp_send_json_error( array( 'message' => __( 'Customer not found.', 'smartpay' ) ) );
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce verified via verify_ajax_request() → check_ajax_referer()
+		// Passwords are deliberately not sanitized: sanitize_text_field() strips
+		// tag-like sequences and trims whitespace, which would silently alter a
+		// legitimate password — breaking both the wp_check_password() comparison
+		// below and the value stored by wp_set_password(). Nonce verified via
+		// verify_ajax_request() → check_ajax_referer().
+		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$current_password     = wp_unslash( $_POST['current_password'] ?? '' );
 		$new_password         = wp_unslash( $_POST['new_password'] ?? '' );
 		$confirm_new_password = wp_unslash( $_POST['confirm_new_password'] ?? '' );
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
+		// phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 		$errors = new WP_Error();
 
