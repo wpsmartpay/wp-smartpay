@@ -33,8 +33,12 @@ class LoggedInUserRegister {
 			wp_send_json_error( array( 'message' => 'Must be logged in' ) );
 		}
 
-		$current_user     = wp_get_current_user();
-		$current_password = sanitize_text_field( wp_unslash( $_POST['current_password'] ?? '' ) );
+		$current_user = wp_get_current_user();
+		// Must NOT be sanitized — sanitize_text_field() strips tag-like sequences
+		// and trims whitespace, so a correct password containing e.g. '<' would
+		// fail the wp_check_password() comparison below. Nonce verified above.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- see above; password must reach wp_check_password() byte-for-byte.
+		$current_password = wp_unslash( $_POST['current_password'] ?? '' );
 
 		$errors = new WP_Error();
 

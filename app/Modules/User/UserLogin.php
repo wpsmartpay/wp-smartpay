@@ -37,7 +37,12 @@ class UserLogin {
 			);
 		}
 
-		$user_login    = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
+		$user_login = isset( $_POST['username'] ) ? sanitize_text_field( wp_unslash( $_POST['username'] ) ) : '';
+		// Passwords are deliberately not sanitized: sanitize_text_field() strips
+		// tag-like sequences and trims whitespace, which would silently alter a
+		// legitimate password and reject a correct login. The value is only ever
+		// passed to wp_signon(), which hashes it. Nonce verified above.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- see above; password must reach wp_signon() byte-for-byte.
 		$user_password = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '';
 		$remember      = ! empty( $_POST['remember'] );
 
