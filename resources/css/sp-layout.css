@@ -314,9 +314,17 @@ select.sp-filter-select {
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
   border-radius: var(--sp-radius);
-  overflow: hidden;
+  overflow: visible; /* must be visible so row-action dropdowns escape the card */
   box-shadow: var(--sp-shadow);
+  position: relative;
 }
+
+/* Clip only the table header and last-row corners to match card border-radius
+   (replaces the old overflow:hidden approach so dropdowns aren't clipped) */
+.sp-table thead tr:first-child th:first-child { border-top-left-radius: var(--sp-radius); }
+.sp-table thead tr:first-child th:last-child  { border-top-right-radius: var(--sp-radius); }
+.sp-table tbody tr:last-child td:first-child   { border-bottom-left-radius: var(--sp-radius); }
+.sp-table tbody tr:last-child td:last-child    { border-bottom-right-radius: var(--sp-radius); }
 
 .sp-table {
   width: 100%;
