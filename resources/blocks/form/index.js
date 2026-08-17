@@ -5,6 +5,7 @@ import { Placeholder, SelectControl, Spinner } from '@wordpress/components'
 import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/form', {
+    apiVersion: 3,
     title: __('WPSmartPay Form', 'smartpay'),
     description: __('Display a WPSmartPay payment form embedded on the page.', 'smartpay'),
     icon: 'feedback',
