@@ -1781,6 +1781,20 @@ input.sp-note-input {
   background-color: var(--sp-brand) !important;
   border-color: var(--sp-brand) !important;
 }
+/* Override admin.css generic switch dimensions for large integration card toggles */
+.sp-integ-card .custom-switch-lg .custom-control-label::before {
+  left: -3rem !important;
+  width: 2.5rem !important;
+  height: 1.4rem !important;
+  top: .05rem !important;
+  border-radius: .7rem !important;
+}
+.sp-integ-card .custom-switch-lg .custom-control-label::after {
+  top: 3px !important;
+  left: calc(-3rem + 3px) !important;
+  width: calc(1.4rem - 6px) !important;
+  height: calc(1.4rem - 6px) !important;
+}
 .sp-integ-card .custom-switch .custom-control-label::before {
   border-radius: 0.75rem;
 }
