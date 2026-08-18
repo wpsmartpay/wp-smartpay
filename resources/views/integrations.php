@@ -132,7 +132,7 @@
                     <div class="sp-integ-card__footer">
                         <?php if (smartpay_integration_is_installed($smartpay_integration)) : ?>
                             <div class="sp-integ-card__toggle-wrap">
-                                <div class="custom-control custom-switch custom-switch-lg">
+                                <div class="custom-control custom-switch">
                                     <input type="checkbox"
                                         class="custom-control-input"
                                         id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"

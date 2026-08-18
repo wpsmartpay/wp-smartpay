@@ -1776,27 +1776,28 @@ input.sp-note-input {
 }
 
 /* Toggle switch for integration cards */
-.sp-integ-card .custom-control { padding-left: 2.5rem; }
+.sp-integ-card .custom-control { padding-left: 2.25rem; }
 .sp-integ-card .custom-control-input:checked ~ .custom-control-label::before {
   background-color: var(--sp-brand) !important;
   border-color: var(--sp-brand) !important;
 }
-/* Override admin.css generic switch dimensions for large integration card toggles */
-.sp-integ-card .custom-switch-lg .custom-control-label::before {
-  left: -3rem !important;
-  width: 2.5rem !important;
-  height: 1.4rem !important;
-  top: .05rem !important;
-  border-radius: .7rem !important;
-}
-.sp-integ-card .custom-switch-lg .custom-control-label::after {
-  top: 3px !important;
-  left: calc(-3rem + 3px) !important;
-  width: calc(1.4rem - 6px) !important;
-  height: calc(1.4rem - 6px) !important;
-}
 .sp-integ-card .custom-switch .custom-control-label::before {
   border-radius: 0.75rem;
+  width: 1.75rem !important;
+  height: 1rem !important;
+}
+.sp-integ-card .custom-switch .custom-control-label::after {
+  width: calc(1rem - 4px) !important;
+  height: calc(1rem - 4px) !important;
+  top: calc(.25rem + 2px) !important;
+  left: calc(-2.25rem + 2px) !important;
+}
+.sp-integ-card .custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, .2);
+  outline: none;
+}
+.sp-integ-card .custom-control-input:focus:not(:focus-visible) ~ .custom-control-label::before {
+  box-shadow: none;
 }
 
 /* ════════════════════════════════════════════════════════════
