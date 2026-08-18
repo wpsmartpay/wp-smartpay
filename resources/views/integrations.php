@@ -131,49 +131,49 @@
 
                     <div class="sp-integ-card__footer">
                         <?php if (smartpay_integration_is_installed($smartpay_integration)) : ?>
-                            <div class="custom-control custom-switch custom-switch-lg">
-                                <input type="checkbox"
-                                    class="custom-control-input"
-                                    id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"
-                                    data-namespace="<?php echo esc_attr($smartpay_namespace); ?>"
-                                    <?php echo $smartpay_activated ? 'checked' : ''; ?>>
-                                <label class="custom-control-label"
-                                    for="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>">
-                                </label>
+                            <div class="sp-integ-card__toggle-wrap">
+                                <div class="custom-control custom-switch custom-switch-lg">
+                                    <input type="checkbox"
+                                        class="custom-control-input"
+                                        id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"
+                                        data-namespace="<?php echo esc_attr($smartpay_namespace); ?>"
+                                        <?php echo $smartpay_activated ? 'checked' : ''; ?>>
+                                    <label class="custom-control-label"
+                                        for="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>">
+                                    </label>
+                                </div>
+                                <span class="sp-integ-card__status">
+                                    <?php if ( $smartpay_needs_setup ) : ?>
+                                        <span class="sp-badge sp-badge--pastdue" style="font-size:11px;">
+                                            <?php esc_html_e( 'Needs setup', 'smartpay' ); ?>
+                                        </span>
+                                    <?php elseif ( $smartpay_activated ) : ?>
+                                        <?php esc_html_e( 'Activated', 'smartpay' ); ?>
+                                    <?php else : ?>
+                                        <?php esc_html_e( 'Disabled', 'smartpay' ); ?>
+                                    <?php endif; ?>
+                                </span>
                             </div>
-                            <span class="sp-integ-card__status">
-                                <?php if ( $smartpay_needs_setup ) : ?>
-                                    <span class="sp-badge sp-badge--pastdue" style="font-size:11px;">
-                                        <?php esc_html_e( 'Needs setup', 'smartpay' ); ?>
-                                    </span>
-                                <?php elseif ( $smartpay_activated ) : ?>
-                                    <?php esc_html_e( 'Activated', 'smartpay' ); ?>
-                                <?php else : ?>
-                                    <?php esc_html_e( 'Disabled', 'smartpay' ); ?>
-                                <?php endif; ?>
-                            </span>
                             <?php if (!empty($smartpay_integration['setting_link'])) : ?>
                                 <?php if ($smartpay_activated) : ?>
                                 <a href="<?php echo esc_url(admin_url('admin.php?page=smartpay-setting&' . $smartpay_integration['setting_link'])); ?>"
                                     class="sp-integ-card__settings"
                                     title="<?php esc_attr_e('Settings', 'smartpay'); ?>">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/></svg>
                                 </a>
                                 <?php else : ?>
                                 <span class="sp-integ-card__settings"
                                     style="opacity:.35;cursor:default;"
                                     title="<?php esc_attr_e('Activate this integration to access its settings', 'smartpay'); ?>"
                                     aria-disabled="true">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                                        <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/>
-                                    </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z"/></svg>
                                 </span>
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
-                            <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
+                            <div class="sp-integ-card__toggle-wrap">
+                                <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
+                            </div>
                         <?php endif; ?>
                     </div>
 

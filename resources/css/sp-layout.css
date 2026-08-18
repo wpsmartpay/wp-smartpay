@@ -1580,7 +1580,7 @@ input.sp-note-input {
   border-radius: .7rem;
 }
 .custom-switch-lg .custom-control-label::after {
-  top: calc(.05rem + 3px);
+  top: 3px !important;
   left: calc(-3rem + 3px);
   width: calc(1.4rem - 6px);
   height: calc(1.4rem - 6px);
@@ -1743,11 +1743,18 @@ input.sp-note-input {
 
 .sp-integ-card__footer {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   padding: 10px 16px;
   border-top: 1px solid var(--sp-border);
   margin-top: auto;
+}
+
+.sp-integ-card__toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
 }
 
 .sp-integ-card__status {
