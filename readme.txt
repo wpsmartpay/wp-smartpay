@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.4
+Stable Tag: 3.2.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -395,6 +395,15 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.5 =
+* New - Name Fields and Address Fields blocks now have a "Layout Columns" setting (Auto / 1 / 2 / 3) in the block sidebar, applied identically in the editor and on the frontend
+* Fix - Form editor canvas now renders full-width, eliminating the column count mismatch between editor and frontend
+* Fix - Field spacing (margin-bottom) now matches between the block editor canvas and the embedded form on the frontend
+* Fix - Deleted blocks no longer reappear when the editor is reopened — the form autosave is cleared after each real save so Gutenberg won't offer to restore stale content
+* Fix - A visual divider now appears before the Settings item in the SmartPay admin submenu
+* Fix - Integration card toggles and gear icon now align correctly at all viewport widths; focus ring sized to the switch control
+* Fix - Bootstrap custom-switch component CSS now scoped to SmartPay integration cards, preventing style conflicts with other admin plugins
 
 = 3.2.4 =
 * New - Live Preview on WordPress.org — try WPSmartPay in a working demo site straight from the plugin listing, no install required
