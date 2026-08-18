@@ -15,7 +15,7 @@ class Integration
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
 
-        add_action('wp_ajax_toggle_integration_activation', [$this, 'toggleIntegrationActivation']);
+        add_action('wp_ajax_smartpay_toggle_integration_activation', [$this, 'toggleIntegrationActivation']);
     }
 
     public static function getIntegrations()
