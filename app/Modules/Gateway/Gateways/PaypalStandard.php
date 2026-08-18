@@ -41,6 +41,9 @@ class PaypalStandard extends PaymentGateway
 
         if (empty($paypal_email)) {
             add_action('admin_notices', function () {
+                if ( ! function_exists( 'get_current_screen' ) || false === strpos( get_current_screen()?->id ?? '', 'smartpay' ) ) {
+                    return;
+                }
 				echo sprintf('<div class="error"><p><strong>'.
 				     esc_html__('Paypal credentials was not set yet!', 'smartpay').'</strong> '. esc_html__('To get the Paypal service on smartpay, you must add your paypal business email.', 'smartpay'). ' <a href="%s"> '. esc_html__(' Input your paypal credentials', 'smartpay'). '</a></p></div>',
 					esc_url(admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal'))
@@ -429,6 +432,9 @@ class PaypalStandard extends PaymentGateway
 
     public function unsupported_currency_notice()
     {
+        if ( ! function_exists( 'get_current_screen' ) || false === strpos( get_current_screen()?->id ?? '', 'smartpay' ) ) {
+            return;
+        }
 	    echo sprintf(
 		    '<div class="error"><p>'.
 		    esc_html__('Unsupported currency! Your currency ', 'smartpay') .

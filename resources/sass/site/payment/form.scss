@@ -55,9 +55,31 @@
         }
 
         // Address: stack its inner fields with consistent spacing.
-        .smartpay-address {
+        // When a sp-cols-N class is set (grid layout), that rule wins instead.
+        .smartpay-address:not(.sp-cols-2):not(.sp-cols-3) {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        // Grid column layout classes — set on NameField / AddressField containers
+        // via the Gutenberg "Layout Columns" SelectControl in InspectorControls.
+        .sp-cols-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 18px;
         }
@@ -539,6 +561,34 @@
                 outline: 0;
                 box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
             }
+        }
+    }
+}
+
+// ── Split checkout layout ────────────────────────────────────────────────
+// Opt-in per-form ("Checkout Layout" setting): fields on the left, gateway
+// selector + pay button on the right, instead of the default single-column
+// stack. The two columns are siblings of the same <form> element.
+.smartpay-form-shortcode--split {
+    .smartpay_form_builder_wrapper > form {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 32px;
+        align-items: start;
+    }
+
+    .smartpay-form-col--pay {
+        position: sticky;
+        top: 24px;
+    }
+
+    @media (max-width: 768px) {
+        .smartpay_form_builder_wrapper > form {
+            display: block;
+        }
+
+        .smartpay-form-col--pay {
+            position: static;
         }
     }
 }

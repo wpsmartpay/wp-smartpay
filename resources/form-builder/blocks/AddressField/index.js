@@ -30,6 +30,7 @@ export const AddressField = {
             showState:   { type: 'boolean', default: true },
             showZip:     { type: 'boolean', default: true },
             showCountry: { type: 'boolean', default: true },
+            columns: { type: 'number', default: 0 },
         },
         edit,
         save,

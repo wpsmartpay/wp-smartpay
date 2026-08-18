@@ -515,6 +515,41 @@ const OnboardingProgressCard = ( { hasPayments, onLaunchWizard } ) => {
     )
 }
 
+// ─── Subtle Pro upgrade note (no color, minimal) ──────────────────────────────
+const ProUpgradeNote = () => {
+    if ( window.smartpayProData?.isActive ) return null
+
+    return (
+        <div
+            className="sp-detail-card"
+            style={{ borderStyle: 'dashed', background: 'transparent', boxShadow: 'none' }}
+        >
+            <div className="sp-detail-card__body" style={{ padding: '14px 16px' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sp-text)', marginBottom: 4 }}>
+                    {__( 'WPSmartPay Pro', 'smartpay' )}
+                </div>
+                <p style={{ margin: '0 0 10px', fontSize: 11.5, lineHeight: 1.5, color: 'var(--sp-text-muted)' }}>
+                    {__( 'Unlock subscriptions, invoices, and advanced reports.', 'smartpay' )}
+                </p>
+                <a
+                    href="https://wpsmartpay.com/pricing"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                        fontSize: 11.5,
+                        fontWeight: 600,
+                        color: 'var(--sp-text-muted)',
+                        textDecoration: 'underline',
+                        textUnderlineOffset: 2,
+                    }}
+                >
+                    {__( 'Learn more →', 'smartpay' )}
+                </a>
+            </div>
+        </div>
+    )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 const now        = new Date()
 const monthLabel = now.toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -761,6 +796,9 @@ export const Dashboard = () => {
                             hasPayments={( curr.completed_count || 0 ) > 0}
                             onLaunchWizard={() => setWizardOpen( true )}
                         />
+
+                        {/* Subtle Pro upgrade note — only when Pro is inactive */}
+                        <ProUpgradeNote />
 
                     </div>
 

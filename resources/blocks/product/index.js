@@ -7,6 +7,7 @@ import { PanelBody, SelectControl as SidebarSelect, TextControl } from '@wordpre
 import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/product', {
+    apiVersion: 3,
     title: __('SmartPay Product', 'smartpay'),
     description: __('Display a SmartPay product with popup or embedded checkout.', 'smartpay'),
     icon: 'cart',
