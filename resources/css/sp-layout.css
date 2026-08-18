@@ -1743,7 +1743,7 @@ input.sp-note-input {
 
 .sp-integ-card__footer {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   padding: 10px 16px;
   border-top: 1px solid var(--sp-border);
