@@ -28,6 +28,7 @@ class NativeForm {
 		add_action( 'admin_footer-edit.php', array( $this, 'shortcode_column_script' ) );
 		add_filter( 'smartpay_prepare_payment_data', array( $this, 'fix_cpt_form_payment_data' ), 5, 2 );
 		add_action( 'save_post_smartpay_form', array( $this, 'sync_pricing_block_amounts' ), 20, 2 );
+		add_action( 'save_post_smartpay_form', array( $this, 'clear_form_autosave' ), 30, 2 );
 		add_filter( 'render_block_smartpay-form/goal-progress', 'smartpay_render_goal_progress_block', 10, 2 );
 	}
 
@@ -104,6 +105,31 @@ class NativeForm {
 
 		if ( ! empty( $amounts ) ) {
 			update_post_meta( $post_id, '_smartpay_amounts', wp_json_encode( $amounts ) );
+		}
+	}
+
+	/**
+	 * Delete any autosave for this form immediately after a real manual save.
+	 *
+	 * Gutenberg creates a periodic autosave via the REST API. If the autosave
+	 * timestamp is newer than the published post, Gutenberg shows a "Restore
+	 * previous version" notice on the next editor load — causing deleted blocks
+	 * to appear to "come back". Deleting the autosave here prevents that prompt.
+	 *
+	 * @param int      $post_id Saved form post ID.
+	 * @param \WP_Post $post    Saved form post object.
+	 */
+	public function clear_form_autosave( int $post_id, \WP_Post $post ): void {
+		if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+		if ( 'smartpay_form' !== $post->post_type ) {
+			return;
+		}
+		// wp_delete_post_autosave() requires WP 6.4+; use the compatible equivalent.
+		$autosave = \wp_get_post_autosave( $post_id );
+		if ( $autosave ) {
+			\wp_delete_post( $autosave->ID, true );
 		}
 	}
 

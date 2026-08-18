@@ -55,9 +55,31 @@
         }
 
         // Address: stack its inner fields with consistent spacing.
-        .smartpay-address {
+        // When a sp-cols-N class is set (grid layout), that rule wins instead.
+        .smartpay-address:not(.sp-cols-2):not(.sp-cols-3) {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        // Grid column layout classes — set on NameField / AddressField containers
+        // via the Gutenberg "Layout Columns" SelectControl in InspectorControls.
+        .sp-cols-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 18px;
         }
