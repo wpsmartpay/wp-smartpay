@@ -37,19 +37,31 @@ class PaypalStandard extends PaymentGateway
     //check api keys set or not
     private function _checkApiKeys()
     {
-        $paypal_email = smartpay_get_option('paypal_email') ?? null;
+        add_filter( 'smartpay_setup_notices', [ $this, 'addSetupNotice' ] );
+    }
 
-        if (empty($paypal_email)) {
-            add_action('admin_notices', function () {
-                if ( ! function_exists( 'get_current_screen' ) || false === strpos( get_current_screen()?->id ?? '', 'smartpay' ) ) {
-                    return;
-                }
-				echo sprintf('<div class="error"><p><strong>'.
-				     esc_html__('Paypal credentials was not set yet!', 'smartpay').'</strong> '. esc_html__('To get the Paypal service on smartpay, you must add your paypal business email.', 'smartpay'). ' <a href="%s"> '. esc_html__(' Input your paypal credentials', 'smartpay'). '</a></p></div>',
-					esc_url(admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal'))
-				);
-            });
+    /**
+     * Add a setup notice when PayPal email is missing.
+     *
+     * @param array $notices Existing notices.
+     * @return array
+     */
+    public function addSetupNotice( array $notices ): array
+    {
+        $paypal_email = smartpay_get_option( 'paypal_email' ) ?? null;
+
+        if ( empty( $paypal_email ) ) {
+            $notices[] = [
+                'id'           => 'paypal_email_missing',
+                'type'         => 'gateway',
+                'level'        => 'error',
+                'message'      => __( 'PayPal gateway is enabled but no email address has been configured.', 'smartpay' ),
+                'action_label' => __( 'Configure PayPal', 'smartpay' ),
+                'action_url'   => admin_url( 'admin.php?page=smartpay-setting&tab=gateways&section=paypal' ),
+            ];
         }
+
+        return $notices;
     }
 
     /**

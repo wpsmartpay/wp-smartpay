@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n'
 import { registerBlockType } from '@wordpress/blocks'
 import { useEffect, useState } from '@wordpress/element'
-import { Placeholder, SelectControl, Spinner } from '@wordpress/components'
-import { InspectorControls } from '@wordpress/block-editor'
-import { PanelBody, SelectControl as SidebarSelect, TextControl } from '@wordpress/components'
+import { Placeholder, SelectControl, Spinner, Notice } from '@wordpress/components'
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor'
+import { PanelBody, TextControl } from '@wordpress/components'
+import { useSelect } from '@wordpress/data'
 import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/product', {
@@ -30,18 +31,26 @@ export default registerBlockType('smartpay/product', {
     },
 
     edit: ({ attributes, setAttributes }) => {
+        const blockProps = useBlockProps()
+        const postType = useSelect(
+            (select) => select('core/editor').getCurrentPostType(),
+            []
+        )
+
         const [products, setProducts] = useState([])
         const [isLoading, setIsLoading] = useState(true)
 
         useEffect(() => {
+            const url = new URL(`${smartpay.restUrl}/v1/products`)
+            url.searchParams.set('per_page', '100')
             apiFetch({
-                path: 'smartpay/v1/products',
+                url: url.toString(),
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
             })
                 .then((data) => {
-                    const productList = (data?.products || []).map((product) => ({
+                    const productList = (data?.products?.data || []).map((product) => ({
                         value: product.id,
                         label: `(#${product.id}) ${product.title}`,
                     }))
@@ -54,6 +63,16 @@ export default registerBlockType('smartpay/product', {
                 })
         }, [])
 
+        if (postType === 'smartpay_form') {
+            return (
+                <div {...blockProps}>
+                    <Notice status="warning" isDismissible={false}>
+                        {__('SmartPay blocks cannot be embedded inside a SmartPay form.', 'smartpay')}
+                    </Notice>
+                </div>
+            )
+        }
+
         const productOptions = [
             { value: 0, label: __('Select a product', 'smartpay') },
             ...products,
@@ -62,7 +81,7 @@ export default registerBlockType('smartpay/product', {
         const selectedProduct = products.find((p) => p.value === attributes.id)
 
         return (
-            <>
+            <div {...blockProps}>
                 <InspectorControls>
                     <PanelBody title={__('Product Settings', 'smartpay')}>
                         <SelectControl
@@ -106,11 +125,10 @@ export default registerBlockType('smartpay/product', {
                         />
                     )}
                 </Placeholder>
-            </>
+            </div>
         )
     },
 
-    save: ({ attributes }) => {
-        return `[smartpay_product id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`
-    },
+    // Dynamic block — rendered server-side via render_callback in Admin.php
+    save: () => null,
 })

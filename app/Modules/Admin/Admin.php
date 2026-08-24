@@ -422,8 +422,8 @@ class Admin
             'smartpay_page_smartpay#/reports',
         ];
         if (in_array($hook, $admin_style_hooks, true) || $is_main_admin_page) {
-            wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', SMARTPAY_VERSION);
-            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', '', SMARTPAY_VERSION);
+            wp_register_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', '', filemtime( SMARTPAY_DIR . 'public/css/admin.css' ) ?: SMARTPAY_VERSION);
+            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', '', filemtime( SMARTPAY_DIR . 'public/css/components.css' ) ?: SMARTPAY_VERSION);
             wp_enqueue_style('smartpay-admin'); // TODO: Remove admin css after refactoring
             wp_enqueue_style('smartpay-components');
             wp_enqueue_style('wp-components');
@@ -455,18 +455,20 @@ class Admin
         if (in_array($hook, $main_admin_hooks, true) || $is_main_admin_page) {
             wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data', 'smartpay-ui'], SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
+            add_filter( 'smartpay_setup_notices', [ $this, 'getIntegrationNotices' ] );
             wp_localize_script(
                 'smartpay-admin',
                 'smartpay',
                 array(
-                    'restUrl'  => get_rest_url('', 'smartpay'),
-                    'adminUrl'  => admin_url('admin.php'),
-                    'ajax_url' => admin_url('admin-ajax.php'),
-                    'apiNonce' => wp_create_nonce('wp_rest'),
-                    'options'    => $this->getOptionsScriptsData(),
-					'logo'       => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
-					'pluginUrl'  => SMARTPAY_PLUGIN_ASSETS,
-					'version'    => SMARTPAY_VERSION,
+                    'restUrl'      => get_rest_url('', 'smartpay'),
+                    'adminUrl'     => admin_url('admin.php'),
+                    'ajax_url'     => admin_url('admin-ajax.php'),
+                    'apiNonce'     => wp_create_nonce('wp_rest'),
+                    'options'      => $this->getOptionsScriptsData(),
+                    'logo'         => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
+                    'pluginUrl'    => SMARTPAY_PLUGIN_ASSETS,
+                    'version'      => SMARTPAY_VERSION,
+                    'setupNotices' => apply_filters( 'smartpay_setup_notices', [] ),
                 )
             );
 
@@ -499,8 +501,8 @@ class Admin
         }
 
         if ('smartpay_page_smartpay-support' === $hook) {
-            wp_enqueue_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', array(), SMARTPAY_VERSION);
-            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', array(), SMARTPAY_VERSION);
+            wp_enqueue_style('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/css/admin.css', array(), filemtime( SMARTPAY_DIR . 'public/css/admin.css' ) ?: SMARTPAY_VERSION);
+            wp_register_style('smartpay-components', SMARTPAY_PLUGIN_ASSETS . '/css/components.css', array(), filemtime( SMARTPAY_DIR . 'public/css/components.css' ) ?: SMARTPAY_VERSION);
             wp_enqueue_style('smartpay-components');
             wp_enqueue_style('wp-components');
             wp_enqueue_script(
@@ -527,8 +529,40 @@ class Admin
         // Global
         wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
 
-        register_block_type( SMARTPAY_DIR . 'public/blocks/product' );
-        register_block_type( SMARTPAY_DIR . 'public/blocks/form' );
+        register_block_type(
+            SMARTPAY_DIR . 'public/blocks/product',
+            [
+                'render_callback' => function ( array $attributes ): string {
+                    $id       = absint( $attributes['id'] ?? 0 );
+                    $behavior = sanitize_text_field( $attributes['behavior'] ?? 'popup' );
+                    $label    = sanitize_text_field( $attributes['label'] ?? '' );
+                    if ( ! $id ) {
+                        return '';
+                    }
+                    return do_shortcode(
+                        sprintf(
+                            '[smartpay_product id="%d" behavior="%s" label="%s"]',
+                            $id,
+                            esc_attr( $behavior ),
+                            esc_attr( $label )
+                        )
+                    );
+                },
+            ]
+        );
+
+        register_block_type(
+            SMARTPAY_DIR . 'public/blocks/form',
+            [
+                'render_callback' => function ( array $attributes ): string {
+                    $id = absint( $attributes['id'] ?? 0 );
+                    if ( ! $id ) {
+                        return '';
+                    }
+                    return do_shortcode( sprintf( '[sp_form id="%d"]', $id ) );
+                },
+            ]
+        );
 
         wp_localize_script(
             'smartpay-editor-blocks',
@@ -542,6 +576,58 @@ class Admin
         );
     }
 
+
+    /**
+     * Append integration setup notices to the smartpay_setup_notices filter.
+     *
+     * Fires during adminScripts() so the filter is populated before wp_localize_script.
+     *
+     * @param array $notices Existing notices.
+     * @return array
+     */
+    public function getIntegrationNotices( array $notices ): array
+    {
+        // Map: integration namespace → required option key.
+        $setup_keys = [
+            'mailchimp'      => 'mailchimp_api_key',
+            'mailerlite'     => 'mailerlite_api_key',
+            'slack'          => 'slack_webhook_url',
+            'telegram'       => 'telegram_bot_token',
+            'twilio'         => 'twilio_account_sid',
+            'google_sheets'  => 'google_sheets_url',
+            'zapier'         => 'zapier_webhook_url',
+            'pabbly'         => 'pabbly_webhook_url',
+            'fluent_support' => 'fs_mailbox_id',
+        ];
+
+        $activated    = smartpay_get_activated_integrations();
+        $integrations = smartpay_integrations();
+
+        foreach ( $setup_keys as $namespace => $option_key ) {
+            if ( ! in_array( $namespace, $activated, true ) ) {
+                continue;
+            }
+            if ( ! empty( smartpay_get_option( $option_key ) ) ) {
+                continue;
+            }
+
+            $integ        = $integrations[ $namespace ] ?? null;
+            $integ_name   = $integ['name'] ?? $namespace;
+            $setting_link = $integ['setting_link'] ?? 'tab=extensions';
+
+            $notices[] = [
+                'id'           => 'integration_' . $namespace . '_unconfigured',
+                'type'         => 'integration',
+                'level'        => 'warning',
+                /* translators: %s: integration name. */
+                'message'      => sprintf( __( '%s is active but not fully configured.', 'smartpay' ), $integ_name ),
+                'action_label' => __( 'Configure', 'smartpay' ),
+                'action_url'   => admin_url( 'admin.php?page=smartpay-setting&' . $setting_link ),
+            ];
+        }
+
+        return $notices;
+    }
 
     /**
      * Get options data for localize scripts

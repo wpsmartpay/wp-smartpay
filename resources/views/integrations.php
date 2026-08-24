@@ -46,6 +46,54 @@
         }
         ?>
 
+        <?php
+        // Banner: integrations that are active but not yet configured.
+        $smartpay_needs_count = 0;
+        $smartpay_setup_keys  = [
+            'mailchimp'      => 'mailchimp_api_key',
+            'mailerlite'     => 'mailerlite_api_key',
+            'slack'          => 'slack_webhook_url',
+            'telegram'       => 'telegram_bot_token',
+            'twilio'         => 'twilio_account_sid',
+            'google_sheets'  => 'google_sheets_url',
+            'zapier'         => 'zapier_webhook_url',
+            'pabbly'         => 'pabbly_webhook_url',
+            'fluent_support' => 'fs_mailbox_id',
+        ];
+        $smartpay_activated_list = smartpay_get_activated_integrations();
+        foreach ( $smartpay_setup_keys as $smartpay_ns => $smartpay_opt ) {
+            if ( in_array( $smartpay_ns, $smartpay_activated_list, true ) && empty( smartpay_get_option( $smartpay_opt ) ) ) {
+                ++$smartpay_needs_count;
+            }
+        }
+        if ( $smartpay_needs_count > 0 ) :
+        ?>
+        <div class="sp-setup-notices sp-setup-notices--warning" style="margin-bottom:16px;">
+            <div class="sp-setup-notices__icon" aria-hidden="true">&#9888;</div>
+            <div class="sp-setup-notices__body">
+                <div class="sp-setup-notices__row">
+                    <span class="sp-setup-notices__msg">
+                        <?php
+                        printf(
+                            /* translators: %d: number of integrations needing setup. */
+                            esc_html( _n(
+                                '%d integration is active but not fully configured.',
+                                '%d integrations are active but not fully configured.',
+                                $smartpay_needs_count,
+                                'smartpay'
+                            ) ),
+                            (int) $smartpay_needs_count
+                        );
+                        ?>
+                    </span>
+                    <span style="font-size:11.5px;color:var(--sp-text-muted);">
+                        <?php esc_html_e( 'Look for the "Needs setup" badge below.', 'smartpay' ); ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <?php if (!empty($smartpay_categories)) : ?>
         <div class="sp-integ-toolbar">
             <div class="sp-filter-tabs">

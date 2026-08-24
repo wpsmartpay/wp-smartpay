@@ -1,7 +1,9 @@
 import { __ } from '@wordpress/i18n'
 import { registerBlockType } from '@wordpress/blocks'
 import { useEffect, useState } from '@wordpress/element'
-import { Placeholder, SelectControl, Spinner } from '@wordpress/components'
+import { Placeholder, SelectControl, Spinner, Notice } from '@wordpress/components'
+import { useBlockProps } from '@wordpress/block-editor'
+import { useSelect } from '@wordpress/data'
 import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/form', {
@@ -20,6 +22,12 @@ export default registerBlockType('smartpay/form', {
     },
 
     edit: ({ attributes, setAttributes }) => {
+        const blockProps = useBlockProps()
+        const postType = useSelect(
+            (select) => select('core/editor').getCurrentPostType(),
+            []
+        )
+
         const [forms, setForms] = useState([])
         const [isLoading, setIsLoading] = useState(true)
 
@@ -46,6 +54,16 @@ export default registerBlockType('smartpay/form', {
                 })
         }, [])
 
+        if (postType === 'smartpay_form') {
+            return (
+                <div {...blockProps}>
+                    <Notice status="warning" isDismissible={false}>
+                        {__('SmartPay blocks cannot be embedded inside a SmartPay form.', 'smartpay')}
+                    </Notice>
+                </div>
+            )
+        }
+
         const formOptions = [
             { value: 0, label: __('Select a form', 'smartpay') },
             ...forms,
@@ -54,30 +72,31 @@ export default registerBlockType('smartpay/form', {
         const selectedForm = forms.find((f) => f.value === attributes.id)
 
         return (
-            <Placeholder
-                icon="feedback"
-                label={__('WPSmartPay Form', 'smartpay')}
-                instructions={
-                    selectedForm
-                        ? __('Selected: ', 'smartpay') + selectedForm.label
-                        : __('Choose a form to display on this page.', 'smartpay')
-                }
-            >
-                {isLoading ? (
-                    <Spinner />
-                ) : (
-                    <SelectControl
-                        value={attributes.id}
-                        onChange={(value) => setAttributes({ id: parseInt(value) })}
-                        options={formOptions}
-                        __nextHasNoMarginBottom
-                    />
-                )}
-            </Placeholder>
+            <div {...blockProps}>
+                <Placeholder
+                    icon="feedback"
+                    label={__('WPSmartPay Form', 'smartpay')}
+                    instructions={
+                        selectedForm
+                            ? __('Selected: ', 'smartpay') + selectedForm.label
+                            : __('Choose a form to display on this page.', 'smartpay')
+                    }
+                >
+                    {isLoading ? (
+                        <Spinner />
+                    ) : (
+                        <SelectControl
+                            value={attributes.id}
+                            onChange={(value) => setAttributes({ id: parseInt(value) })}
+                            options={formOptions}
+                            __nextHasNoMarginBottom
+                        />
+                    )}
+                </Placeholder>
+            </div>
         )
     },
 
-    save: ({ attributes }) => {
-        return `[sp_form id="${attributes.id}"]`
-    },
+    // Dynamic block — rendered server-side via render_callback in Admin.php
+    save: () => null,
 })
