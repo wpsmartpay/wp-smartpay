@@ -437,8 +437,8 @@ body.block-editor-page {
 
     // Grid (Name columns). The frontend inherits Bootstrap's .row/.col; mirror
     // a minimal version here so multi-input fields lay out side by side.
-    .form-element.row,
-    .smartpay-address.row {
+    .form-element.row:not(.sp-cols-1):not(.sp-cols-2):not(.sp-cols-3),
+    .smartpay-address.row:not(.sp-cols-1):not(.sp-cols-2):not(.sp-cols-3) {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
@@ -457,18 +457,24 @@ body.block-editor-page {
         flex-direction: column;
         gap: 12px;
         margin-bottom: 18px;
+
+        > .col { padding-left: 0; padding-right: 0; }
     }
     .sp-cols-2 {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin-bottom: 18px;
+
+        > .col { padding-left: 0; padding-right: 0; }
     }
     .sp-cols-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 18px;
+
+        > .col { padding-left: 0; padding-right: 0; }
     }
 
     // Radio / checkbox option rows.

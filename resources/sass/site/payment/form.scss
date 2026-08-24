@@ -1,3 +1,36 @@
+// Grid column layout — override Bootstrap's .row flex layout when an explicit
+// column count is chosen. Margin resets cancel Bootstrap's .row negative gutters.
+.sp-cols-1 {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+.sp-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+.sp-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+
 .smartpay-form-shortcode {
     position: relative;
 

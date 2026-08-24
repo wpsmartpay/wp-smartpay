@@ -336,6 +336,11 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 
 == Changelog ==
 
+= 3.2.5 =
+* Fix - Layout Columns setting on Name and Address blocks now works in both the form editor preview and on the frontend; Bootstrap's flex row no longer overrides the grid display
+* Fix - Column children no longer have misaligned left/right padding when a grid column layout is active; spacing comes from the gap property
+* Fix - Quick-insert strip below the form editor canvas removed; fields are now added exclusively through the Guide modal (Guide button in the editor header)
+
 = 3.2.4 =
 * New - Live Preview on WordPress.org — try WPSmartPay in a working demo site straight from the plugin listing, no install required
 * Update - Payment Form and Product blocks now ship block.json metadata, improving block registration and editor performance
