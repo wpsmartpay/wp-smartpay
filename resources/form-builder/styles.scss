@@ -450,6 +450,27 @@ body.block-editor-page {
         }
     }
 
+    // Grid column layout classes — set on NameField / AddressField containers
+    // via the "Layout Columns" SelectControl. Mirrors form.scss frontend rules.
+    .sp-cols-1 {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+    .sp-cols-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+    .sp-cols-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
     // Radio / checkbox option rows.
     .custom-control {
         position: relative;
