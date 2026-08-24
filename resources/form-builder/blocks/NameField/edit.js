@@ -4,10 +4,10 @@ import {
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor'
-import { PanelBody, ToggleControl } from '@wordpress/components'
+import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components'
 
 export const edit = ({ attributes, setAttributes }) => {
-    const { showFirstName, showMiddleName, showLastName } = attributes
+    const { showFirstName, showMiddleName, showLastName, columns } = attributes
 
     const TEMPLATE = []
 
@@ -63,7 +63,10 @@ export const edit = ({ attributes, setAttributes }) => {
         ])
     }
 
-    const blockProps = useBlockProps({ className: 'form-element row' })
+    const colClass = columns > 0 ? `sp-cols-${columns}` : ''
+    const blockProps = useBlockProps({
+        className: `form-element row${colClass ? ' ' + colClass : ''}`,
+    })
     const innerBlocksProps = useInnerBlocksProps(blockProps, {
         template: TEMPLATE,
         allowedBlocks: ['smartpay-form/name-field'],
@@ -88,6 +91,20 @@ export const edit = ({ attributes, setAttributes }) => {
                         label={__('Show Last Name', 'smartpay')}
                         checked={showLastName}
                         onChange={(val) => setAttributes({ showLastName: val })}
+                    />
+                    <SelectControl
+                        label={__('Layout Columns', 'smartpay')}
+                        value={columns}
+                        options={[
+                            { label: __('Auto (flex row)', 'smartpay'), value: 0 },
+                            { label: __('1 Column', 'smartpay'), value: 1 },
+                            { label: __('2 Columns', 'smartpay'), value: 2 },
+                            { label: __('3 Columns', 'smartpay'), value: 3 },
+                        ]}
+                        onChange={(val) =>
+                            setAttributes({ columns: parseInt(val, 10) })
+                        }
+                        __nextHasNoMarginBottom
                     />
                 </PanelBody>
             </InspectorControls>
