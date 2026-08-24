@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable Tag: 3.2.4
+Stable Tag: 3.2.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,12 +22,11 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.4
+### ✅ What's New in Version 3.2.5
 
-* **Multiple payment forms on one page** — Place as many forms on a page as you like. Previously only the first one responded to clicks and submissions.
-* **Allow Custom Amount is back in the sidebar** — The toggle returns to the form editor's Document sidebar, with an optional label field, so donation-style forms are straightforward to set up again.
-* **Donation-only forms render correctly** — A form with no preset amounts now shows the custom amount input on its own instead of hiding the amount section entirely.
-* **Customer dashboard no longer redirects away** — Logged-in users who have not paid yet can open the dashboard and profile pages and see an empty state.
+* **Name & Address column layout now works** — The Layout Columns setting on Name and Address blocks correctly applies 2- or 3-column grids in both the form editor preview and on the frontend.
+* **Simpler field insertion in the form editor** — The quick-insert toolbar below the canvas has been removed. Add fields by clicking the Guide button in the editor header — a cleaner, consistent workflow.
+* **Product validation** — Products can no longer be saved without a title or a price greater than zero; clear error messages guide you to fix it before saving.
 
 ---
 
