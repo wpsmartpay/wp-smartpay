@@ -89,7 +89,7 @@ const IntegrationCard = ({ integration, onToggle }) => {
 				) : (
 					<Button variant="outline" size="sm" asChild>
 						<a
-							href="https://wpsmartpay.com"
+							href="https://wpsmartpay.com/#pricing"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
