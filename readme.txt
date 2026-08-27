@@ -2,7 +2,7 @@
 Contributors: converswp
 Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
 Stable Tag: 3.2.5
 License: GPL-3.0-or-later
