@@ -792,16 +792,15 @@ class Setting
 
             // Footer: toggle + status text + optional settings link.
             $html .= '<div class="sp-integ-card__footer">';
-            $html .= '<div class="custom-control custom-switch custom-switch-lg">';
+            $html .= '<label class="sp-switch" for="' . esc_attr( $input_id ) . '">';
             $html .= '<input type="checkbox"'
-                . ' class="custom-control-input"'
                 . ' id="' . esc_attr( $input_id ) . '"'
                 . ' name="' . esc_attr( $input_name ) . '"'
                 . ' value="1"'
                 . checked( true, $enabled, false )
                 . ' />';
-            $html .= '<label class="custom-control-label" for="' . esc_attr( $input_id ) . '"></label>';
-            $html .= '</div>';
+            $html .= '<span class="sp-switch__track"></span>';
+            $html .= '</label>';
 
             // Status text — two spans toggled via CSS :has().
             $html .= '<span class="sp-integ-card__status sp-gw-status-off">' . esc_html__( 'Disabled', 'smartpay' ) . '</span>';
@@ -861,10 +860,10 @@ class Setting
                 $html .= '</div>';
 
                 $html .= '<div class="sp-integ-card__footer">';
-                $html .= '<div class="custom-control custom-switch custom-switch-lg">';
-                $html .= '<input type="checkbox" class="custom-control-input" disabled style="cursor:not-allowed;" />';
-                $html .= '<label class="custom-control-label"></label>';
-                $html .= '</div>';
+                $html .= '<label class="sp-switch sp-switch--disabled">';
+                $html .= '<input type="checkbox" disabled />';
+                $html .= '<span class="sp-switch__track"></span>';
+                $html .= '</label>';
                 $html .= '<span class="sp-badge sp-badge--trial">' . esc_html__( 'Pro Only', 'smartpay' ) . '</span>';
                 $html .= '<a href="' . $upgrade_url . '" target="_blank" rel="noopener noreferrer"'
                     . ' class="sp-integ-card__settings"'
