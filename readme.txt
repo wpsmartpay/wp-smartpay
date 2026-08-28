@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.5
+Stable Tag: 3.2.6
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,10 +22,12 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.5
+### ✅ What's New in Version 3.2.6
 
-* **Name & Address column layout now works** — The Layout Columns setting on Name and Address blocks correctly applies 2- or 3-column grids in both the form editor preview and on the frontend.
-* **Simpler field insertion in the form editor** — The quick-insert toolbar below the canvas has been removed. Add fields by clicking the Guide button in the editor header — a cleaner, consistent workflow.
+* **PayPal notices scoped to SmartPay pages** — API key warnings and unsupported-currency notices no longer appear on unrelated admin pages.
+* **Integration toggle conflict fixed** — The toggle AJAX action was renamed to avoid a conflict with the SmartMembers plugin that was causing nonce failures.
+* **Block API version warning gone** — `apiVersion: 3` added to the form and product blocks to suppress the WP 6.9 deprecation warning on every admin page load.
+* **Required textarea validation** — Required message/textarea fields now show an inline error directly below the field when left empty, instead of silently blocking submission.
 * **Product validation** — Products can no longer be saved without a title or a price greater than zero; clear error messages guide you to fix it before saving.
 
 ---
@@ -394,6 +396,15 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.6 =
+* Fix - PayPal API key and unsupported-currency admin notices now scoped to SmartPay pages only — no longer appear on unrelated admin screens
+* Fix - Row-action dropdowns in table cards no longer clipped by overflow:hidden — menus render correctly without being cut off
+* Fix - Integration toggle AJAX action renamed to `smartpay_toggle_integration_activation` to prevent nonce failure conflict with SmartMembers plugin
+* Fix - `apiVersion: 3` added to smartpay/form and smartpay/product block registrations — suppresses WP 6.9 deprecation warning on every admin page load
+* Fix - Required textarea fields (e.g. message field) now show inline validation error directly below the field instead of silently blocking form submission
+* Fix - Product create/update now validates title (non-empty) and price (> 0) before saving — removes silent "Untitled product" fallback
+* Fix - Support page resource links corrected (contact, developer docs, leave-a-review URLs)
 
 = 3.2.5 =
 * New - Name Fields and Address Fields blocks now have a "Layout Columns" setting (Auto / 1 / 2 / 3) in the block sidebar, applied identically in the editor and on the frontend
