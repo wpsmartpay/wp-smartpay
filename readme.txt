@@ -2,7 +2,7 @@
 Contributors: converswp
 Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
 Stable Tag: 3.2.5
 License: GPL-3.0-or-later
@@ -404,6 +404,10 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 * Fix - A visual divider now appears before the Settings item in the SmartPay admin submenu
 * Fix - Integration card toggles and gear icon now align correctly at all viewport widths; focus ring sized to the switch control
 * Fix - Bootstrap custom-switch component CSS now scoped to SmartPay integration cards, preventing style conflicts with other admin plugins
+* Fix - Payment Gateways settings page now uses the same pill-switch toggle UI as the Integrations page — replaced Bootstrap custom-switch with sp-switch
+* Fix - Upgrade and learn-more URLs across the admin UI corrected to point to the right destination pages
+* Update - Tested up to WordPress 7.1
+* Update - Security: bump brace-expansion dependency (CVE fix)
 
 = 3.2.4 =
 * New - Live Preview on WordPress.org — try WPSmartPay in a working demo site straight from the plugin listing, no install required
