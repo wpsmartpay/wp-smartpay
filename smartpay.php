@@ -8,7 +8,7 @@
  * Version: 3.2.5
  * Requires PHP: 8.1
  * Requires at least: 6.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  *
  * Author:      WPSmartPay
  * Author URI:  https://wpsmartpay.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
@@ -33,7 +33,7 @@
 
 defined('ABSPATH') || exit;
 
-define('SMARTPAY_VERSION', '3.2.4');
+define('SMARTPAY_VERSION', '3.2.5');
 define('SMARTPAY_PLUGIN_FILE', __FILE__);
 define('SMARTPAY_DIR', plugin_dir_path(__FILE__));
 define('SMARTPAY_PLUGIN_ASSETS', plugins_url('public', __FILE__));

@@ -2,7 +2,7 @@
 Contributors: converswp
 Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 8.1
 Stable Tag: 3.2.5
 License: GPL-3.0-or-later
@@ -321,6 +321,66 @@ Yes, with WPSmartPay Pro. The plugin ships a built-in Model Context Protocol (MC
 = What PHP version is required? =
 PHP 8.1 or higher. WordPress 6.0 or higher.
 
+= How do I install and set up WPSmartPay? =
+Go to Plugins → Add New in your WordPress dashboard, search for "WPSmartPay", click Install Now, then Activate. A guided setup wizard walks you through currency selection, page creation, and connecting your first payment gateway — the entire process takes just a few minutes.
+
+= Do I need a merchant account to accept payments? =
+No. You only need an account with a supported payment gateway such as Stripe, PayPal, or Mollie. Funds go directly into your gateway account — there is no separate merchant account required.
+
+= Will WPSmartPay slow down my website? =
+No. WPSmartPay is built to be lightweight. It only loads its scripts and styles on pages where a payment form is actually present, so your other pages remain fast and unaffected.
+
+= Can I add custom fields to my payment forms? =
+Yes. The form builder lets you add text fields, dropdowns, checkboxes, phone numbers, addresses, and other input fields. This is useful for collecting company names, dietary preferences, agreement to terms, or any extra information you need from customers.
+
+= Can I issue refunds from the WordPress admin? =
+Yes. Open any payment from the Payments screen and click Refund. For gateways like Stripe and Paddle, the refund is processed automatically through the gateway and the money returns to the customer's original payment method.
+
+= Can I export my payment and transaction data? =
+Yes. Export your payment records from the Payments page as a CSV file that you can open in Excel or Google Sheets for accounting, tax reporting, or team sharing.
+
+= Can customers manage their own subscriptions and payment details? =
+Yes. WPSmartPay provides a customer self-service portal where subscribers can view payment history, update their payment method, pause, or cancel their subscriptions — without needing access to your WordPress admin.
+
+= Can I offer a free trial for subscription plans? =
+Yes, with WPSmartPay Pro. Add a trial period to any subscription form — for example, a 7-day free trial before the first charge. Trial settings are configured directly in the form builder.
+
+= Can I create installment plans for expensive products or courses? =
+Yes, with WPSmartPay Pro. Break a large payment into smaller installments — for example, 6 monthly payments of $100 instead of $600 upfront. This makes expensive products and courses more affordable and can increase conversions.
+
+= Can I run multiple donation campaigns at the same time? =
+Yes. Create as many donation forms as you need, each with its own goal amount and progress tracker. Every campaign tracks independently so you can run different fundraisers simultaneously on your site.
+
+= Can I show a progress bar on my donation page? =
+Yes. WPSmartPay can display a live progress bar that updates automatically each time a new donation is received, showing donors how much has been raised toward your campaign goal.
+
+= Does WPSmartPay take a percentage of my donations or sales? =
+No. WPSmartPay charges zero transaction fees on top of what your gateway charges. The only fees you pay are the standard processing fees from your payment gateway (for example, Stripe charges 2.9% + $0.30 per transaction in the US). All funds go directly to your own account.
+
+= Can I use multiple payment gateways at the same time? =
+Yes. Enable as many gateways as you need and let customers choose their preferred payment method at checkout. For example, you can offer both Stripe and PayPal on the same form so customers can pick whichever they prefer.
+
+= Can I sell online courses with WPSmartPay? =
+Yes, with WPSmartPay Pro. The plugin integrates with LearnDash, Tutor LMS, and LifterLMS. When a student completes payment, they are automatically enrolled in the course — no manual steps required.
+
+= What currencies does WPSmartPay support? =
+WPSmartPay supports over 157 currencies. Set your default currency in the general settings to accept payments from customers worldwide in their local currency.
+
+= Does WPSmartPay work with my WordPress theme and page builder? =
+Yes. WPSmartPay is designed to work with all standard WordPress themes and popular page builders. Payment forms inherit your theme styles and look like a natural part of your website.
+
+= Can I connect WPSmartPay to email marketing tools like Mailchimp? =
+Yes, with WPSmartPay Pro. WPSmartPay integrates with Mailchimp, FluentCRM, MailerLite, and ActiveCampaign. When a customer makes a payment, their information is automatically added to your email list with the correct tags and segments.
+
+= What happens when a subscription renewal payment fails? =
+WPSmartPay Pro includes a built-in payment recovery system. When a renewal fails, the system automatically retries the charge using smart retry logic and notifies the customer to update their payment details. The Recovery Report tracks all failed and recovered payments so you can see exactly how much revenue was saved.
+
+= Can I track which payment forms generate the most revenue? =
+Yes, with WPSmartPay Pro. The Forms Report shows views, payments, and conversion rates for each form, so you can identify your top performers and focus on what works best.
+
+= Can I add a surcharge or percentage fee to specific payment methods? =
+Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percentage-based or fixed-amount fees globally or per form. The surcharge line item is displayed clearly on the checkout page and in receipts so customers see exactly what they are paying for.
+
 == Screenshots ==
 1. Dashboard - revenue overview, payment stats, and a quick-start checklist.
 2. Payment form builder with native Gutenberg blocks and a checkout layout picker.
@@ -336,9 +396,18 @@ PHP 8.1 or higher. WordPress 6.0 or higher.
 == Changelog ==
 
 = 3.2.5 =
-* Fix - Layout Columns setting on Name and Address blocks now works in both the form editor preview and on the frontend; Bootstrap's flex row no longer overrides the grid display
-* Fix - Column children no longer have misaligned left/right padding when a grid column layout is active; spacing comes from the gap property
-* Fix - Quick-insert strip below the form editor canvas removed; fields are now added exclusively through the Guide modal (Guide button in the editor header)
+* New - Name Fields and Address Fields blocks now have a "Layout Columns" setting (Auto / 1 / 2 / 3) in the block sidebar, applied identically in the editor and on the frontend
+* Fix - Layout Columns setting now works in both the form editor preview and on the frontend; Bootstrap's flex row no longer overrides the grid display
+* Fix - Quick-insert strip below the form editor canvas removed; fields are now added exclusively through the Guide modal
+* Fix - Form editor canvas now renders full-width, eliminating the column count mismatch between editor and frontend
+* Fix - Field spacing (margin-bottom) now matches between the block editor canvas and the embedded form on the frontend
+* Fix - Deleted blocks no longer reappear when the editor is reopened — the form autosave is cleared after each real save
+* Fix - A visual divider now appears before the Settings item in the SmartPay admin submenu
+* Fix - Integration card toggles and gear icon now align correctly at all viewport widths; focus ring sized to the switch control
+* Fix - Payment Gateways settings page now uses the same pill-switch toggle UI as the Integrations page — replaced Bootstrap custom-switch with sp-switch
+* Fix - Upgrade and learn-more URLs across the admin UI corrected to point to the right destination pages
+* Update - Tested up to WordPress 7.1
+* Update - Security: bump brace-expansion dependency (CVE fix)
 
 = 3.2.4 =
 * New - Live Preview on WordPress.org — try WPSmartPay in a working demo site straight from the plugin listing, no install required

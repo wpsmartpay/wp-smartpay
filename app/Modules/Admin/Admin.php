@@ -306,7 +306,7 @@ class Admin
     {
         return (array) apply_filters(
             'smartpay_admin_menu_separators',
-            [ 'smartpay#/payments', 'smartpay#/customers' ]
+            [ 'smartpay#/payments', 'smartpay#/customers', 'smartpay-setting' ]
         );
     }
 

@@ -534,7 +534,7 @@ const ProUpgradeNote = () => {
                     {__( 'Unlock subscriptions, invoices, and advanced reports.', 'smartpay' )}
                 </p>
                 <a
-                    href="https://wpsmartpay.com/pricing"
+                    href="https://wpsmartpay.com/features/"
                     target="_blank"
                     rel="noreferrer"
                     style={{

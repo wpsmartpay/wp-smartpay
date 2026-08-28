@@ -109,10 +109,12 @@ body.block-editor-page {
     }
 
     &__content {
-        width: 70%;
+        flex: 1;
+        min-width: 0;
     }
     &__sidebar {
-        width: 30%;
+        width: 280px;
+        flex-shrink: 0;
         box-shadow: none;
         border: none;
     }
@@ -390,8 +392,17 @@ body.block-editor-page {
 // right while editing).
 // ============================================================
 .editor-styles-wrapper {
+    // Remove WP block max-width constraint in the editor canvas so form fields
+    // fill the available width, matching the frontend's full-width rendering.
+    .wp-block {
+        max-width: none;
+    }
+    .is-root-container > .wp-block {
+        max-width: none !important;
+    }
+
     .form-element {
-        margin-bottom: 16px;
+        margin-bottom: 18px;
 
         > label {
             display: inline-block;
@@ -400,6 +411,14 @@ body.block-editor-page {
             line-height: 1.3;
             color: #1f2933;
         }
+    }
+
+    // Address block — vertical stack (mirrors frontend .smartpay-address rules).
+    .smartpay-address:not(.sp-cols-2):not(.sp-cols-3) {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 18px;
     }
 
     .form-control {
@@ -437,8 +456,8 @@ body.block-editor-page {
 
     // Grid (Name columns). The frontend inherits Bootstrap's .row/.col; mirror
     // a minimal version here so multi-input fields lay out side by side.
-    .form-element.row:not(.sp-cols-1):not(.sp-cols-2):not(.sp-cols-3),
-    .smartpay-address.row:not(.sp-cols-1):not(.sp-cols-2):not(.sp-cols-3) {
+    .form-element.row,
+    .smartpay-address.row {
         display: flex;
         flex-wrap: wrap;
         gap: 12px;
@@ -457,24 +476,18 @@ body.block-editor-page {
         flex-direction: column;
         gap: 12px;
         margin-bottom: 18px;
-
-        > .col { padding-left: 0; padding-right: 0; }
     }
     .sp-cols-2 {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
         margin-bottom: 18px;
-
-        > .col { padding-left: 0; padding-right: 0; }
     }
     .sp-cols-3 {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 18px;
-
-        > .col { padding-left: 0; padding-right: 0; }
     }
 
     // Radio / checkbox option rows.
