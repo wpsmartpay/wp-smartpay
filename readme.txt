@@ -22,12 +22,11 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.4
+### ✅ What's New in Version 3.2.5
 
-* **Multiple payment forms on one page** — Place as many forms on a page as you like. Previously only the first one responded to clicks and submissions.
-* **Allow Custom Amount is back in the sidebar** — The toggle returns to the form editor's Document sidebar, with an optional label field, so donation-style forms are straightforward to set up again.
-* **Donation-only forms render correctly** — A form with no preset amounts now shows the custom amount input on its own instead of hiding the amount section entirely.
-* **Customer dashboard no longer redirects away** — Logged-in users who have not paid yet can open the dashboard and profile pages and see an empty state.
+* **Name & Address column layout now works** — The Layout Columns setting on Name and Address blocks correctly applies 2- or 3-column grids in both the form editor preview and on the frontend.
+* **Simpler field insertion in the form editor** — The quick-insert toolbar below the canvas has been removed. Add fields by clicking the Guide button in the editor header — a cleaner, consistent workflow.
+* **Product validation** — Products can no longer be saved without a title or a price greater than zero; clear error messages guide you to fix it before saving.
 
 ---
 
@@ -398,12 +397,13 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 
 = 3.2.5 =
 * New - Name Fields and Address Fields blocks now have a "Layout Columns" setting (Auto / 1 / 2 / 3) in the block sidebar, applied identically in the editor and on the frontend
+* Fix - Layout Columns setting now works in both the form editor preview and on the frontend; Bootstrap's flex row no longer overrides the grid display
+* Fix - Quick-insert strip below the form editor canvas removed; fields are now added exclusively through the Guide modal
 * Fix - Form editor canvas now renders full-width, eliminating the column count mismatch between editor and frontend
 * Fix - Field spacing (margin-bottom) now matches between the block editor canvas and the embedded form on the frontend
-* Fix - Deleted blocks no longer reappear when the editor is reopened — the form autosave is cleared after each real save so Gutenberg won't offer to restore stale content
+* Fix - Deleted blocks no longer reappear when the editor is reopened — the form autosave is cleared after each real save
 * Fix - A visual divider now appears before the Settings item in the SmartPay admin submenu
 * Fix - Integration card toggles and gear icon now align correctly at all viewport widths; focus ring sized to the switch control
-* Fix - Bootstrap custom-switch component CSS now scoped to SmartPay integration cards, preventing style conflicts with other admin plugins
 * Fix - Payment Gateways settings page now uses the same pill-switch toggle UI as the Integrations page — replaced Bootstrap custom-switch with sp-switch
 * Fix - Upgrade and learn-more URLs across the admin UI corrected to point to the right destination pages
 * Update - Tested up to WordPress 7.1

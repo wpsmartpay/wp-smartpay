@@ -148,6 +148,29 @@ ob_start();
 		</div>
 		<?php endif; ?>
 
+		<?php if ( 'gateways' === $smartpay_active_tab ) :
+			$smartpay_gateway_notices = array_filter(
+				apply_filters( 'smartpay_setup_notices', [] ),
+				function ( $n ) { return ( $n['type'] ?? '' ) === 'gateway'; }
+			);
+			if ( ! empty( $smartpay_gateway_notices ) ) : ?>
+		<div class="sp-setup-notices sp-setup-notices--warning" style="margin-bottom:16px;">
+			<div class="sp-setup-notices__icon" aria-hidden="true">&#9888;</div>
+			<div class="sp-setup-notices__body">
+				<?php foreach ( $smartpay_gateway_notices as $smartpay_gn ) : ?>
+				<div class="sp-setup-notices__row">
+					<span class="sp-setup-notices__msg"><?php echo esc_html( $smartpay_gn['message'] ); ?></span>
+					<?php if ( ! empty( $smartpay_gn['action_url'] ) && ! empty( $smartpay_gn['action_label'] ) ) : ?>
+					<a href="<?php echo esc_url( $smartpay_gn['action_url'] ); ?>" class="sp-setup-notices__link">
+						<?php echo esc_html( $smartpay_gn['action_label'] ); ?> &rarr;
+					</a>
+					<?php endif; ?>
+				</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+		<?php endif; endif; ?>
+
 		<?php if ( 'emails' === $smartpay_active_tab && smartpay_is_pro_active() ) : ?>
 
 			<?php // Pro replaces this container with the full email-notifications UI. ?>

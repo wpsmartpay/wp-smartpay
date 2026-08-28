@@ -17,6 +17,8 @@ import {
     ChevronRight,
     Plus,
     RefreshCw,
+    AlertTriangle,
+    CheckCircle2,
 } from 'lucide-react'
 import { Header } from '../components/header'
 import { SetupWizard } from '../components/SetupWizard'
@@ -550,6 +552,81 @@ const ProUpgradeNote = () => {
     )
 }
 
+// ─── Setup Notices Card ───────────────────────────────────────────────────────
+const SetupNoticesCard = () => {
+    const notices = window.smartpay?.setupNotices || []
+
+    if ( notices.length === 0 ) {
+        return (
+            <div className="sp-detail-card" style={{ overflow: 'hidden' }}>
+                <div className="sp-detail-card__header">
+                    <span className="sp-detail-card__title">{__( 'SETUP STATUS', 'smartpay' )}</span>
+                </div>
+                <div className="sp-detail-card__body" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px' }}>
+                    <CheckCircle2 style={{ width: 18, height: 18, color: '#22c55e', flexShrink: 0 }} />
+                    <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sp-text)' }}>
+                            {__( 'All setup complete', 'smartpay' )}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: 'var(--sp-text-muted)', marginTop: 2 }}>
+                            {__( 'Your gateways and integrations are configured.', 'smartpay' )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#f59e0b' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fffbeb' }}>
+                <AlertTriangle style={{ width: 13, height: 13, color: '#d97706', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#92400e', marginLeft: 6 }}>
+                    {__( 'SETUP NEEDED', 'smartpay' )}
+                </span>
+                <span style={{
+                    marginLeft: 'auto',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    background: '#fef3c7',
+                    color: '#92400e',
+                    border: '1px solid #fcd34d',
+                    padding: '1px 7px',
+                    borderRadius: 99,
+                }}>
+                    {notices.length}
+                </span>
+            </div>
+            <div className="sp-detail-card__body" style={{ padding: 0 }}>
+                { notices.map( ( notice, i ) => (
+                    <div key={ notice.id || i } style={{
+                        display:    'flex',
+                        alignItems: 'flex-start',
+                        gap:        10,
+                        padding:    '9px 16px',
+                        borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
+                    }}>
+                        <AlertTriangle style={{ width: 12, height: 12, color: '#d97706', flexShrink: 0, marginTop: 2 }} />
+                        <span style={{ fontSize: 12, color: 'var(--sp-text)', flex: 1, minWidth: 0, lineHeight: 1.45 }}>
+                            { notice.message }
+                        </span>
+                        { notice.action_url && (
+                            <a
+                                href={ notice.action_url }
+                                style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
+                                onMouseOver={ ( e ) => e.currentTarget.style.textDecoration = 'underline' }
+                                onMouseOut={ ( e ) => e.currentTarget.style.textDecoration = 'none' }
+                            >
+                                { notice.action_label || __( 'Fix →', 'smartpay' ) }
+                            </a>
+                        ) }
+                    </div>
+                ) ) }
+            </div>
+        </div>
+    )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 const now        = new Date()
 const monthLabel = now.toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -758,8 +835,11 @@ export const Dashboard = () => {
 
                     </div>
 
-                    {/* ── RIGHT: CTAs + Onboarding Checklist card ──────────────── */}
+                    {/* ── RIGHT: Setup status + CTAs + Onboarding Checklist card ─ */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                        {/* Setup notices — always first */}
+                        <SetupNoticesCard />
 
                         {/* Quick actions card */}
                         <div className="sp-detail-card">
