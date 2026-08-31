@@ -789,10 +789,10 @@ class Admin
      * @param string $text Default footer text.
      * @return string
      */
-    public function adminFooterText( string $text ): string
+    public function adminFooterText( ?string $text ): string
     {
         if ( ! $this->isSmartPayAdminPage() ) {
-            return $text;
+            return $text ?? '';
         }
 
         $rate_url = 'https://wordpress.org/support/plugin/smartpay/reviews/#new-post';

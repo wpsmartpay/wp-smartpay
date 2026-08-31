@@ -217,15 +217,19 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 						<input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway"
 							value="<?php echo esc_attr( $only_gw_id ); ?>" checked />
 						<?php
-						// A lone gateway skips the picker UI entirely, but it can still inject
-						// its own inline checkout fields (e.g. Authorize.Net's embedded card
-						// form) — those must render regardless of how many gateways exist.
+						// Single gateway: skip the accordion card UI — output inline fields directly.
 						ob_start();
 						do_action( 'smartpay_native_gateway_checkout_fields', $only_gw_id, $only_gateway, $post_id );
 						$smartpay_only_gateway_inline_content = ob_get_clean();
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
-						echo $smartpay_only_gateway_inline_content;
+						if ( '' !== trim( $smartpay_only_gateway_inline_content ) ) :
 						?>
+						<div class="smartpay-single-gateway-fields">
+							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
+							echo $smartpay_only_gateway_inline_content;
+							?>
+						</div>
+						<?php endif; ?>
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
 						<?php ob_start(); ?>
 						<label class="payment-gateway--label mt-3">
