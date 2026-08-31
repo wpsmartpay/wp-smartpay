@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.7
+Stable Tag: 3.2.8
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -396,6 +396,9 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.8 =
+* New - WordPress Playground Live Preview blueprint — try WP SmartPay instantly on WP.org with a pre-configured "Quick Donation" form, PayPal gateway, and sample donation data
 
 = 3.2.7 =
 * Fix - Integration enable/disable checkboxes (e.g. WP User Registration, Slack, Telegram, Google Sheets) now save and display correctly after toggling
