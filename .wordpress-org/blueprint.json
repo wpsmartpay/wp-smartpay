@@ -18,7 +18,7 @@
 			"step": "installPlugin",
 			"pluginData": {
 				"resource": "wordpress.org/plugins",
-				"slug": "wp-smartpay"
+				"slug": "smartpay"
 			},
 			"options": {
 				"activate": true
