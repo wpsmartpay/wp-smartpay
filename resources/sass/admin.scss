@@ -781,3 +781,84 @@ p.excerpt {
 		line-height: 1.5;
 	}
 }
+
+/* ==========================================================================
+   Setup notices banner (settings + integrations pages)
+   ========================================================================== */
+
+:root {
+	--sp-text-muted: #757575;
+}
+
+.sp-setup-notices {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	border-radius: 6px;
+	padding: 12px 14px;
+
+	&__icon {
+		font-size: 16px;
+		flex-shrink: 0;
+		margin-top: 1px;
+		line-height: 1;
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		flex: 1;
+		min-width: 0;
+	}
+
+	&__row {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		flex-wrap: wrap;
+		font-size: 13px;
+		line-height: 1.5;
+	}
+
+	&__msg {
+		color: inherit;
+	}
+
+	&__link {
+		font-size: 12px;
+		white-space: nowrap;
+		text-decoration: underline;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+
+	&--warning {
+		background: #fffbeb;
+		border: 1px solid #fde68a;
+		color: #92400e;
+
+		.sp-setup-notices__icon { color: #b45309; }
+		.sp-setup-notices__link { color: #b45309; }
+	}
+
+	&--error {
+		background: #fef2f2;
+		border: 1px solid #fecaca;
+		color: #991b1b;
+
+		.sp-setup-notices__icon { color: #dc2626; }
+		.sp-setup-notices__link { color: #dc2626; }
+	}
+
+	&--info {
+		background: #eff6ff;
+		border: 1px solid #bfdbfe;
+		color: #1e40af;
+
+		.sp-setup-notices__icon { color: #2563eb; }
+		.sp-setup-notices__link { color: #2563eb; }
+	}
+}
