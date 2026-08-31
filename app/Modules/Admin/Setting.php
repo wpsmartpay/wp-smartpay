@@ -693,6 +693,9 @@ class Setting
     public function settings_checkbox_callback($args)
     {
         $smartpay_option = smartpay_get_option($args['id'], []);
+        if ( ! empty( $args['multiple'] ) && ! is_array( $smartpay_option ) ) {
+            $smartpay_option = [];
+        }
 
         if (isset($args['faux']) && true === $args['faux']) {
             $name = '';
@@ -706,8 +709,10 @@ class Setting
         if ($args['multiple'] && $args['options']) {
             foreach ($args['options'] as $name => $value) {
                 $checked  = in_array($name, $smartpay_option) ? 'checked="checked"' : '';
+                $html    .= '<span style="display:inline-flex;align-items:center;gap:6px;margin-bottom:4px;">';
                 $html    .= '<input type="checkbox" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . '][]" id="smartpay_settings[' . smartpay_sanitize_key($name) . ']" value="' . $name . '" ' . $checked . ' class="' . $class . '"/>';
-                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">' . $value . '</label><br />';
+                $html    .= '<label for="smartpay_settings[' . smartpay_sanitize_key($name) . ']">' . $value . '</label>';
+                $html    .= '</span><br />';
             }
         } else {
             $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';

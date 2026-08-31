@@ -264,6 +264,13 @@
             }
         }
 
+        // ── Single-gateway direct output ─────────────────────────────
+        // When only one gateway is active, the accordion is skipped and the
+        // gateway's inline fields are rendered directly with padding above/below.
+        .smartpay-single-gateway-fields {
+            padding: 8px 0;
+        }
+
         // ── Stacked gateway accordion ───────────────────────────────
         // Full-width selectable cards, one per gateway, stacked vertically.
         // The selected card (its hidden radio :checked) expands to reveal its

@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.6
+Stable Tag: 3.2.7
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -396,6 +396,12 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.7 =
+* Fix - Integration enable/disable checkboxes (e.g. WP User Registration, Slack, Telegram, Google Sheets) now save and display correctly after toggling
+* Fix - Frontend scripts reduced from 880 KB to under 60 KB — only the Bootstrap Modal component is loaded, not the full Bootstrap bundle
+* Fix - Single-gateway checkout form fields now render inside a proper wrapper, preventing layout shifts when only one payment method is active
+* Fix - Admin footer no longer throws a PHP TypeError on non-admin pages when WordPress passes a null value
 
 = 3.2.6 =
 * Fix - PayPal API key and unsupported-currency admin notices now scoped to SmartPay pages only — no longer appear on unrelated admin screens
