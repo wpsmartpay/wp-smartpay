@@ -1,6 +1,6 @@
 {
 	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
-	"landingPage": "/wp-admin/admin.php?page=smartpay",
+	"landingPage": "/donate-now/",
 	"preferredVersions": {
 		"php": "8.2",
 		"wp": "latest"
@@ -25,16 +25,27 @@
 			}
 		},
 		{
+			"step": "setSiteOptions",
+			"options": {
+				"blogname": "Happy Paws Animal Rescue",
+				"blogdescription": "Helping animals find their forever homes"
+			}
+		},
+		{
 			"step": "runPHP",
-			"code": "<?php require_once '/wordpress/wp-load.php'; $s = get_option('smartpay_settings', []); $s['default_gateway'] = 'manual'; $s['gateways'] = ['manual' => 1]; $s['currency'] = 'USD'; $s['currency_position'] = 'before'; $s['decimal_separator'] = '.'; $s['thousands_separator'] = ','; update_option('smartpay_settings', $s, false); echo 'Settings updated';"
+			"code": "<?php require_once '/wordpress/wp-load.php'; $s = get_option('smartpay_settings', []); $s['default_gateway'] = 'manual'; $s['gateways'] = ['manual' => 1]; $s['currency'] = 'USD'; $s['currency_position'] = 'before'; $s['decimal_separator'] = '.'; $s['thousands_separator'] = ','; update_option('smartpay_settings', $s, false); echo 'Settings OK';"
 		},
 		{
-			"step": "wp-cli",
-			"command": "post create --post_type=page --post_title='Donate' --post_status=publish --post_content='<!-- wp:shortcode -->[sp_form id=\"1\"]<!-- /wp:shortcode -->' --allow-root"
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n\n$content = '<!-- wp:smartpay-form/name {\"showMiddleName\":false} -->\n<!-- wp:smartpay-form/name-field {\"sub\":\"first\"} -->\n<!-- wp:smartpay-form/name-label /-->\n<!-- wp:smartpay-form/name-input /-->\n<!-- /wp:smartpay-form/name-field -->\n<!-- wp:smartpay-form/name-field {\"sub\":\"last\"} -->\n<!-- wp:smartpay-form/name-label /-->\n<!-- wp:smartpay-form/name-input /-->\n<!-- /wp:smartpay-form/name-field -->\n<!-- /wp:smartpay-form/name -->\n\n<!-- wp:smartpay-form/email -->\n<!-- wp:smartpay-form/email-label /-->\n<!-- wp:smartpay-form/email-input /-->\n<!-- /wp:smartpay-form/email -->\n\n<!-- wp:smartpay-form/pricing {\"allowCustomAmount\":true,\"customAmountLabel\":\"Enter your gift amount\"} -->\n<!-- wp:smartpay-form/pricing-option {\"key\":\"feed\",\"label\":\"Feed a pet for a week\",\"description\":\"Covers food for one shelter animal\",\"amount\":\"10\",\"billing_type\":\"One Time\"} /-->\n<!-- wp:smartpay-form/pricing-option {\"key\":\"rescue\",\"label\":\"Sponsor a rescue\",\"description\":\"Helps cover transport and initial care\",\"amount\":\"25\",\"billing_type\":\"One Time\"} /-->\n<!-- wp:smartpay-form/pricing-option {\"key\":\"medical\",\"label\":\"Fund a medical check\",\"description\":\"Covers a full vet examination\",\"amount\":\"50\",\"billing_type\":\"One Time\"} /-->\n<!-- /wp:smartpay-form/pricing -->\n\n<!-- wp:smartpay-form/submit-button -->\n<!-- wp:smartpay-form/submit-coupon /-->\n<!-- wp:smartpay-form/submit-pay /-->\n<!-- /wp:smartpay-form/submit-button -->';\n\n$form_id = wp_insert_post([\n    'post_title'   => 'Help Happy Paws Animal Rescue',\n    'post_content' => $content,\n    'post_status'  => 'publish',\n    'post_type'    => 'smartpay_form',\n]);\n\nif ($form_id && !is_wp_error($form_id)) {\n    update_post_meta($form_id, '_smartpay_amounts', json_encode([\n        ['key'=>'feed',   'label'=>'Feed a pet for a week',  'description'=>'Covers food for one shelter animal',      'amount'=>10, 'billing_type'=>'One Time'],\n        ['key'=>'rescue', 'label'=>'Sponsor a rescue',       'description'=>'Helps cover transport and initial care',  'amount'=>25, 'billing_type'=>'One Time'],\n        ['key'=>'medical','label'=>'Fund a medical check',   'description'=>'Covers a full vet examination',           'amount'=>50, 'billing_type'=>'One Time'],\n    ]));\n    file_put_contents('/tmp/sp_form_id.txt', $form_id);\n    echo 'Form created: ' . $form_id;\n} else {\n    echo 'Form error';\n}"
 		},
 		{
-			"step": "wp-cli",
-			"command": "post create --post_type=smartpay_form --post_title='Support WPSmartPay' --post_status=publish --allow-root"
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\n$form_id = (int) trim(file_get_contents('/tmp/sp_form_id.txt'));\nif (!$form_id) { echo 'No form ID'; exit; }\n\n$page_id = wp_insert_post([\n    'post_title'   => 'Donate Now',\n    'post_name'    => 'donate-now',\n    'post_content' => '<!-- wp:shortcode -->[smartpay_form id=\"' . $form_id . '\"]<!-- /wp:shortcode -->',\n    'post_status'  => 'publish',\n    'post_type'    => 'page',\n]);\n\necho 'Page created: ' . $page_id;"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire_once '/wordpress/wp-load.php';\nglobal $wpdb;\n\n$form_id = (int) trim(file_get_contents('/tmp/sp_form_id.txt'));\n$table_p = $wpdb->prefix . 'smartpay_payments';\n$table_c = $wpdb->prefix . 'smartpay_customers';\n\n$donors = [\n    ['Sarah',  'Mitchell', 'sarah@example.com',  25,  'rescue',  'Sponsor a rescue'],\n    ['James',  'Okafor',   'james@example.com',  50,  'medical', 'Fund a medical check'],\n    ['Emily',  'Chen',     'emily@example.com',  10,  'feed',    'Feed a pet for a week'],\n    ['Marcus', 'Williams', 'marcus@example.com', 25,  'rescue',  'Sponsor a rescue'],\n    ['Aisha',  'Patel',    'aisha@example.com',  100, 'custom',  'Custom donation'],\n];\n\nforeach ($donors as $i => $d) {\n    $existing = $wpdb->get_var($wpdb->prepare(\"SELECT id FROM {$table_c} WHERE email=%s\", $d[2]));\n    if (!$existing) {\n        $wpdb->insert($table_c, ['first_name'=>$d[0],'last_name'=>$d[1],'email'=>$d[2]]);\n        $cid = $wpdb->insert_id;\n    } else {\n        $cid = $existing;\n    }\n    $wpdb->insert($table_p, [\n        'type'           => 'form_payment',\n        'data'           => json_encode(['form_id'=>$form_id,'key'=>$d[4],'label'=>$d[5]]),\n        'amount'         => $d[3],\n        'currency'       => 'USD',\n        'gateway'        => 'manual',\n        'transaction_id' => 'DEMO-' . strtoupper(substr(md5($d[2] . $i), 0, 8)),\n        'customer_id'    => $cid,\n        'email'          => $d[2],\n        'key'            => md5($d[2] . $i . time()),\n        'mode'           => 'Live',\n        'status'         => 'completed',\n        'completed_at'   => date('Y-m-d H:i:s', strtotime('-' . (($i + 1) * 3) . ' days')),\n    ]);\n}\necho 'Seeded ' . count($donors) . ' donations';"
 		}
 	]
 }
