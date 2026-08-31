@@ -693,7 +693,7 @@ class Setting
     public function settings_checkbox_callback($args)
     {
         $smartpay_option = smartpay_get_option($args['id'], []);
-        if ( ! is_array( $smartpay_option ) ) {
+        if ( ! empty( $args['multiple'] ) && ! is_array( $smartpay_option ) ) {
             $smartpay_option = [];
         }
 
