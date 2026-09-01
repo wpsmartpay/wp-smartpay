@@ -19,6 +19,8 @@ class Admin
         $this->app->build(Setting::class);
 
         $this->app->addAction('admin_enqueue_scripts', [$this, 'adminScripts']);
+        // Block types must register on `init` so they exist on the front end too.
+        $this->app->addAction('init', [$this, 'registerBlockTypes']);
         $this->app->addAction('admin_menu', [$this, 'adminMenu']);
         // Priority 999: run after every item is registered — core, add-ons, and
         // anything hooked to `smartpay_admin_add_menu_items`.
@@ -529,6 +531,34 @@ class Admin
         // Global
         wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
 
+        wp_localize_script(
+            'smartpay-editor-blocks',
+            'smartpay',
+            array(
+                'restUrl'  => get_rest_url('', 'smartpay'),
+                'adminUrl'  => admin_url('admin.php'),
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'apiNonce' => wp_create_nonce('wp_rest'),
+            )
+        );
+    }
+
+
+    /**
+     * Register the block types.
+     *
+     * Must run on `init`, not `admin_enqueue_scripts`. That hook only fires in
+     * wp-admin, so registering there leaves the blocks unregistered on the front
+     * end and they render as nothing — while the shortcodes they wrap keep
+     * working, which masks the problem.
+     *
+     * Registration is unconditional: the form-builder exclusion applies to the
+     * editor assets only, not to whether the block type exists.
+     *
+     * @return void
+     */
+    public function registerBlockTypes()
+    {
         register_block_type(
             SMARTPAY_DIR . 'public/blocks/product',
             [
@@ -563,19 +593,7 @@ class Admin
                 },
             ]
         );
-
-        wp_localize_script(
-            'smartpay-editor-blocks',
-            'smartpay',
-            array(
-                'restUrl'  => get_rest_url('', 'smartpay'),
-                'adminUrl'  => admin_url('admin.php'),
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'apiNonce' => wp_create_nonce('wp_rest'),
-            )
-        );
     }
-
 
     /**
      * Append integration setup notices to the smartpay_setup_notices filter.
