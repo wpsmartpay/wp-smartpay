@@ -525,6 +525,11 @@ class Setting
                             unset($output[$key]);
                         }
                         break;
+                    case 'switch':
+                        // Always write an explicit 0 or 1 — never unset — so the key
+                        // stays present in the DB row even when the toggle is off.
+                        $output[$key] = ! empty( $input[$key] ) ? 1 : 0;
+                        break;
                     case 'text':
                         if (array_key_exists($key, $input) && empty($input[$key])) {
                             unset($output[$key]);
