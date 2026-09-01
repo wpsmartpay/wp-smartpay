@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.8
+Stable Tag: 3.2.9
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -396,6 +396,13 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.2.9 =
+* Fix - Integrations page toggle is now disabled and shows a warning icon when the required third-party plugin (e.g. Restrict Content Pro, LearnDash, LifterLMS, WishlistMember, AffiliateWP) is not installed — prevents silently activating an integration that cannot work
+* Fix - Settings → Extensions: navigating to an integration's settings page when its plugin is missing now shows a clear "Required plugin not installed" notice instead of silently displaying another integration's settings
+* Fix - Settings → Extensions sub-section navigation changed from a horizontal tab row to a vertical sidebar list, scaling correctly as more integrations are added
+* Fix - Stripe test mode is no longer reset to Live on every plugin activation or update — fixed merge order in the settings defaults so existing admin values always win over defaults
+* Fix - Settings sanitizer now explicitly saves `0` for switch-type toggles (e.g. Test Mode) instead of deleting the key from the database, preventing unexpected mode shifts after a settings save
 
 = 3.2.8 =
 * New - WordPress Playground Live Preview blueprint — try WP SmartPay instantly on WP.org with a pre-configured "Quick Donation" form, PayPal gateway, and sample donation data
