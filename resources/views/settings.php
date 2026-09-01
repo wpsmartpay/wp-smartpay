@@ -178,7 +178,7 @@ ob_start();
 			<nav class="sp-settings-ext-nav" aria-label="<?php esc_attr_e( 'Extension sections', 'smartpay' ); ?>">
 				<?php foreach ( $smartpay_sections as $smartpay_section_id => $smartpay_section_name ) :
 					$smartpay_sec_url    = esc_url( add_query_arg( [ 'tab' => $smartpay_active_tab, 'section' => $smartpay_section_id, 'settings-updated' => false ] ) );
-					$smartpay_sec_active = ( $smartpay_active_section === $smartpay_section_id );
+					$smartpay_sec_active = ( ! $smartpay_section_missing && $smartpay_active_section === $smartpay_section_id );
 				?>
 					<a href="<?php echo esc_url( $smartpay_sec_url ); ?>"
 						class="<?php echo $smartpay_sec_active ? 'sp-ext-nav--active' : ''; ?>">
