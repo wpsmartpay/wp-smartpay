@@ -398,11 +398,9 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 == Changelog ==
 
 = 3.2.9 =
-* Fix - Integrations page toggle is now disabled and shows a warning icon when the required third-party plugin (e.g. Restrict Content Pro, LearnDash, LifterLMS, WishlistMember, AffiliateWP) is not installed — prevents silently activating an integration that cannot work
-* Fix - Settings → Extensions: navigating to an integration's settings page when its plugin is missing now shows a clear "Required plugin not installed" notice instead of silently displaying another integration's settings
-* Fix - Settings → Extensions sub-section navigation changed from a horizontal tab row to a vertical sidebar list, scaling correctly as more integrations are added
-* Fix - Stripe test mode is no longer reset to Live on every plugin activation or update — fixed merge order in the settings defaults so existing admin values always win over defaults
-* Fix - Settings sanitizer now explicitly saves `0` for switch-type toggles (e.g. Test Mode) instead of deleting the key from the database, preventing unexpected mode shifts after a settings save
+* Fix - Stripe test mode no longer flips to Live unexpectedly after saving settings or updating the plugin
+* Fix - Integrations with a missing required plugin now show a clear warning instead of a broken or mismatched settings page
+* Fix - Extensions settings navigation moved to a sidebar list for easier scanning as more integrations are added
 
 = 3.2.8 =
 * New - WordPress Playground Live Preview blueprint — try WP SmartPay instantly on WP.org with a pre-configured "Quick Donation" form, PayPal gateway, and sample donation data
