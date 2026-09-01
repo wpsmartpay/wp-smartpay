@@ -398,9 +398,11 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 == Changelog ==
 
 = 3.2.9 =
+* Fix - SmartPay form and product blocks now render on the front end instead of appearing empty on the published page
 * Fix - Stripe test mode no longer flips to Live unexpectedly after saving settings or updating the plugin
 * Fix - Integrations with a missing required plugin now show a clear warning instead of a broken or mismatched settings page
 * Fix - Extensions settings navigation moved to a sidebar list for easier scanning as more integrations are added
+* Fix - Settings sidebar no longer highlights the first item when the section being opened does not exist
 
 = 3.2.8 =
 * New - WordPress Playground Live Preview blueprint — try WP SmartPay instantly on WP.org with a pre-configured "Quick Donation" form, PayPal gateway, and sample donation data
