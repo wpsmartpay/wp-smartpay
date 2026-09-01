@@ -314,9 +314,17 @@ select.sp-filter-select {
   background: var(--sp-surface);
   border: 1px solid var(--sp-border);
   border-radius: var(--sp-radius);
-  overflow: hidden;
+  overflow: visible; /* must be visible so row-action dropdowns escape the card */
   box-shadow: var(--sp-shadow);
+  position: relative;
 }
+
+/* Clip only the table header and last-row corners to match card border-radius
+   (replaces the old overflow:hidden approach so dropdowns aren't clipped) */
+.sp-table thead tr:first-child th:first-child { border-top-left-radius: var(--sp-radius); }
+.sp-table thead tr:first-child th:last-child  { border-top-right-radius: var(--sp-radius); }
+.sp-table tbody tr:last-child td:first-child   { border-bottom-left-radius: var(--sp-radius); }
+.sp-table tbody tr:last-child td:last-child    { border-bottom-right-radius: var(--sp-radius); }
 
 .sp-table {
   width: 100%;
@@ -1493,6 +1501,98 @@ input.sp-note-input {
   cursor: pointer;
 }
 
+/* ════════════════════════════════════════════════════════════
+   BOOTSTRAP CUSTOM-SWITCH BASE (standalone — Bootstrap not loaded globally)
+   Required by gateway toggles and integration card toggles.
+   ════════════════════════════════════════════════════════════ */
+.custom-control {
+  position: relative;
+  display: block;
+  min-height: 1.5rem;
+  padding-left: 1.5rem;
+}
+.custom-control-input {
+  position: absolute;
+  left: 0;
+  z-index: -1;
+  width: 1rem;
+  height: 1.25rem;
+  opacity: 0;
+}
+.custom-control-label {
+  position: relative;
+  margin-bottom: 0;
+  vertical-align: top;
+}
+.custom-control-label::before {
+  position: absolute;
+  top: .25rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  pointer-events: none;
+  content: "";
+  background-color: #fff;
+  border: 1px solid #adb5bd;
+}
+.custom-control-label::after {
+  position: absolute;
+  top: .25rem;
+  left: -1.5rem;
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  content: "";
+  background: no-repeat 50%/50% 50%;
+}
+.custom-switch { padding-left: 2.25rem; }
+.custom-switch .custom-control-label::before {
+  left: -2.25rem;
+  width: 1.75rem;
+  pointer-events: all;
+  border-radius: .5rem;
+}
+.custom-switch .custom-control-label::after {
+  top: calc(.25rem + 2px);
+  left: calc(-2.25rem + 2px);
+  width: calc(1rem - 4px);
+  height: calc(1rem - 4px);
+  background-color: #adb5bd;
+  border-radius: .5rem;
+  transition: background-color .15s ease-in-out, transform .15s ease-in-out;
+}
+.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: var(--sp-brand);
+  border-color: var(--sp-brand);
+}
+.custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+  background-color: #fff;
+  transform: translateX(.75rem);
+}
+/* Large switch variant */
+.custom-switch-lg { padding-left: 3rem; }
+.custom-switch-lg .custom-control-label::before {
+  left: -3rem;
+  width: 2.5rem;
+  height: 1.4rem;
+  top: .05rem;
+  border-radius: .7rem;
+}
+.custom-switch-lg .custom-control-label::after {
+  top: 3px !important;
+  left: calc(-3rem + 3px);
+  width: calc(1.4rem - 6px);
+  height: calc(1.4rem - 6px);
+  background-color: #adb5bd;
+  border-radius: 50%;
+  transition: background-color .15s ease-in-out, transform .15s ease-in-out;
+}
+.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+  background-color: #fff;
+  transform: translateX(1.1rem);
+}
+
 /* Switch (Bootstrap custom-switch compat) */
 .sp-settings-row__control .custom-control { padding-left: 2.5rem; }
 .sp-settings-row__control .custom-control-input:checked ~ .custom-control-label::before {
@@ -1501,6 +1601,43 @@ input.sp-note-input {
 }
 .sp-settings-row__control .custom-switch .custom-control-label::before {
   border-radius: 0.75rem;
+}
+
+/* Segmented control (Sandbox / Live) */
+.sp-seg {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: #f1f5f9;
+  border: 1px solid var(--sp-border);
+  border-radius: 9px;
+}
+.sp-seg__btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 6px;
+  color: var(--sp-text-muted);
+  transition: color 0.12s, background 0.12s, box-shadow 0.12s;
+}
+.sp-seg__btn:hover:not(.sp-seg__btn--active) {
+  color: var(--sp-text);
+}
+.sp-seg__btn:disabled { cursor: default; }
+.sp-seg__btn--active {
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+.sp-seg__btn--sandbox.sp-seg__btn--active { color: var(--sp-text); }
+.sp-seg__btn--live.sp-seg__btn--active    { color: #16a34a; }
+.sp-seg__btn:focus-visible {
+  outline: 2px solid var(--sp-brand-ring);
+  outline-offset: 1px;
 }
 
 /* Multi-checkbox list (gateways type) */
@@ -1613,6 +1750,13 @@ input.sp-note-input {
   margin-top: auto;
 }
 
+.sp-integ-card__toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
 .sp-integ-card__status {
   font-size: 12px;
   color: var(--sp-text-muted);
@@ -1631,14 +1775,57 @@ input.sp-note-input {
   color: var(--sp-text);
 }
 
-/* Toggle switch for integration cards */
-.sp-integ-card .custom-control { padding-left: 2.5rem; }
-.sp-integ-card .custom-control-input:checked ~ .custom-control-label::before {
-  background-color: var(--sp-brand) !important;
-  border-color: var(--sp-brand) !important;
+/* ── sp-switch — shadcn-matched toggle for PHP-rendered cards ──── */
+.sp-switch {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  line-height: 1;
 }
-.sp-integ-card .custom-switch .custom-control-label::before {
-  border-radius: 0.75rem;
+.sp-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.sp-switch__track {
+  display: inline-block;
+  width: 32px;
+  height: 18px;
+  border-radius: 100px;
+  background: var(--sp-input, #e2e8f0);
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.sp-switch__track::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.sp-switch input:checked + .sp-switch__track {
+  background: var(--sp-brand, hsl(var(--primary)));
+}
+.sp-switch input:checked + .sp-switch__track::after {
+  transform: translateX(14px);
+}
+.sp-switch input:focus-visible + .sp-switch__track {
+  outline: 2px solid var(--sp-brand, hsl(var(--primary)));
+  outline-offset: 2px;
+}
+.sp-switch--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1741,3 +1928,103 @@ input.sp-note-input {
 @keyframes sp-spin {
   to { transform: rotate(360deg); }
 }
+
+/* ─── Gateway toggle switch (Settings › Payment Gateways › General) ──── */
+/* Matches shadcn <Switch> appearance — CSS-only, no JS required          */
+
+.sp-gw-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sp-gw-toggle__chk {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.sp-gw-toggle__track {
+  display: inline-flex;
+  align-items: center;
+  width: 2rem;       /* w-8 = 32px */
+  height: 1.15rem;   /* ~18.4px */
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-color: var(--color-input, #e2e8f0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+  transition: background-color 0.15s;
+  cursor: pointer;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.sp-gw-toggle__thumb {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+}
+
+.sp-gw-toggle__chk:checked + .sp-gw-toggle__track {
+  background-color: var(--color-primary, var(--sp-brand));
+}
+
+.sp-gw-toggle__chk:checked + .sp-gw-toggle__track .sp-gw-toggle__thumb {
+  transform: translateX(calc(100% - 2px));
+}
+
+/* Status text spans inside sp-integ-card__footer (settings gateway grid) */
+.sp-integ-card__footer .sp-gw-status-off { display: inline; }
+.sp-integ-card__footer .sp-gw-status-on  { display: none; }
+.sp-integ-card__footer:has(.sp-switch input:checked) .sp-gw-status-off { display: none; }
+.sp-integ-card__footer:has(.sp-switch input:checked) .sp-gw-status-on  { display: inline; }
+
+/* Gear icon link in card footer */
+.sp-gw-settings-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--sp-radius-sm);
+  color: var(--sp-text-muted);
+  text-decoration: none;
+  transition: background 0.1s, color 0.1s;
+  line-height: 1;
+}
+
+.sp-gw-settings-link:hover {
+  background: var(--sp-surface-muted);
+  color: var(--sp-text);
+}
+
+.sp-gw-settings-link .dashicons {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+}
+
+/* Footer note below the grid */
+.sp-gw-footer-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--sp-text-muted);
+  line-height: 1.5;
+}
+
+.sp-gw-footer-note a {
+  color: var(--sp-brand);
+  text-decoration: none;
+}
+
+.sp-gw-footer-note a:hover { text-decoration: underline; }

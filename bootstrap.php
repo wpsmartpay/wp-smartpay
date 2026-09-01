@@ -23,7 +23,15 @@ register_deactivation_hook(SMARTPAY_PLUGIN_FILE, [Deactivator::class, 'boot']);
 Updater::boot();
 
 add_action('plugins_loaded', function () {
-    require_once(ABSPATH . '/wp-admin/includes/plugin.php');
+    // Compatibility guard: deactivate an outdated Pro version.
+    // deactivate_plugins() and the admin_notices hook are admin-only,
+    // so there is no reason to load plugin.php on frontend requests.
+    if ( ! is_admin() ) {
+        return;
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
     if (defined('SMARTPAY_PRO_VERSION')) {
         if (floatval(SMARTPAY_PRO_VERSION) < 2.6 && "##SMARTPAY_PRO_VERSION##" !== SMARTPAY_PRO_VERSION){
             add_action('admin_notices', 'smartpay_pro_deactivate_notice');

@@ -2,8 +2,7 @@
 defined('ABSPATH') || exit;
 $smartpay_form_action = smartpay_get_payment_page_uri();
 $smartpay_gateways = smartpay_get_enabled_payment_gateways(true);
-// phpcs:ignore: WordPress.Security.NonceVerification.Recommended
-$smartpay_gateway_id = isset($_REQUEST['gateway']) ? sanitize_text_field(wp_unslash($_REQUEST['gateway'])) : '';
+$smartpay_gateway_id = isset($_REQUEST['gateway']) ? sanitize_text_field(wp_unslash($_REQUEST['gateway'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 $smartpay_chosen_gateway = isset($smartpay_gateway_id) && smartpay_is_gateway_active($smartpay_gateway_id) ? $smartpay_gateway_id : smartpay_get_default_gateway();
 $smartpay_has_payment_error = false;

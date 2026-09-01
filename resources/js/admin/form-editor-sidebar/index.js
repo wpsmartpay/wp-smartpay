@@ -122,129 +122,6 @@ const SP_BLOCKS = [
 const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email' ] );
 
 /**
- * Quick-add strip — always visible below the canvas.
- * Smart: tracks which unique blocks are already in the form.
- */
-const QuickAddStrip = ( { onAddField, usedNames } ) => {
-	const hasName  = usedNames.has( 'smartpay-form/name' );
-	const hasEmail = usedNames.has( 'smartpay-form/email' );
-	const allRequired = hasName && hasEmail;
-
-	const label = ! allRequired
-		? __( 'Required fields missing —', 'smartpay' )
-		: __( 'Insert field:', 'smartpay' );
-
-	return (
-		<div className="sp-quick-add-strip">
-			<div className="sp-quick-add-strip__inner">
-				<span className={ `sp-quick-add-strip__label${ ! allRequired ? ' sp-quick-add-strip__label--warn' : '' }` }>
-					{ label }
-				</span>
-				{ SP_BLOCKS.map( ( { name, label: blkLabel, required } ) => {
-					const isUsed = UNIQUE_BLOCKS.has( name ) && usedNames.has( name );
-					return (
-						<button
-							key={ name }
-							className={ `sp-quick-add-btn${ required && ! isUsed ? ' sp-quick-add-btn--required' : '' }${ isUsed ? ' sp-quick-add-btn--used' : '' }` }
-							onClick={ () => ! isUsed && onAddField( name ) }
-							disabled={ isUsed }
-							title={ isUsed ? __( 'Already in form', 'smartpay' ) : blkLabel }
-						>
-							{ isUsed ? '✓ ' : '+ ' }{ blkLabel }
-						</button>
-					);
-				} ) }
-			</div>
-		</div>
-	);
-};
-
-/**
- * Mounts the quick-add strip via a React portal.
- *
- * The strip lives in the MAIN document below the canvas so form-editor-sidebar.css
- * applies without any iframe CSS injection. When the form is empty it expands into
- * the primary empty-state guide; otherwise it collapses to a slim insert toolbar.
- *
- * Selectors tried (WP 7 → WP 6 fallback):
- *   .editor-visual-editor      — WP 7.0
- *   .edit-post-visual-editor   — WP 6.x
- */
-const FormBuilderHelper = () => {
-	const blocks = useSelect(
-		( select ) => select( 'core/block-editor' ).getBlocks(),
-		[]
-	);
-	const usedNames = new Set( blocks.map( ( b ) => b.name ) );
-
-	const { insertBlocks } = useDispatch( 'core/block-editor' );
-	const [ tick, setTick ]   = useState( 0 );
-	const quickAddRef = useRef( null );
-
-	useEffect( () => {
-		let mounted  = true;
-		let rafId    = null;
-		let mutTimer = null;
-
-		// Quick-add strip target — main document, below the canvas.
-		const getStripTarget = () =>
-			document.querySelector( '.interface-interface-skeleton__content' ) ||
-			document.querySelector( '.editor-visual-editor' ) ||
-			document.querySelector( '.edit-post-visual-editor' );
-
-		const setupPortal = () => {
-			const stripTarget = getStripTarget();
-			if ( ! stripTarget ) return false;
-
-			if ( ! quickAddRef.current || ! quickAddRef.current.isConnected ) {
-				quickAddRef.current?.remove();
-				const el = stripTarget.ownerDocument.createElement( 'div' );
-				el.className = 'sp-quick-add-portal';
-				stripTarget.appendChild( el );
-				quickAddRef.current = el;
-			}
-
-			if ( mounted ) setTick( ( n ) => n + 1 );
-			return true;
-		};
-
-		const trySetup = () => {
-			if ( ! mounted ) return;
-			if ( ! setupPortal() ) rafId = requestAnimationFrame( trySetup );
-		};
-
-		rafId = requestAnimationFrame( trySetup );
-
-		const observer = new MutationObserver( () => {
-			clearTimeout( mutTimer );
-			mutTimer = setTimeout( () => {
-				if ( ! mounted ) return;
-				if ( ! quickAddRef.current || ! quickAddRef.current.isConnected ) setupPortal();
-			}, 200 );
-		} );
-		observer.observe( document.body, { childList: true, subtree: true } );
-
-		return () => {
-			mounted = false;
-			cancelAnimationFrame( rafId );
-			clearTimeout( mutTimer );
-			observer.disconnect();
-			quickAddRef.current?.remove();
-			quickAddRef.current = null;
-		};
-	}, [] );
-
-	const addField = ( name ) => insertBlocks( wp.blocks.createBlock( name ) );
-
-	if ( tick === 0 || ! quickAddRef.current ) return null;
-
-	return createPortal(
-		<QuickAddStrip onAddField={ addField } usedNames={ usedNames } />,
-		quickAddRef.current
-	);
-};
-
-/**
  * Form guide — a native Modal that walks the user through adding fields.
  *
  * - Auto-opens for a brand-new, empty form (isCleanNewPost).
@@ -385,9 +262,7 @@ const FormGuide = () => {
 					className="sp-guide-modal"
 				>
 					<p className="sp-guide-modal__desc">
-						{ __( 'Build your payment form — click a field below, or type', 'smartpay' ) }
-						{ ' ' }<code>/</code>{ ' ' }
-						{ __( 'in the editor to add one.', 'smartpay' ) }
+						{ __( 'Build your payment form — click a field below to add it.', 'smartpay' ) }
 					</p>
 
 					<h3 className="sp-guide-modal__heading">{ __( 'Required fields', 'smartpay' ) }</h3>
@@ -573,8 +448,27 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			{ /* Pay Button Label → Submit Button block · Allow Custom Amount → Pricing
-			     block · Allow External Link → removed. These now live on the blocks. */ }
+			{ /* Pay Button Label → Submit Button block · Allow External Link → removed. */ }
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Allow Custom Amount', 'smartpay' ) }
+				help={ __( 'Let visitors enter any amount — ideal for donations.', 'smartpay' ) }
+				checked={ !! settings.allow_custom_amount }
+				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
+			/>
+
+			{ settings.allow_custom_amount && (
+				<div className="sp-sidebar-field">
+					<TextControl
+						__nextHasNoMarginBottom
+						label={ __( 'Custom Amount Label', 'smartpay' ) }
+						value={ settings.custom_amount_label || '' }
+						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
+						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
+					/>
+				</div>
+			) }
 
 			<div className="sp-sidebar-field">
 				<SelectControl
@@ -591,6 +485,28 @@ const OptionsPanel = () => {
 					onChange={ ( val ) => updateSettings( { form_max_width: val } ) }
 				/>
 			</div>
+
+			<div className="sp-sidebar-field">
+				<SelectControl
+					__nextHasNoMarginBottom
+					label={ __( 'Checkout Layout', 'smartpay' ) }
+					help={ __( 'Split places the payment method next to the form fields on wide screens.', 'smartpay' ) }
+					value={ settings.checkout_layout || 'stacked' }
+					options={ [
+						{ value: 'stacked', label: __( 'Stacked (default)', 'smartpay' ) },
+						{ value: 'split',   label: __( 'Split — fields left, payment right', 'smartpay' ) },
+					] }
+					onChange={ ( val ) => updateSettings( { checkout_layout: val } ) }
+				/>
+			</div>
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Require Login to Checkout', 'smartpay' ) }
+				help={ __( 'Visitors must log in before they can see and submit this payment form.', 'smartpay' ) }
+				checked={ !! settings.require_login }
+				onChange={ ( val ) => updateSettings( { require_login: val } ) }
+			/>
 		</div>
 	);
 };
@@ -668,8 +584,7 @@ registerPlugin( 'smartpay-form-sidebar', {
 
 		return (
 			<>
-				{ /* Quick-add strip below the canvas + guide modal / header button */ }
-				<FormBuilderHelper />
+				{ /* Guide modal + header button */ }
 				<FormGuide />
 
 				{ MainDashboardButton && (
