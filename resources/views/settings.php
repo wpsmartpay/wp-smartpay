@@ -24,6 +24,10 @@ $smartpay_active_section    = ( '' !== $smartpay_requested_section
 		? $smartpay_requested_section
 		: $smartpay_key;
 
+// True when the URL named a section that was not registered (third-party plugin missing).
+$smartpay_section_missing = ( '' !== $smartpay_requested_section
+	&& ! array_key_exists( $smartpay_requested_section, $smartpay_sections ) );
+
 /* ── Field extraction ───────────────────────────────────────── */
 
 $smartpay_registered  = Setting::registered_settings();
@@ -134,7 +138,58 @@ ob_start();
 		</div>
 
 		<?php if ( count( $smartpay_sections ) > 1 && 'emails' !== $smartpay_active_tab ) : ?>
-		<!-- Sub-section navigation (e.g. Extensions → Stripe, Paddle…) -->
+		<?php if ( 'extensions' === $smartpay_active_tab ) : ?>
+		<!-- Extensions: vertical sidebar nav -->
+		<style>
+		.sp-settings-ext-wrap { display:flex; gap:0; align-items:flex-start; }
+		.sp-settings-ext-nav {
+			flex-shrink: 0;
+			width: 188px;
+			background: var(--sp-surface,#fff);
+			border: 1px solid var(--sp-border,#e5e7eb);
+			border-radius: 8px;
+			padding: 6px 0;
+			margin-right: 20px;
+			overflow: hidden;
+		}
+		.sp-settings-ext-nav a {
+			display: block;
+			padding: 9px 16px;
+			font-size: 13px;
+			color: var(--sp-text-muted,#6b7280);
+			text-decoration: none;
+			border-left: 3px solid transparent;
+			line-height: 1.4;
+			transition: background .12s, color .12s;
+		}
+		.sp-settings-ext-nav a:hover {
+			background: var(--sp-surface-muted,#f9fafb);
+			color: var(--sp-text,#111827);
+		}
+		.sp-settings-ext-nav a.sp-ext-nav--active {
+			border-left-color: var(--sp-primary,#5956e9);
+			color: var(--sp-primary,#5956e9);
+			font-weight: 600;
+			background: var(--sp-surface-muted,#f9fafb);
+		}
+		.sp-settings-ext-content { flex: 1; min-width: 0; }
+		</style>
+		<div class="sp-settings-ext-wrap">
+			<nav class="sp-settings-ext-nav" aria-label="<?php esc_attr_e( 'Extension sections', 'smartpay' ); ?>">
+				<?php foreach ( $smartpay_sections as $smartpay_section_id => $smartpay_section_name ) :
+					$smartpay_sec_url    = esc_url( add_query_arg( [ 'tab' => $smartpay_active_tab, 'section' => $smartpay_section_id, 'settings-updated' => false ] ) );
+					$smartpay_sec_active = ( ! $smartpay_section_missing && $smartpay_active_section === $smartpay_section_id );
+				?>
+					<a href="<?php echo esc_url( $smartpay_sec_url ); ?>"
+						class="<?php echo $smartpay_sec_active ? 'sp-ext-nav--active' : ''; ?>">
+						<?php echo esc_html( $smartpay_section_name ); ?>
+					</a>
+				<?php endforeach; ?>
+			</nav>
+			<div class="sp-settings-ext-content">
+		<?php // Content is closed after .sp-settings-cards in the extensions tab ?>
+		<?php else : ?>
+		<!-- Sub-section navigation (horizontal for non-extensions tabs) -->
 		<div class="sp-filter-tabs sp-settings-subtabs">
 			<?php foreach ( $smartpay_sections as $smartpay_section_id => $smartpay_section_name ) :
 				$smartpay_sec_url    = esc_url( add_query_arg( [ 'tab' => $smartpay_active_tab, 'section' => $smartpay_section_id, 'settings-updated' => false ] ) );
@@ -146,6 +201,7 @@ ob_start();
 				</a>
 			<?php endforeach; ?>
 		</div>
+		<?php endif; ?>
 		<?php endif; ?>
 
 		<?php if ( 'gateways' === $smartpay_active_tab ) :
@@ -335,7 +391,28 @@ ob_start();
 				</script>
 				<?php endif; ?>
 
-				<?php if ( empty( $smartpay_groups ) ) : ?>
+				<?php if ( $smartpay_section_missing ) : ?>
+					<div class="sp-detail-card" style="border-left:3px solid #e8a000;">
+						<div class="sp-detail-card__body" style="display:flex;align-items:flex-start;gap:14px;padding:20px 22px;">
+							<span style="flex-shrink:0;color:#e8a000;margin-top:1px;" aria-hidden="true">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+							</span>
+							<div>
+								<p style="margin:0 0 4px;font-size:13.5px;font-weight:600;color:var(--sp-text);">
+									<?php esc_html_e( 'Required plugin not installed', 'smartpay' ); ?>
+								</p>
+								<p style="margin:0 0 12px;font-size:13px;line-height:1.6;color:var(--sp-text-muted);">
+									<?php esc_html_e( 'This integration requires a third-party plugin that is not currently installed or activated. Please install and activate the required plugin, then return to this page.', 'smartpay' ); ?>
+								</p>
+								<a href="<?php echo esc_url( admin_url( 'admin.php?page=smartpay-integrations' ) ); ?>"
+									style="font-size:13px;color:var(--sp-primary,#5956e9);text-decoration:none;">
+									&larr; <?php esc_html_e( 'Back to Integrations', 'smartpay' ); ?>
+								</a>
+							</div>
+						</div>
+					</div>
+
+				<?php elseif ( empty( $smartpay_groups ) ) : ?>
 					<div class="sp-detail-card">
 						<div class="sp-detail-card__body">
 							<p style="font-size:13px;color:var(--sp-text-muted);margin:0;">
@@ -412,6 +489,11 @@ ob_start();
 
 		</form>
 
+		<?php endif; ?>
+
+		<?php if ( count( $smartpay_sections ) > 1 && 'extensions' === $smartpay_active_tab ) : ?>
+			</div><!-- .sp-settings-ext-content -->
+		</div><!-- .sp-settings-ext-wrap -->
 		<?php endif; ?>
 
 	</div><!-- .sp-layout -->

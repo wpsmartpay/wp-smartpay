@@ -178,18 +178,28 @@
                     <?php endif; ?>
 
                     <div class="sp-integ-card__footer">
-                        <?php if (smartpay_integration_is_installed($smartpay_integration)) : ?>
+                        <?php if (smartpay_integration_is_installed($smartpay_integration)) :
+                            $smartpay_plugin_active = $smartpay_integration['plugin_active'] ?? true;
+                        ?>
                             <div class="sp-integ-card__toggle-wrap">
-                                <div class="custom-control custom-switch">
+                                <div class="custom-control custom-switch<?php echo ! $smartpay_plugin_active ? ' sp-integ-card__toggle--disabled' : ''; ?>">
                                     <input type="checkbox"
                                         class="custom-control-input"
                                         id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"
                                         data-namespace="<?php echo esc_attr($smartpay_namespace); ?>"
-                                        <?php echo $smartpay_activated ? 'checked' : ''; ?>>
+                                        <?php echo $smartpay_activated ? 'checked' : ''; ?>
+                                        <?php echo ! $smartpay_plugin_active ? 'disabled aria-disabled="true"' : ''; ?>>
                                     <label class="custom-control-label"
                                         for="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>">
                                     </label>
                                 </div>
+                                <?php if ( ! $smartpay_plugin_active ) : ?>
+                                <span class="sp-integ-plugin-missing"
+                                    title="<?php esc_attr_e( 'Required plugin is not installed or activated', 'smartpay' ); ?>"
+                                    aria-label="<?php esc_attr_e( 'Required plugin is not installed or activated', 'smartpay' ); ?>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                </span>
+                                <?php endif; ?>
                                 <span class="sp-integ-card__status">
                                     <?php if ( $smartpay_needs_setup ) : ?>
                                         <span class="sp-badge sp-badge--pastdue" style="font-size:11px;">
@@ -232,6 +242,20 @@
         <?php wp_nonce_field('smartpay_integrations_toggle_activation', 'smartpay_integrations_toggle_activation'); ?>
     </div>
 </div>
+
+<style>
+.sp-integ-card__toggle--disabled { opacity: .45; pointer-events: none; }
+.sp-integ-plugin-missing {
+    display: inline-flex;
+    align-items: center;
+    color: #c0392b;
+    cursor: help;
+    margin-left: 4px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+.sp-integ-plugin-missing svg { display: block; }
+</style>
 
 <script>
 (function () {
