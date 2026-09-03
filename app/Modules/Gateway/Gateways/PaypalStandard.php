@@ -339,7 +339,7 @@ class PaypalStandard extends PaymentGateway
                 return; // The prices don't match
             }
 
-            if ('Completed' == $payment_status || smartpay_is_test_mode()) {
+            if ('Completed' == $payment_status || smartpay_is_test_mode('paypal')) {
                 $payment->updateStatus('completed');
                 $payment->setTransactionId($data['txn_id']);
 
@@ -467,8 +467,8 @@ class PaypalStandard extends PaymentGateway
             $protocol = 'https://';
         }
 
-        // Check the current payment mode
-        if (smartpay_is_test_mode()) {
+        // Check this gateway's own payment mode
+        if (smartpay_is_test_mode('paypal')) {
 
             // Test mode
             if ($ipn) {

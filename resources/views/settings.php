@@ -324,72 +324,10 @@ ob_start();
 
 			<div class="sp-settings-cards">
 
-				<?php if ( 'gateways' === $smartpay_active_tab && $smartpay_active_section === $smartpay_key ) :
-					$smartpay_is_sandbox = (bool) smartpay_get_option( 'test_mode' );
-				?>
-				<div class="sp-detail-card sp-settings-card sp-test-mode-card">
-					<div class="sp-detail-card__body" style="display:flex;align-items:center;justify-content:space-between;gap:24px;padding:18px 20px;">
-						<div style="min-width:0;">
-							<div style="font-size:13.5px;font-weight:600;color:var(--sp-text);">
-								<?php esc_html_e( 'Test Mode', 'smartpay' ); ?>
-							</div>
-							<p style="margin:5px 0 0;font-size:12.5px;line-height:1.55;color:var(--sp-text-muted);max-width:640px;">
-								<?php esc_html_e( 'Choose Sandbox to test checkout with sandbox gateway credentials, or Live to accept real payments. Saved automatically.', 'smartpay' ); ?>
-							</p>
-						</div>
-						<div class="sp-seg" role="group" aria-label="<?php esc_attr_e( 'Payment mode', 'smartpay' ); ?>" style="flex-shrink:0;">
-							<button type="button"
-								class="sp-seg__btn sp-seg__btn--sandbox<?php echo $smartpay_is_sandbox ? ' sp-seg__btn--active' : ''; ?>"
-								data-mode="sandbox" aria-pressed="<?php echo $smartpay_is_sandbox ? 'true' : 'false'; ?>">
-								<?php esc_html_e( 'Sandbox', 'smartpay' ); ?>
-							</button>
-							<button type="button"
-								class="sp-seg__btn sp-seg__btn--live<?php echo $smartpay_is_sandbox ? '' : ' sp-seg__btn--active'; ?>"
-								data-mode="live" aria-pressed="<?php echo $smartpay_is_sandbox ? 'false' : 'true'; ?>">
-								<?php esc_html_e( 'Live', 'smartpay' ); ?>
-							</button>
-						</div>
-					</div>
-					<input type="hidden" id="smartpay_set_test_mode_nonce" value="<?php echo esc_attr( wp_create_nonce( 'smartpay_set_test_mode' ) ); ?>" />
-				</div>
-
-				<script>
-				jQuery(function($){
-					$('.sp-test-mode-card').on('click', '.sp-seg__btn', function(){
-						var $btn = $(this);
-						if ( $btn.hasClass('sp-seg__btn--active') ) { return; }
-
-						var mode  = $btn.attr('data-mode');
-						var $btns = $btn.closest('.sp-seg').find('.sp-seg__btn');
-
-						// Optimistic UI.
-						$btns.removeClass('sp-seg__btn--active').attr('aria-pressed', 'false');
-						$btn.addClass('sp-seg__btn--active').attr('aria-pressed', 'true');
-						$btns.prop('disabled', true);
-
-						$.post(
-							smartpay.ajax_url,
-							{
-								action: 'smartpay_set_test_mode',
-								mode:   mode,
-								nonce:  $('#smartpay_set_test_mode_nonce').val()
-							},
-							function(res){
-								if ( ! res || ! res.success ) {
-									// Revert on failure.
-									$btns.removeClass('sp-seg__btn--active').attr('aria-pressed', 'false');
-									var $other = $btns.filter('[data-mode="' + (mode === 'sandbox' ? 'live' : 'sandbox') + '"]');
-									$other.addClass('sp-seg__btn--active').attr('aria-pressed', 'true');
-									console.error('Test mode update failed:', res && res.data && res.data.message);
-								}
-							}
-						).always(function(){
-							$btns.prop('disabled', false);
-						});
-					});
-				});
-				</script>
-				<?php endif; ?>
+				<?php // The site-wide Test Mode card used to sit here. It wrote one
+				// shared `test_mode` option, so switching it moved every gateway
+				// between sandbox and live at once. Each gateway now carries its own
+				// Sandbox/Live switch on its own settings screen. ?>
 
 				<?php if ( $smartpay_section_missing ) : ?>
 					<div class="sp-detail-card" style="border-left:3px solid #e8a000;">
@@ -436,10 +374,6 @@ ob_start();
 							$smartpay_total = count( $smartpay_group['fields'] );
 							foreach ( $smartpay_group['fields'] as $smartpay_i => $smartpay_field ) :
 								if ( empty( $smartpay_field['id'] ) ) {
-									continue;
-								}
-								// Test Mode is rendered as its own card above (gateways › General only).
-								if ( 'gateways' === $smartpay_active_tab && $smartpay_active_section === $smartpay_key && 'test_mode' === $smartpay_field['id'] ) {
 									continue;
 								}
 								$smartpay_callback     = 'settings_' . $smartpay_field['type'] . '_callback';
