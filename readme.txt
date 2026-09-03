@@ -24,10 +24,10 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ### ✅ What's New in Version 3.3.0
 
-* **Test Mode is now per gateway** — Each gateway has its own Sandbox/Live switch on its own settings screen. The single switch at the top of Settings → Payment Gateways is gone: it moved every gateway at once, so you could not trial a new gateway while the rest kept taking live payments. Your current mode carries over to every gateway on upgrade.
-* **See every Pro integration** — The Integrations page now lists all of them, shown locked with an upgrade link, so you can see the full range rather than only the handful the free plugin happened to know about.
-* **Template picker stays on screen** — The form template chooser could open past the bottom of the window with no way to scroll to it. It is now always kept within the viewport, with the template list scrolling inside it.
-* **Paddle settings warning fixed** — An "Array to string conversion" PHP warning no longer appears on the Paddle gateway settings screen.
+* **Test Mode is now per gateway** — Each gateway has its own Sandbox/Live switch, so you can trial one while the others stay live. Your current mode carries over on upgrade.
+* **See every Pro integration** — The Integrations page lists them all, shown locked, so you can see the full range at a glance.
+* **Settings always reachable** — Open a gateway's settings while it is switched off, so you can set it up before turning it on.
+* **Template picker stays on screen** — The form template chooser no longer opens past the bottom of the window.
 
 ---
 
@@ -397,10 +397,13 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 == Changelog ==
 
 = 3.3.0 =
-* Update - Test Mode is now set per gateway, on that gateway's own settings screen. The single site-wide switch at the top of Settings → Payment Gateways has been removed — it moved every gateway between sandbox and live at once, so there was no way to trial one gateway while the others kept taking real payments. Whatever mode your site was in is carried over to every gateway on upgrade, so nothing changes until you move a gateway yourself. Pro gateways need WP SmartPay Pro 3.3.9 or later to follow their own switch.
-* New - The Integrations page now lists every Pro integration, shown locked with an upgrade link, instead of only a handful — so you can see the full range at a glance
-* Fix - The form template picker could open past the bottom of the browser window with no way to scroll to it; it is now always kept on screen, with the template list scrolling inside it
-* Fix - "Array to string conversion" PHP warning on the Paddle gateway settings screen
+* Update - Test Mode is now set per gateway instead of site-wide, so you can trial one gateway while the others stay live
+* Update - Your current mode carries over to every gateway on upgrade — nothing changes until you move a gateway yourself
+* Update - Pro gateways follow their own switch from WP SmartPay Pro 3.3.9
+* New - Every Pro integration now appears on the Integrations page, shown locked, so you can see the full range at a glance
+* Fix - Gateway settings are reachable while a gateway is switched off, so you can set it up before turning it on
+* Fix - The form template picker no longer opens past the bottom of the screen
+* Fix - PHP warning on the Paddle gateway settings screen
 
 = 3.2.9 =
 * Fix - SmartPay form and product blocks now render on the front end instead of appearing empty on the published page
@@ -576,7 +579,7 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 == Upgrade Notice ==
 
 = 3.3.0 =
-Test Mode moves from one site-wide switch to a separate switch on each gateway, so you can trial one gateway while the rest keep taking live payments. Your current mode carries over to every gateway automatically. The Integrations page now shows the full Pro catalogue, and the form template picker no longer opens off-screen. No database changes.
+Test Mode is now set per gateway instead of site-wide, so you can trial one gateway while the others stay live. Your current mode carries over automatically. No database changes.
 
 = 3.2.4 =
 Fixes multiple payment forms on one page, restores the Allow Custom Amount toggle to the form editor sidebar, renders donation-only forms correctly, and stops the customer dashboard redirecting users who have no payments yet. No database changes.
