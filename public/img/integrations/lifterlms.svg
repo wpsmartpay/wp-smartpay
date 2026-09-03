@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="16" fill="#2295CD" opacity="0.1"/>
+  <!-- Barbell — LifterLMS brand symbol -->
+  <!-- Left plate outer -->
+  <rect x="8" y="30" width="8" height="20" rx="3" fill="#2295CD"/>
+  <!-- Left plate inner -->
+  <rect x="16" y="34" width="5" height="12" rx="2" fill="#2295CD" opacity="0.7"/>
+  <!-- Bar -->
+  <rect x="21" y="37" width="38" height="6" rx="3" fill="#2295CD"/>
+  <!-- Right plate inner -->
+  <rect x="59" y="34" width="5" height="12" rx="2" fill="#2295CD" opacity="0.7"/>
+  <!-- Right plate outer -->
+  <rect x="64" y="30" width="8" height="20" rx="3" fill="#2295CD"/>
+  <!-- Person lifting (stylised) -->
+  <circle cx="40" cy="21" r="6" fill="#2295CD"/>
+  <path d="M34 28 Q40 26 46 28 L46 36 L34 36 Z" fill="#2295CD"/>
+</svg>

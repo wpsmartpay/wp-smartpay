@@ -215,7 +215,12 @@ const TemplateBrowser = ( { onBlank, onUse } ) => {
 	}, [] )
 
 	return (
-		<div style={ { display: 'flex', flexDirection: 'row', height: 'min(660px, 75vh)', margin: '0 -24px -24px', borderTop: '1px solid #e5e7eb' } }>
+		// `flex: 1` + `minHeight: 0` rather than a fixed vh height: the dialog now
+		// caps its own height, and this pane has to shrink inside that cap instead
+		// of dictating it. `minHeight: 0` is the part that actually lets a flex
+		// child shrink below its content — without it the grid keeps its full
+		// height and pushes the dialog back past the bottom of the screen.
+		<div style={ { display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0, maxHeight: 660, margin: '0 -24px -24px', borderTop: '1px solid #e5e7eb' } }>
 			<style>{`
 				.sp-template-search-input {
 					border: none !important;
@@ -379,8 +384,33 @@ export const NewFormModal = ( { open, onClose, onBlank } ) => {
 
 	return (
 		<Dialog open={ open } onOpenChange={ handleOpenChange }>
-			<DialogContent className="sm:max-w-7xl" style={ { maxWidth: '80%', width: '100%', zIndex: 99999 } }>
-				<DialogHeader style={ { padding: '16px 24px 10px', margin: 0 } }>
+			{ /*
+			  * The dialog is centred with top/left 50% and a -50% translate, so any
+			  * height it takes beyond the viewport hangs off both edges — and being
+			  * `position: fixed`, the page cannot be scrolled to reach it. The
+			  * template browser sized itself from `vh` and the header/padding were
+			  * added on top of that, so on a short window the picker ran past the
+			  * bottom of the screen with no way to get at it.
+			  *
+			  * `maxHeight` is the hard stop: the dialog can now never be taller than
+			  * the viewport, whatever the browser reports for `vh`. The flex column
+			  * plus `minHeight: 0` on the child is what makes the template grid give
+			  * up its own height and scroll internally instead of pushing the dialog
+			  * open. `dvh` where supported keeps mobile browser chrome out of it.
+			  */ }
+			<DialogContent
+				className="sm:max-w-7xl"
+				style={ {
+					maxWidth:  '80%',
+					width:     '100%',
+					zIndex:    99999,
+					maxHeight: 'calc(100dvh - 3rem)',
+					display:       'flex',
+					flexDirection: 'column',
+					overflow:      'hidden',
+				} }
+			>
+				<DialogHeader style={ { padding: '16px 24px 10px', margin: 0, flexShrink: 0 } }>
 					<DialogTitle style={ { margin: 0, fontSize: '18px', fontWeight: 700, lineHeight: 1.2 } }>
 						{ __( 'Choose & Organise Templates', 'smartpay' ) }
 					</DialogTitle>
