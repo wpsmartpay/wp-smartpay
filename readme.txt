@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.9
+Stable Tag: 3.3.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,13 +22,12 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.6
+### ✅ What's New in Version 3.3.0
 
-* **PayPal notices scoped to SmartPay pages** — API key warnings and unsupported-currency notices no longer appear on unrelated admin pages.
-* **Integration toggle conflict fixed** — The toggle AJAX action was renamed to avoid a conflict with the SmartMembers plugin that was causing nonce failures.
-* **Block API version warning gone** — `apiVersion: 3` added to the form and product blocks to suppress the WP 6.9 deprecation warning on every admin page load.
-* **Required textarea validation** — Required message/textarea fields now show an inline error directly below the field when left empty, instead of silently blocking submission.
-* **Product validation** — Products can no longer be saved without a title or a price greater than zero; clear error messages guide you to fix it before saving.
+* **Test Mode is now per gateway** — Each gateway has its own Sandbox/Live switch on its own settings screen. The single switch at the top of Settings → Payment Gateways is gone: it moved every gateway at once, so you could not trial a new gateway while the rest kept taking live payments. Your current mode carries over to every gateway on upgrade.
+* **See every Pro integration** — The Integrations page now lists all of them, shown locked with an upgrade link, so you can see the full range rather than only the handful the free plugin happened to know about.
+* **Template picker stays on screen** — The form template chooser could open past the bottom of the window with no way to scroll to it. It is now always kept within the viewport, with the template list scrolling inside it.
+* **Paddle settings warning fixed** — An "Array to string conversion" PHP warning no longer appears on the Paddle gateway settings screen.
 
 ---
 
@@ -397,6 +396,12 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 
 == Changelog ==
 
+= 3.3.0 =
+* Update - Test Mode is now set per gateway, on that gateway's own settings screen. The single site-wide switch at the top of Settings → Payment Gateways has been removed — it moved every gateway between sandbox and live at once, so there was no way to trial one gateway while the others kept taking real payments. Whatever mode your site was in is carried over to every gateway on upgrade, so nothing changes until you move a gateway yourself. Pro gateways need WP SmartPay Pro 3.3.9 or later to follow their own switch.
+* New - The Integrations page now lists every Pro integration, shown locked with an upgrade link, instead of only a handful — so you can see the full range at a glance
+* Fix - The form template picker could open past the bottom of the browser window with no way to scroll to it; it is now always kept on screen, with the template list scrolling inside it
+* Fix - "Array to string conversion" PHP warning on the Paddle gateway settings screen
+
 = 3.2.9 =
 * Fix - SmartPay form and product blocks now render on the front end instead of appearing empty on the published page
 * Fix - Stripe test mode no longer flips to Live unexpectedly after saving settings or updating the plugin
@@ -569,6 +574,9 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.3.0 =
+Test Mode moves from one site-wide switch to a separate switch on each gateway, so you can trial one gateway while the rest keep taking live payments. Your current mode carries over to every gateway automatically. The Integrations page now shows the full Pro catalogue, and the form template picker no longer opens off-screen. No database changes.
 
 = 3.2.4 =
 Fixes multiple payment forms on one page, restores the Allow Custom Amount toggle to the form editor sidebar, renders donation-only forms correctly, and stops the customer dashboard redirecting users who have no payments yet. No database changes.
