@@ -39,6 +39,17 @@ class Setting
      */
     public function seed_gateway_test_mode()
     {
+        // admin_init also fires on admin-ajax.php, which is reachable without
+        // logging in at all (wp_ajax_nopriv_*). Ungated, that let an anonymous
+        // request trigger an option write, and made every heartbeat poll do this
+        // work. Seeding exists so the settings screens render truthfully, so the
+        // people who can reach those screens are the only ones who need it —
+        // everyone else resolves through the legacy fallback in
+        // smartpay_is_test_mode(), which returns the identical value.
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
         $settings = smartpay_get_settings();
         $legacy   = (int) (bool) ($settings['test_mode'] ?? 0);
         $changed  = false;

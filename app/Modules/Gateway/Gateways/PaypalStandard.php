@@ -51,6 +51,13 @@ class PaypalStandard extends PaymentGateway
      */
     private function initSettings()
     {
+        // Admin + CLI only — never on a public frontend page load. gatewaySettings()
+        // translates its labels, and WordPress 6.7+ warns about a text domain loaded
+        // before init. Matches how the pro gateways register theirs.
+        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+            return;
+        }
+
         add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
 
         add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
