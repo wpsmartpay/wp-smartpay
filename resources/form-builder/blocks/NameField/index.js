@@ -27,6 +27,7 @@ export const NameField = {
             showFirstName: { type: 'boolean', default: true },
             showMiddleName: { type: 'boolean', default: true },
             showLastName: { type: 'boolean', default: true },
+            columns: { type: 'number', default: 0 },
         },
         edit,
         save,

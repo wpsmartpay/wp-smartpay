@@ -1,29 +1,63 @@
 name: Deploy to WordPress.org
-on:
-    push:
-        tags:
-            - '*'
-jobs:
-    tag:
-        name: New tag
-        runs-on: ubuntu-latest
-        steps:
-            - name: Clone
-              uses: actions/checkout@v3
-            - name: Setup PHP with PECL extension
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-            - name: Build
-              run: |
-                  sudo apt-get install libkrb5-dev -y
-                  npm install
-                  composer install --no-dev
-                  npm run build
 
-            - name: WordPress Plugin Deploy
-              uses: 10up/action-wordpress-plugin-deploy@master
-              env:
-                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-                  SLUG: smartpay
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cloning repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Build plugin
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libkrb5-dev
+          npm ci
+          composer install --no-dev --no-ansi --no-cache --no-interaction
+          npm run build
+          npx gulp release
+
+      - name: Read version from plugin header
+        id: pkg
+        run: |
+          echo "version=$(grep -m1 'Version:' smartpay.php | sed 's/.*Version:\s*//' | tr -d ' ')" >> $GITHUB_OUTPUT
+
+      - name: Set deploy version when manual run
+        id: deployver
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ steps.pkg.outputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to WP.org
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          dry-run: false
+          generate-zip: false
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: smartpay
+          BUILD_DIR: ./releases/smartpay
+          VERSION: ${{ steps.deployver.outputs.version }}
+          ASSETS_DIR: .wordpress-org

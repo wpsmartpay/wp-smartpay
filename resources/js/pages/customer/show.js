@@ -168,6 +168,32 @@ export const ShowCustomer = () => {
 
 						<div className="sp-detail-card" style={{ marginTop: 16 }}>
 							<div className="sp-detail-card__header">
+								<span className="sp-detail-card__title">{__('Address & Contact', 'smartpay')}</span>
+							</div>
+							<div className="sp-detail-card__body" style={{ padding: '16px 20px' }}>
+								<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+									{[
+										[__('Phone', 'smartpay'), customer?.phone],
+										[__('Email', 'smartpay'), customer?.email],
+										[__('Address Line 1', 'smartpay'), customer?.address_line_1],
+										[__('Address Line 2', 'smartpay'), customer?.address_line_2],
+										[__('City', 'smartpay'), customer?.city],
+										[__('State', 'smartpay'), customer?.state],
+										[__('Postal Code', 'smartpay'), customer?.postal_code],
+										[__('Country', 'smartpay'), customer?.country],
+										[__('Newsletter', 'smartpay'), customer?.subscribe_newsletter ? __('Subscribed', 'smartpay') : __('Not subscribed', 'smartpay')],
+									].map(([label, value], i) => (
+										<div key={i}>
+											<div style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--sp-text-muted)', marginBottom: 4 }}>{label}</div>
+											<div style={{ fontSize: 14, color: 'var(--sp-text)' }}>{value || '—'}</div>
+										</div>
+									))}
+								</div>
+							</div>
+						</div>
+
+						<div className="sp-detail-card" style={{ marginTop: 16 }}>
+							<div className="sp-detail-card__header">
 								<span className="sp-detail-card__title">{__('Recent Payments', 'smartpay')}</span>
 							</div>
 							<div className="sp-detail-card__body" style={{ padding: '16px 20px' }}>

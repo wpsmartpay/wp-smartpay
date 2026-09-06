@@ -14,7 +14,7 @@ jQuery(function ($) {
             }
 
             let data = {
-                action: 'toggle_integration_activation',
+                action: 'smartpay_toggle_integration_activation',
                 payload: { action, namespace, nonce },
             }
 

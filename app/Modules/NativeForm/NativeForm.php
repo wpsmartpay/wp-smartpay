@@ -28,6 +28,7 @@ class NativeForm {
 		add_action( 'admin_footer-edit.php', array( $this, 'shortcode_column_script' ) );
 		add_filter( 'smartpay_prepare_payment_data', array( $this, 'fix_cpt_form_payment_data' ), 5, 2 );
 		add_action( 'save_post_smartpay_form', array( $this, 'sync_pricing_block_amounts' ), 20, 2 );
+		add_action( 'save_post_smartpay_form', array( $this, 'clear_form_autosave' ), 30, 2 );
 		add_filter( 'render_block_smartpay-form/goal-progress', 'smartpay_render_goal_progress_block', 10, 2 );
 	}
 
@@ -104,6 +105,31 @@ class NativeForm {
 
 		if ( ! empty( $amounts ) ) {
 			update_post_meta( $post_id, '_smartpay_amounts', wp_json_encode( $amounts ) );
+		}
+	}
+
+	/**
+	 * Delete any autosave for this form immediately after a real manual save.
+	 *
+	 * Gutenberg creates a periodic autosave via the REST API. If the autosave
+	 * timestamp is newer than the published post, Gutenberg shows a "Restore
+	 * previous version" notice on the next editor load — causing deleted blocks
+	 * to appear to "come back". Deleting the autosave here prevents that prompt.
+	 *
+	 * @param int      $post_id Saved form post ID.
+	 * @param \WP_Post $post    Saved form post object.
+	 */
+	public function clear_form_autosave( int $post_id, \WP_Post $post ): void {
+		if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+		if ( 'smartpay_form' !== $post->post_type ) {
+			return;
+		}
+		// wp_delete_post_autosave() requires WP 6.4+; use the compatible equivalent.
+		$autosave = \wp_get_post_autosave( $post_id );
+		if ( $autosave ) {
+			\wp_delete_post( $autosave->ID, true );
 		}
 	}
 
@@ -202,12 +228,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_amounts',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '[]',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '[]',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
@@ -215,12 +240,11 @@ class NativeForm {
 			'smartpay_form',
 			'_smartpay_settings',
 			array(
-				'show_in_rest'      => true,
-				'single'            => true,
-				'type'              => 'string',
-				'default'           => '{}',
-				'auth_callback'     => $auth_callback,
-				'revisions_enabled' => true,
+				'show_in_rest'  => true,
+				'single'        => true,
+				'type'          => 'string',
+				'default'       => '{}',
+				'auth_callback' => $auth_callback,
 			)
 		);
 
@@ -316,6 +340,70 @@ class NativeForm {
 				),
 			)
 		);
+
+		register_rest_route(
+			'smartpay/v1',
+			'migrate-legacy-form',
+			array(
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'rest_migrate_legacy_form' ),
+				'permission_callback' => fn() => current_user_can( 'manage_options' ),
+				'args'                => array(
+					'form_id' => array(
+						'required'          => false,
+						'sanitize_callback' => 'absint',
+					),
+					'migrate_all' => array(
+						'required'          => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					),
+					'dry_run' => array(
+						'required'          => false,
+						'default'           => false,
+						'sanitize_callback' => 'rest_sanitize_boolean',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * REST handler: migrate one or all legacy forms to CPT posts.
+	 *
+	 * @param \WP_REST_Request $request
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function rest_migrate_legacy_form( \WP_REST_Request $request ) {
+		if ( ! class_exists( '\\SmartPay\\Models\\Form' ) ) {
+			return new \WP_Error( 'smartpay_no_legacy_model', __( 'Legacy Form model not available.', 'smartpay' ), array( 'status' => 500 ) );
+		}
+
+		$migrator = new LegacyFormMigrator();
+		$dry_run  = (bool) $request->get_param( 'dry_run' );
+		$form_id  = (int) $request->get_param( 'form_id' );
+		$all      = (bool) $request->get_param( 'migrate_all' );
+
+		if ( ! $form_id && ! $all ) {
+			return new \WP_Error( 'smartpay_missing_param', __( 'Provide form_id or migrate_all=true.', 'smartpay' ), array( 'status' => 400 ) );
+		}
+
+		$forms = $all
+			? \SmartPay\Models\Form::all()
+			: \SmartPay\Models\Form::where( 'id', $form_id )->get();
+
+		$results = array();
+		foreach ( $forms as $form ) {
+			$result = $migrator->migrate( $form, $dry_run );
+			$results[] = array(
+				'legacy_id' => $form->id,
+				'title'     => $form->title,
+				'post_id'   => is_wp_error( $result ) ? null : $result,
+				'error'     => is_wp_error( $result ) ? $result->get_error_message() : null,
+				'dry_run'   => $dry_run,
+			);
+		}
+
+		return new \WP_REST_Response( array( 'results' => $results ), 200 );
 	}
 
 	/**
@@ -548,6 +636,7 @@ class NativeForm {
 				'adminUrl' => admin_url( 'admin.php' ),
 				'ajax_url' => admin_url( 'admin-ajax.php' ),
 				'apiNonce' => wp_create_nonce( 'wp_rest' ),
+				'logo'     => SMARTPAY_PLUGIN_ASSETS . '/img/logo-lockup-color.png',
 				'isPro'    => smartpay_is_pro_active(),
 			)
 		);
@@ -640,6 +729,9 @@ class NativeForm {
 		}
 
 		$meta = array( 'amounts' => $definition['amounts'] );
+		if ( ! empty( $definition['settings'] ) ) {
+			$meta['settings'] = $definition['settings'];
+		}
 
 		wp_add_inline_script(
 			'smartpay-form-editor-sidebar',
@@ -907,16 +999,24 @@ class NativeForm {
 	 * @param string $preset Pricing preset ('grid' | 'list').
 	 * @return array
 	 */
-	private function tpl_assemble( string $name, array $fields, array $prices, string $pay = 'Pay Now', string $preset = 'grid' ): array {
+	private function tpl_goal_progress(): array {
+		return $this->tpl_block( 'smartpay-form/goal-progress', array() );
+	}
+
+	private function tpl_assemble( string $name, array $fields, array $prices, string $pay = 'Pay Now', string $preset = 'grid', array $settings = array() ): array {
 		$blocks   = $fields;
 		$blocks[] = $this->tpl_pricing( $prices, $preset );
 		$blocks[] = $this->tpl_pay( $pay );
 
-		return array(
+		$result = array(
 			'name'    => $name,
 			'blocks'  => $blocks,
 			'amounts' => $this->pricing_amounts( $prices ),
 		);
+		if ( ! empty( $settings ) ) {
+			$result['settings'] = $settings;
+		}
+		return $result;
 	}
 
 	/**
@@ -1035,6 +1135,7 @@ class NativeForm {
 				return $this->tpl_assemble(
 					'Charity Donation',
 					array(
+						$this->tpl_goal_progress(),
 						$this->tpl_name(),
 						$this->tpl_email(),
 						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
@@ -1060,7 +1161,17 @@ class NativeForm {
 							'amount' => 250,
 						),
 					),
-					'Give Now'
+					'Give Now',
+					'grid',
+					array(
+						'goal' => array(
+							'enabled'             => true,
+							'type'                => 'amount',
+							'target'              => 1000,
+							'showToPublic'        => true,
+							'behaviorWhenGoalMet' => 'allow_orders',
+						),
+					)
 				);
 
 			// ── Registration ─────────────────────────────────────────

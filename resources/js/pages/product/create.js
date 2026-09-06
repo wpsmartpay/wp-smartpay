@@ -24,6 +24,18 @@ export const CreateProduct = () => {
     const navigate = useNavigate()
 
     const createProduct = () => {
+        const title = (product.title || '').trim()
+        if (!title) {
+            Swal.fire({ toast: true, icon: 'error', title: __('Product title is required.', 'smartpay'), position: 'top-end', showConfirmButton: false, timer: 2500, showClass: { popup: 'swal2-noanimation' }, hideClass: { popup: '' } })
+            return
+        }
+        const basePrice = parseFloat(product.base_price) || 0
+        const hasVariationPrice = (product.variations || []).some((v) => parseFloat(v.base_price) > 0)
+        if (basePrice <= 0 && !hasVariationPrice) {
+            Swal.fire({ toast: true, icon: 'error', title: __('At least one price must be greater than zero.', 'smartpay'), position: 'top-end', showConfirmButton: false, timer: 2500, showClass: { popup: 'swal2-noanimation' }, hideClass: { popup: '' } })
+            return
+        }
+
         SaveProduct(JSON.stringify(product))
             .then((response) => {
                 setProductData(productDefaultData)
