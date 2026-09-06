@@ -690,6 +690,14 @@ class Admin
             );
         }
 
+        $sandbox = array();
+        foreach ( smartpay_payment_gateways() as $slug => $gateway ) {
+            if ( smartpay_is_test_mode( $slug ) ) {
+                $sandbox[] = $gateway['admin_label'] ?? $slug;
+            }
+        }
+        $sandbox_gateways = implode( ', ', $sandbox );
+
         return array(
             'nonce'      => wp_create_nonce( 'wp_rest' ),
             'restUrl'    => get_rest_url( null, 'smartpay/v1' ),
@@ -718,7 +726,10 @@ class Admin
                 'smartpay' => array(
                     array( 'label' => 'WPSmartPay Version', 'value' => SMARTPAY_VERSION ),
                     array( 'label' => 'Active Gateway',   'value' => smartpay_get_default_gateway() ?: 'None' ),
-                    array( 'label' => 'Test Mode',        'value' => smartpay_is_test_mode() ? 'Enabled' : 'Disabled' ),
+                    // Per gateway now — a single Enabled/Disabled would hide the
+                    // case this report exists for: one gateway left in sandbox
+                    // while the rest take live payments.
+                    array( 'label' => 'Sandbox Gateways',  'value' => $sandbox_gateways ?: 'None (all live)' ),
                     array( 'label' => 'Currency',         'value' => smartpay_get_currency() ),
                 ),
                 'plugins' => $active_plugins,

@@ -1762,6 +1762,21 @@ input.sp-note-input {
   color: var(--sp-text-muted);
 }
 
+/* A pro integration listed but not installed — a showcase entry, not an error. */
+.sp-integ-card__status--locked {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--sp-brand, #293c81);
+}
+
+.sp-integ-card__toggle--disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .sp-integ-card__settings {
   margin-left: auto;
   color: var(--sp-text-muted);

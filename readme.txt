@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.2.9
+Stable Tag: 3.3.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -22,13 +22,12 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.2.6
+### ✅ What's New in Version 3.3.0
 
-* **PayPal notices scoped to SmartPay pages** — API key warnings and unsupported-currency notices no longer appear on unrelated admin pages.
-* **Integration toggle conflict fixed** — The toggle AJAX action was renamed to avoid a conflict with the SmartMembers plugin that was causing nonce failures.
-* **Block API version warning gone** — `apiVersion: 3` added to the form and product blocks to suppress the WP 6.9 deprecation warning on every admin page load.
-* **Required textarea validation** — Required message/textarea fields now show an inline error directly below the field when left empty, instead of silently blocking submission.
-* **Product validation** — Products can no longer be saved without a title or a price greater than zero; clear error messages guide you to fix it before saving.
+* **Test Mode is now per gateway** — Each gateway has its own Sandbox/Live switch, so you can trial one while the others stay live. Your current mode carries over on upgrade.
+* **See every Pro integration** — The Integrations page lists them all, shown locked, so you can see the full range at a glance.
+* **Settings always reachable** — Open a gateway's settings while it is switched off, so you can set it up before turning it on.
+* **Template picker stays on screen** — The form template chooser no longer opens past the bottom of the window.
 
 ---
 
@@ -397,6 +396,15 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 
 == Changelog ==
 
+= 3.3.0 =
+* Update - Test Mode is now set per gateway instead of site-wide, so you can trial one gateway while the others stay live
+* Update - Your current mode carries over to every gateway on upgrade — nothing changes until you move a gateway yourself
+* Update - Pro gateways follow their own switch from WP SmartPay Pro 3.3.9
+* New - Every Pro integration now appears on the Integrations page, shown locked, so you can see the full range at a glance
+* Fix - Gateway settings are reachable while a gateway is switched off, so you can set it up before turning it on
+* Fix - The form template picker no longer opens past the bottom of the screen
+* Fix - PHP warning on the Paddle gateway settings screen
+
 = 3.2.9 =
 * Fix - SmartPay form and product blocks now render on the front end instead of appearing empty on the published page
 * Fix - Stripe test mode no longer flips to Live unexpectedly after saving settings or updating the plugin
@@ -569,6 +577,9 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 * Initial stable release
 
 == Upgrade Notice ==
+
+= 3.3.0 =
+Test Mode is now set per gateway instead of site-wide, so you can trial one gateway while the others stay live. Your current mode carries over automatically. No database changes.
 
 = 3.2.4 =
 Fixes multiple payment forms on one page, restores the Allow Custom Amount toggle to the form editor sidebar, renders donation-only forms correctly, and stops the customer dashboard redirecting users who have no payments yet. No database changes.
