@@ -114,11 +114,12 @@ const SP_BLOCKS = [
 	{ name: 'smartpay-form/radio-input',    label: __( 'Radio',       'smartpay' ), required: false },
 	{ name: 'smartpay-form/checkbox-input', label: __( 'Checkbox',    'smartpay' ), required: false },
 	{ name: 'smartpay-form/select-input',   label: __( 'Select',      'smartpay' ), required: false },
-	{ name: 'smartpay-form/address-input',  label: __( 'Address',     'smartpay' ), required: false },
+	{ name: 'smartpay-form/address-input',  label: __( 'Address',       'smartpay' ), required: false },
+	{ name: 'smartpay-form/goal-progress', label: __( 'Goal Progress', 'smartpay' ), required: false },
 ];
 
 // Blocks that may only appear once in the form.
-const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email' ] );
+const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email', 'smartpay-form/goal-progress' ] );
 
 const SUBMIT_BLOCK = 'smartpay-form/submit-button';
 
@@ -568,27 +569,6 @@ const OptionsPanel = () => {
 				onChange={ ( val ) => updateSettings( { show_title: val } ) }
 			/>
 
-			{ /* Pay Button Label → Submit Button block · Allow External Link → removed. */ }
-
-			<ToggleControl
-				__nextHasNoMarginBottom
-				label={ __( 'Allow Custom Amount', 'smartpay' ) }
-				help={ __( 'Let visitors enter any amount — ideal for donations.', 'smartpay' ) }
-				checked={ !! settings.allow_custom_amount }
-				onChange={ ( val ) => updateSettings( { allow_custom_amount: val } ) }
-			/>
-
-			{ settings.allow_custom_amount && (
-				<div className="sp-sidebar-field">
-					<TextControl
-						__nextHasNoMarginBottom
-						label={ __( 'Custom Amount Label', 'smartpay' ) }
-						value={ settings.custom_amount_label || '' }
-						placeholder={ __( 'Enter custom amount', 'smartpay' ) }
-						onChange={ ( val ) => updateSettings( { custom_amount_label: val } ) }
-					/>
-				</div>
-			) }
 
 			<div className="sp-sidebar-field">
 				<SelectControl
