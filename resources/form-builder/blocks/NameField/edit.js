@@ -1,13 +1,28 @@
 import { __ } from '@wordpress/i18n'
+import { useEffect, useRef } from '@wordpress/element'
 import {
     InspectorControls,
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor'
 import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components'
+import { useDispatch } from '@wordpress/data'
+import { createBlock } from '@wordpress/blocks'
 
-export const edit = ({ attributes, setAttributes }) => {
+const templateToBlocks = (template) =>
+    template.map(([name, attrs, innerTemplate = []]) =>
+        createBlock(
+            name,
+            attrs,
+            innerTemplate.map(([innerName, innerAttrs]) => createBlock(innerName, innerAttrs))
+        )
+    )
+
+export const edit = ({ attributes, setAttributes, clientId }) => {
     const { showFirstName, showMiddleName, showLastName, columns } = attributes
+
+    const { replaceInnerBlocks } = useDispatch('core/block-editor')
+    const isFirstMount = useRef(true)
 
     const TEMPLATE = []
 
@@ -63,9 +78,23 @@ export const edit = ({ attributes, setAttributes }) => {
         ])
     }
 
+    // Sync inner blocks with attribute toggles. Skip mount — post content already
+    // has the saved blocks; only re-sync when the user changes a toggle.
+    useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false
+            return
+        }
+        replaceInnerBlocks(clientId, templateToBlocks(TEMPLATE), false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showFirstName, showMiddleName, showLastName])
+
     const colClass = columns > 0 ? `sp-cols-${columns}` : ''
     const blockProps = useBlockProps({
-        className: `form-element row${colClass ? ' ' + colClass : ''}`,
+        // "row" (flex) conflicts with sp-cols-N (grid) in the editor — drop it when a
+        // column layout is active. save.js still emits "form-element row sp-cols-N"
+        // for the frontend where Bootstrap order makes sp-cols-N win correctly.
+        className: colClass ? `form-element ${colClass}` : 'form-element row',
     })
     const innerBlocksProps = useInnerBlocksProps(blockProps, {
         template: TEMPLATE,
