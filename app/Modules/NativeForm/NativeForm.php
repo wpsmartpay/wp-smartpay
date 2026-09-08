@@ -688,7 +688,7 @@ class NativeForm {
 				'smartpay-form-editor-sidebar',
 				'smartpayFormEditor',
 				array(
-					'logoUrl'      => SMARTPAY_PLUGIN_ASSETS . '/img/favicon.png',
+					'logoUrl'      => SMARTPAY_PLUGIN_ASSETS . '/img/logo-icon-color.svg',
 					'formsListUrl' => admin_url( 'admin.php?page=smartpay' ) . '#/native-forms',
 				)
 			);

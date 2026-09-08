@@ -5,7 +5,6 @@ import { registerPlugin } from '@wordpress/plugins';
 import { Button, Modal } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
 import {
-	PluginDocumentSettingPanel,
 	__experimentalMainDashboardButton as MainDashboardButton,
 } from '@wordpress/edit-post';
 import AmountCard from '../form-editor/components/sidebar/AmountCard';
@@ -121,15 +120,12 @@ const SP_BLOCKS = [
 // Blocks that may only appear once in the form.
 const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email' ] );
 
+const SUBMIT_BLOCK = 'smartpay-form/submit-button';
+
 /**
- * Form guide — a native Modal that walks the user through adding fields.
- *
- * - Auto-opens for a brand-new, empty form (isCleanNewPost).
- * - Re-openable any time via the "Guide" button portaled into the editor header.
- * - Lists required fields (Name, Email) and optional fields, each a one-click add.
- *   Already-added unique fields render disabled with a check.
- * - Native <Modal> provides the X / ESC / overlay close; a Close button is also
- *   offered in the footer.
+ * Header portals — "Settings" modal button, "Guide" field picker, and a
+ * top-left "Add field" button. All three portal their DOM nodes so they
+ * survive Gutenberg re-renders without relying on SlotFill internals.
  */
 const FormGuide = () => {
 	const blocks = useSelect(
@@ -139,20 +135,24 @@ const FormGuide = () => {
 	const usedNames = new Set( blocks.map( ( b ) => b.name ) );
 
 	const { insertBlocks } = useDispatch( 'core/block-editor' );
-	const { openGeneralSidebar } = useDispatch( 'core/edit-post' );
-	const [ isOpen, setIsOpen ]     = useState( false );
-	const [ btnTick, setBtnTick ]   = useState( 0 );
-	const btnRef     = useRef( null );
 
-	// Open the existing form settings panels (Pricing, Form Settings, Goal),
-	// which live in the editor's Document settings sidebar.
-	const openSettings = () => openGeneralSidebar?.( 'edit-post/document' );
+	// ── right-header portal (Settings + Guide buttons) ────────────────────
+	const [ btnTick, setBtnTick ]           = useState( 0 );
+	const btnRef                            = useRef( null );
 
-	// Note: the guide modal is NOT auto-opened on editor load — it gets in the
-	// way. Users open it on demand via the "Guide" button portaled into the
-	// editor header (below); the slim quick-add toolbar stays available too.
+	// ── top-left portal (Add Field button) ────────────────────────────────
+	const [ leftTick, setLeftTick ]         = useState( 0 );
+	const leftRef                           = useRef( null );
+	const [ fieldPickerOpen, setFieldPickerOpen ] = useState( false );
 
-	// Portal a "Guide" button into the editor header settings area.
+	// ── Settings full-page modal ───────────────────────────────────────────
+	const [ settingsOpen, setSettingsOpen ]       = useState( false );
+	const [ settingsTab, setSettingsTab ]          = useState( 'settings' );
+
+	// ── Guide modal (field list) ───────────────────────────────────────────
+	const [ guideOpen, setGuideOpen ]             = useState( false );
+
+	// Portal the right-header buttons into .editor-header__settings
 	useEffect( () => {
 		let mounted  = true;
 		let rafId    = null;
@@ -165,7 +165,6 @@ const FormGuide = () => {
 		const setupBtn = () => {
 			const header = getHeader();
 			if ( ! header ) return false;
-
 			if ( ! btnRef.current || ! btnRef.current.isConnected ) {
 				btnRef.current?.remove();
 				const el = document.createElement( 'div' );
@@ -173,38 +172,84 @@ const FormGuide = () => {
 				header.insertBefore( el, header.firstChild );
 				btnRef.current = el;
 			}
-
 			if ( mounted ) setBtnTick( ( n ) => n + 1 );
 			return true;
 		};
 
-		const trySetup = () => {
-			if ( ! mounted ) return;
-			if ( ! setupBtn() ) rafId = requestAnimationFrame( trySetup );
-		};
-
+		const trySetup = () => { if ( ! mounted ) return; if ( ! setupBtn() ) rafId = requestAnimationFrame( trySetup ); };
 		rafId = requestAnimationFrame( trySetup );
 
 		const observer = new MutationObserver( () => {
 			clearTimeout( mutTimer );
-			mutTimer = setTimeout( () => {
-				if ( ! mounted ) return;
-				if ( ! btnRef.current || ! btnRef.current.isConnected ) setupBtn();
-			}, 200 );
+			mutTimer = setTimeout( () => { if ( mounted && ( ! btnRef.current || ! btnRef.current.isConnected ) ) setupBtn(); }, 200 );
 		} );
 		observer.observe( document.body, { childList: true, subtree: true } );
 
 		return () => {
-			mounted = false;
-			cancelAnimationFrame( rafId );
-			clearTimeout( mutTimer );
-			observer.disconnect();
-			btnRef.current?.remove();
-			btnRef.current = null;
+			mounted = false; cancelAnimationFrame( rafId ); clearTimeout( mutTimer );
+			observer.disconnect(); btnRef.current?.remove(); btnRef.current = null;
 		};
 	}, [] );
 
+	// Portal the top-left "Add field" button into .editor-header__left
+	useEffect( () => {
+		let mounted  = true;
+		let rafId    = null;
+		let mutTimer = null;
+
+		const getLeft = () =>
+			document.querySelector( '.editor-header__left' ) ||
+			document.querySelector( '.edit-post-header__toolbar' );
+
+		const setupLeft = () => {
+			const left = getLeft();
+			if ( ! left ) return false;
+			if ( ! leftRef.current || ! leftRef.current.isConnected ) {
+				leftRef.current?.remove();
+				const el = document.createElement( 'div' );
+				el.className = 'sp-add-field-portal';
+				el.style.cssText = 'display:inline-flex;align-items:center;';
+				left.appendChild( el );
+				leftRef.current = el;
+			}
+			if ( mounted ) setLeftTick( ( n ) => n + 1 );
+			return true;
+		};
+
+		const tryLeft = () => { if ( ! mounted ) return; if ( ! setupLeft() ) rafId = requestAnimationFrame( tryLeft ); };
+		rafId = requestAnimationFrame( tryLeft );
+
+		const observer = new MutationObserver( () => {
+			clearTimeout( mutTimer );
+			mutTimer = setTimeout( () => { if ( mounted && ( ! leftRef.current || ! leftRef.current.isConnected ) ) setupLeft(); }, 200 );
+		} );
+		observer.observe( document.body, { childList: true, subtree: true } );
+
+		return () => {
+			mounted = false; cancelAnimationFrame( rafId ); clearTimeout( mutTimer );
+			observer.disconnect(); leftRef.current?.remove(); leftRef.current = null;
+		};
+	}, [] );
+
+	// Close field picker when clicking outside
+	useEffect( () => {
+		if ( ! fieldPickerOpen ) return;
+		const close = ( e ) => {
+			if ( ! e.target.closest( '.sp-add-field-portal' ) ) setFieldPickerOpen( false );
+		};
+		document.addEventListener( 'mousedown', close );
+		return () => document.removeEventListener( 'mousedown', close );
+	}, [ fieldPickerOpen ] );
+
 	const addField = ( name ) => insertBlocks( wp.blocks.createBlock( name ) );
+
+	// Insert block before submit-button block if it exists, otherwise at end.
+	const addFieldBeforeSubmit = ( name ) => {
+		const allBlocks = wp.data.select( 'core/block-editor' ).getBlocks();
+		const submitIdx = allBlocks.findIndex( ( b ) => b.name === SUBMIT_BLOCK );
+		insertBlocks( wp.blocks.createBlock( name ), submitIdx >= 0 ? submitIdx : undefined );
+		setFieldPickerOpen( false );
+	};
 
 	const addRequired = () => {
 		const toAdd = [ 'smartpay-form/name', 'smartpay-form/email' ]
@@ -233,68 +278,132 @@ const FormGuide = () => {
 		);
 	};
 
+	// ── Wand SVG for the Add Field button ─────────────────────────────────
+	const WandIcon = (
+		<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+			<path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 18.36l3.64 3.64L21.64 5.36a1.21 1.21 0 0 0 0-1.72z"/>
+			<path d="m14 7 3 3"/>
+			<path d="M5 6v4"/><path d="M19 14v4"/>
+			<path d="M10 2v2"/><path d="M7 8H3"/>
+			<path d="M21 16h-4"/><path d="M11 3H9"/>
+		</svg>
+	);
+
+	// ── Settings tabs ─────────────────────────────────────────────────────
+	const SETTINGS_TABS = [
+		{ id: 'settings', label: __( 'Form Settings', 'smartpay' ) },
+		{ id: 'goal',     label: __( 'Goal',          'smartpay' ) },
+	];
+
 	return (
 		<>
+			{ /* Right-header: "Settings" (opens modal) + "Guide" (opens field guide) */ }
 			{ btnTick > 0 && btnRef.current && createPortal(
 				<>
-					<Button
-						variant="tertiary"
-						className="sp-guide-trigger"
-						onClick={ openSettings }
-					>
+					<Button variant="tertiary" className="sp-guide-trigger" onClick={ () => { setSettingsOpen( true ); setSettingsTab( 'settings' ); } }>
 						{ __( 'Settings', 'smartpay' ) }
 					</Button>
-					<Button
-						variant="tertiary"
-						className="sp-guide-trigger"
-						onClick={ () => setIsOpen( true ) }
-					>
+					<Button variant="tertiary" className="sp-guide-trigger" onClick={ () => setGuideOpen( true ) }>
 						{ __( 'Guide', 'smartpay' ) }
 					</Button>
 				</>,
 				btnRef.current
 			) }
 
-			{ isOpen && (
+			{ /* Top-left: "Add Field" button with SmartPay block picker dropdown */ }
+			{ leftTick > 0 && leftRef.current && createPortal(
+				<div className="sp-add-field-wrap" style={ { position: 'relative', display: 'inline-flex', alignItems: 'center' } }>
+					<button
+						type="button"
+						className="sp-add-field-btn"
+						onClick={ () => setFieldPickerOpen( ( o ) => ! o ) }
+						aria-label={ __( 'Add field', 'smartpay' ) }
+						title={ __( 'Add field', 'smartpay' ) }
+					>
+						{ WandIcon }
+						<span className="sp-add-field-btn__label">{ __( '+ Field', 'smartpay' ) }</span>
+					</button>
+					{ fieldPickerOpen && (
+						<div className="sp-field-picker" role="menu">
+							{ SP_BLOCKS.map( ( { name, label, required } ) => {
+								const isUsed = UNIQUE_BLOCKS.has( name ) && usedNames.has( name );
+								return (
+									<button
+										key={ name }
+										type="button"
+										className={ `sp-field-picker__item${ isUsed ? ' is-used' : '' }${ required ? ' is-required' : '' }` }
+										disabled={ isUsed }
+										role="menuitem"
+										onClick={ () => ! isUsed && addFieldBeforeSubmit( name ) }
+									>
+										<span className="sp-field-picker__check" aria-hidden="true">{ isUsed ? '✓' : '+' }</span>
+										{ label }
+										{ required && <span className="sp-field-picker__req" title={ __( 'Required', 'smartpay' ) }>✦</span> }
+									</button>
+								);
+							} ) }
+						</div>
+					) }
+				</div>,
+				leftRef.current
+			) }
+
+			{ /* Full-page Settings modal with sidebar tabs */ }
+			{ settingsOpen && (
+				<Modal
+					title={ __( 'Form Settings', 'smartpay' ) }
+					onRequestClose={ () => setSettingsOpen( false ) }
+					className="sp-form-settings-modal"
+					size="large"
+				>
+					<div className="sp-form-settings-modal__layout">
+						<nav className="sp-form-settings-modal__nav" aria-label={ __( 'Settings sections', 'smartpay' ) }>
+							{ SETTINGS_TABS.map( ( tab ) => (
+								<button
+									key={ tab.id }
+									type="button"
+									className={ `sp-form-settings-modal__nav-item${ settingsTab === tab.id ? ' is-active' : '' }` }
+									onClick={ () => setSettingsTab( tab.id ) }
+								>
+									{ tab.label }
+								</button>
+							) ) }
+						</nav>
+						<div className="sp-form-settings-modal__content">
+							{ settingsTab === 'settings' && <OptionsPanel /> }
+							{ settingsTab === 'goal'     && <GoalPanel /> }
+						</div>
+					</div>
+				</Modal>
+			) }
+
+			{ /* Guide modal — block field list */ }
+			{ guideOpen && (
 				<Modal
 					title={ __( 'WPSmartPay Help Guide', 'smartpay' ) }
-					onRequestClose={ () => setIsOpen( false ) }
+					onRequestClose={ () => setGuideOpen( false ) }
 					className="sp-guide-modal"
 				>
 					<p className="sp-guide-modal__desc">
 						{ __( 'Build your payment form — click a field below to add it.', 'smartpay' ) }
 					</p>
-
 					<h3 className="sp-guide-modal__heading">{ __( 'Required fields', 'smartpay' ) }</h3>
 					<div className="sp-guide-modal__grid">
 						{ SP_BLOCKS.filter( ( b ) => b.required ).map( ( b ) => (
 							<FieldButton key={ b.name } name={ b.name } label={ b.label } />
 						) ) }
 					</div>
-
 					<h3 className="sp-guide-modal__heading">{ __( 'Add more fields', 'smartpay' ) }</h3>
 					<div className="sp-guide-modal__grid">
 						{ SP_BLOCKS.filter( ( b ) => ! b.required ).map( ( b ) => (
 							<FieldButton key={ b.name } name={ b.name } label={ b.label } />
 						) ) }
 					</div>
-
 					<div className="sp-guide-modal__footer">
-						<Button
-							variant="primary"
-							__next40pxDefaultSize
-							disabled={ allRequiredAdded }
-							onClick={ addRequired }
-						>
-							{ allRequiredAdded
-								? __( 'Required fields added ✓', 'smartpay' )
-								: __( 'Add required fields', 'smartpay' ) }
+						<Button variant="primary" __next40pxDefaultSize disabled={ allRequiredAdded } onClick={ addRequired }>
+							{ allRequiredAdded ? __( 'Required fields added ✓', 'smartpay' ) : __( 'Add required fields', 'smartpay' ) }
 						</Button>
-						<Button
-							variant="tertiary"
-							__next40pxDefaultSize
-							onClick={ () => setIsOpen( false ) }
-						>
+						<Button variant="tertiary" __next40pxDefaultSize onClick={ () => setGuideOpen( false ) }>
 							{ __( 'Close', 'smartpay' ) }
 						</Button>
 					</div>
@@ -584,7 +693,7 @@ registerPlugin( 'smartpay-form-sidebar', {
 
 		return (
 			<>
-				{ /* Guide modal + header button */ }
+				{ /* Guide + Settings modals, header buttons, and top-left Add Field button */ }
 				<FormGuide />
 
 				{ MainDashboardButton && (
@@ -601,24 +710,6 @@ registerPlugin( 'smartpay-form-sidebar', {
 						</a>
 					</MainDashboardButton>
 				) }
-
-					{ /* Pricing is authored via the Pricing block now; sidebar repeater hidden. */ }
-
-				<PluginDocumentSettingPanel
-					name="sp-form-settings"
-					title={ __( 'Form Settings', 'smartpay' ) }
-					className="sp-sidebar-form-settings"
-				>
-					<OptionsPanel />
-				</PluginDocumentSettingPanel>
-
-				<PluginDocumentSettingPanel
-					name="sp-goal"
-					title={ __( 'Goal', 'smartpay' ) }
-					className="sp-sidebar-goal"
-				>
-					<GoalPanel />
-				</PluginDocumentSettingPanel>
 			</>
 		);
 	},
