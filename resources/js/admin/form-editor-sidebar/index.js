@@ -191,13 +191,14 @@ const FormGuide = () => {
 		};
 	}, [] );
 
-	// Portal the top-left "Add field" button into .editor-header__left
+	// Portal the top-left "Add field" button into .editor-header__toolbar
 	useEffect( () => {
 		let mounted  = true;
 		let rafId    = null;
 		let mutTimer = null;
 
 		const getLeft = () =>
+			document.querySelector( '.editor-header__toolbar' ) ||
 			document.querySelector( '.editor-header__left' ) ||
 			document.querySelector( '.edit-post-header__toolbar' );
 
@@ -289,11 +290,15 @@ const FormGuide = () => {
 		</svg>
 	);
 
-	// ── Settings tabs ─────────────────────────────────────────────────────
-	const SETTINGS_TABS = [
+	// ── Settings tabs — extensible via wp.hooks filter ────────────────────
+	const baseTabs = [
 		{ id: 'settings', label: __( 'Form Settings', 'smartpay' ) },
 		{ id: 'goal',     label: __( 'Goal',          'smartpay' ) },
 	];
+	const SETTINGS_TABS = window.wp?.hooks?.applyFilters?.(
+		'smartpay_form_settings_tabs',
+		baseTabs
+	) ?? baseTabs;
 
 	return (
 		<>
@@ -372,6 +377,12 @@ const FormGuide = () => {
 						<div className="sp-form-settings-modal__content">
 							{ settingsTab === 'settings' && <OptionsPanel /> }
 							{ settingsTab === 'goal'     && <GoalPanel /> }
+							{ settingsTab !== 'settings' && settingsTab !== 'goal' && ( () => {
+								const ExtPanel = window.wp?.hooks?.applyFilters?.(
+									'smartpay_form_settings_panel', null, settingsTab
+								);
+								return ExtPanel ? <ExtPanel /> : null;
+							} )() }
 						</div>
 					</div>
 				</Modal>
