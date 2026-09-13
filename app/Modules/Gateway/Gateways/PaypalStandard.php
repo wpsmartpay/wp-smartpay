@@ -19,6 +19,15 @@ class PaypalStandard extends PaymentGateway
      */
     public function __construct()
     {
+        // Settings register unconditionally, before every early return below.
+        // They used to live in initActions(), which is skipped when the gateway
+        // is switched off or the currency is unsupported — so the settings
+        // section did not exist, the gear on the gateway card was not rendered,
+        // and there was no way in to configure PayPal until you had already
+        // enabled it. That is backwards: you configure a gateway, then turn it
+        // on. Same shape Stripe and M-Pesa already use.
+        $this->initSettings();
+
         if (!smartpay_is_gateway_active('paypal')) {
             return;
         }
@@ -32,6 +41,26 @@ class PaypalStandard extends PaymentGateway
 
         // Initialize actions.
         $this->initActions();
+    }
+
+    /**
+     * Register the settings section and fields.
+     *
+     * Separate from initActions() so the settings screen stays reachable
+     * whether or not the gateway is currently active.
+     */
+    private function initSettings()
+    {
+        // Admin + CLI only — never on a public frontend page load. gatewaySettings()
+        // translates its labels, and WordPress 6.7+ warns about a text domain loaded
+        // before init. Matches how the pro gateways register theirs.
+        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+            return;
+        }
+
+        add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
+
+        add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
     }
 
     //check api keys set or not
@@ -79,9 +108,7 @@ class PaypalStandard extends PaymentGateway
 
         add_action('smartpay_paypal_ajax_process_payment', [$this, 'ajaxProcessPayment']);
 
-        add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
-
-        add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
+        // Settings filters moved to initSettings(), which runs unconditionally.
 
         add_action('init', [$this, 'processWebhooks']);
 
@@ -339,7 +366,7 @@ class PaypalStandard extends PaymentGateway
                 return; // The prices don't match
             }
 
-            if ('Completed' == $payment_status || smartpay_is_test_mode()) {
+            if ('Completed' == $payment_status || smartpay_is_test_mode('paypal')) {
                 $payment->updateStatus('completed');
                 $payment->setTransactionId($data['txn_id']);
 
@@ -467,8 +494,8 @@ class PaypalStandard extends PaymentGateway
             $protocol = 'https://';
         }
 
-        // Check the current payment mode
-        if (smartpay_is_test_mode()) {
+        // Check this gateway's own payment mode
+        if (smartpay_is_test_mode('paypal')) {
 
             // Test mode
             if ($ipn) {

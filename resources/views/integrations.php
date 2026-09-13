@@ -229,9 +229,27 @@
                                 <?php endif; ?>
                             <?php endif; ?>
                         <?php else : ?>
+                            <?php // Not installed. The catalogue lists every pro integration so a
+                            // free user can see the whole range, which makes this a showcase state
+                            // rather than an error: a disabled switch plus a padlock says "this
+                            // exists, it is not yours yet" far more plainly than a lone button. ?>
                             <div class="sp-integ-card__toggle-wrap">
-                                <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
+                                <div class="custom-control custom-switch sp-integ-card__toggle--disabled">
+                                    <input type="checkbox"
+                                        class="custom-control-input"
+                                        id="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>"
+                                        disabled
+                                        aria-disabled="true">
+                                    <label class="custom-control-label"
+                                        for="<?php echo 'integration_' . esc_attr($smartpay_namespace); ?>">
+                                    </label>
+                                </div>
+                                <span class="sp-integ-card__status sp-integ-card__status--locked">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    <?php esc_html_e('Pro', 'smartpay'); ?>
+                                </span>
                             </div>
+                            <?php smartpay_integration_get_not_installed_message($smartpay_type); ?>
                         <?php endif; ?>
                     </div>
 

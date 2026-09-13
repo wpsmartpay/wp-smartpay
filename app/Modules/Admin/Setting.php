@@ -10,13 +10,162 @@ class Setting
     public function __construct()
     {
         // die();
+        add_action('admin_init', [$this, 'seed_gateway_test_mode'], 5);
         add_action('admin_init', [$this, 'register_settings']);
         add_action('wp_ajax_smartpay_toggle_gateway', [$this, 'toggle_gateway_activation']);
         add_action('wp_ajax_smartpay_set_test_mode', [$this, 'set_test_mode']);
+
+        // Late, so every gateway (core and pro) has registered its own section first.
+        add_filter('smartpay_settings_gateways', [$this, 'inject_gateway_test_mode_fields'], 999);
     }
 
     /**
-     * AJAX: set the global Test Mode (Sandbox / Live) and persist immediately.
+     * Give every registered gateway an explicit `{slug}_test_mode` value.
+     *
+     * Seeded from the old site-wide `test_mode`, so a site upgrading from the
+     * shared toggle keeps running in exactly the mode it was already in.
+     *
+     * Without this the switch on a gateway screen would render off (no stored
+     * value) while smartpay_is_test_mode() answered true from the legacy
+     * fallback — the settings page would be telling the merchant the opposite
+     * of what the gateway was actually doing.
+     *
+     * Self-healing rather than a one-shot migration: a gateway registered later
+     * (a pro add-on switched on next week) gets its value on the next admin
+     * request. A key that already exists is never touched, so a deliberate
+     * choice of Live is never undone.
+     *
+     * @return void
+     */
+    public function seed_gateway_test_mode()
+    {
+        // admin_init also fires on admin-ajax.php, which is reachable without
+        // logging in at all (wp_ajax_nopriv_*). Ungated, that let an anonymous
+        // request trigger an option write, and made every heartbeat poll do this
+        // work. Seeding exists so the settings screens render truthfully, so the
+        // people who can reach those screens are the only ones who need it —
+        // everyone else resolves through the legacy fallback in
+        // smartpay_is_test_mode(), which returns the identical value.
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $settings = smartpay_get_settings();
+        $legacy   = (int) (bool) ($settings['test_mode'] ?? 0);
+        $changed  = false;
+
+        foreach (array_keys(smartpay_payment_gateways()) as $slug) {
+            $key = smartpay_gateway_test_mode_key($slug);
+
+            if (!array_key_exists($key, $settings)) {
+                $settings[$key] = $legacy;
+                $changed        = true;
+            }
+        }
+
+        if (!$changed) {
+            return;
+        }
+
+        smartpay_update_settings($settings);
+
+        // $smartpay_options was populated before this ran, and smartpay_get_option()
+        // reads it rather than the option row — so without this the very request
+        // that seeds the values renders the settings screen from the stale copy,
+        // showing every freshly-seeded switch as off.
+        $GLOBALS['smartpay_options'] = $settings;
+    }
+
+    /**
+     * Give every gateway settings section its own Sandbox / Live switch.
+     *
+     * Replaces the single site-wide Test Mode toggle that used to sit at the top
+     * of Settings › Gateways: that one option moved every gateway at once, so a
+     * merchant could not test one gateway without taking the rest off live
+     * payments. The switch is injected here rather than added to each gateway by
+     * hand so a newly registered gateway gets one for free.
+     *
+     * A gateway that already renders its own Sandbox/Live control (Stripe,
+     * Authorize.Net and M-Pesa each draw one in their settings hero) opts out
+     * through `smartpay_gateway_has_test_mode_field` and keeps that control —
+     * it writes the same `{slug}_test_mode` setting over AJAX.
+     *
+     * @param array $settings Gateway settings, keyed by section.
+     * @return array
+     */
+    public function inject_gateway_test_mode_fields($settings)
+    {
+        if (!is_array($settings)) {
+            return $settings;
+        }
+
+        foreach (smartpay_payment_gateways() as $slug => $gateway) {
+            if (!isset($settings[$slug]) || !is_array($settings[$slug])) {
+                continue;
+            }
+
+            /**
+             * Whether to render the generic Test Mode switch for this gateway.
+             *
+             * @param bool   $show Default true.
+             * @param string $slug Gateway slug.
+             */
+            if (!apply_filters('smartpay_gateway_has_test_mode_field', true, $slug)) {
+                continue;
+            }
+
+            $key = smartpay_gateway_test_mode_key($slug);
+
+            // Already registered by the gateway itself — leave it alone.
+            if ($this->_section_has_field($settings[$slug], $key)) {
+                continue;
+            }
+
+            $field = array(
+                'id'   => $key,
+                'name' => __('Test Mode', 'smartpay'),
+                'desc' => sprintf(
+                    /* translators: %s: payment gateway name. */
+                    __('Process %s payments against its sandbox credentials. Only this gateway is affected — the others keep whatever mode they are set to.', 'smartpay'),
+                    $gateway['admin_label'] ?? $slug
+                ),
+                'type' => 'switch',
+            );
+
+            // A string key survives array_merge on both shapes this array comes
+            // in: core sections are keyed by field id, pro's are plain lists.
+            $settings[$slug] = array_merge(array($key => $field), $settings[$slug]);
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Does a settings section already declare a field with this id?
+     *
+     * @param array  $section Section fields, keyed or a plain list.
+     * @param string $id      Field id to look for.
+     * @return bool
+     */
+    private function _section_has_field($section, $id)
+    {
+        foreach ($section as $field) {
+            if (is_array($field) && isset($field['id']) && $id === $field['id']) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * AJAX: set Test Mode (Sandbox / Live) for one gateway and persist immediately.
+     *
+     * A `gateway` slug is required. This used to write the single site-wide
+     * `test_mode` option, so the toggle on the Stripe screen also moved Paddle,
+     * M-Pesa and every other gateway — the reason the shared switch was removed.
+     * A request without a slug is rejected rather than quietly falling back to
+     * that site-wide behaviour.
      */
     public function set_test_mode()
     {
@@ -29,18 +178,29 @@ class Setting
             wp_send_json_error( [ 'message' => __( 'Invalid request.', 'smartpay' ) ], 403 );
         }
 
+        $gateway = isset( $_POST['gateway'] ) ? sanitize_key( wp_unslash( $_POST['gateway'] ) ) : '';
+        if ( '' === $gateway || ! array_key_exists( $gateway, smartpay_payment_gateways() ) ) {
+            wp_send_json_error( [ 'message' => __( 'Unknown payment gateway.', 'smartpay' ) ], 400 );
+        }
+
         $mode      = isset( $_POST['mode'] ) ? sanitize_key( wp_unslash( $_POST['mode'] ) ) : '';
-        $test_mode = ( 'sandbox' === $mode ) ? 1 : 0;
+        $test_mode = ( 'sandbox' === $mode || 'test' === $mode ) ? 1 : 0;
 
         global $smartpay_options;
-        $smartpay_options['test_mode'] = $test_mode;
+        $smartpay_options[ smartpay_gateway_test_mode_key( $gateway ) ] = $test_mode;
         smartpay_update_settings( $smartpay_options );
 
+        $gateways = smartpay_payment_gateways();
+        $label    = $gateways[ $gateway ]['admin_label'] ?? $gateway;
+
         wp_send_json_success( [
+            'gateway'   => $gateway,
             'test_mode' => $test_mode,
             'message'   => ( 1 === $test_mode )
-                ? __( 'Sandbox (test) mode enabled.', 'smartpay' )
-                : __( 'Live mode enabled.', 'smartpay' ),
+                /* translators: %s: payment gateway name. */
+                ? sprintf( __( '%s is now in sandbox (test) mode.', 'smartpay' ), $label )
+                /* translators: %s: payment gateway name. */
+                : sprintf( __( '%s is now in live mode.', 'smartpay' ), $label ),
         ] );
     }
 
@@ -254,13 +414,12 @@ class Setting
             'gateways' => apply_filters(
                 'smartpay_settings_gateways',
                 array(
+                    // No site-wide Test Mode switch here on purpose: one shared
+                    // toggle moved every gateway between sandbox and live at
+                    // once. Each gateway carries its own `{slug}_test_mode`
+                    // switch on its own settings screen — see
+                    // smartpay_is_test_mode().
                     'main' => array(
-                        'test_mode' => array(
-                            'id'   => 'test_mode',
-                            'name' => __('Test Mode', 'smartpay'),
-                            'desc' => __('While in test mode no live transactions are processed. To fully use test mode, you must have a sandbox (test) account for the payment gateway you are testing.', 'smartpay'),
-                            'type' => 'switch',
-                        ),
                         'gateways' => array(
                             'id'      => 'gateways',
                             'name'    => __('Payment Gateways', 'smartpay'),
@@ -676,7 +835,7 @@ class Setting
     {
         $smartpay_option = smartpay_get_option($args['id']);
 
-        $class = sanitize_html_class($args['field_class']);
+        $class = $this->settings_sanitize_html_class($args['field_class']);
 
         $html = '';
 
@@ -708,7 +867,7 @@ class Setting
             $name = 'name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"';
         }
 
-        $class = sanitize_html_class($args['field_class']);
+        $class = $this->settings_sanitize_html_class($args['field_class']);
 
         $html     = '<input type="hidden"' . $name . ' value="-1" />';
         if ($args['multiple'] && $args['options']) {
@@ -743,7 +902,7 @@ class Setting
             $name = 'name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']"';
         }
 
-        $class = sanitize_html_class($args['field_class']);
+        $class = $this->settings_sanitize_html_class($args['field_class']);
 
         $checked  = !empty($smartpay_option) ? checked(1, $smartpay_option, false) : '';
         $html          = '<div class="custom-control custom-switch">';
@@ -989,7 +1148,7 @@ class Setting
             $name = 'name="smartpay_settings[' . esc_attr($args['id']) . ']"';
         }
 
-        $class = sanitize_html_class($args['field_class']);
+        $class = $this->settings_sanitize_html_class($args['field_class']);
 
         $disabled = !empty($args['disabled']) ? ' disabled="disabled"' : '';
         $readonly = $args['readonly'] === true ? ' readonly="readonly"' : '';
@@ -1162,7 +1321,7 @@ class Setting
             $message = __('Please enter your valid license key.', 'smartpay');
         }
 
-        $class = ' ' . sanitize_html_class($args['field_class']);
+        $class = ' ' . $this->settings_sanitize_html_class($args['field_class']);
 
         $size = (isset($args['size']) && !is_null($args['size'])) ? $args['size'] : 'regular';
         $html = '<input type="password" class="' . sanitize_html_class($size) . '-text" id="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" name="smartpay_settings[' . smartpay_sanitize_key($args['id']) . ']" value="' . esc_attr($value) . '"/>';
