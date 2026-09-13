@@ -19,6 +19,15 @@ class PaypalStandard extends PaymentGateway
      */
     public function __construct()
     {
+        // Settings register unconditionally, before every early return below.
+        // They used to live in initActions(), which is skipped when the gateway
+        // is switched off or the currency is unsupported — so the settings
+        // section did not exist, the gear on the gateway card was not rendered,
+        // and there was no way in to configure PayPal until you had already
+        // enabled it. That is backwards: you configure a gateway, then turn it
+        // on. Same shape Stripe and M-Pesa already use.
+        $this->initSettings();
+
         if (!smartpay_is_gateway_active('paypal')) {
             return;
         }
@@ -34,19 +43,54 @@ class PaypalStandard extends PaymentGateway
         $this->initActions();
     }
 
+    /**
+     * Register the settings section and fields.
+     *
+     * Separate from initActions() so the settings screen stays reachable
+     * whether or not the gateway is currently active.
+     */
+    private function initSettings()
+    {
+        // Admin + CLI only — never on a public frontend page load. gatewaySettings()
+        // translates its labels, and WordPress 6.7+ warns about a text domain loaded
+        // before init. Matches how the pro gateways register theirs.
+        if (!is_admin() && !(defined('WP_CLI') && WP_CLI)) {
+            return;
+        }
+
+        add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
+
+        add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
+    }
+
     //check api keys set or not
     private function _checkApiKeys()
     {
-        $paypal_email = smartpay_get_option('paypal_email') ?? null;
+        add_filter( 'smartpay_setup_notices', [ $this, 'addSetupNotice' ] );
+    }
 
-        if (empty($paypal_email)) {
-            add_action('admin_notices', function () {
-				echo sprintf('<div class="error"><p><strong>'.
-				     esc_html__('Paypal credentials was not set yet!', 'smartpay').'</strong> '. esc_html__('To get the Paypal service on smartpay, you must add your paypal business email.', 'smartpay'). ' <a href="%s"> '. esc_html__(' Input your paypal credentials', 'smartpay'). '</a></p></div>',
-					esc_url(admin_url('admin.php?page=smartpay-setting&tab=gateways&section=paypal'))
-				);
-            });
+    /**
+     * Add a setup notice when PayPal email is missing.
+     *
+     * @param array $notices Existing notices.
+     * @return array
+     */
+    public function addSetupNotice( array $notices ): array
+    {
+        $paypal_email = smartpay_get_option( 'paypal_email' ) ?? null;
+
+        if ( empty( $paypal_email ) ) {
+            $notices[] = [
+                'id'           => 'paypal_email_missing',
+                'type'         => 'gateway',
+                'level'        => 'error',
+                'message'      => __( 'PayPal gateway is enabled but no email address has been configured.', 'smartpay' ),
+                'action_label' => __( 'Configure PayPal', 'smartpay' ),
+                'action_url'   => admin_url( 'admin.php?page=smartpay-setting&tab=gateways&section=paypal' ),
+            ];
         }
+
+        return $notices;
     }
 
     /**
@@ -64,9 +108,7 @@ class PaypalStandard extends PaymentGateway
 
         add_action('smartpay_paypal_ajax_process_payment', [$this, 'ajaxProcessPayment']);
 
-        add_filter('smartpay_settings_sections_gateways', [$this, 'gatewaySection']);
-
-        add_filter('smartpay_settings_gateways', [$this, 'gatewaySettings']);
+        // Settings filters moved to initSettings(), which runs unconditionally.
 
         add_action('init', [$this, 'processWebhooks']);
 
@@ -324,7 +366,7 @@ class PaypalStandard extends PaymentGateway
                 return; // The prices don't match
             }
 
-            if ('Completed' == $payment_status || smartpay_is_test_mode()) {
+            if ('Completed' == $payment_status || smartpay_is_test_mode('paypal')) {
                 $payment->updateStatus('completed');
                 $payment->setTransactionId($data['txn_id']);
 
@@ -429,6 +471,9 @@ class PaypalStandard extends PaymentGateway
 
     public function unsupported_currency_notice()
     {
+        if ( ! function_exists( 'get_current_screen' ) || false === strpos( get_current_screen()?->id ?? '', 'smartpay' ) ) {
+            return;
+        }
 	    echo sprintf(
 		    '<div class="error"><p>'.
 		    esc_html__('Unsupported currency! Your currency ', 'smartpay') .
@@ -449,8 +494,8 @@ class PaypalStandard extends PaymentGateway
             $protocol = 'https://';
         }
 
-        // Check the current payment mode
-        if (smartpay_is_test_mode()) {
+        // Check this gateway's own payment mode
+        if (smartpay_is_test_mode('paypal')) {
 
             // Test mode
             if ($ipn) {
