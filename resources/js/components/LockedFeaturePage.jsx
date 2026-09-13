@@ -55,7 +55,7 @@ const LockedFeaturePage = ({ title, subtitle, excerpt, previewImage }) => {
     const licenseUrl =
         proData.licenseUrl ||
         (window.smartpay?.adminUrl ?? '') + '?page=smartpay-setting&tab=licenses'
-    const upgradeUrl = 'https://wpsmartpay.com/pricing?utm_source=plugin&utm_medium=locked-page&utm_campaign=upgrade'
+    const upgradeUrl = 'https://wpsmartpay.com/#pricing?utm_source=plugin&utm_medium=locked-page&utm_campaign=upgrade'
 
     const ctaUrl = isInstalled ? licenseUrl : upgradeUrl
     const ctaLabel = isInstalled

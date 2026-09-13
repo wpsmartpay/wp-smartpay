@@ -143,7 +143,8 @@ class Activator {
 		);
 
 		// autoload = false: settings are only fetched on demand, not pre-loaded on every page.
-		update_option( 'smartpay_settings', array_merge( $smartpay_settings, $options ), false );
+		// Use $options as base so existing admin values (e.g. test_mode) are never overwritten by defaults.
+		update_option( 'smartpay_settings', array_merge( $options, $smartpay_settings ), false );
 
 		// set the db version to option table (also non-autoloaded).
 		if ( is_null( get_option( 'smartpay_db_version' ) ) ) {

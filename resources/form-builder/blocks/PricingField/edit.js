@@ -8,9 +8,10 @@ import {
 } from '@wordpress/components'
 import {
     InspectorControls,
-    PanelColorSettings,
     useBlockProps,
     useInnerBlocksProps,
+    __experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+    __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
 import { gridJustifyStyle } from './layout'
@@ -20,7 +21,7 @@ const DEFAULT_OPTION = {
     attributesToCopy: ['billing_type', 'billing_period', 'style', 'className'],
 }
 
-export const edit = ({ attributes, setAttributes }) => {
+export const edit = ({ attributes, setAttributes, clientId }) => {
     const {
         preset,
         labelAlign,
@@ -45,6 +46,44 @@ export const edit = ({ attributes, setAttributes }) => {
     if (tickerColor) wrapperStyle['--sp-ticker'] = tickerColor
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
+
+    // Theme palettes/gradients, so our swatches match the native Color panel.
+    const colorGradientSettings = useMultipleOriginColorsAndGradients()
+
+    // Filled into the `color` group so these sit *inside* the native Color
+    // panel rather than as a second, separate colour panel next to it.
+    const colorSettings = [
+        {
+            label: __('Selected border', 'smartpay'),
+            colorValue: selectedBorderColor,
+            onColorChange: (v) => setAttributes({ selectedBorderColor: v || '' }),
+            resetAllFilter: () => ({ selectedBorderColor: '' }),
+        },
+        {
+            label: __('Ticker', 'smartpay'),
+            colorValue: tickerColor,
+            onColorChange: (v) => setAttributes({ tickerColor: v || '' }),
+            resetAllFilter: () => ({ tickerColor: '' }),
+        },
+        ...(allowCustomAmount
+            ? [
+                  {
+                      label: __('Custom amount background', 'smartpay'),
+                      colorValue: customInputBackground,
+                      onColorChange: (v) =>
+                          setAttributes({ customInputBackground: v || '' }),
+                      resetAllFilter: () => ({ customInputBackground: '' }),
+                  },
+                  {
+                      label: __('Custom amount border', 'smartpay'),
+                      colorValue: customInputBorder,
+                      onColorChange: (v) =>
+                          setAttributes({ customInputBorder: v || '' }),
+                      resetAllFilter: () => ({ customInputBorder: '' }),
+                  },
+              ]
+            : []),
+    ]
 
     const blockProps = useBlockProps({
         className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}${
@@ -101,6 +140,39 @@ export const edit = ({ attributes, setAttributes }) => {
                     )}
                 </div>
             </div>
+
+            {/*
+             * List View tab — sits alongside the repeatable pricing options, so
+             * "add another way to pay" lives next to the options themselves
+             * rather than in a separate Settings panel.
+             */}
+            <InspectorControls group="list">
+                <PanelBody
+                    title={__('Custom Amount', 'smartpay')}
+                    initialOpen={true}
+                >
+                    <ToggleControl
+                        label={__('Allow custom amount', 'smartpay')}
+                        help={__(
+                            'Adds a free-entry amount field below the options.',
+                            'smartpay'
+                        )}
+                        checked={allowCustomAmount}
+                        onChange={(v) => setAttributes({ allowCustomAmount: v })}
+                        __nextHasNoMarginBottom
+                    />
+                    {allowCustomAmount && (
+                        <TextControl
+                            label={__('Custom amount label', 'smartpay')}
+                            value={customAmountLabel}
+                            onChange={(v) =>
+                                setAttributes({ customAmountLabel: v })
+                            }
+                            __nextHasNoMarginBottom
+                        />
+                    )}
+                </PanelBody>
+            </InspectorControls>
 
             <InspectorControls>
                 <PanelBody title={__('Pricing', 'smartpay')} initialOpen={true}>
@@ -198,63 +270,20 @@ export const edit = ({ attributes, setAttributes }) => {
                         __nextHasNoMarginBottom
                     />
                 </PanelBody>
+            </InspectorControls>
 
-                <PanelBody title={__('Custom Amount', 'smartpay')} initialOpen={false}>
-                    <ToggleControl
-                        label={__('Allow custom amount', 'smartpay')}
-                        checked={allowCustomAmount}
-                        onChange={(v) => setAttributes({ allowCustomAmount: v })}
-                        __nextHasNoMarginBottom
-                    />
-                    {allowCustomAmount && (
-                        <TextControl
-                            label={__('Custom amount label', 'smartpay')}
-                            value={customAmountLabel}
-                            onChange={(v) => setAttributes({ customAmountLabel: v })}
-                            __nextHasNoMarginBottom
-                        />
-                    )}
-                </PanelBody>
-
-                <PanelColorSettings
-                    title={__('Colors', 'smartpay')}
-                    initialOpen={false}
-                    colorSettings={[
-                        {
-                            value: selectedBorderColor,
-                            onChange: (v) =>
-                                setAttributes({ selectedBorderColor: v || '' }),
-                            label: __('Selected border', 'smartpay'),
-                        },
-                        {
-                            value: tickerColor,
-                            onChange: (v) =>
-                                setAttributes({ tickerColor: v || '' }),
-                            label: __('Ticker', 'smartpay'),
-                        },
-                    ]}
+            {/*
+             * Styles tab — filling the `color` group merges these swatches into
+             * the block's native Color panel (which already carries Background),
+             * so the Styles tab shows one colour group rather than several.
+             */}
+            <InspectorControls group="color">
+                <ColorGradientSettingsDropdown
+                    __experimentalIsRenderedInSidebar
+                    settings={colorSettings}
+                    panelId={clientId}
+                    {...colorGradientSettings}
                 />
-
-                {allowCustomAmount && (
-                    <PanelColorSettings
-                        title={__('Custom Amount Input', 'smartpay')}
-                        initialOpen={false}
-                        colorSettings={[
-                            {
-                                value: customInputBackground,
-                                onChange: (v) =>
-                                    setAttributes({ customInputBackground: v || '' }),
-                                label: __('Background', 'smartpay'),
-                            },
-                            {
-                                value: customInputBorder,
-                                onChange: (v) =>
-                                    setAttributes({ customInputBorder: v || '' }),
-                                label: __('Border', 'smartpay'),
-                            },
-                        ]}
-                    />
-                )}
             </InspectorControls>
         </>
     )

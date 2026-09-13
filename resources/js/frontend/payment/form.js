@@ -206,15 +206,32 @@ jQuery(($) => {
             let validation = checkPaymentFormValidation(formData)
 
             // Hide all errors
-            $parentWrapper.find('input').removeClass('is-invalid')
+            $parentWrapper.find('input, textarea').removeClass('is-invalid')
             $parentWrapper.find('#form-response').hide()
+            $parentWrapper.find('.smartpay-field-error').remove()
 
-            if (!validation.valid) {
-                showErrors(
-                    $parentWrapper.find('.smartpay-message-info'),
-                    validation
-                )
-                $parentWrapper.find('#first_name').focus();
+            // Validate required textareas inline (not covered by main validation).
+            let hasRequiredFieldErrors = false
+            $parentWrapper.find('form textarea[required]').each(function () {
+                if (!($(this).val() || '').trim()) {
+                    hasRequiredFieldErrors = true
+                    $(this).addClass('is-invalid')
+                    $('<div>', {
+                        class: 'smartpay-field-error',
+                        style: 'color:#dc3545;font-size:0.875em;margin-top:0.25rem;',
+                        text: 'This field is required.',
+                    }).insertAfter(this)
+                }
+            })
+
+            if (!validation.valid || hasRequiredFieldErrors) {
+                if (!validation.valid) {
+                    showErrors(
+                        $parentWrapper.find('.smartpay-message-info'),
+                        validation
+                    )
+                    $parentWrapper.find('#first_name').focus()
+                }
             } else {
                 $(e.currentTarget).text('Processing...').attr('disabled', true)
                 jQuery.post(
