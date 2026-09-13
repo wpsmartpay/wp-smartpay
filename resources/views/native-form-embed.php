@@ -93,7 +93,7 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 		<div class="card form bg-transparent border-0">
 			<div class="card-body smartpay_form_builder_wrapper">
 				<?php do_action( 'before_smartpay_payment_form', (object) array( 'id' => $post_id ) ); ?>
-				<form id="smartpay-payment-form"
+				<form class="smartpay-payment-form"
 					action="<?php echo esc_url( smartpay_get_payment_page_uri() ); ?>"
 					method="POST"
 					enctype="multipart/form-data">
@@ -117,11 +117,13 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 
 					<div id="mobile-field"></div>
 
-					<?php if ( ! empty( $amounts ) && ! $has_pricing_block ) : ?>
+					<?php if ( ! $has_pricing_block && ( ! empty( $amounts ) || $allow_custom_amount ) ) : ?>
 					<div class="form--amount-section mb-3">
+						<?php if ( ! empty( $amounts ) ) : ?>
 						<label class="form-amounts--label d-block m-0 mb-2">
 							<?php esc_html_e( 'Select an amount', 'smartpay' ); ?>
 						</label>
+						<?php endif; ?>
 						<div class="form-amounts">
 							<div class="form-plan-grid">
 								<?php foreach ( $amounts as $index => $amount ) : ?>
@@ -215,15 +217,19 @@ $GLOBALS['smartpay_payment_response_rendered'] = false;
 						<input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway"
 							value="<?php echo esc_attr( $only_gw_id ); ?>" checked />
 						<?php
-						// A lone gateway skips the picker UI entirely, but it can still inject
-						// its own inline checkout fields (e.g. Authorize.Net's embedded card
-						// form) — those must render regardless of how many gateways exist.
+						// Single gateway: skip the accordion card UI — output inline fields directly.
 						ob_start();
 						do_action( 'smartpay_native_gateway_checkout_fields', $only_gw_id, $only_gateway, $post_id );
 						$smartpay_only_gateway_inline_content = ob_get_clean();
-						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
-						echo $smartpay_only_gateway_inline_content;
+						if ( '' !== trim( $smartpay_only_gateway_inline_content ) ) :
 						?>
+						<div class="smartpay-single-gateway-fields">
+							<?php
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- gateway-rendered content is expected to already escape its own output.
+							echo $smartpay_only_gateway_inline_content;
+							?>
+						</div>
+						<?php endif; ?>
 					<?php elseif ( count( $gateways ) > 1 ) : ?>
 						<?php ob_start(); ?>
 						<label class="payment-gateway--label mt-3">

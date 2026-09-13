@@ -30,8 +30,8 @@ class SanitizerService {
 			$this->sanitize_personal_info( $data ),
 			$this->sanitize_address( $data ),
 			array(
-				'password'             => $data['password'] ?? '',
-				'confirm_password'     => $data['confirm_password'] ?? '',
+				'password'             => wp_unslash( $data['password'] ?? '' ),
+				'confirm_password'     => wp_unslash( $data['confirm_password'] ?? '' ),
 				'subscribe_newsletter' => ! empty( $data['subscribe_newsletter'] ),
 				'agree_terms'          => ! empty( $data['agree_terms'] ),
 			)

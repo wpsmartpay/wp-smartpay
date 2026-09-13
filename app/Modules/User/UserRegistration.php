@@ -25,7 +25,10 @@ class UserRegistration {
 		$this->customerService = new CustomerService();
 
 		add_action( 'wp_ajax_nopriv_smartpay_user_registration', array( $this, 'handle_user_registration' ) );
-		add_filter( 'template_include', array( $this, 'render_layout' ) );
+		add_action( 'template_redirect', array( $this, 'maybe_redirect' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_filter( 'the_content', array( $this, 'inject_shortcode' ) );
+		add_action( 'wp_head', array( $this, 'hide_page_title' ) );
 	}
 
 	public function handle_user_registration() {
@@ -61,7 +64,16 @@ class UserRegistration {
 
 			$this->userService->authenticate_user( $user_id );
 
-			wp_send_json_success( array( 'message' => __( 'Registration successful!', 'smartpay' ) ) );
+			$settings    = get_option( 'smartpay_settings', array() );
+			$dashboard   = (int) ( $settings['customer_dashboard_page'] ?? 0 );
+			$redirect    = $dashboard ? get_permalink( $dashboard ) : home_url();
+
+			wp_send_json_success(
+				array(
+					'message'  => __( 'Registration successful!', 'smartpay' ),
+					'redirect' => esc_url( $redirect ),
+				)
+			);
 
 		} catch ( Exception $e ) {
 			if ( isset( $user_id ) && ! is_wp_error( $user_id ) ) {
@@ -112,23 +124,60 @@ class UserRegistration {
 		return $errors;
 	}
 
-	public function render_layout( $template ) {
-		if ( $this->is_smartpay_registration_page() ) {
-			if ( is_user_logged_in() ) {
-				$settings = get_option( 'smartpay_settings', array() );
-				$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
-				if ( $page_id ) {
-					wp_safe_redirect( get_permalink( $page_id ) );
-				} else {
-					wp_safe_redirect( home_url() );
-				}
-			}
-			$shortcode = 'smartpay_user_registration';
-			include SMARTPAY_DIR . 'resources/views/templates/layout.php';
+	public function enqueue_assets() {
+		if ( ! $this->is_smartpay_registration_page() ) {
 			return;
 		}
+		wp_enqueue_style(
+			'smartpay-registration-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/css/frontend/registration.css',
+			array(),
+			SMARTPAY_VERSION
+		);
+		wp_enqueue_script(
+			'smartpay-registration-frontend',
+			SMARTPAY_PLUGIN_ASSETS . '/js/frontend/registration.js',
+			array(),
+			SMARTPAY_VERSION,
+			true
+		);
+		wp_localize_script(
+			'smartpay-registration-frontend',
+			'smartpayData',
+			array(
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonce'   => wp_create_nonce( 'smartpay_frontend_nonce' ),
+				'strings' => array(
+					'processing' => __( 'Processing...', 'smartpay' ),
+					'error'      => __( 'An error occurred. Please try again.', 'smartpay' ),
+				),
+			)
+		);
+	}
 
-		return $template;
+	public function hide_page_title() {
+		if ( $this->is_smartpay_registration_page() ) {
+			echo '<style>.wp-block-post-title,.entry-title,.page-title{display:none!important}</style>';
+		}
+	}
+
+	public function inject_shortcode( $content ) {
+		if ( $this->is_smartpay_registration_page() && in_the_loop() && is_main_query() ) {
+			return do_shortcode( '[smartpay_user_registration]' );
+		}
+		return $content;
+	}
+
+	public function maybe_redirect() {
+		if ( ! $this->is_smartpay_registration_page() ) {
+			return;
+		}
+		if ( is_user_logged_in() ) {
+			$settings = get_option( 'smartpay_settings', array() );
+			$page_id  = (int) ( $settings['customer_dashboard_page'] ?? 0 );
+			wp_safe_redirect( $page_id ? get_permalink( $page_id ) : home_url() );
+			exit;
+		}
 	}
 
 	protected function is_smartpay_registration_page() {

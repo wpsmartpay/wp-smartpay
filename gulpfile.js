@@ -49,6 +49,53 @@ const copy = () => {
     ]).pipe(dest('releases/smartpay'))
 }
 
+// Composer dev requirements — must never reach the shipped package.
+const DEV_VENDORS = [
+    'squizlabs',
+    'wp-coding-standards',
+    'phpcompatibility',
+    'phpcsstandards',
+    'dealerdirect',
+]
+
+/**
+ * Verify the built package carries no composer dev dependencies.
+ *
+ * `composerProd` should guarantee this, but vendor/ is copied verbatim — a
+ * stale tree from an earlier `composer install` would ship silently. Fail the
+ * build instead of trusting the previous step.
+ */
+const verify = (cb) => {
+    const pkg = 'releases/smartpay'
+    const problems = []
+
+    DEV_VENDORS.forEach((name) => {
+        if (fs.existsSync(`${pkg}/vendor/${name}`)) {
+            problems.push(`dev dependency shipped: vendor/${name}`)
+        }
+    })
+
+    if (fs.existsSync(`${pkg}/vendor/bin`)) {
+        problems.push('dev dependency shipped: vendor/bin (phpcs/phpcbf shims)')
+    }
+
+    const installed = `${pkg}/vendor/composer/installed.json`
+    if (fs.existsSync(installed)) {
+        const meta = JSON.parse(fs.readFileSync(installed, 'utf-8'))
+        if (meta.dev !== false) {
+            problems.push('vendor/composer/installed.json reports dev packages installed')
+        }
+    }
+
+    if (problems.length) {
+        cb(new Error(`Package verification failed:\n  - ${problems.join('\n  - ')}`))
+        return
+    }
+
+    console.log('[+] Package verified: no composer dev dependencies')
+    cb()
+}
+
 const getPluginVersion = () => {
     let text = fs.readFileSync('smartpay.php', 'utf-8')
 
@@ -76,5 +123,7 @@ const bundle = () => {
         .pipe(dest('./releases'))
 }
 
-exports.release = series(removeTemp, composerProd, copy, bundle)
+exports.release = series(removeTemp, composerProd, copy, verify, bundle)
+// Exposed so the built package can be re-checked without a full rebuild.
+exports.verify = verify
 // exports.default = build

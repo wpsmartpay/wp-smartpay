@@ -892,10 +892,64 @@ function smartpay_insert_payment($paymentData)
     return smartpay()->get(Payment::class)->insertPayment($paymentData);
 }
 
-function smartpay_is_test_mode()
+/**
+ * Is the given gateway running against its sandbox credentials?
+ *
+ * Test mode used to be a single site-wide `test_mode` option with one toggle at
+ * the top of Settings › Gateways. Flipping it moved every gateway at once, so a
+ * merchant could not put a newly-added gateway in sandbox while the rest kept
+ * taking live payments. Each gateway now owns a `{slug}_test_mode` setting,
+ * switched from that gateway's own settings screen.
+ *
+ * Resolution order for a named gateway:
+ *   1. `{slug}_test_mode` — the gateway's own switch, once it has been saved;
+ *   2. the legacy site-wide `test_mode` — so an existing site keeps the mode it
+ *      was already running in until someone touches the new switch;
+ *   3. live.
+ *
+ * Called with no gateway it answers for the legacy site-wide value alone. That
+ * is right for site-level reporting ("is this site in test mode") and wrong for
+ * a gateway API call — always pass the slug there.
+ *
+ * @param string|null $gateway Gateway slug, e.g. 'stripe'. Null for the site-wide value.
+ * @return bool
+ */
+function smartpay_is_test_mode($gateway = null)
 {
-    $is_test_mode = smartpay_get_option('test_mode', false);
-    return (bool) $is_test_mode;
+    $legacy = (bool) smartpay_get_option('test_mode', false);
+
+    if (empty($gateway)) {
+        return $legacy;
+    }
+
+    $settings = smartpay_get_settings();
+    $key      = smartpay_gateway_test_mode_key($gateway);
+
+    // array_key_exists, not smartpay_get_option(): that helper resolves through
+    // !empty(), so a gateway deliberately switched to Live (0) would read as
+    // "never set" and fall back to the legacy site-wide value.
+    $is_test_mode = array_key_exists($key, $settings)
+        ? (bool) $settings[$key]
+        : $legacy;
+
+    /**
+     * Filter the resolved test mode for a single gateway.
+     *
+     * @param bool   $is_test_mode Whether this gateway runs in sandbox.
+     * @param string $gateway      Gateway slug.
+     */
+    return (bool) apply_filters('smartpay_gateway_is_test_mode', $is_test_mode, $gateway);
+}
+
+/**
+ * Settings field id holding a gateway's own test-mode switch.
+ *
+ * @param string $gateway Gateway slug.
+ * @return string
+ */
+function smartpay_gateway_test_mode_key($gateway)
+{
+    return sanitize_key($gateway) . '_test_mode';
 }
 
 function smartpay_get_payment_success_page_uri($query_string = null)

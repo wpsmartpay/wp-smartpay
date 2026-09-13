@@ -5,7 +5,7 @@ $current_user = wp_get_current_user();
 $customer = smartpay_get_customer_by_user_id($current_user->ID);
 ?>
 
-<div class="smartpay-profile-edit">
+<div class="smartpay-profile-edit alignfull">
 	<div class="profile-container">
 		<div class="dashboard-layout">
 			<!-- Sidebar Navigation -->
