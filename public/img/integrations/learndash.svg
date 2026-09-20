@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="16" fill="#E89C34" opacity="0.12"/>
+  <!-- Lightning bolt — LearnDash brand symbol -->
+  <polygon points="46,12 28,44 40,44 34,68 54,36 42,36" fill="#E89C34"/>
+  <!-- Inner highlight -->
+  <polygon points="44,18 32,42 42,42 37,60 50,38 40,38" fill="#F5B942" opacity="0.6"/>
+</svg>

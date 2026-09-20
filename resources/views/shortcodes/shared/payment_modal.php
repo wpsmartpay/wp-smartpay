@@ -17,6 +17,18 @@ $smartpay_has_payment_error = false;
 
 $smartpay_product = $smartpay_view_data['product'] ?? null;
 $smartpay_form = $smartpay_view_data['form'] ?? null;
+
+// Effective price: when parent sale_price is 0 but paid variations exist,
+// use the first paid variation's price so gateways render instead of hiding.
+$smartpay_effective_price = (float) ($smartpay_product->sale_price ?? 0);
+if ($smartpay_effective_price <= 0 && $smartpay_product && count($smartpay_product->variations ?? [])) {
+    foreach ($smartpay_product->variations as $_var) {
+        if ((float) $_var->sale_price > 0) {
+            $smartpay_effective_price = (float) $_var->sale_price;
+            break;
+        }
+    }
+}
 ?>
 
 <div class="modal fade payment-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
@@ -53,39 +65,47 @@ $smartpay_form = $smartpay_view_data['form'] ?? null;
                     <form action="<?php echo esc_url(smartpay_get_payment_page_uri()); ?>" method="POST">
                         <?php wp_nonce_field('smartpay_process_payment', 'smartpay_process_payment'); ?>
                         <div class="payment-modal--gateway">
-                            <!-- // If Product has Zero sale amount -->
-                            <?php
-                                //FIXME: gateways are not visible if the main product is free or sale amount is zero
-                            ?>
-                            <?php if ($smartpay_product->sale_price <= 0) : ?>
+                            <?php if ($smartpay_effective_price <= 0) : ?>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="free" checked>
 
-                                <!-- // If only one gateway activated -->
-                            <?php elseif (count($smartpay_gateways) == 1) : ?>
+                            <?php elseif (count($smartpay_gateways) === 0) : ?>
+                                <?php $smartpay_has_payment_error = true; ?>
+                                <div class="alert alert-danger"><?php echo esc_html__('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
+
+                            <?php elseif (count($smartpay_gateways) === 1) : ?>
                                 <?php $smartpay_gateways_index = array_keys($smartpay_gateways); ?>
                                 <p class="payment-gateway--label text-muted single-gateway">
-                                    <?php echo wp_kses_post(sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($smartpay_gateways)['checkout_label'])));
-                                    ?>
+                                    <?php echo wp_kses_post(sprintf(__('Payment method - ', 'smartpay') . ' <strong>%s</strong>', esc_html(reset($smartpay_gateways)['checkout_label']))); ?>
                                 </p>
                                 <input class="d-none" type="radio" name="smartpay_gateway" id="smartpay_gateway" value="<?php echo esc_attr(reset($smartpay_gateways_index)); ?>" checked>
 
-                                <!-- // If it has multiple payment gateway -->
-                            <?php elseif (count($smartpay_gateways) > 1) : ?>
+                            <?php else : ?>
+                                <?php
+                                // Build the default gateway UI — a plain icon-only grid.
+                                // Pro plugin can replace this via the filter with accordion/tab layout.
+                                ob_start();
+                                ?>
                                 <div class="gateways m-0 justify-content-center d-flex">
                                     <?php foreach ($smartpay_gateways as $smartpay_gateway_id => $smartpay_gateway) : ?>
                                         <div class="gateway">
-                                            <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($smartpay_gateway_id); ?>" value="<?php echo esc_attr($smartpay_gateway_id) ?>" <?php echo checked($smartpay_gateway_id, $smartpay_chosen_gateway, false); ?>>
+                                            <input type="radio" class="d-none" name="smartpay_gateway" id="<?php echo 'smartpay_gateway_' . esc_attr($smartpay_gateway_id); ?>" value="<?php echo esc_attr($smartpay_gateway_id); ?>" <?php checked($smartpay_gateway_id, $smartpay_chosen_gateway); ?>>
                                             <label for="<?php echo 'smartpay_gateway_' . esc_attr($smartpay_gateway_id); ?>" class="gateway--label">
-                                                <!-- dynamically load the gateway image -->
                                                 <img src="<?php echo esc_url($smartpay_gateway['gateway_icon']); ?>" alt="<?php echo esc_attr($smartpay_gateway['checkout_label']); ?>">
-                                                <!-- <?php echo esc_html($smartpay_gateway['checkout_label']); ?> -->
                                             </label>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
-                            <?php else : ?>
-                                <?php $smartpay_has_payment_error = true; ?>
-                                <div class="alert alert-danger"><?php echo esc_html__('You must enable a payment gateway to proceed a payment.', 'smartpay'); ?></div>
+                                <?php
+                                $smartpay_modal_gateway_html = ob_get_clean();
+                                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- already escaped inside
+                                echo apply_filters(
+                                    'smartpay_product_modal_gateway_html',
+                                    $smartpay_modal_gateway_html,
+                                    $smartpay_gateways,
+                                    $smartpay_chosen_gateway,
+                                    $smartpay_product
+                                );
+                                ?>
                             <?php endif; ?>
                         </div>
 

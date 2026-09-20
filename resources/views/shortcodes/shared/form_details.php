@@ -43,7 +43,7 @@
 					<?php endif; ?>
 				<?php endif; ?>
 
-                <form id="smartpay-payment-form" action="<?php echo esc_url(smartpay_get_payment_page_uri()); ?>" method="POST"
+                <form class="smartpay-payment-form" action="<?php echo esc_url(smartpay_get_payment_page_uri()); ?>" method="POST"
                       enctype="multipart/form-data">
                     <div id="form-response" class="mb-3"></div>
 					<?php wp_nonce_field( 'smartpay_process_payment', 'smartpay_process_payment' ); ?>

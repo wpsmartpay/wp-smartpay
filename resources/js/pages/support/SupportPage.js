@@ -4,6 +4,7 @@ import { Header } from '../../components/header'
 import { GettingStartedBanner } from '../../components/GettingStartedBanner'
 import { SystemInfo } from './SystemInfo'
 import { DebugLog } from './DebugLog'
+import { Shortcodes } from './Shortcodes'
 
 // ── Icons ─────────────────────────────────────────────────────
 
@@ -52,9 +53,10 @@ const ExternalIcon = () => (
 // ── Data ──────────────────────────────────────────────────────
 
 const TABS = [
-    { key: 'support',  label: __('Support & Docs', 'smartpay') },
-    { key: 'sysinfo',  label: __('System Info', 'smartpay') },
-    { key: 'debuglog', label: __('Debug Log', 'smartpay') },
+    { key: 'support',   label: __('Support & Docs', 'smartpay') },
+    { key: 'sysinfo',   label: __('System Info', 'smartpay') },
+    { key: 'debuglog',  label: __('Debug Log', 'smartpay') },
+    { key: 'shortcodes', label: __('Shortcodes', 'smartpay') },
 ]
 
 const DOC_LINKS = [
@@ -65,16 +67,10 @@ const DOC_LINKS = [
         url:   'https://docs.wpsmartpay.com/',
     },
     {
-        icon: <VideoIcon />,
-        title: __('Video Tutorials', 'smartpay'),
-        desc:  __('Watch step-by-step overviews for common workflows.', 'smartpay'),
-        url:   'https://www.youtube.com/watch?v=PdqA7XNH60Q',
-    },
-    {
         icon: <ChatIcon />,
         title: __('Contact Support', 'smartpay'),
         desc:  __('Open a ticket and get help from the WPSmartPay team.', 'smartpay'),
-        url:   'https://wpsmartpay.com/support/',
+        url:   'https://wpsmartpay.com/contact/',
     },
     {
         icon: <ChangelogIcon />,
@@ -86,20 +82,20 @@ const DOC_LINKS = [
         icon: <CodeIcon />,
         title: __('Developer Docs', 'smartpay'),
         desc:  __('Hooks, REST API, and integration patterns for developers.', 'smartpay'),
-        url:   'https://docs.wpsmartpay.com/en/category/developer',
+        url:   'https://docs.wpsmartpay.com/en/category/developer-docs',
     },
     {
         icon: <StarIcon />,
         title: __('Leave a Review', 'smartpay'),
         desc:  __('Enjoying WPSmartPay? Share your experience on WordPress.org.', 'smartpay'),
-        url:   'https://wordpress.org/support/plugin/wp-smartpay/reviews/',
+        url:   'https://wordpress.org/support/plugin/smartpay/reviews/',
     },
 ]
 
 const QUICK_LINKS = [
-    { href: 'https://wpsmartpay.com/support/',                               icon: <ChatIcon />,     label: __('Open a Support Ticket', 'smartpay') },
+    { href: 'https://wpsmartpay.com/contact/',                               icon: <ChatIcon />,     label: __('Open a Support Ticket', 'smartpay') },
     { href: 'https://docs.wpsmartpay.com/',                                   icon: <BookIcon />,     label: __('Search Documentation', 'smartpay') },
-    { href: 'https://wordpress.org/support/plugin/wp-smartpay/reviews/',      icon: <StarIcon />,     label: __('Leave a Review', 'smartpay') },
+    { href: 'https://wordpress.org/support/plugin/smartpay/reviews/',      icon: <StarIcon />,     label: __('Leave a Review', 'smartpay') },
 ]
 
 // ── Components ────────────────────────────────────────────────
@@ -213,9 +209,10 @@ export function SupportPage() {
                     ))}
                 </div>
 
-                {tab === 'support'  && <SupportTab />}
-                {tab === 'sysinfo'  && <SystemInfo />}
-                {tab === 'debuglog' && <DebugLog />}
+                {tab === 'support'   && <SupportTab />}
+                {tab === 'sysinfo'   && <SystemInfo />}
+                {tab === 'debuglog'  && <DebugLog />}
+                {tab === 'shortcodes' && <Shortcodes />}
             </div>
         </>
     )
