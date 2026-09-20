@@ -52,7 +52,7 @@ export const edit = ({ attributes, setAttributes }) => {
         return (
             <div {...blockProps}>
                 <Notice status="info" isDismissible={false}>
-                    {__('Coupon is off. Turn it on in Form Settings → Enable Coupon.', 'smartpay')}
+                    {__('Coupon is off. Turn it on in Form Settings → Coupon tab.', 'smartpay')}
                 </Notice>
             </div>
         )
@@ -95,7 +95,7 @@ export const edit = ({ attributes, setAttributes }) => {
             <InspectorControls>
                 <PanelBody title={__('Coupon', 'smartpay')} initialOpen={true}>
                     <p className="components-base-control__help" style={{ marginTop: 0 }}>
-                        {__('Turn the coupon on/off in Form Settings → Enable Coupon. This block controls its wording + style.', 'smartpay')}
+                        {__('Turn the coupon on/off in Form Settings → Coupon tab. This block controls its wording + style.', 'smartpay')}
                     </p>
                     <TextControl
                         __nextHasNoMarginBottom

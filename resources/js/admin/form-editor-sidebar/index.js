@@ -150,6 +150,17 @@ const FormGuide = () => {
 	const [ settingsOpen, setSettingsOpen ]       = useState( false );
 	const [ settingsTab, setSettingsTab ]          = useState( 'settings' );
 
+	// Expose modal opener for blocks so they can open a specific tab directly.
+	useEffect( () => {
+		window.smartpayFormEditor = {
+			...( window.smartpayFormEditor || {} ),
+			openSettings: ( tab ) => {
+				setSettingsOpen( true );
+				if ( tab ) setSettingsTab( tab );
+			},
+		};
+	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps
+
 	// ── Guide modal (field list) ───────────────────────────────────────────
 	const [ guideOpen, setGuideOpen ]             = useState( false );
 
