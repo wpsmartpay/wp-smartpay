@@ -1,16 +1,14 @@
 <?php
 defined('ABSPATH') || exit;
 
-use SmartPay\Models\Form;
-
 $smartpay_payment = $smartpay_view_data['payment'] ?? null;
 
 if ($smartpay_payment && !property_exists($smartpay_payment, 'customer')) {
     $smartpay_payment->load('customer');
 }
 
-$smartpay_form_id  = absint($smartpay_payment->data['form_id'] ?? 0);
-$smartpay_form    = Form::find($smartpay_form_id);
+// Resolves native (smartpay_form post) and legacy forms alike.
+$smartpay_form_name = $smartpay_payment ? smartpay_get_payment_product_or_form_name($smartpay_payment->id)['name'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -168,7 +166,7 @@ $smartpay_form    = Form::find($smartpay_form_id);
                                                         <div style="line-height: 24px">&zwnj;</div>
                                                         <table style="color: #4f5a68; width: 100%" cellpadding="0" cellspacing="0" role="presentation">
                                                             <tr>
-                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($smartpay_form->title); ?></td>
+                                                                <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($smartpay_form_name); ?></td>
                                                                 <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($smartpay_payment->data['total_amount'])); ?></td>
                                                             </tr>
                                                             <tr>
