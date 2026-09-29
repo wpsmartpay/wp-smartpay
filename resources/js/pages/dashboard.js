@@ -552,6 +552,73 @@ const ProUpgradeNote = () => {
     )
 }
 
+// ─── Alerts Card ──────────────────────────────────────────────────────────────
+// Urgent problems (e.g. Stripe rejecting checkout payments) sent by add-ons via
+// the `smartpay_dashboard_alerts` filter. Renders nothing when there are none.
+const AlertsCard = () => {
+    const [ alerts, setAlerts ] = useState( window.smartpay?.alerts || [] )
+
+    const dismiss = ( alert ) => {
+        const body = new URLSearchParams( { action: alert.dismiss.action, nonce: alert.dismiss.nonce } )
+        fetch( window.smartpay.ajax_url, { method: 'POST', credentials: 'same-origin', body } )
+        setAlerts( ( list ) => list.filter( ( a ) => a.id !== alert.id ) )
+    }
+
+    return alerts.map( ( alert ) => (
+        <div key={ alert.id } className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#dc2626' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fef2f2' }}>
+                <XCircle style={{ width: 13, height: 13, color: '#dc2626', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#991b1b', marginLeft: 6 }}>
+                    { alert.title }
+                </span>
+                { alert.count > 0 && (
+                    <span style={{
+                        marginLeft: 'auto',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        background: '#fee2e2',
+                        color: '#991b1b',
+                        border: '1px solid #fca5a5',
+                        padding: '1px 7px',
+                        borderRadius: 99,
+                    }}>
+                        { alert.count }
+                    </span>
+                ) }
+            </div>
+            <div className="sp-detail-card__body" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 16px' }}>
+                <div style={{ fontSize: 12.5, color: 'var(--sp-text)', lineHeight: 1.45 }}>{ alert.message }</div>
+                { alert.detail && (
+                    <div style={{ fontSize: 11.5, color: '#8a2424', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, padding: '6px 8px', lineHeight: 1.45, wordBreak: 'break-word' }}>
+                        { alert.detail }
+                    </div>
+                ) }
+                { ( alert.actions || [] ).map( ( action, i ) => (
+                    <a
+                        key={ action.url }
+                        href={ action.url }
+                        target={ action.external ? '_blank' : undefined }
+                        rel={ action.external ? 'noopener noreferrer' : undefined }
+                        className={ i === 0 ? 'sp-btn sp-btn--primary' : 'sp-btn sp-btn--outline' }
+                        style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
+                    >
+                        { action.label }
+                    </a>
+                ) ) }
+                { alert.dismiss && (
+                    <button
+                        type="button"
+                        onClick={ () => dismiss( alert ) }
+                        style={{ background: 'none', border: 0, padding: 0, fontSize: 11.5, color: 'var(--sp-text-muted)', textDecoration: 'underline', cursor: 'pointer', alignSelf: 'center' }}
+                    >
+                        { __( 'Dismiss', 'smartpay' ) }
+                    </button>
+                ) }
+            </div>
+        </div>
+    ) )
+}
+
 // ─── Setup Notices Card ───────────────────────────────────────────────────────
 const SetupNoticesCard = () => {
     const notices = window.smartpay?.setupNotices || []
@@ -577,24 +644,20 @@ const SetupNoticesCard = () => {
         )
     }
 
-    // Errors (e.g. Stripe rejecting payments) turn the whole card red and go first.
-    const hasError = notices.some( ( n ) => n.level === 'error' )
-    const sorted   = [ ...notices ].sort( ( a, b ) => ( b.level === 'error' ) - ( a.level === 'error' ) )
-
     return (
-        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: hasError ? '#dc2626' : '#f59e0b' }}>
-            <div className="sp-detail-card__header" style={{ background: hasError ? '#fef2f2' : '#fffbeb' }}>
-                <AlertTriangle style={{ width: 13, height: 13, color: hasError ? '#dc2626' : '#d97706', flexShrink: 0 }} />
-                <span className="sp-detail-card__title" style={{ color: hasError ? '#991b1b' : '#92400e', marginLeft: 6 }}>
-                    { hasError ? __( 'ACTION NEEDED', 'smartpay' ) : __( 'SETUP NEEDED', 'smartpay' ) }
+        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#f59e0b' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fffbeb' }}>
+                <AlertTriangle style={{ width: 13, height: 13, color: '#d97706', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#92400e', marginLeft: 6 }}>
+                    {__( 'SETUP NEEDED', 'smartpay' )}
                 </span>
                 <span style={{
                     marginLeft: 'auto',
                     fontSize: 11,
                     fontWeight: 700,
-                    background: hasError ? '#fee2e2' : '#fef3c7',
-                    color: hasError ? '#991b1b' : '#92400e',
-                    border: hasError ? '1px solid #fca5a5' : '1px solid #fcd34d',
+                    background: '#fef3c7',
+                    color: '#92400e',
+                    border: '1px solid #fcd34d',
                     padding: '1px 7px',
                     borderRadius: 99,
                 }}>
@@ -602,25 +665,22 @@ const SetupNoticesCard = () => {
                 </span>
             </div>
             <div className="sp-detail-card__body" style={{ padding: 0 }}>
-                { sorted.map( ( notice, i ) => {
-                    const color = notice.level === 'error' ? '#dc2626' : '#d97706'
-                    return (
+                { notices.map( ( notice, i ) => (
                     <div key={ notice.id || i } style={{
                         display:    'flex',
                         alignItems: 'flex-start',
                         gap:        10,
                         padding:    '9px 16px',
                         borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
-                        background: notice.level === 'error' ? '#fef2f2' : undefined,
                     }}>
-                        <AlertTriangle style={{ width: 12, height: 12, color, flexShrink: 0, marginTop: 2 }} />
+                        <AlertTriangle style={{ width: 12, height: 12, color: '#d97706', flexShrink: 0, marginTop: 2 }} />
                         <span style={{ fontSize: 12, color: 'var(--sp-text)', flex: 1, minWidth: 0, lineHeight: 1.45 }}>
                             { notice.message }
                         </span>
                         { notice.action_url && (
                             <a
                                 href={ notice.action_url }
-                                style={{ fontSize: 11.5, fontWeight: 600, color, whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
+                                style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
                                 onMouseOver={ ( e ) => e.currentTarget.style.textDecoration = 'underline' }
                                 onMouseOut={ ( e ) => e.currentTarget.style.textDecoration = 'none' }
                             >
@@ -628,8 +688,7 @@ const SetupNoticesCard = () => {
                             </a>
                         ) }
                     </div>
-                    )
-                } ) }
+                ) ) }
             </div>
         </div>
     )
@@ -846,7 +905,8 @@ export const Dashboard = () => {
                     {/* ── RIGHT: Setup status + CTAs + Onboarding Checklist card ─ */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                        {/* Setup notices — always first */}
+                        {/* Urgent alerts (only when present), then setup notices */}
+                        <AlertsCard />
                         <SetupNoticesCard />
 
                         {/* Quick actions card */}
