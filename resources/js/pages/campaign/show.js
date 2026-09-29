@@ -89,7 +89,9 @@ export const ShowCampaign = () => {
         )
     }
 
-    if (!campaign) {
+    // The SPA mounts with legacy render(), so these two state updates are not
+    // batched: guard on both or the Settings tab renders with a null draft.
+    if (!campaign || !draft) {
         return <div className="sp-layout"><div className="sp-state-loading">{__('Loading…', 'smartpay')}</div></div>
     }
 

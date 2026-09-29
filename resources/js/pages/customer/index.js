@@ -188,6 +188,9 @@ export const CustomerList = () => {
 
 					<div className="sp-toolbar__spacer" />
 
+					{/* Add-ons (Pro) add toolbar actions, e.g. Export CSV. */}
+					{window.wp?.hooks?.applyFilters?.('smartpay_customer_list_actions', [], { search: debouncedSearch }) || null}
+
 					<div className="sp-action-dropdown" onClick={(e) => e.stopPropagation()}>
 						<button className="sp-btn sp-btn--outline"
 							disabled={!hasSelection}

@@ -225,6 +225,7 @@ function smartpay_hydrate_donor_rows( array $rows, array $scope ): array {
 			$comment_id = 0;
 			$anonymous  = 0;
 			$hidden     = false;
+			$pending    = false;
 			$campaigns  = array();
 
 			foreach ( $by_customer[ (int) $row['id'] ] ?? array() as $gift ) {
@@ -237,6 +238,7 @@ function smartpay_hydrate_donor_rows( array $rows, array $scope ): array {
 					$comment    = $donation['comment'];
 					$comment_id = (int) $gift['id'];
 					$hidden     = ! empty( $donation['hidden'] );
+					$pending    = ! $donation['approved'];
 				}
 
 				$data    = json_decode( (string) $gift['data'], true );
@@ -262,25 +264,26 @@ function smartpay_hydrate_donor_rows( array $rows, array $scope ): array {
 			$extra = json_decode( (string) $row['extra'], true );
 
 			return array(
-				'id'             => (int) $row['id'],
-				'first_name'     => (string) $row['first_name'],
-				'last_name'      => (string) $row['last_name'],
-				'name'           => trim( $row['first_name'] . ' ' . $row['last_name'] ),
-				'email'          => (string) $row['email'],
-				'type'           => (string) $row['donor_type'],
-				'monthly_amount' => null !== $row['monthly_amount'] ? (float) $row['monthly_amount'] : null,
-				'gifts'          => (int) $row['gifts'],
-				'total'          => (float) $row['total'],
-				'latest'         => (string) $row['latest'],
-				'all_gifts'      => (int) $row['all_gifts'],
-				'all_total'      => (float) $row['all_total'],
-				'donor_since'    => (string) $row['donor_since'],
-				'comment'        => $comment,
-				'comment_id'     => $comment_id,
-				'comment_hidden' => $hidden,
-				'anonymous'      => $anonymous,
-				'hide_name'      => ! empty( $extra['donor']['hide_name'] ),
-				'campaigns'      => array_values( $campaigns ),
+				'id'              => (int) $row['id'],
+				'first_name'      => (string) $row['first_name'],
+				'last_name'       => (string) $row['last_name'],
+				'name'            => trim( $row['first_name'] . ' ' . $row['last_name'] ),
+				'email'           => (string) $row['email'],
+				'type'            => (string) $row['donor_type'],
+				'monthly_amount'  => null !== $row['monthly_amount'] ? (float) $row['monthly_amount'] : null,
+				'gifts'           => (int) $row['gifts'],
+				'total'           => (float) $row['total'],
+				'latest'          => (string) $row['latest'],
+				'all_gifts'       => (int) $row['all_gifts'],
+				'all_total'       => (float) $row['all_total'],
+				'donor_since'     => (string) $row['donor_since'],
+				'comment'         => $comment,
+				'comment_id'      => $comment_id,
+				'comment_hidden'  => $hidden,
+				'comment_pending' => $pending,
+				'anonymous'       => $anonymous,
+				'hide_name'       => ! empty( $extra['donor']['hide_name'] ),
+				'campaigns'       => array_values( $campaigns ),
 			);
 		},
 		$rows
@@ -291,7 +294,7 @@ function smartpay_hydrate_donor_rows( array $rows, array $scope ): array {
  * Donor fields saved on a gift (payments.extra.donation), normalised.
  *
  * @param array|string|null $extra Payment extra (array or JSON).
- * @return array{anonymous: bool, comment: string, frequency: string, tribute: array, hidden: bool}
+ * @return array{anonymous: bool, comment: string, frequency: string, tribute: array, hidden: bool, approved: bool}
  */
 function smartpay_get_payment_donation( $extra ): array {
 	$extra    = is_array( $extra ) ? $extra : json_decode( (string) $extra, true );
@@ -307,6 +310,8 @@ function smartpay_get_payment_donation( $extra ): array {
 			'name' => (string) ( $tribute['name'] ?? '' ),
 		),
 		'hidden'    => ! empty( $donation['hidden'] ),
+		// Comments are approved unless moderation (Pro) held them.
+		'approved'  => ! array_key_exists( 'approved', $donation ) || ! empty( $donation['approved'] ),
 	);
 }
 
