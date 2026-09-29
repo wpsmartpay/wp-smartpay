@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.3.2
+Stable Tag: 3.3.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -395,6 +395,10 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.3.3 =
+* Fix - Payment confirmation page and receipt email now show the form name for SmartPay forms (was "No Name")
+* Fix - Form payment receipt email no longer logs "Attempt to read property 'title' on null"
 
 = 3.3.2 =
 * Fix - Goal Progress block: "Open Form Settings" button now opens the SmartPay Settings modal to the Goal tab instead of the Gutenberg Document sidebar
