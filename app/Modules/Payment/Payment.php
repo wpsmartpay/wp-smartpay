@@ -3,7 +3,6 @@
 namespace SmartPay\Modules\Payment;
 defined('ABSPATH') || exit;
 
-use Ramsey\Uuid\Uuid;
 use SmartPay\Models\Product;
 use SmartPay\Models\Form;
 
@@ -343,9 +342,11 @@ class Payment
         $payment->customer_id    = $paymentData['customer']['customer_id'];
         $payment->email          = $paymentData['email'];
         $payment->key            = $paymentData['key'];
-        $payment->uuid            = Uuid::uuid4()->toString();
+        $payment->uuid            = wp_generate_uuid4();
         $payment->extra          = apply_filters('smartpay_payment_extra_data', $paymentData['extra']);
-        $payment->mode           = smartpay_is_test_mode() ? 'test' : 'live';
+        // Resolved against the gateway this payment goes through, not the site:
+        // one gateway can sit in sandbox while the others take live money.
+        $payment->mode           = smartpay_is_test_mode($payment->gateway) ? 'test' : 'live';
         $payment->parent_id      = !empty($paymentData['parent_id']) ? absint($paymentData['parent_id']) : 0;
         $payment->status         = $paymentData['status'] ?? 'pending';
 

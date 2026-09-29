@@ -12,7 +12,6 @@ import {
     useBlockProps,
 } from '@wordpress/block-editor'
 import { useEntityProp } from '@wordpress/core-data'
-import { useDispatch } from '@wordpress/data'
 import { __ } from '@wordpress/i18n'
 
 /**
@@ -58,7 +57,6 @@ export const edit = ({ attributes, setAttributes }) => {
     } = attributes
 
     const [meta] = useEntityProp('postType', 'smartpay_form', 'meta')
-    const { openGeneralSidebar } = useDispatch('core/edit-post')
 
     const goal = readGoal(meta)
     const goalEnabled = !!goal.enabled
@@ -102,7 +100,7 @@ export const edit = ({ attributes, setAttributes }) => {
                         <div style={{ marginTop: '8px' }}>
                             <Button
                                 variant="secondary"
-                                onClick={() => openGeneralSidebar?.('edit-post/document')}
+                                onClick={() => window.smartpayFormEditor?.openSettings?.('goal')}
                             >
                                 {__('Open Form Settings', 'smartpay')}
                             </Button>
