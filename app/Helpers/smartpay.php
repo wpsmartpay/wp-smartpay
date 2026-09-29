@@ -1183,14 +1183,14 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 	if ( ! empty( $goal['campaign_id'] ) ) {
 		$progress = smartpay_calculate_campaign_progress( (int) $goal['campaign_id'] );
 
-		return [
+		return array(
 			'current'      => $progress['current'],
 			'target'       => $progress['target'],
 			'percentage'   => $progress['percentage'],
 			'type'         => $goal['type'],
 			'goal_reached' => $progress['goal_reached'],
 			'campaign_id'  => (int) $goal['campaign_id'],
-		];
+		);
 	}
 
 	$type   = $goal['type'] ?? 'quantity';
@@ -1202,8 +1202,8 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 	if ( false !== $cached ) {
 		$current = floatval( $cached );
 	} else {
-		$stats   = smartpay_get_forms_gift_stats( [ $form_id ] );
-		$current = (float) ( $type === 'quantity' ? $stats['donations'] : $stats['raised'] );
+		$stats   = smartpay_get_forms_gift_stats( array( $form_id ) );
+		$current = (float) ( 'quantity' === $type ? $stats['donations'] : $stats['raised'] );
 
 		set_transient( $transient_key, $current, MINUTE_IN_SECONDS );
 	}

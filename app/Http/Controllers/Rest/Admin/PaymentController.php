@@ -153,13 +153,15 @@ class PaymentController extends RestController
 
             // Form-builder (CPT) forms first: their post ids can collide with
             // rows in the legacy forms table, which must not win the lookup.
-            $post = get_post( $form_id );
+            $post   = get_post( $form_id );
+            $is_cpt = $post && 'smartpay_form' === $post->post_type;
+            $form   = $is_cpt ? null : \SmartPay\Models\Form::find( $form_id );
 
-            if ( $post && 'smartpay_form' === $post->post_type ) {
+            if ( $is_cpt ) {
                 $data['data']['form_type']     = 'native';
-                $data['data']['form_title']    = esc_html( $post->post_title ) ?: sprintf( 'Form #%d', $form_id );
+                $data['data']['form_title']    = '' !== $post->post_title ? esc_html( $post->post_title ) : sprintf( 'Form #%d', $form_id );
                 $data['data']['form_edit_url'] = esc_url( admin_url( 'post.php?post=' . $form_id . '&action=edit' ) );
-            } elseif ( $form = \SmartPay\Models\Form::find( $form_id ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInControlStructure
+            } elseif ( $form ) {
                 $data['data']['form_type']     = 'legacy';
                 $data['data']['form_title']    = esc_html( $form->title );
                 $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
