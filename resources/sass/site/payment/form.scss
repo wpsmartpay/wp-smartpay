@@ -656,3 +656,145 @@
     min-width: 170px;
     max-width: 300px;
 }
+
+// ── Donation blocks (DonationFields.php) + Step Break steps (donation.js) ──
+.smartpay-donation-field {
+    margin: 0 0 18px;
+    padding: 0;
+    border: 0;
+}
+
+.smartpay-donation-field__label {
+    display: block;
+    margin: 0 0 8px;
+    padding: 0;
+    font-weight: 600;
+}
+
+.smartpay-donation-field__help {
+    display: block;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 0.85em;
+}
+
+.smartpay-donation-frequency__options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+
+    label {
+        position: relative;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    span {
+        display: block;
+        padding: 10px 12px;
+        text-align: center;
+        font-weight: 600;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+    }
+
+    input:checked + span {
+        border-color: #293c81;
+        box-shadow: inset 0 0 0 1px #293c81;
+        background: #eef1fb;
+        color: #293c81;
+    }
+
+    input:focus-visible + span {
+        outline: 2px solid #293c81;
+        outline-offset: 2px;
+    }
+}
+
+.smartpay-donation-anonymous label {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin: 0;
+    cursor: pointer;
+
+    input { margin-top: 3px; }
+}
+
+.smartpay-donation-comment textarea,
+.smartpay-donation-tribute input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.smartpay-donation-tribute {
+    summary {
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    &__body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        margin-top: 10px;
+
+        label { margin: 0; }
+        input[type="text"] { flex-basis: 100%; }
+    }
+}
+
+.smartpay-steps {
+    display: flex;
+    gap: 6px;
+    margin: 0 0 18px;
+
+    i {
+        flex: 1;
+        height: 4px;
+        border-radius: 999px;
+        background: #e5e7eb;
+
+        &.is-on { background: #293c81; }
+    }
+}
+
+.smartpay-step__title {
+    margin: 0 0 12px;
+    font-size: 1.1em;
+}
+
+.smartpay-step__nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 12px;
+
+    button {
+        padding: 11px 18px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}
+
+.smartpay-step__next {
+    margin-left: auto;
+    border: 0;
+    background: #293c81;
+    color: #fff;
+}
+
+.smartpay-step__back {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #1f2937;
+}

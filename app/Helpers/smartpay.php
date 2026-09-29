@@ -1292,7 +1292,8 @@ function smartpay_render_goal_progress_block( string $block_content, array $bloc
 
 	$goal = smartpay_get_form_goal( $form_id );
 
-	if ( empty( $goal['enabled'] ) ) {
+	// On the campaign page itself the header already shows the campaign bar.
+	if ( empty( $goal['enabled'] ) || ( ! empty( $goal['campaign_id'] ) && did_action( 'smartpay_campaign_page_after_forms' ) ) ) {
 		return '';
 	}
 

@@ -58,6 +58,8 @@ class Campaign {
 		add_action( 'set_object_terms', array( $this, 'enforce_single_campaign' ), 10, 6 );
 		add_filter( 'template_include', array( $this, 'campaign_template' ) );
 		add_filter( 'smartpay_needs_frontend_assets', array( $this, 'campaign_page_needs_assets' ) );
+
+		new DonationFields();
 	}
 
 	/**

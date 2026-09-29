@@ -451,6 +451,13 @@ jQuery(($) => {
     function getPaymentFormData($wrapper, index = '') {
         const data = $wrapper.find('form').serializeJSON()
 
+        // Giving Frequency block: a donor-chosen "monthly" gift is charged as a
+        // monthly subscription, the same path a recurring pricing option takes.
+        if ('monthly' === data.smartpay_form?.donation?.frequency) {
+            data.smartpay_form_billing_type = SUBSCRIPTION
+            data.smartpay_form_billing_period = 'Monthly'
+        }
+
         return {
             smartpay_action: 'smartpay_process_payment',
             smartpay_payment_type: 'form_payment',

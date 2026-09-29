@@ -1165,38 +1165,44 @@ class NativeForm {
 				);
 
 			case 2002:
-				return $this->tpl_assemble(
-					'Charity Donation',
+				// Donation flow: amount first, identity second, payment last.
+				$prices = array(
 					array(
+						'label'  => '$25',
+						'amount' => 25,
+					),
+					array(
+						'label'  => '$50',
+						'amount' => 50,
+					),
+					array(
+						'label'  => '$100',
+						'amount' => 100,
+					),
+					array(
+						'label'  => '$250',
+						'amount' => 250,
+					),
+				);
+
+				return array(
+					'name'     => 'Charity Donation',
+					'blocks'   => array(
 						$this->tpl_goal_progress(),
+						$this->tpl_block( 'smartpay-form/donation-frequency' ),
+						$this->tpl_pricing( $prices, 'grid' ),
+						$this->tpl_block( 'smartpay-form/step-break' ),
 						$this->tpl_name(),
 						$this->tpl_email(),
 						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
-						$this->tpl_choice( 'radio', 'Donation Frequency', 'frequency', array( 'One-time', 'Monthly', 'Annually' ), 'one-time' ),
-						$this->tpl_textarea( 'Dedication Message', 'dedication', 'In honor or memory of…', 3 ),
-						$this->tpl_choice( 'checkbox', 'Options', 'donation_options', array( 'Make my donation anonymous', 'Email me a receipt' ) ),
+						$this->tpl_block( 'smartpay-form/donation-anonymous' ),
+						$this->tpl_block( 'smartpay-form/donation-comment' ),
+						$this->tpl_block( 'smartpay-form/donation-tribute' ),
+						$this->tpl_block( 'smartpay-form/step-break', array( 'nextLabel' => 'Continue to payment' ) ),
+						$this->tpl_pay( 'Give Now' ),
 					),
-					array(
-						array(
-							'label'  => '$25',
-							'amount' => 25,
-						),
-						array(
-							'label'  => '$50',
-							'amount' => 50,
-						),
-						array(
-							'label'  => '$100',
-							'amount' => 100,
-						),
-						array(
-							'label'  => '$250',
-							'amount' => 250,
-						),
-					),
-					'Give Now',
-					'grid',
-					array(
+					'amounts'  => $this->pricing_amounts( $prices ),
+					'settings' => array(
 						'goal' => array(
 							'enabled'             => true,
 							'type'                => 'amount',
@@ -1204,7 +1210,7 @@ class NativeForm {
 							'showToPublic'        => true,
 							'behaviorWhenGoalMet' => 'allow_orders',
 						),
-					)
+					),
 				);
 
 			// ── Registration ─────────────────────────────────────────
