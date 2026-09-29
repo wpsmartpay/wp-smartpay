@@ -26,6 +26,10 @@ import { FormData } from './pages/form-data/index.jsx'
 // Native Forms
 import { NativeFormList } from './admin/native-forms'
 
+// Campaigns
+import { CampaignList } from './pages/campaign/index'
+import { ShowCampaign } from './pages/campaign/show'
+
 // Other pages
 import { NotFound } from './pages/not-found'
 import { SubscriptionsLockedPage, ReportsLockedPage, InvoicesLockedPage, WebhooksLockedPage } from './components/LockedFeaturePage'
@@ -68,6 +72,10 @@ domReady(function () {
                         <Route exact path="/form-data"                element={<FormData />} />
 
                         <Route exact path="/native-forms" element={<NativeFormList />} />
+
+                        <Route exact path="/campaigns"                     element={<CampaignList />} />
+                        <Route exact path="/campaigns/:campaignId"         element={<ShowCampaign />} />
+                        <Route exact path="/campaigns/:campaignId/:tab"    element={<ShowCampaign />} />
 
                         <Route
                             exact path="/subscriptions"

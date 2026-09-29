@@ -4,6 +4,7 @@ import { useSelect, useDispatch } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 import { Button, Modal } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
+import apiFetch from '@wordpress/api-fetch';
 import {
 	__experimentalMainDashboardButton as MainDashboardButton,
 } from '@wordpress/edit-post';
@@ -306,6 +307,7 @@ const FormGuide = () => {
 	const baseTabs = [
 		{ id: 'settings', label: __( 'Form Settings', 'smartpay' ) },
 		{ id: 'goal',     label: __( 'Goal',          'smartpay' ) },
+		{ id: 'campaign', label: __( 'Campaign',      'smartpay' ) },
 	];
 	const SETTINGS_TABS = window.wp?.hooks?.applyFilters?.(
 		'smartpay_form_settings_tabs',
@@ -389,7 +391,8 @@ const FormGuide = () => {
 						<div className="sp-form-settings-modal__content">
 							{ settingsTab === 'settings' && <OptionsPanel /> }
 							{ settingsTab === 'goal'     && <GoalPanel /> }
-							{ settingsTab !== 'settings' && settingsTab !== 'goal' && ( () => {
+							{ settingsTab === 'campaign' && <CampaignPanel /> }
+							{ ! [ 'settings', 'goal', 'campaign' ].includes( settingsTab ) && ( () => {
 								const ExtPanel = window.wp?.hooks?.applyFilters?.(
 									'smartpay_form_settings_panel', null, settingsTab
 								);
@@ -437,10 +440,132 @@ const FormGuide = () => {
 };
 
 /**
+ * Campaign panel: which campaign this form belongs to (one or none), whether it
+ * is the campaign's default form, and the "donation form" flag.
+ *
+ * The campaign term is saved with the post (taxonomy `smartpay_campaign`, REST
+ * base `smartpay_campaigns`). A new form opened from Campaign → Forms → "Add
+ * form" arrives with ?sp_campaign={id} and starts pre-assigned.
+ */
+const CampaignPanel = () => {
+	const { SelectControl, ToggleControl, Notice } = wp.components;
+	const [ meta, setMeta ]   = useEntityProp( 'postType', 'smartpay_form', 'meta' );
+	const [ terms, setTerms ] = useEntityProp( 'postType', 'smartpay_form', 'smartpay_campaigns' );
+	const { postId, isSaved } = useSelect( ( select ) => ( {
+		postId:  select( 'core/editor' ).getCurrentPostId(),
+		isSaved: ! select( 'core/editor' ).isEditedPostDirty() && ! select( 'core/editor' ).isEditedPostNew(),
+	} ), [] );
+	const campaigns = useSelect(
+		( select ) => select( 'core' ).getEntityRecords( 'taxonomy', 'smartpay_campaign', { per_page: 100, context: 'view' } ),
+		[]
+	);
+	const [ defaultFormId, setDefaultFormId ] = useState( 0 );
+	const [ busy, setBusy ] = useState( false );
+
+	const campaignId = Array.isArray( terms ) && terms.length ? Number( terms[ 0 ] ) : 0;
+
+	useEffect( () => {
+		if ( ! campaignId ) return;
+		apiFetch( { path: `/smartpay/v1/campaigns/${ campaignId }` } )
+			.then( ( res ) => setDefaultFormId( Number( res?.campaign?.default_form_id ) || 0 ) )
+			.catch( () => setDefaultFormId( 0 ) );
+	}, [ campaignId, isSaved ] );
+
+	const makeDefault = async () => {
+		setBusy( true );
+		try {
+			await apiFetch( {
+				path: `/smartpay/v1/campaigns/${ campaignId }/default-form`,
+				method: 'POST',
+				data: { form_id: postId },
+			} );
+			setDefaultFormId( postId );
+		} finally {
+			setBusy( false );
+		}
+	};
+
+	const options = [
+		{ value: '0', label: __( '— No campaign —', 'smartpay' ) },
+		...( campaigns || [] ).map( ( c ) => ( { value: String( c.id ), label: c.name } ) ),
+	];
+	const current = ( campaigns || [] ).find( ( c ) => c.id === campaignId );
+
+	return (
+		<div className="sp-goal-panel">
+			<SelectControl
+				__nextHasNoMarginBottom
+				label={ __( 'Campaign', 'smartpay' ) }
+				help={ __( 'A form belongs to one campaign or none.', 'smartpay' ) }
+				value={ String( campaignId ) }
+				options={ options }
+				onChange={ ( val ) => setTerms( Number( val ) ? [ Number( val ) ] : [] ) }
+			/>
+
+			{ campaignId > 0 && (
+				<>
+					{ ! isSaved ? (
+						<Notice status="info" isDismissible={ false }>
+							{ __( 'Save the form, then you can make it the campaign’s default form.', 'smartpay' ) }
+						</Notice>
+					) : (
+						<ToggleControl
+							__nextHasNoMarginBottom
+							label={ __( 'Make this the campaign’s default form ★', 'smartpay' ) }
+							help={ current?.link
+								? __( 'Used by “Donate now” on ', 'smartpay' ) + current.link.replace( /^https?:\/\/[^/]+/, '' )
+								: __( 'Used by “Donate now” on the campaign page.', 'smartpay' ) }
+							checked={ defaultFormId === postId }
+							disabled={ busy || defaultFormId === postId }
+							onChange={ ( val ) => val && makeDefault() }
+						/>
+					) }
+					<Notice status="warning" isDismissible={ false }>
+						{ __( 'Goal is taken from the campaign while attached. This form’s own goal is paused.', 'smartpay' ) }
+					</Notice>
+				</>
+			) }
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				label={ __( 'Treat as donation form', 'smartpay' ) }
+				help={ __( 'Payers on this form count as donors, even without a campaign. Forms in a campaign always do.', 'smartpay' ) }
+				checked={ campaignId > 0 || !! meta?._smartpay_is_donation_form }
+				disabled={ campaignId > 0 }
+				onChange={ ( val ) => setMeta( { ...meta, _smartpay_is_donation_form: val } ) }
+			/>
+		</div>
+	);
+};
+
+/**
+ * Pre-assign a new form to the campaign it was created from (?sp_campaign=ID).
+ * The assignment is saved with the post, so no request is made here.
+ */
+const CampaignPreselect = () => {
+	const [ terms, setTerms ] = useEntityProp( 'postType', 'smartpay_form', 'smartpay_campaigns' );
+	const isNew = useSelect( ( select ) => select( 'core/editor' ).isCleanNewPost(), [] );
+	const done  = useRef( false );
+
+	useEffect( () => {
+		if ( done.current || terms === undefined ) return;
+		done.current = true;
+		const id = Number( new URLSearchParams( window.location.search ).get( 'sp_campaign' ) );
+		if ( isNew && id > 0 && ( ! terms || ! terms.length ) ) {
+			setTerms( [ id ] );
+		}
+	}, [ terms, isNew ] );
+
+	return null;
+};
+
+/**
  * Goal panel backed by `_smartpay_settings.goal` post meta.
  */
 const GoalPanel = () => {
 	const [ meta, setMeta ] = useEntityProp( 'postType', 'smartpay_form', 'meta' );
+	const [ campaignTerms ] = useEntityProp( 'postType', 'smartpay_form', 'smartpay_campaigns' );
+	const inCampaign        = Array.isArray( campaignTerms ) && campaignTerms.length > 0;
 	const { ToggleControl, SelectControl, TextControl } = wp.components;
 
 	const rawSettings = meta?._smartpay_settings || '{}';
@@ -468,6 +593,17 @@ const GoalPanel = () => {
 		const nextSettings = { ...settings, goal: nextGoal };
 		setMeta( { ...meta, _smartpay_settings: JSON.stringify( nextSettings ) } );
 	};
+
+	if ( inCampaign ) {
+		const { Notice } = wp.components;
+		return (
+			<div className="sp-goal-panel">
+				<Notice status="info" isDismissible={ false }>
+					{ __( 'This form is in a campaign, so the campaign’s goal applies and this form’s own goal is paused. Detach it from the campaign to use its own goal again.', 'smartpay' ) }
+				</Notice>
+			</div>
+		);
+	}
 
 	return (
 		<div className="sp-goal-panel">
@@ -697,6 +833,7 @@ registerPlugin( 'smartpay-form-sidebar', {
 			<>
 				{ /* Guide + Settings modals, header buttons, and top-left Add Field button */ }
 				<FormGuide />
+				<CampaignPreselect />
 
 				{ MainDashboardButton && (
 					<MainDashboardButton>

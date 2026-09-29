@@ -80,6 +80,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Campaigns', 'smartpay'),
+            __('Campaigns', 'smartpay'),
+            'manage_options',
+            'smartpay#/campaigns',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Forms', 'smartpay'),
             __('Forms', 'smartpay'),
             'manage_options',
@@ -529,7 +541,7 @@ class Admin
         }
 
         // Global
-        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data'], SMARTPAY_VERSION, false);
+        wp_enqueue_script('smartpay-editor-blocks', SMARTPAY_PLUGIN_ASSETS . '/blocks/index.js', ['wp-element', 'wp-plugins', 'wp-blocks', 'wp-block-editor', 'wp-data', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-server-side-render'], SMARTPAY_VERSION, false);
 
         wp_localize_script(
             'smartpay-editor-blocks',
