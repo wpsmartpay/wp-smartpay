@@ -552,6 +552,76 @@ const ProUpgradeNote = () => {
     )
 }
 
+// ─── Alerts Card ──────────────────────────────────────────────────────────────
+// Urgent problems (e.g. Stripe rejecting checkout payments) sent by add-ons via
+// the `smartpay_dashboard_alerts` filter. Renders nothing when there are none.
+const AlertsCard = () => {
+    const [ alerts, setAlerts ] = useState( window.smartpay?.alerts || [] )
+
+    const safeUrl = ( url ) =>
+        typeof url === 'string' && /^https?:/i.test( url ) ? url : '#'
+
+    const dismiss = ( alert ) => {
+        const body = new URLSearchParams( { action: alert.dismiss.action, nonce: alert.dismiss.nonce } )
+        fetch( window.smartpay.ajax_url, { method: 'POST', credentials: 'same-origin', body } )
+            .then( () => setAlerts( ( list ) => list.filter( ( a ) => a.id !== alert.id ) ) )
+    }
+
+    return alerts.map( ( alert ) => (
+        <div key={ alert.id } className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#dc2626' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fef2f2' }}>
+                <XCircle style={{ width: 13, height: 13, color: '#dc2626', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#991b1b', marginLeft: 6 }}>
+                    { alert.title }
+                </span>
+                { alert.count > 0 && (
+                    <span style={{
+                        marginLeft: 'auto',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        background: '#fee2e2',
+                        color: '#991b1b',
+                        border: '1px solid #fca5a5',
+                        padding: '1px 7px',
+                        borderRadius: 99,
+                    }}>
+                        { alert.count }
+                    </span>
+                ) }
+            </div>
+            <div className="sp-detail-card__body" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 16px' }}>
+                <div style={{ fontSize: 12.5, color: 'var(--sp-text)', lineHeight: 1.45 }}>{ alert.message }</div>
+                { alert.detail && (
+                    <div style={{ fontSize: 11.5, color: '#8a2424', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, padding: '6px 8px', lineHeight: 1.45, wordBreak: 'break-word' }}>
+                        { alert.detail }
+                    </div>
+                ) }
+                { ( alert.actions || [] ).map( ( action, i ) => (
+                    <a
+                        key={ action.url }
+                        href={ safeUrl( action.url ) }
+                        target={ action.external ? '_blank' : undefined }
+                        rel={ action.external ? 'noopener noreferrer' : undefined }
+                        className={ i === 0 ? 'sp-btn sp-btn--primary' : 'sp-btn sp-btn--outline' }
+                        style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
+                    >
+                        { action.label }
+                    </a>
+                ) ) }
+                { alert.dismiss && (
+                    <button
+                        type="button"
+                        onClick={ () => dismiss( alert ) }
+                        style={{ background: 'none', border: 0, padding: 0, fontSize: 11.5, color: 'var(--sp-text-muted)', textDecoration: 'underline', cursor: 'pointer', alignSelf: 'center' }}
+                    >
+                        { __( 'Dismiss', 'smartpay' ) }
+                    </button>
+                ) }
+            </div>
+        </div>
+    ) )
+}
+
 // ─── Setup Notices Card ───────────────────────────────────────────────────────
 const SetupNoticesCard = () => {
     const notices = window.smartpay?.setupNotices || []
@@ -838,7 +908,8 @@ export const Dashboard = () => {
                     {/* ── RIGHT: Setup status + CTAs + Onboarding Checklist card ─ */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                        {/* Setup notices — always first */}
+                        {/* Urgent alerts (only when present), then setup notices */}
+                        <AlertsCard />
                         <SetupNoticesCard />
 
                         {/* Quick actions card */}
