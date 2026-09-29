@@ -33,7 +33,14 @@ class CreateUser {
 
             try {
                 $user = wp_insert_user( $new_customer_data );
-                if ($user){
+                if ($user && ! is_wp_error($user)){
+                    // Link the new account to the payer's customer record, or the
+                    // dashboard (which looks customers up by user_id) can't find them.
+                    if ($payment->customer && empty($payment->customer->user_id)) {
+                        $payment->customer->user_id = (int) $user;
+                        $payment->customer->save();
+                    }
+
                     do_action('smartpay_customer_user_created', $user, $payment);
                     //send notification to only new user
                     // check the new user notification

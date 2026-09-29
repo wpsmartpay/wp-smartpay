@@ -37,3 +37,6 @@ export const AssignFormsToCampaign = (ids, campaignId) =>
 export const GetUnassignedForms = () =>
     request('v1/native-forms', { params: { campaign: 'none', per_page: 100 } }).then((r) => r?.forms?.data || [])
 export const MigrateLegacyForm = (formId) => request('v1/migrate-legacy-form', { method: 'POST', data: { form_id: formId } })
+
+export const GetDonors = (params) => request('v1/donors', { params }).then((r) => r?.donors || {})
+export const GetDonor = (id) => request(`v1/donors/${id}`)

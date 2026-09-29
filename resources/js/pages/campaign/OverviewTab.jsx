@@ -182,7 +182,7 @@ export const OverviewTab = ({ campaign }) => {
                                     <div className="sp-customer">
                                         <span className="sp-campaign-rank">{i + 1}</span>
                                         <div className="sp-avatar" data-color={colorIndex(d.name)}>{initials(d.name)}</div>
-                                        <Link to={`/customers/${d.id}`} className="sp-customer__name">{d.name || d.email}</Link>
+                                        <Link to={`/donors/${d.id}`} className="sp-customer__name">{d.name || d.email}</Link>
                                     </div>
                                     <span className="sp-cell--num">{money(d.total)}</span>
                                 </div>

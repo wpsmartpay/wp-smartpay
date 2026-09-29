@@ -168,6 +168,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Donors', 'smartpay'),
+            __('Donors', 'smartpay'),
+            'manage_options',
+            'smartpay#/donors',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Coupons', 'smartpay'),
             __('Coupons', 'smartpay'),
             'manage_options',

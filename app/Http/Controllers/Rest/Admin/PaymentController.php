@@ -151,26 +151,39 @@ class PaymentController extends RestController
         if ( Payment::FORM_PAYMENT === $raw_type && ! empty( $data['data']['form_id'] ) ) {
             $form_id = absint( $data['data']['form_id'] );
 
-            // Check native forms table first.
-            $form = \SmartPay\Models\Form::find( $form_id );
+            // Form-builder (CPT) forms first: their post ids can collide with
+            // rows in the legacy forms table, which must not win the lookup.
+            $post = get_post( $form_id );
 
-            if ( $form ) {
-                $data['data']['form_type']    = 'native';
+            if ( $post && 'smartpay_form' === $post->post_type ) {
+                $data['data']['form_type']     = 'native';
+                $data['data']['form_title']    = esc_html( $post->post_title ) ?: sprintf( 'Form #%d', $form_id );
+                $data['data']['form_edit_url'] = esc_url( admin_url( 'post.php?post=' . $form_id . '&action=edit' ) );
+            } elseif ( $form = \SmartPay\Models\Form::find( $form_id ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInControlStructure
+                $data['data']['form_type']     = 'legacy';
                 $data['data']['form_title']    = esc_html( $form->title );
-                $data['data']['form_edit_url'] = '#/forms/' . $form_id . '/edit';
+                $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
             } else {
-                // Fall back to legacy WP post form.
-                $legacy = get_post( $form_id );
+                $data['data']['form_type']     = '';
+                $data['data']['form_title']    = sprintf( 'Form #%d (deleted)', $form_id );
+                $data['data']['form_edit_url'] = '';
+            }
 
-                if ( $legacy && 'smartpay_form' === $legacy->post_type ) {
-                    $data['data']['form_type']    = 'legacy';
-                    $data['data']['form_title']    = esc_html( $legacy->post_title ) ?: sprintf( 'Form #%d', $form_id );
-                    $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
-                } else {
-                    $data['data']['form_type']    = '';
-                    $data['data']['form_title']    = sprintf( 'Form #%d (deleted)', $form_id );
-                    $data['data']['form_edit_url'] = '';
-                }
+            // Donation card: campaign + what the donor entered with the gift.
+            if ( smartpay_is_donation_form( $form_id ) ) {
+                $campaign_id      = smartpay_get_form_campaign_id( $form_id );
+                $campaign         = $campaign_id ? smartpay_get_campaign( $campaign_id ) : null;
+                $data['donation'] = array_merge(
+                    smartpay_get_payment_donation( $data['extra'] ?? array() ),
+                    array(
+                        'campaign' => $campaign
+                            ? array(
+                                'id'    => $campaign['id'],
+                                'title' => $campaign['title'],
+                            )
+                            : null,
+                    )
+                );
             }
         }
 

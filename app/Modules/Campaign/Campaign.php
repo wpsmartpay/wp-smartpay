@@ -10,6 +10,7 @@ namespace SmartPay\Modules\Campaign;
 defined( 'ABSPATH' ) || exit;
 
 use SmartPay\Http\Controllers\Rest\Admin\CampaignController;
+use SmartPay\Http\Controllers\Rest\Admin\DonorController;
 use WP_REST_Server;
 
 /**
@@ -59,7 +60,43 @@ class Campaign {
 		add_filter( 'template_include', array( $this, 'campaign_template' ) );
 		add_filter( 'smartpay_needs_frontend_assets', array( $this, 'campaign_page_needs_assets' ) );
 
+		add_action( 'template_redirect', array( $this, 'save_donor_privacy' ) );
+
 		new DonationFields();
+	}
+
+	/**
+	 * Dashboard → Giving → "Hide my name on public donor walls".
+	 *
+	 * Stored on the customer (customers.extra.donor.hide_name) so it covers
+	 * past and future gifts. Only the logged-in donor's own record is touched.
+	 */
+	public function save_donor_privacy(): void {
+		if ( empty( $_POST['smartpay_donor_privacy'] ) || ! is_user_logged_in() ) {
+			return;
+		}
+
+		$nonce = isset( $_POST['smartpay_donor_privacy_nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['smartpay_donor_privacy_nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'smartpay_donor_privacy' ) ) {
+			return;
+		}
+
+		$customer = \SmartPay\Models\Customer::find( smartpay_dashboard_current_customer_id() );
+		if ( ! $customer ) {
+			return;
+		}
+
+		$extra = is_array( $customer->extra ) ? $customer->extra : json_decode( (string) $customer->extra, true );
+		$extra = is_array( $extra ) ? $extra : array();
+
+		$extra['donor']              = is_array( $extra['donor'] ?? null ) ? $extra['donor'] : array();
+		$extra['donor']['hide_name'] = ! empty( $_POST['hide_name'] );
+
+		$customer->extra = wp_json_encode( $extra );
+		$customer->save();
+
+		wp_safe_redirect( add_query_arg( 'sp_privacy', 'saved', smartpay_dashboard_view_url( 'giving' ) ) );
+		exit;
 	}
 
 	/**
@@ -379,6 +416,28 @@ class Campaign {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $controller, 'donors' ),
 				'permission_callback' => $auth,
+			)
+		);
+
+		$donors = $this->app->make( DonorController::class );
+
+		register_rest_route(
+			'smartpay/v1',
+			'donors',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $donors, 'index' ),
+				'permission_callback' => array( $donors, 'middleware' ),
+			)
+		);
+
+		register_rest_route(
+			'smartpay/v1',
+			'donors/(?P<id>[\d]+)',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $donors, 'show' ),
+				'permission_callback' => array( $donors, 'middleware' ),
 			)
 		);
 

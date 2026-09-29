@@ -101,7 +101,7 @@ export const DonorsTab = ({ campaign }) => {
                                     <div className="sp-customer">
                                         <div className="sp-avatar" data-color={colorIndex(d.name)}>{initials(d.name)}</div>
                                         <div className="sp-customer__info">
-                                            <Link to={`/customers/${d.id}`} className="sp-customer__name" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <Link to={`/donors/${d.id}`} className="sp-customer__name" style={{ textDecoration: 'none', color: 'inherit' }}>
                                                 {d.name || d.email}
                                             </Link>
                                             <div className="sp-customer__email">{d.email}</div>

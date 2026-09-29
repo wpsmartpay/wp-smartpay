@@ -59,9 +59,10 @@ function smartpay_donor_subscriptions_table(): string {
  * @param int[]  $all_form_ids   Every donation form (drives the global donor type).
  * @param string $flag           '' | 'comments' | 'anonymous' — only donors with such a gift in scope.
  * @param string $search         Name/email search.
+ * @param int[]  $customer_ids   Limit to these customers ([] = all).
  * @return string SQL, already prepared.
  */
-function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, string $flag = '', string $search = '' ): string {
+function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, string $flag = '', string $search = '', array $customer_ids = array() ): string {
 	global $wpdb;
 
 	$payments  = $wpdb->prefix . 'smartpay_payments';
@@ -84,11 +85,15 @@ function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, st
 		$monthly = 'SELECT NULL AS customer_id, NULL AS amt FROM DUAL WHERE 1=0';
 	}
 
-	$where = '';
+	$where        = '';
+	$customer_ids = array_values( array_filter( array_map( 'absint', $customer_ids ) ) );
+	if ( $customer_ids ) {
+		$where = ' WHERE c.id IN (' . implode( ',', $customer_ids ) . ')';
+	}
 	if ( '' !== $search ) {
-		$like  = '%' . $wpdb->esc_like( $search ) . '%';
-		$where = $wpdb->prepare(
-			" WHERE ( c.email LIKE %s OR c.first_name LIKE %s OR c.last_name LIKE %s OR CONCAT(c.first_name, ' ', c.last_name) LIKE %s )",
+		$like   = '%' . $wpdb->esc_like( $search ) . '%';
+		$where .= ( $where ? ' AND' : ' WHERE' ) . $wpdb->prepare(
+			" ( c.email LIKE %s OR c.first_name LIKE %s OR c.last_name LIKE %s OR CONCAT(c.first_name, ' ', c.last_name) LIKE %s )",
 			$like,
 			$like,
 			$like,
@@ -111,7 +116,7 @@ function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, st
 /**
  * Query donors.
  *
- * Args: form_ids (int[] scope, defaults to every donation form), type ('' or a
+ * Args: form_ids (int[] scope, defaults to every donation form), customer_ids (int[]), type ('' or a
  * smartpay_donor_types() key), flag ('' | comments | anonymous), search,
  * orderby (latest | total | gifts | name | oldest), page, per_page (max 100).
  *
@@ -152,7 +157,7 @@ function smartpay_query_donors( array $args = array() ): array {
 		return $empty;
 	}
 
-	$base       = smartpay_donor_base_sql( $scope, $all_ids, $flag, $search );
+	$base       = smartpay_donor_base_sql( $scope, $all_ids, $flag, $search, (array) ( $args['customer_ids'] ?? array() ) );
 	$type_where = $type ? $wpdb->prepare( ' WHERE t.donor_type = %s', $type ) : '';
 	$offset     = ( $page - 1 ) * $per_page;
 
@@ -325,4 +330,152 @@ function smartpay_donor_public_name( string $first, string $last, string $style 
 	}
 
 	return $first . ' ' . mb_strtoupper( mb_substr( $last, 0, 1 ) ) . '.';
+}
+
+/**
+ * A donor's giving: every payment on a donation form (any status, newest
+ * first, max 200) plus stats and per-campaign totals from completed gifts.
+ *
+ * @param int $customer_id Customer ID.
+ * @return array{stats: array, history: array[], campaigns: array[], monthly: array[]}
+ */
+function smartpay_get_donor_giving( int $customer_id ): array {
+	global $wpdb;
+
+	// Every payment on a donation form (any status) for the history table;
+	// only completed ones count in the stats.
+	$form_ids = smartpay_get_donation_form_ids();
+	$table    = $wpdb->prefix . 'smartpay_payments';
+	$match    = smartpay_payments_form_match_sql( $form_ids, 'p.data' );
+	$parent   = smartpay_payments_form_match_sql( $form_ids, 'sp_parent.data' );
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Fragments are prepared by the helpers.
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT p.id, p.amount, p.status, p.created_at, p.parent_id, p.data, p.extra, p.currency FROM {$table} p
+		WHERE p.customer_id = %d AND ( {$match} OR p.parent_id IN ( SELECT sp_parent.id FROM {$table} sp_parent WHERE {$parent} ) )
+		ORDER BY p.created_at DESC, p.id DESC LIMIT 200",
+			$customer_id
+		),
+		ARRAY_A
+	);
+	// phpcs:enable
+
+	$parents   = array();
+	$history   = array();
+	$campaigns = array();
+	$status    = array();
+	$amounts   = array();
+
+	foreach ( (array) $rows as $row ) {
+		$data = json_decode( (string) $row['data'], true );
+		if ( ! empty( $row['parent_id'] ) ) {
+			if ( ! array_key_exists( $row['parent_id'], $parents ) ) {
+				$parent_row                   = $wpdb->get_var( $wpdb->prepare( "SELECT data FROM {$table} WHERE id = %d", $row['parent_id'] ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$parents[ $row['parent_id'] ] = json_decode( (string) $parent_row, true );
+			}
+			$data = $parents[ $row['parent_id'] ];
+		}
+
+		$form_id     = (int) ( is_array( $data ) ? ( $data['form_id'] ?? 0 ) : 0 );
+		$campaign_id = smartpay_get_form_campaign_id( $form_id );
+		$campaign    = $campaign_id ? get_term( $campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY ) : null;
+		$donation    = smartpay_get_payment_donation( $row['extra'] );
+		$completed   = \SmartPay\Models\Payment::COMPLETED === $row['status'];
+
+		$status[ $row['status'] ] = ( $status[ $row['status'] ] ?? 0 ) + 1;
+
+		if ( $completed ) {
+			$amounts[] = (float) $row['amount'];
+			if ( $campaign instanceof \WP_Term ) {
+				$c                         = $campaigns[ $campaign_id ] ?? array(
+					'id'     => $campaign_id,
+					'title'  => $campaign->name,
+					'total'  => 0.0,
+					'gifts'  => 0,
+					'latest' => '',
+				);
+				$c['total']               += (float) $row['amount'];
+				$c['gifts']               += 1;
+				$c['latest']               = max( $c['latest'], (string) $row['created_at'] );
+				$campaigns[ $campaign_id ] = $c;
+			}
+		}
+
+		$history[] = array(
+			'id'         => (int) $row['id'],
+			'amount'     => (float) $row['amount'],
+			'status'     => (string) $row['status'],
+			'created_at' => (string) $row['created_at'],
+			'form'       => $form_id ? get_the_title( $form_id ) : '',
+			'campaign'   => $campaign instanceof \WP_Term ? array(
+				'id'    => $campaign_id,
+				'title' => $campaign->name,
+			) : null,
+			'frequency'  => ( ! empty( $row['parent_id'] ) || \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['billing_type'] ?? '' ) ) ? 'monthly' : 'one_time',
+			'anonymous'  => $donation['anonymous'],
+			'comment'    => $donation['comment'],
+		);
+	}
+
+	return array(
+		'stats'     => array(
+			'lifetime' => array_sum( $amounts ),
+			'gifts'    => count( $amounts ),
+			'average'  => $amounts ? array_sum( $amounts ) / count( $amounts ) : 0,
+			'largest'  => $amounts ? max( $amounts ) : 0,
+			'status'   => $status,
+		),
+		'history'   => $history,
+		'campaigns' => array_values( $campaigns ),
+		'monthly'   => smartpay_get_donor_monthly_gifts( $customer_id ),
+	);
+}
+
+/**
+ * A donor's recurring gifts (Pro subscriptions whose first payment was a gift).
+ *
+ * @param int $customer_id Customer ID.
+ * @return array[] id, status, amount, period, created_at, campaign.
+ */
+function smartpay_get_donor_monthly_gifts( int $customer_id ): array {
+	global $wpdb;
+
+	$subs = smartpay_donor_subscriptions_table();
+	if ( ! $subs || $customer_id <= 0 ) {
+		return array();
+	}
+
+	$table = $wpdb->prefix . 'smartpay_payments';
+	$match = smartpay_payments_form_match_sql( smartpay_get_donation_form_ids(), 'p.data' );
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $match is prepared; table names are ours.
+	$rows = $wpdb->get_results(
+		$wpdb->prepare(
+			"SELECT s.id, s.status, s.recurring_amount, s.period, s.created_at, p.data FROM {$subs} s
+			JOIN {$table} p ON p.id = s.parent_payment_id
+			WHERE p.customer_id = %d AND {$match} ORDER BY s.id DESC",
+			$customer_id
+		),
+		ARRAY_A
+	);
+	// phpcs:enable
+
+	return array_map(
+		static function ( $row ) {
+			$data        = json_decode( (string) $row['data'], true );
+			$campaign_id = smartpay_get_form_campaign_id( (int) ( $data['form_id'] ?? 0 ) );
+			$term        = $campaign_id ? get_term( $campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY ) : null;
+
+			return array(
+				'id'         => (int) $row['id'],
+				'status'     => (string) $row['status'],
+				'amount'     => (float) $row['recurring_amount'],
+				'period'     => (string) $row['period'],
+				'created_at' => (string) $row['created_at'],
+				'campaign'   => $term instanceof \WP_Term ? $term->name : '',
+			);
+		},
+		(array) $rows
+	);
 }

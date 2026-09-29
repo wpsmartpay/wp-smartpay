@@ -30,6 +30,10 @@ import { NativeFormList } from './admin/native-forms'
 import { CampaignList } from './pages/campaign/index'
 import { ShowCampaign } from './pages/campaign/show'
 
+// Donors
+import { DonorList } from './pages/donor/index'
+import { ShowDonor } from './pages/donor/show'
+
 // Other pages
 import { NotFound } from './pages/not-found'
 import { SubscriptionsLockedPage, ReportsLockedPage, InvoicesLockedPage, WebhooksLockedPage } from './components/LockedFeaturePage'
@@ -76,6 +80,9 @@ domReady(function () {
                         <Route exact path="/campaigns"                     element={<CampaignList />} />
                         <Route exact path="/campaigns/:campaignId"         element={<ShowCampaign />} />
                         <Route exact path="/campaigns/:campaignId/:tab"    element={<ShowCampaign />} />
+
+                        <Route exact path="/donors"                        element={<DonorList />} />
+                        <Route exact path="/donors/:donorId"               element={<ShowDonor />} />
 
                         <Route
                             exact path="/subscriptions"

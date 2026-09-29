@@ -296,6 +296,35 @@ export const PaymentDetailPage = () => {
 		})
 	}
 
+	/* Donation — campaign + what the donor entered with this gift */
+	if (payment.donation) {
+		const d = payment.donation
+		const tribute = d.tribute?.name
+			? `${d.tribute.type === 'memory' ? __('In memory of', 'smartpay') : __('In honor of', 'smartpay')} ${d.tribute.name}`
+			: ''
+		mainSections.push({
+			id: 'donation',
+			component: (
+				<DetailCard key="donation" title={__('Donation', 'smartpay')}>
+					<table className="sp-kv-table">
+						<tbody>
+							<tr>
+								<td>{__('Campaign', 'smartpay')}</td>
+								<td>{d.campaign ? <a href={`#/campaigns/${d.campaign.id}`}>{d.campaign.title} ↗</a> : '—'}</td>
+							</tr>
+							<tr><td>{__('Form', 'smartpay')}</td><td>{payment.data?.form_title || '—'}</td></tr>
+							<tr><td>{__('Frequency', 'smartpay')}</td><td>{d.frequency === 'monthly' ? __('Monthly', 'smartpay') : __('One-time', 'smartpay')}</td></tr>
+							<tr><td>{__('Anonymous', 'smartpay')}</td><td>{d.anonymous ? __('Yes', 'smartpay') : __('No', 'smartpay')}</td></tr>
+							<tr><td>{__('Tribute', 'smartpay')}</td><td>{tribute || '—'}</td></tr>
+							<tr><td>{__('Donor comment', 'smartpay')}</td><td>{d.comment ? `“${d.comment}”` : '—'}</td></tr>
+							{window.wp?.hooks?.applyFilters?.('smartpay_payment_donation_rows', null, payment)}
+						</tbody>
+					</table>
+				</DetailCard>
+			),
+		})
+	}
+
 	/* Customer details */
 	if (payment.customer) {
 		mainSections.push({

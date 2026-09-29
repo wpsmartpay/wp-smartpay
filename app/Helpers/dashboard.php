@@ -518,6 +518,11 @@ function smartpay_dashboard_subscriptions_enabled(): bool {
 function smartpay_dashboard_views(): array {
 	$views = array( 'overview', 'orders', 'order' );
 
+	// Giving tab: only on sites that take donations.
+	if ( function_exists( 'smartpay_get_donation_form_ids' ) && smartpay_get_donation_form_ids() ) {
+		$views[] = 'giving';
+	}
+
 	if ( smartpay_dashboard_subscriptions_enabled() ) {
 		$views[] = 'subscriptions';
 	}
