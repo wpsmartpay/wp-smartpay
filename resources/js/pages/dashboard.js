@@ -558,10 +558,13 @@ const ProUpgradeNote = () => {
 const AlertsCard = () => {
     const [ alerts, setAlerts ] = useState( window.smartpay?.alerts || [] )
 
+    const safeUrl = ( url ) =>
+        typeof url === 'string' && /^https?:/i.test( url ) ? url : '#'
+
     const dismiss = ( alert ) => {
         const body = new URLSearchParams( { action: alert.dismiss.action, nonce: alert.dismiss.nonce } )
         fetch( window.smartpay.ajax_url, { method: 'POST', credentials: 'same-origin', body } )
-        setAlerts( ( list ) => list.filter( ( a ) => a.id !== alert.id ) )
+            .then( () => setAlerts( ( list ) => list.filter( ( a ) => a.id !== alert.id ) ) )
     }
 
     return alerts.map( ( alert ) => (
@@ -596,7 +599,7 @@ const AlertsCard = () => {
                 { ( alert.actions || [] ).map( ( action, i ) => (
                     <a
                         key={ action.url }
-                        href={ action.url }
+                        href={ safeUrl( action.url ) }
                         target={ action.external ? '_blank' : undefined }
                         rel={ action.external ? 'noopener noreferrer' : undefined }
                         className={ i === 0 ? 'sp-btn sp-btn--primary' : 'sp-btn sp-btn--outline' }
