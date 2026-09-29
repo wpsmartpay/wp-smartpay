@@ -483,6 +483,9 @@ class Admin
                     'pluginUrl'    => SMARTPAY_PLUGIN_ASSETS,
                     'version'      => SMARTPAY_VERSION,
                     'setupNotices' => apply_filters( 'smartpay_setup_notices', [] ),
+                    // Urgent problems for the dashboard's red alert box. Each item:
+                    // id, title, message, detail?, count?, actions[{label,url,external?}], dismiss?{action,nonce}.
+                    'alerts'       => apply_filters( 'smartpay_dashboard_alerts', [] ),
                 )
             );
 
