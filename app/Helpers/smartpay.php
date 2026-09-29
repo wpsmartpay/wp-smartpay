@@ -1085,27 +1085,48 @@ function smartpay_get_available_payment_gateways($availableGateways) {
     return apply_filters('smartpay_get_available_payment_gateways', $availableGateways);
 }
 
-// get the form or product title from payment id
-function smartpay_get_payment_product_or_form_name($payment_id): array {
-	$payment = PaymentModel::find($payment_id);
-	if ($payment->type == 'Product Purchase') {
-		$product = \SmartPay\Models\Product::find($payment->data['product_id']);
-		if ($product) {
-			$name = $product->title;
-			$prev_link = $product->extra['product_preview_page_permalink'];
+/**
+ * Get the product or form name and preview link for a payment.
+ *
+ * @param int $payment_id Payment ID.
+ * @return array{name: string, preview: string} Falls back to "No Name" and "#".
+ */
+function smartpay_get_payment_product_or_form_name( $payment_id ): array {
+	$name    = '';
+	$preview = '';
+	$payment = PaymentModel::find( $payment_id );
+
+	if ( $payment && 'Product Purchase' === $payment->type ) {
+		$product = \SmartPay\Models\Product::find( $payment->data['product_id'] ?? 0 );
+		if ( $product ) {
+			$name    = $product->title;
+			$preview = $product->extra['product_preview_page_permalink'] ?? '';
 		}
-	} else {
-		$form = \SmartPay\Models\Form::find($payment->data['form_id']);
-		if ($form) {
-			$name = $form->title;
-			$prev_link = $form->extra['form_preview_page_permalink'];
+	} elseif ( $payment ) {
+		$form_id = absint( $payment->data['form_id'] ?? 0 );
+		$post    = $form_id ? get_post( $form_id ) : null;
+		$form    = null;
+
+		// Native forms are smartpay_form posts and form_id is the post ID. Check
+		// them first: when such a post exists, NativeForm::fix_cpt_form_payment_data()
+		// built this payment from it, even if a legacy form shares the same ID.
+		if ( $post && 'smartpay_form' === $post->post_type ) {
+			$name    = $post->post_title;
+			$preview = 'publish' === $post->post_status ? get_permalink( $post ) : '';
+		} else {
+			$form = \SmartPay\Models\Form::find( $form_id );
+		}
+
+		if ( $form ) {
+			$name    = $form->title;
+			$preview = $form->extra['form_preview_page_permalink'] ?? '';
 		}
 	}
 
-	return [
-		'name' => $name ?? 'No Name',
-		'preview'   =>$prev_link ?? '#'
-	];
+	return array(
+		'name'    => $name ? $name : __( 'No Name', 'smartpay' ),
+		'preview' => $preview ? $preview : '#',
+	);
 }
 
 /*
