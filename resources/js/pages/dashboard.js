@@ -577,20 +577,24 @@ const SetupNoticesCard = () => {
         )
     }
 
+    // Errors (e.g. Stripe rejecting payments) turn the whole card red and go first.
+    const hasError = notices.some( ( n ) => n.level === 'error' )
+    const sorted   = [ ...notices ].sort( ( a, b ) => ( b.level === 'error' ) - ( a.level === 'error' ) )
+
     return (
-        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#f59e0b' }}>
-            <div className="sp-detail-card__header" style={{ background: '#fffbeb' }}>
-                <AlertTriangle style={{ width: 13, height: 13, color: '#d97706', flexShrink: 0 }} />
-                <span className="sp-detail-card__title" style={{ color: '#92400e', marginLeft: 6 }}>
-                    {__( 'SETUP NEEDED', 'smartpay' )}
+        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: hasError ? '#dc2626' : '#f59e0b' }}>
+            <div className="sp-detail-card__header" style={{ background: hasError ? '#fef2f2' : '#fffbeb' }}>
+                <AlertTriangle style={{ width: 13, height: 13, color: hasError ? '#dc2626' : '#d97706', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: hasError ? '#991b1b' : '#92400e', marginLeft: 6 }}>
+                    { hasError ? __( 'ACTION NEEDED', 'smartpay' ) : __( 'SETUP NEEDED', 'smartpay' ) }
                 </span>
                 <span style={{
                     marginLeft: 'auto',
                     fontSize: 11,
                     fontWeight: 700,
-                    background: '#fef3c7',
-                    color: '#92400e',
-                    border: '1px solid #fcd34d',
+                    background: hasError ? '#fee2e2' : '#fef3c7',
+                    color: hasError ? '#991b1b' : '#92400e',
+                    border: hasError ? '1px solid #fca5a5' : '1px solid #fcd34d',
                     padding: '1px 7px',
                     borderRadius: 99,
                 }}>
@@ -598,22 +602,25 @@ const SetupNoticesCard = () => {
                 </span>
             </div>
             <div className="sp-detail-card__body" style={{ padding: 0 }}>
-                { notices.map( ( notice, i ) => (
+                { sorted.map( ( notice, i ) => {
+                    const color = notice.level === 'error' ? '#dc2626' : '#d97706'
+                    return (
                     <div key={ notice.id || i } style={{
                         display:    'flex',
                         alignItems: 'flex-start',
                         gap:        10,
                         padding:    '9px 16px',
                         borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
+                        background: notice.level === 'error' ? '#fef2f2' : undefined,
                     }}>
-                        <AlertTriangle style={{ width: 12, height: 12, color: '#d97706', flexShrink: 0, marginTop: 2 }} />
+                        <AlertTriangle style={{ width: 12, height: 12, color, flexShrink: 0, marginTop: 2 }} />
                         <span style={{ fontSize: 12, color: 'var(--sp-text)', flex: 1, minWidth: 0, lineHeight: 1.45 }}>
                             { notice.message }
                         </span>
                         { notice.action_url && (
                             <a
                                 href={ notice.action_url }
-                                style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
+                                style={{ fontSize: 11.5, fontWeight: 600, color, whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
                                 onMouseOver={ ( e ) => e.currentTarget.style.textDecoration = 'underline' }
                                 onMouseOut={ ( e ) => e.currentTarget.style.textDecoration = 'none' }
                             >
@@ -621,7 +628,8 @@ const SetupNoticesCard = () => {
                             </a>
                         ) }
                     </div>
-                ) ) }
+                    )
+                } ) }
             </div>
         </div>
     )
