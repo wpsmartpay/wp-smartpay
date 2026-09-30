@@ -123,6 +123,14 @@ class DonationFields {
 		 * @param array|null $campaign Normalised campaign.
 		 */
 		$wall_public = $ctx['campaign'] && apply_filters( 'smartpay_campaign_wall_is_public', false, $ctx['campaign'] );
+
+		/**
+		 * Whether this campaign's donor wall prints donor names (Pro).
+		 *
+		 * @param bool       $shows    Default true.
+		 * @param array|null $campaign Normalised campaign.
+		 */
+		$anonymous = $anonymous || ! apply_filters( 'smartpay_campaign_wall_shows_names', true, $ctx['campaign'] );
 		?>
 		<div class="smartpay-receipt-donation" style="margin-top:24px;padding:16px 20px;border:1px solid #e5e7eb;border-radius:8px;">
 			<?php if ( $ctx['campaign'] ) : ?>
@@ -141,11 +149,11 @@ class DonationFields {
 				<?php if ( $wall_public ) : ?>
 					<p style="margin:12px 0 0;font-size:14px;">
 						<?php if ( $anonymous ) : ?>
-							<?php esc_html_e( 'You gave anonymously. Your name won’t appear on the donor wall.', 'smartpay' ); ?>
+							<?php esc_html_e( 'Your name won’t appear on the donor wall.', 'smartpay' ); ?>
 						<?php else : ?>
 							<?php
 							printf(
-								/* translators: %s: public name, e.g. "Sarah A." */
+								/* translators: %s: donor's full name */
 								esc_html__( 'You’ll appear on the donor wall as %s.', 'smartpay' ),
 								'<strong>' . esc_html( smartpay_donor_public_name( (string) ( $customer->first_name ?? '' ), (string) ( $customer->last_name ?? '' ) ) ) . '</strong>'
 							);

@@ -316,25 +316,14 @@ function smartpay_get_payment_donation( $extra ): array {
 }
 
 /**
- * Public wall name for a donor: "Sarah A." (first name + last initial).
+ * Public wall name for a donor: full name.
  *
  * @param string $first First name.
  * @param string $last  Last name.
- * @param string $style initial | full | first.
  * @return string
  */
-function smartpay_donor_public_name( string $first, string $last, string $style = 'initial' ): string {
-	$first = trim( $first );
-	$last  = trim( $last );
-
-	if ( 'full' === $style ) {
-		return trim( $first . ' ' . $last );
-	}
-	if ( 'first' === $style || '' === $last ) {
-		return $first;
-	}
-
-	return $first . ' ' . mb_strtoupper( mb_substr( $last, 0, 1 ) ) . '.';
+function smartpay_donor_public_name( string $first, string $last ): string {
+	return trim( trim( $first ) . ' ' . trim( $last ) );
 }
 
 /**
