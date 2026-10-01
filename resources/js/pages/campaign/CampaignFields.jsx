@@ -2,8 +2,13 @@ import { GOAL_TYPES, currencySymbol } from './utils'
 
 const { __ } = wp.i18n
 
-/** Cover picker backed by the WP media library. */
-export const CoverField = ({ coverUrl, onChange }) => {
+/**
+ * Cover picker backed by the WP media library.
+ *
+ * `onPicking(true|false)` tells a surrounding dialog the library is open, so
+ * it can stop treating clicks in the library as "outside" and closing.
+ */
+export const CoverField = ({ coverUrl, onChange, onPicking = () => {} }) => {
     const { Button } = window.WPSmartPayUI
 
     const pick = () => {
@@ -12,6 +17,11 @@ export const CoverField = ({ coverUrl, onChange }) => {
             const file = frame.state().get('selection').first().toJSON()
             onChange({ cover_id: file.id, cover_url: file.url })
         })
+        frame.on('close', () => onPicking(false))
+        // A surrounding dialog re-renders when picking starts and can leave
+        // focus behind it; give it back to the library so Escape/search work.
+        frame.on('open', () => setTimeout(() => frame.$el.closest('.media-modal').trigger('focus'), 50))
+        onPicking(true)
         frame.open()
     }
 
@@ -63,16 +73,18 @@ export const GoalFields = ({ value, onChange, showBehavior = false }) => {
                 </div>
             </div>
 
-            <div className="sp-field--row">
+            <div className="sp-campaign-row">
                 <div className="sp-campaign-field">
                     <Label htmlFor="sp-campaign-target">{__('Goal target', 'smartpay')}</Label>
                     <div className="sp-campaign-prefix">
-                        {value.goal_type === 'amount' && <span>{currencySymbol()}</span>}
+                        {value.goal_type === 'amount' && <span aria-hidden="true">{currencySymbol()}</span>}
                         <Input
                             id="sp-campaign-target"
+                            className="shadow-none!" // the group box draws the shadow
                             type="number"
                             min="0"
                             step="any"
+                            placeholder={value.goal_type === 'amount' ? '5000' : '100'}
                             value={value.goal_target ?? ''}
                             onChange={(e) => onChange({ goal_target: e.target.value })}
                         />
@@ -83,6 +95,8 @@ export const GoalFields = ({ value, onChange, showBehavior = false }) => {
                     <Input
                         id="sp-campaign-end"
                         type="date"
+                        // Open the picker from anywhere in the box, not just the icon.
+                        onClick={(e) => { try { e.currentTarget.showPicker?.() } catch (err) {} }}
                         value={value.end_date || ''}
                         onChange={(e) => onChange({ end_date: e.target.value })}
                     />

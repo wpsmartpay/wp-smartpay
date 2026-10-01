@@ -5,7 +5,7 @@ import { CoverField, GoalFields } from './CampaignFields'
 import { money, count, goalValue, GoalBar, colorIndex, initials, errorMessage } from './utils'
 
 const { __, sprintf } = wp.i18n
-const { useState, useEffect, useCallback } = wp.element
+const { useState, useEffect, useCallback, useRef } = wp.element
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100]
 
@@ -18,11 +18,25 @@ const NewCampaignModal = ({ open, onClose, onCreated }) => {
     const [value, setValue] = useState(EMPTY)
     const [saving, setSaving] = useState(false)
     const [error, setError] = useState('')
+    // The WP media library opens outside the dialog (on <body>). While it is
+    // open the dialog drops its focus trap and pointer blocking (modal=false)
+    // and ignores outside clicks/Escape, so picking a cover never closes it.
+    const [picking, setPicking] = useState(false)
+    const keepOpen = (e) => picking && e.preventDefault()
+    // Switching `modal` remounts the content; only auto-focus on a real open,
+    // never on those remounts (it would steal focus from the library).
+    const pickedOnce = useRef(false)
+    const startPicking = (on) => {
+        if (on) pickedOnce.current = true
+        setPicking(on)
+    }
 
     useEffect(() => {
         if (open) {
             setValue(EMPTY)
             setError('')
+            setPicking(false)
+            pickedOnce.current = false
         }
     }, [open])
 
@@ -48,17 +62,18 @@ const NewCampaignModal = ({ open, onClose, onCreated }) => {
     }
 
     return (
-        <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
-            <DialogContent className="sm:max-w-xl">
+        <Dialog open={open} modal={!picking} onOpenChange={(o) => !o && !picking && onClose()}>
+            <DialogContent className="sm:max-w-xl" onInteractOutside={keepOpen} onEscapeKeyDown={keepOpen}
+                onOpenAutoFocus={(e) => pickedOnce.current && e.preventDefault()}>
                 <form onSubmit={submit} className="sp-campaign-form">
-                    <DialogHeader>
+                    <DialogHeader className="sp-campaign-form__header">
                         <DialogTitle>{__('New campaign', 'smartpay')}</DialogTitle>
                         <DialogDescription>{__('Name it and set one goal. You attach forms afterwards on the Forms tab.', 'smartpay')}</DialogDescription>
                     </DialogHeader>
 
                     <div className="sp-campaign-field">
                         <Label htmlFor="sp-new-campaign-title">{__('Title', 'smartpay')}</Label>
-                        <Input id="sp-new-campaign-title" value={value.title} autoFocus onChange={(e) => change({ title: e.target.value })} />
+                        <Input id="sp-new-campaign-title" value={value.title} onChange={(e) => change({ title: e.target.value })} />
                     </div>
 
                     <div className="sp-campaign-field">
@@ -68,14 +83,14 @@ const NewCampaignModal = ({ open, onClose, onCreated }) => {
 
                     <div className="sp-campaign-field">
                         <span className="sp-campaign-field__label">{__('Cover image', 'smartpay')}</span>
-                        <CoverField coverUrl={value.cover_url} onChange={change} />
+                        <CoverField coverUrl={value.cover_url} onChange={change} onPicking={startPicking} />
                     </div>
 
                     <GoalFields value={value} onChange={change} />
 
                     {error && <p className="sp-campaign-error" role="alert">{error}</p>}
 
-                    <DialogFooter>
+                    <DialogFooter className="sp-campaign-form__footer">
                         <Button type="button" variant="outline" onClick={onClose}>{__('Cancel', 'smartpay')}</Button>
                         <Button type="submit" disabled={saving}>{saving ? __('Creating…', 'smartpay') : __('Create campaign', 'smartpay')}</Button>
                     </DialogFooter>

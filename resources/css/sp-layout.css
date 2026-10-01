@@ -2213,21 +2213,91 @@ input.sp-note-input {
   flex-direction: column;
   gap: 6px;
 }
+/* Same look as the <Label> component so every field label matches. */
 .sp-campaign-field__label {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
   color: var(--sp-text);
   margin: 0;
 }
+/* Header/footer: WP admin gives h2/p their own margins, so reset them. */
+.sp-campaign-form .sp-campaign-form__header {
+  text-align: left;
+  gap: 4px;
+  padding-right: 24px; /* clear the close button */
+  margin-bottom: 6px;
+}
+.sp-campaign-form__header h2,
+.sp-campaign-form__header p {
+  margin: 0;
+}
+.sp-campaign-form__footer {
+  margin-top: 4px;
+}
+
+/* Goal target + end date side by side. */
+.sp-campaign-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .sp-campaign-row { grid-template-columns: 1fr; }
+}
+
+/* Input group: prefix ($, /campaign/) and input share one box. */
 .sp-campaign-prefix {
   display: flex;
   align-items: center;
-  gap: 6px;
+  height: 36px;
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  overflow: hidden; /* keep the input inside the rounded border */
+}
+.sp-campaign-prefix:focus-within {
+  border-color: var(--sp-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-brand) 20%, transparent);
 }
 .sp-campaign-prefix > span {
+  padding-left: 12px;
   color: var(--sp-text-muted);
   font-size: 13px;
   white-space: nowrap;
+}
+/* [data-slot] outranks the scoped `.smartpay .border` !important rule. */
+.sp-campaign-prefix > input[data-slot="input"] {
+  flex: 1;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+/* The box shows focus (see :focus-within), not the inner input. Tailwind
+   builds the ring from this var; the Input also gets `shadow-none!`, since
+   a layered !important shadow can't be overridden from plain CSS. */
+.sp-campaign-prefix > input[data-slot="input"]:focus-visible {
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+.sp-campaign-prefix > span + input {
+  padding-left: 4px;
+}
+.sp-campaign-prefix input[type="number"] {
+  -moz-appearance: textfield;
+}
+.sp-campaign-prefix input[type="number"]::-webkit-inner-spin-button,
+.sp-campaign-prefix input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* WP admin makes date inputs 40px; match the 36px fields beside them. */
+.sp-campaign-field input[type="date"][data-slot="input"] {
+  height: 36px !important;
+  min-height: 0 !important;
+  cursor: pointer;
 }
 
 .sp-campaign-choices {

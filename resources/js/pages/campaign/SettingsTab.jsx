@@ -23,7 +23,7 @@ export const SettingsTab = ({ campaign, draft, onChange }) => {
                         <Label htmlFor="sp-campaign-slug">{__('Page URL', 'smartpay')}</Label>
                         <div className="sp-campaign-prefix">
                             <span>{base.replace(/^https?:\/\/[^/]+/, '') || '/campaign/'}</span>
-                            <Input id="sp-campaign-slug" value={draft.slug} onChange={(e) => onChange({ slug: e.target.value })} />
+                            <Input id="sp-campaign-slug" className="shadow-none!" value={draft.slug} onChange={(e) => onChange({ slug: e.target.value })} />
                         </div>
                     </div>
                     <div className="sp-campaign-field">
