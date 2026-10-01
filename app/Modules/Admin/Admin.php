@@ -132,27 +132,16 @@ class Admin
 
         add_submenu_page(
             'smartpay',
-            __('WPSmartPay - Payments', 'smartpay'),
-            __('Payments', 'smartpay'),
+            __('WPSmartPay - Transactions', 'smartpay'),
+            __('Transactions', 'smartpay'),
             'manage_options',
-            'smartpay#/payments',
+            'smartpay#/transactions',
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
 
-        add_submenu_page(
-            'smartpay',
-            __('WPSmartPay - Donations', 'smartpay'),
-            __('Donations', 'smartpay'),
-            'manage_options',
-            'smartpay#/donations',
-            function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
 
         add_submenu_page(
             'smartpay',
@@ -168,27 +157,16 @@ class Admin
 
         add_submenu_page(
             'smartpay',
-            __('WPSmartPay - Customers', 'smartpay'),
-            __('Customers', 'smartpay'),
+            __('WPSmartPay - Contacts', 'smartpay'),
+            __('Contacts', 'smartpay'),
             'manage_options',
-            'smartpay#/customers',
+            'smartpay#/contacts',
             function () {
 				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
                 echo smartpay_view('admin');
             }
         );
 
-        add_submenu_page(
-            'smartpay',
-            __('WPSmartPay - Donors', 'smartpay'),
-            __('Donors', 'smartpay'),
-            'manage_options',
-            'smartpay#/donors',
-            function () {
-				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
-                echo smartpay_view('admin');
-            }
-        );
 
         add_submenu_page(
             'smartpay',
@@ -303,8 +281,8 @@ class Admin
             array(
                 'parent' => 'smartpay-toolbar',
                 'id'     => 'smartpay-toolbar-payments',
-                'title'  => esc_html__( 'Payments', 'smartpay' ),
-                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/payments' ) ),
+                'title'  => esc_html__( 'Transactions', 'smartpay' ),
+                'href'   => esc_url( admin_url( 'admin.php?page=smartpay#/transactions' ) ),
             )
         );
 
@@ -344,7 +322,7 @@ class Admin
     {
         return (array) apply_filters(
             'smartpay_admin_menu_separators',
-            [ 'smartpay#/payments', 'smartpay#/customers', 'smartpay-setting' ]
+            [ 'smartpay#/transactions', 'smartpay#/contacts', 'smartpay-setting' ]
         );
     }
 

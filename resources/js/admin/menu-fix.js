@@ -9,6 +9,15 @@ jQuery(function ($) {
      * `admin.php?page=smartpay%23%2Fproducts` in the href attribute.
      * We match by decoding the href and comparing the hash portion.
      */
+    // Old list pages now live as tabs of the merged pages.
+    const MERGED = { payments: 'transactions', donations: 'transactions', customers: 'contacts', donors: 'contacts' }
+
+    // '#/payments/12?x=1' → 'transactions' (first path segment, merged).
+    const section = (h) => {
+        const first = (h.replace(/^#\/?/, '').split(/[/?]/)[0]) || ''
+        return MERGED[first] || first
+    }
+
     function activateMenuByHash() {
         const hash = window.location.hash || '#/'
 
@@ -23,7 +32,7 @@ jQuery(function ($) {
             //   admin.php?page=smartpay#/products → products
             const hrefHash = href.includes('#') ? href.substring(href.indexOf('#')) : '#/'
 
-            if (hrefHash === hash) {
+            if (hrefHash !== '#/' && section(hrefHash) === section(hash)) {
                 $(this).parent().addClass('current')
                 matched = true
                 return false // break .each

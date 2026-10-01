@@ -86,7 +86,8 @@ class PaymentController extends RestController
 		// Get paginated results
 		$payments = $query->paginate($perPage);
 
-		if (null !== $donation && rest_sanitize_boolean($donation)) {
+		// Donation rows (Donations or All tab) show their campaign.
+		if (null === $donation || '' === $donation || rest_sanitize_boolean($donation)) {
 			$this->attach_campaign_titles($payments);
 		}
 
@@ -120,8 +121,8 @@ class PaymentController extends RestController
     }
 
     /**
-     * Add `campaign_title` to each donation row. Renewals carry no form id, so
-     * they use their parent's.
+     * Add `campaign_title` to each donation row (sales are skipped). Renewals
+     * carry no form id, so they use their parent's.
      *
      * @param iterable $payments Payment models on the current page.
      */
@@ -129,7 +130,7 @@ class PaymentController extends RestController
     {
 		$parent_ids = array();
 		foreach ($payments as $payment) {
-			if ((int) $payment->parent_id > 0) {
+			if ((int) $payment->is_donation && (int) $payment->parent_id > 0) {
 				$parent_ids[] = (int) $payment->parent_id;
 			}
 		}
@@ -143,6 +144,10 @@ class PaymentController extends RestController
 
 		$titles = array();
 		foreach ($payments as $payment) {
+			if (! (int) $payment->is_donation) {
+				continue;
+			}
+
 			$form_id = (int) $payment->parent_id > 0
 				? ($parent_forms[(int) $payment->parent_id] ?? 0)
 				: absint($payment->data['form_id'] ?? 0);

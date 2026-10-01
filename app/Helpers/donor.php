@@ -502,3 +502,48 @@ function smartpay_customers_exclude_donors_sql( string $column = 'id' ): string 
 	return "{$column} NOT IN ( SELECT p.customer_id FROM {$payments} p WHERE p.customer_id IS NOT NULL AND {$gift}
 		AND p.customer_id NOT IN ( SELECT s.customer_id FROM {$payments} s WHERE s.customer_id IS NOT NULL AND s.is_donation = 0 ) )";
 }
+
+/**
+ * Contact roles for the Contacts › All list, matching the Customers and
+ * Donors tabs: a donor has a completed gift on a donation form; a customer
+ * is anyone the Customers tab lists (see smartpay_customers_exclude_donors_sql()).
+ *
+ * @param int[] $customer_ids Customer IDs on the current page.
+ * @return array<int, array{customer: bool, donor: bool}>
+ */
+function smartpay_get_contact_roles( array $customer_ids ): array {
+	global $wpdb;
+
+	$ids = array_values( array_filter( array_map( 'absint', $customer_ids ) ) );
+	if ( ! $ids ) {
+		return array();
+	}
+
+	$payments = $wpdb->prefix . 'smartpay_payments';
+	$in       = implode( ',', $ids );
+	$form_ids = smartpay_get_donation_form_ids();
+	$donors   = array();
+	$buyers   = array();
+
+	// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $in is absint-joined, $gift is prepared.
+	if ( $form_ids ) {
+		$gift   = smartpay_gift_payments_where_sql( $form_ids, 'p' );
+		$donors = array_map( 'intval', $wpdb->get_col( "SELECT DISTINCT p.customer_id FROM {$payments} p WHERE p.customer_id IN ({$in}) AND {$gift}" ) );
+		if ( get_option( 'smartpay_payments_is_donation_column' ) ) {
+			$buyers = array_map( 'intval', $wpdb->get_col( "SELECT DISTINCT customer_id FROM {$payments} WHERE customer_id IN ({$in}) AND is_donation = 0" ) );
+		}
+	}
+	// phpcs:enable
+
+	$no_split = ! get_option( 'smartpay_payments_is_donation_column' );
+	$roles    = array();
+	foreach ( $ids as $id ) {
+		$donor        = in_array( $id, $donors, true );
+		$roles[ $id ] = array(
+			'customer' => $no_split || ! $donor || in_array( $id, $buyers, true ),
+			'donor'    => $donor,
+		);
+	}
+
+	return $roles;
+}

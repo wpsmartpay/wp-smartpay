@@ -8,7 +8,8 @@ const { useState, useEffect, useCallback } = wp.element
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100]
 
-export const DonorList = () => {
+/** Contacts › Donors. */
+export const DonorList = ({ tabs = null }) => {
     const { Header, StatCard } = window.WPSmartPayUI
 
     const [search, setSearch] = useState('')
@@ -55,13 +56,15 @@ export const DonorList = () => {
 
     return (
         <>
-            <Header title={__('Donors', 'smartpay')} subtitle={__('People who gave to your campaigns', 'smartpay')} />
+            <Header title={__('Contacts', 'smartpay')} subtitle={__('Everyone who paid or gave', 'smartpay')} />
 
             <div className="sp-layout">
                 <div className="sp-page-title__inner">
-                    <h1 className="sp-page-title__heading">{__('Donors', 'smartpay')}</h1>
-                    <p className="sp-page-title__sub">{__('People who gave to your campaigns and donation forms', 'smartpay')}</p>
+                    <h1 className="sp-page-title__heading">{__('Contacts', 'smartpay')}</h1>
+                    <p className="sp-page-title__sub">{__('Everyone who paid or gave', 'smartpay')}</p>
                 </div>
+
+                {tabs}
 
                 <div className="sp-grid sp-grid--4" style={{ marginBottom: 20 }}>
                     <StatCard title={__('Donors', 'smartpay')} value={result ? count(counts.all) : '…'} icon={Users}
