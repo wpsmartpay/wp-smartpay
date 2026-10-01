@@ -57,6 +57,8 @@ class Campaign {
 		add_action( 'init', array( $this, 'register_block' ) );
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ) );
 		add_action( 'set_object_terms', array( $this, 'enforce_single_campaign' ), 10, 6 );
+		// Detach (wp_remove_object_terms) fires this, not set_object_terms.
+		add_action( 'deleted_term_relationships', array( $this, 'forms_left_campaign' ), 10, 3 );
 		add_filter( 'template_include', array( $this, 'campaign_template' ) );
 		add_filter( 'smartpay_needs_frontend_assets', array( $this, 'campaign_page_needs_assets' ) );
 
@@ -223,7 +225,34 @@ class Campaign {
 			$this->enforcing = false;
 		}
 
-		foreach ( array_unique( array_merge( $tt_ids, array_map( 'intval', (array) $old_tt_ids ) ) ) as $tt_id ) {
+		$this->refresh_campaign_links( (int) $object_id, array_merge( $tt_ids, array_map( 'intval', (array) $old_tt_ids ) ) );
+	}
+
+	/**
+	 * A form was detached from a campaign (wp_remove_object_terms()).
+	 *
+	 * @param int    $object_id Form post ID.
+	 * @param array  $tt_ids    Removed term taxonomy IDs.
+	 * @param string $taxonomy  Taxonomy.
+	 */
+	public function forms_left_campaign( $object_id, $tt_ids, $taxonomy ): void {
+		if ( SMARTPAY_CAMPAIGN_TAXONOMY !== $taxonomy ) {
+			return;
+		}
+
+		$this->refresh_campaign_links( (int) $object_id, array_map( 'intval', (array) $tt_ids ) );
+	}
+
+	/**
+	 * After a form joins or leaves campaigns: drop each affected campaign's
+	 * cached totals, clear its default-form pointer when this form left, and
+	 * drop the form's own cached goal (paused while in a campaign).
+	 *
+	 * @param int   $form_id Form post ID.
+	 * @param int[] $tt_ids  Term taxonomy IDs of every campaign it joined or left.
+	 */
+	private function refresh_campaign_links( int $form_id, array $tt_ids ): void {
+		foreach ( array_unique( $tt_ids ) as $tt_id ) {
 			$term = get_term_by( 'term_taxonomy_id', $tt_id, SMARTPAY_CAMPAIGN_TAXONOMY );
 			if ( ! $term ) {
 				continue;
@@ -231,15 +260,14 @@ class Campaign {
 
 			smartpay_invalidate_campaign_cache( (int) $term->term_id );
 
-			$still_attached = has_term( (int) $term->term_id, SMARTPAY_CAMPAIGN_TAXONOMY, (int) $object_id );
-			if ( ! $still_attached && (int) get_term_meta( $term->term_id, 'smartpay_campaign_default_form', true ) === (int) $object_id ) {
+			$still_attached = has_term( (int) $term->term_id, SMARTPAY_CAMPAIGN_TAXONOMY, $form_id );
+			if ( ! $still_attached && (int) get_term_meta( $term->term_id, 'smartpay_campaign_default_form', true ) === $form_id ) {
 				delete_term_meta( $term->term_id, 'smartpay_campaign_default_form' );
 			}
 		}
 
-		// The form's own goal is paused/resumed, so its cached value is stale too.
-		delete_transient( "smartpay_goal_{$object_id}_quantity" );
-		delete_transient( "smartpay_goal_{$object_id}_amount" );
+		delete_transient( "smartpay_goal_{$form_id}_quantity" );
+		delete_transient( "smartpay_goal_{$form_id}_amount" );
 	}
 
 	/**
