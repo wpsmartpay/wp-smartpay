@@ -118,9 +118,8 @@ class Payment
         $form_id = $payment_data['payment_data']['form_id'] ?? 0;
         if ( $form_id > 0 ) {
             $progress = smartpay_calculate_goal_progress( $form_id );
-            $settings = get_post_meta( $form_id, '_smartpay_settings', true );
-            $settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
-            $goal     = $settings['goal'] ?? [];
+            // Campaign-aware: an attached form follows its campaign's goal.
+            $goal     = smartpay_get_form_goal( (int) $form_id );
 
             if ( ! empty( $goal['enabled'] ) ) {
                 $blocked = false;
@@ -397,6 +396,11 @@ class Payment
 
         // Invalidate goal cache so progress bar reflects new completed payment.
         $form_id = $payment->data['form_id'] ?? 0;
+        // Renewals carry no data; they count toward their parent payment's form.
+        if ( ! $form_id && ! empty( $payment->parent_id ) ) {
+            $parent  = PaymentModel::find( (int) $payment->parent_id );
+            $form_id = $parent ? ( $parent->data['form_id'] ?? 0 ) : 0;
+        }
         if ( $form_id > 0 && function_exists( 'smartpay_invalidate_goal_cache' ) ) {
             smartpay_invalidate_goal_cache( (int) $form_id );
         }

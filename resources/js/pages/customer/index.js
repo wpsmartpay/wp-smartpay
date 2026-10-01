@@ -17,8 +17,11 @@ const colorIndex = (str) => {
 
 const PER_PAGE_OPTIONS = [10, 20, 50, 100]
 
-const CustomerRow = ({ customer, onDelete, openId, setOpenId, checked, onCheck }) => {
+const CustomerRow = ({ customer, all, onDelete, openId, setOpenId, checked, onCheck }) => {
 	const isOpen    = openId === customer.id
+	const roles     = customer.roles || { customer: true, donor: false }
+	// Donor-only contacts open their donor page.
+	const detailUrl = all && roles.donor && !roles.customer ? `/donors/${customer.id}` : `/customers/${customer.id}`
 	const fullName  = `${customer.first_name || ''} ${customer.last_name || ''}`.trim() || '—'
 	const initials  = (customer.email || fullName || '?').substring(0, 2).toUpperCase()
 	const dateLabel = customer.created_at
@@ -38,7 +41,7 @@ const CustomerRow = ({ customer, onDelete, openId, setOpenId, checked, onCheck }
 						{initials}
 					</div>
 					<div className="sp-customer__info">
-						<Link to={`/customers/${customer.id}`} className="sp-customer__name"
+						<Link to={detailUrl} className="sp-customer__name"
 							style={{ textDecoration: 'none', color: 'inherit' }}>
 							{fullName}
 						</Link>
@@ -46,6 +49,16 @@ const CustomerRow = ({ customer, onDelete, openId, setOpenId, checked, onCheck }
 					</div>
 				</div>
 			</td>
+
+			{all && (
+				<td>
+					{roles.customer && roles.donor
+						? <span className="sp-badge sp-badge--trial">{__('Customer + Donor', 'smartpay')}</span>
+						: roles.donor
+						? <span className="sp-badge sp-badge--pending">{__('Donor', 'smartpay')}</span>
+						: <span className="sp-badge sp-badge--active">{__('Customer', 'smartpay')}</span>}
+				</td>
+			)}
 
 			<td className="sp-cell--muted sp-col--nowrap">{dateLabel}</td>
 
@@ -58,7 +71,7 @@ const CustomerRow = ({ customer, onDelete, openId, setOpenId, checked, onCheck }
 						···
 					</button>
 					<div className={`sp-dropdown${isOpen ? ' sp-dropdown--open' : ''}`}>
-						<Link to={`/customers/${customer.id}`} className="sp-dropdown__item"
+						<Link to={detailUrl} className="sp-dropdown__item"
 							onClick={() => setOpenId(null)}>
 							{__('View Details', 'smartpay')}
 						</Link>
@@ -76,7 +89,8 @@ const CustomerRow = ({ customer, onDelete, openId, setOpenId, checked, onCheck }
 
 /* ── Main list ────────────────────────────────────────────── */
 
-export const CustomerList = () => {
+/** Contacts › All (`all`) and Contacts › Customers. */
+export const CustomerList = ({ all = false, tabs = null }) => {
 	const { Header } = window.WPSmartPayUI
 
 	const [data,            setData]            = useState([])
@@ -99,7 +113,7 @@ export const CustomerList = () => {
 	const fetchCustomers = useCallback(async (page = 1, search = '') => {
 		setIsLoading(true)
 		try {
-			const result = await GetCustomers({ page, perPage, search })
+			const result = await GetCustomers({ page, perPage, search, scope: all ? 'all' : '' })
 			const { data: rows = [], ...paginationData } = result
 			setData(rows)
 			setPagination(paginationData)
@@ -109,7 +123,7 @@ export const CustomerList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [perPage])
+	}, [perPage, all])
 
 	useEffect(() => {
 		fetchCustomers(1, debouncedSearch)
@@ -156,16 +170,18 @@ export const CustomerList = () => {
 	return (
 		<>
 			<Header
-				title={__('Customers', 'smartpay')}
-				subtitle={__('Manage your customers here', 'smartpay')}
+				title={__('Contacts', 'smartpay')}
+				subtitle={__('Everyone who paid or gave', 'smartpay')}
 			/>
 
 			<div className="sp-layout">
 
 				<div className="sp-page-title__inner">
-					<h1 className="sp-page-title__heading">{__('Customers', 'smartpay')}</h1>
-					<p className="sp-page-title__sub">{__('Manage your customers here', 'smartpay')}</p>
+					<h1 className="sp-page-title__heading">{__('Contacts', 'smartpay')}</h1>
+					<p className="sp-page-title__sub">{__('Everyone who paid or gave', 'smartpay')}</p>
 				</div>
+
+				{tabs}
 
 				<div className="sp-toolbar">
 					<div className="sp-search">
@@ -187,6 +203,9 @@ export const CustomerList = () => {
 					)}
 
 					<div className="sp-toolbar__spacer" />
+
+					{/* Add-ons (Pro) add toolbar actions, e.g. Export CSV. */}
+					{window.wp?.hooks?.applyFilters?.('smartpay_customer_list_actions', [], { search: debouncedSearch, scope: all ? 'all' : '' }) || null}
 
 					<div className="sp-action-dropdown" onClick={(e) => e.stopPropagation()}>
 						<button className="sp-btn sp-btn--outline"
@@ -221,19 +240,20 @@ export const CustomerList = () => {
 										ref={(el) => { if (el) el.indeterminate = someChecked }}
 										onChange={toggleAll} />
 								</th>
-								<th>{__('Customer', 'smartpay')}</th>
+								<th>{all ? __('Contact', 'smartpay') : __('Customer', 'smartpay')}</th>
+								{all && <th>{__('Role', 'smartpay')}</th>}
 								<th>{__('Member Since', 'smartpay')}</th>
 								<th className="sp-col--actions"></th>
 							</tr>
 						</thead>
 						<tbody>
 							{isLoading ? (
-								<tr><td colSpan={4} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
+								<tr><td colSpan={all ? 5 : 4} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
 							) : data.length === 0 ? (
-								<tr><td colSpan={4}>
+								<tr><td colSpan={all ? 5 : 4}>
 									<div className="sp-empty">
 										<div className="sp-empty__icon">👤</div>
-										<div className="sp-empty__title">{__('No customers found', 'smartpay')}</div>
+										<div className="sp-empty__title">{all ? __('No contacts found', 'smartpay') : __('No customers found', 'smartpay')}</div>
 										<div className="sp-empty__desc">
 											{searchQuery
 												? __('No customers match your search. Try a different term.', 'smartpay')
@@ -246,6 +266,7 @@ export const CustomerList = () => {
 								<CustomerRow
 									key={customer.id}
 									customer={customer}
+									all={all}
 									onDelete={deleteCustomer}
 									openId={openRowId}
 									setOpenId={setOpenRowId}
@@ -260,7 +281,7 @@ export const CustomerList = () => {
 						<div className="sp-pagination">
 							<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
 								<span className="sp-pagination__info">
-									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {__('customers', 'smartpay')}
+									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {all ? __('contacts', 'smartpay') : __('customers', 'smartpay')}
 								</span>
 								<select className="sp-filter-select"
 									style={{ fontSize: 12, padding: '0 22px 0 8px' }}

@@ -18,7 +18,8 @@ function smartpay_dashboard_get_totals(): array {
 	$prefix = esc_sql( $wpdb->prefix );
 
     // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	$total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" );
+	$no_donors       = smartpay_customers_exclude_donors_sql();
+	$total_customers = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_customers" . ( $no_donors ? " WHERE {$no_donors}" : '' ) );
 	$total_products  = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_products" );
 	$total_forms     = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$prefix}smartpay_forms" );
     // phpcs:enable
@@ -517,6 +518,11 @@ function smartpay_dashboard_subscriptions_enabled(): bool {
  */
 function smartpay_dashboard_views(): array {
 	$views = array( 'overview', 'orders', 'order' );
+
+	// Giving tab: only on sites that take donations.
+	if ( function_exists( 'smartpay_get_donation_form_ids' ) && smartpay_get_donation_form_ids() ) {
+		$views[] = 'giving';
+	}
 
 	if ( smartpay_dashboard_subscriptions_enabled() ) {
 		$views[] = 'subscriptions';

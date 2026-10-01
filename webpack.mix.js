@@ -63,6 +63,7 @@ mix.webpackConfig({
     .js('resources/js/frontend/registration.js', 'public/js/frontend/registration.js')
     .css('resources/css/frontend/registration.css', 'public/css/frontend/registration.css')
     .css('resources/css/frontend/dashboard.css', 'public/css/frontend/dashboard.css')
+    .css('resources/css/frontend/campaign.css', 'public/css/frontend/campaign.css')
     .react()
     .sass('resources/sass/admin.scss', 'public/css')
     .sass('resources/sass/dashboard.scss', 'public/css')

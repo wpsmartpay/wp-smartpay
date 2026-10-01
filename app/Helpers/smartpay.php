@@ -2,6 +2,8 @@
 defined('ABSPATH') || exit;
 
 require_once __DIR__ . '/integration.php';
+require_once __DIR__ . '/campaign.php';
+require_once __DIR__ . '/donor.php';
 
 use SmartPay\Models\Customer;
 use SmartPay\Modules\Gateway\Gateway;
@@ -1165,9 +1167,7 @@ if (!function_exists('smartpay_is_customer')) {
  * @return array{current: float, target: float, percentage: float, type: string, goal_reached: bool}
  */
 function smartpay_calculate_goal_progress( int $form_id ): array {
-	$settings = get_post_meta( $form_id, '_smartpay_settings', true );
-	$settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
-	$goal     = $settings['goal'] ?? [];
+	$goal = smartpay_get_form_goal( $form_id );
 
 	if ( empty( $goal['enabled'] ) ) {
 		return [
@@ -1179,6 +1179,20 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 		];
 	}
 
+	// Attached to a campaign: the form's own goal is paused, the campaign's applies.
+	if ( ! empty( $goal['campaign_id'] ) ) {
+		$progress = smartpay_calculate_campaign_progress( (int) $goal['campaign_id'] );
+
+		return array(
+			'current'      => $progress['current'],
+			'target'       => $progress['target'],
+			'percentage'   => $progress['percentage'],
+			'type'         => $goal['type'],
+			'goal_reached' => $progress['goal_reached'],
+			'campaign_id'  => (int) $goal['campaign_id'],
+		);
+	}
+
 	$type   = $goal['type'] ?? 'quantity';
 	$target = floatval( $goal['target'] ?? 100 );
 
@@ -1188,22 +1202,8 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 	if ( false !== $cached ) {
 		$current = floatval( $cached );
 	} else {
-		global $wpdb;
-		$table = esc_sql( $wpdb->prefix . 'smartpay_payments' );
-
-		// Filter by form_id stored in payment data JSON
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$row = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT COUNT(*) as cnt, COALESCE(SUM(amount),0) as total_amount FROM {$table} WHERE status = %s AND data LIKE %s",
-				\SmartPay\Models\Payment::COMPLETED,
-				'%\"form_id\":' . (int) $form_id . '%'
-			),
-			ARRAY_A
-		);
-		// phpcs:enable
-
-		$current = (float) ( $type === 'quantity' ? ( $row['cnt'] ?? 0 ) : ( $row['total_amount'] ?? 0 ) );
+		$stats   = smartpay_get_forms_gift_stats( array( $form_id ) );
+		$current = (float) ( 'quantity' === $type ? $stats['donations'] : $stats['raised'] );
 
 		set_transient( $transient_key, $current, MINUTE_IN_SECONDS );
 	}
@@ -1227,6 +1227,7 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 function smartpay_invalidate_goal_cache( int $form_id ): void {
 	delete_transient( "smartpay_goal_{$form_id}_quantity" );
 	delete_transient( "smartpay_goal_{$form_id}_amount" );
+	smartpay_invalidate_campaign_cache( smartpay_get_form_campaign_id( $form_id ) );
 }
 
 /**
@@ -1289,13 +1290,10 @@ function smartpay_render_goal_progress_block( string $block_content, array $bloc
 		return '';
 	}
 
-	$settings = get_post_meta( $form_id, '_smartpay_settings', true );
-	$settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: array() );
-	$raw_goal = $settings['goal'] ?? array();
-	$goal     = is_string( $raw_goal ) ? json_decode( $raw_goal, true ) : $raw_goal;
-	$goal     = is_array( $goal ) ? $goal : array();
+	$goal = smartpay_get_form_goal( $form_id );
 
-	if ( empty( $goal['enabled'] ) ) {
+	// On the campaign page itself the header already shows the campaign bar.
+	if ( empty( $goal['enabled'] ) || ( ! empty( $goal['campaign_id'] ) && did_action( 'smartpay_campaign_page_after_forms' ) ) ) {
 		return '';
 	}
 
@@ -1305,7 +1303,15 @@ function smartpay_render_goal_progress_block( string $block_content, array $bloc
 	$percentage  = (float) $progress['percentage'];
 	$reached     = ! empty( $progress['goal_reached'] );
 	$type        = $goal['type'] ?? 'quantity';
-	$unit        = 'quantity' === $type ? _n( 'sold', 'sold', (int) floor( $current ), 'smartpay' ) : __( 'raised', 'smartpay' );
+	if ( 'donors' === $type ) {
+		$unit = _n( 'donor', 'donors', (int) floor( $current ), 'smartpay' );
+	} elseif ( 'quantity' === $type ) {
+		$unit = ! empty( $goal['campaign_id'] )
+			? _n( 'donation', 'donations', (int) floor( $current ), 'smartpay' )
+			: _n( 'sold', 'sold', (int) floor( $current ), 'smartpay' );
+	} else {
+		$unit = __( 'raised', 'smartpay' );
+	}
 	$met_message = $goal['goalMetMessage'] ?? __( 'Goal reached!', 'smartpay' );
 
 	$a = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();

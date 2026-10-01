@@ -2043,3 +2043,343 @@ input.sp-note-input {
 }
 
 .sp-gw-footer-note a:hover { text-decoration: underline; }
+
+/* ════════════════════════════════════════════════════════════
+   CAMPAIGNS  (list, campaign screen, new-campaign modal)
+   ════════════════════════════════════════════════════════════ */
+
+.sp-campaign-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--sp-border);
+  overflow: hidden;
+}
+.sp-campaign-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #22c55e;
+}
+
+.sp-campaign-goal-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sp-campaign-goal-cell > span {
+  font-size: 11px;
+  color: var(--sp-text-subtle);
+}
+
+.sp-campaign-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sp-campaign-head .sp-page-title__sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sp-campaign-head__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.sp-campaign-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sp-campaign-notice {
+  margin: 0 0 14px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+.sp-campaign-notice--success { background: #dcfce7; color: #166534; }
+.sp-campaign-notice--error   { background: #fee2e2; color: #991b1b; }
+
+.sp-campaign-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 13px;
+}
+
+.sp-campaign-info {
+  margin: 0;
+  padding: 9px 12px;
+  border-radius: 6px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+  font-size: 12.5px;
+}
+
+.sp-campaign-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-brand);
+  text-decoration: none;
+}
+
+.sp-campaign-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.sp-campaign-chart rect { fill: var(--sp-brand); }
+.sp-campaign-chart text { font-size: 10px; fill: var(--sp-text-subtle); }
+
+.sp-campaign-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sp-campaign-feed__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sp-campaign-rank {
+  width: 16px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--sp-text-subtle);
+}
+
+.sp-campaign-ring {
+  --p: 0;
+  width: 108px;
+  height: 108px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(#22c55e calc(var(--p) * 1%), var(--sp-border) 0);
+}
+.sp-campaign-ring > span {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: var(--sp-surface);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sp-text);
+}
+
+.sp-campaign-star {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--sp-text-subtle);
+}
+.sp-campaign-star.is-default { color: #f59e0b; cursor: default; }
+
+.sp-campaign-code {
+  background: var(--sp-surface-muted);
+  border: 1px solid var(--sp-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.sp-campaign-comment {
+  max-width: 260px;
+  font-style: italic;
+  color: var(--sp-text-muted);
+}
+
+.sp-campaign-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.sp-campaign-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Same look as the <Label> component so every field label matches. */
+.sp-campaign-field__label {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--sp-text);
+  margin: 0;
+}
+/* Header/footer: WP admin gives h2/p their own margins, so reset them. */
+.sp-campaign-form .sp-campaign-form__header {
+  text-align: left;
+  gap: 4px;
+  padding-right: 24px; /* clear the close button */
+  margin-bottom: 6px;
+}
+.sp-campaign-form__header h2,
+.sp-campaign-form__header p {
+  margin: 0;
+}
+.sp-campaign-form__footer {
+  margin-top: 4px;
+}
+
+/* Goal target + end date side by side. */
+.sp-campaign-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 640px) {
+  .sp-campaign-row { grid-template-columns: 1fr; }
+}
+
+/* Input group: prefix ($, /campaign/) and input share one box. */
+.sp-campaign-prefix {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  overflow: hidden; /* keep the input inside the rounded border */
+}
+.sp-campaign-prefix:focus-within {
+  border-color: var(--sp-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sp-brand) 20%, transparent);
+}
+.sp-campaign-prefix > span {
+  padding-left: 12px;
+  color: var(--sp-text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+/* [data-slot] outranks the scoped `.smartpay .border` !important rule. */
+.sp-campaign-prefix > input[data-slot="input"] {
+  flex: 1;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+/* The box shows focus (see :focus-within), not the inner input. Tailwind
+   builds the ring from this var; the Input also gets `shadow-none!`, since
+   a layered !important shadow can't be overridden from plain CSS. */
+.sp-campaign-prefix > input[data-slot="input"]:focus-visible {
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+.sp-campaign-prefix > span + input {
+  padding-left: 4px;
+}
+.sp-campaign-prefix input[type="number"] {
+  -moz-appearance: textfield;
+}
+.sp-campaign-prefix input[type="number"]::-webkit-inner-spin-button,
+.sp-campaign-prefix input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* WP admin makes date inputs 40px; match the 36px fields beside them. */
+.sp-campaign-field input[type="date"][data-slot="input"] {
+  height: 36px !important;
+  min-height: 0 !important;
+  cursor: pointer;
+}
+
+.sp-campaign-choices {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .sp-campaign-choices { grid-template-columns: 1fr; }
+}
+.sp-campaign-choice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--sp-border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sp-campaign-choice.is-active {
+  border-color: var(--sp-brand);
+  box-shadow: inset 0 0 0 1px var(--sp-brand);
+  background: var(--sp-brand-light);
+}
+.sp-campaign-choice input { margin-top: 3px; }
+.sp-campaign-choice b { display: block; font-size: 12.5px; color: var(--sp-text); }
+.sp-campaign-choice small { font-size: 11.5px; color: var(--sp-text-muted); }
+
+.sp-campaign-cover img {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--sp-border);
+}
+.sp-campaign-cover__actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.sp-campaign-cover__drop {
+  width: 100%;
+  padding: 22px 12px;
+  border: 1px dashed var(--sp-border);
+  border-radius: 6px;
+  background: var(--sp-surface-muted);
+  color: var(--sp-text-muted);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.sp-campaign-cover__drop:hover,
+.sp-campaign-cover__drop:focus-visible { border-color: var(--sp-brand); color: var(--sp-brand); }
+
+.sp-campaign-picklist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.sp-campaign-picklist__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--sp-border);
+  border-radius: 6px;
+}
+.sp-campaign-picklist__row > span:first-of-type { flex: 1; }
+
+.sp-campaign-settings {
+  max-width: 760px;
+}
+
+.sp-campaign-sort {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}

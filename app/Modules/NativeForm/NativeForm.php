@@ -319,6 +319,11 @@ class NativeForm {
 							'default'           => '',
 							'sanitize_callback' => 'sanitize_text_field',
 						),
+						// Campaign term ID, 'none' (unassigned) or '' (all).
+						'campaign' => array(
+							'default'           => '',
+							'sanitize_callback' => 'sanitize_key',
+						),
 					),
 				),
 				array(
@@ -430,14 +435,35 @@ class NativeForm {
 			$args['s'] = $search;
 		}
 
+		$campaign = (string) $request->get_param( 'campaign' );
+		if ( 'none' === $campaign ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Campaign filter on the admin list.
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => SMARTPAY_CAMPAIGN_TAXONOMY,
+					'operator' => 'NOT EXISTS',
+				),
+			);
+		} elseif ( absint( $campaign ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Campaign filter on the admin list.
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => SMARTPAY_CAMPAIGN_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => absint( $campaign ),
+				),
+			);
+		}
+
 		$query  = new \WP_Query( $args );
 		$total  = (int) $query->found_posts;
 		$offset = ( $page - 1 ) * $per_page;
 
 		$forms = array_map(
 			function ( \WP_Post $post ) {
-				$settings = $this->decode_meta_json( get_post_meta( $post->ID, '_smartpay_settings', true ), array() );
-				$goal     = $settings['goal'] ?? array();
+				$goal        = smartpay_get_form_goal( (int) $post->ID );
+				$campaign_id = (int) $goal['campaign_id'];
+				$campaign    = $campaign_id ? get_term( $campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY ) : null;
 
 				$goal_data = null;
 				if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) {
@@ -449,6 +475,7 @@ class NativeForm {
 						'percentage'   => $progress['percentage'],
 						'goal_reached' => $progress['goal_reached'],
 						'type'         => $goal['type'] ?? 'quantity',
+						'from_campaign' => $campaign_id > 0,
 					);
 				}
 
@@ -461,6 +488,12 @@ class NativeForm {
 					'edit_url'    => admin_url( 'post.php?post=' . absint( $post->ID ) . '&action=edit' ),
 					'preview_url' => get_the_permalink( $post->ID ),
 					'goal'        => $goal_data,
+					'campaign'    => $campaign instanceof \WP_Term
+						? array(
+							'id'    => $campaign_id,
+							'title' => $campaign->name,
+						)
+						: null,
 				);
 			},
 			$query->posts
@@ -677,7 +710,7 @@ class NativeForm {
 			wp_enqueue_script(
 				'smartpay-form-editor-sidebar',
 				$sidebar_js,
-				array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data' ),
+				array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data', 'wp-api-fetch' ),
 				SMARTPAY_VERSION,
 				true
 			);
@@ -1132,38 +1165,44 @@ class NativeForm {
 				);
 
 			case 2002:
-				return $this->tpl_assemble(
-					'Charity Donation',
+				// Donation flow: amount first, identity second, payment last.
+				$prices = array(
 					array(
+						'label'  => '$25',
+						'amount' => 25,
+					),
+					array(
+						'label'  => '$50',
+						'amount' => 50,
+					),
+					array(
+						'label'  => '$100',
+						'amount' => 100,
+					),
+					array(
+						'label'  => '$250',
+						'amount' => 250,
+					),
+				);
+
+				return array(
+					'name'     => 'Charity Donation',
+					'blocks'   => array(
 						$this->tpl_goal_progress(),
+						$this->tpl_block( 'smartpay-form/donation-frequency' ),
+						$this->tpl_pricing( $prices, 'grid' ),
+						$this->tpl_block( 'smartpay-form/step-break' ),
 						$this->tpl_name(),
 						$this->tpl_email(),
 						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
-						$this->tpl_choice( 'radio', 'Donation Frequency', 'frequency', array( 'One-time', 'Monthly', 'Annually' ), 'one-time' ),
-						$this->tpl_textarea( 'Dedication Message', 'dedication', 'In honor or memory of…', 3 ),
-						$this->tpl_choice( 'checkbox', 'Options', 'donation_options', array( 'Make my donation anonymous', 'Email me a receipt' ) ),
+						$this->tpl_block( 'smartpay-form/donation-anonymous' ),
+						$this->tpl_block( 'smartpay-form/donation-comment' ),
+						$this->tpl_block( 'smartpay-form/donation-tribute' ),
+						$this->tpl_block( 'smartpay-form/step-break', array( 'nextLabel' => 'Continue to payment' ) ),
+						$this->tpl_pay( 'Give Now' ),
 					),
-					array(
-						array(
-							'label'  => '$25',
-							'amount' => 25,
-						),
-						array(
-							'label'  => '$50',
-							'amount' => 50,
-						),
-						array(
-							'label'  => '$100',
-							'amount' => 100,
-						),
-						array(
-							'label'  => '$250',
-							'amount' => 250,
-						),
-					),
-					'Give Now',
-					'grid',
-					array(
+					'amounts'  => $this->pricing_amounts( $prices ),
+					'settings' => array(
 						'goal' => array(
 							'enabled'             => true,
 							'type'                => 'amount',
@@ -1171,7 +1210,7 @@ class NativeForm {
 							'showToPublic'        => true,
 							'behaviorWhenGoalMet' => 'allow_orders',
 						),
-					)
+					),
 				);
 
 			// ── Registration ─────────────────────────────────────────

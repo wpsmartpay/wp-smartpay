@@ -59,6 +59,7 @@ export const ShowCustomer = () => {
 				status,
 				type,
 				customerId: customerId,
+				donation: 0, // gifts show on the donor page
 				sortBy
 			});
 

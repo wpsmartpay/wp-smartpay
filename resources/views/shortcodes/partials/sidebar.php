@@ -30,6 +30,16 @@ $sp_nav_items = array(
 	),
 );
 
+// Giving — donation history, only on sites that take donations.
+if ( in_array( 'giving', smartpay_dashboard_views(), true ) ) {
+	$sp_nav_items[] = array(
+		'view'  => 'giving',
+		'label' => __( 'Giving', 'smartpay' ),
+		'url'   => smartpay_dashboard_view_url( 'giving' ),
+		'icon'  => '<path d="M10 17S3 12.5 3 7.5C3 5.3 4.8 3.5 7 3.5C8.3 3.5 9.4 4.1 10 5C10.6 4.1 11.7 3.5 13 3.5C15.2 3.5 17 5.3 17 7.5C17 12.5 10 17 10 17Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>',
+	);
+}
+
 // Subscriptions are a Pro feature — only show the tab when its table exists.
 if ( function_exists( 'smartpay_dashboard_subscriptions_enabled' ) && smartpay_dashboard_subscriptions_enabled() ) {
 	$sp_nav_items[] = array(
