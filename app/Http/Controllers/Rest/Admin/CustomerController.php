@@ -40,6 +40,12 @@ class CustomerController extends RestController
 
         $query = Customer::orderBy('id', 'DESC');
 
+		// Donors have their own list.
+		$no_donors = smartpay_customers_exclude_donors_sql();
+		if ($no_donors) {
+			$query->where($query->raw($no_donors));
+		}
+
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
 				$q->where('email', 'like', '%' . $search . '%');

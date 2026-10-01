@@ -41,6 +41,8 @@ class PaymentController extends RestController
 		$type       = sanitize_text_field($request->get_param('type') ?: '');
 		$customerId = absint($request->get_param('customer_id') ?: 0);
 		$orderBy    = sanitize_text_field($request->get_param('sort_by') ?: 'id:desc');
+		// Payments and Donations are separate lists; no param = both (customer page).
+		$donation   = $request->get_param('donation');
 
 		// Start building the query
 		$query = Payment::with(['customer']);
@@ -68,6 +70,10 @@ class PaymentController extends RestController
 			$query->where('type', $type);
 		}
 
+		if (null !== $donation && '' !== $donation) {
+			$query->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
+		}
+
 		$allowed_columns = ['id', 'email', 'transaction_id', 'amount', 'created_at', 'completed_at'];
 		$orderByParts = explode(',', $orderBy);
 		foreach ($orderByParts as $part) {
@@ -80,16 +86,27 @@ class PaymentController extends RestController
 		// Get paginated results
 		$payments = $query->paginate($perPage);
 
+		if (null !== $donation && rest_sanitize_boolean($donation)) {
+			$this->attach_campaign_titles($payments);
+		}
+
 		$response = ['payments' => $payments];
 
 		// If filtering by customer, include payment statistics
 		if (!empty($customerId)) {
-			$baseQuery = Payment::where('customer_id', $customerId);
+			// Stats follow the same donation filter as the list.
+			$base = static function () use ($customerId, $donation) {
+				$q = Payment::where('customer_id', $customerId);
+				if (null !== $donation && '' !== $donation) {
+					$q->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
+				}
+				return $q;
+			};
 
-			$totalPayments = $baseQuery->count();
-			$completedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::COMPLETED)->count();
-			$pendingPayments = Payment::where('customer_id', $customerId)->where('status', Payment::PENDING)->count();
-			$refundedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::REFUNDED)->count();
+			$totalPayments = $base()->count();
+			$completedPayments = $base()->where('status', Payment::COMPLETED)->count();
+			$pendingPayments = $base()->where('status', Payment::PENDING)->count();
+			$refundedPayments = $base()->where('status', Payment::REFUNDED)->count();
 
 			$response['payment_stats'] = [
 				'total' => $totalPayments,
@@ -100,6 +117,44 @@ class PaymentController extends RestController
 		}
 
 		return new WP_REST_Response($response);
+    }
+
+    /**
+     * Add `campaign_title` to each donation row. Renewals carry no form id, so
+     * they use their parent's.
+     *
+     * @param iterable $payments Payment models on the current page.
+     */
+    private function attach_campaign_titles($payments): void
+    {
+		$parent_ids = array();
+		foreach ($payments as $payment) {
+			if ((int) $payment->parent_id > 0) {
+				$parent_ids[] = (int) $payment->parent_id;
+			}
+		}
+
+		$parent_forms = array();
+		if ($parent_ids) {
+			foreach (Payment::whereIn('id', array_unique($parent_ids))->get() as $parent) {
+				$parent_forms[(int) $parent->id] = absint($parent->data['form_id'] ?? 0);
+			}
+		}
+
+		$titles = array();
+		foreach ($payments as $payment) {
+			$form_id = (int) $payment->parent_id > 0
+				? ($parent_forms[(int) $payment->parent_id] ?? 0)
+				: absint($payment->data['form_id'] ?? 0);
+
+			if (! array_key_exists($form_id, $titles)) {
+				$campaign_id      = $form_id ? smartpay_get_form_campaign_id($form_id) : 0;
+				$term             = $campaign_id ? get_term($campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY) : null;
+				$titles[$form_id] = $term instanceof \WP_Term ? $term->name : '';
+			}
+
+			$payment->campaign_title = $titles[$form_id];
+		}
     }
 
     /**

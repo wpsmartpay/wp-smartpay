@@ -69,9 +69,10 @@ domReady(function () {
 
                         <Route exact path="/coupons"                  element={<CouponList />} />
 
-                        <Route exact path="/payments"                 element={<PaymentList />} />
+                        <Route exact path="/payments"                 element={<PaymentList key="payments" />} />
                         <Route exact path="/payments/new"             element={null} />
                         <Route exact path="/payments/:paymentId"      element={<PaymentDetailPage />} />
+                        <Route exact path="/donations"                element={<PaymentList key="donations" donations />} />
 
                         <Route exact path="/form-data"                element={<FormData />} />
 

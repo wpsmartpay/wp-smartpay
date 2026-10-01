@@ -473,3 +473,32 @@ function smartpay_get_donor_monthly_gifts( int $customer_id ): array {
 		(array) $rows
 	);
 }
+
+/**
+ * SQL condition that hides donors from the Customers list.
+ *
+ * Hidden: people on the Donors list (a completed gift on a donation form)
+ * who never made a sale. Anyone who also bought something stays a customer,
+ * so they show on both lists. Nobody can drop off both lists: a person who is
+ * not on the Donors list always stays here. Returns '' until the
+ * `is_donation` column exists.
+ *
+ * @param string $column Customer id column in the outer query.
+ * @return string SQL fragment, or '' for no condition.
+ */
+function smartpay_customers_exclude_donors_sql( string $column = 'id' ): string {
+	global $wpdb;
+
+	$form_ids = get_option( 'smartpay_payments_is_donation_column' ) ? smartpay_get_donation_form_ids() : array();
+	if ( empty( $form_ids ) ) {
+		return '';
+	}
+
+	$column   = preg_replace( '/[^a-z_.]/', '', $column );
+	$payments = $wpdb->prefix . 'smartpay_payments';
+	$gift     = smartpay_gift_payments_where_sql( $form_ids, 'p' );
+
+	// IS NOT NULL: one NULL in a NOT IN list would match nothing.
+	return "{$column} NOT IN ( SELECT p.customer_id FROM {$payments} p WHERE p.customer_id IS NOT NULL AND {$gift}
+		AND p.customer_id NOT IN ( SELECT s.customer_id FROM {$payments} s WHERE s.customer_id IS NOT NULL AND s.is_donation = 0 ) )";
+}

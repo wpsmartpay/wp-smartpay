@@ -92,7 +92,7 @@ export const AddPaymentLog = async (paymentId, note) => {
     });
 }
 
-export const GetPayments = async ({ page = 1, perPage = 10, search = '', status = '', type = '', customerId = '', sortBy = 'id:desc' }) => {
+export const GetPayments = async ({ page = 1, perPage = 10, search = '', status = '', type = '', customerId = '', donation = '', sortBy = 'id:desc' }) => {
 	const queryParams = new URLSearchParams({
         page,
         per_page: perPage,
@@ -100,7 +100,8 @@ export const GetPayments = async ({ page = 1, perPage = 10, search = '', status 
         type,
         sort_by: sortBy,
         ...(search && { search }),
-        ...(customerId && { customer_id: customerId })
+        ...(customerId && { customer_id: customerId }),
+        ...(donation !== '' && { donation })
 	})
 
     const baseUrl = smartpay.restUrl.replace(/\/$/, '');

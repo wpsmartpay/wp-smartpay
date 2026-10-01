@@ -144,6 +144,18 @@ class Admin
 
         add_submenu_page(
             'smartpay',
+            __('WPSmartPay - Donations', 'smartpay'),
+            __('Donations', 'smartpay'),
+            'manage_options',
+            'smartpay#/donations',
+            function () {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- The generated output has already escaped.
+                echo smartpay_view('admin');
+            }
+        );
+
+        add_submenu_page(
+            'smartpay',
             __('WPSmartPay - Subscriptions', 'smartpay'),
             __('Subscriptions', 'smartpay'),
             'manage_options',
@@ -466,7 +478,7 @@ class Admin
             'smartpay_page_smartpay-form',
         ];
         if (in_array($hook, $admin_spa_hooks, true) || $is_main_admin_page) {
-            wp_register_script('smartpay-ui', SMARTPAY_PLUGIN_ASSETS . '/js/ui.js', ['wp-element', 'wp-data'], SMARTPAY_VERSION, true);
+            wp_register_script('smartpay-ui', SMARTPAY_PLUGIN_ASSETS . '/js/ui.js', ['wp-element', 'wp-data'], filemtime( SMARTPAY_DIR . 'public/js/ui.js' ) ?: SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-ui');
         }
         $main_admin_hooks = [
@@ -479,7 +491,7 @@ class Admin
             'smartpay_page_smartpay#/reports',
         ];
         if (in_array($hook, $main_admin_hooks, true) || $is_main_admin_page) {
-            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data', 'smartpay-ui'], SMARTPAY_VERSION, true);
+            wp_register_script('smartpay-admin', SMARTPAY_PLUGIN_ASSETS . '/js/admin.js', ['jquery', 'wp-element', 'wp-data', 'smartpay-ui'], filemtime( SMARTPAY_DIR . 'public/js/admin.js' ) ?: SMARTPAY_VERSION, true);
             wp_enqueue_script('smartpay-admin');
             add_filter( 'smartpay_setup_notices', [ $this, 'getIntegrationNotices' ] );
             wp_localize_script(

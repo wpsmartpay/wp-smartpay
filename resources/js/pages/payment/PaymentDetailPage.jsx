@@ -373,9 +373,9 @@ export const PaymentDetailPage = () => {
 			<div className="sp-layout">
 
 				{/* Back */}
-				<Link to="/payments" className="sp-back-btn">
+				<Link to={Number(payment.is_donation) ? '/donations' : '/payments'} className="sp-back-btn">
 					<span className="sp-back-btn__arrow">←</span>
-					{__('Payments', 'smartpay')}
+					{Number(payment.is_donation) ? __('Donations', 'smartpay') : __('Payments', 'smartpay')}
 				</Link>
 
 				<div className="sp-detail-grid">
