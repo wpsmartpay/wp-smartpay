@@ -1,4 +1,4 @@
-import { Search, Users, UserPlus, Repeat, Heart } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { GetDonors, GetCampaigns } from '../../http/campaign'
 import { money, count, colorIndex, initials, shortDate, DonorTypeBadge, DONOR_TYPES } from '../campaign/utils'
@@ -10,7 +10,7 @@ const PER_PAGE_OPTIONS = [10, 20, 50, 100]
 
 /** Contacts › Donors. */
 export const DonorList = ({ tabs = null }) => {
-    const { Header, StatCard } = window.WPSmartPayUI
+    const { Header } = window.WPSmartPayUI
 
     const [search, setSearch] = useState('')
     const [debounced, setDebounced] = useState('')
@@ -42,7 +42,6 @@ export const DonorList = ({ tabs = null }) => {
 
     useEffect(() => { load(1) }, [load])
 
-    const counts = result?.counts || {}
     const rows = result?.data || []
 
     const sortHeader = (key, label) => (
@@ -65,14 +64,6 @@ export const DonorList = ({ tabs = null }) => {
                 </div>
 
                 {tabs}
-
-                <div className="sp-grid sp-grid--4" style={{ marginBottom: 20 }}>
-                    <StatCard title={__('Donors', 'smartpay')} value={result ? count(counts.all) : '…'} icon={Users}
-                        change={campaign ? __('this campaign', 'smartpay') : __('all campaigns', 'smartpay')} />
-                    <StatCard title={__('First-time', 'smartpay')} value={result ? count(counts.first_time) : '…'} icon={UserPlus} change={__('1 gift', 'smartpay')} />
-                    <StatCard title={__('Repeat', 'smartpay')} value={result ? count(counts.repeat) : '…'} icon={Repeat} change={__('2+ gifts', 'smartpay')} />
-                    <StatCard title={__('Monthly', 'smartpay')} value={result ? count(counts.monthly) : '…'} icon={Heart} change={__('active recurring', 'smartpay')} />
-                </div>
 
                 <div className="sp-toolbar">
                     <div className="sp-search">

@@ -353,7 +353,7 @@ export const PaymentList = ({ mode = 'all', tabs = null }) => {
 										ref={(el) => { if (el) el.indeterminate = someChecked }}
 										onChange={toggleAll} />
 								</th>
-								<th>{__('Customer', 'smartpay')}</th>
+								<th>{donations ? __('Donor', 'smartpay') : mode === 'all' ? __('Contact', 'smartpay') : __('Customer', 'smartpay')}</th>
 								<th>{__('Type', 'smartpay')}</th>
 								<th>{donations ? __('Campaign', 'smartpay') : __('Source', 'smartpay')}</th>
 								<th>{__('Date', 'smartpay')}</th>
