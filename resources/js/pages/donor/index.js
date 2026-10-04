@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react'
+import { ChevronDown, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { GetDonors, GetCampaigns } from '../../http/campaign'
 import { money, count, colorIndex, initials, shortDate, DonorTypeBadge, DONOR_TYPES } from '../campaign/utils'
@@ -20,6 +20,8 @@ export const DonorList = ({ tabs = null }) => {
     const [perPage, setPerPage] = useState(20)
     const [campaigns, setCampaigns] = useState([])
     const [result, setResult] = useState(null)
+    const [checkedIds, setCheckedIds] = useState(new Set())
+    const [actionOpen, setActionOpen] = useState(false)
 
     // Pro adds toolbar actions (e.g. Export CSV): (actions, filters) => [elements].
     const actions = window.wp?.hooks?.applyFilters?.('smartpay_donor_list_actions', [], { campaign, type, search: debounced }) || []
@@ -35,6 +37,7 @@ export const DonorList = ({ tabs = null }) => {
 
     const load = useCallback((page = 1) => {
         setResult(null)
+        setCheckedIds(new Set())
         GetDonors({ page, per_page: perPage, search: debounced, campaign, type, orderby })
             .then(setResult)
             .catch(() => setResult({ data: [], total: 0, counts: {} }))
@@ -42,7 +45,35 @@ export const DonorList = ({ tabs = null }) => {
 
     useEffect(() => { load(1) }, [load])
 
+    useEffect(() => {
+        const close = () => setActionOpen(false)
+        document.addEventListener('click', close)
+        return () => document.removeEventListener('click', close)
+    }, [])
+
     const rows = result?.data || []
+
+    const allChecked   = rows.length > 0 && checkedIds.size === rows.length
+    const someChecked  = checkedIds.size > 0 && checkedIds.size < rows.length
+    const hasSelection = checkedIds.size > 0
+
+    const toggleAll = () => setCheckedIds(allChecked || someChecked ? new Set() : new Set(rows.map((d) => d.id)))
+    const toggleRow = (id) => {
+        const next = new Set(checkedIds)
+        next.has(id) ? next.delete(id) : next.add(id)
+        setCheckedIds(next)
+    }
+
+    // A donor is a customer record, so bulk delete reuses the customer endpoint.
+    const bulkDelete = async () => {
+        if (!window.confirm(__('Delete all selected donors? This cannot be undone.', 'smartpay'))) return
+        const baseUrl = window.smartpay.restUrl.replace(/\/$/, '')
+        await Promise.all([...checkedIds].map((id) => fetch(`${baseUrl}/v1/customers/${id}`, {
+            method: 'DELETE',
+            headers: { 'X-WP-Nonce': window.smartpay.apiNonce },
+        })))
+        load(1)
+    }
 
     const sortHeader = (key, label) => (
         <th>
@@ -79,14 +110,39 @@ export const DonorList = ({ tabs = null }) => {
                         <option value="">{__('All types', 'smartpay')}</option>
                         {Object.entries(DONOR_TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                     </select>
+                    {hasSelection && (
+                        <span className="sp-selection-count">
+                            {checkedIds.size} {__('selected', 'smartpay')}
+                            <button className="sp-selection-count__clear"
+                                onClick={() => setCheckedIds(new Set())} title={__('Clear selection', 'smartpay')}>
+                                ✕
+                            </button>
+                        </span>
+                    )}
                     <div className="sp-toolbar__spacer" />
                     {actions}
+                    <div className="sp-action-dropdown" onClick={(e) => e.stopPropagation()}>
+                        <button className="sp-btn sp-btn--outline" disabled={!hasSelection} onClick={() => setActionOpen((o) => !o)}>
+                            {__('Select Action', 'smartpay')}
+                            <ChevronDown size={14} style={{ marginLeft: 2, opacity: 0.6 }} />
+                        </button>
+                        <div className={`sp-dropdown${actionOpen ? ' sp-dropdown--open' : ''}`}>
+                            <button className="sp-dropdown__item sp-dropdown__item--destructive"
+                                onClick={() => { setActionOpen(false); bulkDelete() }}>
+                                {__('Delete selected', 'smartpay')}
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="sp-table-card">
                     <table className="sp-table">
                         <thead>
                             <tr>
+                                <th className="sp-col--check">
+                                    <input type="checkbox" className="sp-checkbox sp-select-all" checked={allChecked}
+                                        ref={(el) => { if (el) el.indeterminate = someChecked }} onChange={toggleAll} />
+                                </th>
                                 <th>{__('Donor', 'smartpay')}</th>
                                 <th>{__('Type', 'smartpay')}</th>
                                 {sortHeader('total', __('Total given', 'smartpay'))}
@@ -97,9 +153,9 @@ export const DonorList = ({ tabs = null }) => {
                         </thead>
                         <tbody>
                             {!result ? (
-                                <tr><td colSpan={6} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
+                                <tr><td colSpan={7} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
                             ) : rows.length === 0 ? (
-                                <tr><td colSpan={6}>
+                                <tr><td colSpan={7}>
                                     <div className="sp-empty">
                                         <div className="sp-empty__icon">💚</div>
                                         <div className="sp-empty__title">{__('No donors yet', 'smartpay')}</div>
@@ -109,7 +165,11 @@ export const DonorList = ({ tabs = null }) => {
                                     </div>
                                 </td></tr>
                             ) : rows.map((d) => (
-                                <tr key={d.id}>
+                                <tr key={d.id} className={checkedIds.has(d.id) ? 'sp-row--selected' : ''}>
+                                    <td className="sp-col--check">
+                                        <input type="checkbox" className="sp-checkbox sp-row-check"
+                                            checked={checkedIds.has(d.id)} onChange={() => toggleRow(d.id)} />
+                                    </td>
                                     <td>
                                         <div className="sp-customer">
                                             <div className="sp-avatar" data-color={colorIndex(d.name)}>{initials(d.name || d.email)}</div>
