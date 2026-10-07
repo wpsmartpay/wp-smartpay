@@ -99,10 +99,15 @@ jQuery(($) => {
                 )
             }
 
-            $(e.currentTarget)
+            // The hidden input (custom amount off) carries the card amount; the
+            // visible custom box stays empty so it never shows a card's price.
+            const $customAmount = $(e.currentTarget)
                 .parents('.form-amounts')
                 .find('.form--custom-amount')
-                .val(selectedAmount.val())
+            $customAmount.val(
+                $customAmount.is('[type="hidden"]') ? selectedAmount.val() : ''
+            )
+            $customAmount.filter(':not([type="hidden"])').attr('placeholder', '0.00')
 
             $(e.currentTarget)
                 .parents('.form-amounts')
@@ -212,7 +217,19 @@ jQuery(($) => {
         }
     )
 
-    /** Send ajax request to process form payment **/
+    /** Round a typed custom amount to cents (20.5546 -> 20.55). **/
+    $(document.body).on(
+        'blur',
+        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+        (e) => {
+            const value = parseFloat(e.currentTarget.value)
+            if (!isNaN(value)) {
+                e.currentTarget.value = String(Math.round(value * 100) / 100)
+            }
+        }
+    )
+
+        /** Send ajax request to process form payment **/
     $(document.body).on(
         'click',
         '.smartpay-form-shortcode button.smartpay-form-pay-now',
@@ -245,7 +262,22 @@ jQuery(($) => {
                 }
             })
 
-            if (!validation.valid || hasRequiredFieldErrors) {
+            // A custom amount must be positive (the server rejects it too).
+            if (
+                'true' === formData.smartpay_is_custom_amount &&
+                !(parseFloat(formData.smartpay_amount) > 0)
+            ) {
+                hasRequiredFieldErrors = true
+                const $customAmount = $parentWrapper.find('.form--custom-amount')
+                $customAmount.addClass('is-invalid')
+                $('<div>', {
+                    class: 'smartpay-field-error',
+                    style: 'color:#dc3545;font-size:0.875em;margin-top:-0.75rem;margin-bottom:1rem;',
+                    text: 'Please enter an amount greater than 0.',
+                }).insertAfter($customAmount.closest('.input-group'))
+            }
+
+                        if (!validation.valid || hasRequiredFieldErrors) {
                 if (!validation.valid) {
                     showErrors(
                         $parentWrapper.find('.smartpay-message-info'),
@@ -396,7 +428,7 @@ jQuery(($) => {
                     .find('.plan-amount.selected input[name=_form_amount]')
                     .attr('id')
 
-                $form.find('input[name=smartpay_form_amount]')
+                $form.find('input[name=smartpay_form_amount][type=hidden]')
                     .val($couponData[$selectedAmountInputId].discountAmount)
 
                 discountAmountContainer.removeClass('d-none')
@@ -468,6 +500,19 @@ jQuery(($) => {
         $(this).closest('.smartpay-coupon-form').slideUp(150)
     })
 
+    /**
+     * The custom box when the donor typed in it, else the selected card's
+     * amount (the visible custom box is left empty while a card is selected).
+     */
+    function selectedFormAmount($wrapper, typed) {
+        return (
+            typed ||
+            $wrapper
+                .find('.form-amounts .form-plan-card.selected input[name="_form_amount"]')
+                .val()
+        )
+    }
+
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
         const data = $wrapper.find('form').serializeJSON()
@@ -482,7 +527,7 @@ jQuery(($) => {
             smartpay_email: data.smartpay_form.email,
             smartpay_payment_mobile: data.smartpay_payment_mobile,
             smartpay_form_id: data.smartpay_form_id,
-            smartpay_amount: data.smartpay_form_amount,
+            smartpay_amount: selectedFormAmount($wrapper, data.smartpay_form_amount),
             smartpay_amount_key: data.smartpay_selected_amount_key,
             smartpay_form_data: data.smartpay_form,
             smartpay_is_custom_amount: data.smartpay_is_custom_payment,

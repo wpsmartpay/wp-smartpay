@@ -107,7 +107,18 @@ class Payment
             die();
         }
 
-        // Set session payment data
+        // A 0 amount is routed to the free gateway below, so a custom amount
+        // must be positive here; no amount may be negative.
+        if ( 'form_payment' === ( $payment_data['payment_type'] ?? '' ) ) {
+            $amount    = (float) ( $payment_data['amount'] ?? 0 );
+            $is_custom = filter_var( $payment_data['payment_data']['is_custom_amount'] ?? false, FILTER_VALIDATE_BOOLEAN );
+            if ( $amount < 0 || ( $is_custom && $amount <= 0 ) ) {
+                echo '<p class="text-danger">' . esc_html__( 'Please enter an amount greater than 0.', 'smartpay' ) . '</p>';
+                die();
+            }
+        }
+
+                // Set session payment data
         // FIXME: Reform validation
         //smartpay_set_session_payment_data($payment_data);
 
@@ -278,7 +289,8 @@ class Payment
 
                 $payment_data = [
                     'form_id'           => $form->id,
-                    'total_amount'      => $_data['smartpay_amount'] ?? 0,
+                    // Money has at most 2 decimals; a typed custom amount may have more.
+                    'total_amount'      => round( (float) ( $_data['smartpay_amount'] ?? 0 ), 2 ),
                     'billing_type'      => $_data['smartpay_form_billing_type'],
                     'is_custom_amount'  => $_data['smartpay_is_custom_amount'] ?? false,
                     ];

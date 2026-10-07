@@ -1694,7 +1694,7 @@ class NativeForm {
 			return $data;
 		}
 
-		$amount       = (float) ( $raw['smartpay_amount'] ?? 0 );
+		$amount       = round( (float) ( $raw['smartpay_amount'] ?? 0 ), 2 );
 		$billing_type = sanitize_text_field( $raw['smartpay_form_billing_type'] ?? 'One Time' );
 
 		$data['payment_data'] = array(
