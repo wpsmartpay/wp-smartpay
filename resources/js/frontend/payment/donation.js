@@ -1,5 +1,6 @@
 /**
- * Donation form behaviour: Step Break blocks become steps.
+ * Donation form behaviour: Step Break blocks become steps; a filled tribute
+ * stays open.
  * Server markup: app/Modules/Campaign/DonationFields.php.
  */
 jQuery(($) => {
@@ -78,6 +79,23 @@ jQuery(($) => {
 
         show(0)
     }
+
+    /* ── Tribute ─────────────────────────────────────────────────────────── */
+
+    // While a name is entered the section can't be collapsed, so a donor never
+    // pays with a dedication they can't see. Clearing the name unlocks it.
+    $(document).on('input', '.smartpay-donation-tribute input[type="text"]', function () {
+        const filled = this.value.trim() !== ''
+        $(this).closest('details').children('summary')
+            .attr('aria-disabled', filled ? 'true' : null)
+            .attr('title', filled ? __('Clear the name to remove the dedication', 'smartpay') : null)
+    })
+    $(document).on('click', '.smartpay-donation-tribute > summary[aria-disabled="true"]', (e) => e.preventDefault())
+    // A name restored by the browser (back / refresh) opens and locks too.
+    $('.smartpay-donation-tribute input[type="text"]')
+        .filter(function () { return this.value.trim() !== '' })
+        .trigger('input')
+        .closest('details').prop('open', true)
 
     $('.smartpay-payment-form').each(function () {
         buildSteps($(this))

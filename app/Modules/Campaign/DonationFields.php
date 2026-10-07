@@ -180,6 +180,75 @@ class DonationFields {
 	}
 
 	/**
+	 * Wrapper attributes carrying the block's editor styles (color, spacing,
+	 * typography). The blocks are dynamic, so WordPress doesn't add these itself.
+	 *
+	 * @param array  $block Parsed block.
+	 * @param string $class Block's own class.
+	 * @return string `class="…" style="…"`, escaped.
+	 */
+	private function wrapper( array $block, string $class ): string {
+		$attrs   = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
+		$classes = array( 'smartpay-donation-field', $class );
+		$css     = '';
+
+		if ( function_exists( 'wp_style_engine_get_styles' ) && is_array( $attrs['style'] ?? null ) ) {
+			$styles = wp_style_engine_get_styles( $attrs['style'] );
+			$css    = (string) ( $styles['css'] ?? '' );
+			if ( ! empty( $styles['classnames'] ) ) {
+				$classes[] = $styles['classnames'];
+			}
+		}
+
+		// Theme palette / font-size presets are stored as slugs.
+		$presets = array(
+			'textColor'       => 'has-text-color has-%s-color',
+			'backgroundColor' => 'has-background has-%s-background-color',
+			'fontSize'        => 'has-%s-font-size',
+		);
+		foreach ( $presets as $key => $pattern ) {
+			if ( ! empty( $attrs[ $key ] ) && is_string( $attrs[ $key ] ) ) {
+				$classes[] = sprintf( $pattern, sanitize_html_class( $attrs[ $key ] ) );
+			}
+		}
+
+		return sprintf( 'class="%s"', esc_attr( implode( ' ', $classes ) ) )
+			. ( '' !== $css ? sprintf( ' style="%s"', esc_attr( $css ) ) : '' );
+	}
+
+	/**
+	 * Whether the honoree's name will be printed on a public donor wall for the
+	 * form being rendered.
+	 *
+	 * @return bool
+	 */
+	private function tribute_is_public(): bool {
+		$form_id = smartpay_current_form_render_id();
+		if ( ! $form_id ) {
+			$form_id = (int) get_the_ID();
+		}
+
+		$campaign_id = $form_id ? smartpay_get_form_campaign_id( $form_id ) : 0;
+		$campaign    = $campaign_id ? smartpay_get_campaign( $campaign_id ) : null;
+		if ( ! $campaign ) {
+			return false;
+		}
+
+		/** This filter is documented in DonationFields::receipt_summary(). */
+		if ( ! apply_filters( 'smartpay_campaign_wall_is_public', false, $campaign ) ) {
+			return false;
+		}
+
+		/**
+		 * Whether this campaign's donor wall prints tributes ("In memory of …") (Pro).
+		 *
+		 * @param bool  $shows    Default true.
+		 * @param array $campaign Normalised campaign.
+		 */
+		return (bool) apply_filters( 'smartpay_campaign_wall_shows_tributes', true, $campaign );
+	}
+
+	/**
 	 * Give anonymously.
 	 *
 	 * @param string $content Rendered content (empty).
@@ -189,7 +258,7 @@ class DonationFields {
 	public function render_anonymous( $content, $block ): string {
 		ob_start();
 		?>
-		<div class="smartpay-donation-field smartpay-donation-anonymous">
+		<div <?php echo $this->wrapper( $block, 'smartpay-donation-anonymous' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in wrapper(). ?>>
 			<label>
 				<input type="checkbox" name="smartpay_form[donation][anonymous]" value="1" />
 				<span><?php echo esc_html( $this->attr( $block, 'label', __( 'Give anonymously — your name won’t appear publicly', 'smartpay' ) ) ); ?></span>
@@ -211,7 +280,7 @@ class DonationFields {
 
 		ob_start();
 		?>
-		<div class="smartpay-donation-field smartpay-donation-comment">
+		<div <?php echo $this->wrapper( $block, 'smartpay-donation-comment' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in wrapper(). ?>>
 			<label class="smartpay-donation-field__label" for="<?php echo esc_attr( $id ); ?>">
 				<?php echo esc_html( $this->attr( $block, 'label', __( 'Leave a message (optional)', 'smartpay' ) ) ); ?>
 			</label>
@@ -237,7 +306,7 @@ class DonationFields {
 
 		ob_start();
 		?>
-		<details class="smartpay-donation-field smartpay-donation-tribute">
+		<details <?php echo $this->wrapper( $block, 'smartpay-donation-tribute' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in wrapper(). ?>>
 			<summary><?php echo esc_html( $this->attr( $block, 'label', __( 'Dedicate this gift (in honor / in memory)', 'smartpay' ) ) ); ?></summary>
 			<div class="smartpay-donation-tribute__body">
 				<label><input type="radio" name="smartpay_form[donation][tribute][type]" value="honor" checked /> <?php esc_html_e( 'In honor of', 'smartpay' ); ?></label>
@@ -245,6 +314,9 @@ class DonationFields {
 				<label class="screen-reader-text" for="<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Name', 'smartpay' ); ?></label>
 				<input type="text" id="<?php echo esc_attr( $id ); ?>" name="smartpay_form[donation][tribute][name]" maxlength="200"
 					placeholder="<?php esc_attr_e( 'Name', 'smartpay' ); ?>" />
+				<?php if ( $this->tribute_is_public() ) : ?>
+					<small class="smartpay-donation-field__help"><?php esc_html_e( 'This name is shown publicly on the campaign’s donor wall.', 'smartpay' ); ?></small>
+				<?php endif; ?>
 			</div>
 		</details>
 		<?php

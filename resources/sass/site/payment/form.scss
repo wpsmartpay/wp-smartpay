@@ -700,6 +700,8 @@
     summary {
         cursor: pointer;
         font-weight: 600;
+
+        &[aria-disabled="true"] { cursor: not-allowed; }
     }
 
     &__body {
@@ -709,7 +711,9 @@
         margin-top: 10px;
 
         label { margin: 0; }
-        input[type="text"] { flex-basis: 100%; }
+        input[type="text"],
+        .smartpay-donation-field__help { flex-basis: 100%; }
+        .smartpay-donation-field__help { margin-top: -4px; }
     }
 }
 
