@@ -51,15 +51,20 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
         customInputBorder,
         customBillingMode,
         customBillingPeriods,
+        customBillingOneTime,
     } = attributes
 
     const { isPro: pro, upgradeUrl } = readProFlag()
     const donorChooses = pro && customBillingMode === 'donor'
     const periods = customBillingPeriods || []
+    const oneTime = customBillingOneTime !== false
+    // At least one choice (One time or a period) stays ticked.
     const togglePeriod = (value, on) => {
         const next = on ? [...periods, value] : periods.filter((p) => p !== value)
-        // At least one period stays ticked.
-        if (next.length) setAttributes({ customBillingPeriods: next })
+        if (next.length || oneTime) setAttributes({ customBillingPeriods: next })
+    }
+    const toggleOneTime = (on) => {
+        if (on || periods.length) setAttributes({ customBillingOneTime: on })
     }
 
     const wrapperStyle = {
@@ -164,7 +169,11 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
                                         className="form-control smartpay-custom-billing-period"
                                         disabled
                                     >
-                                        <option>{__('One time', 'smartpay')}</option>
+                                        <option>
+                                            {oneTime
+                                                ? __('One time', 'smartpay')
+                                                : PERIOD_LABELS[CUSTOM_BILLING_PERIODS.find((p) => periods.includes(p.value))?.value]}
+                                        </option>
                                     </select>
                                 )}
                             </div>
@@ -224,10 +233,16 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
                         </Notice>
                     )}
                     {allowCustomAmount && donorChooses && (
-                        <fieldset>
+                        <fieldset className="smartpay-custom-billing-periods">
                             <legend className="components-base-control__label">
-                                {__('Periods the donor can pick', 'smartpay')}
+                                {__('Options the donor can pick', 'smartpay')}
                             </legend>
+                            <CheckboxControl
+                                label={__('One time', 'smartpay')}
+                                checked={oneTime}
+                                onChange={toggleOneTime}
+                                __nextHasNoMarginBottom
+                            />
                             {CUSTOM_BILLING_PERIODS.map((p) => (
                                 <CheckboxControl
                                     key={p.value}

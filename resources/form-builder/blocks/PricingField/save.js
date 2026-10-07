@@ -28,6 +28,7 @@ export const save = ({ attributes }) => {
         customInputBorder,
         customBillingMode,
         customBillingPeriods,
+        customBillingOneTime,
     } = attributes
 
     const wrapperStyle = {
@@ -99,7 +100,9 @@ export const save = ({ attributes }) => {
                                     name="smartpay_custom_billing_period"
                                     aria-label="Billing"
                                 >
-                                    <option value="">One time</option>
+                                    {customBillingOneTime !== false && (
+                                        <option value="">One time</option>
+                                    )}
                                     {CUSTOM_BILLING_PERIODS.filter((p) =>
                                         (customBillingPeriods || []).includes(p.value)
                                     ).map((p) => (

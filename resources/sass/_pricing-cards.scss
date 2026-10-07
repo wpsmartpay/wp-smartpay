@@ -275,7 +275,8 @@
             }
         }
 
-        .smartpay-custom-billing-period {
+        // `select` + `.input-group` outrank the shortcode wrapper's `.form-control { width: 100% }`.
+        .input-group select.smartpay-custom-billing-period {
             flex: 0 0 auto;
             width: auto;
             height: auto;

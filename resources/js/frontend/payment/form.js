@@ -124,7 +124,7 @@ jQuery(($) => {
             $(e.currentTarget)
                 .parents('.form-amounts')
                 .find('.smartpay-custom-billing-period')
-                .val('')
+                .prop('selectedIndex', 0)
 
             // set the is_custom_payment flag to false
             $(e.currentTarget).closest('form').find('[name="smartpay_is_custom_payment"]').val('false');
