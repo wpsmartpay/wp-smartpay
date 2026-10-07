@@ -241,51 +241,8 @@ jQuery(($) => {
             let buttonText = $(e.currentTarget).text()
 
             let formData = getPaymentFormData($parentWrapper)
-            let validation = checkPaymentFormValidation(formData)
 
-            // Hide all errors
-            $parentWrapper.find('input, textarea').removeClass('is-invalid')
-            $parentWrapper.find('#form-response').hide()
-            $parentWrapper.find('.smartpay-field-error').remove()
-
-            // Validate required textareas inline (not covered by main validation).
-            let hasRequiredFieldErrors = false
-            $parentWrapper.find('form textarea[required]').each(function () {
-                if (!($(this).val() || '').trim()) {
-                    hasRequiredFieldErrors = true
-                    $(this).addClass('is-invalid')
-                    $('<div>', {
-                        class: 'smartpay-field-error',
-                        style: 'color:#dc3545;font-size:0.875em;margin-top:0.25rem;',
-                        text: 'This field is required.',
-                    }).insertAfter(this)
-                }
-            })
-
-            // A custom amount must be positive (the server rejects it too).
-            if (
-                'true' === formData.smartpay_is_custom_amount &&
-                !(parseFloat(formData.smartpay_amount) > 0)
-            ) {
-                hasRequiredFieldErrors = true
-                const $customAmount = $parentWrapper.find('.form--custom-amount')
-                $customAmount.addClass('is-invalid')
-                $('<div>', {
-                    class: 'smartpay-field-error',
-                    style: 'color:#dc3545;font-size:0.875em;margin-top:-0.75rem;margin-bottom:1rem;',
-                    text: 'Please enter an amount greater than 0.',
-                }).insertAfter($customAmount.closest('.input-group'))
-            }
-
-                        if (!validation.valid || hasRequiredFieldErrors) {
-                if (!validation.valid) {
-                    showErrors(
-                        $parentWrapper.find('.smartpay-message-info'),
-                        validation
-                    )
-                    $parentWrapper.find('#first_name').focus()
-                }
-            } else {
+            if (validatePaymentForm($parentWrapper)) {
                 $(e.currentTarget).text('Processing...').attr('disabled', true)
                 jQuery.post(
                     smartpay.ajaxUrl,
@@ -538,6 +495,80 @@ jQuery(($) => {
         }
     }
 
+    // The input each validation key belongs to, so a form step can check its own fields.
+    const FIELD_OF = {
+        smartpay_first_name: '[name="smartpay_form[name][first_name]"]',
+        smartpay_last_name: '[name="smartpay_form[name][last_name]"]',
+        smartpay_email: '[name="smartpay_form[email]"]',
+        smartpay_payment_mobile: '[name="smartpay_payment_mobile"]',
+    }
+
+    /**
+     * Run the checkout checks and show their errors. With $scope (one step of
+     * a multi-step form) only the fields inside that step are checked.
+     */
+    function validatePaymentForm($parentWrapper, $scope = null) {
+        const $in = $scope || $parentWrapper.find('form')
+        const inScope = (selector) => !$scope || $scope.find(selector).length > 0
+        const formData = getPaymentFormData($parentWrapper)
+        const validation = checkPaymentFormValidation(formData)
+
+        if ($scope) {
+            Object.keys(validation.errors).forEach((key) => {
+                if (!FIELD_OF[key] || !inScope(FIELD_OF[key])) delete validation.errors[key]
+            })
+            validation.valid = Object.keys(validation.errors).length === 0
+        }
+
+        // Hide all errors
+        $parentWrapper.find('input, textarea').removeClass('is-invalid')
+        $parentWrapper.find('#form-response').hide()
+        $parentWrapper.find('.smartpay-field-error').remove()
+        $parentWrapper.find('.smartpay-message-info').empty()
+
+        // Validate required textareas inline (not covered by main validation).
+        let hasRequiredFieldErrors = false
+        $in.find('textarea[required]').each(function () {
+            if (!($(this).val() || '').trim()) {
+                hasRequiredFieldErrors = true
+                $(this).addClass('is-invalid')
+                $('<div>', {
+                    class: 'smartpay-field-error',
+                    style: 'color:#dc3545;font-size:0.875em;margin-top:0.25rem;',
+                    text: 'This field is required.',
+                }).insertAfter(this)
+            }
+        })
+
+        // A custom amount must be positive (the server rejects it too).
+        if (
+            'true' === formData.smartpay_is_custom_amount &&
+            !(parseFloat(formData.smartpay_amount) > 0) &&
+            inScope('.form--custom-amount')
+        ) {
+            hasRequiredFieldErrors = true
+            const $customAmount = $parentWrapper.find('.form--custom-amount')
+            $customAmount.addClass('is-invalid')
+            $('<div>', {
+                class: 'smartpay-field-error',
+                style: 'color:#dc3545;font-size:0.875em;margin-top:-0.75rem;margin-bottom:1rem;',
+                text: 'Please enter an amount greater than 0.',
+            }).insertAfter($customAmount.closest('.input-group'))
+        }
+
+        if (!validation.valid) {
+            showErrors($parentWrapper.find('.smartpay-message-info'), validation)
+        }
+        if (!validation.valid || hasRequiredFieldErrors) {
+            $in.find('.is-invalid').first().trigger('focus')
+            return false
+        }
+        return true
+    }
+
+    // Step forms (donation.js) check each step before moving on.
+    window.smartpayValidatePaymentForm = validatePaymentForm
+
     function checkPaymentFormValidation(data) {
         const rules = {
             smartpay_action: {
@@ -587,7 +618,7 @@ jQuery(($) => {
 
         Object.entries(validation.errors).forEach(([property, messages]) => {
             $parentWrapper
-                .find('input[name="' + property + '"]')
+                .find(FIELD_OF[property] || 'input[name="' + property + '"]')
                 .addClass('is-invalid')
 
             let fieldName = JSUcfirst(property.split('_').slice(1).join(' '))

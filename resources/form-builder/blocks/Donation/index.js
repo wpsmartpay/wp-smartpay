@@ -1,5 +1,7 @@
-import { PanelBody, TextControl } from '@wordpress/components'
+import { Notice, PanelBody, TextControl } from '@wordpress/components'
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor'
+import { useEntityProp } from '@wordpress/core-data'
+import { useSelect } from '@wordpress/data'
 import { __ } from '@wordpress/i18n'
 import { commentContent, starFilled, seen, pageBreak } from '@wordpress/icons'
 import './editor.scss'
@@ -102,6 +104,40 @@ export const DonationTribute = {
     }),
 }
 
+/** The front end ignores breaks that are nested or on a Split-layout form; say so here. */
+function StepBreakEdit({ attributes, setAttributes, clientId }) {
+    const [meta] = useEntityProp('postType', 'smartpay_form', 'meta')
+    const nested = useSelect((select) => select('core/block-editor').getBlockParents(clientId).length > 0, [clientId])
+    let split = false
+    try {
+        split = 'split' === JSON.parse(meta?._smartpay_settings || '{}')?.checkout_layout
+    } catch {}
+
+    return (
+        <div {...useBlockProps({ className: 'sp-donation-preview sp-donation-preview--break' })}>
+            <Labels
+                attributes={attributes}
+                setAttributes={setAttributes}
+                fields={[
+                    ['nextLabel', __('Button label', 'smartpay')],
+                    ['title', __('Next step title (optional)', 'smartpay')],
+                ]}
+            />
+            {nested && (
+                <Notice status="warning" isDismissible={false}>
+                    {__('Steps only work at the top level of the form. Move this Step Break out of the Group or Columns block.', 'smartpay')}
+                </Notice>
+            )}
+            {split && (
+                <Notice status="warning" isDismissible={false}>
+                    {__('Steps are not used with the Split checkout layout. Switch to Stacked in Form Settings to use them.', 'smartpay')}
+                </Notice>
+            )}
+            <span>{__('Step break', 'smartpay')} · {attributes.nextLabel || __('Continue', 'smartpay')} →</span>
+        </div>
+    )
+}
+
 export const StepBreak = {
     namespace: 'smartpay-form/step-break',
     settings: base({
@@ -113,19 +149,7 @@ export const StepBreak = {
             nextLabel: { type: 'string', default: '' },
             title: { type: 'string', default: '' },
         },
-        edit: ({ attributes, setAttributes }) => (
-            <div {...useBlockProps({ className: 'sp-donation-preview sp-donation-preview--break' })}>
-                <Labels
-                    attributes={attributes}
-                    setAttributes={setAttributes}
-                    fields={[
-                        ['nextLabel', __('Button label', 'smartpay')],
-                        ['title', __('Next step title (optional)', 'smartpay')],
-                    ]}
-                />
-                <span>{__('Step break', 'smartpay')} · {attributes.nextLabel || __('Continue', 'smartpay')} →</span>
-            </div>
-        ),
+        edit: StepBreakEdit,
     }),
 }
 

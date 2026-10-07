@@ -1811,7 +1811,8 @@ class NativeForm {
 						block.name,
 						Object.assign( {}, block, {
 							category: "wp-smartpay",
-							supports: Object.assign( {}, block.supports || {}, blockSupports ),
+							// Step Break renders no visible element, so styles have nothing to apply to.
+							supports: Object.assign( {}, block.supports || {}, "smartpay-form/step-break" === block.name ? {} : blockSupports ),
 							example: meta.example || block.example,
 							description: meta.description || block.description
 						} )

@@ -8,7 +8,9 @@ jQuery(($) => {
 
     /* ── Steps ───────────────────────────────────────────────────────────── */
 
-    const validStep = ($step) => {
+    // Browser checks first, then the same checks Pay runs, limited to this step,
+    // so the donor is stopped on the step that has the problem.
+    const validStep = ($form, $step) => {
         let ok = true
         $step.find('input, select, textarea').filter(':visible').each(function () {
             if (ok && typeof this.checkValidity === 'function' && !this.checkValidity()) {
@@ -16,6 +18,9 @@ jQuery(($) => {
                 ok = false
             }
         })
+        if (ok && typeof window.smartpayValidatePaymentForm === 'function') {
+            ok = window.smartpayValidatePaymentForm($form.closest('.smartpay-payment'), $step)
+        }
         return ok
     }
 
@@ -38,8 +43,11 @@ jQuery(($) => {
         })
 
         // Hidden inputs, nonce and response containers stay outside the steps.
+        // A group of only empty containers (#form-response before a leading
+        // break) is not a step.
         const keepOutside = (el) => el.tagName === 'INPUT' && el.type === 'hidden'
-        const steps = groups.filter((g) => g.nodes.some((n) => !keepOutside(n)))
+        const isEmpty = (el) => !el.children.length && !el.textContent.trim()
+        const steps = groups.filter((g) => g.nodes.some((n) => !keepOutside(n) && !isEmpty(n)))
         if (steps.length < 2) return
 
         const $bar = $('<div class="smartpay-steps" aria-hidden="true"></div>')
@@ -47,8 +55,12 @@ jQuery(($) => {
         $form.prepend($bar)
 
         const $panes = steps.map((step, i) => {
-            const $pane = $('<div class="smartpay-step" role="group"></div>')
-                .attr('aria-label', sprintf(__('Step %1$d of %2$d', 'smartpay'), i + 1, steps.length))
+            const $pane = $('<div class="smartpay-step"></div>')
+            // Read out on every step change; focus moves here.
+            $pane.append(
+                $('<p class="smartpay-step__status" tabindex="-1"></p>')
+                    .text(sprintf(__('Step %1$d of %2$d', 'smartpay'), i + 1, steps.length))
+            )
             if (step.title) $pane.append($('<h3 class="smartpay-step__title"></h3>').text(step.title))
             step.nodes.filter((n) => !keepOutside(n)).forEach((n) => $pane.append(n))
 
@@ -59,25 +71,32 @@ jQuery(($) => {
             if (i < steps.length - 1) {
                 $nav.append($('<button type="button" class="smartpay-step__next"></button>').text(step.next))
             }
-            $pane.append($nav)
             $form.append($pane)
+            // On the pay step, Back sits beside Pay instead of under it.
+            const $pay = $pane.find('.smartpay-submit-button-wrap, .smartpay-form-pay-now').first()
+            if (i === steps.length - 1 && $pay.length) {
+                $pay.before($nav)
+                $nav.append($pay)
+            } else {
+                $pane.append($nav)
+            }
             return $pane
         })
 
         let current = 0
-        const show = (i) => {
+        const show = (i, moveFocus = true) => {
             current = i
             $panes.forEach(($p, idx) => $p.toggle(idx === i))
             $bar.children().each((idx, el) => $(el).toggleClass('is-on', idx <= i))
-            if (i > 0) $panes[i].find('input, select, textarea, button').filter(':visible').first().trigger('focus')
+            if (moveFocus) $panes[i].find('.smartpay-step__status').trigger('focus')
         }
 
         $form.on('click', '.smartpay-step__next', () => {
-            if (validStep($panes[current])) show(Math.min(current + 1, $panes.length - 1))
+            if (validStep($form, $panes[current])) show(Math.min(current + 1, $panes.length - 1))
         })
         $form.on('click', '.smartpay-step__back', () => show(Math.max(current - 1, 0)))
 
-        show(0)
+        show(0, false)
     }
 
     /* ── Tribute ─────────────────────────────────────────────────────────── */

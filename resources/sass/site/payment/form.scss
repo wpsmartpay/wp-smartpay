@@ -737,13 +737,29 @@
     font-size: 1.1em;
 }
 
+.smartpay-step__status {
+    margin: 0 0 8px;
+    font-size: .85em;
+    color: #6b7280;
+
+    &:focus { outline: none; }
+}
+
 .smartpay-step__nav {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 8px;
     margin-top: 12px;
 
-    button {
+    // Pay button moved in beside Back on the last step.
+    > .smartpay-submit-button-wrap,
+    > .smartpay-form-pay-now {
+        margin: 0 0 0 auto;
+    }
+
+    .smartpay-step__back,
+    .smartpay-step__next {
         padding: 11px 18px;
         border-radius: 8px;
         font-weight: 700;
