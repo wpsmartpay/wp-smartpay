@@ -12,8 +12,8 @@ defined( 'ABSPATH' ) || exit;
 use SmartPay\Models\Payment;
 
 /**
- * Server rendering for the donation blocks (frequency, anonymous, comment,
- * tribute, step break) and the normalisation of what the donor entered into
+ * Server rendering for the donation blocks (anonymous, comment, tribute,
+ * step break) and the normalisation of what the donor entered into
  * the payment's `extra.donation` JSON.
  *
  * The blocks are dynamic (save() is empty) so the markup lives here, like the
@@ -21,10 +21,8 @@ use SmartPay\Models\Payment;
  * payment they are moved out of `extra.form_data` into `extra.donation` so
  * donor fields never mix with custom form fields.
  *
- * Monthly giving routes into the existing subscription engine: choosing
- * "Monthly" sets the form's billing type to Subscription / Monthly on the
- * client, exactly as a recurring pricing option does. Without Pro there is no
- * subscription engine, so the frequency block renders nothing.
+ * Recurring gifts come from the Pricing block: a subscription option, or a
+ * custom amount with a donor-chosen period (see NativeForm::guard_custom_billing).
  */
 class DonationFields {
 
@@ -33,7 +31,6 @@ class DonationFields {
 	 */
 	public function __construct() {
 		$blocks = array(
-			'donation-frequency' => 'render_frequency',
 			'donation-anonymous' => 'render_anonymous',
 			'donation-comment'   => 'render_comment',
 			'donation-tribute'   => 'render_tribute',
@@ -183,39 +180,6 @@ class DonationFields {
 	}
 
 	/**
-	 * Giving frequency: one-time or monthly (Pro subscription engine required).
-	 *
-	 * @param string $content Rendered content (empty).
-	 * @param array  $block   Parsed block.
-	 * @return string
-	 */
-	public function render_frequency( $content, $block ): string {
-		if ( ! smartpay_is_pro_active() ) {
-			return '';
-		}
-
-		$monthly_default = 'monthly' === ( $block['attrs']['default'] ?? '' );
-
-		ob_start();
-		?>
-		<fieldset class="smartpay-donation-field smartpay-donation-frequency">
-			<legend class="smartpay-donation-field__label"><?php echo esc_html( $this->attr( $block, 'label', __( 'How often?', 'smartpay' ) ) ); ?></legend>
-			<div class="smartpay-donation-frequency__options">
-				<label>
-					<input type="radio" name="smartpay_form[donation][frequency]" value="one_time" <?php checked( ! $monthly_default ); ?> />
-					<span><?php echo esc_html( $this->attr( $block, 'oneTimeLabel', __( 'One-time', 'smartpay' ) ) ); ?></span>
-				</label>
-				<label>
-					<input type="radio" name="smartpay_form[donation][frequency]" value="monthly" <?php checked( $monthly_default ); ?> />
-					<span><?php echo esc_html( $this->attr( $block, 'monthlyLabel', __( 'Monthly', 'smartpay' ) ) ); ?></span>
-				</label>
-			</div>
-		</fieldset>
-		<?php
-		return (string) ob_get_clean();
-	}
-
-	/**
 	 * Give anonymously.
 	 *
 	 * @param string $content Rendered content (empty).
@@ -329,7 +293,7 @@ class DonationFields {
 			return $data;
 		}
 
-		// No subscription engine without Pro: a posted "monthly" is charged once.
+		// No subscription engine without Pro: a posted subscription is charged once.
 		if ( ! smartpay_is_pro_active() && Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['payment_data']['billing_type'] ?? '' ) ) {
 			$data['payment_data']['billing_type'] = Payment::BILLING_TYPE_ONE_TIME;
 			unset( $data['billing_type'], $data['billing_period'], $data['payment_data']['billing_period'] );

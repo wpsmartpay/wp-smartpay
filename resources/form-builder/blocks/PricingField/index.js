@@ -78,6 +78,10 @@ export const PricingField = {
             currencySymbol: { type: 'string', default: '$' },
             customInputBackground: { type: 'string', default: '' },
             customInputBorder: { type: 'string', default: '' },
+            // Custom amount billing: 'one_time' or 'donor' (donor picks One time
+            // or one of customBillingPeriods). Synced to `_smartpay_custom_billing`.
+            customBillingMode: { type: 'string', default: 'one_time' },
+            customBillingPeriods: { type: 'array', default: ['Monthly', 'Yearly'] },
         },
         edit,
         save,

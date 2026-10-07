@@ -1,4 +1,4 @@
-import { PanelBody, TextControl, SelectControl, Notice } from '@wordpress/components'
+import { PanelBody, TextControl } from '@wordpress/components'
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
 import { commentContent, starFilled, seen, pageBreak } from '@wordpress/icons'
@@ -32,62 +32,6 @@ const base = (settings) => ({
     save: () => null,
     ...settings,
 })
-
-const proActive = () => !!window.smartpayPricingData?.isPro
-
-export const DonationFrequency = {
-    namespace: 'smartpay-form/donation-frequency',
-    settings: base({
-        title: __('Giving Frequency', 'smartpay'),
-        description: __('Let the donor choose one-time or monthly giving. Monthly uses recurring payments.', 'smartpay'),
-        icon: 'heart',
-        keywords: ['donation', 'monthly', 'recurring', 'frequency'],
-        supports: { multiple: false },
-        attributes: {
-            label: { type: 'string', default: '' },
-            oneTimeLabel: { type: 'string', default: '' },
-            monthlyLabel: { type: 'string', default: '' },
-            default: { type: 'string', default: 'one_time' },
-        },
-        edit: ({ attributes, setAttributes }) => (
-            <div {...useBlockProps({ className: 'sp-donation-preview' })}>
-                <Labels
-                    attributes={attributes}
-                    setAttributes={setAttributes}
-                    fields={[
-                        ['label', __('Question', 'smartpay')],
-                        ['oneTimeLabel', __('One-time label', 'smartpay')],
-                        ['monthlyLabel', __('Monthly label', 'smartpay')],
-                    ]}
-                />
-                <InspectorControls>
-                    <PanelBody title={__('Default', 'smartpay')}>
-                        <SelectControl
-                            __nextHasNoMarginBottom
-                            label={__('Selected by default', 'smartpay')}
-                            value={attributes.default}
-                            options={[
-                                { value: 'one_time', label: __('One-time', 'smartpay') },
-                                { value: 'monthly', label: __('Monthly', 'smartpay') },
-                            ]}
-                            onChange={(v) => setAttributes({ default: v })}
-                        />
-                    </PanelBody>
-                </InspectorControls>
-                {!proActive() && (
-                    <Notice status="info" isDismissible={false}>
-                        {__('Monthly giving needs recurring payments (WP SmartPay Pro). Until then this block is hidden on the form and every gift is one-time.', 'smartpay')}
-                    </Notice>
-                )}
-                <p className="sp-donation-preview__label">{attributes.label || __('How often?', 'smartpay')}</p>
-                <div className="sp-donation-preview__toggle">
-                    <span className={attributes.default !== 'monthly' ? 'is-on' : ''}>{attributes.oneTimeLabel || __('One-time', 'smartpay')}</span>
-                    <span className={attributes.default === 'monthly' ? 'is-on' : ''}>{attributes.monthlyLabel || __('Monthly', 'smartpay')}</span>
-                </div>
-            </div>
-        ),
-    }),
-}
 
 export const DonationAnonymous = {
     namespace: 'smartpay-form/donation-anonymous',
@@ -185,4 +129,4 @@ export const StepBreak = {
     }),
 }
 
-export const donationBlocks = [DonationFrequency, DonationAnonymous, DonationComment, DonationTribute, StepBreak]
+export const donationBlocks = [DonationAnonymous, DonationComment, DonationTribute, StepBreak]

@@ -48,8 +48,8 @@ export const TEMPLATES = [
 		id: 2002,
 		name: 'Charity Donation',
 		category: 'donation',
-		description: 'Step-by-step donation — one-time or monthly giving and tiered amounts, then donor details with give anonymously, a public message and an in honor / in memory dedication.',
-		fields: [ 'frequency', 'name', 'email', 'text', 'anonymous', 'comment', 'tribute', 'submit' ],
+		description: 'Step-by-step donation — tiered amounts or a custom gift, then donor details with give anonymously, a public message and an in honor / in memory dedication.',
+		fields: [ 'name', 'email', 'text', 'anonymous', 'comment', 'tribute', 'submit' ],
 	},
 
 	// ── Registration ───────────────────────────────────────────

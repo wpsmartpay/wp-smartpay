@@ -117,7 +117,6 @@ const SP_BLOCKS = [
 	{ name: 'smartpay-form/select-input',   label: __( 'Select',      'smartpay' ), required: false },
 	{ name: 'smartpay-form/address-input',  label: __( 'Address',       'smartpay' ), required: false },
 	{ name: 'smartpay-form/goal-progress', label: __( 'Goal Progress', 'smartpay' ), required: false },
-	{ name: 'smartpay-form/donation-frequency', label: __( 'Giving Frequency', 'smartpay' ), required: false },
 	{ name: 'smartpay-form/donation-anonymous', label: __( 'Give Anonymously', 'smartpay' ), required: false },
 	{ name: 'smartpay-form/donation-comment',   label: __( 'Donor Comment',    'smartpay' ), required: false },
 	{ name: 'smartpay-form/donation-tribute',   label: __( 'Tribute',          'smartpay' ), required: false },
@@ -125,7 +124,7 @@ const SP_BLOCKS = [
 ];
 
 // Blocks that may only appear once in the form.
-const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email', 'smartpay-form/goal-progress', 'smartpay-form/donation-frequency', 'smartpay-form/donation-anonymous', 'smartpay-form/donation-comment', 'smartpay-form/donation-tribute' ] );
+const UNIQUE_BLOCKS = new Set( [ 'smartpay-form/name', 'smartpay-form/email', 'smartpay-form/goal-progress', 'smartpay-form/donation-anonymous', 'smartpay-form/donation-comment', 'smartpay-form/donation-tribute' ] );
 
 const SUBMIT_BLOCK = 'smartpay-form/submit-button';
 

@@ -1,51 +1,9 @@
 /**
- * Donation form behaviour: Step Break blocks become steps, and the pay button
- * shows the recurring amount when the donor picks monthly giving
- * ("Give Now · $50/month"). Server markup: app/Modules/Campaign/DonationFields.php.
+ * Donation form behaviour: Step Break blocks become steps.
+ * Server markup: app/Modules/Campaign/DonationFields.php.
  */
 jQuery(($) => {
     const { __, sprintf } = window.wp?.i18n || { __: (s) => s, sprintf: (s, ...a) => a.reduce((t, v) => t.replace(/%[sd]/, v), s) }
-
-    const decode = (str) => {
-        const t = document.createElement('textarea')
-        t.innerHTML = str || ''
-        return t.value
-    }
-
-    /* ── Monthly: show the recurring amount on the pay button ───────────── */
-
-    const refreshPayLabel = ($form) => {
-        const $label = $form.find('.smartpay-form-pay-now > span').first()
-        const $target = $label.length ? $label : $form.find('.smartpay-form-pay-now').first()
-        if (!$target.length) return
-
-        if (undefined === $target.data('sp-label')) $target.data('sp-label', $target.text().trim())
-        const base = $target.data('sp-label')
-        const monthly = 'monthly' === $form.find('input[name="smartpay_form[donation][frequency]"]:checked').val()
-        const amount = parseFloat($form.find('[name="smartpay_form_amount"]').val())
-
-        if (!monthly) {
-            $target.text(base)
-            return
-        }
-
-        const symbol = decode(window.smartpay?.options?.currencySymbol) || '$'
-        $target.text(
-            amount > 0
-                ? sprintf(__('%1$s · %2$s/month', 'smartpay'), base, `${symbol}${amount.toLocaleString()}`)
-                : sprintf(__('%s monthly', 'smartpay'), base)
-        )
-    }
-
-    $(document.body).on(
-        'change input click',
-        '.smartpay-payment-form input[name="smartpay_form[donation][frequency]"], .smartpay-payment-form [name="smartpay_form_amount"], .smartpay-payment-form .form-plan-card',
-        function () {
-            const $form = $(this).closest('form')
-            // Amount cards update the amount input on the same click; read it after.
-            setTimeout(() => refreshPayLabel($form), 0)
-        }
-    )
 
     /* ── Steps ───────────────────────────────────────────────────────────── */
 
@@ -123,6 +81,5 @@ jQuery(($) => {
 
     $('.smartpay-payment-form').each(function () {
         buildSteps($(this))
-        refreshPayLabel($(this))
     })
 })

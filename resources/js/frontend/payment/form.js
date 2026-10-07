@@ -120,6 +120,12 @@ jQuery(($) => {
                     .find('input[name="smartpay_selected_amount_key"]')
                     .val(selectedAmountKey.val())
             }
+            // A card sets its own billing; the custom amount's period no longer applies.
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.smartpay-custom-billing-period')
+                .val('')
+
             // set the is_custom_payment flag to false
             $(e.currentTarget).closest('form').find('[name="smartpay_is_custom_payment"]').val('false');
         }
@@ -169,25 +175,40 @@ jQuery(($) => {
         }
     )
 
+    /**
+     * Billing for a custom amount: the donor's period from the Pricing block's
+     * dropdown, or One Time when there is no dropdown or "One time" is picked.
+     * Without this a custom amount kept the last clicked card's billing type.
+     */
+    function applyCustomBilling($amounts) {
+        const period = $amounts.find('.smartpay-custom-billing-period').val()
+        $amounts
+            .find('input[name="smartpay_form_billing_type"]')
+            .val(period ? SUBSCRIPTION : 'One Time')
+        if (period) {
+            $amounts.find('input[name="smartpay_form_billing_period"]').val(period)
+        }
+    }
+
     /** Select form custom amount **/
     $(document.body).on(
-        'focus',
-        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+        'focus change',
+        '.smartpay-form-shortcode .form-amounts .form--custom-amount, .smartpay-form-shortcode .form-amounts .smartpay-custom-billing-period',
         (e) => {
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.plan-amount')
-                .removeClass('selected')
-            $(e.currentTarget).addClass('selected')
+            const $amounts = $(e.currentTarget).parents('.form-amounts')
+
+            $amounts.find('.plan-amount').removeClass('selected')
+            $amounts.find('.form--custom-amount').addClass('selected')
 
             // remove checked attribute from all radio button
-            $(e.currentTarget)
-                .parents('.form-amounts')
+            $amounts
                 .find('.plan-amount input[type="radio"]:checked')
                 .prop('checked', false)
 
             // set the is_custom_payment flag to true
             $(e.currentTarget).closest('form').find('[name="smartpay_is_custom_payment"]').val('true');
+
+            applyCustomBilling($amounts)
         }
     )
 
@@ -450,13 +471,6 @@ jQuery(($) => {
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
         const data = $wrapper.find('form').serializeJSON()
-
-        // Giving Frequency block: a donor-chosen "monthly" gift is charged as a
-        // monthly subscription, the same path a recurring pricing option takes.
-        if ('monthly' === data.smartpay_form?.donation?.frequency) {
-            data.smartpay_form_billing_type = SUBSCRIPTION
-            data.smartpay_form_billing_period = 'Monthly'
-        }
 
         return {
             smartpay_action: 'smartpay_process_payment',

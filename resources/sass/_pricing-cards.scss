@@ -265,6 +265,24 @@
                 box-shadow: none;
             }
         }
+
+        // Donor-chosen billing period sits after the amount input.
+        .input-group:has(.smartpay-custom-billing-period) {
+            max-width: 440px;
+
+            .form--custom-amount {
+                border-radius: 0;
+            }
+        }
+
+        .smartpay-custom-billing-period {
+            flex: 0 0 auto;
+            width: auto;
+            height: auto;
+            margin-left: -1px;
+            border-radius: 0 0.25rem 0.25rem 0;
+            cursor: pointer;
+        }
     }
 
     // ── List preset: full-width plan rows ───────────────────────────────────

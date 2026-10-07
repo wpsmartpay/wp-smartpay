@@ -3,22 +3,6 @@
 
     &__label { margin: 0 0 6px; font-weight: 600; }
 
-    &__toggle {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-
-        span {
-            padding: 9px 12px;
-            text-align: center;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-weight: 600;
-
-            &.is-on { border-color: #293c81; color: #293c81; background: #eef1fb; }
-        }
-    }
-
     &__check { display: flex; gap: 8px; align-items: center; }
 
     &__input { width: 100%; }
