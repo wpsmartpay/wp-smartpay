@@ -72,6 +72,8 @@ class Payment extends Model
             if ( ! isset( $payment->attributes['is_donation'] ) && get_option( 'smartpay_payments_is_donation_column' ) ) {
                 $payment->attributes['is_donation'] = (int) self::resolve_is_donation( $payment );
             }
+
+            self::inherit_donation( $payment );
         });
 
         static::saving(function ($payment) {
@@ -95,6 +97,33 @@ class Payment extends Model
                 }
             }
         });
+    }
+
+    /**
+     * Renewals keep the donor's choices from the original gift, so an anonymous
+     * monthly gift stays anonymous on every charge. The comment and tribute
+     * belong to the first gift only and are not repeated.
+     *
+     * @param self $payment Payment being created.
+     */
+    private static function inherit_donation( self $payment ): void
+    {
+        $parent_id = (int) ( $payment->attributes['parent_id'] ?? 0 );
+        $extra     = is_array( $payment->extra ) ? $payment->extra : [];
+        if ( $parent_id <= 0 || isset( $extra['donation'] ) ) {
+            return;
+        }
+
+        $parent   = self::find( $parent_id );
+        $donation = $parent ? ( $parent->extra['donation'] ?? null ) : null;
+        if ( ! is_array( $donation ) ) {
+            return;
+        }
+
+        $donation['comment'] = '';
+        $donation['tribute'] = [];
+        $extra['donation']   = $donation;
+        $payment->extra      = $extra;
     }
 
     /**

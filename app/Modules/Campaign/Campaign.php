@@ -63,6 +63,7 @@ class Campaign {
 		add_filter( 'smartpay_needs_frontend_assets', array( $this, 'campaign_page_needs_assets' ) );
 
 		add_action( 'template_redirect', array( $this, 'save_donor_privacy' ) );
+		add_action( 'wp_after_insert_post', array( $this, 'flag_donation_form' ), 10, 2 );
 
 		new DonationFields();
 	}
@@ -226,6 +227,27 @@ class Campaign {
 		}
 
 		$this->refresh_campaign_links( (int) $object_id, array_merge( $tt_ids, array_map( 'intval', (array) $old_tt_ids ) ) );
+	}
+
+	/**
+	 * A form holding donation blocks (anonymous, comment, tribute) is a
+	 * donation form, so what the donor enters there is kept with the payment.
+	 * Runs after REST meta writes, so the editor's toggle cannot undo it.
+	 *
+	 * @param int      $post_id Form post ID.
+	 * @param \WP_Post $post    Form post.
+	 */
+	public function flag_donation_form( $post_id, $post ): void {
+		if ( 'smartpay_form' !== $post->post_type || get_post_meta( $post_id, '_smartpay_is_donation_form', true ) ) {
+			return;
+		}
+
+		foreach ( array( 'donation-anonymous', 'donation-comment', 'donation-tribute' ) as $name ) {
+			if ( has_block( 'smartpay-form/' . $name, $post ) ) {
+				update_post_meta( $post_id, '_smartpay_is_donation_form', true );
+				return;
+			}
+		}
 	}
 
 	/**
