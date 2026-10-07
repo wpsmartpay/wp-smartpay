@@ -370,15 +370,17 @@ jQuery(($) => {
 
                 payment_form.addClass('coupon-applied')
 
+                // Each card carries its discounted amount, which submit falls back
+                // to while the visible custom box is empty.
                 payment_form
-                    .find('.form--fixed-amount')
+                    .find('.form-plan-card')
                     .each(function () {
-                        let $inputId = $(this)
-                            .find('input[name=_form_amount]')
-                            .attr('id')
-                        $(this)
-                            .find('input[name=_form_amount]')
-                            .val($couponData[$inputId].discountAmount)
+                        let $amount = $(this).find('input[name=_form_amount]')
+                        let data = $couponData[$amount.attr('id')]
+                        // Legacy subscription cards repeat the key in their id, so they have no couponData entry.
+                        if (data) {
+                            $amount.val(data.discountAmount)
+                        }
                     })
 
                 let $selectedAmountInputId = $form.find('.form-amounts')
