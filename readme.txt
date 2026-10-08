@@ -4,7 +4,7 @@ Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.3.4
+Stable Tag: 3.3.5
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -395,6 +395,18 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.3.5 =
+* New - Donation campaigns: campaign model, admin screens, public campaign page, progress shortcode and block, donor wall
+* New - Donation blocks: giving frequency, anonymous, comment, tribute and step break
+* New - Donors and Donations are separated from Customers and Payments, with Transactions and Contacts tabs
+* New - Donors can choose the billing period for custom amounts
+* Update - Amount goals now include subscription renewal payments
+* Fix - Quantity goals count first payments only, so renewals no longer close sales forms early
+* Fix - Coupon discount now applies to card amounts
+* Fix - Custom amount box starts empty, rounds to cents and rejects a zero amount
+* Fix - Multi-step donation forms validate each step on Continue
+* Fix - Anonymous choice is kept on renewals
 
 = 3.3.4 =
 * New - Dashboard alert box for urgent problems reported by add-ons (e.g. Stripe payment rejections)
