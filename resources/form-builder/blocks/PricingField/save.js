@@ -1,5 +1,6 @@
 import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor'
 import { gridJustifyStyle } from './layout'
+import { CUSTOM_BILLING_PERIODS } from './billing'
 
 /**
  * Parent save — wraps the option cards + custom amount + coordination inputs.
@@ -25,6 +26,9 @@ export const save = ({ attributes }) => {
         gap,
         customInputBackground,
         customInputBorder,
+        customBillingMode,
+        customBillingPeriods,
+        customBillingOneTime,
     } = attributes
 
     const wrapperStyle = {
@@ -89,6 +93,25 @@ export const save = ({ attributes }) => {
                                 value="0.00"
                                 placeholder=""
                             />
+                            {/* Only when the donor may choose, so existing markup stays byte-identical. */}
+                            {customBillingMode === 'donor' && (
+                                <select
+                                    className="form-control smartpay-custom-billing-period"
+                                    name="smartpay_custom_billing_period"
+                                    aria-label="Billing"
+                                >
+                                    {customBillingOneTime !== false && (
+                                        <option value="">One time</option>
+                                    )}
+                                    {CUSTOM_BILLING_PERIODS.filter((p) =>
+                                        (customBillingPeriods || []).includes(p.value)
+                                    ).map((p) => (
+                                        <option key={p.value} value={p.value}>
+                                            {p.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
                     </div>
                 ) : (

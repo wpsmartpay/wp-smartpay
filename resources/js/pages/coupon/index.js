@@ -91,6 +91,8 @@ const CouponRow = ({ coupon, onDelete, onEdit, openId, setOpenId, checked, onChe
 export const CouponList = () => {
 	const { Header } = window.WPSmartPayUI
 
+	const proActions = window.wp?.hooks?.applyFilters( 'smartpay_coupon_list_actions', [] ) || []
+
 	const [data,             setData]             = useState([])
 	const [isLoading,        setIsLoading]        = useState(false)
 	const [searchQuery,      setSearchQuery]      = useState('')
@@ -232,6 +234,8 @@ export const CouponList = () => {
 							</button>
 						</div>
 					</div>
+
+					{proActions}
 
 					<button className="sp-btn sp-btn--primary" onClick={openCreate}>
 						+ {__('Create Coupon', 'smartpay')}

@@ -296,6 +296,35 @@ export const PaymentDetailPage = () => {
 		})
 	}
 
+	/* Donation — campaign + what the donor entered with this gift */
+	if (payment.donation) {
+		const d = payment.donation
+		const tribute = d.tribute?.name
+			? `${d.tribute.type === 'memory' ? __('In memory of', 'smartpay') : __('In honor of', 'smartpay')} ${d.tribute.name}`
+			: ''
+		mainSections.push({
+			id: 'donation',
+			component: (
+				<DetailCard key="donation" title={__('Donation', 'smartpay')}>
+					<table className="sp-kv-table">
+						<tbody>
+							<tr>
+								<td>{__('Campaign', 'smartpay')}</td>
+								<td>{d.campaign ? <a href={`#/campaigns/${d.campaign.id}`}>{d.campaign.title} ↗</a> : '—'}</td>
+							</tr>
+							<tr><td>{__('Form', 'smartpay')}</td><td>{payment.data?.form_title || '—'}</td></tr>
+							<tr><td>{__('Frequency', 'smartpay')}</td><td>{d.frequency_label}</td></tr>
+							<tr><td>{__('Anonymous', 'smartpay')}</td><td>{d.anonymous ? __('Yes', 'smartpay') : __('No', 'smartpay')}</td></tr>
+							<tr><td>{__('Tribute', 'smartpay')}</td><td>{tribute || '—'}</td></tr>
+							<tr><td>{__('Donor comment', 'smartpay')}</td><td>{d.comment ? `“${d.comment}”` : '—'}</td></tr>
+							{window.wp?.hooks?.applyFilters?.('smartpay_payment_donation_rows', null, payment)}
+						</tbody>
+					</table>
+				</DetailCard>
+			),
+		})
+	}
+
 	/* Customer details */
 	if (payment.customer) {
 		mainSections.push({
@@ -344,9 +373,9 @@ export const PaymentDetailPage = () => {
 			<div className="sp-layout">
 
 				{/* Back */}
-				<Link to="/payments" className="sp-back-btn">
+				<Link to={Number(payment.is_donation) ? '/donations' : '/payments'} className="sp-back-btn">
 					<span className="sp-back-btn__arrow">←</span>
-					{__('Payments', 'smartpay')}
+					{Number(payment.is_donation) ? __('Donations', 'smartpay') : __('Payments', 'smartpay')}
 				</Link>
 
 				<div className="sp-detail-grid">

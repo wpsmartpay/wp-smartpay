@@ -53,8 +53,9 @@ const fmtAmount = (amount, currency) => {
 
 /* ── Row ──────────────────────────────────────────────────── */
 
-const PaymentRow = ({ payment, onDelete, onView, openId, setOpenId, checked, onCheck }) => {
+const PaymentRow = ({ payment, mode, onDelete, onView, openId, setOpenId, checked, onCheck }) => {
 	const isOpen      = openId === payment.id
+	const isGift      = mode === 'donations' || Number(payment.is_donation) > 0
 	const billingType = payment?.data?.billing_type
 	const period      = periodLabel(payment?.data?.billing_period)
 	const dateStr     = payment.completed_at || payment.created_at
@@ -79,20 +80,31 @@ const PaymentRow = ({ payment, onDelete, onView, openId, setOpenId, checked, onC
 							style={{ textDecoration: 'none', color: 'inherit' }}>
 							{payment.email || '—'}
 						</Link>
-						<div className="sp-customer__email">#{payment.id}</div>
+						<div className="sp-customer__email">
+							#{payment.id}
+							{mode === 'all' && isGift && (
+								<span className="sp-badge sp-badge--pending" style={{ marginLeft: 6 }}>{__('Donation', 'smartpay')}</span>
+							)}
+						</div>
 					</div>
 				</div>
 			</td>
 
 			<td>
-				{isSubscription(billingType)
-					? <span className="sp-badge sp-badge--dot sp-badge--trial">{__('Subscription', 'smartpay')}</span>
+				{isGift && Number(payment.parent_id) > 0
+					? <span className="sp-badge sp-badge--dot sp-badge--trial">{__('Renewal', 'smartpay')}</span>
+					: isSubscription(billingType)
+					? <span className="sp-badge sp-badge--dot sp-badge--trial">{isGift ? __('Recurring', 'smartpay') : __('Subscription', 'smartpay')}</span>
 					: <span className="sp-badge sp-badge--dot sp-badge--active">{__('One-time', 'smartpay')}</span>
 				}
 			</td>
 
 			<td>
-				{payment.type === 'Product Purchase'
+				{isGift
+					? (payment.campaign_title
+						? <span className="sp-badge sp-badge--pending">{payment.campaign_title}</span>
+						: <span style={{ color: 'var(--sp-text-subtle)' }}>{payment.data?.form_id ? `#${payment.data.form_id} form` : '—'}</span>)
+					: payment.type === 'Product Purchase'
 					? <span className="sp-badge sp-badge--expired">#{payment.data?.product_id || '—'} product</span>
 					: payment.type === 'Form Payment'
 					? <span className="sp-badge sp-badge--pending">#{payment.data?.form_id || '—'} form</span>
@@ -165,8 +177,13 @@ const TYPE_OPTIONS = [
 	{ value: 'product_purchase', label: __('Product',   'smartpay') },
 ]
 
-export const PaymentList = () => {
+/**
+ * The Transactions page list. `mode` is the tab: 'all', 'payments' (sales)
+ * or 'donations'; it sets the REST filter (`is_donation`), copy and columns.
+ */
+export const PaymentList = ({ mode = 'all', tabs = null }) => {
 	const { Header } = window.WPSmartPayUI
+	const donations = mode === 'donations'
 
 	const [data,              setData]              = useState([])
 	const [isLoading,         setIsLoading]         = useState(false)
@@ -192,7 +209,7 @@ export const PaymentList = () => {
 	const fetchPayments = useCallback(async (page = 1, search = '') => {
 		setIsLoading(true)
 		try {
-			const result = await GetPayments({ page, perPage, search, status: paymentStatus, type: paymentType, sortBy: 'id:desc' })
+			const result = await GetPayments({ page, perPage, search, status: paymentStatus, type: donations ? '' : paymentType, donation: mode === 'all' ? '' : (donations ? 1 : 0), sortBy: 'id:desc' })
 			const { data: rows = [], ...paginationData } = result
 			setData(rows)
 			setPagination(paginationData)
@@ -202,7 +219,7 @@ export const PaymentList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [perPage, paymentStatus, paymentType])
+	}, [perPage, paymentStatus, paymentType, mode])
 
 	useEffect(() => {
 		fetchPayments(1, debouncedSearch)
@@ -246,21 +263,27 @@ export const PaymentList = () => {
 
 	const goToPage = (page) => fetchPayments(page, debouncedSearch)
 
-	const proActions = window.wp?.hooks?.applyFilters('smartpay_payment_list_actions', []) || []
+	// "+ New Payment" etc. belong to sales, not gifts.
+	const proActions = donations ? [] : (window.wp?.hooks?.applyFilters('smartpay_payment_list_actions', []) || [])
+
+	const title    = __('Transactions', 'smartpay')
+	const subtitle = __('Every payment and donation in one place', 'smartpay')
 
 	return (
 		<>
 			<Header
-				title={__('Payments', 'smartpay')}
-				subtitle={__('Manage your payments here', 'smartpay')}
+				title={title}
+				subtitle={subtitle}
 			/>
 
 			<div className="sp-layout">
 
 				<div className="sp-page-title__inner">
-					<h1 className="sp-page-title__heading">{__('Payments', 'smartpay')}</h1>
-					<p className="sp-page-title__sub">{__('Manage your payments here', 'smartpay')}</p>
+					<h1 className="sp-page-title__heading">{title}</h1>
+					<p className="sp-page-title__sub">{subtitle}</p>
 				</div>
+
+				{tabs}
 
 				<div className="sp-toolbar">
 					<div className="sp-search">
@@ -276,10 +299,12 @@ export const PaymentList = () => {
 						{STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
 					</select>
 
-					<select className="sp-filter-select" value={paymentType}
-						onChange={(e) => setPaymentType(e.target.value)}>
-						{TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-					</select>
+					{!donations && (
+						<select className="sp-filter-select" value={paymentType}
+							onChange={(e) => setPaymentType(e.target.value)}>
+							{TYPE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
+						</select>
+					)}
 
 					{hasSelection && (
 						<span className="sp-selection-count">
@@ -328,9 +353,9 @@ export const PaymentList = () => {
 										ref={(el) => { if (el) el.indeterminate = someChecked }}
 										onChange={toggleAll} />
 								</th>
-								<th>{__('Customer', 'smartpay')}</th>
+								<th>{donations ? __('Donor', 'smartpay') : mode === 'all' ? __('Contact', 'smartpay') : __('Customer', 'smartpay')}</th>
 								<th>{__('Type', 'smartpay')}</th>
-								<th>{__('Source', 'smartpay')}</th>
+								<th>{donations ? __('Campaign', 'smartpay') : __('Source', 'smartpay')}</th>
 								<th>{__('Date', 'smartpay')}</th>
 								<th>{__('Status', 'smartpay')}</th>
 								<th className="sp-col--num">{__('Amount', 'smartpay')}</th>
@@ -343,12 +368,16 @@ export const PaymentList = () => {
 							) : data.length === 0 ? (
 								<tr><td colSpan={8}>
 									<div className="sp-empty">
-										<div className="sp-empty__icon">💳</div>
-										<div className="sp-empty__title">{__('No payments found', 'smartpay')}</div>
+										<div className="sp-empty__icon">{donations ? '💝' : '💳'}</div>
+										<div className="sp-empty__title">{donations ? __('No donations found', 'smartpay') : mode === 'all' ? __('No transactions found', 'smartpay') : __('No payments found', 'smartpay')}</div>
 										<div className="sp-empty__desc">
-											{searchQuery || paymentStatus || paymentType
-												? __('No payments match your filters. Try adjusting them.', 'smartpay')
-												: __('Payments will appear here once customers complete checkout.', 'smartpay')
+											{searchQuery || paymentStatus || (!donations && paymentType)
+												? __('Nothing matches your filters. Try adjusting them.', 'smartpay')
+												: (donations
+													? __('Donations will appear here once donors give through a campaign form.', 'smartpay')
+													: mode === 'all'
+													? __('Payments and donations will appear here once someone pays or gives.', 'smartpay')
+													: __('Payments will appear here once customers complete checkout.', 'smartpay'))
 											}
 										</div>
 									</div>
@@ -357,6 +386,7 @@ export const PaymentList = () => {
 								<PaymentRow
 									key={payment.id}
 									payment={payment}
+									mode={mode}
 									onDelete={deletePayment}
 									onView={(id) => { setSelectedPaymentId(id); setIsDialogOpen(true) }}
 									openId={openRowId}
@@ -372,7 +402,7 @@ export const PaymentList = () => {
 						<div className="sp-pagination">
 							<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
 								<span className="sp-pagination__info">
-									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {__('payments', 'smartpay')}
+									{__('Showing', 'smartpay')} {pagination.from}–{pagination.to} {__('of', 'smartpay')} {pagination.total} {donations ? __('donations', 'smartpay') : mode === 'all' ? __('transactions', 'smartpay') : __('payments', 'smartpay')}
 								</span>
 								<select className="sp-filter-select"
 									style={{ fontSize: 12, padding: '0 22px 0 8px' }}

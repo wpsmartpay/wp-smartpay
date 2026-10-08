@@ -1,10 +1,13 @@
 import { __ } from '@wordpress/i18n'
+import { useEffect, useRef } from '@wordpress/element'
 import {
     InspectorControls,
     useBlockProps,
     useInnerBlocksProps,
 } from '@wordpress/block-editor'
-import { PanelBody, ToggleControl } from '@wordpress/components'
+import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components'
+import { useDispatch } from '@wordpress/data'
+import { createBlock } from '@wordpress/blocks'
 
 const line = (label, fieldName, fieldType) => [
     'smartpay-form/address-field',
@@ -15,7 +18,16 @@ const line = (label, fieldName, fieldType) => [
     ],
 ]
 
-export const edit = ({ attributes, setAttributes }) => {
+const templateToBlocks = (template) =>
+    template.map(([name, attrs, innerTemplate = []]) =>
+        createBlock(
+            name,
+            attrs,
+            innerTemplate.map(([innerName, innerAttrs]) => createBlock(innerName, innerAttrs))
+        )
+    )
+
+export const edit = ({ attributes, setAttributes, clientId }) => {
     const {
         showLine1,
         showLine2,
@@ -23,9 +35,12 @@ export const edit = ({ attributes, setAttributes }) => {
         showState,
         showZip,
         showCountry,
+        columns,
     } = attributes
 
-    // Country first so the State options can depend on it (frontend cascade).
+    const { replaceInnerBlocks } = useDispatch('core/block-editor')
+    const isFirstMount = useRef(true)
+
     const TEMPLATE = []
     if (showLine1)   TEMPLATE.push(line(__('Address Line 1', 'smartpay'), 'line_1', 'text'))
     if (showLine2)   TEMPLATE.push(line(__('Address Line 2', 'smartpay'), 'line_2', 'text'))
@@ -34,7 +49,21 @@ export const edit = ({ attributes, setAttributes }) => {
     if (showState)   TEMPLATE.push(line(__('State', 'smartpay'),          'state',  'state'))
     if (showZip)     TEMPLATE.push(line(__('Zip Code', 'smartpay'),       'zip',    'text'))
 
-    const blockProps = useBlockProps({ className: 'smartpay-address' })
+    // Sync inner blocks with attribute toggles. Skip mount — post content already
+    // has the saved blocks; only re-sync when the user changes a toggle.
+    useEffect(() => {
+        if (isFirstMount.current) {
+            isFirstMount.current = false
+            return
+        }
+        replaceInnerBlocks(clientId, templateToBlocks(TEMPLATE), false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [showLine1, showLine2, showCity, showState, showZip, showCountry])
+
+    const colClass = columns > 0 ? `sp-cols-${columns}` : ''
+    const blockProps = useBlockProps({
+        className: `smartpay-address${colClass ? ' ' + colClass : ''}`,
+    })
     const innerBlocksProps = useInnerBlocksProps(blockProps, {
         template: TEMPLATE,
         allowedBlocks: ['smartpay-form/address-field'],
@@ -74,6 +103,20 @@ export const edit = ({ attributes, setAttributes }) => {
                         label={__('Show Country', 'smartpay')}
                         checked={showCountry}
                         onChange={(val) => setAttributes({ showCountry: val })}
+                    />
+                    <SelectControl
+                        label={__('Layout Columns', 'smartpay')}
+                        value={columns}
+                        options={[
+                            { label: __('Default (stacked)', 'smartpay'), value: 0 },
+                            { label: __('1 Column', 'smartpay'), value: 1 },
+                            { label: __('2 Columns', 'smartpay'), value: 2 },
+                            { label: __('3 Columns', 'smartpay'), value: 3 },
+                        ]}
+                        onChange={(val) =>
+                            setAttributes({ columns: parseInt(val, 10) })
+                        }
+                        __nextHasNoMarginBottom
                     />
                 </PanelBody>
             </InspectorControls>

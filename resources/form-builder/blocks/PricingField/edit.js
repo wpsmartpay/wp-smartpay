@@ -2,25 +2,39 @@ import {
     PanelBody,
     TextControl,
     ToggleControl,
+    RadioControl,
+    CheckboxControl,
+    Notice,
+    ExternalLink,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
     __experimentalUnitControl as UnitControl,
 } from '@wordpress/components'
 import {
     InspectorControls,
-    PanelColorSettings,
     useBlockProps,
     useInnerBlocksProps,
+    __experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+    __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
 } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
 import { gridJustifyStyle } from './layout'
+import { CUSTOM_BILLING_PERIODS } from './billing'
+import { readProFlag } from './option/edit'
+
+const PERIOD_LABELS = {
+    Daily: __('Daily', 'smartpay'),
+    Weekly: __('Weekly', 'smartpay'),
+    Monthly: __('Monthly', 'smartpay'),
+    Yearly: __('Yearly', 'smartpay'),
+}
 
 const DEFAULT_OPTION = {
     name: 'smartpay-form/pricing-option',
     attributesToCopy: ['billing_type', 'billing_period', 'style', 'className'],
 }
 
-export const edit = ({ attributes, setAttributes }) => {
+export const edit = ({ attributes, setAttributes, clientId }) => {
     const {
         preset,
         labelAlign,
@@ -35,7 +49,23 @@ export const edit = ({ attributes, setAttributes }) => {
         layout,
         customInputBackground,
         customInputBorder,
+        customBillingMode,
+        customBillingPeriods,
+        customBillingOneTime,
     } = attributes
+
+    const { isPro: pro, upgradeUrl } = readProFlag()
+    const donorChooses = pro && customBillingMode === 'donor'
+    const periods = customBillingPeriods || []
+    const oneTime = customBillingOneTime !== false
+    // At least one choice (One time or a period) stays ticked.
+    const togglePeriod = (value, on) => {
+        const next = on ? [...periods, value] : periods.filter((p) => p !== value)
+        if (next.length || oneTime) setAttributes({ customBillingPeriods: next })
+    }
+    const toggleOneTime = (on) => {
+        if (on || periods.length) setAttributes({ customBillingOneTime: on })
+    }
 
     const wrapperStyle = {
         '--sp-currency': `'${currencySymbol}'`,
@@ -45,6 +75,44 @@ export const edit = ({ attributes, setAttributes }) => {
     if (tickerColor) wrapperStyle['--sp-ticker'] = tickerColor
     if (customInputBackground) wrapperStyle['--sp-input-bg'] = customInputBackground
     if (customInputBorder) wrapperStyle['--sp-input-border'] = customInputBorder
+
+    // Theme palettes/gradients, so our swatches match the native Color panel.
+    const colorGradientSettings = useMultipleOriginColorsAndGradients()
+
+    // Filled into the `color` group so these sit *inside* the native Color
+    // panel rather than as a second, separate colour panel next to it.
+    const colorSettings = [
+        {
+            label: __('Selected border', 'smartpay'),
+            colorValue: selectedBorderColor,
+            onColorChange: (v) => setAttributes({ selectedBorderColor: v || '' }),
+            resetAllFilter: () => ({ selectedBorderColor: '' }),
+        },
+        {
+            label: __('Ticker', 'smartpay'),
+            colorValue: tickerColor,
+            onColorChange: (v) => setAttributes({ tickerColor: v || '' }),
+            resetAllFilter: () => ({ tickerColor: '' }),
+        },
+        ...(allowCustomAmount
+            ? [
+                  {
+                      label: __('Custom amount background', 'smartpay'),
+                      colorValue: customInputBackground,
+                      onColorChange: (v) =>
+                          setAttributes({ customInputBackground: v || '' }),
+                      resetAllFilter: () => ({ customInputBackground: '' }),
+                  },
+                  {
+                      label: __('Custom amount border', 'smartpay'),
+                      colorValue: customInputBorder,
+                      onColorChange: (v) =>
+                          setAttributes({ customInputBorder: v || '' }),
+                      resetAllFilter: () => ({ customInputBorder: '' }),
+                  },
+              ]
+            : []),
+    ]
 
     const blockProps = useBlockProps({
         className: `form--amount-section smartpay-pricing is-style-${preset || 'grid'}${
@@ -96,11 +164,98 @@ export const edit = ({ attributes, setAttributes }) => {
                                     disabled
                                     placeholder="0.00"
                                 />
+                                {donorChooses && (
+                                    <select
+                                        className="form-control smartpay-custom-billing-period"
+                                        disabled
+                                    >
+                                        <option>
+                                            {oneTime
+                                                ? __('One time', 'smartpay')
+                                                : PERIOD_LABELS[CUSTOM_BILLING_PERIODS.find((p) => periods.includes(p.value))?.value]}
+                                        </option>
+                                    </select>
+                                )}
                             </div>
                         </div>
                     )}
                 </div>
             </div>
+
+            {/*
+             * List View tab — sits alongside the repeatable pricing options, so
+             * "add another way to pay" lives next to the options themselves
+             * rather than in a separate Settings panel.
+             */}
+            <InspectorControls group="list">
+                <PanelBody
+                    title={__('Custom Amount', 'smartpay')}
+                    initialOpen={true}
+                >
+                    <ToggleControl
+                        label={__('Allow custom amount', 'smartpay')}
+                        help={__(
+                            'Adds a free-entry amount field below the options.',
+                            'smartpay'
+                        )}
+                        checked={allowCustomAmount}
+                        onChange={(v) => setAttributes({ allowCustomAmount: v })}
+                        __nextHasNoMarginBottom
+                    />
+                    {allowCustomAmount && (
+                        <TextControl
+                            label={__('Custom amount label', 'smartpay')}
+                            value={customAmountLabel}
+                            onChange={(v) =>
+                                setAttributes({ customAmountLabel: v })
+                            }
+                            __nextHasNoMarginBottom
+                        />
+                    )}
+                    {allowCustomAmount && (
+                        <RadioControl
+                            label={__('Billing for custom amount', 'smartpay')}
+                            selected={donorChooses ? 'donor' : 'one_time'}
+                            options={[
+                                { label: __('One time only', 'smartpay'), value: 'one_time' },
+                                { label: __('Let donor choose', 'smartpay'), value: 'donor' },
+                            ]}
+                            onChange={(v) => pro && setAttributes({ customBillingMode: v })}
+                            disabled={!pro}
+                        />
+                    )}
+                    {allowCustomAmount && !pro && (
+                        <Notice status="info" isDismissible={false}>
+                            {__('Recurring custom amounts are available in the Pro plan.', 'smartpay')}{' '}
+                            <ExternalLink href={upgradeUrl}>
+                                {__('Upgrade to Pro', 'smartpay')}
+                            </ExternalLink>
+                        </Notice>
+                    )}
+                    {allowCustomAmount && donorChooses && (
+                        <fieldset className="smartpay-custom-billing-periods">
+                            <legend className="components-base-control__label">
+                                {__('Options the donor can pick', 'smartpay')}
+                            </legend>
+                            <CheckboxControl
+                                label={__('One time', 'smartpay')}
+                                checked={oneTime}
+                                onChange={toggleOneTime}
+                                __nextHasNoMarginBottom
+                            />
+                            {CUSTOM_BILLING_PERIODS.map((p) => (
+                                <CheckboxControl
+                                    key={p.value}
+                                    label={PERIOD_LABELS[p.value]}
+                                    checked={periods.includes(p.value)}
+                                    onChange={(on) => togglePeriod(p.value, on)}
+                                    __nextHasNoMarginBottom
+                                />
+                            ))}
+                        </fieldset>
+                    )}
+                </PanelBody>
+            </InspectorControls>
 
             <InspectorControls>
                 <PanelBody title={__('Pricing', 'smartpay')} initialOpen={true}>
@@ -198,63 +353,20 @@ export const edit = ({ attributes, setAttributes }) => {
                         __nextHasNoMarginBottom
                     />
                 </PanelBody>
+            </InspectorControls>
 
-                <PanelBody title={__('Custom Amount', 'smartpay')} initialOpen={false}>
-                    <ToggleControl
-                        label={__('Allow custom amount', 'smartpay')}
-                        checked={allowCustomAmount}
-                        onChange={(v) => setAttributes({ allowCustomAmount: v })}
-                        __nextHasNoMarginBottom
-                    />
-                    {allowCustomAmount && (
-                        <TextControl
-                            label={__('Custom amount label', 'smartpay')}
-                            value={customAmountLabel}
-                            onChange={(v) => setAttributes({ customAmountLabel: v })}
-                            __nextHasNoMarginBottom
-                        />
-                    )}
-                </PanelBody>
-
-                <PanelColorSettings
-                    title={__('Colors', 'smartpay')}
-                    initialOpen={false}
-                    colorSettings={[
-                        {
-                            value: selectedBorderColor,
-                            onChange: (v) =>
-                                setAttributes({ selectedBorderColor: v || '' }),
-                            label: __('Selected border', 'smartpay'),
-                        },
-                        {
-                            value: tickerColor,
-                            onChange: (v) =>
-                                setAttributes({ tickerColor: v || '' }),
-                            label: __('Ticker', 'smartpay'),
-                        },
-                    ]}
+            {/*
+             * Styles tab — filling the `color` group merges these swatches into
+             * the block's native Color panel (which already carries Background),
+             * so the Styles tab shows one colour group rather than several.
+             */}
+            <InspectorControls group="color">
+                <ColorGradientSettingsDropdown
+                    __experimentalIsRenderedInSidebar
+                    settings={colorSettings}
+                    panelId={clientId}
+                    {...colorGradientSettings}
                 />
-
-                {allowCustomAmount && (
-                    <PanelColorSettings
-                        title={__('Custom Amount Input', 'smartpay')}
-                        initialOpen={false}
-                        colorSettings={[
-                            {
-                                value: customInputBackground,
-                                onChange: (v) =>
-                                    setAttributes({ customInputBackground: v || '' }),
-                                label: __('Background', 'smartpay'),
-                            },
-                            {
-                                value: customInputBorder,
-                                onChange: (v) =>
-                                    setAttributes({ customInputBorder: v || '' }),
-                                label: __('Border', 'smartpay'),
-                            },
-                        ]}
-                    />
-                )}
             </InspectorControls>
         </>
     )

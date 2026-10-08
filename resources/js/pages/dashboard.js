@@ -17,6 +17,8 @@ import {
     ChevronRight,
     Plus,
     RefreshCw,
+    AlertTriangle,
+    CheckCircle2,
 } from 'lucide-react'
 import { Header } from '../components/header'
 import { SetupWizard } from '../components/SetupWizard'
@@ -77,9 +79,9 @@ const MANAGEMENT_GROUPS = [
         label: __('MANAGEMENT', 'smartpay'),
         items: [
             { label: __('Forms', 'smartpay'),          icon: FileText,   hash: '/native-forms' },
-            { label: __('Payments', 'smartpay'),       icon: Receipt,    hash: '/payments' },
+            { label: __('Transactions', 'smartpay'),   icon: Receipt,    hash: '/transactions' },
             { label: __('Subscriptions', 'smartpay'),  icon: RefreshCw,  hash: '/subscriptions' },
-            { label: __('Customers', 'smartpay'),      icon: UserCheck,  hash: '/customers' },
+            { label: __('Contacts', 'smartpay'),       icon: UserCheck,  hash: '/contacts' },
         ],
     },
     {
@@ -515,6 +517,186 @@ const OnboardingProgressCard = ( { hasPayments, onLaunchWizard } ) => {
     )
 }
 
+// ─── Subtle Pro upgrade note (no color, minimal) ──────────────────────────────
+const ProUpgradeNote = () => {
+    if ( window.smartpayProData?.isActive ) return null
+
+    return (
+        <div
+            className="sp-detail-card"
+            style={{ borderStyle: 'dashed', background: 'transparent', boxShadow: 'none' }}
+        >
+            <div className="sp-detail-card__body" style={{ padding: '14px 16px' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--sp-text)', marginBottom: 4 }}>
+                    {__( 'WPSmartPay Pro', 'smartpay' )}
+                </div>
+                <p style={{ margin: '0 0 10px', fontSize: 11.5, lineHeight: 1.5, color: 'var(--sp-text-muted)' }}>
+                    {__( 'Unlock subscriptions, invoices, and advanced reports.', 'smartpay' )}
+                </p>
+                <a
+                    href="https://wpsmartpay.com/features/"
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                        fontSize: 11.5,
+                        fontWeight: 600,
+                        color: 'var(--sp-text-muted)',
+                        textDecoration: 'underline',
+                        textUnderlineOffset: 2,
+                    }}
+                >
+                    {__( 'Learn more →', 'smartpay' )}
+                </a>
+            </div>
+        </div>
+    )
+}
+
+// ─── Alerts Card ──────────────────────────────────────────────────────────────
+// Urgent problems (e.g. Stripe rejecting checkout payments) sent by add-ons via
+// the `smartpay_dashboard_alerts` filter. Renders nothing when there are none.
+const AlertsCard = () => {
+    const [ alerts, setAlerts ] = useState( window.smartpay?.alerts || [] )
+
+    const safeUrl = ( url ) =>
+        typeof url === 'string' && /^https?:/i.test( url ) ? url : '#'
+
+    const dismiss = ( alert ) => {
+        const body = new URLSearchParams( { action: alert.dismiss.action, nonce: alert.dismiss.nonce } )
+        fetch( window.smartpay.ajax_url, { method: 'POST', credentials: 'same-origin', body } )
+            .then( () => setAlerts( ( list ) => list.filter( ( a ) => a.id !== alert.id ) ) )
+    }
+
+    return alerts.map( ( alert ) => (
+        <div key={ alert.id } className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#dc2626' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fef2f2' }}>
+                <XCircle style={{ width: 13, height: 13, color: '#dc2626', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#991b1b', marginLeft: 6 }}>
+                    { alert.title }
+                </span>
+                { alert.count > 0 && (
+                    <span style={{
+                        marginLeft: 'auto',
+                        fontSize: 11,
+                        fontWeight: 700,
+                        background: '#fee2e2',
+                        color: '#991b1b',
+                        border: '1px solid #fca5a5',
+                        padding: '1px 7px',
+                        borderRadius: 99,
+                    }}>
+                        { alert.count }
+                    </span>
+                ) }
+            </div>
+            <div className="sp-detail-card__body" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px 16px' }}>
+                <div style={{ fontSize: 12.5, color: 'var(--sp-text)', lineHeight: 1.45 }}>{ alert.message }</div>
+                { alert.detail && (
+                    <div style={{ fontSize: 11.5, color: '#8a2424', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 4, padding: '6px 8px', lineHeight: 1.45, wordBreak: 'break-word' }}>
+                        { alert.detail }
+                    </div>
+                ) }
+                { ( alert.actions || [] ).map( ( action, i ) => (
+                    <a
+                        key={ action.url }
+                        href={ safeUrl( action.url ) }
+                        target={ action.external ? '_blank' : undefined }
+                        rel={ action.external ? 'noopener noreferrer' : undefined }
+                        className={ i === 0 ? 'sp-btn sp-btn--primary' : 'sp-btn sp-btn--outline' }
+                        style={{ textDecoration: 'none', justifyContent: 'center', fontSize: 12, height: 32 }}
+                    >
+                        { action.label }
+                    </a>
+                ) ) }
+                { alert.dismiss && (
+                    <button
+                        type="button"
+                        onClick={ () => dismiss( alert ) }
+                        style={{ background: 'none', border: 0, padding: 0, fontSize: 11.5, color: 'var(--sp-text-muted)', textDecoration: 'underline', cursor: 'pointer', alignSelf: 'center' }}
+                    >
+                        { __( 'Dismiss', 'smartpay' ) }
+                    </button>
+                ) }
+            </div>
+        </div>
+    ) )
+}
+
+// ─── Setup Notices Card ───────────────────────────────────────────────────────
+const SetupNoticesCard = () => {
+    const notices = window.smartpay?.setupNotices || []
+
+    if ( notices.length === 0 ) {
+        return (
+            <div className="sp-detail-card" style={{ overflow: 'hidden' }}>
+                <div className="sp-detail-card__header">
+                    <span className="sp-detail-card__title">{__( 'SETUP STATUS', 'smartpay' )}</span>
+                </div>
+                <div className="sp-detail-card__body" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px' }}>
+                    <CheckCircle2 style={{ width: 18, height: 18, color: '#22c55e', flexShrink: 0 }} />
+                    <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--sp-text)' }}>
+                            {__( 'All setup complete', 'smartpay' )}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: 'var(--sp-text-muted)', marginTop: 2 }}>
+                            {__( 'Your gateways and integrations are configured.', 'smartpay' )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className="sp-detail-card" style={{ overflow: 'hidden', borderColor: '#f59e0b' }}>
+            <div className="sp-detail-card__header" style={{ background: '#fffbeb' }}>
+                <AlertTriangle style={{ width: 13, height: 13, color: '#d97706', flexShrink: 0 }} />
+                <span className="sp-detail-card__title" style={{ color: '#92400e', marginLeft: 6 }}>
+                    {__( 'SETUP NEEDED', 'smartpay' )}
+                </span>
+                <span style={{
+                    marginLeft: 'auto',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    background: '#fef3c7',
+                    color: '#92400e',
+                    border: '1px solid #fcd34d',
+                    padding: '1px 7px',
+                    borderRadius: 99,
+                }}>
+                    {notices.length}
+                </span>
+            </div>
+            <div className="sp-detail-card__body" style={{ padding: 0 }}>
+                { notices.map( ( notice, i ) => (
+                    <div key={ notice.id || i } style={{
+                        display:    'flex',
+                        alignItems: 'flex-start',
+                        gap:        10,
+                        padding:    '9px 16px',
+                        borderTop:  i > 0 ? '1px solid var(--sp-border)' : 'none',
+                    }}>
+                        <AlertTriangle style={{ width: 12, height: 12, color: '#d97706', flexShrink: 0, marginTop: 2 }} />
+                        <span style={{ fontSize: 12, color: 'var(--sp-text)', flex: 1, minWidth: 0, lineHeight: 1.45 }}>
+                            { notice.message }
+                        </span>
+                        { notice.action_url && (
+                            <a
+                                href={ notice.action_url }
+                                style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', textDecoration: 'none', flexShrink: 0 }}
+                                onMouseOver={ ( e ) => e.currentTarget.style.textDecoration = 'underline' }
+                                onMouseOut={ ( e ) => e.currentTarget.style.textDecoration = 'none' }
+                            >
+                                { notice.action_label || __( 'Fix →', 'smartpay' ) }
+                            </a>
+                        ) }
+                    </div>
+                ) ) }
+            </div>
+        </div>
+    )
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 const now        = new Date()
 const monthLabel = now.toLocaleString('default', { month: 'long', year: 'numeric' })
@@ -607,13 +789,13 @@ export const Dashboard = () => {
                         />
 
                         <DetailCard
-                            title={__('RECENT PAYMENTS', 'smartpay')}
+                            title={__('RECENT TRANSACTIONS', 'smartpay')}
                             action={
                                 <a
-                                    href={`${adminUrl}?page=smartpay#/payments`}
+                                    href={`${adminUrl}?page=smartpay#/transactions`}
                                     style={{ fontSize: 12, color: 'var(--sp-text-muted)', textDecoration: 'none', fontWeight: 500 }}
                                 >
-                                    {__('Open payments →', 'smartpay')}
+                                    {__('Open transactions →', 'smartpay')}
                                 </a>
                             }
                         >
@@ -622,8 +804,8 @@ export const Dashboard = () => {
                             ) : recentPayments.length === 0 ? (
                                 <div className="sp-empty" style={{ padding: '24px 0' }}>
                                     <div className="sp-empty__icon">💳</div>
-                                    <div className="sp-empty__title">{__('No payments yet', 'smartpay')}</div>
-                                    <div className="sp-empty__desc">{__('Payments will appear here once received.', 'smartpay')}</div>
+                                    <div className="sp-empty__title">{__('No transactions yet', 'smartpay')}</div>
+                                    <div className="sp-empty__desc">{__('Payments and donations will appear here once received.', 'smartpay')}</div>
                                 </div>
                             ) : (
                                 <>
@@ -664,11 +846,11 @@ export const Dashboard = () => {
                                         </tbody>
                                     </table>
                                     <a
-                                        href={`${adminUrl}?page=smartpay#/payments`}
+                                        href={`${adminUrl}?page=smartpay#/transactions`}
                                         className="sp-btn sp-btn--outline"
                                         style={{ textDecoration: 'none', fontSize: 12, height: 30, padding: '0 12px' }}
                                     >
-                                        {__('View all payments →', 'smartpay')}
+                                        {__('View all transactions →', 'smartpay')}
                                     </a>
                                 </>
                             )}
@@ -723,8 +905,12 @@ export const Dashboard = () => {
 
                     </div>
 
-                    {/* ── RIGHT: CTAs + Onboarding Checklist card ──────────────── */}
+                    {/* ── RIGHT: Setup status + CTAs + Onboarding Checklist card ─ */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+                        {/* Urgent alerts (only when present), then setup notices */}
+                        <AlertsCard />
+                        <SetupNoticesCard />
 
                         {/* Quick actions card */}
                         <div className="sp-detail-card">
@@ -761,6 +947,9 @@ export const Dashboard = () => {
                             hasPayments={( curr.completed_count || 0 ) > 0}
                             onLaunchWizard={() => setWizardOpen( true )}
                         />
+
+                        {/* Subtle Pro upgrade note — only when Pro is inactive */}
+                        <ProUpgradeNote />
 
                     </div>
 
