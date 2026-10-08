@@ -1,4 +1,5 @@
 import { ChevronDown, Search } from 'lucide-react'
+import Swal from 'sweetalert2/dist/sweetalert2'
 import { Link } from 'react-router-dom'
 import { GetDonors, GetCampaigns } from '../../http/campaign'
 import { money, count, colorIndex, initials, shortDate, DonorTypeBadge, DONOR_TYPES } from '../campaign/utils'
@@ -66,12 +67,21 @@ export const DonorList = ({ tabs = null }) => {
 
     // A donor is a customer record, so bulk delete reuses the customer endpoint.
     const bulkDelete = async () => {
-        if (!window.confirm(__('Delete all selected donors? This cannot be undone.', 'smartpay'))) return
+        if (!window.confirm(__('Delete selected contacts and their purchase history? This cannot be undone.', 'smartpay'))) return
         const baseUrl = window.smartpay.restUrl.replace(/\/$/, '')
-        await Promise.all([...checkedIds].map((id) => fetch(`${baseUrl}/v1/customers/${id}`, {
+        const results = await Promise.all([...checkedIds].map((id) => fetch(`${baseUrl}/v1/customers/${id}`, {
             method: 'DELETE',
             headers: { 'X-WP-Nonce': window.smartpay.apiNonce },
-        })))
+        }).then((res) => res.ok, () => false)))
+        const failed = results.filter((ok) => !ok).length
+        if (failed) {
+            Swal.fire({
+                icon: 'error',
+                title: __('Error', 'smartpay'),
+                /* translators: %d: number of contacts */
+                text: sprintf(__('%d contact(s) could not be deleted.', 'smartpay'), failed),
+            })
+        }
         load(1)
     }
 
