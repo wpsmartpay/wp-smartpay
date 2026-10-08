@@ -132,32 +132,35 @@ class Payment
             // Campaign-aware: an attached form follows its campaign's goal.
             $goal     = smartpay_get_form_goal( (int) $form_id );
 
-            if ( ! empty( $goal['enabled'] ) ) {
-                $blocked = false;
-                $stop_message = '';
+            $blocked = false;
+            $stop_message = '';
 
-                // Block if goal reached and stop_orders behavior is set
-                if ( ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
-                    && ( $progress['goal_reached'] ?? false )
-                ) {
-                    $blocked     = true;
-                    $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
-                }
+            // Block if goal reached and stop_orders behavior is set
+            if ( ! empty( $goal['enabled'] )
+                && ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
+                && ( $progress['goal_reached'] ?? false )
+            ) {
+                $blocked     = true;
+                $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
+            }
 
-                // Block if stop collection date is set and today is past that date
-                if ( ! $blocked && ! empty( $goal['stopCollectionDate'] ) ) {
-                    $today      = gmdate( 'Y-m-d' );
-                    $cutoff     = $goal['stopCollectionDate'];
-                    if ( $cutoff && $today > $cutoff ) {
-                        $blocked     = true;
-                        $stop_message = $goal['goalMetMessage'] ?: __( 'This form is no longer accepting payments.', 'smartpay' );
-                    }
-                }
+            // Block once the end date has passed. A campaign's end date applies
+            // even without a goal target; a standalone form's only with its goal on.
+            if ( ! $blocked
+                && ( ! empty( $goal['enabled'] ) || ! empty( $goal['campaign_id'] ) )
+                && ! empty( $goal['stopCollectionDate'] )
+                && gmdate( 'Y-m-d' ) > $goal['stopCollectionDate']
+            ) {
+                $blocked     = true;
+                // Campaigns: not goalMetMessage, which would claim the goal was reached.
+                $stop_message = ! empty( $goal['campaign_id'] )
+                    ? __( 'This campaign has ended.', 'smartpay' )
+                    : ( ( $goal['goalMetMessage'] ?? '' ) ?: __( 'This form is no longer accepting payments.', 'smartpay' ) );
+            }
 
-                if ( $blocked ) {
-                    echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
-                    die();
-                }
+            if ( $blocked ) {
+                echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
+                die();
             }
         }
 
