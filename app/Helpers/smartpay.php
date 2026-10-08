@@ -1202,8 +1202,17 @@ function smartpay_calculate_goal_progress( int $form_id ): array {
 	if ( false !== $cached ) {
 		$current = floatval( $cached );
 	} else {
-		$stats   = smartpay_get_forms_gift_stats( array( $form_id ) );
-		$current = (float) ( 'quantity' === $type ? $stats['donations'] : $stats['raised'] );
+		if ( 'quantity' === $type ) {
+			global $wpdb;
+			$table = $wpdb->prefix . 'smartpay_payments';
+			$where = $wpdb->prepare( 'status = %s', PaymentModel::COMPLETED ) . ' AND parent_id = 0 AND ' . smartpay_payments_form_match_sql( array( $form_id ) );
+
+			// A renewal is the same sale paying again, not another unit sold, so only first payments count.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where is prepared; cached below.
+			$current = (float) $wpdb->get_var( "SELECT COUNT(*) FROM {$table} WHERE {$where}" );
+		} else {
+			$current = (float) smartpay_get_forms_gift_stats( array( $form_id ) )['raised'];
+		}
 
 		set_transient( $transient_key, $current, MINUTE_IN_SECONDS );
 	}
