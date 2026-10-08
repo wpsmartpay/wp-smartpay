@@ -407,6 +407,13 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 * Fix - Custom amount box starts empty, rounds to cents and rejects a zero amount
 * Fix - Multi-step donation forms validate each step on Continue
 * Fix - Anonymous choice is kept on renewals
+* Fix - Campaigns stop taking payments after their end date, even without a goal target
+* Fix - Recurring gifts show their real billing period instead of always Monthly
+* Fix - Donors "With comments" filter ignores empty comments
+* Fix - Clearer donor bulk delete confirmation, and failed deletes are reported
+* Fix - Payments list no longer breaks if the donation database upgrade fails or has not run yet
+* Fix - Only administrators can assign campaign categories
+* Fix - Admin no longer shows a warning when a saved integration setting is malformed
 
 = 3.3.4 =
 * New - Dashboard alert box for urgent problems reported by add-ons (e.g. Stripe payment rejections)
