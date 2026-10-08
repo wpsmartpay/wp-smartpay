@@ -73,7 +73,8 @@ function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, st
 	if ( 'anonymous' === $flag ) {
 		$scope .= $wpdb->prepare( ' AND p.extra LIKE %s', '%' . $wpdb->esc_like( '"donation":{' ) . '%' . $wpdb->esc_like( '"anonymous":true' ) . '%' );
 	} elseif ( 'comments' === $flag ) {
-		$scope .= $wpdb->prepare( ' AND p.extra LIKE %s', '%' . $wpdb->esc_like( '"donation":{' ) . '%' . $wpdb->esc_like( '"comment":"' ) . '_%' );
+		$scope .= $wpdb->prepare( ' AND p.extra LIKE %s', '%' . $wpdb->esc_like( '"donation":{' ) . '%' . $wpdb->esc_like( '"comment":"' ) . '%' )
+			. $wpdb->prepare( ' AND p.extra NOT LIKE %s', '%' . $wpdb->esc_like( '"donation":{' ) . '%' . $wpdb->esc_like( '"comment":""' ) . '%' );
 	}
 
 	$subs = smartpay_donor_subscriptions_table();
