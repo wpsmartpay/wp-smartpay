@@ -17,6 +17,7 @@ use SmartPay\Modules\Integration\Integration;
 use SmartPay\Modules\Email\Email;
 use SmartPay\Modules\Frontend\Utilities\Downloader;
 use SmartPay\Modules\NativeForm\NativeForm;
+use SmartPay\Modules\Campaign\Campaign;
 use SmartPay\Modules\User\User;
 use SmartPay\Modules\Role\Roles;
 
@@ -106,6 +107,13 @@ class AppServiceProvider extends ServiceProvider {
 		);
 
 		$this->app->singleton(
+			Campaign::class,
+			function ( $app ) {
+				return new Campaign( $app );
+			}
+		);
+
+		$this->app->singleton(
 			NativeForm::class,
 			function ( $app ) {
 				return new NativeForm( $app );
@@ -139,6 +147,7 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->make( Shortcode::class );
 		$this->app->make( Integration::class );
 		$this->app->make( NativeForm::class );
+		$this->app->make( Campaign::class );
 		$this->app->make( Roles::class );
 		$this->app->make( User::class );
 	}

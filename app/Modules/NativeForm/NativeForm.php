@@ -13,6 +13,11 @@ defined( 'ABSPATH' ) || exit;
 class NativeForm {
 
 	/**
+	 * Periods a donor may pick for a custom amount (Subscription::BILLING_PERIOD_* values).
+	 */
+	const CUSTOM_BILLING_PERIODS = array( 'Daily', 'Weekly', 'Monthly', 'Yearly' );
+
+	/**
 	 * @param mixed $app
 	 */
 	public function __construct( $app ) {
@@ -27,6 +32,9 @@ class NativeForm {
 		add_action( 'manage_smartpay_form_posts_custom_column', array( $this, 'render_shortcode_column' ), 10, 2 );
 		add_action( 'admin_footer-edit.php', array( $this, 'shortcode_column_script' ) );
 		add_filter( 'smartpay_prepare_payment_data', array( $this, 'fix_cpt_form_payment_data' ), 5, 2 );
+		// After Pro's subscriptionPaymentData (10), before DonationFields (20).
+		add_filter( 'smartpay_prepare_payment_data', array( $this, 'guard_custom_billing' ), 15, 2 );
+		add_filter( 'render_block_smartpay-form/pricing', array( $this, 'render_pricing_block' ) );
 		add_action( 'save_post_smartpay_form', array( $this, 'sync_pricing_block_amounts' ), 20, 2 );
 		add_action( 'save_post_smartpay_form', array( $this, 'clear_form_autosave' ), 30, 2 );
 		add_filter( 'render_block_smartpay-form/goal-progress', 'smartpay_render_goal_progress_block', 10, 2 );
@@ -106,6 +114,103 @@ class NativeForm {
 		if ( ! empty( $amounts ) ) {
 			update_post_meta( $post_id, '_smartpay_amounts', wp_json_encode( $amounts ) );
 		}
+
+		// Custom amount billing: may the donor make a custom amount recurring?
+		$attrs   = isset( $pricing['attrs'] ) && is_array( $pricing['attrs'] ) ? $pricing['attrs'] : array();
+		$periods = array_values(
+			array_intersect(
+				self::CUSTOM_BILLING_PERIODS,
+				(array) ( $attrs['customBillingPeriods'] ?? array( 'Monthly', 'Yearly' ) )
+			)
+		);
+		$donor   = $pro && ! empty( $attrs['allowCustomAmount'] ) && 'donor' === ( $attrs['customBillingMode'] ?? '' ) && $periods;
+
+		update_post_meta(
+			$post_id,
+			'_smartpay_custom_billing',
+			wp_json_encode(
+				array(
+					'mode'    => $donor ? 'donor' : 'one_time',
+					'periods' => $donor ? $periods : array(),
+				)
+			)
+		);
+	}
+
+	/**
+	 * Keep a custom amount recurring only when the form lets the donor choose
+	 * that period; otherwise charge it once.
+	 *
+	 * The browser decides the billing type, so this is the server-side check.
+	 * Card (non-custom) payments are left as they are.
+	 *
+	 * @param array $data Prepared payment data.
+	 * @param array $raw  Raw posted data.
+	 * @return array
+	 */
+	public function guard_custom_billing( array $data, array $raw ): array {
+		if ( 'form_payment' !== ( $data['payment_type'] ?? '' ) ) {
+			return $data;
+		}
+
+		// Posted as the string "true"/"false"; "false" is truthy in PHP.
+		if ( ! filter_var( $raw['smartpay_is_custom_amount'] ?? false, FILTER_VALIDATE_BOOLEAN ) ) {
+			return $data;
+		}
+
+		$is_sub = 'Subscription' === ( $data['payment_data']['billing_type'] ?? '' ) || 'Subscription' === ( $data['billing_type'] ?? '' );
+		if ( ! $is_sub ) {
+			return $data;
+		}
+
+		$form_id = absint( $raw['smartpay_form_id'] ?? 0 );
+		$post    = $form_id ? get_post( $form_id ) : null;
+		$billing = ( $post && 'smartpay_form' === $post->post_type )
+			? json_decode( (string) get_post_meta( $form_id, '_smartpay_custom_billing', true ), true )
+			: null;
+		$period  = sanitize_text_field( $raw['smartpay_form_billing_period'] ?? '' );
+
+		$allowed = function_exists( 'smartpay_is_pro_active' ) && smartpay_is_pro_active()
+			&& is_array( $billing )
+			&& 'donor' === ( $billing['mode'] ?? '' )
+			&& in_array( $period, (array) ( $billing['periods'] ?? array() ), true );
+
+		if ( ! $allowed ) {
+			$data['payment_data']['billing_type'] = 'One Time';
+			unset( $data['billing_type'], $data['billing_period'], $data['payment_data']['billing_period'] );
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Drop the custom amount's billing dropdown when Pro (the subscription
+	 * engine) is not active, and translate its "One time" choice.
+	 *
+	 * @param string $content Rendered Pricing block.
+	 * @return string
+	 */
+	public function render_pricing_block( $content ): string {
+		$content = (string) $content;
+		if ( false === strpos( $content, 'smartpay-custom-billing-period' ) ) {
+			return $content;
+		}
+
+		if ( ! function_exists( 'smartpay_is_pro_active' ) || ! smartpay_is_pro_active() ) {
+			return (string) preg_replace( '#<select[^>]*smartpay-custom-billing-period.*?</select>#s', '', $content );
+		}
+
+		// The saved markup holds English labels; swap in translations.
+		$labels = array(
+			'<option value="">One time</option>'       => '<option value="">' . esc_html__( 'One time', 'smartpay' ) . '</option>',
+			'<option value="Daily">Daily</option>'     => '<option value="Daily">' . esc_html__( 'Daily', 'smartpay' ) . '</option>',
+			'<option value="Weekly">Weekly</option>'   => '<option value="Weekly">' . esc_html__( 'Weekly', 'smartpay' ) . '</option>',
+			'<option value="Monthly">Monthly</option>' => '<option value="Monthly">' . esc_html__( 'Monthly', 'smartpay' ) . '</option>',
+			'<option value="Yearly">Yearly</option>'   => '<option value="Yearly">' . esc_html__( 'Yearly', 'smartpay' ) . '</option>',
+			'aria-label="Billing"'                     => 'aria-label="' . esc_attr__( 'Billing', 'smartpay' ) . '"',
+		);
+
+		return strtr( $content, $labels );
 	}
 
 	/**
@@ -319,6 +424,11 @@ class NativeForm {
 							'default'           => '',
 							'sanitize_callback' => 'sanitize_text_field',
 						),
+						// Campaign term ID, 'none' (unassigned) or '' (all).
+						'campaign' => array(
+							'default'           => '',
+							'sanitize_callback' => 'sanitize_key',
+						),
 					),
 				),
 				array(
@@ -430,14 +540,35 @@ class NativeForm {
 			$args['s'] = $search;
 		}
 
+		$campaign = (string) $request->get_param( 'campaign' );
+		if ( 'none' === $campaign ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Campaign filter on the admin list.
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => SMARTPAY_CAMPAIGN_TAXONOMY,
+					'operator' => 'NOT EXISTS',
+				),
+			);
+		} elseif ( absint( $campaign ) ) {
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Campaign filter on the admin list.
+			$args['tax_query'] = array(
+				array(
+					'taxonomy' => SMARTPAY_CAMPAIGN_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => absint( $campaign ),
+				),
+			);
+		}
+
 		$query  = new \WP_Query( $args );
 		$total  = (int) $query->found_posts;
 		$offset = ( $page - 1 ) * $per_page;
 
 		$forms = array_map(
 			function ( \WP_Post $post ) {
-				$settings = $this->decode_meta_json( get_post_meta( $post->ID, '_smartpay_settings', true ), array() );
-				$goal     = $settings['goal'] ?? array();
+				$goal        = smartpay_get_form_goal( (int) $post->ID );
+				$campaign_id = (int) $goal['campaign_id'];
+				$campaign    = $campaign_id ? get_term( $campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY ) : null;
 
 				$goal_data = null;
 				if ( ! empty( $goal['enabled'] ) && function_exists( 'smartpay_calculate_goal_progress' ) ) {
@@ -449,6 +580,7 @@ class NativeForm {
 						'percentage'   => $progress['percentage'],
 						'goal_reached' => $progress['goal_reached'],
 						'type'         => $goal['type'] ?? 'quantity',
+						'from_campaign' => $campaign_id > 0,
 					);
 				}
 
@@ -461,6 +593,12 @@ class NativeForm {
 					'edit_url'    => admin_url( 'post.php?post=' . absint( $post->ID ) . '&action=edit' ),
 					'preview_url' => get_the_permalink( $post->ID ),
 					'goal'        => $goal_data,
+					'campaign'    => $campaign instanceof \WP_Term
+						? array(
+							'id'    => $campaign_id,
+							'title' => $campaign->name,
+						)
+						: null,
 				);
 			},
 			$query->posts
@@ -677,7 +815,7 @@ class NativeForm {
 			wp_enqueue_script(
 				'smartpay-form-editor-sidebar',
 				$sidebar_js,
-				array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data' ),
+				array( 'wp-plugins', 'wp-edit-post', 'wp-editor', 'wp-components', 'wp-element', 'wp-data', 'wp-i18n', 'wp-core-data', 'wp-api-fetch' ),
 				SMARTPAY_VERSION,
 				true
 			);
@@ -1132,38 +1270,43 @@ class NativeForm {
 				);
 
 			case 2002:
-				return $this->tpl_assemble(
-					'Charity Donation',
+				// Donation flow: amount first, identity second, payment last.
+				$prices = array(
 					array(
+						'label'  => '$25',
+						'amount' => 25,
+					),
+					array(
+						'label'  => '$50',
+						'amount' => 50,
+					),
+					array(
+						'label'  => '$100',
+						'amount' => 100,
+					),
+					array(
+						'label'  => '$250',
+						'amount' => 250,
+					),
+				);
+
+				return array(
+					'name'     => 'Charity Donation',
+					'blocks'   => array(
 						$this->tpl_goal_progress(),
+						$this->tpl_pricing( $prices, 'grid' ),
+						$this->tpl_block( 'smartpay-form/step-break' ),
 						$this->tpl_name(),
 						$this->tpl_email(),
 						$this->tpl_text( 'Phone', 'phone', 'tel', '+1 (555) 000-0000' ),
-						$this->tpl_choice( 'radio', 'Donation Frequency', 'frequency', array( 'One-time', 'Monthly', 'Annually' ), 'one-time' ),
-						$this->tpl_textarea( 'Dedication Message', 'dedication', 'In honor or memory of…', 3 ),
-						$this->tpl_choice( 'checkbox', 'Options', 'donation_options', array( 'Make my donation anonymous', 'Email me a receipt' ) ),
+						$this->tpl_block( 'smartpay-form/donation-anonymous' ),
+						$this->tpl_block( 'smartpay-form/donation-comment' ),
+						$this->tpl_block( 'smartpay-form/donation-tribute' ),
+						$this->tpl_block( 'smartpay-form/step-break', array( 'nextLabel' => 'Continue to payment' ) ),
+						$this->tpl_pay( 'Give Now' ),
 					),
-					array(
-						array(
-							'label'  => '$25',
-							'amount' => 25,
-						),
-						array(
-							'label'  => '$50',
-							'amount' => 50,
-						),
-						array(
-							'label'  => '$100',
-							'amount' => 100,
-						),
-						array(
-							'label'  => '$250',
-							'amount' => 250,
-						),
-					),
-					'Give Now',
-					'grid',
-					array(
+					'amounts'  => $this->pricing_amounts( $prices ),
+					'settings' => array(
 						'goal' => array(
 							'enabled'             => true,
 							'type'                => 'amount',
@@ -1171,7 +1314,7 @@ class NativeForm {
 							'showToPublic'        => true,
 							'behaviorWhenGoalMet' => 'allow_orders',
 						),
-					)
+					),
 				);
 
 			// ── Registration ─────────────────────────────────────────
@@ -1551,7 +1694,7 @@ class NativeForm {
 			return $data;
 		}
 
-		$amount       = (float) ( $raw['smartpay_amount'] ?? 0 );
+		$amount       = round( (float) ( $raw['smartpay_amount'] ?? 0 ), 2 );
 		$billing_type = sanitize_text_field( $raw['smartpay_form_billing_type'] ?? 'One Time' );
 
 		$data['payment_data'] = array(
@@ -1668,7 +1811,8 @@ class NativeForm {
 						block.name,
 						Object.assign( {}, block, {
 							category: "wp-smartpay",
-							supports: Object.assign( {}, block.supports || {}, blockSupports ),
+							// Step Break renders no visible element, so styles have nothing to apply to.
+							supports: Object.assign( {}, block.supports || {}, "smartpay-form/step-break" === block.name ? {} : blockSupports ),
 							example: meta.example || block.example,
 							description: meta.description || block.description
 						} )

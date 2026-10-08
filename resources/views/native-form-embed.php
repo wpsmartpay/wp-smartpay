@@ -54,15 +54,17 @@ $chosen_gw = isset( $_REQUEST['gateway'] ) && smartpay_is_gateway_active( saniti
 	: $default_gw;
 // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-$goal              = $settings['goal'] ?? array();
+$goal              = smartpay_get_form_goal( (int) $post_id );
 $has_payment_error = empty( $gateways );
 $default_amount    = reset( $amounts );
 
 // Auto-inject the goal-progress block when the sidebar has "Show progress bar on
 // frontend" enabled but the block was never explicitly added to the form content
 // (e.g. forms created before the Charity template existed, or plain donation forms).
+// Not on the campaign page itself — its header already shows the campaign bar.
 if (
 	! empty( $goal['enabled'] ) &&
+	! did_action( 'smartpay_campaign_page_after_forms' ) &&
 	false !== ( $goal['showToPublic'] ?? true ) &&
 	! has_block( 'smartpay-form/goal-progress', $body )
 ) {

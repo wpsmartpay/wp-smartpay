@@ -52,6 +52,12 @@ class Updater
         \Smartpay_AddUuidColumnOnPaymentTable::up();
         \Smartpay_CreateSmartpayPaymentLogsTable::up();
         \Smartpay_AddUserIdToPaymentLogsTable::up();
+        // Don't record the version when the column could not be added, so the
+        // migration retries on the next admin load instead of never again.
+        if ( false === \Smartpay_AddIsDonationColumnOnPaymentsTable::up() ) {
+            return;
+        }
+        \Smartpay_FlagFormsWithDonationBlocks::up();
 
         // Record that migrations have run for this plugin version so
         // subsequent requests skip the INFORMATION_SCHEMA queries above.

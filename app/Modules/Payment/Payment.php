@@ -107,7 +107,18 @@ class Payment
             die();
         }
 
-        // Set session payment data
+        // A 0 amount is routed to the free gateway below, so a custom amount
+        // must be positive here; no amount may be negative.
+        if ( 'form_payment' === ( $payment_data['payment_type'] ?? '' ) ) {
+            $amount    = (float) ( $payment_data['amount'] ?? 0 );
+            $is_custom = filter_var( $payment_data['payment_data']['is_custom_amount'] ?? false, FILTER_VALIDATE_BOOLEAN );
+            if ( $amount < 0 || ( $is_custom && $amount <= 0 ) ) {
+                echo '<p class="text-danger">' . esc_html__( 'Please enter an amount greater than 0.', 'smartpay' ) . '</p>';
+                die();
+            }
+        }
+
+                // Set session payment data
         // FIXME: Reform validation
         //smartpay_set_session_payment_data($payment_data);
 
@@ -118,36 +129,38 @@ class Payment
         $form_id = $payment_data['payment_data']['form_id'] ?? 0;
         if ( $form_id > 0 ) {
             $progress = smartpay_calculate_goal_progress( $form_id );
-            $settings = get_post_meta( $form_id, '_smartpay_settings', true );
-            $settings = is_string( $settings ) ? json_decode( $settings, true ) : ( $settings ?: [] );
-            $goal     = $settings['goal'] ?? [];
+            // Campaign-aware: an attached form follows its campaign's goal.
+            $goal     = smartpay_get_form_goal( (int) $form_id );
 
-            if ( ! empty( $goal['enabled'] ) ) {
-                $blocked = false;
-                $stop_message = '';
+            $blocked = false;
+            $stop_message = '';
 
-                // Block if goal reached and stop_orders behavior is set
-                if ( ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
-                    && ( $progress['goal_reached'] ?? false )
-                ) {
-                    $blocked     = true;
-                    $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
-                }
+            // Block if goal reached and stop_orders behavior is set
+            if ( ! empty( $goal['enabled'] )
+                && ( $goal['behaviorWhenGoalMet'] ?? 'allow_orders' ) === 'stop_orders'
+                && ( $progress['goal_reached'] ?? false )
+            ) {
+                $blocked     = true;
+                $stop_message = $goal['goalMetMessage'] ?? __( 'This form has reached its goal and is no longer accepting payments.', 'smartpay' );
+            }
 
-                // Block if stop collection date is set and today is past that date
-                if ( ! $blocked && ! empty( $goal['stopCollectionDate'] ) ) {
-                    $today      = gmdate( 'Y-m-d' );
-                    $cutoff     = $goal['stopCollectionDate'];
-                    if ( $cutoff && $today > $cutoff ) {
-                        $blocked     = true;
-                        $stop_message = $goal['goalMetMessage'] ?: __( 'This form is no longer accepting payments.', 'smartpay' );
-                    }
-                }
+            // Block once the end date has passed. A campaign's end date applies
+            // even without a goal target; a standalone form's only with its goal on.
+            if ( ! $blocked
+                && ( ! empty( $goal['enabled'] ) || ! empty( $goal['campaign_id'] ) )
+                && ! empty( $goal['stopCollectionDate'] )
+                && gmdate( 'Y-m-d' ) > $goal['stopCollectionDate']
+            ) {
+                $blocked     = true;
+                // Campaigns: not goalMetMessage, which would claim the goal was reached.
+                $stop_message = ! empty( $goal['campaign_id'] )
+                    ? __( 'This campaign has ended.', 'smartpay' )
+                    : ( ( $goal['goalMetMessage'] ?? '' ) ?: __( 'This form is no longer accepting payments.', 'smartpay' ) );
+            }
 
-                if ( $blocked ) {
-                    echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
-                    die();
-                }
+            if ( $blocked ) {
+                echo '<p class="text-danger">' . esc_html( $stop_message ) . '</p>';
+                die();
             }
         }
 
@@ -279,7 +292,8 @@ class Payment
 
                 $payment_data = [
                     'form_id'           => $form->id,
-                    'total_amount'      => $_data['smartpay_amount'] ?? 0,
+                    // Money has at most 2 decimals; a typed custom amount may have more.
+                    'total_amount'      => round( (float) ( $_data['smartpay_amount'] ?? 0 ), 2 ),
                     'billing_type'      => $_data['smartpay_form_billing_type'],
                     'is_custom_amount'  => $_data['smartpay_is_custom_amount'] ?? false,
                     ];
@@ -397,6 +411,11 @@ class Payment
 
         // Invalidate goal cache so progress bar reflects new completed payment.
         $form_id = $payment->data['form_id'] ?? 0;
+        // Renewals carry no data; they count toward their parent payment's form.
+        if ( ! $form_id && ! empty( $payment->parent_id ) ) {
+            $parent  = PaymentModel::find( (int) $payment->parent_id );
+            $form_id = $parent ? ( $parent->data['form_id'] ?? 0 ) : 0;
+        }
         if ( $form_id > 0 && function_exists( 'smartpay_invalidate_goal_cache' ) ) {
             smartpay_invalidate_goal_cache( (int) $form_id );
         }

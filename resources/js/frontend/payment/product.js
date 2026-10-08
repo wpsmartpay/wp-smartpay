@@ -370,6 +370,9 @@ jQuery(($) => {
                 $wrapper.find('input[name="smartpay_form_id"]').val() || null
             data.smartpay_amount =
                 $wrapper.find('input[name="smartpay_form_amount"]').val() ||
+                $wrapper
+                    .find('.form-amounts .form-plan-card.selected input[name="_form_amount"]')
+                    .val() ||
                 null
 
             let smartpay_form_extra_data = {}

@@ -40,6 +40,15 @@ class CustomerController extends RestController
 
         $query = Customer::orderBy('id', 'DESC');
 
+		// Contacts › Customers hides donors (they have their own tab);
+		// Contacts › All (`scope=all`) lists everyone with role flags.
+		$all = 'all' === $request->get_param('scope');
+
+		$no_donors = $all ? '' : smartpay_customers_exclude_donors_sql();
+		if ($no_donors) {
+			$query->where($query->raw($no_donors));
+		}
+
 		if (!empty($search)) {
 			$query->where(function($q) use ($search) {
 				$q->where('email', 'like', '%' . $search . '%');
@@ -47,6 +56,17 @@ class CustomerController extends RestController
 		}
 
 		$customers = $query->paginate($perPage);
+
+		if ($all) {
+			$ids = array();
+			foreach ($customers as $customer) {
+				$ids[] = (int) $customer->id;
+			}
+			$roles = smartpay_get_contact_roles($ids);
+			foreach ($customers as $customer) {
+				$customer->roles = $roles[(int) $customer->id] ?? array('customer' => true, 'donor' => false);
+			}
+		}
 
         return new WP_REST_Response(['customers' => $customers]);
     }

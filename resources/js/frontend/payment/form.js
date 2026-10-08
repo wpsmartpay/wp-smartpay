@@ -99,10 +99,15 @@ jQuery(($) => {
                 )
             }
 
-            $(e.currentTarget)
+            // The hidden input (custom amount off) carries the card amount; the
+            // visible custom box stays empty so it never shows a card's price.
+            const $customAmount = $(e.currentTarget)
                 .parents('.form-amounts')
                 .find('.form--custom-amount')
-                .val(selectedAmount.val())
+            $customAmount.val(
+                $customAmount.is('[type="hidden"]') ? selectedAmount.val() : ''
+            )
+            $customAmount.filter(':not([type="hidden"])').attr('placeholder', '0.00')
 
             $(e.currentTarget)
                 .parents('.form-amounts')
@@ -120,6 +125,12 @@ jQuery(($) => {
                     .find('input[name="smartpay_selected_amount_key"]')
                     .val(selectedAmountKey.val())
             }
+            // A card sets its own billing; the custom amount's period no longer applies.
+            $(e.currentTarget)
+                .parents('.form-amounts')
+                .find('.smartpay-custom-billing-period')
+                .prop('selectedIndex', 0)
+
             // set the is_custom_payment flag to false
             $(e.currentTarget).closest('form').find('[name="smartpay_is_custom_payment"]').val('false');
         }
@@ -169,29 +180,56 @@ jQuery(($) => {
         }
     )
 
+    /**
+     * Billing for a custom amount: the donor's period from the Pricing block's
+     * dropdown, or One Time when there is no dropdown or "One time" is picked.
+     * Without this a custom amount kept the last clicked card's billing type.
+     */
+    function applyCustomBilling($amounts) {
+        const period = $amounts.find('.smartpay-custom-billing-period').val()
+        $amounts
+            .find('input[name="smartpay_form_billing_type"]')
+            .val(period ? SUBSCRIPTION : 'One Time')
+        if (period) {
+            $amounts.find('input[name="smartpay_form_billing_period"]').val(period)
+        }
+    }
+
     /** Select form custom amount **/
     $(document.body).on(
-        'focus',
-        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+        'focus change',
+        '.smartpay-form-shortcode .form-amounts .form--custom-amount, .smartpay-form-shortcode .form-amounts .smartpay-custom-billing-period',
         (e) => {
-            $(e.currentTarget)
-                .parents('.form-amounts')
-                .find('.plan-amount')
-                .removeClass('selected')
-            $(e.currentTarget).addClass('selected')
+            const $amounts = $(e.currentTarget).parents('.form-amounts')
+
+            $amounts.find('.plan-amount').removeClass('selected')
+            $amounts.find('.form--custom-amount').addClass('selected')
 
             // remove checked attribute from all radio button
-            $(e.currentTarget)
-                .parents('.form-amounts')
+            $amounts
                 .find('.plan-amount input[type="radio"]:checked')
                 .prop('checked', false)
 
             // set the is_custom_payment flag to true
             $(e.currentTarget).closest('form').find('[name="smartpay_is_custom_payment"]').val('true');
+
+            applyCustomBilling($amounts)
         }
     )
 
-    /** Send ajax request to process form payment **/
+    /** Round a typed custom amount to cents (20.5546 -> 20.55). **/
+    $(document.body).on(
+        'blur',
+        '.smartpay-form-shortcode .form-amounts .form--custom-amount',
+        (e) => {
+            const value = parseFloat(e.currentTarget.value)
+            if (!isNaN(value)) {
+                e.currentTarget.value = String(Math.round(value * 100) / 100)
+            }
+        }
+    )
+
+        /** Send ajax request to process form payment **/
     $(document.body).on(
         'click',
         '.smartpay-form-shortcode button.smartpay-form-pay-now',
@@ -203,36 +241,8 @@ jQuery(($) => {
             let buttonText = $(e.currentTarget).text()
 
             let formData = getPaymentFormData($parentWrapper)
-            let validation = checkPaymentFormValidation(formData)
 
-            // Hide all errors
-            $parentWrapper.find('input, textarea').removeClass('is-invalid')
-            $parentWrapper.find('#form-response').hide()
-            $parentWrapper.find('.smartpay-field-error').remove()
-
-            // Validate required textareas inline (not covered by main validation).
-            let hasRequiredFieldErrors = false
-            $parentWrapper.find('form textarea[required]').each(function () {
-                if (!($(this).val() || '').trim()) {
-                    hasRequiredFieldErrors = true
-                    $(this).addClass('is-invalid')
-                    $('<div>', {
-                        class: 'smartpay-field-error',
-                        style: 'color:#dc3545;font-size:0.875em;margin-top:0.25rem;',
-                        text: 'This field is required.',
-                    }).insertAfter(this)
-                }
-            })
-
-            if (!validation.valid || hasRequiredFieldErrors) {
-                if (!validation.valid) {
-                    showErrors(
-                        $parentWrapper.find('.smartpay-message-info'),
-                        validation
-                    )
-                    $parentWrapper.find('#first_name').focus()
-                }
-            } else {
+            if (validatePaymentForm($parentWrapper)) {
                 $(e.currentTarget).text('Processing...').attr('disabled', true)
                 jQuery.post(
                     smartpay.ajaxUrl,
@@ -360,22 +370,24 @@ jQuery(($) => {
 
                 payment_form.addClass('coupon-applied')
 
+                // Each card carries its discounted amount, which submit falls back
+                // to while the visible custom box is empty.
                 payment_form
-                    .find('.form--fixed-amount')
+                    .find('.form-plan-card')
                     .each(function () {
-                        let $inputId = $(this)
-                            .find('input[name=_form_amount]')
-                            .attr('id')
-                        $(this)
-                            .find('input[name=_form_amount]')
-                            .val($couponData[$inputId].discountAmount)
+                        let $amount = $(this).find('input[name=_form_amount]')
+                        let data = $couponData[$amount.attr('id')]
+                        // Legacy subscription cards repeat the key in their id, so they have no couponData entry.
+                        if (data) {
+                            $amount.val(data.discountAmount)
+                        }
                     })
 
                 let $selectedAmountInputId = $form.find('.form-amounts')
                     .find('.plan-amount.selected input[name=_form_amount]')
                     .attr('id')
 
-                $form.find('input[name=smartpay_form_amount]')
+                $form.find('input[name=smartpay_form_amount][type=hidden]')
                     .val($couponData[$selectedAmountInputId].discountAmount)
 
                 discountAmountContainer.removeClass('d-none')
@@ -447,6 +459,19 @@ jQuery(($) => {
         $(this).closest('.smartpay-coupon-form').slideUp(150)
     })
 
+    /**
+     * The custom box when the donor typed in it, else the selected card's
+     * amount (the visible custom box is left empty while a card is selected).
+     */
+    function selectedFormAmount($wrapper, typed) {
+        return (
+            typed ||
+            $wrapper
+                .find('.form-amounts .form-plan-card.selected input[name="_form_amount"]')
+                .val()
+        )
+    }
+
     /** Prepare payment data **/
     function getPaymentFormData($wrapper, index = '') {
         const data = $wrapper.find('form').serializeJSON()
@@ -461,7 +486,7 @@ jQuery(($) => {
             smartpay_email: data.smartpay_form.email,
             smartpay_payment_mobile: data.smartpay_payment_mobile,
             smartpay_form_id: data.smartpay_form_id,
-            smartpay_amount: data.smartpay_form_amount,
+            smartpay_amount: selectedFormAmount($wrapper, data.smartpay_form_amount),
             smartpay_amount_key: data.smartpay_selected_amount_key,
             smartpay_form_data: data.smartpay_form,
             smartpay_is_custom_amount: data.smartpay_is_custom_payment,
@@ -471,6 +496,80 @@ jQuery(($) => {
             }),
         }
     }
+
+    // The input each validation key belongs to, so a form step can check its own fields.
+    const FIELD_OF = {
+        smartpay_first_name: '[name="smartpay_form[name][first_name]"]',
+        smartpay_last_name: '[name="smartpay_form[name][last_name]"]',
+        smartpay_email: '[name="smartpay_form[email]"]',
+        smartpay_payment_mobile: '[name="smartpay_payment_mobile"]',
+    }
+
+    /**
+     * Run the checkout checks and show their errors. With $scope (one step of
+     * a multi-step form) only the fields inside that step are checked.
+     */
+    function validatePaymentForm($parentWrapper, $scope = null) {
+        const $in = $scope || $parentWrapper.find('form')
+        const inScope = (selector) => !$scope || $scope.find(selector).length > 0
+        const formData = getPaymentFormData($parentWrapper)
+        const validation = checkPaymentFormValidation(formData)
+
+        if ($scope) {
+            Object.keys(validation.errors).forEach((key) => {
+                if (!FIELD_OF[key] || !inScope(FIELD_OF[key])) delete validation.errors[key]
+            })
+            validation.valid = Object.keys(validation.errors).length === 0
+        }
+
+        // Hide all errors
+        $parentWrapper.find('input, textarea').removeClass('is-invalid')
+        $parentWrapper.find('#form-response').hide()
+        $parentWrapper.find('.smartpay-field-error').remove()
+        $parentWrapper.find('.smartpay-message-info').empty()
+
+        // Validate required textareas inline (not covered by main validation).
+        let hasRequiredFieldErrors = false
+        $in.find('textarea[required]').each(function () {
+            if (!($(this).val() || '').trim()) {
+                hasRequiredFieldErrors = true
+                $(this).addClass('is-invalid')
+                $('<div>', {
+                    class: 'smartpay-field-error',
+                    style: 'color:#dc3545;font-size:0.875em;margin-top:0.25rem;',
+                    text: 'This field is required.',
+                }).insertAfter(this)
+            }
+        })
+
+        // A custom amount must be positive (the server rejects it too).
+        if (
+            'true' === formData.smartpay_is_custom_amount &&
+            !(parseFloat(formData.smartpay_amount) > 0) &&
+            inScope('.form--custom-amount')
+        ) {
+            hasRequiredFieldErrors = true
+            const $customAmount = $parentWrapper.find('.form--custom-amount')
+            $customAmount.addClass('is-invalid')
+            $('<div>', {
+                class: 'smartpay-field-error',
+                style: 'color:#dc3545;font-size:0.875em;margin-top:-0.75rem;margin-bottom:1rem;',
+                text: 'Please enter an amount greater than 0.',
+            }).insertAfter($customAmount.closest('.input-group'))
+        }
+
+        if (!validation.valid) {
+            showErrors($parentWrapper.find('.smartpay-message-info'), validation)
+        }
+        if (!validation.valid || hasRequiredFieldErrors) {
+            $in.find('.is-invalid').first().trigger('focus')
+            return false
+        }
+        return true
+    }
+
+    // Step forms (donation.js) check each step before moving on.
+    window.smartpayValidatePaymentForm = validatePaymentForm
 
     function checkPaymentFormValidation(data) {
         const rules = {
@@ -521,7 +620,7 @@ jQuery(($) => {
 
         Object.entries(validation.errors).forEach(([property, messages]) => {
             $parentWrapper
-                .find('input[name="' + property + '"]')
+                .find(FIELD_OF[property] || 'input[name="' + property + '"]')
                 .addClass('is-invalid')
 
             let fieldName = JSUcfirst(property.split('_').slice(1).join(' '))

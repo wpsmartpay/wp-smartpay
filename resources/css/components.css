@@ -204,6 +204,7 @@
 
 .sp-tabs__nav {
   @apply border-b border-border;
+  margin-bottom: 18px;
 }
 
 .sp-tabs__item {

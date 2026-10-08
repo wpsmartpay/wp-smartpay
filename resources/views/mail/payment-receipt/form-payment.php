@@ -9,6 +9,11 @@ if ($smartpay_payment && !property_exists($smartpay_payment, 'customer')) {
 
 // Resolves native (smartpay_form post) and legacy forms alike.
 $smartpay_form_name = $smartpay_payment ? smartpay_get_payment_product_or_form_name($smartpay_payment->id)['name'] : '';
+
+// Donation variant: campaign + frequency rows, a gift note and a link to the donor's giving history.
+$smartpay_gift = ( $smartpay_payment && class_exists( '\SmartPay\Modules\Campaign\DonationFields' ) )
+    ? \SmartPay\Modules\Campaign\DonationFields::payment_context( $smartpay_payment )
+    : null;
 ?>
 
 <!DOCTYPE html>
@@ -137,6 +142,7 @@ $smartpay_form_name = $smartpay_payment ? smartpay_get_payment_product_or_form_n
                                             <div class="sm-leading-16" style="line-height: 24px">&zwnj;</div>
                                             <?php if ( ! smartpay_get_option('hide_payment_number_in_email', false) ) : ?>
                                                 <p style="font-size: 16px; line-height: 24px; margin: 0; text-align: center; color: #a0a6b0">
+                                                    <?php echo $smartpay_gift ? esc_html__('Thank you for your donation', 'smartpay') . '<br>' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped text plus a literal <br>. ?>
                                                     <?php echo esc_html__('Order/Payment Number ', 'smartpay') . ': ' . esc_html($smartpay_payment->get_payment_number()); ?>
                                                 </p>
                                             <?php endif; ?>
@@ -169,6 +175,18 @@ $smartpay_form_name = $smartpay_payment ? smartpay_get_payment_product_or_form_n
                                                                 <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; vertical-align: top; width: 50%" valign="top"><?php echo esc_html($smartpay_form_name); ?></td>
                                                                 <td style="font-weight: 700; font-size: 16px; line-height: 24px; text-align: right; vertical-align: top; width: 50%" align="right" valign="top"><?php echo esc_html(smartpay_amount_format($smartpay_payment->data['total_amount'])); ?></td>
                                                             </tr>
+                                                            <?php if ( $smartpay_gift ) : ?>
+                                                                <?php if ( $smartpay_gift['campaign'] ) : ?>
+                                                                <tr>
+                                                                    <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; width: 50%"><?php esc_html_e('Campaign', 'smartpay'); ?></td>
+                                                                    <td style="font-size: 16px; line-height: 24px; text-align: right; width: 50%" align="right"><?php echo esc_html($smartpay_gift['campaign']['title']); ?></td>
+                                                                </tr>
+                                                                <?php endif; ?>
+                                                                <tr>
+                                                                    <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; width: 50%"><?php esc_html_e('Frequency', 'smartpay'); ?></td>
+                                                                    <td style="font-size: 16px; line-height: 24px; text-align: right; width: 50%" align="right"><?php echo esc_html($smartpay_gift['donation']['frequency_label']); ?></td>
+                                                                </tr>
+                                                            <?php endif; ?>
                                                             <tr>
                                                                 <td colspan="2" style="padding-top: 16px; padding-bottom: 16px">
                                                                     <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
@@ -202,7 +220,26 @@ $smartpay_form_name = $smartpay_payment ? smartpay_get_payment_product_or_form_n
                                             <div style="line-height: 64px">&zwnj;</div>
                                             <div style="background-color: #d4d5d6; height: 1px; line-height: 1px">&nbsp;</div>
                                             <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
+                                            <?php if ( $smartpay_gift ) : ?>
+                                                <p style="font-size: 14px; line-height: 20px; margin: 0 0 12px; color: #4f5a68">
+                                                    <?php
+                                                    /**
+                                                     * Note printed on donation receipts (e.g. tax wording).
+                                                     *
+                                                     * @param string $note    Default note.
+                                                     * @param object $payment Payment.
+                                                     */
+                                                    echo esc_html( apply_filters( 'smartpay_donation_receipt_note', __( 'No goods or services were provided in exchange for this gift.', 'smartpay' ), $smartpay_payment ) );
+                                                    ?>
+                                                </p>
+                                                <?php $smartpay_giving_url = function_exists( 'smartpay_dashboard_view_url' ) ? smartpay_dashboard_view_url( 'giving' ) : ''; ?>
+                                                <?php if ( $smartpay_giving_url ) : ?>
+                                                    <p style="font-size: 14px; line-height: 20px; margin: 0 0 12px;"><a href="<?php echo esc_url( $smartpay_giving_url ); ?>" style="color: #293c81"><?php esc_html_e('Manage your donations', 'smartpay'); ?></a></p>
+                                                <?php endif; ?>
+                                                <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo esc_html__('You’re receiving this because you donated at ', 'smartpay') . esc_html(get_bloginfo('name')); ?></p>
+                                            <?php else : ?>
                                             <p style="font-size: 14px; line-height: 20px; margin: 0; color: #a0a6b0"><?php echo esc_html__('You get this email because you signed up or purchased something at ', 'smartpay') . esc_html(get_bloginfo('name')); ?></p>
+                                            <?php endif; ?>
                                             <div class="sm-leading-16" style="line-height: 32px">&zwnj;</div>
                                         </td>
                                     </tr>

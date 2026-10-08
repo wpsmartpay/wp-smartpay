@@ -41,6 +41,8 @@ class PaymentController extends RestController
 		$type       = sanitize_text_field($request->get_param('type') ?: '');
 		$customerId = absint($request->get_param('customer_id') ?: 0);
 		$orderBy    = sanitize_text_field($request->get_param('sort_by') ?: 'id:desc');
+		// Payments and Donations are separate lists; no param = both (customer page).
+		$donation   = $request->get_param('donation');
 
 		// Start building the query
 		$query = Payment::with(['customer']);
@@ -68,6 +70,11 @@ class PaymentController extends RestController
 			$query->where('type', $type);
 		}
 
+		// Skip the filter until the is_donation migration has added the column.
+		if (null !== $donation && '' !== $donation && get_option('smartpay_payments_is_donation_column')) {
+			$query->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
+		}
+
 		$allowed_columns = ['id', 'email', 'transaction_id', 'amount', 'created_at', 'completed_at'];
 		$orderByParts = explode(',', $orderBy);
 		foreach ($orderByParts as $part) {
@@ -80,16 +87,28 @@ class PaymentController extends RestController
 		// Get paginated results
 		$payments = $query->paginate($perPage);
 
+		// Donation rows (Donations or All tab) show their campaign.
+		if (null === $donation || '' === $donation || rest_sanitize_boolean($donation)) {
+			$this->attach_campaign_titles($payments);
+		}
+
 		$response = ['payments' => $payments];
 
 		// If filtering by customer, include payment statistics
 		if (!empty($customerId)) {
-			$baseQuery = Payment::where('customer_id', $customerId);
+			// Stats follow the same donation filter as the list.
+			$base = static function () use ($customerId, $donation) {
+				$q = Payment::where('customer_id', $customerId);
+				if (null !== $donation && '' !== $donation && get_option('smartpay_payments_is_donation_column')) {
+					$q->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
+				}
+				return $q;
+			};
 
-			$totalPayments = $baseQuery->count();
-			$completedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::COMPLETED)->count();
-			$pendingPayments = Payment::where('customer_id', $customerId)->where('status', Payment::PENDING)->count();
-			$refundedPayments = Payment::where('customer_id', $customerId)->where('status', Payment::REFUNDED)->count();
+			$totalPayments = $base()->count();
+			$completedPayments = $base()->where('status', Payment::COMPLETED)->count();
+			$pendingPayments = $base()->where('status', Payment::PENDING)->count();
+			$refundedPayments = $base()->where('status', Payment::REFUNDED)->count();
 
 			$response['payment_stats'] = [
 				'total' => $totalPayments,
@@ -100,6 +119,48 @@ class PaymentController extends RestController
 		}
 
 		return new WP_REST_Response($response);
+    }
+
+    /**
+     * Add `campaign_title` to each donation row (sales are skipped). Renewals
+     * carry no form id, so they use their parent's.
+     *
+     * @param iterable $payments Payment models on the current page.
+     */
+    private function attach_campaign_titles($payments): void
+    {
+		$parent_ids = array();
+		foreach ($payments as $payment) {
+			if ((int) $payment->is_donation && (int) $payment->parent_id > 0) {
+				$parent_ids[] = (int) $payment->parent_id;
+			}
+		}
+
+		$parent_forms = array();
+		if ($parent_ids) {
+			foreach (Payment::whereIn('id', array_unique($parent_ids))->get() as $parent) {
+				$parent_forms[(int) $parent->id] = absint($parent->data['form_id'] ?? 0);
+			}
+		}
+
+		$titles = array();
+		foreach ($payments as $payment) {
+			if (! (int) $payment->is_donation) {
+				continue;
+			}
+
+			$form_id = (int) $payment->parent_id > 0
+				? ($parent_forms[(int) $payment->parent_id] ?? 0)
+				: absint($payment->data['form_id'] ?? 0);
+
+			if (! array_key_exists($form_id, $titles)) {
+				$campaign_id      = $form_id ? smartpay_get_form_campaign_id($form_id) : 0;
+				$term             = $campaign_id ? get_term($campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY) : null;
+				$titles[$form_id] = $term instanceof \WP_Term ? $term->name : '';
+			}
+
+			$payment->campaign_title = $titles[$form_id];
+		}
     }
 
     /**
@@ -151,26 +212,43 @@ class PaymentController extends RestController
         if ( Payment::FORM_PAYMENT === $raw_type && ! empty( $data['data']['form_id'] ) ) {
             $form_id = absint( $data['data']['form_id'] );
 
-            // Check native forms table first.
-            $form = \SmartPay\Models\Form::find( $form_id );
+            // Form-builder (CPT) forms first: their post ids can collide with
+            // rows in the legacy forms table, which must not win the lookup.
+            $post   = get_post( $form_id );
+            $is_cpt = $post && 'smartpay_form' === $post->post_type;
+            $form   = $is_cpt ? null : \SmartPay\Models\Form::find( $form_id );
 
-            if ( $form ) {
-                $data['data']['form_type']    = 'native';
+            if ( $is_cpt ) {
+                $data['data']['form_type']     = 'native';
+                $data['data']['form_title']    = '' !== $post->post_title ? esc_html( $post->post_title ) : sprintf( 'Form #%d', $form_id );
+                $data['data']['form_edit_url'] = esc_url( admin_url( 'post.php?post=' . $form_id . '&action=edit' ) );
+            } elseif ( $form ) {
+                $data['data']['form_type']     = 'legacy';
                 $data['data']['form_title']    = esc_html( $form->title );
-                $data['data']['form_edit_url'] = '#/forms/' . $form_id . '/edit';
+                $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
             } else {
-                // Fall back to legacy WP post form.
-                $legacy = get_post( $form_id );
+                $data['data']['form_type']     = '';
+                $data['data']['form_title']    = sprintf( 'Form #%d (deleted)', $form_id );
+                $data['data']['form_edit_url'] = '';
+            }
 
-                if ( $legacy && 'smartpay_form' === $legacy->post_type ) {
-                    $data['data']['form_type']    = 'legacy';
-                    $data['data']['form_title']    = esc_html( $legacy->post_title ) ?: sprintf( 'Form #%d', $form_id );
-                    $data['data']['form_edit_url'] = esc_url( admin_url( 'admin.php?page=smartpay-form&id=' . $form_id ) );
-                } else {
-                    $data['data']['form_type']    = '';
-                    $data['data']['form_title']    = sprintf( 'Form #%d (deleted)', $form_id );
-                    $data['data']['form_edit_url'] = '';
-                }
+            // Donation card: campaign + what the donor entered with the gift.
+            if ( smartpay_is_donation_form( $form_id ) ) {
+                $campaign_id      = smartpay_get_form_campaign_id( $form_id );
+                $campaign         = $campaign_id ? smartpay_get_campaign( $campaign_id ) : null;
+                $donation         = smartpay_get_payment_donation( $data['extra'] ?? array() );
+                $data['donation'] = array_merge(
+                    $donation,
+                    array(
+                        'frequency_label' => smartpay_donation_frequency_label( smartpay_get_gift_frequency( $donation, $data['data'] ?? array(), (int) ( $data['parent_id'] ?? 0 ) ) ),
+                        'campaign' => $campaign
+                            ? array(
+                                'id'    => $campaign['id'],
+                                'title' => $campaign['title'],
+                            )
+                            : null,
+                    )
+                );
             }
         }
 

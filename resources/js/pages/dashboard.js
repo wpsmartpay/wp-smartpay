@@ -79,9 +79,9 @@ const MANAGEMENT_GROUPS = [
         label: __('MANAGEMENT', 'smartpay'),
         items: [
             { label: __('Forms', 'smartpay'),          icon: FileText,   hash: '/native-forms' },
-            { label: __('Payments', 'smartpay'),       icon: Receipt,    hash: '/payments' },
+            { label: __('Transactions', 'smartpay'),   icon: Receipt,    hash: '/transactions' },
             { label: __('Subscriptions', 'smartpay'),  icon: RefreshCw,  hash: '/subscriptions' },
-            { label: __('Customers', 'smartpay'),      icon: UserCheck,  hash: '/customers' },
+            { label: __('Contacts', 'smartpay'),       icon: UserCheck,  hash: '/contacts' },
         ],
     },
     {
@@ -789,13 +789,13 @@ export const Dashboard = () => {
                         />
 
                         <DetailCard
-                            title={__('RECENT PAYMENTS', 'smartpay')}
+                            title={__('RECENT TRANSACTIONS', 'smartpay')}
                             action={
                                 <a
-                                    href={`${adminUrl}?page=smartpay#/payments`}
+                                    href={`${adminUrl}?page=smartpay#/transactions`}
                                     style={{ fontSize: 12, color: 'var(--sp-text-muted)', textDecoration: 'none', fontWeight: 500 }}
                                 >
-                                    {__('Open payments →', 'smartpay')}
+                                    {__('Open transactions →', 'smartpay')}
                                 </a>
                             }
                         >
@@ -804,8 +804,8 @@ export const Dashboard = () => {
                             ) : recentPayments.length === 0 ? (
                                 <div className="sp-empty" style={{ padding: '24px 0' }}>
                                     <div className="sp-empty__icon">💳</div>
-                                    <div className="sp-empty__title">{__('No payments yet', 'smartpay')}</div>
-                                    <div className="sp-empty__desc">{__('Payments will appear here once received.', 'smartpay')}</div>
+                                    <div className="sp-empty__title">{__('No transactions yet', 'smartpay')}</div>
+                                    <div className="sp-empty__desc">{__('Payments and donations will appear here once received.', 'smartpay')}</div>
                                 </div>
                             ) : (
                                 <>
@@ -846,11 +846,11 @@ export const Dashboard = () => {
                                         </tbody>
                                     </table>
                                     <a
-                                        href={`${adminUrl}?page=smartpay#/payments`}
+                                        href={`${adminUrl}?page=smartpay#/transactions`}
                                         className="sp-btn sp-btn--outline"
                                         style={{ textDecoration: 'none', fontSize: 12, height: 30, padding: '0 12px' }}
                                     >
-                                        {__('View all payments →', 'smartpay')}
+                                        {__('View all transactions →', 'smartpay')}
                                     </a>
                                 </>
                             )}

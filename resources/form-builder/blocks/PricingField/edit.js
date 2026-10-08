@@ -2,6 +2,10 @@ import {
     PanelBody,
     TextControl,
     ToggleControl,
+    RadioControl,
+    CheckboxControl,
+    Notice,
+    ExternalLink,
     __experimentalToggleGroupControl as ToggleGroupControl,
     __experimentalToggleGroupControlOption as ToggleGroupControlOption,
     __experimentalUnitControl as UnitControl,
@@ -15,6 +19,15 @@ import {
 } from '@wordpress/block-editor'
 import { __ } from '@wordpress/i18n'
 import { gridJustifyStyle } from './layout'
+import { CUSTOM_BILLING_PERIODS } from './billing'
+import { readProFlag } from './option/edit'
+
+const PERIOD_LABELS = {
+    Daily: __('Daily', 'smartpay'),
+    Weekly: __('Weekly', 'smartpay'),
+    Monthly: __('Monthly', 'smartpay'),
+    Yearly: __('Yearly', 'smartpay'),
+}
 
 const DEFAULT_OPTION = {
     name: 'smartpay-form/pricing-option',
@@ -36,7 +49,23 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
         layout,
         customInputBackground,
         customInputBorder,
+        customBillingMode,
+        customBillingPeriods,
+        customBillingOneTime,
     } = attributes
+
+    const { isPro: pro, upgradeUrl } = readProFlag()
+    const donorChooses = pro && customBillingMode === 'donor'
+    const periods = customBillingPeriods || []
+    const oneTime = customBillingOneTime !== false
+    // At least one choice (One time or a period) stays ticked.
+    const togglePeriod = (value, on) => {
+        const next = on ? [...periods, value] : periods.filter((p) => p !== value)
+        if (next.length || oneTime) setAttributes({ customBillingPeriods: next })
+    }
+    const toggleOneTime = (on) => {
+        if (on || periods.length) setAttributes({ customBillingOneTime: on })
+    }
 
     const wrapperStyle = {
         '--sp-currency': `'${currencySymbol}'`,
@@ -135,6 +164,18 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
                                     disabled
                                     placeholder="0.00"
                                 />
+                                {donorChooses && (
+                                    <select
+                                        className="form-control smartpay-custom-billing-period"
+                                        disabled
+                                    >
+                                        <option>
+                                            {oneTime
+                                                ? __('One time', 'smartpay')
+                                                : PERIOD_LABELS[CUSTOM_BILLING_PERIODS.find((p) => periods.includes(p.value))?.value]}
+                                        </option>
+                                    </select>
+                                )}
                             </div>
                         </div>
                     )}
@@ -170,6 +211,48 @@ export const edit = ({ attributes, setAttributes, clientId }) => {
                             }
                             __nextHasNoMarginBottom
                         />
+                    )}
+                    {allowCustomAmount && (
+                        <RadioControl
+                            label={__('Billing for custom amount', 'smartpay')}
+                            selected={donorChooses ? 'donor' : 'one_time'}
+                            options={[
+                                { label: __('One time only', 'smartpay'), value: 'one_time' },
+                                { label: __('Let donor choose', 'smartpay'), value: 'donor' },
+                            ]}
+                            onChange={(v) => pro && setAttributes({ customBillingMode: v })}
+                            disabled={!pro}
+                        />
+                    )}
+                    {allowCustomAmount && !pro && (
+                        <Notice status="info" isDismissible={false}>
+                            {__('Recurring custom amounts are available in the Pro plan.', 'smartpay')}{' '}
+                            <ExternalLink href={upgradeUrl}>
+                                {__('Upgrade to Pro', 'smartpay')}
+                            </ExternalLink>
+                        </Notice>
+                    )}
+                    {allowCustomAmount && donorChooses && (
+                        <fieldset className="smartpay-custom-billing-periods">
+                            <legend className="components-base-control__label">
+                                {__('Options the donor can pick', 'smartpay')}
+                            </legend>
+                            <CheckboxControl
+                                label={__('One time', 'smartpay')}
+                                checked={oneTime}
+                                onChange={toggleOneTime}
+                                __nextHasNoMarginBottom
+                            />
+                            {CUSTOM_BILLING_PERIODS.map((p) => (
+                                <CheckboxControl
+                                    key={p.value}
+                                    label={PERIOD_LABELS[p.value]}
+                                    checked={periods.includes(p.value)}
+                                    onChange={(on) => togglePeriod(p.value, on)}
+                                    __nextHasNoMarginBottom
+                                />
+                            ))}
+                        </fieldset>
                     )}
                 </PanelBody>
             </InspectorControls>

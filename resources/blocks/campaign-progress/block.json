@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "smartpay/campaign-progress",
+	"version": "1.0.0",
+	"title": "WPSmartPay Campaign Progress",
+	"category": "widgets",
+	"icon": "chart-bar",
+	"description": "Show a campaign's goal progress bar on any page or post.",
+	"keywords": [ "campaign", "goal", "donation", "progress", "wpsmartpay" ],
+	"textdomain": "smartpay",
+	"editorScript": "smartpay-editor-blocks",
+	"style": "smartpay-campaign",
+	"attributes": {
+		"id": {
+			"type": "integer",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false
+	}
+}
