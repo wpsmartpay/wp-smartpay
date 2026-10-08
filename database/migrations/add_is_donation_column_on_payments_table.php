@@ -36,7 +36,13 @@ class Smartpay_AddIsDonationColumnOnPaymentsTable {
 		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		$wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `is_donation` TINYINT(1) NOT NULL DEFAULT 0 AFTER `type`, ADD INDEX `is_donation` (`is_donation`)" );
+		$added = $wpdb->query( "ALTER TABLE `{$table}` ADD COLUMN `is_donation` TINYINT(1) NOT NULL DEFAULT 0 AFTER `type`, ADD INDEX `is_donation` (`is_donation`)" );
+
+		// ALTER denied or timed out: leave the option unset so checkout never
+		// writes to the missing column, and tell the Updater to retry.
+		if ( false === $added ) {
+			return false;
+		}
 
 		self::backfill( $table );
 
