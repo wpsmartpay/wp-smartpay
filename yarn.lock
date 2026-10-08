@@ -17171,9 +17171,9 @@ seroval-plugins@^1.4.2:
   integrity sha512-EAHqADIQondwRZIdeW2I636zgsODzoBDwb3PT/+7TLDWyw1Dy/Xv7iGUIEXXav7usHDE9HVhOU61irI3EnyyHA==
 
 seroval@^1.4.2:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/seroval/-/seroval-1.5.0.tgz#aba4cffbd0c4c8a4351358362acf40ee8d74d97b"
-  integrity sha512-OE4cvmJ1uSPrKorFIH9/w/Qwuvi/IMcGbv5RKgcJ/zjA/IohDLU6SVaxFN9FwajbP7nsX0dQqMDes1whk3y+yw==
+  version "1.6.8"
+  resolved "https://registry.yarnpkg.com/seroval/-/seroval-1.6.8.tgz#916c4a293cfadcd9e0efdb73a8bfbe061f81866b"
+  integrity sha512-HlSgSAkTk4EqHcje1ptJjfZi1YDv5KbhVJ/d3P7T/nAXua2VmDu+AKDX5VTdFfZf48nDkWB2TKYt0DrCSa+3wg==
 
 serve-index@^1.9.1:
   version "1.9.2"
