@@ -30,7 +30,7 @@ function smartpay_donor_types(): array {
 	return array(
 		'first_time' => __( 'First-time', 'smartpay' ),
 		'repeat'     => __( 'Repeat', 'smartpay' ),
-		'monthly'    => __( 'Monthly', 'smartpay' ),
+		'monthly'    => __( 'Recurring', 'smartpay' ),
 	);
 }
 
@@ -80,7 +80,13 @@ function smartpay_donor_base_sql( array $scope_form_ids, array $all_form_ids, st
 	$subs = smartpay_donor_subscriptions_table();
 	if ( $subs ) {
 		$gift_parent = smartpay_payments_form_match_sql( $all_form_ids, 'p.data' );
-		$monthly     = "SELECT p.customer_id, MAX(p.amount) AS amt FROM {$subs} s JOIN {$payments} p ON p.id = s.parent_payment_id
+		// Active recurring gifts as one monthly figure, whatever their periods.
+		$per_year = 'CASE s.period';
+		foreach ( smartpay_billing_period_per_year() as $period => $times ) {
+			$per_year .= $wpdb->prepare( ' WHEN %s THEN %d', $period, $times );
+		}
+		$per_year   .= ' ELSE 12 END';
+		$monthly     = "SELECT p.customer_id, SUM(s.recurring_amount * {$per_year}) / 12 AS amt FROM {$subs} s JOIN {$payments} p ON p.id = s.parent_payment_id
 			WHERE s.status IN ('active','trialling') AND {$gift_parent} GROUP BY p.customer_id";
 	} else {
 		$monthly = 'SELECT NULL AS customer_id, NULL AS amt FROM DUAL WHERE 1=0';
@@ -317,6 +323,76 @@ function smartpay_get_payment_donation( $extra ): array {
 }
 
 /**
+ * Charges per year for each billing period, to put mixed periods on one monthly figure.
+ *
+ * @return array<string,int>
+ */
+function smartpay_billing_period_per_year(): array {
+	return array(
+		'Daily'          => 365,
+		'Weekly'         => 52,
+		'Monthly'        => 12,
+		'Every 3 Months' => 4,
+		'Every 6 Months' => 2,
+		'Yearly'         => 1,
+	);
+}
+
+/**
+ * Monthly equivalent of a recurring amount (unknown periods count as monthly).
+ *
+ * @param float  $amount Amount per charge.
+ * @param string $period Billing period, e.g. 'Yearly'.
+ * @return float
+ */
+function smartpay_monthly_amount( float $amount, string $period ): float {
+	return $amount * ( smartpay_billing_period_per_year()[ $period ] ?? 12 ) / 12;
+}
+
+/**
+ * A gift's frequency: 'one_time', its billing period ('Yearly'), or
+ * 'recurring' when the period is unknown.
+ *
+ * @param array        $donation  From smartpay_get_payment_donation().
+ * @param array|string $data      Payment data (array or JSON).
+ * @param int          $parent_id Parent payment ID (renewals).
+ * @return string
+ */
+function smartpay_get_gift_frequency( array $donation, $data, int $parent_id = 0 ): string {
+	// Gifts made before the period was stored say 'monthly' for any period.
+	if ( '' !== $donation['frequency'] && 'monthly' !== $donation['frequency'] ) {
+		return $donation['frequency'];
+	}
+	$data = is_array( $data ) ? $data : (array) json_decode( (string) $data, true );
+	if ( $parent_id > 0 || \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['billing_type'] ?? '' ) ) {
+		return (string) ( $data['billing_period'] ?? '' ) ?: 'recurring';
+	}
+	return 'one_time';
+}
+
+/**
+ * Label for a gift frequency.
+ *
+ * @param string $frequency 'one_time', 'recurring' or a billing period.
+ * @return string
+ */
+function smartpay_donation_frequency_label( string $frequency ): string {
+	$labels = array(
+		'one_time'       => __( 'One-time', 'smartpay' ),
+		'recurring'      => __( 'Recurring', 'smartpay' ),
+		'monthly'        => __( 'Recurring', 'smartpay' ),
+		'Daily'          => __( 'Daily', 'smartpay' ),
+		'Weekly'         => __( 'Weekly', 'smartpay' ),
+		'Monthly'        => __( 'Monthly', 'smartpay' ),
+		'Every 3 Months' => __( 'Every 3 months', 'smartpay' ),
+		'Every 6 Months' => __( 'Every 6 months', 'smartpay' ),
+		'Yearly'         => __( 'Yearly', 'smartpay' ),
+	);
+
+	return $labels[ '' === $frequency ? 'one_time' : $frequency ] ?? $frequency;
+}
+
+/**
  * Public wall name for a donor: full name.
  *
  * @param string $first First name.
@@ -377,6 +453,7 @@ function smartpay_get_donor_giving( int $customer_id ): array {
 		$campaign    = $campaign_id ? get_term( $campaign_id, SMARTPAY_CAMPAIGN_TAXONOMY ) : null;
 		$donation    = smartpay_get_payment_donation( $row['extra'] );
 		$completed   = \SmartPay\Models\Payment::COMPLETED === $row['status'];
+		$frequency   = smartpay_get_gift_frequency( $donation, $data, (int) $row['parent_id'] );
 
 		$status[ $row['status'] ] = ( $status[ $row['status'] ] ?? 0 ) + 1;
 
@@ -407,7 +484,8 @@ function smartpay_get_donor_giving( int $customer_id ): array {
 				'id'    => $campaign_id,
 				'title' => $campaign->name,
 			) : null,
-			'frequency'  => ( ! empty( $row['parent_id'] ) || \SmartPay\Models\Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['billing_type'] ?? '' ) ) ? 'monthly' : 'one_time',
+			'frequency'  => $frequency,
+			'frequency_label' => smartpay_donation_frequency_label( $frequency ),
 			'anonymous'  => $donation['anonymous'],
 			'comment'    => $donation['comment'],
 		);

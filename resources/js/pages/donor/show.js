@@ -100,7 +100,7 @@ export const ShowDonor = () => {
                                                 <b>{g.campaign ? g.campaign.title : __('No campaign', 'smartpay')}</b>
                                                 <div className="sp-cell--muted">{g.form}</div>
                                             </td>
-                                            <td>{g.frequency === 'monthly' ? __('Monthly', 'smartpay') : __('One-time', 'smartpay')}</td>
+                                            <td>{g.frequency_label}</td>
                                             <td className="sp-cell--muted sp-col--nowrap">{shortDate(g.created_at)}</td>
                                             <td><span className={`sp-badge sp-badge--dot ${STATUS_CLASS[g.status] || 'sp-badge--expired'}`}>{g.status}</span></td>
                                             <td className="sp-cell--num" style={{ textAlign: 'left' }}>{money(g.amount, 2)}</td>

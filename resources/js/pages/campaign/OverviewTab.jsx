@@ -93,7 +93,7 @@ export const OverviewTab = ({ campaign }) => {
                 <StatCard title={__('Donations', 'smartpay')} value={data ? count(s.donations) : '…'} icon={Gift}
                     change={s.donations ? sprintf(__('avg %s', 'smartpay'), money(s.raised / s.donations, 2)) : ''} />
                 <StatCard title={__('Donors', 'smartpay')} value={data ? count(s.donors) : '…'} icon={Users}
-                    change={data ? sprintf(__('%1$s repeat · %2$s monthly', 'smartpay'), count(s.repeat), count(s.monthly)) : ''} />
+                    change={data ? sprintf(__('%1$s repeat · %2$s recurring', 'smartpay'), count(s.repeat), count(s.monthly)) : ''} />
             </div>
 
             <div className="sp-detail-grid">
@@ -128,7 +128,7 @@ export const OverviewTab = ({ campaign }) => {
                                         </div>
                                     </div>
                                     <span className="sp-cell--num">
-                                        {money(g.amount, 2)}{g.monthly && <span className="sp-cell--muted"> · {__('monthly', 'smartpay')}</span>}
+                                        {money(g.amount, 2)}{g.frequency !== 'one_time' && <span className="sp-cell--muted"> · {g.frequency_label}</span>}
                                     </span>
                                 </div>
                             ))}

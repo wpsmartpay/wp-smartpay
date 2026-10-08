@@ -313,7 +313,7 @@ export const PaymentDetailPage = () => {
 								<td>{d.campaign ? <a href={`#/campaigns/${d.campaign.id}`}>{d.campaign.title} ↗</a> : '—'}</td>
 							</tr>
 							<tr><td>{__('Form', 'smartpay')}</td><td>{payment.data?.form_title || '—'}</td></tr>
-							<tr><td>{__('Frequency', 'smartpay')}</td><td>{d.frequency === 'monthly' ? __('Monthly', 'smartpay') : __('One-time', 'smartpay')}</td></tr>
+							<tr><td>{__('Frequency', 'smartpay')}</td><td>{d.frequency_label}</td></tr>
 							<tr><td>{__('Anonymous', 'smartpay')}</td><td>{d.anonymous ? __('Yes', 'smartpay') : __('No', 'smartpay')}</td></tr>
 							<tr><td>{__('Tribute', 'smartpay')}</td><td>{tribute || '—'}</td></tr>
 							<tr><td>{__('Donor comment', 'smartpay')}</td><td>{d.comment ? `“${d.comment}”` : '—'}</td></tr>

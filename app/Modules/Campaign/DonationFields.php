@@ -63,8 +63,11 @@ class DonationFields {
 		$campaign_id = smartpay_get_form_campaign_id( $form_id );
 		$campaign    = $campaign_id ? smartpay_get_campaign( $campaign_id ) : null;
 
+		$donation                    = smartpay_get_payment_donation( $payment->extra ?? array() );
+		$donation['frequency_label'] = smartpay_donation_frequency_label( smartpay_get_gift_frequency( $donation, $data, (int) ( $payment->parent_id ?? 0 ) ) );
+
 		return array(
-			'donation' => smartpay_get_payment_donation( $payment->extra ?? array() ),
+			'donation' => $donation,
 			'campaign' => $campaign,
 			'progress' => $campaign ? smartpay_calculate_campaign_progress( $campaign['id'] ) : null,
 		);
@@ -85,7 +88,7 @@ class DonationFields {
 		if ( $ctx['campaign'] ) {
 			$rows[ __( 'Campaign', 'smartpay' ) ] = $ctx['campaign']['title'];
 		}
-		$rows[ __( 'Frequency', 'smartpay' ) ] = 'monthly' === $ctx['donation']['frequency'] ? __( 'Monthly', 'smartpay' ) : __( 'One-time', 'smartpay' );
+		$rows[ __( 'Frequency', 'smartpay' ) ] = $ctx['donation']['frequency_label'];
 
 		foreach ( $rows as $label => $value ) {
 			printf(
@@ -343,7 +346,7 @@ class DonationFields {
 	 * Move the donor's entries into `extra.donation` (sanitised) on donation forms.
 	 *
 	 * Frequency is taken from the billing type that was actually charged, so
-	 * the record never claims "monthly" for a one-time payment. The Charity
+	 * the record never claims a recurring period for a one-time payment. The Charity
 	 * template's older "Make my donation anonymous" checkbox still counts.
 	 *
 	 * @param array $data Prepared payment data.
@@ -378,7 +381,9 @@ class DonationFields {
 		$data['extra']['donation'] = array(
 			'anonymous' => ! empty( $posted['anonymous'] ) || in_array( 'make-my-donation-anonymous', $legacy_options, true ),
 			'comment'   => mb_substr( sanitize_textarea_field( wp_unslash( (string) ( $posted['comment'] ?? '' ) ) ), 0, 1000 ),
-			'frequency' => Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['payment_data']['billing_type'] ?? '' ) ? 'monthly' : 'one_time',
+			'frequency' => Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['payment_data']['billing_type'] ?? '' )
+				? ( (string) ( $data['payment_data']['billing_period'] ?? '' ) ?: 'recurring' )
+				: 'one_time',
 			'tribute'   => '' !== $tribute_name
 				? array(
 					'type' => 'memory' === ( $tribute['type'] ?? '' ) ? 'memory' : 'honor',

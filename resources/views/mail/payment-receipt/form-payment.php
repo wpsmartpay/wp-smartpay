@@ -184,7 +184,7 @@ $smartpay_gift = ( $smartpay_payment && class_exists( '\SmartPay\Modules\Campaig
                                                                 <?php endif; ?>
                                                                 <tr>
                                                                     <td style="font-size: 16px; line-height: 24px; color: #a0a6b0; width: 50%"><?php esc_html_e('Frequency', 'smartpay'); ?></td>
-                                                                    <td style="font-size: 16px; line-height: 24px; text-align: right; width: 50%" align="right"><?php echo 'monthly' === $smartpay_gift['donation']['frequency'] ? esc_html__('Monthly', 'smartpay') : esc_html__('One-time', 'smartpay'); ?></td>
+                                                                    <td style="font-size: 16px; line-height: 24px; text-align: right; width: 50%" align="right"><?php echo esc_html($smartpay_gift['donation']['frequency_label']); ?></td>
                                                                 </tr>
                                                             <?php endif; ?>
                                                             <tr>

@@ -72,11 +72,11 @@ endif;
 		<div class="sp-dash-card__meta"><div class="sp-dash-card__row"><span><?php esc_html_e( 'Completed', 'smartpay' ); ?></span></div></div>
 	</div>
 	<div class="sp-dash-card">
-		<div class="sp-dash-card__head"><span class="sp-dash-card__title"><?php esc_html_e( 'Active monthly', 'smartpay' ); ?></span></div>
+		<div class="sp-dash-card__head"><span class="sp-dash-card__title"><?php esc_html_e( 'Active recurring', 'smartpay' ); ?></span></div>
 		<div class="sp-dash-card__price">
 			<?php
 			echo $sp_active
-				? esc_html( smartpay_amount_format( array_sum( wp_list_pluck( $sp_active, 'amount' ) ) ) . ' / ' . __( 'month', 'smartpay' ) )
+				? esc_html( smartpay_amount_format( array_sum( array_map( static fn( $sub ) => smartpay_monthly_amount( $sub['amount'], $sub['period'] ), $sp_active ) ) ) . ' / ' . __( 'month', 'smartpay' ) )
 				: esc_html__( 'None', 'smartpay' );
 			?>
 		</div>
@@ -91,7 +91,7 @@ endif;
 
 <?php if ( $sp_giving['monthly'] ) : ?>
 	<div class="sp-dash-panel">
-		<div class="sp-dash-panel__head"><h2><?php esc_html_e( 'Monthly gifts', 'smartpay' ); ?></h2></div>
+		<div class="sp-dash-panel__head"><h2><?php esc_html_e( 'Recurring gifts', 'smartpay' ); ?></h2></div>
 		<div class="sp-dash-table-wrap">
 			<table class="sp-dash-table">
 				<thead>
@@ -108,7 +108,7 @@ endif;
 						<?php $sp_badge = smartpay_dashboard_status_badge( $sp_sub['status'] ); ?>
 						<tr>
 							<td data-label="<?php esc_attr_e( 'Campaign', 'smartpay' ); ?>"><?php echo esc_html( $sp_sub['campaign'] ? $sp_sub['campaign'] : '—' ); ?></td>
-							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_sub['amount'] ) . ' / ' . ( in_array( $sp_sub['period'], array( '', 'Monthly' ), true ) ? __( 'month', 'smartpay' ) : $sp_sub['period'] ) ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_sub['amount'] ) . ' / ' . smartpay_donation_frequency_label( $sp_sub['period'] ?: 'recurring' ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Started', 'smartpay' ); ?>"><?php echo esc_html( date_i18n( 'M d, Y', strtotime( $sp_sub['created_at'] ) ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>
 							<td class="sp-dash-table__actions">
@@ -169,7 +169,7 @@ endif;
 					<tr>
 						<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( date_i18n( 'M d, Y', strtotime( $sp_gift['created_at'] ) ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Campaign', 'smartpay' ); ?>"><?php echo esc_html( $sp_gift['campaign'] ? $sp_gift['campaign']['title'] : $sp_gift['form'] ); ?></td>
-						<td data-label="<?php esc_attr_e( 'Frequency', 'smartpay' ); ?>"><?php echo 'monthly' === $sp_gift['frequency'] ? esc_html__( 'Monthly', 'smartpay' ) : esc_html__( 'One-time', 'smartpay' ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Frequency', 'smartpay' ); ?>"><?php echo esc_html( $sp_gift['frequency_label'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_gift['amount'] ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>
 						<td data-label="<?php esc_attr_e( 'Receipt', 'smartpay' ); ?>" class="sp-dash-table__actions">

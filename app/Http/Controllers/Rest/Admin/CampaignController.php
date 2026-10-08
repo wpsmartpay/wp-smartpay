@@ -568,13 +568,14 @@ class CampaignController extends RestController {
 	public function present_gift( array $row ): array {
 		$data     = json_decode( (string) $row['data'], true );
 		$donation = smartpay_get_payment_donation( $row['extra'] );
-		$monthly  = ! empty( $row['parent_id'] ) || ( is_array( $data ) && Payment::BILLING_TYPE_SUBSCRIPTION === ( $data['billing_type'] ?? '' ) );
+		$frequency = smartpay_get_gift_frequency( $donation, is_array( $data ) ? $data : array(), (int) $row['parent_id'] );
 
 		return array(
 			'id'         => (int) $row['id'],
 			'amount'     => (float) $row['amount'],
 			'created_at' => (string) $row['created_at'],
-			'monthly'    => $monthly,
+			'frequency'  => $frequency,
+			'frequency_label' => smartpay_donation_frequency_label( $frequency ),
 			'anonymous'  => $donation['anonymous'],
 			'comment'    => $donation['comment'],
 			'customer'   => array(

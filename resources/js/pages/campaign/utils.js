@@ -29,7 +29,7 @@ export const GOAL_TYPES = [
 export const DONOR_TYPES = {
     first_time: __('First-time', 'smartpay'),
     repeat: __('Repeat', 'smartpay'),
-    monthly: __('Monthly', 'smartpay'),
+    monthly: __('Recurring', 'smartpay'),
 }
 
 export const colorIndex = (str) => {

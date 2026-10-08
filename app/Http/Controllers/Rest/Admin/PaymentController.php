@@ -235,9 +235,11 @@ class PaymentController extends RestController
             if ( smartpay_is_donation_form( $form_id ) ) {
                 $campaign_id      = smartpay_get_form_campaign_id( $form_id );
                 $campaign         = $campaign_id ? smartpay_get_campaign( $campaign_id ) : null;
+                $donation         = smartpay_get_payment_donation( $data['extra'] ?? array() );
                 $data['donation'] = array_merge(
-                    smartpay_get_payment_donation( $data['extra'] ?? array() ),
+                    $donation,
                     array(
+                        'frequency_label' => smartpay_donation_frequency_label( smartpay_get_gift_frequency( $donation, $data['data'] ?? array(), (int) ( $data['parent_id'] ?? 0 ) ) ),
                         'campaign' => $campaign
                             ? array(
                                 'id'    => $campaign['id'],
