@@ -397,23 +397,15 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 == Changelog ==
 
 = 3.3.5 =
-* New - Donation campaigns: campaign model, admin screens, public campaign page, progress shortcode and block, donor wall
-* New - Donation blocks: giving frequency, anonymous, comment, tribute and step break
-* New - Donors and Donations are separated from Customers and Payments, with Transactions and Contacts tabs
-* New - Donors can choose the billing period for custom amounts
-* Update - Amount goals now include subscription renewal payments
-* Fix - Quantity goals count first payments only, so renewals no longer close sales forms early
-* Fix - Coupon discount now applies to card amounts
-* Fix - Custom amount box starts empty, rounds to cents and rejects a zero amount
-* Fix - Multi-step donation forms validate each step on Continue
-* Fix - Anonymous choice is kept on renewals
-* Fix - Campaigns stop taking payments after their end date, even without a goal target
-* Fix - Recurring gifts show their real billing period instead of always Monthly
-* Fix - Donors "With comments" filter ignores empty comments
-* Fix - Clearer donor bulk delete confirmation, and failed deletes are reported
-* Fix - Payments list no longer breaks if the donation database upgrade fails or has not run yet
-* Fix - Only administrators can assign campaign categories
-* Fix - Admin no longer shows a warning when a saved integration setting is malformed
+* New - Donation campaigns with goals, a public campaign page and a donor wall
+* New - Donation form blocks: recurring giving, anonymous gifts, comments and tributes
+* New - Separate Donors and Donations screens
+* New - Donors can choose how often to give a custom amount
+* Update - Amount goals now count subscription renewals
+* Fix - Renewals no longer count as new sales in quantity goals
+* Fix - Coupons now apply to amount cards
+* Fix - Custom amount field starts empty and rejects zero
+* Fix - Admin warning caused by an old integration setting
 
 = 3.3.4 =
 * New - Dashboard alert box for urgent problems reported by add-ons (e.g. Stripe payment rejections)
