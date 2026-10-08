@@ -70,7 +70,8 @@ class PaymentController extends RestController
 			$query->where('type', $type);
 		}
 
-		if (null !== $donation && '' !== $donation) {
+		// Skip the filter until the is_donation migration has added the column.
+		if (null !== $donation && '' !== $donation && get_option('smartpay_payments_is_donation_column')) {
 			$query->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
 		}
 
@@ -98,7 +99,7 @@ class PaymentController extends RestController
 			// Stats follow the same donation filter as the list.
 			$base = static function () use ($customerId, $donation) {
 				$q = Payment::where('customer_id', $customerId);
-				if (null !== $donation && '' !== $donation) {
+				if (null !== $donation && '' !== $donation && get_option('smartpay_payments_is_donation_column')) {
 					$q->where('is_donation', rest_sanitize_boolean($donation) ? 1 : 0);
 				}
 				return $q;
