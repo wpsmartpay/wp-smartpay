@@ -145,7 +145,7 @@ class Campaign {
 					'manage_terms' => 'manage_options',
 					'edit_terms'   => 'manage_options',
 					'delete_terms' => 'manage_options',
-					'assign_terms' => 'edit_posts',
+					'assign_terms' => 'manage_options',
 				),
 			)
 		);
