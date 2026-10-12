@@ -67,8 +67,9 @@ $sp_type_labels = array(
 			</div>
 			<div class="sp-dash-kv__row">
 				<span class="sp-dash-kv__key"><?php esc_html_e( 'Date', 'smartpay' ); ?></span>
-				<span class="sp-dash-kv__val"><?php echo esc_html( gmdate( 'M d, Y · g:i A', strtotime( (string) $sp_order->created_at ) ) ); ?></span>
+				<span class="sp-dash-kv__val"><?php echo esc_html( wp_date( 'M d, Y · g:i A', strtotime( (string) $sp_order->created_at ) ) ); ?></span>
 			</div>
+			<?php // created_at is stored in UTC, so wp_date() converts it; completed_at is already site-local (current_time), so gmdate() prints it as stored. ?>
 			<?php if ( $sp_order->completed_at ) : ?>
 				<div class="sp-dash-kv__row">
 					<span class="sp-dash-kv__key"><?php esc_html_e( 'Completed', 'smartpay' ); ?></span>

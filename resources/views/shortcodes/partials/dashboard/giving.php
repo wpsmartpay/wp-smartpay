@@ -84,7 +84,7 @@ endif;
 	</div>
 	<div class="sp-dash-card">
 		<div class="sp-dash-card__head"><span class="sp-dash-card__title"><?php esc_html_e( 'Donor since', 'smartpay' ); ?></span></div>
-		<div class="sp-dash-card__price"><?php echo esc_html( date_i18n( 'M Y', strtotime( $sp_donor['donor_since'] ) ) ); ?></div>
+		<div class="sp-dash-card__price"><?php echo esc_html( wp_date( 'M Y', strtotime( $sp_donor['donor_since'] ) ) ); ?></div>
 		<div class="sp-dash-card__meta"><div class="sp-dash-card__row"><span><?php echo esc_html( $sp_donor['email'] ); ?></span></div></div>
 	</div>
 </div>
@@ -109,7 +109,7 @@ endif;
 						<tr>
 							<td data-label="<?php esc_attr_e( 'Campaign', 'smartpay' ); ?>"><?php echo esc_html( $sp_sub['campaign'] ? $sp_sub['campaign'] : '—' ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_sub['amount'] ) . ' / ' . smartpay_donation_frequency_label( $sp_sub['period'] ?: 'recurring' ) ); ?></td>
-							<td data-label="<?php esc_attr_e( 'Started', 'smartpay' ); ?>"><?php echo esc_html( date_i18n( 'M d, Y', strtotime( $sp_sub['created_at'] ) ) ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Started', 'smartpay' ); ?>"><?php echo esc_html( wp_date( 'M d, Y', strtotime( $sp_sub['created_at'] ) ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>
 							<td class="sp-dash-table__actions">
 								<?php
@@ -167,7 +167,7 @@ endif;
 				<?php foreach ( $sp_giving['history'] as $sp_gift ) : ?>
 					<?php $sp_badge = smartpay_dashboard_status_badge( $sp_gift['status'] ); ?>
 					<tr>
-						<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( date_i18n( 'M d, Y', strtotime( $sp_gift['created_at'] ) ) ); ?></td>
+						<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( wp_date( 'M d, Y', strtotime( $sp_gift['created_at'] ) ) ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Campaign', 'smartpay' ); ?>"><?php echo esc_html( $sp_gift['campaign'] ? $sp_gift['campaign']['title'] : $sp_gift['form'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Frequency', 'smartpay' ); ?>"><?php echo esc_html( $sp_gift['frequency_label'] ); ?></td>
 						<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_gift['amount'] ) ); ?></td>

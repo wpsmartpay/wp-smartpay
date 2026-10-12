@@ -66,7 +66,7 @@ $sp_summary = smartpay_get_user_dashboard_summary( $sp_customer_id );
 						<?php $sp_badge = smartpay_dashboard_status_badge( (string) $sp_payment->status ); ?>
 						<tr>
 							<td data-label="<?php esc_attr_e( 'Order', 'smartpay' ); ?>">#<?php echo esc_html( $sp_payment->id ); ?></td>
-							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( gmdate( 'M d, Y', strtotime( $sp_payment->created_at ) ) ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( wp_date( 'M d, Y', strtotime( $sp_payment->created_at ) ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_payment->amount, $sp_payment->currency ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>
 						</tr>

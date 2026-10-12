@@ -41,7 +41,7 @@ $sp_default_currency = function_exists( 'smartpay_get_option' ) ? (string) smart
 				<div class="sp-dash-card__meta">
 					<div class="sp-dash-card__row">
 						<span><?php esc_html_e( 'Started', 'smartpay' ); ?></span>
-						<strong><?php echo esc_html( gmdate( 'M d, Y', strtotime( $sp_sub->created_at ) ) ); ?></strong>
+						<strong><?php echo esc_html( wp_date( 'M d, Y', strtotime( $sp_sub->created_at ) ) ); ?></strong>
 					</div>
 					<div class="sp-dash-card__row">
 						<span><?php esc_html_e( 'Next renewal', 'smartpay' ); ?></span>
