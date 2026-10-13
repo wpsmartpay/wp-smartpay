@@ -60,7 +60,7 @@
     "@wordpress/keyboard-shortcuts": "^5.35.0",
     "@wordpress/media-utils": "^5.35.0",
     "@wordpress/plugins": "^7.35.0",
-    "@wordpress/scripts": "^31.5.0",
+    "@wordpress/scripts": "^35.0.0",
     "apexcharts": "^5.3.6",
     "bootstrap": "^4.6.2",
     "class-variance-authority": "^0.7.1",
