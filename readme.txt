@@ -22,7 +22,7 @@ Invoice clients, bill recurring subscriptions, or collect one-time and recurring
 
 ---
 
-### ✅ What's New in Version 3.3.5
+### ✅ What's New in Version 3.4.0
 
 * **Complete Donation & Fundraising Campaigns** — Launch fundraising campaigns with target goals, public campaign pages, and live progress bars.
 * **Gutenberg Donation Form Blocks** — Build donor checkout forms with preset giving tiers, Give Anonymously toggles, Donor Comments, Tributes (in honor/memory), and Step Breaks.
