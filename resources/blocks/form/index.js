@@ -1,45 +1,47 @@
 import { __ } from '@wordpress/i18n'
 import { registerBlockType } from '@wordpress/blocks'
 import { useEffect, useState } from '@wordpress/element'
-import { Placeholder, SelectControl, Spinner, PanelBody, TextControl } from '@wordpress/components'
-import { InspectorControls } from '@wordpress/block-editor'
+import { Placeholder, SelectControl, Spinner, Notice } from '@wordpress/components'
+import { useBlockProps } from '@wordpress/block-editor'
+import { useSelect } from '@wordpress/data'
 import apiFetch from '@wordpress/api-fetch'
 
 export default registerBlockType('smartpay/form', {
-    title: __('SmartPay Form', 'smartpay'),
-    description: __('Display a SmartPay payment form with popup or embedded checkout.', 'smartpay'),
+    apiVersion: 3,
+    title: __('WPSmartPay Form', 'smartpay'),
+    description: __('Display a WPSmartPay payment form embedded on the page.', 'smartpay'),
     icon: 'feedback',
     category: 'widgets',
-    keywords: [__('payment', 'smartpay'), __('form', 'smartpay'), __('checkout', 'smartpay')],
+    keywords: [__('payment', 'smartpay'), __('form', 'smartpay'), __('checkout', 'smartpay'), __('wpsmartpay', 'smartpay')],
 
     attributes: {
         id: {
             type: 'integer',
             default: 0,
         },
-        behavior: {
-            type: 'string',
-            default: 'popup',
-        },
-        label: {
-            type: 'string',
-            default: '',
-        },
     },
 
     edit: ({ attributes, setAttributes }) => {
+        const blockProps = useBlockProps()
+        const postType = useSelect(
+            (select) => select('core/editor').getCurrentPostType(),
+            []
+        )
+
         const [forms, setForms] = useState([])
         const [isLoading, setIsLoading] = useState(true)
 
         useEffect(() => {
+            const url = new URL(`${smartpay.restUrl}/v1/native-forms`)
+            url.searchParams.set('per_page', '100')
             apiFetch({
-                path: 'smartpay/v1/forms',
+                url: url.toString(),
                 headers: {
                     'X-WP-Nonce': smartpay.apiNonce,
                 },
             })
                 .then((data) => {
-                    const formList = (data?.forms || []).map((form) => ({
+                    const formList = (data?.forms?.data || []).map((form) => ({
                         value: form.id,
                         label: `(#${form.id}) ${form.title}`,
                     }))
@@ -52,6 +54,16 @@ export default registerBlockType('smartpay/form', {
                 })
         }, [])
 
+        if (postType === 'smartpay_form') {
+            return (
+                <div {...blockProps}>
+                    <Notice status="warning" isDismissible={false}>
+                        {__('SmartPay blocks cannot be embedded inside a SmartPay form.', 'smartpay')}
+                    </Notice>
+                </div>
+            )
+        }
+
         const formOptions = [
             { value: 0, label: __('Select a form', 'smartpay') },
             ...forms,
@@ -60,33 +72,10 @@ export default registerBlockType('smartpay/form', {
         const selectedForm = forms.find((f) => f.value === attributes.id)
 
         return (
-            <>
-                <InspectorControls>
-                    <PanelBody title={__('Form Settings', 'smartpay')}>
-                        <SelectControl
-                            label={__('Shortcode behavior', 'smartpay')}
-                            value={attributes.behavior}
-                            onChange={(value) => setAttributes({ behavior: value })}
-                            options={[
-                                { value: 'popup', label: __('Popup', 'smartpay') },
-                                { value: 'embedded', label: __('Embedded', 'smartpay') },
-                            ]}
-                            __nextHasNoMarginBottom
-                        />
-                        {attributes.behavior === 'popup' && (
-                            <TextControl
-                                label={__('Button label', 'smartpay')}
-                                value={attributes.label}
-                                onChange={(value) => setAttributes({ label: value })}
-                                __nextHasNoMarginBottom
-                            />
-                        )}
-                    </PanelBody>
-                </InspectorControls>
-
+            <div {...blockProps}>
                 <Placeholder
                     icon="feedback"
-                    label={__('SmartPay Form', 'smartpay')}
+                    label={__('WPSmartPay Form', 'smartpay')}
                     instructions={
                         selectedForm
                             ? __('Selected: ', 'smartpay') + selectedForm.label
@@ -104,11 +93,10 @@ export default registerBlockType('smartpay/form', {
                         />
                     )}
                 </Placeholder>
-            </>
+            </div>
         )
     },
 
-    save: ({ attributes }) => {
-        return `[smartpay_form id="${attributes.id}" behavior="${attributes.behavior}" label="${attributes.label}"]`
-    },
+    // Dynamic block — rendered server-side via render_callback in Admin.php
+    save: () => null,
 })

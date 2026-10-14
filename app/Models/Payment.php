@@ -15,6 +15,7 @@ class Payment extends Model
 
     protected $fillable = [
         'type',
+        'is_donation',
         'data',
         'amount',
         'currency',
@@ -65,6 +66,14 @@ class Payment extends Model
             if ( empty( $payment->attributes['status'] ) ) {
                 $payment->attributes['status'] = self::PENDING;
             }
+
+            // Stamp donation vs sale once, so the Payments and Donations lists
+            // stay stable when forms later move between campaigns.
+            if ( ! isset( $payment->attributes['is_donation'] ) && get_option( 'smartpay_payments_is_donation_column' ) ) {
+                $payment->attributes['is_donation'] = (int) self::resolve_is_donation( $payment );
+            }
+
+            self::inherit_donation( $payment );
         });
 
         static::saving(function ($payment) {
@@ -88,6 +97,57 @@ class Payment extends Model
                 }
             }
         });
+    }
+
+    /**
+     * Renewals keep the donor's choices from the original gift, so an anonymous
+     * monthly gift stays anonymous on every charge. The comment and tribute
+     * belong to the first gift only and are not repeated.
+     *
+     * @param self $payment Payment being created.
+     */
+    private static function inherit_donation( self $payment ): void
+    {
+        $parent_id = (int) ( $payment->attributes['parent_id'] ?? 0 );
+        $extra     = is_array( $payment->extra ) ? $payment->extra : [];
+        if ( $parent_id <= 0 || isset( $extra['donation'] ) ) {
+            return;
+        }
+
+        $parent   = self::find( $parent_id );
+        $donation = $parent ? ( $parent->extra['donation'] ?? null ) : null;
+        if ( ! is_array( $donation ) ) {
+            return;
+        }
+
+        $donation['comment'] = '';
+        $donation['tribute'] = [];
+        $extra['donation']   = $donation;
+        $payment->extra      = $extra;
+    }
+
+    /**
+     * Whether a new payment is a donation: a form payment on a donation form,
+     * or a renewal of a donation.
+     *
+     * @param self $payment Payment being created.
+     */
+    private static function resolve_is_donation( self $payment ): bool
+    {
+        $parent_id = (int) ( $payment->attributes['parent_id'] ?? 0 );
+        if ( $parent_id > 0 ) {
+            $parent = self::find( $parent_id );
+            return $parent && ! empty( $parent->attributes['is_donation'] );
+        }
+
+        if ( self::FORM_PAYMENT !== ( $payment->attributes['type'] ?? '' ) || ! function_exists( 'smartpay_is_donation_form' ) ) {
+            return false;
+        }
+
+        $data    = json_decode( (string) ( $payment->attributes['data'] ?? '' ), true );
+        $form_id = absint( $data['form_id'] ?? 0 );
+
+        return $form_id > 0 && smartpay_is_donation_form( $form_id );
     }
 
     public function customer()

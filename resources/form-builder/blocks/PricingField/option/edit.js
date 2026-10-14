@@ -27,7 +27,7 @@ const BILLING_PERIODS = [
  * window → parent → top because the block edit runs inside the editor iframe,
  * and treats wp_localize_script's "1"/"" string coercion as truthy.
  */
-const readProFlag = () => {
+export const readProFlag = () => {
     const truthy = (v) => v === true || v === 1 || v === '1'
     const frames = []
     try { frames.push(window) } catch (e) {}

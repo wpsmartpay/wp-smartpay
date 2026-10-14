@@ -1,0 +1,27 @@
+.sp-donation-preview {
+    margin: 0 0 16px;
+
+    &__label { margin: 0 0 6px; font-weight: 600; }
+
+    &__check { display: flex; gap: 8px; align-items: center; }
+
+    &__input { width: 100%; }
+
+    &--break {
+        padding: 8px 12px;
+        border: 1px dashed #9ca3af;
+        border-radius: 6px;
+        text-align: center;
+        color: #6b7280;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+
+        .components-notice {
+            margin: 0 0 8px;
+            text-align: left;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+    }
+}

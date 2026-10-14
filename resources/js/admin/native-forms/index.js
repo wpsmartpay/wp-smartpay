@@ -1,17 +1,19 @@
 import apiFetch from '@wordpress/api-fetch'
-import { ChevronDown, Search } from 'lucide-react'
+import { ChevronDown, Search, Eye, Copy } from 'lucide-react'
 import { NewFormModal } from './NewFormModal'
+import { GetCampaigns, AssignFormsToCampaign } from '../../http/campaign'
 
 const { __ } = wp.i18n
 const { useState, useEffect, useCallback } = wp.element
 
 /* ── HTTP ─────────────────────────────────────────────────── */
 
-const GetNativeForms = async ({ page = 1, perPage = 10, search = '' }) => {
+const GetNativeForms = async ({ page = 1, perPage = 10, search = '', campaign = '' }) => {
 	const params = new URLSearchParams({
 		page,
 		per_page: perPage,
 		...(search && { search }),
+		...(campaign && { campaign }),
 	})
 	const base = smartpay.restUrl.replace(/\/$/, '')
 	const response = await apiFetch({
@@ -90,32 +92,66 @@ const NativeFormRow = ({ form, onDelete, openId, setOpenId, checked, onCheck }) 
 						{initials}
 					</div>
 					<div className="sp-customer__info">
-						<a href={form.edit_url} className="sp-customer__name"
-							style={{ textDecoration: 'none', color: 'inherit' }}>
-							{form.title || __('(Untitled)', 'smartpay')}
-						</a>
+						<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+							<a href={form.edit_url} className="sp-customer__name"
+								style={{ textDecoration: 'none', color: 'inherit' }}>
+								{form.title || __('(Untitled)', 'smartpay')}
+							</a>
+							{form.preview_url && (
+								<a href={form.preview_url} target="_blank" rel="noopener noreferrer"
+									className="sp-form-preview-icon"
+									title={__('Preview form', 'smartpay')}
+									aria-label={__('Preview form', 'smartpay')}
+									style={{ display: 'inline-flex', color: 'var(--sp-text-subtle)', flexShrink: 0 }}>
+									<Eye style={{ width: 14, height: 14 }} />
+								</a>
+							)}
+						</span>
 						<div className="sp-customer__email">#{form.id}</div>
 					</div>
 				</div>
 			</td>
 
 			<td>
+				{form.campaign ? (
+					<a href={`#/campaigns/${form.campaign.id}`} style={{ color: 'inherit', textDecoration: 'none', fontWeight: 500 }}>
+						{form.campaign.title}
+					</a>
+				) : (
+					<span style={{ color: 'var(--sp-text-subtle)' }}>—</span>
+				)}
+			</td>
+
+			<td>
 				{form.shortcode ? (
-					<code
-						onClick={() => copyShortcode(form.shortcode)}
-						title={__('Click to copy', 'smartpay')}
-						style={{
-							cursor: 'pointer',
+					<span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+						<code style={{
 							background: 'var(--sp-surface-muted)',
 							border: '1px solid var(--sp-border)',
 							borderRadius: 4,
 							padding: '2px 8px',
 							fontSize: 12,
 							whiteSpace: 'nowrap',
-							userSelect: 'all',
 						}}>
-						{form.shortcode}
-					</code>
+							{form.shortcode}
+						</code>
+						<button
+							type="button"
+							onClick={() => copyShortcode(form.shortcode)}
+							title={__('Copy shortcode', 'smartpay')}
+							aria-label={__('Copy shortcode', 'smartpay')}
+							style={{
+								background: 'none',
+								border: 'none',
+								cursor: 'pointer',
+								padding: 0,
+								display: 'inline-flex',
+								color: 'var(--sp-text-subtle)',
+								flexShrink: 0,
+							}}>
+							<Copy style={{ width: 13, height: 13 }} />
+						</button>
+					</span>
 				) : (
 					<span style={{ color: 'var(--sp-text-subtle)' }}>—</span>
 				)}
@@ -130,7 +166,9 @@ const NativeFormRow = ({ form, onDelete, openId, setOpenId, checked, onCheck }) 
 			<td className="sp-cell--muted sp-col--nowrap">{form.date || '—'}</td>
 
 			<td>
-				{goal?.enabled ? (
+				{goal?.from_campaign ? (
+					<span style={{ fontSize: 11, color: 'var(--sp-text-subtle)' }}>{__('from campaign', 'smartpay')}</span>
+				) : goal?.enabled ? (
 					<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 3 }}>
 						<div style={{ width: 80, height: 5, background: 'var(--sp-border)', borderRadius: 3, overflow: 'hidden' }}>
 							<div style={{ width: `${Math.min(100, goal.percentage || 0)}%`, height: '100%', background: '#22c55e', borderRadius: 3 }} />
@@ -189,6 +227,9 @@ export const NativeFormList = () => {
 	const [actionOpen,      setActionOpen]      = useState(false)
 	const [checkedIds,      setCheckedIds]      = useState(new Set())
 	const [perPage,         setPerPage]         = useState(20)
+	const [campaignFilter,  setCampaignFilter]  = useState('')
+	const [campaigns,       setCampaigns]       = useState([])
+	const [assignOpen,      setAssignOpen]      = useState(false)
 	const [pagination,      setPagination]      = useState({
 		current_page: 1, last_page: 1, total: 0, from: 0, to: 0,
 	})
@@ -200,10 +241,14 @@ export const NativeFormList = () => {
 		return () => clearTimeout(t)
 	}, [searchQuery])
 
+	useEffect(() => {
+		GetCampaigns({ per_page: 100 }).then((r) => setCampaigns(r.data || [])).catch(() => setCampaigns([]))
+	}, [])
+
 	const fetchForms = useCallback(async (page = 1, search = '') => {
 		setIsLoading(true)
 		try {
-			const result = await GetNativeForms({ page, perPage, search })
+			const result = await GetNativeForms({ page, perPage, search, campaign: campaignFilter })
 			const { data: rows = [], ...paginationData } = result
 			setData(rows)
 			setPagination(paginationData)
@@ -213,14 +258,14 @@ export const NativeFormList = () => {
 		} finally {
 			setIsLoading(false)
 		}
-	}, [perPage])
+	}, [perPage, campaignFilter])
 
 	useEffect(() => {
 		fetchForms(1, debouncedSearch)
 	}, [fetchForms, debouncedSearch])
 
 	useEffect(() => {
-		const close = () => { setOpenRowId(null); setActionOpen(false) }
+		const close = () => { setOpenRowId(null); setActionOpen(false); setAssignOpen(false) }
 		document.addEventListener('click', close)
 		return () => document.removeEventListener('click', close)
 	}, [])
@@ -240,6 +285,16 @@ export const NativeFormList = () => {
 			})
 		}))
 		fetchForms(1, debouncedSearch)
+	}
+
+	const assignSelected = async (campaignId) => {
+		setAssignOpen(false)
+		try {
+			await AssignFormsToCampaign([...checkedIds], campaignId)
+		} catch (e) {
+			window.alert(e.message || __('Could not update the campaign.', 'smartpay'))
+		}
+		fetchForms(pagination.current_page, debouncedSearch)
 	}
 
 	const allChecked   = data.length > 0 && checkedIds.size === data.length
@@ -284,6 +339,14 @@ export const NativeFormList = () => {
 							onChange={(e) => setSearchQuery(e.target.value)} />
 					</div>
 
+					<select className="sp-filter-select" value={campaignFilter}
+						aria-label={__('Filter by campaign', 'smartpay')}
+						onChange={(e) => setCampaignFilter(e.target.value)}>
+						<option value="">{__('All campaigns', 'smartpay')}</option>
+						<option value="none">{__('No campaign', 'smartpay')}</option>
+						{campaigns.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+					</select>
+
 					{hasSelection && (
 						<span className="sp-selection-count">
 							{checkedIds.size} {__('selected', 'smartpay')}
@@ -304,6 +367,16 @@ export const NativeFormList = () => {
 							<ChevronDown size={14} style={{ marginLeft: 2, opacity: 0.6 }} />
 						</button>
 						<div className={`sp-dropdown${actionOpen ? ' sp-dropdown--open' : ''}`}>
+							<button className="sp-dropdown__item"
+								disabled={!campaigns.length}
+								onClick={() => { setActionOpen(false); setAssignOpen(true) }}>
+								{__('Assign to campaign', 'smartpay')}
+							</button>
+							<button className="sp-dropdown__item"
+								onClick={() => { setActionOpen(false); assignSelected(0) }}>
+								{__('Remove from campaign', 'smartpay')}
+							</button>
+							<div className="sp-dropdown__divider" />
 							<button className="sp-dropdown__item sp-dropdown__item--destructive"
 								onClick={() => {
 									setActionOpen(false)
@@ -316,6 +389,13 @@ export const NativeFormList = () => {
 								{__('Delete selected', 'smartpay')}
 							</button>
 						</div>
+						{assignOpen && (
+							<div className="sp-dropdown sp-dropdown--open" role="menu" aria-label={__('Choose a campaign', 'smartpay')}>
+								{campaigns.map((c) => (
+									<button key={c.id} className="sp-dropdown__item" onClick={() => assignSelected(c.id)}>{c.title}</button>
+								))}
+							</div>
+						)}
 					</div>
 
 					<button className="sp-btn sp-btn--primary" onClick={openModal}>
@@ -334,6 +414,7 @@ export const NativeFormList = () => {
 										onChange={toggleAll} />
 								</th>
 								<th>{__('Name', 'smartpay')}</th>
+								<th>{__('Campaign', 'smartpay')}</th>
 								<th>{__('Shortcode', 'smartpay')}</th>
 								<th>{__('Status', 'smartpay')}</th>
 								<th>{__('Created', 'smartpay')}</th>
@@ -343,9 +424,9 @@ export const NativeFormList = () => {
 						</thead>
 						<tbody>
 							{isLoading ? (
-								<tr><td colSpan={7} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
+								<tr><td colSpan={8} className="sp-state-loading">{__('Loading…', 'smartpay')}</td></tr>
 							) : data.length === 0 ? (
-								<tr><td colSpan={7}>
+								<tr><td colSpan={8}>
 									<div className="sp-empty">
 										<div className="sp-empty__icon">📝</div>
 										<div className="sp-empty__title">{__('No forms found', 'smartpay')}</div>

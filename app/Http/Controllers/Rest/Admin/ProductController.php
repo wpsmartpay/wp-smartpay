@@ -100,14 +100,19 @@ class ProductController extends RestController
     public function store(WP_REST_Request $request): WP_REST_Response
     {
         global $wpdb;
+
+        $data   = json_decode($request->get_body(), true);
+        $errors = $this->validate($data);
+        if ( ! empty($errors) ) {
+            return new WP_REST_Response(['message' => implode(' ', $errors)], 422);
+        }
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
         try {
-            $data = json_decode($request->get_body(), true);
-
             $product = new Product();
-            $product->title       = sanitize_text_field($data['title'] ?? 'Untitled product');
+            $product->title       = sanitize_text_field($data['title']);
             $product->description = sanitize_textarea_field($data['description'] ?? '');
             $product->base_price  = max(0, (float) ($data['base_price'] ?? 0));
             $product->sale_price  = max(0, (float) ($data['sale_price'] ?? 0));
@@ -166,6 +171,13 @@ class ProductController extends RestController
     public function update(WP_REST_Request $request): WP_REST_Response
     {
         global $wpdb;
+
+        $data   = json_decode($request->get_body(), true);
+        $errors = $this->validate($data);
+        if ( ! empty($errors) ) {
+            return new WP_REST_Response(['message' => implode(' ', $errors)], 422);
+        }
+
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $wpdb->query('START TRANSACTION');
 
@@ -176,9 +188,7 @@ class ProductController extends RestController
                 return new WP_REST_Response(['message' => __('Product not found', 'smartpay')], 404);
             }
 
-            $data = json_decode($request->get_body(), true);
-
-            $product->title       = sanitize_text_field($data['title'] ?? 'Untitled product');
+            $product->title       = sanitize_text_field($data['title']);
             $product->description = sanitize_textarea_field($data['description'] ?? '');
             $product->base_price  = max(0, (float) ($data['base_price'] ?? 0));
             $product->sale_price  = max(0, (float) ($data['sale_price'] ?? 0));
@@ -257,6 +267,39 @@ class ProductController extends RestController
             error_log('SmartPay: Product delete error — ' . $e->getMessage());
             return new WP_REST_Response(['message' => esc_html__('An error occurred. Please try again.', 'smartpay')], 500);
         }
+    }
+
+    /**
+     * Validate product data before create/update.
+     *
+     * @param array|null $data
+     * @return string[]
+     */
+    private function validate( $data ): array
+    {
+        $errors = [];
+
+        if ( ! is_array($data) ) {
+            $errors[] = esc_html__( 'Invalid request body.', 'smartpay' );
+            return $errors;
+        }
+
+        $title = trim( sanitize_text_field( $data['title'] ?? '' ) );
+        if ( '' === $title ) {
+            $errors[] = esc_html__( 'Product title is required.', 'smartpay' );
+        }
+
+        $base_price = (float) ( $data['base_price'] ?? 0 );
+        $variations = (array) ( $data['variations'] ?? [] );
+        $has_variation_price = array_reduce( $variations, function ( $carry, $v ) {
+            return $carry || ( (float) ( $v['base_price'] ?? 0 ) ) > 0;
+        }, false );
+
+        if ( $base_price <= 0 && ! $has_variation_price ) {
+            $errors[] = esc_html__( 'At least one price must be greater than zero.', 'smartpay' );
+        }
+
+        return $errors;
     }
 
     /**

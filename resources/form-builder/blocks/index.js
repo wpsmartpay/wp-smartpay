@@ -39,6 +39,7 @@ import { SubmitButton } from './SubmitButton'
 import { SubmitPay } from './SubmitButton/pay'
 import { SubmitCoupon } from './SubmitButton/coupon'
 import { GoalProgress } from './GoalProgress'
+import { donationBlocks } from './Donation'
 
 const unregisterBlocks = [
     'core/quote',
@@ -96,6 +97,7 @@ const unregisterBlocks = [
 ]
 
 const smartPayBlocks = [
+    ...donationBlocks,
     NameField,
     NameFieldColumn,
     NameLabel,

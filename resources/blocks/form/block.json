@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "smartpay/form",
+	"version": "1.0.0",
+	"title": "WPSmartPay Form",
+	"category": "widgets",
+	"icon": "feedback",
+	"description": "Embed a WPSmartPay payment form directly on any page or post.",
+	"keywords": [ "payment", "form", "checkout", "wpsmartpay" ],
+	"textdomain": "smartpay",
+	"editorScript": "smartpay-editor-blocks",
+	"attributes": {
+		"id": {
+			"type": "integer",
+			"default": 0
+		}
+	},
+	"supports": {
+		"html": false
+	}
+}

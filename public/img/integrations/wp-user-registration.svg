@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <!-- WordPress blue background -->
+  <rect width="80" height="80" rx="16" fill="#21759B" opacity="0.1"/>
+  <!-- User silhouette -->
+  <circle cx="32" cy="28" r="11" fill="#21759B"/>
+  <path d="M8 66c0-13.255 10.745-24 24-24s24 10.745 24 24" fill="#21759B"/>
+  <!-- Registration plus badge -->
+  <circle cx="61" cy="19" r="14" fill="#0073AA"/>
+  <path d="M61 13v12M55 19h12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

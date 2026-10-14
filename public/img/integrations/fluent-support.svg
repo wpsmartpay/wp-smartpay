@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <rect width="80" height="80" rx="16" fill="#25B7D3" opacity="0.1"/>
+  <!-- Chat bubble body -->
+  <path d="M10 14h44a8 8 0 0 1 8 8v24a8 8 0 0 1-8 8H28l-12 12V54H10a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8z" fill="#25B7D3"/>
+  <!-- Headset arc -->
+  <path d="M26 36a14 14 0 0 1 12-14 14 14 0 0 1 12 14" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- Earpieces -->
+  <rect x="21" y="33" width="8" height="6" rx="3" fill="white"/>
+  <rect x="51" y="33" width="8" height="6" rx="3" fill="white"/>
+  <!-- Mouth bar -->
+  <path d="M35 47 a5 5 0 0 0 10 0" stroke="white" stroke-width="2" fill="none"/>
+</svg>

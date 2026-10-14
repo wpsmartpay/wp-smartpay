@@ -45,3 +45,16 @@
 .smartpay-pricing .plan-amount-input {
     field-sizing: content;
 }
+
+// Sidebar: periods checklist. Reset fieldset chrome, space legend from the
+// first checkbox and leave room below the last one.
+.smartpay-custom-billing-periods {
+    margin: 0 0 16px;
+    padding: 0;
+    border: 0;
+
+    legend {
+        margin-bottom: 12px;
+        padding: 0;
+    }
+}

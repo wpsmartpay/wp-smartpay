@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "smartpay/product",
+	"version": "1.0.0",
+	"title": "SmartPay Product",
+	"category": "widgets",
+	"icon": "cart",
+	"description": "Display a SmartPay product with popup or embedded checkout.",
+	"keywords": [ "payment", "product", "checkout", "wpsmartpay" ],
+	"textdomain": "smartpay",
+	"editorScript": "smartpay-editor-blocks",
+	"attributes": {
+		"id": {
+			"type": "integer",
+			"default": 0
+		},
+		"behavior": {
+			"type": "string",
+			"default": "popup"
+		},
+		"label": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false
+	}
+}

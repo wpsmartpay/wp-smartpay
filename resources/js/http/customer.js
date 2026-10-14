@@ -49,11 +49,12 @@ export const DeleteCustomer = async (customerId) => {
 	}
 }
 
-export const GetCustomers = async ({ page = 1, perPage = 10, search = '' }) => {
+export const GetCustomers = async ({ page = 1, perPage = 10, search = '', scope = '' }) => {
 	const queryParams = new URLSearchParams({
 		page,
 		per_page: perPage,
-		...(search && { search })
+		...(search && { search }),
+		...(scope && { scope })
 	})
 
     const baseUrl = smartpay.restUrl.replace(/\/$/, '');

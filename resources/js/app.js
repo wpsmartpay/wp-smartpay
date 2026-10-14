@@ -162,4 +162,5 @@ jQuery(($) => {
 
 import './frontend/payment/product'
 import './frontend/payment/form'
+import './frontend/payment/donation'
 import './frontend/shortcode.js'

@@ -80,7 +80,7 @@ export function HelpDrawer( { open, onOpenChange } ) {
                     </SheetDescription>
                 </SheetHeader>
 
-                <nav className="flex flex-col gap-6 px-6 py-5" aria-label={__( 'Documentation links', 'smartpay' )}>
+                <nav className="flex flex-col gap-6 px-6 pt-2 pb-5" aria-label={__( 'Documentation links', 'smartpay' )}>
                     {DOC_SECTIONS.map( ( section ) => (
                         <div key={section.heading}>
                             <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/60">

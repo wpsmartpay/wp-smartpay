@@ -22,7 +22,7 @@ function smartpay_get_activated_integrations()
     $integrations = (array) smartpay_get_option('integrations', []);
 
     $activated_integrations = array_filter($integrations, function ($integration) {
-        if ($integration['active']) {
+        if (is_array($integration) && !empty($integration['active'])) {
             return $integration;
         }
     });

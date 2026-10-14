@@ -1,3 +1,36 @@
+// Grid column layout — override Bootstrap's .row flex layout when an explicit
+// column count is chosen. Margin resets cancel Bootstrap's .row negative gutters.
+.sp-cols-1 {
+    display: flex !important;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+.sp-cols-2 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+.sp-cols-3 {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > .col { padding-left: 0; padding-right: 0; }
+}
+
 .smartpay-form-shortcode {
     position: relative;
 
@@ -55,9 +88,31 @@
         }
 
         // Address: stack its inner fields with consistent spacing.
-        .smartpay-address {
+        // When a sp-cols-N class is set (grid layout), that rule wins instead.
+        .smartpay-address:not(.sp-cols-2):not(.sp-cols-3) {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        // Grid column layout classes — set on NameField / AddressField containers
+        // via the Gutenberg "Layout Columns" SelectControl in InspectorControls.
+        .sp-cols-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .sp-cols-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 18px;
         }
@@ -207,6 +262,13 @@
                     margin: 0;
                 }
             }
+        }
+
+        // ── Single-gateway direct output ─────────────────────────────
+        // When only one gateway is active, the accordion is skipped and the
+        // gateway's inline fields are rendered directly with padding above/below.
+        .smartpay-single-gateway-fields {
+            padding: 8px 0;
         }
 
         // ── Stacked gateway accordion ───────────────────────────────
@@ -543,6 +605,34 @@
     }
 }
 
+// ── Split checkout layout ────────────────────────────────────────────────
+// Opt-in per-form ("Checkout Layout" setting): fields on the left, gateway
+// selector + pay button on the right, instead of the default single-column
+// stack. The two columns are siblings of the same <form> element.
+.smartpay-form-shortcode--split {
+    .smartpay_form_builder_wrapper > form {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 32px;
+        align-items: start;
+    }
+
+    .smartpay-form-col--pay {
+        position: sticky;
+        top: 24px;
+    }
+
+    @media (max-width: 768px) {
+        .smartpay_form_builder_wrapper > form {
+            display: block;
+        }
+
+        .smartpay-form-col--pay {
+            position: static;
+        }
+    }
+}
+
 .smartpay-custom-control-label {
     display: flex;
     flex-direction: column;
@@ -565,4 +655,127 @@
     border: 1px solid grey;
     min-width: 170px;
     max-width: 300px;
+}
+
+// ── Donation blocks (DonationFields.php) + Step Break steps (donation.js) ──
+.smartpay-donation-field {
+    margin: 0 0 18px;
+    padding: 0;
+    border: 0;
+}
+
+.smartpay-donation-field__label {
+    display: block;
+    margin: 0 0 8px;
+    padding: 0;
+    font-weight: 600;
+}
+
+.smartpay-donation-field__help {
+    display: block;
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 0.85em;
+}
+
+.smartpay-donation-anonymous label {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin: 0;
+    cursor: pointer;
+
+    input { margin-top: 3px; }
+}
+
+.smartpay-donation-comment textarea,
+.smartpay-donation-tribute input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.smartpay-donation-tribute {
+    summary {
+        cursor: pointer;
+        font-weight: 600;
+
+        &[aria-disabled="true"] { cursor: not-allowed; }
+    }
+
+    &__body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        margin-top: 10px;
+
+        label { margin: 0; }
+        input[type="text"],
+        .smartpay-donation-field__help { flex-basis: 100%; }
+        .smartpay-donation-field__help { margin-top: -4px; }
+    }
+}
+
+.smartpay-steps {
+    display: flex;
+    gap: 6px;
+    margin: 0 0 18px;
+
+    i {
+        flex: 1;
+        height: 4px;
+        border-radius: 999px;
+        background: #e5e7eb;
+
+        &.is-on { background: #293c81; }
+    }
+}
+
+.smartpay-step__title {
+    margin: 0 0 12px;
+    font-size: 1.1em;
+}
+
+.smartpay-step__status {
+    margin: 0 0 8px;
+    font-size: .85em;
+    color: #6b7280;
+
+    &:focus { outline: none; }
+}
+
+.smartpay-step__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+
+    // Pay button moved in beside Back on the last step.
+    > .smartpay-submit-button-wrap,
+    > .smartpay-form-pay-now {
+        margin: 0 0 0 auto;
+    }
+
+    .smartpay-step__back,
+    .smartpay-step__next {
+        padding: 11px 18px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+}
+
+.smartpay-step__next {
+    margin-left: auto;
+    border: 0;
+    background: #293c81;
+    color: #fff;
+}
+
+.smartpay-step__back {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #1f2937;
 }
