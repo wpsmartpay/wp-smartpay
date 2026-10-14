@@ -45,7 +45,7 @@ $sp_type_labels = array(
 						<tr>
 							<td data-label="<?php esc_attr_e( 'Order', 'smartpay' ); ?>"><strong>#<?php echo esc_html( $sp_payment->id ); ?></strong></td>
 							<td data-label="<?php esc_attr_e( 'Type', 'smartpay' ); ?>"><?php echo esc_html( $sp_type_label ); ?></td>
-							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( gmdate( 'M d, Y · g:i A', strtotime( $sp_payment->created_at ) ) ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( wp_date( 'M d, Y · g:i A', strtotime( $sp_payment->created_at ) ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Gateway', 'smartpay' ); ?>"><?php echo esc_html( ucfirst( (string) $sp_payment->gateway ) ?: '—' ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_payment->amount, $sp_payment->currency ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>

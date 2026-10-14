@@ -5,6 +5,20 @@ defined( 'ABSPATH' ) || exit;
 /** @var int $sp_customer_id */
 
 $sp_summary = smartpay_get_user_dashboard_summary( $sp_customer_id );
+
+// Prefer the WP signup date; fall back to the customer record when it is the zero date or empty.
+$sp_valid_date = static function ( $date ) {
+	return $date && 0 !== strpos( $date, '0000' );
+};
+$sp_member_since = '';
+if ( $sp_valid_date( $sp_current_user->user_registered ) ) {
+	$sp_member_since = mysql2date( 'M Y', $sp_current_user->user_registered );
+} else {
+	$sp_customer = smartpay_get_customer_by_user_id( $sp_current_user->ID );
+	if ( $sp_customer && $sp_valid_date( $sp_customer->created_at ) ) {
+		$sp_member_since = mysql2date( 'M Y', $sp_customer->created_at );
+	}
+}
 ?>
 
 <div class="dashboard-header">
@@ -38,7 +52,7 @@ $sp_summary = smartpay_get_user_dashboard_summary( $sp_customer_id );
 	</div>
 	<div class="sp-dash-stat">
 		<span class="sp-dash-stat__label"><?php esc_html_e( 'Member Since', 'smartpay' ); ?></span>
-		<span class="sp-dash-stat__value"><?php echo esc_html( gmdate( 'M Y', strtotime( $sp_current_user->user_registered ) ) ); ?></span>
+		<span class="sp-dash-stat__value"><?php echo esc_html( $sp_member_since ? $sp_member_since : '—' ); ?></span>
 		<span class="sp-dash-stat__meta"><?php echo esc_html( $sp_current_user->user_email ); ?></span>
 	</div>
 </div>
@@ -66,7 +80,7 @@ $sp_summary = smartpay_get_user_dashboard_summary( $sp_customer_id );
 						<?php $sp_badge = smartpay_dashboard_status_badge( (string) $sp_payment->status ); ?>
 						<tr>
 							<td data-label="<?php esc_attr_e( 'Order', 'smartpay' ); ?>">#<?php echo esc_html( $sp_payment->id ); ?></td>
-							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( gmdate( 'M d, Y', strtotime( $sp_payment->created_at ) ) ); ?></td>
+							<td data-label="<?php esc_attr_e( 'Date', 'smartpay' ); ?>"><?php echo esc_html( wp_date( 'M d, Y', strtotime( $sp_payment->created_at ) ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Amount', 'smartpay' ); ?>"><?php echo esc_html( smartpay_amount_format( $sp_payment->amount, $sp_payment->currency ) ); ?></td>
 							<td data-label="<?php esc_attr_e( 'Status', 'smartpay' ); ?>"><span class="sp-dash-badge <?php echo esc_attr( $sp_badge['class'] ); ?>"><?php echo esc_html( $sp_badge['label'] ); ?></span></td>
 						</tr>
