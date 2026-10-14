@@ -84,22 +84,23 @@ Build payment and donation forms the WordPress way — with native blocks and li
 
 * **Drag-and-drop form fields** — Name, email, phone, address, text, textarea, select dropdowns, radio options, and checkboxes
 * **Flexible pricing models** — Fixed product prices, suggested donation tiers, custom amount inputs, and recurring billing cycles
-* **Dedicated donation blocks** — Give Anonymously, Donor Comment, Tribute / Dedication, Step Break, and Campaign Goal Progress
+* **Dedicated donation blocks** — Give Anonymously, Donor Comment, Tribute / Dedication, Step Break, Campaign Goal Progress, and Campaign Donors *(Pro)*
 * **Ready-made template library** — Pick from curated templates (including the Charity Donation template) or start from a blank canvas
 * **Universal embedding** — Embed forms anywhere using the SmartPay Form block, the `[smartpay_form]` shortcode, or a clean popup overlay
 * **Checkout experience controls** — Stacked or split layouts, and per-form "require login to checkout" settings
 
 ---
 
-### Complete WordPress Donations and Fundraising
+### [Complete WordPress Donations and Fundraising](https://docs.wpsmartpay.com/en/donations-overview)
 
 Collect one-time and recurring donations, launch fundraising campaigns, and recognize supporters with an interactive donor wall — without bloated eCommerce tools or needing a separate donation plugin.
 
 Whether you run a charity, nonprofit organization, community project, church, or personal fundraiser, WPSmartPay turns WordPress into a reliable fundraising and nonprofit payments platform.
 
-#### Native Gutenberg Donation Form Blocks
+#### [Native Gutenberg Donation Form Blocks](https://docs.wpsmartpay.com/en/donation-form-blocks)
 Design donor checkout forms directly in the WordPress block editor with live visual preview:
 * **Preset donation tiers and custom amounts** — Offer suggested gift amounts (such as $25, $50, $100, $250) or let supporters type their own custom donation amount.
+* **Custom amount recurring billing *(Pro)*** — Empower donors to select their custom amount and preferred giving frequency (daily, weekly, monthly, or yearly) directly in the Pricing block.
 * **Give Anonymously block** — A privacy checkbox allowing donors to give anonymously. Anonymous gifts still count toward campaign totals and show in your admin records, but keep names off public listings.
 * **Donor Comment block** — Invite supporters to leave a public message or words of encouragement (up to 1,000 characters) during checkout.
 * **Tribute and Dedication block** — Give donors the option to dedicate gifts "In honor of" or "In memory of" someone special with dedicated honoree fields.
@@ -107,22 +108,24 @@ Design donor checkout forms directly in the WordPress block editor with live vis
 * **Goal Progress bar block** — Display real-time progress toward your fundraising target to encourage community momentum.
 * **Charity Donation template** — Launch in seconds using a pre-configured template that includes preset tiers, contact details, dedications, comments, and payment buttons ready to go.
 
-#### Interactive Donor Wall *(Pro)*
-Build social proof, inspire more gifts, and celebrate community generosity directly on your campaign pages:
-* **Public donor listings** — Display donor names, contribution amounts, comments, dedication tributes, dates, and avatars (Gravatar or initials).
-* **Flexible view options** — Sort contributors by recent donations or spotlight top donors.
+#### [Interactive Donor Wall](https://docs.wpsmartpay.com/en/donor-wall) *(Pro)*
+Build social proof, inspire more gifts, and celebrate community generosity directly on your campaign pages (requires WPSmartPay Pro):
+* **Public donor listings *(Pro)*** — Display donor names, contribution amounts, comments, dedication tributes, dates, and avatars (Gravatar or initials).
+* **Flexible view options *(Pro)*** — Sort contributors by recent donations or spotlight top donors.
 * **Full donor privacy control** — Donors can choose to remain anonymous during checkout or toggle their public display preferences from their donor account.
-* **Comment moderation** — Review donor comments before they go live, with approve/hide actions right inside your campaign dashboard.
-* **Embed anywhere** — The donor wall appears automatically on campaign pages, or place it on any page or post using the **WPSmartPay Campaign Donors** Gutenberg widget block or `[smartpay_campaign_donors id="..."]` shortcode.
+* **Comment moderation *(Pro)*** — Review donor comments before they go live, with approve/hide actions right inside your campaign dashboard.
+* **Embed anywhere *(Pro)*** — The donor wall appears automatically on campaign pages, or place it on any page or post using the **WPSmartPay Campaign Donors *(Pro)*** Gutenberg widget block or `[smartpay_campaign_donors id="..."]` shortcode.
 
-#### Campaign Management and Recurring Donations
+#### [Campaign Management and Recurring Donations](https://docs.wpsmartpay.com/en/donations-overview)
 Organize, manage, and track all your nonprofit payments in one place:
 * **Independent fundraising campaigns** — Group donation forms under dedicated campaigns with custom target goals, deadlines, and standalone campaign landing pages.
-* **One-time and recurring donations** — Accept one-time gifts in the free plugin via PayPal Standard or manual payments. Upgrade to Pro to accept recurring donations (weekly, monthly, or yearly) through Stripe and Paddle.
+* **One-time donations** — Accept one-time gifts in the free plugin via PayPal Standard or manual/free payment flows.
+* **Recurring donations *(Pro)*** — Accept recurring donations on preset subscription intervals (weekly, monthly, or yearly) through Stripe and Paddle gateways.
 * **Custom amount recurring billing *(Pro)*** — Give donors full flexibility to choose both custom gift amounts and their preferred frequency (daily, weekly, monthly, or yearly) on a single form.
+* **Campaign reports and analytics *(Pro)*** — Detailed campaign performance metrics with CSV data export.
 * **Separate donor and customer records** — Any form linked to a campaign or marked as a donation automatically categorizes contributors under **SmartPay → Contacts → Donors** and records gifts in **SmartPay → Transactions → Donations**, keeping donation records clean from product sales.
 * **Automated donation receipts** — Send immediate branded email confirmations with gift details, and generate printable PDF receipts *(Pro)* for donor tax records.
-* **Donor self-service dashboard** — Supporter portal where donors can view their lifetime giving history, manage active recurring donations, and update payment details.
+* **Donor self-service dashboard** — Supporter portal where donors can view their lifetime giving history, manage or cancel recurring plans *(Pro)*, and update payment details.
 
 ---
 
@@ -215,9 +218,9 @@ Use Claude, ChatGPT, Codex, Cursor, or any tool that speaks Model Context Protoc
 
 * Native Gutenberg payment and donation form builder with live preview
 * Ready-to-use form templates (including Charity Donation template)
-* Dedicated donation form blocks: Give Anonymously, Donor Comment, Tribute, and Step Break
+* Dedicated [donation form blocks](https://docs.wpsmartpay.com/en/donation-form-blocks): Give Anonymously, Donor Comment, Tribute, and Step Break
 * Campaign Goal Progress block with real-time visual progress bar
-* Dedicated fundraising campaigns with target goals, deadlines, and public campaign pages
+* Dedicated [fundraising campaigns](https://docs.wpsmartpay.com/en/donations-overview) with target goals, deadlines, and public campaign pages
 * One-time donation collection with preset giving tiers and custom amounts
 * Separate Donors directory and Donations transaction log
 * Donor giving history tab in the customer dashboard
@@ -245,15 +248,15 @@ Unlock more with [WPSmartPay Pro](https://wpsmartpay.com/pricing/?utm_source=rea
 Stripe - Authorize.net - Paddle - Razorpay - Mollie - bKash - toyyibPay - Paytm
 
 **Donations and Fundraising (Pro):**
-* Interactive public donor wall on campaign pages
-* WPSmartPay Campaign Donors Gutenberg widget block and shortcode embed
-* Donor wall moderation with comment approval queue
-* Recurring donations on fixed intervals (weekly, monthly, annual)
-* Custom amount recurring billing (let donors pick gift amount and frequency: daily, weekly, monthly, yearly)
-* Donor self-service management (donors can view and cancel their recurring gifts)
-* Campaign performance analytics report with CSV export
-* Printable PDF donation receipts
-* Private administrative notes on donor profiles
+* Interactive public [donor wall](https://docs.wpsmartpay.com/en/donor-wall) *(Pro)* on campaign pages
+* WPSmartPay Campaign Donors Gutenberg widget block and shortcode embed *(Pro)*
+* Donor wall moderation with comment approval queue *(Pro)*
+* [Recurring donations](https://docs.wpsmartpay.com/en/donations-overview) *(Pro)* on fixed intervals (weekly, monthly, annual)
+* Custom amount recurring billing *(Pro)* via [donation pricing blocks](https://docs.wpsmartpay.com/en/donation-form-blocks) (let donors pick gift amount and frequency: daily, weekly, monthly, yearly)
+* Donor self-service management *(Pro)* (donors can view and cancel their recurring gifts)
+* Campaign performance analytics report with CSV export *(Pro)*
+* Printable PDF donation receipts *(Pro)*
+* Private administrative notes on donor profiles *(Pro)*
 
 **Subscriptions and Recurring Billing:**
 * Recurring plans on forms and products
@@ -324,8 +327,8 @@ Display and sell digital downloads and products with instant checkout.
 Display a live visual progress bar showing funds raised toward a fundraising campaign target.
 
 <!-- wp:smartpay/campaign-donors -->
-= Campaign Donors (Donor Wall) =
-Showcase public donors, contributions, and messages of support on any campaign or landing page.
+= Campaign Donors (Donor Wall) (Pro) =
+Showcase public donors, contributions, and messages of support on any campaign or landing page. Requires WPSmartPay Pro.
 
 == Installation ==
 
@@ -361,19 +364,19 @@ Yes. WPSmartPay includes a built-in invoice management system. Create invoices, 
 Yes, with WPSmartPay Pro. Set up recurring billing on any payment form with weekly, monthly, or yearly billing cycles. Membership plans with role-based access are also included.
 
 = Can I collect donations and run fundraising campaigns? =
-Yes. WPSmartPay is a full-featured WordPress donation plugin. You can launch standalone fundraising campaigns with monetary goals, display real-time campaign progress bars, create custom donation forms using native Gutenberg blocks, and accept one-time gifts with PayPal or recurring donations with Stripe and Paddle *(Pro)*.
+Yes. WPSmartPay is a full-featured WordPress donation plugin. You can launch standalone [fundraising campaigns](https://docs.wpsmartpay.com/en/donations-overview) with monetary goals, display real-time campaign progress bars, create custom donation forms using native Gutenberg blocks, and accept one-time gifts with PayPal or recurring donations with Stripe and Paddle *(Pro)*.
 
 = How do I build a donation form using Gutenberg blocks? =
-Go to **SmartPay → Forms** and click **+ New Form**. You can start with a blank form or pick the pre-configured **Charity Donation** template, which includes preset giving tiers ($25, $50, $100, $250), custom amount inputs, donor contact fields, the Give Anonymously checkbox, Donor Comment box, Tribute dedication fields, and a Step Break block for multi-step checkout. Customize labels, amounts, and layouts in the block settings, then publish and embed the form anywhere with the SmartPay Form block or shortcode.
+Go to **SmartPay → Forms** and click **+ New Form**. You can start with a blank form or pick the pre-configured **Charity Donation** template, which includes preset giving tiers ($25, $50, $100, $250), custom amount inputs, donor contact fields, and dedicated [donation form blocks](https://docs.wpsmartpay.com/en/donation-form-blocks): the Give Anonymously checkbox, Donor Comment box, Tribute dedication fields, and a Step Break block for multi-step checkout. With WPSmartPay Pro, you can also enable custom recurring donation billing *(Pro)* so donors pick their own giving frequency. Customize labels, amounts, and layouts in the block settings, then publish and embed the form anywhere with the SmartPay Form block or shortcode.
 
-= How does the Donor Wall work and can donors choose to remain anonymous? =
-The Donor Wall (available in WPSmartPay Pro) displays public contributions on campaign pages or any custom landing page via the Campaign Donors block and shortcode. You can showcase donor names, donation amounts, dates, Gravatar or initials avatars, comments, tributes, and company names, sorted by recent donations or top donors. Donors have complete control over their privacy: checking the "Give anonymously" box at checkout or enabling "Hide my name on public donor walls" in their dashboard keeps their name off all public listings while still recording the gift securely in your admin records. Site administrators can also hold comments for moderation and hide specific entries directly from the campaign Donors tab.
+= How does the Donor Wall work and can donors choose to remain anonymous? *(Pro)* =
+The [Donor Wall](https://docs.wpsmartpay.com/en/donor-wall) *(Pro)* displays public contributions on campaign pages or any custom landing page via the Campaign Donors block and shortcode. You can showcase donor names, donation amounts, dates, Gravatar or initials avatars, comments, tributes, and company names, sorted by recent donations or top donors. Donors have complete control over their privacy: checking the "Give anonymously" box at checkout or enabling "Hide my name on public donor walls" in their dashboard keeps their name off all public listings while still recording the gift securely in your admin records. Site administrators can also hold comments for moderation and hide specific entries directly from the campaign Donors tab.
 
 = Can I accept recurring donations and track campaign fundraising goals? =
-Yes. You can assign target goals to any campaign (by total revenue or donation count) and display a live visual progress bar that updates in real time as gifts arrive. To accept recurring donations, WPSmartPay Pro connects with Stripe and Paddle to support fixed recurring subscriptions (daily, weekly, monthly, or yearly) as well as custom amount recurring billing, allowing donors to choose both their own gift amount and their preferred billing frequency directly on the donation form.
+Yes. In the free plugin, you can assign target goals to any campaign (by total revenue or donation count) and display a live visual progress bar that updates in real time as gifts arrive. To accept [recurring donations](https://docs.wpsmartpay.com/en/donations-overview) *(Pro)*, WPSmartPay Pro connects with Stripe and Paddle to support fixed recurring subscriptions (daily, weekly, monthly, or yearly) as well as custom amount recurring billing *(Pro)*, allowing donors to choose both their own gift amount and their preferred billing frequency directly on the donation form. Donors can also manage and cancel their active recurring gifts from their account dashboard *(Pro)*.
 
 = How does WPSmartPay separate donors from regular customers? =
-WPSmartPay automatically categorizes transactions without requiring a separate donation plugin. Any payment made through a form assigned to a campaign or marked with "Treat as donation form" is logged as a donation rather than a standard product purchase. You can view all contributions under **SmartPay → Transactions → Donations** and manage donor profiles under **SmartPay → Contacts → Donors**. Supporters also get a dedicated Giving tab in their customer portal to review past contributions and download receipts.
+WPSmartPay automatically categorizes transactions without requiring a separate donation plugin. As detailed in the [Donations & Campaigns Overview](https://docs.wpsmartpay.com/en/donations-overview), any payment made through a form assigned to a campaign or marked with "Treat as donation form" is logged as a donation rather than a standard product purchase. You can view all contributions under **SmartPay → Transactions → Donations** and manage donor profiles under **SmartPay → Contacts → Donors**. Supporters also get a dedicated Giving tab in their customer portal to review past contributions and download receipts (with printable PDF receipts in Pro).
 
 = Does it work with PayPal? =
 Yes. PayPal Standard is built into the free plugin. Connect your PayPal account under SmartPay → Settings → Payment Gateways and start accepting payments immediately — no Pro license required.
