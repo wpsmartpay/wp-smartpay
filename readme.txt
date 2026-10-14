@@ -1,10 +1,10 @@
 === WPSmartPay – Payment Forms, Invoices, Donations & Subscriptions ===
-Contributors: converswp
+Contributors: converswp, parvezvai, shamsbd71
 Tags: payment forms, stripe, subscriptions, invoices, donation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable Tag: 3.3.5
+Stable Tag: 3.4.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -469,6 +469,11 @@ Yes. WPSmartPay Pro includes a tax and surcharge system that lets you add percen
 10. Payment form preview
 
 == Changelog ==
+
+= 3.4.0 =
+* Fix - "New Form" template picker no longer opens off-screen when another plugin loads Tailwind CSS
+* Fix - Customer dashboard order, subscription and donation dates now use the site timezone
+* Fix - Member Since no longer shows "Nov -0001" for imported accounts
 
 = 3.3.5 =
 * New - Donation campaigns with goals, a public campaign page and a donor wall
