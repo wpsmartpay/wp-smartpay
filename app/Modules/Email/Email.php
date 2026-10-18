@@ -35,7 +35,8 @@ class Email
         // body
         $body = $this->getPaymentReceiptBody($payment);
 
-        return $this->emailNotification->notify($payment->email, $subject, wpautop($body));
+        // The receipt views are full HTML documents; wpautop() would inject <p>/<br> into <head>.
+        return $this->emailNotification->notify($payment->email, $subject, $body);
     }
 
     /**
