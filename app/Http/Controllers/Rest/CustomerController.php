@@ -66,6 +66,16 @@ class CustomerController extends RestController
         $customer = Customer::find($request->get_param('id'));
 		$current_user = wp_get_current_user();
 
+		// Defense in depth: the ownership gate also lives in middleware(), but this
+		// endpoint writes to the WP users table (wp_update_user below), so a future
+		// edit that weakens the middleware must not hand one customer the ability to
+		// rewrite another user's account. Re-assert ownership here and never trust
+		// the request-supplied id for anything but locating the caller's own record.
+		// Regression: CVE-2025-3848 — Subscriber+ account takeover via this route.
+		if ( empty( $customer ) || ! is_user_logged_in() || $current_user->user_email !== $customer->email ) {
+			return new WP_REST_Response(['message' => __('You are not allowed to do this.', 'smartpay')], 403);
+		}
+
         $requestData = \json_decode($request->get_body(), true);
 
         // Sanitize input data.
